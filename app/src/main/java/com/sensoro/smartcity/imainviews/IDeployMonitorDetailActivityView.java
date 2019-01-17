@@ -10,7 +10,7 @@ import java.util.List;
 public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialog, IActivityIntent {
     void updateUploadState(boolean isAvailable);
 
-    void setDeviceTitleName(String name);
+    void setDeviceSn(String sn);
 
     //
     void setNameAddressText(String text);

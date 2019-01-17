@@ -16,7 +16,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/view_divider_width"
         android:layout_marginTop="24dp"
         android:background="@color/c_dfdfdf" />
 
@@ -24,7 +24,6 @@
         android:id="@+id/dialog_tv_exception"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/selector_item_white_ee"
         android:gravity="center"
         android:paddingBottom="14dp"
         android:paddingTop="14dp"
@@ -34,14 +33,13 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/view_divider_width"
         android:background="@color/c_dfdfdf" />
 
     <TextView
         android:id="@+id/dialog_tv_upload_change_device"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/selector_item_white_ee"
         android:gravity="center"
         android:paddingBottom="14dp"
         android:paddingTop="14dp"
@@ -51,7 +49,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/view_divider_width"
         android:background="@color/c_dfdfdf" />
 
     <TextView

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="20dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginEnd="20dp"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/tv_threshold_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_threshold_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:textColor="@color/c_252525"
+        android:lineSpacingExtra="8dp"
+        android:textSize="14sp" />
+</LinearLayout>

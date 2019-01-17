@@ -13,48 +13,93 @@
         android:background="@color/c_f4f4f4"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/contract_title_layout"
+        <LinearLayout
+            android:id="@+id/fg_main_top_search_title_root"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/y200"
-            android:background="@color/white">
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/contract_iv_menu_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="4dp"
-                android:adjustViewBounds="true"
-                android:cropToPadding="true"
-                android:padding="12dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:contentDescription="@null"
+                android:padding="8dp"
                 android:src="@drawable/arrows_left" />
 
+            <RelativeLayout
+                android:id="@+id/ac_contract_record_frame_search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_bg_full_corner">
+
+                <ImageView
+                    android:id="@+id/ac_contract_record_search_imv_clear"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="6dp"
+                    android:contentDescription="@null"
+                    android:padding="7dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/search_monitor_clear_search"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/ac_contract_record_et_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_toStartOf="@id/ac_contract_record_search_imv_clear"
+                    android:background="@null"
+                    android:drawableStart="@drawable/main_search"
+                    android:drawablePadding="8dp"
+                    android:hint="@string/legal_representative_name"
+                    android:imeOptions="actionSearch"
+                    android:singleLine="true"
+                    android:textColor="@color/c_252525"
+                    android:textColorHint="@color/c_a6a6a6"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
             <TextView
-                android:id="@+id/contract_title"
+                android:id="@+id/tv_contract_search_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/contract_iv_menu_list"
-                android:text="@string/contract_list"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:padding="8dp"
+                android:text="@string/cancel"
                 android:textColor="@color/c_252525"
-                android:textSize="18sp" />
-
+                android:visibility="gone" />
 
             <ImageView
-                android:id="@+id/contract_iv_add"
-                android:layout_width="@dimen/x120"
-                android:layout_height="@dimen/y160"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/x20"
-                android:adjustViewBounds="true"
-                android:cropToPadding="true"
+                android:id="@+id/ac_contract_record_imv_calendar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp"
+                android:background="@color/transparent"
+                android:contentDescription="@null"
                 android:padding="8dp"
-                android:src="@mipmap/main_add" />
-        </RelativeLayout>
+                android:src="@drawable/calendar"
+                android:visibility="gone" />
 
-        <include layout="@layout/item_contract_include_top_search" />
+        </LinearLayout>
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/contract_cl_select_root"
@@ -111,9 +156,40 @@
             android:background="@color/c_dfdfdf" />
 
         <RelativeLayout
+            android:id="@+id/fg_main_top_search_rl_date_edit"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingStart="20dp"
+            android:paddingEnd="10dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/fg_main_top_search_tv_date_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y30"
+                android:layout_marginEnd="@dimen/x45"
+                android:layout_marginBottom="@dimen/y30"
+                android:textSize="@dimen/x54" />
+
+            <ImageView
+                android:id="@+id/fg_main_warn_top_search_date_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/fg_main_top_search_tv_date_edit"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@null"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                android:src="@mipmap/ic_close" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_marginTop="12dp"
+            android:layout_weight="1"
             android:background="@color/c_f4f4f4">
 
 
@@ -138,7 +214,27 @@
 
             <include layout="@layout/item_no_content" />
 
-            <include layout="@layout/item_include_search_history_rv"/>
+            <include layout="@layout/item_include_search_history_rv" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/ac_contract_manger_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/c_29c093">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="12dp"
+                android:drawableStart="@drawable/deploy_add"
+                android:drawablePadding="6dp"
+                android:text="@string/new_contract"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -148,7 +244,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginRight="@dimen/x50"
-        android:layout_marginBottom="@dimen/y50">
+        android:layout_marginBottom="50dp">
 
         <ImageView
             android:id="@+id/contract_return_top"

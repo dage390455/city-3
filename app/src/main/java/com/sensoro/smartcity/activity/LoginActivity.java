@@ -265,7 +265,11 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
 //        rxPermissionUtils.unregisterObserver(this);
         mPermissionUtils.unregisterObserver(this);
         mProgressUtils.destroyProgress();
-        LogUtils.loge("onDestroy");
+        try {
+            LogUtils.loge("onDestroy");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         super.onDestroy();
     }
 

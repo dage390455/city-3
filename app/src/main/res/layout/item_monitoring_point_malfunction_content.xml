@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:background="@drawable/shape_bg_corner_2dp_fff7e2_shadow">
+
+    <TextView
+        android:id="@+id/item_monitoring_point_malfunction_content_tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="16dp"
+        android:text="@string/malfunction_cause_detail"
+        android:textColor="@color/c_987823"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/item_monitoring_point_malfunction_content_tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="end"
+        android:text="被茶歇"
+        android:textColor="@color/c_987823"
+        android:textSize="16sp" />
+
+
+</RelativeLayout>

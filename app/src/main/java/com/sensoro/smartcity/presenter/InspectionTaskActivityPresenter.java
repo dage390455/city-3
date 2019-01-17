@@ -149,7 +149,11 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                 BLE_DEVICE_SET.add(device.getSn());
             }
         }
-        LogUtils.loge("onUpdateDevices = " + stringBuilder.toString());
+        try {
+            LogUtils.loge("onUpdateDevices = " + stringBuilder.toString());
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -408,7 +412,11 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
             }
             String sn = inspectionTaskDeviceDetail.getSn();
             boolean nearBy_local = inspectionTaskDeviceDetail.isNearBy_local();
-            LogUtils.loge(this, "handlerInspectionTaskDevice -->> sn = " + sn + ",isNear = " + nearBy_local);
+            try {
+                LogUtils.loge(this, "handlerInspectionTaskDevice -->> sn = " + sn + ",isNear = " + nearBy_local);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         }
         Collections.sort(mDevices);
     }
@@ -444,7 +452,11 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
             handlerInspectionTaskDevice();
             getView().updateInspectionTaskDeviceItem(mDevices);
         }
-        LogUtils.loge("run canFreshBle ----->> " + canFreshBle);
+        try {
+            LogUtils.loge("run canFreshBle ----->> " + canFreshBle);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         mHandler.postDelayed(this, 3 * 1000);
     }
 

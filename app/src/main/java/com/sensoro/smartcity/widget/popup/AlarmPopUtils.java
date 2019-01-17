@@ -30,11 +30,11 @@ import com.sensoro.smartcity.model.AlarmPopModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -416,9 +416,11 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
 
     @Override
     public void onStart() {
-        progressDialog.setTitle(mActivity.getString(R.string.please_wait));
-        progressDialog.setProgress(0);
-        progressDialog.show();
+        if (progressDialog != null) {
+            progressDialog.setTitle(mActivity.getString(R.string.please_wait));
+            progressDialog.setProgress(0);
+            progressDialog.show();
+        }
     }
 
     @Override
@@ -429,9 +431,15 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
         }
         dismissProgressDialog();
 //        toastShort("上传成功---");
-        LogUtils.loge(this, "上传成功---" + s);
+        try {
+            LogUtils.loge(this, "上传成功---" + s);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         //TODO 上传结果
-        mListener.onPopupCallback(selectResult, selectType, selectPlace, scenesDataList, mRemark);
+        if (mListener != null) {
+            mListener.onPopupCallback(selectResult, selectType, selectPlace, scenesDataList, mRemark);
+        }
     }
 
     @Override
@@ -460,15 +468,27 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
                     tvSpinnerResultInfo.setVisibility(View.GONE);
                 }
 
-                LogUtils.loge("结果类型：" + selectResult);
+                try {
+                    LogUtils.loge("结果类型：" + selectResult);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 break;
             case R.id.spinner_type:
                 selectType = typeArr[position];
-                LogUtils.loge("成因类型：" + selectType);
+                try {
+                    LogUtils.loge("成因类型：" + selectType);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 break;
             case R.id.spinner_place:
                 selectPlace = placeArr[position];
-                LogUtils.loge("场所类型：" + selectPlace);
+                try {
+                    LogUtils.loge("场所类型：" + selectPlace);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 break;
             default:
                 break;
@@ -595,13 +615,15 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
     }
 
     public void setUpdateButtonClickable(boolean canClick) {
-        if (canClick) {
-            mButton.setBackground(mActivity.getResources().getDrawable(R.drawable.shape_button));
-        } else {
-            mButton.setBackground(mActivity.getResources().getDrawable(R.drawable.shape_button_normal));
+        if (mButton != null) {
+            if (canClick) {
+                mButton.setBackground(mActivity.getResources().getDrawable(R.drawable.shape_button));
+            } else {
+                mButton.setBackground(mActivity.getResources().getDrawable(R.drawable.shape_button_normal));
+            }
+            mButton.setEnabled(canClick);
+            mButton.setClickable(canClick);
         }
-        mButton.setEnabled(canClick);
-        mButton.setClickable(canClick);
     }
 
     public static void handlePhotoIntent(int requestCode, int resultCode, Intent data) {
@@ -642,7 +664,11 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
             if (data != null && requestCode == REQUEST_CODE_RECORD) {
                 ImageItem imageItem = (ImageItem) data.getSerializableExtra("path_record");
                 if (imageItem != null) {
-                    LogUtils.loge("--- 从视频返回  path = " + imageItem.path);
+                    try {
+                        LogUtils.loge("--- 从视频返回  path = " + imageItem.path);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                     ArrayList<ImageItem> tempImages = new ArrayList<>();
                     tempImages.add(imageItem);
                     EventData eventData = new EventData();
@@ -666,6 +692,10 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
 
         }
         //
-        LogUtils.loge("handlerActivityResult requestCode = " + requestCode + ",resultCode = " + resultCode + ",data = " + data);
+        try {
+            LogUtils.loge("handlerActivityResult requestCode = " + requestCode + ",resultCode = " + resultCode + ",data = " + data);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 }

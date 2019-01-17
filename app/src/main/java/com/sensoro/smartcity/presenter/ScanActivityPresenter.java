@@ -33,7 +33,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
     private Activity mContext;
     private static final float BEEP_VOLUME = 0.10f;
     private MediaPlayer mediaPlayer;
-    private int scanType = -1;
+    public int scanType = -1;
     private InspectionTaskDeviceDetail mDeviceDetail;
     private InspectionIndexTaskInfo mTaskInfo;
 
@@ -165,7 +165,11 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
             mediaPlayer.prepare();
             return mediaPlayer;
         } catch (IOException ioe) {
-            LogUtils.loge(this, ioe.getMessage());
+            try {
+                LogUtils.loge(this, ioe.getMessage());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             mediaPlayer.release();
             return null;
         }

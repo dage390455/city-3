@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -24,8 +23,8 @@ import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.FocusSurfaceView;
 import com.sensoro.smartcity.widget.MyVideoView;
 import com.sensoro.smartcity.widget.RecordedButton;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.yixia.camera.MediaRecorderBase;
 import com.yixia.camera.MediaRecorderNative;
 import com.yixia.camera.VCamera;
@@ -229,7 +228,11 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
             }
         } else if (dir.exists()) {
             if (dir.getAbsolutePath().endsWith(".jpg") || dir.getAbsolutePath().endsWith("mp4")) {
-                LogUtils.loge("视频图片缓存文件路径--->> " + dir.getAbsolutePath());
+                try {
+                    LogUtils.loge("视频图片缓存文件路径--->> " + dir.getAbsolutePath());
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             } else {
                 dir.delete();
             }
@@ -238,7 +241,11 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
 
     @Override
     public void onEncodeStart() {
-        Log.i("Log.i", "onEncodeStart");
+        try {
+            LogUtils.logd("Log.i", "onEncodeStart");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     @Override
@@ -289,7 +296,11 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
 
     @Override
     public void onEncodeError() {
-        Log.i("Log.i", "onEncodeError");
+        try {
+            LogUtils.logd("Log.i", "onEncodeError");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     @Override
@@ -341,7 +352,11 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
                 final String videoPath = mMediaObject.getOutputTempVideoPath();
                 final String videoThumbPath = WidgetUtil.bitmap2File(WidgetUtil.getVideoThumbnail(videoPath), videoPath);
                 final long endTime = mMediaObject.getCurrentPart().endTime;
-                LogUtils.loge("videoThumbPath = " + videoThumbPath);
+                try {
+                    LogUtils.loge("videoThumbPath = " + videoThumbPath);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 //                    initMediaRecorderState();
                 if (vv_play != null) {
                     vv_play.pause();

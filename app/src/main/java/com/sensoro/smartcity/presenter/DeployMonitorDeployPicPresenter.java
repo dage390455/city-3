@@ -3,10 +3,8 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.TakeRecordActivity;
@@ -28,11 +26,13 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
         implements SelectDialog.SelectDialogListener, Constants {
     private Activity mActivity;
     private final ImageItem[] selImages = new ImageItem[3];
-    private int mAddPicIndex = -1;
+    private volatile int mAddPicIndex = -1;
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
+        String deviceType = mActivity.getIntent().getStringExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE);
+        getView().setDeployPicTvInstallationSiteTipVisible("mantun_fires".equals(deviceType));
         ArrayList<ImageItem> imageList = (ArrayList<ImageItem>) mActivity.getIntent().getSerializableExtra(EXTRA_DEPLOY_TO_PHOTO);
         if (imageList != null && imageList.size() > 0 && imageList.size() < 4) {
             for (int i = 0; i < imageList.size(); i++) {
@@ -93,14 +93,16 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
             if (data != null && requestCode == REQUEST_CODE_SELECT) {
                 ArrayList<ImageItem> tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                 if (tempImages != null && tempImages.size() > 0) {
+                    if (mAddPicIndex == -1) {
+                        return;
+                    }
                     selImages[mAddPicIndex] = tempImages.get(0);
                     getView().displayPic(selImages, mAddPicIndex);
                 }
                 checkCanSave();
             }
-        }
 //        else if (resultCode == ImagePicker.RESULT_CODE_BACK) {
-        //预览图片返回
+            //预览图片返回
 //            if (data != null && requestCode == REQUEST_CODE_PREVIEW) {
 //                ArrayList<ImageItem> tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
 //                if (tempImages != null) {
@@ -110,12 +112,14 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
 //                }
 //            }
 //        }
+        }
+
     }
 
     private void checkCanSave() {
-        if(selImages[0] != null && selImages[1] != null){
+        if (selImages[0] != null && selImages[1] != null) {
             getView().setSaveBtnStatus(true);
-        }else{
+        } else {
             getView().setSaveBtnStatus(false);
         }
     }

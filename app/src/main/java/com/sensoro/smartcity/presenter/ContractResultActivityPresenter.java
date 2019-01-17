@@ -26,18 +26,18 @@ public class ContractResultActivityPresenter extends BasePresenter<IContractResu
     private Activity mContext;
     private String code;
     private Bitmap bitmapTemp;
-    private boolean needFinish = true;
+//    private boolean needFinish = true;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        code = mContext.getIntent().getStringExtra("code");
-        needFinish = mContext.getIntent().getBooleanExtra(EXTRA_CONTRACT_RESULT_TYPE, false);
-        if (needFinish) {
+        code = mContext.getIntent().getStringExtra(EXTRA_CONTRACT_ID_QRCODE);
+//        needFinish = mContext.getIntent().getBooleanExtra(EXTRA_CONTRACT_RESULT_TYPE, false);
+//        if (needFinish) {
             getView().setTextResultInfo("业主扫描此二维码，生成合同预览");
-        } else {
-            getView().setTextResultInfo("业主扫描此二维码，查看合同详情");
-        }
+//        } else {
+//            getView().setTextResultInfo("业主扫描此二维码，查看合同详情");
+//        }
         processCode();
     }
 
@@ -87,8 +87,12 @@ public class ContractResultActivityPresenter extends BasePresenter<IContractResu
         req.message = wxMediaMessage;
         req.scene = SendMessageToWX.Req.WXSceneSession;
         boolean b = SensoroCityApplication.getInstance().api.sendReq(req);
-        LogUtils.loge("toShareWeChat: isSuc = " + b + ",bitmap_ratio = " + ratio.length + ",bitmapLength = " +
-                bitmapTemp.getByteCount());
+        try {
+            LogUtils.loge("toShareWeChat: isSuc = " + b + ",bitmap_ratio = " + ratio.length + ",bitmapLength = " +
+                    bitmapTemp.getByteCount());
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     private String buildTransaction(final String type) {
@@ -107,7 +111,7 @@ public class ContractResultActivityPresenter extends BasePresenter<IContractResu
     public void finish() {
         EventData eventData = new EventData();
         eventData.code = EVENT_DATA_FINISH_CODE;
-        eventData.data = needFinish;
+        eventData.data = true;
         EventBus.getDefault().post(eventData);
         getView().finishAc();
     }

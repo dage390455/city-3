@@ -23,6 +23,8 @@
         android:layout_height="wrap_content"
         android:textColor="@color/c_a6a6a6"
         android:textSize="14sp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
         />
@@ -30,7 +32,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/view_divider_height"
         android:layout_marginTop="24dp"
         android:background="@color/c_dfdfdf"/>
     <LinearLayout
@@ -46,7 +48,6 @@
             android:textSize="16sp"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:background="@drawable/selector_item_white_ee_corner_left_right"
             android:textColor="@color/c_a6a6a6"
             android:gravity="center"/>
         <!--<View-->
@@ -63,7 +64,6 @@
             <!--android:textSize="16sp"-->
             <!--android:paddingTop="16dp"-->
             <!--android:paddingBottom="16dp"-->
-            <!--android:background="@drawable/selector_item_white_ee"-->
             <!--android:textColor="@color/c_29c093"-->
             <!--android:gravity="center"/>-->
 

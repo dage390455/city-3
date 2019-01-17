@@ -18,7 +18,6 @@ import com.bumptech.glide.request.target.Target;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
@@ -36,7 +35,6 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
     private final Activity mContext;
     private final List<DeviceInfo> mList = new ArrayList<>();
     private OnContentItemClickListener onContentItemClickListener;
-    private DeviceMergeTypesInfo.DeviceMergeTypeConfig deviceMergeTypeConfig;
 
     public interface OnContentItemClickListener {
         void onAlarmInfoClick(View v, int position);
@@ -53,7 +51,6 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
     }
 
     public void updateData(final List<DeviceInfo> list) {
-        deviceMergeTypeConfig = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
         //
 //        ThreadPoolManager.getInstance().execute(new Runnable() {
 //            @Override
@@ -170,12 +167,9 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
 
     private void setContentStatus(final MyViewHolder holder, final int position, int status, String mergeType) {
         String image = null;
-        try {
-            MergeTypeStyles mergeTypeStyles = deviceMergeTypeConfig.getMergeType().get(mergeType);
+        MergeTypeStyles mergeTypeStyles = PreferencesHelper.getInstance().getConfigMergeType(mergeType);
+        if (mergeTypeStyles != null) {
             image = mergeTypeStyles.getImage();
-        } catch (Exception e) {
-            e.printStackTrace();
-            LogUtils.loge("MainHomeFragRcContentAdapter ----->>>mergeType = " + mergeType);
         }
         int color = 0;
         switch (status) {
@@ -261,20 +255,36 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
             setBottomVisible(holder, position);
             DeviceInfo deviceInfo = mList.get(position);
             HashMap map = (HashMap) payloads.get(0);
-            LogUtils.loge(this, "----------------->>>>" + map.toString());
+            try {
+                LogUtils.loge(this, "----------------->>>>" + map.toString());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             Integer status = (Integer) map.get("status");
             if (status != null) {
-                LogUtils.loge(this, "status change -->> " + status);
+                try {
+                    LogUtils.loge(this, "status change -->> " + status);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 setContentStatus(holder, position, status, deviceInfo.getDeviceType());
             }
             Long updateTime = (Long) map.get("updateTime");
             if (updateTime != null) {
-                LogUtils.loge(this, "updateTime change -->> " + updateTime);
+                try {
+                    LogUtils.loge(this, "updateTime change -->> " + updateTime);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 setContentTime(holder, updateTime);
             }
             String name = (String) map.get("name");
             if (!TextUtils.isEmpty(name)) {
-                LogUtils.loge(this, "updateTime name -->> " + name);
+                try {
+                    LogUtils.loge(this, "updateTime name -->> " + name);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 setContentName(holder, name, deviceInfo.getSn());
             }
             setListener(holder, position);

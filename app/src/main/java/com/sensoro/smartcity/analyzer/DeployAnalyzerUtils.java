@@ -26,7 +26,6 @@ import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetailModel;
 import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
-import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.LogUtils;
@@ -185,6 +184,7 @@ public enum DeployAnalyzerUtils implements Constants {
                 deployAnalyzerModel.status = data.getStatus();
                 deployAnalyzerModel.updatedTime = data.getUpdatedTime();
                 deployAnalyzerModel.nameAndAddress = data.getName();
+                deployAnalyzerModel.status = data.getStatus();
                 deployAnalyzerModel.deviceType = data.getDeviceType();
                 deployAnalyzerModel.sn = data.getSn();
                 deployAnalyzerModel.blePassword = data.getBlePassword();
@@ -306,7 +306,9 @@ public enum DeployAnalyzerUtils implements Constants {
                             deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_STATION;
                             deployAnalyzerModel.sn = deployStationInfo.getSn();
                             deployAnalyzerModel.nameAndAddress = deployStationInfo.getName();
+                            deployAnalyzerModel.status = deployStationInfo.getNormalStatus();
                             List<Double> lonlat = deployStationInfo.getLonlat();
+                            deployAnalyzerModel.status = deployStationInfo.getNormalStatus();
                             if (lonlat != null && lonlat.size() > 1 && lonlat.get(0) != 0 && lonlat.get(1) != 0) {
                                 deployAnalyzerModel.latLng.clear();
                                 deployAnalyzerModel.latLng.addAll(lonlat);
@@ -353,7 +355,7 @@ public enum DeployAnalyzerUtils implements Constants {
                             deployAnalyzerModel.notOwn = data.isNotOwn();
                             deployAnalyzerModel.blePassword = data.getBlePassword();
                             deployAnalyzerModel.weChatAccount = data.getWxPhone();
-
+                            deployAnalyzerModel.status = data.getStatus();
                             deployAnalyzerModel.signal = data.getSignal();
                             List<String> tags = data.getTags();
                             if (tags != null && tags.size() > 0) {
@@ -399,10 +401,12 @@ public enum DeployAnalyzerUtils implements Constants {
                         deployAnalyzerModel.sn = data.getSn();
                         deployAnalyzerModel.deviceType = data.getDeviceType();
                         deployAnalyzerModel.nameAndAddress = data.getName();
+                        deployAnalyzerModel.status = data.getStatus();
                         deployAnalyzerModel.notOwn = data.isNotOwn();
                         deployAnalyzerModel.blePassword = data.getBlePassword();
                         deployAnalyzerModel.signal = data.getSignal();
                         deployAnalyzerModel.weChatAccount = data.getWxPhone();
+                        deployAnalyzerModel.status = data.getStatus();
                         List<String> tags = data.getTags();
                         if (tags != null && tags.size() > 0) {
                             deployAnalyzerModel.tagList.clear();
@@ -473,7 +477,11 @@ public enum DeployAnalyzerUtils implements Constants {
             public void onCompleted(ResponseBase responseBase) {
                 if (responseBase.getErrcode() == 0) {
                     try {
-                        LogUtils.loge("qrcodeId = " + result);
+                        try {
+                            LogUtils.loge("qrcodeId = " + result);
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                         Intent intent = new Intent();
                         intent.setClass(activity, ScanLoginResultActivity.class);
                         intent.putExtra("qrcodeId", result);
@@ -573,7 +581,7 @@ public enum DeployAnalyzerUtils implements Constants {
                                 deployAnalyzerModel.notOwn = data.isNotOwn();
                                 deployAnalyzerModel.mDeviceDetail = oldDeviceDetail;
                                 deployAnalyzerModel.blePassword = data.getBlePassword();
-
+                                deployAnalyzerModel.status = data.getStatus();
                                 String deviceType = data.getDeviceType();
                                 if (!TextUtils.isEmpty(deviceType)) {
                                     deployAnalyzerModel.deviceType = deviceType;
@@ -598,8 +606,10 @@ public enum DeployAnalyzerUtils implements Constants {
                 DeployDeviceInfo data = deployDeviceDetailRsp.getData();
                 deployAnalyzerModel.deployType = scanType;
                 deployAnalyzerModel.nameAndAddress = data.getName();
+                deployAnalyzerModel.status = data.getStatus();
                 deployAnalyzerModel.deviceType = data.getDeviceType();
                 deployAnalyzerModel.weChatAccount = data.getWxPhone();
+                deployAnalyzerModel.status = data.getStatus();
                 List<Double> lonlat = data.getLonlat();
                 if (lonlat != null && lonlat.size() > 1 && lonlat.get(0) != 0 && lonlat.get(1) != 0) {
                     deployAnalyzerModel.latLng.clear();
@@ -640,180 +650,180 @@ public enum DeployAnalyzerUtils implements Constants {
 
     }
 
-    /**
-     * 逻辑处理嵌套太多 暂时不用 以后处理
-     *
-     * @param presenter
-     * @param activity
-     * @param deployAnalyzerModel
-     * @param imgUrls
-     * @param listener
-     */
-    public void submitDeploymentResult(BasePresenter presenter, final Activity activity, final DeployAnalyzerModel deployAnalyzerModel, List<String> imgUrls, final OnDeployAnalyzerListener listener) {
-        if (deployAnalyzerModel.latLng.size() == 2) {
-            Double lon = deployAnalyzerModel.latLng.get(0);
-            Double lan = deployAnalyzerModel.latLng.get(1);
-            if (lon != 0 && lan != 0) {
-                switch (deployAnalyzerModel.deployType) {
-                    case TYPE_SCAN_DEPLOY_STATION:
-                        //基站部署
-                        RetrofitServiceHelper.INSTANCE.doStationDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress).subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new CityObserver<DeployStationInfoRsp>(presenter) {
-                                    @Override
-                                    public void onErrorMsg(int errorCode, String errorMsg) {
-                                        if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
-                                            listener.onError(errorCode, null, errorMsg);
-                                        } else if (errorCode == 4013101 || errorCode == 4000013) {
-                                            freshErrorResultNotUnderAccount(errorCode, errorMsg, activity, deployAnalyzerModel, listener);
-                                        } else {
-                                            Intent intent = new Intent();
-                                            intent.setClass(activity, DeployResultActivity.class);
-                                            DeployResultModel deployResultModel = new DeployResultModel();
-                                            deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED;
-                                            deployResultModel.sn = deployAnalyzerModel.sn;
-                                            deployResultModel.scanType = TYPE_SCAN_DEPLOY_STATION;
-                                            intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
-                                            listener.onError(errorCode, intent, errorMsg);
-                                        }
-                                    }
+//    /**
+//     * 逻辑处理嵌套太多 暂时不用 以后处理
+//     *
+//     * @param presenter
+//     * @param activity
+//     * @param deployAnalyzerModel
+//     * @param imgUrls
+//     * @param listener
+//     */
+//    public void submitDeploymentResult(BasePresenter presenter, final Activity activity, final DeployAnalyzerModel deployAnalyzerModel, List<String> imgUrls, final OnDeployAnalyzerListener listener) {
+//        if (deployAnalyzerModel.latLng.size() == 2) {
+//            Double lon = deployAnalyzerModel.latLng.get(0);
+//            Double lan = deployAnalyzerModel.latLng.get(1);
+//            if (lon != 0 && lan != 0) {
+//                switch (deployAnalyzerModel.deployType) {
+//                    case TYPE_SCAN_DEPLOY_STATION:
+//                        //基站部署
+//                        RetrofitServiceHelper.INSTANCE.doStationDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress).subscribeOn(Schedulers.io())
+//                                .observeOn(AndroidSchedulers.mainThread())
+//                                .subscribe(new CityObserver<DeployStationInfoRsp>(presenter) {
+//                                    @Override
+//                                    public void onErrorMsg(int errorCode, String errorMsg) {
+//                                        if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+//                                            listener.onError(errorCode, null, errorMsg);
+//                                        } else if (errorCode == 4013101 || errorCode == 4000013) {
+//                                            freshErrorResultNotUnderAccount(errorCode, errorMsg, activity, deployAnalyzerModel, listener);
+//                                        } else {
+//                                            Intent intent = new Intent();
+//                                            intent.setClass(activity, DeployResultActivity.class);
+//                                            DeployResultModel deployResultModel = new DeployResultModel();
+//                                            deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED;
+//                                            deployResultModel.sn = deployAnalyzerModel.sn;
+//                                            deployResultModel.scanType = TYPE_SCAN_DEPLOY_STATION;
+//                                            intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+//                                            listener.onError(errorCode, intent, errorMsg);
+//                                        }
+//                                    }
+//
+//                                    @Override
+//                                    public void onCompleted(DeployStationInfoRsp deployStationInfoRsp) {
+//                                        Intent intent = new Intent(activity, DeployResultActivity.class);
+//                                        DeployResultModel deployResultModel = new DeployResultModel();
+//                                        deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
+//                                        DeployStationInfo deployStationInfo = deployStationInfoRsp.getData();
+//                                        deployResultModel.name = deployStationInfo.getName();
+//                                        deployResultModel.sn = deployStationInfo.getSn();
+//                                        deployResultModel.stationStatus = deployStationInfo.getNormalStatus();
+//                                        deployResultModel.updateTime = deployStationInfo.getUpdatedTime();
+//                                        deployResultModel.scanType = TYPE_SCAN_DEPLOY_STATION;
+//                                        deployResultModel.address = deployAnalyzerModel.address;
+//                                        intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+//                                        listener.onSuccess(intent);
+//                                    }
+//                                });
+//
+//
+//                        break;
+//                    case TYPE_SCAN_DEPLOY_DEVICE:
+//                        //设备部署
+//                        if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+//                            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+//                            RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
+//                                    deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+//                                    .subscribe(new CityObserver<DeviceDeployRsp>(presenter) {
+//                                        @Override
+//                                        public void onErrorMsg(int errorCode, String errorMsg) {
+//                                            if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+//                                                listener.onError(errorCode, null, errorMsg);
+//                                            } else if (errorCode == 4013101 || errorCode == 4000013) {
+//                                                freshErrorResultNotUnderAccount(errorCode, errorMsg, activity, deployAnalyzerModel, listener);
+//                                            } else {
+//                                                Intent intent = new Intent();
+//                                                intent.setClass(activity, DeployResultActivity.class);
+//                                                DeployResultModel deployResultModel = new DeployResultModel();
+//                                                deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED;
+//                                                deployResultModel.sn = deployAnalyzerModel.sn;
+//                                                deployResultModel.scanType = TYPE_SCAN_DEPLOY_DEVICE;
+//                                                deployResultModel.errorMsg = errorMsg;
+//                                                intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+//                                                listener.onError(errorCode, intent, errorMsg);
+//                                            }
+//                                        }
+//
+//                                        @Override
+//                                        public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
+//                                            DeployResultModel deployResultModel = new DeployResultModel();
+//                                            deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
+//                                            deployResultModel.deviceInfo = deviceDeployRsp.getData();
+//                                            Intent intent = new Intent(activity, DeployResultActivity.class);
+//                                            //TODO 新版联系人
+//                                            if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+//                                                DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+//                                                deployResultModel.contact = deployContactModel.name;
+//                                                deployResultModel.phone = deployContactModel.phone;
+//                                            }
+//                                            deployResultModel.scanType = TYPE_SCAN_DEPLOY_DEVICE;
+//                                            deployResultModel.address = deployAnalyzerModel.address;
+//                                            intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+//                                            listener.onSuccess(intent);
+//                                        }
+//                                    });
+//                        } else {
+//                            listener.onError(0, null, activity.getString(R.string.please_enter_contact_phone));
+//                        }
+//
+//                        break;
+//                    case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+//                        if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+//                            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+//                            RetrofitServiceHelper.INSTANCE.doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
+//                                    deployAnalyzerModel.mDeviceDetail.getTaskId(), 1, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
+//                                    deployContactModel.name, deployContactModel.phone, imgUrls,null).
+//                                    subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(presenter) {
+//                                @Override
+//                                public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
+//                                    DeployResultModel deployResultModel = new DeployResultModel();
+//                                    deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
+//                                    deployResultModel.deviceInfo = deviceDeployRsp.getData();
+//                                    Intent intent = new Intent(activity, DeployResultActivity.class);
+//                                    //TODO 新版联系人
+//                                    if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+//                                        DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+//                                        deployResultModel.contact = deployContactModel.name;
+//                                        deployResultModel.phone = deployContactModel.phone;
+//                                    }
+//                                    deployResultModel.scanType = TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE;
+//                                    deployResultModel.address = deployAnalyzerModel.address;
+//                                    intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+//                                    listener.onSuccess(intent);
+//                                }
+//
+//                                @Override
+//                                public void onErrorMsg(int errorCode, String errorMsg) {
+//                                    if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+//                                        listener.onError(errorCode, null, errorMsg);
+//                                    } else if (errorCode == 4013101 || errorCode == 4000013) {
+//                                        freshErrorResultNotUnderAccount(errorCode, errorMsg, activity, deployAnalyzerModel, listener);
+//                                    } else {
+//                                        Intent intent = new Intent();
+//                                        intent.setClass(activity, DeployResultActivity.class);
+//                                        DeployResultModel deployResultModel = new DeployResultModel();
+//                                        deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED;
+//                                        deployResultModel.sn = deployAnalyzerModel.sn;
+//                                        deployResultModel.scanType = TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE;
+//                                        deployResultModel.errorMsg = errorMsg;
+//                                        intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+//                                        listener.onError(errorCode, intent, errorMsg);
+//                                    }
+//                                }
+//                            });
+//                        } else {
+//                            listener.onError(0, null, activity.getString(R.string.please_enter_contact_phone));
+//                        }
+//                        break;
+//                    default:
+//                        break;
+//                }
+//                return;
+//            }
+//
+//        }
+//        listener.onError(0, null, activity.getString(R.string.please_specify_the_deployment_location));
+//    }
 
-                                    @Override
-                                    public void onCompleted(DeployStationInfoRsp deployStationInfoRsp) {
-                                        Intent intent = new Intent(activity, DeployResultActivity.class);
-                                        DeployResultModel deployResultModel = new DeployResultModel();
-                                        deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
-                                        DeployStationInfo deployStationInfo = deployStationInfoRsp.getData();
-                                        deployResultModel.name = deployStationInfo.getName();
-                                        deployResultModel.sn = deployStationInfo.getSn();
-                                        deployResultModel.stationStatus = deployStationInfo.getNormalStatus();
-                                        deployResultModel.updateTime = deployStationInfo.getUpdatedTime();
-                                        deployResultModel.scanType = TYPE_SCAN_DEPLOY_STATION;
-                                        deployResultModel.address = deployAnalyzerModel.address;
-                                        intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
-                                        listener.onSuccess(intent);
-                                    }
-                                });
-
-
-                        break;
-                    case TYPE_SCAN_DEPLOY_DEVICE:
-                        //设备部署
-                        if (deployAnalyzerModel.deployContactModelList.size() > 0) {
-                            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
-                            RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                                    deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(new CityObserver<DeviceDeployRsp>(presenter) {
-                                        @Override
-                                        public void onErrorMsg(int errorCode, String errorMsg) {
-                                            if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
-                                                listener.onError(errorCode, null, errorMsg);
-                                            } else if (errorCode == 4013101 || errorCode == 4000013) {
-                                                freshErrorResultNotUnderAccount(errorCode, errorMsg, activity, deployAnalyzerModel, listener);
-                                            } else {
-                                                Intent intent = new Intent();
-                                                intent.setClass(activity, DeployResultActivity.class);
-                                                DeployResultModel deployResultModel = new DeployResultModel();
-                                                deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED;
-                                                deployResultModel.sn = deployAnalyzerModel.sn;
-                                                deployResultModel.scanType = TYPE_SCAN_DEPLOY_DEVICE;
-                                                deployResultModel.errorMsg = errorMsg;
-                                                intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
-                                                listener.onError(errorCode, intent, errorMsg);
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
-                                            DeployResultModel deployResultModel = new DeployResultModel();
-                                            deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
-                                            deployResultModel.deviceInfo = deviceDeployRsp.getData();
-                                            Intent intent = new Intent(activity, DeployResultActivity.class);
-                                            //TODO 新版联系人
-                                            if (deployAnalyzerModel.deployContactModelList.size() > 0) {
-                                                DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
-                                                deployResultModel.contact = deployContactModel.name;
-                                                deployResultModel.phone = deployContactModel.phone;
-                                            }
-                                            deployResultModel.scanType = TYPE_SCAN_DEPLOY_DEVICE;
-                                            deployResultModel.address = deployAnalyzerModel.address;
-                                            intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
-                                            listener.onSuccess(intent);
-                                        }
-                                    });
-                        } else {
-                            listener.onError(0, null, activity.getString(R.string.please_enter_contact_phone));
-                        }
-
-                        break;
-                    case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
-                        if (deployAnalyzerModel.deployContactModelList.size() > 0) {
-                            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
-                            RetrofitServiceHelper.INSTANCE.doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
-                                    deployAnalyzerModel.mDeviceDetail.getTaskId(), 1, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                                    deployContactModel.name, deployContactModel.phone, imgUrls,null).
-                                    subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(presenter) {
-                                @Override
-                                public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
-                                    DeployResultModel deployResultModel = new DeployResultModel();
-                                    deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
-                                    deployResultModel.deviceInfo = deviceDeployRsp.getData();
-                                    Intent intent = new Intent(activity, DeployResultActivity.class);
-                                    //TODO 新版联系人
-                                    if (deployAnalyzerModel.deployContactModelList.size() > 0) {
-                                        DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
-                                        deployResultModel.contact = deployContactModel.name;
-                                        deployResultModel.phone = deployContactModel.phone;
-                                    }
-                                    deployResultModel.scanType = TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE;
-                                    deployResultModel.address = deployAnalyzerModel.address;
-                                    intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
-                                    listener.onSuccess(intent);
-                                }
-
-                                @Override
-                                public void onErrorMsg(int errorCode, String errorMsg) {
-                                    if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
-                                        listener.onError(errorCode, null, errorMsg);
-                                    } else if (errorCode == 4013101 || errorCode == 4000013) {
-                                        freshErrorResultNotUnderAccount(errorCode, errorMsg, activity, deployAnalyzerModel, listener);
-                                    } else {
-                                        Intent intent = new Intent();
-                                        intent.setClass(activity, DeployResultActivity.class);
-                                        DeployResultModel deployResultModel = new DeployResultModel();
-                                        deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED;
-                                        deployResultModel.sn = deployAnalyzerModel.sn;
-                                        deployResultModel.scanType = TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE;
-                                        deployResultModel.errorMsg = errorMsg;
-                                        intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
-                                        listener.onError(errorCode, intent, errorMsg);
-                                    }
-                                }
-                            });
-                        } else {
-                            listener.onError(0, null, activity.getString(R.string.please_enter_contact_phone));
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                return;
-            }
-
-        }
-        listener.onError(0, null, activity.getString(R.string.please_specify_the_deployment_location));
-    }
-
-    private void freshErrorResultNotUnderAccount(int errorCode, String errorMsg, Activity activity, DeployAnalyzerModel deployAnalyzerModel, OnDeployAnalyzerListener listener) {
-        Intent intent = new Intent();
-        intent.setClass(activity, DeployResultActivity.class);
-        DeployResultModel deployResultModel = new DeployResultModel();
-        deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
-        deployResultModel.sn = deployAnalyzerModel.sn;
-        deployResultModel.scanType = deployAnalyzerModel.deployType;
-        intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
-        listener.onError(errorCode, intent, errorMsg);
-    }
+//    private void freshErrorResultNotUnderAccount(int errorCode, String errorMsg, Activity activity, DeployAnalyzerModel deployAnalyzerModel, OnDeployAnalyzerListener listener) {
+//        Intent intent = new Intent();
+//        intent.setClass(activity, DeployResultActivity.class);
+//        DeployResultModel deployResultModel = new DeployResultModel();
+//        deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
+//        deployResultModel.sn = deployAnalyzerModel.sn;
+//        deployResultModel.scanType = deployAnalyzerModel.deployType;
+//        intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+//        listener.onError(errorCode, intent, errorMsg);
+//    }
 
     private String parseResultMac(String result) {
 

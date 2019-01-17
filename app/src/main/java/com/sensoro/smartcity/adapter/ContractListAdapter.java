@@ -1,12 +1,12 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
@@ -24,19 +24,11 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
     private Context mContext;
     private LayoutInflater mInflater;
     private final List<ContractListInfo> mList = new ArrayList<>();
-    private final Resources resources;
-    //    private OnContractClickListener mListener;
 
     public ContractListAdapter(Context context) {
         this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
-        resources = context.getResources();
-//        this.mListener = listener;
     }
-
-//    public interface OnContractClickListener {
-//        void onContractClickItem(View view, int position);
-//    }
 
     public void setData(List<ContractListInfo> list) {
         this.mList.clear();
@@ -46,7 +38,6 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
     public List<ContractListInfo> getData() {
         return mList;
     }
-
 
     @Override
     public int getCount() {
@@ -65,7 +56,7 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup viewGroup) {
-        ContractViewHolder holder = null;
+        ContractViewHolder holder;
         if (convertView == null) {
             holder = new ContractViewHolder();
             convertView = mInflater.inflate(R.layout.item_contracts_manger, null);
@@ -79,31 +70,64 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
             holder.itemEtNumber = (TextView) convertView.findViewById(R.id.et_contacts_manger_number);
             holder.itemEtDate = (TextView) convertView.findViewById(R.id.et_contacts_manger_time);
             holder.itemEtSignTime = convertView.findViewById(R.id.et_contacts_manger_sign_time);
+            holder.itemRlContactsEnterprise = convertView.findViewById(R.id.rl_contacts_manger_enterprise);
+            holder.itemTvContactsEnterprise = convertView.findViewById(R.id.tv_contacts_manger_enterprise);
+            holder.itemEtContactsEnterprise = convertView.findViewById(R.id.et_contacts_manger_enterprise);
             convertView.setTag(holder);
         } else {
             holder = (ContractViewHolder) convertView.getTag();
         }
         ContractListInfo contractListInfo = mList.get(position);
         int contract_type = contractListInfo.getContract_type();
+        String customer_enterprise_name = contractListInfo.getCustomer_enterprise_name();
+        if (TextUtils.isEmpty(customer_enterprise_name)) {
+            customer_enterprise_name = mContext.getString(R.string.unknown);
+        }
+        String customer_name = contractListInfo.getCustomer_name();
+        if (TextUtils.isEmpty(customer_name)) {
+            customer_name = mContext.getString(R.string.unknown);
+        }
+        String customer_address = contractListInfo.getCustomer_address();
+        if (TextUtils.isEmpty(customer_address)) {
+            customer_address = mContext.getString(R.string.unknown);
+        }
         switch (contract_type) {
             case 1:
                 holder.itemTvType.setText(R.string.company);
+                holder.itemTvLine1.setText(mContext.getString(R.string.legal_name));
+                holder.itemEtLine1.setText(customer_name);
+                holder.itemTvContactsEnterprise.setText(R.string.business_merchant_name);
+                holder.itemEtContactsEnterprise.setText(customer_enterprise_name);
+                holder.itemTvLine2.setText(R.string.register_address);
+                holder.itemEtLine2.setText(customer_address);
                 break;
             case 2:
                 holder.itemTvType.setText(R.string.personal);
+                holder.itemTvLine1.setText(R.string.owners_name);
+                holder.itemEtLine1.setText(customer_name);
+                holder.itemTvContactsEnterprise.setText(R.string.party_a_customer_name);
+                holder.itemEtContactsEnterprise.setText(customer_enterprise_name);
+                holder.itemTvLine2.setText(R.string.home_address);
+                holder.itemEtLine2.setText(customer_address);
                 break;
             default:
                 holder.itemTvType.setText(R.string.company);
+                holder.itemTvLine1.setText(mContext.getString(R.string.legal_name));
+                holder.itemEtLine1.setText(customer_name);
+                holder.itemTvContactsEnterprise.setText(R.string.business_merchant_name);
+                holder.itemEtContactsEnterprise.setText(customer_enterprise_name);
+                holder.itemTvLine2.setText(R.string.register_address);
+                holder.itemEtLine2.setText(customer_address);
                 break;
         }
 
         if (contractListInfo.isConfirmed()) {
             holder.itemTvStatus.setText(R.string.signed);
-            holder.itemTvStatus.setTextColor(resources.getColor(R.color.c_29c093));
+            holder.itemTvStatus.setTextColor(mContext.getResources().getColor(R.color.c_29c093));
             holder.itemTvStatus.setBackgroundResource(R.drawable.shape_bg_stroke_1_29c_full_corner);
         } else {
             holder.itemTvStatus.setText(R.string.not_signed);
-            holder.itemTvStatus.setTextColor(resources.getColor(R.color.c_ff8d34));
+            holder.itemTvStatus.setTextColor(mContext.getResources().getColor(R.color.c_ff8d34));
             holder.itemTvStatus.setBackgroundResource(R.drawable.shape_bg_stroke_1_ff8d_full_corner);
         }
         String contract_number = contractListInfo.getContract_number();
@@ -135,40 +159,6 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
         } else {
             holder.itemEtSignTime.setText("-");
         }
-        //
-        int created_type = contractListInfo.getCreated_type();
-        String customer_name = contractListInfo.getCustomer_name();
-        switch (created_type) {
-            case 1:
-                holder.itemTvLine1.setText(mContext.getString(R.string.legal_representative));
-                holder.itemEtLine1.setText(customer_name);
-                String customer_enterprise_name = contractListInfo.getCustomer_enterprise_name();
-                holder.itemTvLine2.setText(R.string.company_name);
-                holder.itemEtLine2.setText(customer_enterprise_name);
-                break;
-            case 2:
-            case 3:
-                holder.itemTvLine1.setText(R.string.name);
-                holder.itemEtLine1.setText(customer_name);
-                String customer_address = contractListInfo.getCustomer_address();
-                holder.itemTvLine2.setText(R.string.address);
-                holder.itemEtLine2.setText(customer_address);
-                break;
-//            case 3:
-//                String customer_enterprise_name1 = contractListInfo.getCustomer_enterprise_name();
-//                holder.itemTvLine1.setText("姓名");
-//                holder.itemEtLine1.setText(customer_name);
-//                holder.itemTvLine2.setText("住址");
-//                holder.itemEtLine2.setText(customer_enterprise_name1);
-//                break;
-            default:
-        }
-//        convertView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
         return convertView;
     }
 
@@ -184,6 +174,9 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
         TextView itemEtDate;
         TextView itemTvStatus;
         TextView itemEtSignTime;
+        TextView itemTvContactsEnterprise;
+        TextView itemEtContactsEnterprise;
+        RelativeLayout itemRlContactsEnterprise;
 
         ContractViewHolder() {
 

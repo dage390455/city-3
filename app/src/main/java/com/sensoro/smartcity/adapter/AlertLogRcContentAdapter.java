@@ -18,10 +18,10 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
-import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.ImageFactory;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
 
@@ -38,7 +38,6 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
     private List<AlarmInfo.RecordInfo.Event> receiveStautus1 = new ArrayList<>();
     private List<AlarmInfo.RecordInfo.Event> receiveStautus2 = new ArrayList<>();
     private List<AlarmInfo.RecordInfo.Event> receiveStautus3 = new ArrayList<>();
-    private DeviceMergeTypesInfo.DeviceMergeTypeConfig deviceMergeTypeConfig;
 
     public AlertLogRcContentAdapter(Context context) {
         mContext = context;
@@ -50,7 +49,6 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
     public void setData(List<AlarmInfo.RecordInfo> recordInfoList) {
         this.timeShaftParentBeans.clear();
         this.timeShaftParentBeans.addAll(recordInfoList);
-        deviceMergeTypeConfig = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
     }
 
     public interface OnPhotoClickListener {
@@ -185,19 +183,21 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             String sensorType = recordInfo.getSensorType();
             try {
                 StringBuilder stringBuilder = new StringBuilder();
-                SensorTypeStyles sensorTypeStyles = deviceMergeTypeConfig.getSensorType().get(sensorType);
-                String trueMean = sensorTypeStyles.getTrueMean();
-                boolean bool = sensorTypeStyles.isBool();
-                if (bool) {
-                    stringBuilder.append(trueMean).append("，").append(mContext.getString(R.string.back_to_normal));
-                } else {
+                SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensorType);
+                if (sensorTypeStyles != null) {
+                    String trueMean = sensorTypeStyles.getTrueMean();
+                    boolean bool = sensorTypeStyles.isBool();
+                    if (bool) {
+                        stringBuilder.append(trueMean).append("，").append(mContext.getString(R.string.back_to_normal));
+                    } else {
 //                    "电量低于预警值, 恢复正常";
 ////                    info = "温度 值为 " + thresholds + "°C 达到预警值";
-                    String name = sensorTypeStyles.getName();
-                    stringBuilder.append(name);
-                    stringBuilder.append(mContext.getString(R.string.below_the_warning_value)).append("，").append(mContext.getString(R.string.back_to_normal));
+                        String name = sensorTypeStyles.getName();
+                        stringBuilder.append(name);
+                        stringBuilder.append(mContext.getString(R.string.below_the_warning_value)).append("，").append(mContext.getString(R.string.back_to_normal));
+                    }
+                    holder.itemAlertContentTvContent.setText(stringBuilder.toString());
                 }
-                holder.itemAlertContentTvContent.setText(stringBuilder.toString());
             } catch (Exception e) {
                 e.printStackTrace();
                 holder.itemAlertContentTvContent.setText(WidgetUtil.getAlarmDetailInfo(sensorType, recordInfo
@@ -226,32 +226,35 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             String sensorType = recordInfo.getSensorType();
             StringBuilder stringBuilder = new StringBuilder();
             try {
-                SensorTypeStyles sensorTypeStyles = deviceMergeTypeConfig.getSensorType().get(sensorType);
-                boolean bool = sensorTypeStyles.isBool();
-                if (bool) {
+                SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensorType);
+                if (sensorTypeStyles != null) {
+                    boolean bool = sensorTypeStyles.isBool();
+                    if (bool) {
 //                    info = "烟雾浓度高，设备预警";
-                    int thresholds = recordInfo.getThresholds();
-                    switch (thresholds) {
-                        case 1:
-                            //true
-                            String trueMean = sensorTypeStyles.getTrueMean();
-                            stringBuilder.append(trueMean).append("，").append(mContext.getString(R.string.equipment_warning));
-                            break;
-                        case 0:
-                            //false
-                            String falseMean = sensorTypeStyles.getFalseMean();
-                            stringBuilder.append(falseMean).append("，").append(mContext.getString(R.string.equipment_warning));
-                            break;
-                    }
+                        int thresholds = recordInfo.getThresholds();
+                        switch (thresholds) {
+                            case 1:
+                                //true
+                                String trueMean = sensorTypeStyles.getTrueMean();
+                                stringBuilder.append(trueMean).append("，").append(mContext.getString(R.string.equipment_warning));
+                                break;
+                            case 0:
+                                //false
+                                String falseMean = sensorTypeStyles.getFalseMean();
+                                stringBuilder.append(falseMean).append("，").append(mContext.getString(R.string.equipment_warning));
+                                break;
+                        }
 
-                } else {
-                    String name = sensorTypeStyles.getName();
-                    stringBuilder.append(name);
+                    } else {
+                        String name = sensorTypeStyles.getName();
+                        stringBuilder.append(name);
 ////                    info = "温度 值为 " + thresholds + "°C 达到预警值";
-                    int thresholds = recordInfo.getThresholds();
-                    String unit = sensorTypeStyles.getUnit();
-                    stringBuilder.append(" ").append(mContext.getString(R.string.value_is)).append(" ").append(thresholds).append(unit).append(" ").append(mContext.getString(R.string.achieve_warning_value));
+                        int thresholds = recordInfo.getThresholds();
+                        String unit = sensorTypeStyles.getUnit();
+                        stringBuilder.append(" ").append(mContext.getString(R.string.value_is)).append(" ").append(thresholds).append(unit).append(" ").append(mContext.getString(R.string.achieve_warning_value));
+                    }
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
                 stringBuilder.append(WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(), recordInfo.getThresholds(), 1));
@@ -359,10 +362,14 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         receiveStautus3.clear();
     }
 
-    private SpannableString changTextColor(String content, String temp, SpannableString spannableString, @ColorRes int color) {
-
+    private SpannableString changTextColor(final String content, final String temp, SpannableString spannableString, @ColorRes int color) {
         ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(color));
-        int i = content.indexOf(temp);
+        int i = 0;
+        try {
+            i = content.indexOf(temp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         spannableString.setSpan(foregroundColorSpan, i, i + temp.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         return spannableString;
     }

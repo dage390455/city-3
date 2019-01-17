@@ -9,8 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +28,6 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.adapter.MainWarnFragRcContentAdapter;
 import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
@@ -42,15 +39,12 @@ import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.crypto.Mac;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -350,7 +344,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
                 if (xLinearLayoutManager.findFirstVisibleItemPosition() > 4) {
                     if (newState == 0) {
                         mReturnTopImageView.setVisibility(View.VISIBLE);
-                        if (returnTopAnimation.hasEnded()) {
+                        if (returnTopAnimation!=null&&returnTopAnimation.hasEnded()) {
                             mReturnTopImageView.startAnimation(returnTopAnimation);
                         }
                     } else {
@@ -457,7 +451,11 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
             mRcContentAdapter.setData(deviceAlarmLogInfoList);
             mRcContentAdapter.notifyDataSetChanged();
         }
-        LogUtils.loge("updateAlarmListAdapter-->> 刷新 " + mRcContentAdapter.getData().size());
+        try {
+            LogUtils.loge("updateAlarmListAdapter-->> 刷新 " + mRcContentAdapter.getData().size());
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         setNoContentVisible(deviceAlarmLogInfoList.size() < 1);
 
     }

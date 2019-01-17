@@ -111,7 +111,11 @@ public class MonitorPointMapENActivityPresenter extends BasePresenter<IMonitorPo
                     .build();
 
             aMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
-            LogUtils.loge("latLng = " + latLng.toString());
+            try {
+                LogUtils.loge("latLng = " + latLng.toString());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         } else {
             backToCurrentLocation();
         }
@@ -119,7 +123,7 @@ public class MonitorPointMapENActivityPresenter extends BasePresenter<IMonitorPo
 
 
     public void doNavigation() {
-        if (!AppUtils.doNavigation(mContext, currentLonlat, WidgetUtil.getDeviceTypeName(mDeviceInfo.getDeviceType()))) {
+        if (!AppUtils.doNavigation(mContext, currentLonlat, WidgetUtil.getDeviceMainTypeName(mDeviceInfo.getDeviceType()))) {
             getView().toastShort(mContext.getString(R.string.location_not_obtained));
         }
     }

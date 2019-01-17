@@ -77,14 +77,13 @@
     <permission
         android:name="getui.permission.GetuiService.${applicationId}"
         android:protectionLevel="normal" />
-
-
+    <!--TODO 正式版和测试版需要进行图标切换-->
     <application
         android:name=".SensoroCityApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="${APP_ICON}"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="${APP_ROUND_ICON}"
         android:supportsRtl="true"
         android:theme="@style/MyTheme"
         tools:replace="android:theme">
@@ -348,6 +347,12 @@
         <activity android:name=".activity.DeployMonitorConfigurationActivity" />
         <activity android:name=".activity.DeployMapENActivity" />
         <activity android:name=".activity.MonitorPointMapENActivity" />
+        <activity android:name=".activity.MonitorPointElectricDetailActivity" />
+        <activity android:name=".activity.EarlyWarningThresholdSettingActivity" />
+        <activity android:name=".activity.ContractEditorActivity" />
+        <activity android:name=".activity.ContractCreationSuccessActivity" />
+        <activity android:name=".activity.ContractDetailActivity" />
+        <activity android:name=".activity.ContractPreviewActivity" />
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"

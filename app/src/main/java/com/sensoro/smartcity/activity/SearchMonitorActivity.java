@@ -185,7 +185,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
                 if (xLinearLayoutManager.findFirstVisibleItemPosition() > 4) {
                     if (newState == 0) {
                         mReturnTopImageView.setVisibility(VISIBLE);
-                        if (returnTopAnimation.hasEnded()) {
+                        if (returnTopAnimation!=null&&returnTopAnimation.hasEnded()) {
                             mReturnTopImageView.startAnimation(returnTopAnimation);
                         }
                     } else {

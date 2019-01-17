@@ -16,7 +16,11 @@ public class TopListAdapterDiff extends DiffCallBack<HomeTopModel> {
         int oldType = mOldList.get(oldItemPosition).type;
         int newType = mNewList.get(newItemPosition).type;
         boolean b = oldType == newType;
-        LogUtils.loge("updateData-----getItemsTheSame-->>b = " + b + ",oldType = " + oldType + ",newType = " + newType);
+        try {
+            LogUtils.loge("updateData-----getItemsTheSame-->>b = " + b + ",oldType = " + oldType + ",newType = " + newType);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         return b;
     }
 
@@ -25,13 +29,21 @@ public class TopListAdapterDiff extends DiffCallBack<HomeTopModel> {
         int oldValue = oldData.value;
         int newValue = newData.value;
         boolean b = oldValue == newValue;
-        LogUtils.loge("updateData-----getContentsTheSame-->>b = " + b + ",oldValue = " + oldValue + ",newValue = " + newValue);
+        try {
+            LogUtils.loge("updateData-----getContentsTheSame-->>b = " + b + ",oldValue = " + oldValue + ",newValue = " + newValue);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         return b;
     }
 
     @Override
     public Object getChangePayload(HomeTopModel oldData, HomeTopModel newData) {
-        LogUtils.loge("updateData-----getChangePayload-->>oldData = " + oldData + ", newData = " + newData);
+        try {
+            LogUtils.loge("updateData-----getChangePayload-->>oldData = " + oldData + ", newData = " + newData);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         HashMap<String, Object> payload = new HashMap<>();
         if (oldData.type != newData.type) {
             payload.put("type", newData.type);

@@ -31,7 +31,7 @@ import com.sensoro.smartcity.widget.TouchRecycleView;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
 import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.divider.BottomNoDividerItemDecoration;
-import com.sensoro.smartcity.widget.toast.MonitorPointOperationSuccessToast;
+import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
@@ -306,6 +306,7 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         if (mOperatingUtil != null) {
             mOperatingUtil.destroy();
         }
+        SensoroSuccessToast.INSTANCE.cancelToast();
         super.onDestroy();
     }
 
@@ -453,7 +454,7 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
 
     @Override
     public void showOperationSuccessToast() {
-        MonitorPointOperationSuccessToast.INSTANCE.showToast(mActivity, Toast.LENGTH_SHORT);
+        SensoroSuccessToast.INSTANCE.showToast(mActivity, Toast.LENGTH_SHORT);
     }
 
     @Override
@@ -465,7 +466,7 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         mTipUtils.setTipEtRootVisible(false);
         mTipUtils.setTipTitleText(mActivity.getString(R.string.request_failed));
         mTipUtils.setTipMessageText(errorMsg);
-        mTipUtils.setTipCacnleText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
+        mTipUtils.setTipCancelText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
         mTipUtils.setTipConfirmVisible(false);
         mTipUtils.show();
     }
@@ -564,7 +565,7 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         mTipUtils.setTipTitleText(mActivity.getString(title));
         mTipUtils.setTipMessageText(mActivity.getString(message));
         mTipUtils.setTipConfirmVisible(true);
-        mTipUtils.setTipCacnleText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
+        mTipUtils.setTipCancelText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
         mTipUtils.setTipConfirmText(mActivity.getString(confirm), mActivity.getResources().getColor(confirmColor));
         mTipDialogType = type;
         mTipUtils.show();
@@ -579,7 +580,7 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     }
 
     @Override
-    public void onConfirmClick(String content) {
+    public void onConfirmClick(String content,String diameter) {
         mPresenter.doOperation(mTipDialogType, content);
     }
 

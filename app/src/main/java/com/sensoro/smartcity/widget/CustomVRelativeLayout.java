@@ -28,7 +28,6 @@ public class CustomVRelativeLayout extends RelativeLayout {
         float y = ev.getRawY();
         float dealtX = 0;
         float dealtY = 0;
-
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
                 dealtX = 0;

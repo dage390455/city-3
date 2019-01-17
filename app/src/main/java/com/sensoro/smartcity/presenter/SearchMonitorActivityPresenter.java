@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
+import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
@@ -201,7 +201,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
                     mContext.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (isAttachedView()){
+                            if (isAttachedView()) {
                                 getView().updateRelationData(tempList);
                             }
 
@@ -340,7 +340,8 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
     public void clickItem(int position) {
         if (position >= 0) {
             DeviceInfo deviceInfo = mDataList.get(position);
-            Intent intent = new Intent(mContext, MonitorPointDetailActivity.class);
+            Intent intent = new Intent();
+            intent.setClass(mContext, MonitorPointElectricDetailActivity.class);
             intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
             intent.putExtra(EXTRA_SENSOR_NAME, deviceInfo.getName());
             intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
@@ -439,7 +440,11 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
             if (data != null && requestCode == REQUEST_CODE_RECORD) {
                 ImageItem imageItem = (ImageItem) data.getSerializableExtra("path_record");
                 if (imageItem != null) {
-                    LogUtils.loge("--- 从视频返回  path = " + imageItem.path);
+                    try {
+                        LogUtils.loge("--- 从视频返回  path = " + imageItem.path);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                     ArrayList<ImageItem> tempImages = new ArrayList<>();
                     tempImages.add(imageItem);
                     EventData eventData = new EventData();

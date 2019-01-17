@@ -253,7 +253,11 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
                                 .zoom(16)
                                 .tilt(20)
                                 .build();
-                        LogUtils.loge("---markerView null");
+                        try {
+                            LogUtils.loge("---markerView null");
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                         aMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
                     }
                 }
@@ -277,7 +281,11 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
                         if (deployAnalyzerModel.sn.equalsIgnoreCase(sn)) {
                             deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
                             deployAnalyzerModel.signal = deviceInfo.getSignal();
-                            LogUtils.loge(this, "地图也刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + deployAnalyzerModel.signal);
+                            try {
+                                LogUtils.loge(this, "地图也刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + deployAnalyzerModel.signal);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                             getView().refreshSignal(deployAnalyzerModel.updatedTime, deployAnalyzerModel.signal);
                         }
                     } catch (NullPointerException e) {

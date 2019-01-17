@@ -92,5 +92,11 @@
     <color name="ip_text_primary_inverted">#ff5d5d5d</color>
     <color name="c_bf000000">#BF000000</color>
     <color name="c_eaeaea">#EAEAEA</color>
+    <color name="c_dff6ef">#DFF6EF</color>
+    <color name="c_197358">#197358</color>
+    <color name="c_987823">#987823</color>
+    <color name="c_fff7e2">#FFF7E2</color>
+    <color name="c_922c2c">#922C2C</color>
+    <color name="c_fde4e4">#FDE4E4</color>
 
 </resources>

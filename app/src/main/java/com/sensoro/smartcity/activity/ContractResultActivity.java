@@ -25,12 +25,16 @@ public class ContractResultActivity extends BaseActivity<IContractResultActivity
     ImageView ivResult;
     @BindView(R.id.bt_share)
     Button btShare;
-    @BindView(R.id.iv_contract_result_back)
-    ImageView ivContractResultBack;
+    @BindView(R.id.include_text_title_imv_arrows_left)
+    ImageView includeTextTitleImvArrowsLeft;
+    @BindView(R.id.include_text_title_tv_title)
+    TextView includeTextTitleTvTitle;
+    @BindView(R.id.include_text_title_tv_subtitle)
+    TextView includeTextTitleTvSubtitle;
+    @BindView(R.id.include_text_title_divider)
+    View includeTextTitleViewDivider;
     @BindView(R.id.tv_result_info)
     TextView tvResultInfo;
-    @BindView(R.id.tv_contract_info_title_finish)
-    TextView tvContractInfoTitleFinish;
 //    private ProgressUtils mProgressUtils;
 
     @Override
@@ -43,6 +47,10 @@ public class ContractResultActivity extends BaseActivity<IContractResultActivity
 
     private void initView() {
 //        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+        includeTextTitleImvArrowsLeft.setImageResource(R.drawable.title_close);
+        includeTextTitleTvTitle.setText(mActivity.getString(R.string.contract_info_contract_qr_code));
+        includeTextTitleTvSubtitle.setVisibility(View.GONE);
+        includeTextTitleViewDivider.setVisibility(View.GONE);
     }
 
     @Override
@@ -51,16 +59,13 @@ public class ContractResultActivity extends BaseActivity<IContractResultActivity
     }
 
 
-    @OnClick({R.id.bt_share, R.id.iv_contract_result_back, R.id.tv_contract_info_title_finish})
+    @OnClick({R.id.bt_share, R.id.include_text_title_imv_arrows_left})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_share:
                 mPresenter.sharePic();
                 break;
-            case R.id.iv_contract_result_back:
-                mPresenter.finish();
-                break;
-            case R.id.tv_contract_info_title_finish:
+            case R.id.include_text_title_imv_arrows_left:
                 mPresenter.finish();
                 break;
         }

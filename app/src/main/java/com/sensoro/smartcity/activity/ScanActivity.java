@@ -2,10 +2,8 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,6 +13,7 @@ import android.widget.Toast;
 import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IScanActivityView;
 import com.sensoro.smartcity.presenter.ScanActivityPresenter;
 import com.sensoro.smartcity.util.LogUtils;
@@ -70,17 +69,18 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
 
         acScanQrView.setDelegate(this);
         acScanQrView.getScanBoxView().setOnlyDecodeScanBoxArea(true);
-        acScanQrView.getCameraPreview().setAutoFocusFailureDelay(0);
+//        acScanQrView.getCameraPreview().setAutoFocusFailureDelay(0);
 
     }
 
     private void changeIconArrowsColor() {
-        Drawable drawable = mActivity.getResources().getDrawable(R.drawable.arrows_left_scan);
-        Drawable.ConstantState state = drawable.getConstantState();
-        DrawableCompat.wrap(state == null ? drawable : state.newDrawable());
-        drawable.setBounds(0, 0, drawable.getIntrinsicHeight(), drawable.getIntrinsicHeight());
-        DrawableCompat.setTint(drawable, Color.WHITE);
-        includeTextTitleImvArrowsLeft.setImageDrawable(drawable);
+//        Drawable drawable = mActivity.getResources().getDrawable(R.drawable.arrows_left);
+//        Drawable.ConstantState state = drawable.getConstantState();
+//        DrawableCompat.wrap(state == null ? drawable : state.newDrawable());
+//        drawable.setBounds(0, 0, drawable.getIntrinsicHeight(), drawable.getIntrinsicHeight());
+//        DrawableCompat.setTint(drawable, Color.WHITE);
+//        includeTextTitleImvArrowsLeft.setImageDrawable(drawable);
+        includeTextTitleImvArrowsLeft.setColorFilter(mActivity.getResources().getColor(R.color.white));
     }
 
     @Override
@@ -194,8 +194,31 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     }
 
     @Override
+    public void onCameraAmbientBrightnessChanged(boolean isDark) {
+        if (mPresenter.scanType != Constants.TYPE_SCAN_LOGIN) {
+            // 这里是通过修改提示文案来展示环境是否过暗的状态，接入方也可以根据 isDark 的值来实现其他交互效果
+            String tipText = acScanQrView.getScanBoxView().getTipText();
+            String ambientBrightnessTip = "\n" + mActivity.getString(R.string.the_environment_is_too_dark_please_turn_on_the_flash);
+            if (isDark) {
+                if (!tipText.contains(ambientBrightnessTip)) {
+                    acScanQrView.getScanBoxView().setTipText(tipText + ambientBrightnessTip);
+                }
+            } else {
+                if (tipText.contains(ambientBrightnessTip)) {
+                    tipText = tipText.substring(0, tipText.indexOf(ambientBrightnessTip));
+                    acScanQrView.getScanBoxView().setTipText(tipText);
+                }
+            }
+        }
+    }
+
+    @Override
     public void onScanQRCodeOpenCameraError() {
-        LogUtils.loge(this, "扫描出错！！！！！！！");
+        try {
+            LogUtils.loge(this, "扫描出错！！！！！！！");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     @Override

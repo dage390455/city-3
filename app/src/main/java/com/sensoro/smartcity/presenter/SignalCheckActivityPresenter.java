@@ -95,7 +95,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         } else {
             temp = deployAnalyzerModel.nameAndAddress;
         }
-        String text = WidgetUtil.getDeviceTypeName(deployAnalyzerModel.deviceType) + " " + temp;
+        String text = WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType) + " " + temp;
         getView().setTypeAndName(text);
         getView().updateTag(deployAnalyzerModel.tagList);
     }
@@ -130,7 +130,11 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
 
     @Override
     public void onNewDevice(BLEDevice bleDevice) {
-        LogUtils.loge(this, bleDevice.getMacAddress() + " " + bleDevice.getSn().equals(deployAnalyzerModel.sn));
+        try {
+            LogUtils.loge(this, bleDevice.getMacAddress() + " " + bleDevice.getSn().equals(deployAnalyzerModel.sn));
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         if (bleDevice.getSn().equals(deployAnalyzerModel.sn)) {
             bleAddress = bleDevice.getMacAddress();
             getView().setNearVisible(true);

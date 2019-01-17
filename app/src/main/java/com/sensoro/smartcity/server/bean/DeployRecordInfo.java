@@ -25,15 +25,15 @@ public class DeployRecordInfo implements Serializable {
     private List<String> tags;
     private List<Double> lonlat;
     private List<String> deployPics;
-    private Map<String,DeployContralSettingData> config;
+    private Map<String,DeployControlSettingData> config;
 
 
 
-    public Map<String, DeployContralSettingData> getConfig() {
+    public Map<String, DeployControlSettingData> getConfig() {
         return config;
     }
 
-    public void setConfig(Map<String, DeployContralSettingData> config) {
+    public void setConfig(Map<String, DeployControlSettingData> config) {
         this.config = config;
     }
     public String getWxPhone() {

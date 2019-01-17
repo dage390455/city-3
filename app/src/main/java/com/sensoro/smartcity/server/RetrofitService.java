@@ -276,5 +276,9 @@ public interface RetrofitService {
 
     @PUT("devices/gps/{sn}")
     Observable<DeviceDeployRsp> doDevicePositionCalibration(@Path("sn") String sn, @Body RequestBody requestBody);
+
+    @GET("devices/valid")
+//    Observable<DevicesMergeTypesRsp> getDevicesMergeTypes(@Header("x-session-id") String sessionId);
+    Observable<ResponseBase> getDeviceNameValid(@Query("name") String name);
 }
 
