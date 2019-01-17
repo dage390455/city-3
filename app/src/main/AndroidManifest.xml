@@ -15,6 +15,14 @@
     <uses-permission android:name="android.permission.RESTART_PACKAGES" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <uses-permission-sdk-23 android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission-sdk-23 android:name="android.permission.CAMERA" />
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission-sdk-23 android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission-sdk-23 android:name="android.permission.INTERNET" />
+
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission
         android:name="android.permission.CHANGE_CONFIGURATION"
@@ -345,6 +353,7 @@
         <activity android:name=".activity.ContractCreationSuccessActivity" />
         <activity android:name=".activity.ContractDetailActivity" />
         <activity android:name=".activity.ContractPreviewActivity" />
+
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"
             android:authorities="${applicationId}.provider"
