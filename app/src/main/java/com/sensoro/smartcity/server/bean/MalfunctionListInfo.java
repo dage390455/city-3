@@ -326,6 +326,14 @@ public class MalfunctionListInfo implements Serializable {
         private String id;
         private String _updatedTime;
         private String status;
+        private String malfunctionSubType;
+        public String getMalfunctionSubType() {
+            return malfunctionSubType;
+        }
+
+        public void setMalfunctionSubType(String malfunctionSubType) {
+            this.malfunctionSubType = malfunctionSubType;
+        }
 
         public String getStatus() {
             return status;

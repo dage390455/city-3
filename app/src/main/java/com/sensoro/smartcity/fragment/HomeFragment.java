@@ -134,8 +134,15 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         mSelectDeviceTypePop.setSelectDeviceTypeItemClickListener(new SelectDeviceTypePopUtils.SelectDeviceTypeItemClickListener() {
             @Override
             public void onSelectDeviceTypeItemClick(View view, int position, DeviceTypeModel item) {
-                HomeTopModel homeTopModel = mMainHomeFragRcContentAdapter.getData().get(currentPosition);
-                mPresenter.requestDataByTypes(position, homeTopModel);
+                List<HomeTopModel> data = mMainHomeFragRcContentAdapter.getData();
+                //数据容错
+                if (data.size() > 0) {
+                    HomeTopModel homeTopModel = data.get(currentPosition);
+                    mPresenter.requestDataByTypes(position, homeTopModel);
+                } else {
+                    //尝试刷新所有数据
+                    mPresenter.requestInitData(true);
+                }
                 //选择类型的pop点击事件
                 Resources resources = Objects.requireNonNull(mRootFragment.getActivity()).getResources();
                 if ("全部".equals(item.name)) {
