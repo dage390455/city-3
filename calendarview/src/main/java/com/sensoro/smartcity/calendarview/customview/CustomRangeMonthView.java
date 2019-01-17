@@ -15,10 +15,12 @@ import com.sensoro.smartcity.calendarview.RangeMonthView;
 
 public class CustomRangeMonthView extends RangeMonthView {
 
+    private final Context mContext;
     private int mRadius;
 
     public CustomRangeMonthView(Context context) {
         super(context);
+        mContext = context;
     }
 
 
@@ -69,7 +71,12 @@ public class CustomRangeMonthView extends RangeMonthView {
 
     private void drawRoundRect(Canvas canvas, int x, int cy) {
         RectF rectF = new RectF(x, cy - mRadius, x + mItemWidth, cy + mRadius);
-        canvas.drawRoundRect(rectF, 10, 10, mSelectedLastPaint);
+        canvas.drawRoundRect(rectF, dp2Px(8), dp2Px(8), mSelectedLastPaint);
+    }
+
+    private int dp2Px(int dp) {
+        float density = mContext.getResources().getDisplayMetrics().density;
+        return (int) (dp*density+0.5f);
     }
 
     @Override
