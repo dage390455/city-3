@@ -259,6 +259,7 @@ public class AppUtils {
         });
     }
 
+
     public interface InputSoftStatusListener {
         void onKeyBoardClose();
 

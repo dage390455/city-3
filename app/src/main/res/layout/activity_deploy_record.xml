@@ -113,10 +113,9 @@
                 android:id="@+id/ac_deploy_record_tv_date_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/y30"
-                android:layout_marginEnd="@dimen/x45"
-                android:layout_marginBottom="@dimen/y30"
-                android:textSize="@dimen/x54" />
+                android:textSize="14sp"
+                android:layout_centerVertical="true"
+                android:textColor="@color/c_252525"/>
 
             <ImageView
                 android:id="@+id/ac_deploy_record_imv_date_close"
@@ -126,6 +125,7 @@
                 android:layout_alignParentEnd="true"
                 android:contentDescription="@null"
                 android:padding="8dp"
+                android:layout_centerVertical="true"
                 android:scaleType="centerInside"
                 android:src="@mipmap/ic_close" />
         </RelativeLayout>

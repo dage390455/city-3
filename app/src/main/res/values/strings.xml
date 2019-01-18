@@ -647,6 +647,18 @@
 
     <string name="please_use_different_device_to_replace">Please use a different device to replace</string>
     <string name="no_search_history">No search history</string>
+    <string name="january">January</string>
+    <string name="february">February</string>
+    <string name="march">March</string>
+    <string name="april">April</string>
+    <string name="may">May</string>
+    <string name="june">June</string>
+    <string name="july">July</string>
+    <string name="august">August</string>
+    <string name="september">September</string>
+    <string name="october">October</string>
+    <string name="november">November</string>
+    <string name="december">December</string>
     <string name="channel_mask_error_tip">Failed to get frequency information when frequency point needs to be configured</string>
     <string name="please_enter_a_valid_mobile_number">Please enter a valid mobile number</string>
     <string name="enter_the_phone_number_used_for_applet_login">Enter the phone number to login mini program</string>
