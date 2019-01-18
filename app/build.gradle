@@ -192,7 +192,7 @@ dependencies {
     //    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
     //
     //    compile 'com.github.PhilJay:MPAndroidChart:v3.0.3'
-    compile project(':cosmocalendar')
+//    compile project(':cosmocalendar')
     compile files('libs/Baidu_Mtj_3.8.2.1.jar')
     compile 'com.jakewharton:butterknife:8.7.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'

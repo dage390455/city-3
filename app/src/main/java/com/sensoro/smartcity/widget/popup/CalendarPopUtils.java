@@ -2,9 +2,6 @@ package com.sensoro.smartcity.widget.popup;
 
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.v4.util.Pair;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,8 +18,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.applikeysolutions.cosmocalendar.listeners.OnDayRangeSelectedListener;
-import com.applikeysolutions.cosmocalendar.model.Day;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.calendarview.CalendarView;
 import com.sensoro.smartcity.constant.Constants;
