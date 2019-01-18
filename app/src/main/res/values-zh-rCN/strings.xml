@@ -777,4 +777,7 @@
     <string name="identification_failed_try_again">识别失败，请重试</string>
     <string name="is_alarm">时报警</string>
     <string name="sensoro_number">升哲安全服务</string>
+    <string name="back_to_main_merchant">返回主账户</string>
+    <string name="current_merchant">当前商户</string>
+    <string name="sub_merchant">下级商户</string>
 </resources>

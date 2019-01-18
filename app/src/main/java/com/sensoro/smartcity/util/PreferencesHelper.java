@@ -80,6 +80,7 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, eventLoginData.hasSignalConfig);
         editor.putBoolean(EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD, eventLoginData.hasBadSignalUpload);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION, eventLoginData.hasDevicePositionCalibration);
+        editor.putBoolean(EXTRA_GRANTS_HAS_CONTROLLER_AID, eventLoginData.hasControllerAid);
         //
         editor.apply();
     }
@@ -115,6 +116,7 @@ public final class PreferencesHelper implements Constants {
             boolean hasDeviceSignalConfig = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, false);
             boolean hasBadSignalUpload = sp.getBoolean(EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD, false);
             boolean hasDevicePositionCalibration = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION, false);
+            boolean hasControllerAid = sp.getBoolean(EXTRA_GRANTS_HAS_CONTROLLER_AID, false);
             final EventLoginData eventLoginData = new EventLoginData();
             eventLoginData.phoneId = phoneId;
             eventLoginData.userId = userId;
@@ -138,6 +140,7 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasSignalConfig = hasDeviceSignalConfig;
             eventLoginData.hasBadSignalUpload = hasBadSignalUpload;
             eventLoginData.hasDevicePositionCalibration = hasDevicePositionCalibration;
+            eventLoginData.hasControllerAid = hasControllerAid;
             mEventLoginData = eventLoginData;
         }
         return mEventLoginData;

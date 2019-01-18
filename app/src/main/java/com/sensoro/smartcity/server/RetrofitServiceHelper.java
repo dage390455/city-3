@@ -1381,4 +1381,12 @@ public enum RetrofitServiceHelper {
     public Observable<ResponseBase> getDeviceNameValid(String name) {
         return retrofitService.getDeviceNameValid(name);
     }
+
+    /**
+     * 解除账号控制返回主账户
+     * @return
+     */
+    public Observable<LoginRsp> backMainAccount() {
+        return retrofitService.backMainControlling();
+    }
 }

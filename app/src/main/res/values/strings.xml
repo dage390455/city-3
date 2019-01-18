@@ -782,4 +782,7 @@
     <string name="identification_failed_try_again">识别失败，请重试</string>
     <string name="is_alarm">Alarm</string>
     <string name="sensoro_number">Sensoro Security Service</string>
+    <string name="back_to_main_merchant">Back Origin</string>
+    <string name="current_merchant">Current Merchant</string>
+    <string name="sub_merchant">Sub Merchant</string>
 </resources>

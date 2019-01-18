@@ -58,17 +58,17 @@ public class MerchantAdapter extends BaseAdapter implements Constants {
         }
         UserInfo userInfo = mList.get(position);
         if (userInfo.isStop()) {
-            holder.item_name.setTextColor(mContext.getResources().getColor(R.color.item_sensor_line));
+            holder.item_name.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
         } else {
-            holder.item_name.setTextColor(mContext.getResources().getColor(R.color.slide_menu_item_bg));
+            holder.item_name.setTextColor(mContext.getResources().getColor(R.color.c_252525));
         }
         holder.item_name.setText(userInfo.getNickname());
         holder.item_phone.setText(userInfo.getContacts());
 
-        if (mList.size() != 0 && position == mList.size() - 1) {
-            holder.itemBottomS.setVisibility(View.VISIBLE);
-        } else {
+        if (mList.size() == 0 || position == mList.size() - 1) {
             holder.itemBottomS.setVisibility(View.GONE);
+        } else {
+            holder.itemBottomS.setVisibility(View.VISIBLE);
         }
         return convertView;
     }
