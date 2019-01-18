@@ -50,6 +50,7 @@
                     android:paddingEnd="10dp"
                     android:paddingBottom="4dp"
                     android:text="@string/signal_check_near"
+                    android:visibility="gone"
                     android:textColor="@color/white"
                     android:textSize="10sp" />
 
