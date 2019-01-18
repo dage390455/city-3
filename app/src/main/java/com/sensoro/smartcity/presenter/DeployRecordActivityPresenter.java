@@ -183,8 +183,8 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
         getView().setSelectedDateLayoutVisible(true);
         startTime = DateUtil.strToDate(calendarDateModel.startDate).getTime();
         endTime = DateUtil.strToDate(calendarDateModel.endDate).getTime();
-        getView().setSelectedDateSearchText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil
-                .getMothDayFormatDate(endTime));
+        getView().setSelectedDateSearchText(DateUtil.getCalendarYearMothDayFormatDate(startTime) + " ~ " + DateUtil
+                .getCalendarYearMothDayFormatDate(endTime));
         getView().setSearchHistoryVisible(false);
         if (!TextUtils.isEmpty(tempSearch)) {
             PreferencesHelper.getInstance().saveSearchHistoryText(tempSearch, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);

@@ -145,8 +145,8 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
         getView().setDateSelectVisible(true);
         startTime = DateUtil.strToDate(calendarDateModel.startDate).getTime();
         endTime = DateUtil.strToDate(calendarDateModel.endDate).getTime();
-        getView().setDateSelectText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil
-                .getMothDayFormatDate(endTime));
+        getView().setDateSelectText(DateUtil.getCalendarYearMothDayFormatDate(startTime) + " ~ " + DateUtil
+                .getCalendarYearMothDayFormatDate(endTime));
 //        getView().setSelectedDateSearchText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil
 //                .getMothDayFormatDate(endTime));
         endTime += 1000 * 60 * 60 * 24;

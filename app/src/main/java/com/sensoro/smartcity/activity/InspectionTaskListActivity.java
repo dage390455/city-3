@@ -282,8 +282,8 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
         setRlDateEditVisible(true);
         startTime = DateUtil.strToDate(calendarDateModel.startDate).getTime();
         endTime = DateUtil.strToDate(calendarDateModel.endDate).getTime();
-        setSelectedDateSearchText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil
-                .getMothDayFormatDate(endTime));
+        setSelectedDateSearchText(DateUtil.getCalendarYearMothDayFormatDate(startTime) + " ~ " + DateUtil
+                .getCalendarYearMothDayFormatDate(endTime));
         endTime += 1000 * 60 * 60 * 24;
         mPresenter.requestDataByDate(startTime,endTime);
 

@@ -234,8 +234,8 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
         startTime = DateUtil.strToDate(calendarDateModel.startDate).getTime();
         endTime = DateUtil.strToDate(calendarDateModel.endDate).getTime();
         if (isAttachedView()){
-            getView().setDateSelectText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil
-                    .getMothDayFormatDate(endTime));
+            getView().setDateSelectText(DateUtil.getCalendarYearMothDayFormatDate(startTime) + " ~ " + DateUtil
+                    .getCalendarYearMothDayFormatDate(endTime));
         }
 //        getView().setSelectedDateSearchText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil
 //                .getMothDayFormatDate(endTime));
