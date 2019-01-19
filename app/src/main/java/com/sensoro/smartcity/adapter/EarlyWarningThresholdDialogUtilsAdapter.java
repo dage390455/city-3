@@ -18,11 +18,17 @@ import java.util.List;
 public class EarlyWarningThresholdDialogUtilsAdapter extends RecyclerView.Adapter<EarlyWarningThresholdDialogUtilsAdapter
         .EarlyWarningThresholdDialogUtilsHolder> {
 
+    private boolean mHideName;
     private Context mContext;
     private final ArrayList<EarlyWarningthresholdDialogUtilsAdapterModel> mList = new ArrayList<>();
 
     public EarlyWarningThresholdDialogUtilsAdapter(Context context) {
+        this(context,false);
+    }
+
+    public EarlyWarningThresholdDialogUtilsAdapter(Context context,boolean hideName) {
         this.mContext = context;
+        this.mHideName = hideName;
     }
 
     public void updateList(List<EarlyWarningthresholdDialogUtilsAdapterModel> list) {
@@ -44,12 +50,16 @@ public class EarlyWarningThresholdDialogUtilsAdapter extends RecyclerView.Adapte
 
     @Override
     public void onBindViewHolder(EarlyWarningThresholdDialogUtilsHolder holder, int position) {
-        String name = mList.get(position).name;
-        if (TextUtils.isEmpty(name)) {
-            holder.nameTextView.setText(mContext.getString(R.string.unknown));
-        } else {
-            holder.nameTextView.setText(name);
+        holder.nameTextView.setVisibility(mHideName ? View.GONE : View.VISIBLE);
+        if(!mHideName){
+            String name = mList.get(position).name;
+            if (TextUtils.isEmpty(name)) {
+                holder.nameTextView.setText(mContext.getString(R.string.unknown));
+            } else {
+                holder.nameTextView.setText(name);
+            }
         }
+
         String content = mList.get(position).content;
         if (TextUtils.isEmpty(content)) {
             holder.contentTextView.setText(mContext.getString(R.string.unknown));

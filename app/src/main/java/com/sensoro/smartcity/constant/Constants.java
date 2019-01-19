@@ -1,9 +1,13 @@
 package com.sensoro.smartcity.constant;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.model.MaterialValueModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Created by sensoro on 17/7/27.
@@ -412,4 +416,46 @@ public interface Constants {
     };
     int[] MONTHS = {R.string.january,R.string.february,R.string.march,R.string.april,R.string.may,R.string.june
     ,R.string.july,R.string.august,R.string.september,R.string.october,R.string.november,R.string.december};
+
+    LinkedHashMap<String,MaterialValueModel> materialValueMap = new LinkedHashMap<String,MaterialValueModel>(){
+        {
+            put("1",new MaterialValueModel(16,9));
+            put("1.5",new MaterialValueModel(20,15));
+            put("2.5",new MaterialValueModel(27,21));
+            put("4",new MaterialValueModel(36,27));
+            put("6",new MaterialValueModel(47,36));
+            put("10",new MaterialValueModel(64,51));
+            put("16",new MaterialValueModel(90,69));
+            put("25",new MaterialValueModel(119,90));
+            put("35",new MaterialValueModel(147,112));
+            put("50",new MaterialValueModel(185,142));
+            put("70",new MaterialValueModel(229,177));
+            put("95",new MaterialValueModel(281,216));
+            put("120",new MaterialValueModel(324,246));
+            put("150",new MaterialValueModel(371,281));
+            put("185",new MaterialValueModel(423,328));
+
+        }
+    };
+    ArrayList<String> materaialKeyList = new ArrayList<String>(){
+        {
+            add("1");
+            add("1.5");
+            add("2.5");
+            add("4");
+            add("6");
+            add("10");
+            add("16");
+            add("25");
+            add("35");
+            add("50");
+            add("70");
+            add("95");
+            add("120");
+            add("150");
+            add("185");
+        }
+
+    };
+
 }

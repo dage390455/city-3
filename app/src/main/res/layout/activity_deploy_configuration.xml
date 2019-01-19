@@ -188,7 +188,16 @@
             android:layout_height="wrap_content"
             android:paddingStart="4dp"
             android:paddingEnd="20dp"
+            android:contentDescription="@null"
             android:src="@drawable/elect_device_detail_info" />
+        <TextView
+            android:id="@+id/tv_current_value"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:layout_height="wrap_content"
+            android:textColor="@color/c_252525"
+            android:textSize="14sp" />
     </LinearLayout>
 
     <TextView

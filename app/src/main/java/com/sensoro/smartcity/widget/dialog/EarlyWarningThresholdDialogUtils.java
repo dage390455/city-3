@@ -21,27 +21,36 @@ public class EarlyWarningThresholdDialogUtils {
     //    private final TextView mTvTitle;
     //    private AlertDialog mDialog;
 //    private final TextView mTvMessage;
-    private final TextView mTvCancel;
-    private final RecyclerView rvEarlyWarningThreshold;
-    private final EarlyWarningThresholdDialogUtilsAdapter mAdapter;
+    private TextView mTvCancel;
+    private RecyclerView rvEarlyWarningThreshold;
+    private EarlyWarningThresholdDialogUtilsAdapter mAdapter;
     //    private final TextView mTvConfirm;
     private DialogUtilsChangeClickListener listener;
     private CustomCornerDialog mDialog;
     private ImageView ivCancel;
-    private final ImageView mImvNoContent;
+    private ImageView mImvNoContent;
+    private TextView tvTitle;
 
     public EarlyWarningThresholdDialogUtils(Activity activity) {
+        this(activity,activity.getString(R.string.warning_threshold),false);
+
+    }
+
+    public EarlyWarningThresholdDialogUtils(Activity activity,String title,boolean hideName) {
         View view = View.inflate(activity, R.layout.item_dialog_elect_threshold, null);
 //        mTvTitle = view.findViewById(R.id.dialog_tip_tv_title);
 //        mTvMessage = view.findViewById(R.id.dialog_tip_tv_message);
+        tvTitle = view.findViewById(R.id.tv_early_warning_threshold_title);
         mTvCancel = view.findViewById(R.id.dialog_tv_change_info);
         mImvNoContent = view.findViewById(R.id.no_content);
         ivCancel = view.findViewById(R.id.iv_cancel);
+
+        tvTitle.setText(title);
         rvEarlyWarningThreshold = view.findViewById(R.id.rv_early_warning_threshold);
         LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rvEarlyWarningThreshold.setLayoutManager(layoutManager);
-        mAdapter = new EarlyWarningThresholdDialogUtilsAdapter(activity);
+        mAdapter = new EarlyWarningThresholdDialogUtilsAdapter(activity,hideName);
         rvEarlyWarningThreshold.setAdapter(mAdapter);
 //        mTvConfirm = view.findViewById(R.id.dialog_tip_tv_confirm);
 //        AlertDialog.Builder builder = new AlertDialog.Builder(activity);

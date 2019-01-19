@@ -1,8 +1,11 @@
 package com.sensoro.smartcity.imainviews;
 
+import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
+
+import java.util.ArrayList;
 
 public interface IDeployMonitorConfigurationView extends IToast, IActivityIntent, IProgressDialog {
     void showBleConfigurationDialog(String message);
@@ -22,4 +25,6 @@ public interface IDeployMonitorConfigurationView extends IToast, IActivityIntent
     void setTvEnterValueRange(int minValue, int maxValue);
 
     void setLlAcDeployConfigurationDiameterVisible(boolean isVisible);
+
+    void showOverCurrentDialog(ArrayList<EarlyWarningthresholdDialogUtilsAdapterModel> overCurrentDataList);
 }
