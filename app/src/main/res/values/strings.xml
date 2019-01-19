@@ -785,4 +785,7 @@
     <string name="back_to_main_merchant">Back Origin</string>
     <string name="current_merchant">Current Merchant</string>
     <string name="sub_merchant">Sub Merchant</string>
+    <string name="diameter_info">Diameter Info</string>
+    <string name="diameter_material">Diameter Material</string>
+    <string name="actual_overcurrent_threshold">Actual overcurrent threshold</string>
 </resources>

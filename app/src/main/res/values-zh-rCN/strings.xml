@@ -780,4 +780,7 @@
     <string name="back_to_main_merchant">返回主账户</string>
     <string name="current_merchant">当前商户</string>
     <string name="sub_merchant">下级商户</string>
+    <string name="diameter_info">电线参数</string>
+    <string name="diameter_material">电线材质</string>
+    <string name="actual_overcurrent_threshold">实际过流阈值</string>
 </resources>
