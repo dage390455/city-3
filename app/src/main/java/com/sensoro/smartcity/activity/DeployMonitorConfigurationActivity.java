@@ -170,15 +170,20 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
         if (!TextUtils.isEmpty(diameter) && !TextUtils.isEmpty(material) && !TextUtils.isEmpty(enterValue)) {
             try {
                 Integer integer = Integer.valueOf(enterValue);
-                int in = integer;
-                if (getString(R.string.cu).equals(material)) {
-                    in = Constants.materialValueMap.get(diameter).cuValue;
-                } else if (getString(R.string.al).equals(material)) {
-                    in = Constants.materialValueMap.get(diameter).alValue;
+                if (integer > 0) {
+                    int in = integer;
+                    if (getString(R.string.cu).equals(material)) {
+                        in = Constants.materialValueMap.get(diameter).cuValue;
+                    } else if (getString(R.string.al).equals(material)) {
+                        in = Constants.materialValueMap.get(diameter).alValue;
+                    }
+                    int min = Math.min(integer, in);
+                    tvCurrentValue.setText(String.format(Locale.CHINESE, "%dA", min));
+                    updateBtnStatus(true);
+                }else{
+                    updateBtnStatus(false);
                 }
-                int min = Math.min(integer, in);
-                tvCurrentValue.setText(String.format(Locale.CHINESE, "%dA", min));
-                updateBtnStatus(true);
+
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 toastShort(getString(R.string.enter_the_correct_number_format));

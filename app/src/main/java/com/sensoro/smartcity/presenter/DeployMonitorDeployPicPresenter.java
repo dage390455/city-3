@@ -32,7 +32,7 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
     public void initData(Context context) {
         mActivity = (Activity) context;
         String deviceType = mActivity.getIntent().getStringExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE);
-        getView().setDeployPicTvInstallationSiteTipVisible("mantun_fires".equals(deviceType));
+        getView().setDeployPicTvInstallationSiteTipVisible(DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType));
         ArrayList<ImageItem> imageList = (ArrayList<ImageItem>) mActivity.getIntent().getSerializableExtra(EXTRA_DEPLOY_TO_PHOTO);
         if (imageList != null && imageList.size() > 0 && imageList.size() < 4) {
             for (int i = 0; i < imageList.size(); i++) {

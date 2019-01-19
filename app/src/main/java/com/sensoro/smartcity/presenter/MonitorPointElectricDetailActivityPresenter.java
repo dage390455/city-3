@@ -1106,7 +1106,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     getView().toastShort(mContext.getString(R.string.electric_current) + mContext.getString(R.string.enter_the_correct_number_format));
                     return;
                 }
-                if ("mantun_fires".equals(mDeviceInfo.getDeviceType())) {
+                if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
                     if (TextUtils.isEmpty(diameter)) {
                         getView().toastShort(mContext.getString(R.string.diameter) + mContext.getString(R.string.input_not_null));
                         return;
