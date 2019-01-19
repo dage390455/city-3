@@ -794,4 +794,5 @@
     <string name="cu">铜芯</string>
     <string name="al">铝芯</string>
     <string name="please_set_initial_configuration">Please set the initial configuration first</string>
+    <string name="actual_overcurrent_threshold_format">实际过流阈值：%dA</string>
 </resources>

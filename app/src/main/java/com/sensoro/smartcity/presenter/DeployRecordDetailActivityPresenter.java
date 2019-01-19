@@ -22,6 +22,7 @@ import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRecordDetailActivityView>
         implements Constants {
@@ -81,12 +82,16 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
                 if (mDeployRecordInfo.getConfig() != null) {
                     DeployControlSettingData deployControlSettingData = mDeployRecordInfo.getConfig().get(mDeployRecordInfo.getDeviceType());
                     if (deployControlSettingData != null) {
-                        if (deployControlSettingData.getDiameterValue() != null) {
-                            String formatDouble = WidgetUtil.getFormatDouble(deployControlSettingData.getDiameterValue(), 2);
-                            getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getInitValue() + "A" + " " + mActivity.getString(R.string.diameter) + ":" + formatDouble + "m㎡");
-                        } else {
-                            getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getInitValue() + "A");
-                        }
+                        //线径的判断，暂时不需要了
+//                        if (deployControlSettingData.getDiameterValue() != null) {
+//                            String formatDouble = WidgetUtil.getFormatDouble(deployControlSettingData.getDiameterValue(), 2);
+////                            getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getInitValue() + "A" + " " + mActivity.getString(R.string.diameter) + ":" + formatDouble + "m㎡");
+//
+//
+//                        } else {
+//                            getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getInitValue() + "A");
+//                        }
+                        getView().setDeployDeviceDetailDeploySetting(String.format(Locale.CHINA,mActivity.getString(R.string.actual_overcurrent_threshold_format),deployControlSettingData.getInitValue()));
                         return;
                     }
                 }
