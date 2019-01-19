@@ -794,7 +794,8 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         EarlyWarningthresholdDialogUtilsAdapterModel earlyWarningthresholdDialogUtilsAdapterModel = new EarlyWarningthresholdDialogUtilsAdapterModel();
                         String name = monitorOptionsBean.getName();
                         if (TextUtils.isEmpty(name)) {
-                            name = mContext.getString(R.string.unknown);
+                            name = "";
+//                            name = mContext.getString(R.string.unknown);
                         }
                         earlyWarningthresholdDialogUtilsAdapterModel.name = name;
                         List<MonitorOptionsBean.SensorTypesBean> sensorTypes = monitorOptionsBean.getSensorTypes();
