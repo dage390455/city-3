@@ -88,7 +88,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
     }
 
     public boolean needDiameter() {
-        return "mantun_fires".equals(deployAnalyzerModel.deviceType);
+        return Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
     }
 
 
