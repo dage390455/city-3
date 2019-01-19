@@ -237,6 +237,55 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
         getView().showProgressDialog();
         tempSearch = null;
         final String phoneId = PreferencesHelper.getInstance().getUserData().phoneId;
+//        RetrofitServiceHelper.INSTANCE.backMainAccount().subscribeOn(Schedulers.io()).flatMap(new Func1<LoginRsp, Observable<DevicesMergeTypesRsp>>() {
+//            @Override
+//            public Observable<DevicesMergeTypesRsp> call(LoginRsp loginRsp) {
+//                //
+//                String sessionID = loginRsp.getData().getSessionID();
+//                RetrofitServiceHelper.INSTANCE.saveSessionId(sessionID);
+//                UserInfo userInfo = loginRsp.getData();
+//                eventLoginData = UserPermissionFactory.createLoginData(userInfo, phoneId);
+//                PreferencesHelper.getInstance().saveUserData(eventLoginData);
+//                return RetrofitServiceHelper.INSTANCE.getDevicesMergeTypes();
+//            }
+//        }).flatMap(new Func1<DevicesMergeTypesRsp, Observable<UserAccountRsp>>() {
+//            @Override
+//            public Observable<UserAccountRsp> call(DevicesMergeTypesRsp devicesMergeTypesRsp) {
+//                DeviceMergeTypesInfo data = devicesMergeTypesRsp.getData();
+//                PreferencesHelper.getInstance().saveLocalDevicesMergeTypes(data);
+//                return RetrofitServiceHelper.INSTANCE.getUserAccountList(tempSearch, null, 0, 20);
+//            }
+//        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>(this) {
+//
+//            @Override
+//            public void onErrorMsg(int errorCode, String errorMsg) {
+//                getView().dismissProgressDialog();
+//                getView().toastShort(errorMsg);
+//                getView().onPullRefreshComplete();
+//            }
+//
+//            @Override
+//            public void onCompleted(UserAccountRsp userAccountRsp) {
+//                if (eventLoginData != null) {
+//                    getView().setTvBackToMainMerchantVisible(eventLoginData.hasControllerAid);
+//                    getView().setCurrentNameAndPhone(eventLoginData.userName, eventLoginData.phone);
+//                    EventData eventData = new EventData();
+//                    eventData.code = EVENT_DATA_SEARCH_MERCHANT;
+//                    eventData.data = eventLoginData;
+//                    EventBus.getDefault().post(eventData);
+//                }
+//                List<UserInfo> list = userAccountRsp.getData();
+//                if (list == null) {
+//                    mUserInfoList.clear();
+//                } else {
+//                    mUserInfoList.clear();
+//                    mUserInfoList.addAll(list);
+//                }
+//                getView().updateAdapterUserInfo(mUserInfoList);
+//                getView().dismissProgressDialog();
+//                getView().onPullRefreshComplete();
+//            }
+//        });
         RetrofitServiceHelper.INSTANCE.backMainAccount().subscribeOn(Schedulers.io()).flatMap(new Func1<LoginRsp, Observable<DevicesMergeTypesRsp>>() {
             @Override
             public Observable<DevicesMergeTypesRsp> call(LoginRsp loginRsp) {
@@ -248,42 +297,30 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                 PreferencesHelper.getInstance().saveUserData(eventLoginData);
                 return RetrofitServiceHelper.INSTANCE.getDevicesMergeTypes();
             }
-        }).flatMap(new Func1<DevicesMergeTypesRsp, Observable<UserAccountRsp>>() {
+        }).doOnNext(new Action1<DevicesMergeTypesRsp>() {
             @Override
-            public Observable<UserAccountRsp> call(DevicesMergeTypesRsp devicesMergeTypesRsp) {
+            public void call(DevicesMergeTypesRsp devicesMergeTypesRsp) {
                 DeviceMergeTypesInfo data = devicesMergeTypesRsp.getData();
                 PreferencesHelper.getInstance().saveLocalDevicesMergeTypes(data);
-                return RetrofitServiceHelper.INSTANCE.getUserAccountList(tempSearch, null, 0, 20);
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>(this) {
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesMergeTypesRsp>(this) {
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
-                getView().onPullRefreshComplete();
             }
 
             @Override
-            public void onCompleted(UserAccountRsp userAccountRsp) {
+            public void onCompleted(DevicesMergeTypesRsp devicesMergeTypesRsp) {
                 if (eventLoginData != null) {
-                    getView().setTvBackToMainMerchantVisible(eventLoginData.hasControllerAid);
-                    getView().setCurrentNameAndPhone(eventLoginData.userName, eventLoginData.phone);
                     EventData eventData = new EventData();
                     eventData.code = EVENT_DATA_SEARCH_MERCHANT;
                     eventData.data = eventLoginData;
                     EventBus.getDefault().post(eventData);
+                    getView().finishAc();
                 }
-                List<UserInfo> list = userAccountRsp.getData();
-                if (list == null) {
-                    mUserInfoList.clear();
-                } else {
-                    mUserInfoList.clear();
-                    mUserInfoList.addAll(list);
-                }
-                getView().updateAdapterUserInfo(mUserInfoList);
                 getView().dismissProgressDialog();
-                getView().onPullRefreshComplete();
             }
         });
     }

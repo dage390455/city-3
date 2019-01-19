@@ -783,4 +783,5 @@
     <string name="diameter_info">电线参数</string>
     <string name="diameter_material">电线材质</string>
     <string name="actual_overcurrent_threshold">实际过流阈值</string>
+    <string name="please_set_initial_configuration">请先设置初始配置信息</string>
 </resources>

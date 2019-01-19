@@ -788,4 +788,5 @@
     <string name="diameter_info">Diameter Info</string>
     <string name="diameter_material">Diameter Material</string>
     <string name="actual_overcurrent_threshold">Actual overcurrent threshold</string>
+    <string name="please_set_initial_configuration">Please set the initial configuration first</string>
 </resources>

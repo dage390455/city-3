@@ -89,8 +89,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deployAnalyzerModel = (DeployAnalyzerModel) intent.getSerializableExtra(EXTRA_DEPLOY_ANALYZER_MODEL);
         originName = deployAnalyzerModel.nameAndAddress;
         getView().setNotOwnVisible(deployAnalyzerModel.notOwn);
-        //TODO 记得去掉
-        PreferencesHelper.getInstance().getUserData().hasSignalConfig = true;
         init();
         if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION || Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
             mHandler.post(this);
@@ -236,7 +234,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             getView().showBleConfigDialog();
                             connectDevice();
                         } else {
-                            getView().toastShort("请先设置初始配置信息");
+                            getView().toastShort(mContext.getString(R.string.please_set_initial_configuration));
                         }
                     } else {
                         //直接配置频点信息
@@ -299,13 +297,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             }
 
         }
-        //        try {
-//            getView().showBleConfigurationDialog(mActivity.getString(R.string.connecting));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            getView().dismissBleConfigurationDialog();
-//            getView().toastShort(mActivity.getString(R.string.ble_connect_failed));
-//        }
     }
 
     private void doUploadImages(final double lon, final double lan) {
@@ -995,99 +986,23 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     @Override
     public void onConnectedSuccess(final BLEDevice bleDevice, int cmd) {
-        mContext.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (isAttachedView()) {
-                    getView().updateBleConfigDialogMessage(mContext.getString(R.string.loading_configuration_file));
-                    if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
-                        sensoroDeviceConnection.writeData05ChannelMask(deployAnalyzerModel.channelMask, new SensoroWriteCallback() {
-                            @Override
-                            public void onWriteSuccess(Object o, int cmd) {
-                                mContext.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (isAttachedView()) {
-                                            if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
-                                                if (deployAnalyzerModel.settingData != null) {
-                                                    SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getInitValue());
-                                                    if (sensoroDevice != null) {
-                                                        sensoroDeviceConnection.writeData05Configuration(sensoroDevice, new SensoroWriteCallback() {
-                                                            @Override
-                                                            public void onWriteSuccess(Object o, int cmd) {
-                                                                mContext.runOnUiThread(new Runnable() {
-                                                                    @Override
-                                                                    public void run() {
-                                                                        if (isAttachedView()) {
-                                                                            getView().dismissBleConfigDialog();
-                                                                            doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
-                                                                        }
-                                                                    }
-                                                                });
-                                                            }
-
-                                                            @Override
-                                                            public void onWriteFailure(int errorCode, int cmd) {
-                                                                mContext.runOnUiThread(new Runnable() {
-                                                                    @Override
-                                                                    public void run() {
-                                                                        if (isAttachedView()) {
-                                                                            getView().dismissBleConfigDialog();
-                                                                            getView().updateUploadState(true);
-                                                                            getView().toastShort(mContext.getString(R.string.device_ble_deploy_failed));
-                                                                            sensoroDeviceConnection.disconnect();
-                                                                        }
-
-                                                                    }
-                                                                });
-                                                            }
-                                                        });
-                                                    } else {
-                                                        mContext.runOnUiThread(new Runnable() {
-                                                            @Override
-                                                            public void run() {
-                                                                if (isAttachedView()) {
-                                                                    getView().toastShort(mContext.getString(R.string.deploy_configuration_analyze_data_failed));
-                                                                    sensoroDeviceConnection.disconnect();
-                                                                }
-
-                                                            }
-                                                        });
-
-                                                    }
-                                                } else {
-                                                    getView().toastShort("请先设置初始配置值");
-                                                    sensoroDeviceConnection.disconnect();
-                                                }
-                                            } else {
-                                                getView().dismissBleConfigDialog();
-                                                doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
-                                            }
-
-                                        }
-
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onWriteFailure(int errorCode, int cmd) {
-                                mContext.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (isAttachedView()) {
-                                            getView().dismissBleConfigDialog();
-                                            getView().updateUploadState(true);
-                                            getView().toastShort(mContext.getString(R.string.device_ble_deploy_failed));
-                                            sensoroDeviceConnection.disconnect();
-                                        }
-
-                                    }
-                                });
-                            }
-                        });
-                    } else {
+        if (isAttachedView()) {
+            getView().updateBleConfigDialogMessage(mContext.getString(R.string.loading_configuration_file));
+            if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
+                try {
+                    LogUtils.loge("onConnectedSuccess--->> hasSignalConfig");
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+                sensoroDeviceConnection.writeData05ChannelMask(deployAnalyzerModel.channelMask, new SensoroWriteCallback() {
+                    @Override
+                    public void onWriteSuccess(Object o, int cmd) {
                         if (isAttachedView()) {
+                            try {
+                                LogUtils.loge("onConnectedSuccess--->> hasSignalConfig writeData05ChannelMask suc");
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                             if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                                 if (deployAnalyzerModel.settingData != null) {
                                     SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getInitValue());
@@ -1095,80 +1010,138 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                                         sensoroDeviceConnection.writeData05Configuration(sensoroDevice, new SensoroWriteCallback() {
                                             @Override
                                             public void onWriteSuccess(Object o, int cmd) {
-                                                mContext.runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        if (isAttachedView()) {
-                                                            getView().dismissBleConfigDialog();
-                                                            doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
-                                                        }
+                                                if (isAttachedView()) {
+                                                    try {
+                                                        LogUtils.loge("onConnectedSuccess--->>hasSignalConfig writeData05Configuration suc");
+                                                    } catch (Throwable throwable) {
+                                                        throwable.printStackTrace();
                                                     }
-                                                });
-
-
+                                                    getView().dismissBleConfigDialog();
+                                                    doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
+                                                }
                                             }
 
                                             @Override
                                             public void onWriteFailure(int errorCode, int cmd) {
-                                                mContext.runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        if (isAttachedView()) {
-                                                            getView().dismissBleConfigDialog();
-                                                            getView().updateUploadState(true);
-                                                            getView().toastShort(mContext.getString(R.string.device_ble_deploy_failed));
-                                                            sensoroDeviceConnection.disconnect();
-                                                        }
-
+                                                if (isAttachedView()) {
+                                                    try {
+                                                        LogUtils.loge("onConnectedSuccess--->>hasSignalConfig writeData05Configuration suc");
+                                                    } catch (Throwable throwable) {
+                                                        throwable.printStackTrace();
                                                     }
-                                                });
+                                                    getView().dismissBleConfigDialog();
+                                                    getView().updateUploadState(true);
+                                                    getView().toastShort(mContext.getString(R.string.device_ble_deploy_failed));
+                                                    sensoroDeviceConnection.disconnect();
+                                                }
                                             }
                                         });
                                     } else {
-                                        mContext.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                if (isAttachedView()) {
-                                                    getView().toastShort(mContext.getString(R.string.deploy_configuration_analyze_data_failed));
-                                                    sensoroDeviceConnection.disconnect();
-                                                }
-
-                                            }
-                                        });
+                                        getView().dismissBleConfigDialog();
+                                        getView().toastShort(mContext.getString(R.string.deploy_configuration_analyze_data_failed));
+                                        sensoroDeviceConnection.disconnect();
 
                                     }
+
                                 } else {
-                                    getView().toastShort("请先设置初始配置值");
+                                    getView().dismissBleConfigDialog();
+                                    getView().toastShort(mContext.getString(R.string.please_set_initial_configuration));
                                     sensoroDeviceConnection.disconnect();
                                 }
                             } else {
                                 getView().dismissBleConfigDialog();
                                 doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
                             }
-
                         }
+
                     }
 
+                    @Override
+                    public void onWriteFailure(int errorCode, int cmd) {
+                        if (isAttachedView()) {
+                            try {
+                                LogUtils.loge("onConnectedSuccess--->>hasSignalConfig writeData05ChannelMask fal");
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+                            getView().dismissBleConfigDialog();
+                            getView().updateUploadState(true);
+                            getView().toastShort(mContext.getString(R.string.device_ble_deploy_failed));
+                            sensoroDeviceConnection.disconnect();
+                        }
 
+                    }
+
+                });
+            } else {
+                if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+                    try {
+                        LogUtils.loge("onConnectedSuccess--->>contains(deployAnalyzerModel.deviceType)");
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                    if (deployAnalyzerModel.settingData != null) {
+                        SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getInitValue());
+                        if (sensoroDevice != null) {
+                            sensoroDeviceConnection.writeData05Configuration(sensoroDevice, new SensoroWriteCallback() {
+                                @Override
+                                public void onWriteSuccess(Object o, int cmd) {
+                                    if (isAttachedView()) {
+                                        try {
+                                            LogUtils.loge("onConnectedSuccess--->>contains(deployAnalyzerModel.deviceType)  writeData05Configuration suc");
+                                        } catch (Throwable throwable) {
+                                            throwable.printStackTrace();
+                                        }
+                                        getView().dismissBleConfigDialog();
+                                        doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
+                                    }
+                                }
+
+                                @Override
+                                public void onWriteFailure(int errorCode, int cmd) {
+                                    if (isAttachedView()) {
+                                        try {
+                                            LogUtils.loge("onConnectedSuccess--->>contains(deployAnalyzerModel.deviceType)  writeData05Configuration fail");
+                                        } catch (Throwable throwable) {
+                                            throwable.printStackTrace();
+                                        }
+                                        getView().dismissBleConfigDialog();
+                                        getView().updateUploadState(true);
+                                        getView().toastShort(mContext.getString(R.string.device_ble_deploy_failed));
+                                        sensoroDeviceConnection.disconnect();
+                                    }
+
+                                }
+                            });
+                        } else {
+                            getView().dismissBleConfigDialog();
+                            getView().toastShort(mContext.getString(R.string.deploy_configuration_analyze_data_failed));
+                            sensoroDeviceConnection.disconnect();
+                        }
+                    } else {
+                        getView().dismissBleConfigDialog();
+                        getView().toastShort(mContext.getString(R.string.please_set_initial_configuration));
+                        sensoroDeviceConnection.disconnect();
+                    }
+                } else {
+                    getView().dismissBleConfigDialog();
+                    doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
                 }
 
             }
-        });
+        }
+
+
     }
 
     @Override
     public void onConnectedFailure(int errorCode) {
-        mContext.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (isAttachedView()) {
-                    getView().dismissBleConfigDialog();
-                    getView().updateUploadState(true);
-                    getView().toastShort(mContext.getString(R.string.ble_connect_failed));
-                }
+        if (isAttachedView()) {
+            getView().dismissBleConfigDialog();
+            getView().updateUploadState(true);
+            getView().toastShort(mContext.getString(R.string.ble_connect_failed));
+        }
 
-            }
-        });
     }
 
     @Override
