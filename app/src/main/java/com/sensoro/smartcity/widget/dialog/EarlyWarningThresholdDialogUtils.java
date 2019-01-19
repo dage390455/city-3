@@ -3,7 +3,10 @@ package com.sensoro.smartcity.widget.dialog;
 import android.app.Activity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,12 +28,14 @@ public class EarlyWarningThresholdDialogUtils {
     private DialogUtilsChangeClickListener listener;
     private CustomCornerDialog mDialog;
     private ImageView ivCancel;
+    private final ImageView mImvNoContent;
 
     public EarlyWarningThresholdDialogUtils(Activity activity) {
         View view = View.inflate(activity, R.layout.item_dialog_elect_threshold, null);
 //        mTvTitle = view.findViewById(R.id.dialog_tip_tv_title);
 //        mTvMessage = view.findViewById(R.id.dialog_tip_tv_message);
         mTvCancel = view.findViewById(R.id.dialog_tv_change_info);
+        mImvNoContent = view.findViewById(R.id.no_content);
         ivCancel = view.findViewById(R.id.iv_cancel);
         rvEarlyWarningThreshold = view.findViewById(R.id.rv_early_warning_threshold);
         LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
@@ -89,7 +94,15 @@ public class EarlyWarningThresholdDialogUtils {
 //        mTvConfirm.setTextColor(color);
 //    }
     public void updateEarlyWarningThresholdAdapter(List<EarlyWarningthresholdDialogUtilsAdapterModel> data) {
-        mAdapter.updateList(data);
+        if(data == null || data.size() == 0){
+            mImvNoContent.setVisibility(View.VISIBLE);
+            rvEarlyWarningThreshold.setVisibility(View.GONE);
+        }else{
+            mImvNoContent.setVisibility(View.GONE);
+            rvEarlyWarningThreshold.setVisibility(View.VISIBLE);
+            mAdapter.updateList(data);
+        }
+
     }
 
     public void show() {
