@@ -18,6 +18,7 @@ import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
+import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
 import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapENActivity;
@@ -31,6 +32,7 @@ import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IMonitorPointElectricDetailActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.Elect3DetailModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.TaskOptionModel;
@@ -1145,7 +1147,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         getView().dismissTipDialog();
         getView().showOperationTipLoadingDialog();
         mScheduleNo = null;
-        RetrofitServiceHelper.INSTANCE.doMonitorPointOperation(sns, operationType, null, null, switchSpec, diameter)
+        RetrofitServiceHelper.INSTANCE.doMonitorPointOperation(sns, operationType, null, null, switchSpec, null,diameter)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>(this) {
             @Override
             public void onCompleted(MonitorPointOperationRequestRsp response) {
@@ -1232,7 +1234,15 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 getView().showTipDialog(false, null, R.string.is_device_self_check, R.string.device_self_check_tip_message, R.color.c_a6a6a6, R.string.self_check, R.color.c_29c093, MonitorPointOperationCode.SELF_CHECK);
                 break;
             case MonitorPointOperationCode.AIR_SWITCH_CONFIG:
-                getView().showTipDialog(true, mDeviceInfo.getDeviceType(), R.string.is_device_air_switch_config, R.string.device_air_switch_config_tip_message, R.color.c_a6a6a6, R.string.air_switch_config, R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_CONFIG);
+                //TODO 跳转阈值
+                Intent intent = new Intent(mContext, DeployMonitorConfigurationActivity.class);
+                intent.putExtra(EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
+                DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
+                deployAnalyzerModel.deviceType = mDeviceInfo.getDeviceType();
+                deployAnalyzerModel.sn = mDeviceInfo.getSn();
+                intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+                getView().startAC(intent);
+//                getView().showTipDialog(true, mDeviceInfo.getDeviceType(), R.string.is_device_air_switch_config, R.string.device_air_switch_config_tip_message, R.color.c_a6a6a6, R.string.air_switch_config, R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_CONFIG);
                 break;
             case MonitorPointOperationCode.AIR_SWITCH_POWER_OFF:
                 //断电

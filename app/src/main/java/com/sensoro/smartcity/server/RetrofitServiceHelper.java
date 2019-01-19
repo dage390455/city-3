@@ -1239,7 +1239,7 @@ public enum RetrofitServiceHelper {
         return devicesMergeTypes;
     }
 
-    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer switchSpec, Double diameter) {
+    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer switchSpec, Integer wireMaterial, Double diameter) {
         JSONObject jsonObject = new JSONObject();
 
         try {
@@ -1260,13 +1260,19 @@ public enum RetrofitServiceHelper {
                 }
                 jsonObject.put("rules", jsonRules);
             }
+            JSONObject jsonObjectConfig = new JSONObject();
             if (switchSpec != null) {
-                jsonObject.put("switchSpec", switchSpec);
+                jsonObjectConfig.put("switchSpec", switchSpec);
+            }
+            if (wireMaterial != null) {
+                jsonObjectConfig.put("wireMaterial", wireMaterial);
             }
             if (diameter != null) {
-                jsonObject.put("wireDiameter", diameter);
+                jsonObjectConfig.put("wireDiameter", diameter);
             }
-
+            if (switchSpec != null || wireMaterial != null || diameter != null) {
+                jsonObject.put("config", jsonObjectConfig);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -1384,6 +1390,7 @@ public enum RetrofitServiceHelper {
 
     /**
      * 解除账号控制返回主账户
+     *
      * @return
      */
     public Observable<LoginRsp> backMainAccount() {

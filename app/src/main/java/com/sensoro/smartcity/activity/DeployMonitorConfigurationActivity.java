@@ -23,17 +23,20 @@ import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapt
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorConfigurationView;
+import com.sensoro.smartcity.model.MaterialValueModel;
 import com.sensoro.smartcity.presenter.DeployMonitorConfigurationPresenter;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.dialog.BleConfigurationDialogUtils;
 import com.sensoro.smartcity.widget.dialog.EarlyWarningThresholdDialogUtils;
+import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
+import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
+import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,11 +77,12 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     @BindView(R.id.ac_deploy_configuration_tv_diameter)
     TextView acDeployConfigurationTvDiameter;
 
-    private List<String> marterials = new ArrayList<>();
+    private final List<String> marterials = new ArrayList<>();
     private BleConfigurationDialogUtils bleConfigDialog;
     private OptionsPickerView pvCustomOptions;
     private EarlyWarningThresholdDialogUtils overCurrentDialog;
-
+    private MonitorPointOperatingDialogUtil mOperatingUtil;
+    private TipOperationDialogUtils mTipUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -88,9 +92,22 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
         mPresenter.initData(mActivity);
     }
 
+    private void initOperatingDialog() {
+        mOperatingUtil = new MonitorPointOperatingDialogUtil(mActivity, false);
+    }
+
+    private void initTipDialog() {
+        mTipUtils = new TipOperationDialogUtils(mActivity, false);
+//        mTipUtils.setTipDialogUtilsClickListener(this);
+    }
+
     private void initView() {
+        includeTextTitleTvSubtitle.setText(R.string.cancel);
+        initTipDialog();
+        initOperatingDialog();
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         includeTextTitleTvTitle.setText(mActivity.getString(R.string.initial_configuration));
+        initCustomOptionPicker();
         acDeployConfigurationEtEnter.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -107,7 +124,6 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
                 getCurrentValue();
             }
         });
-        initCustomOptionPicker();
         acDeployConfigurationTvDiameter.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -140,22 +156,6 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
                 getCurrentValue();
             }
         });
-//        acDeployConfigurationEtDiameter.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                updateBtnStatus(s.toString().length() > 0);
-//            }
-//        });
         bleConfigDialog = new BleConfigurationDialogUtils(mActivity, mActivity.getString(R.string.connecting));
         overCurrentDialog = new EarlyWarningThresholdDialogUtils(mActivity, mActivity.getString(R.string.over_current), true);
 
@@ -170,20 +170,18 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
         if (!TextUtils.isEmpty(diameter) && !TextUtils.isEmpty(material) && !TextUtils.isEmpty(enterValue)) {
             try {
                 Integer integer = Integer.valueOf(enterValue);
-                if (integer > 0) {
-                    int in = integer;
+                int in = integer;
+                MaterialValueModel materialValueModel = Constants.materialValueMap.get(diameter);
+                if (materialValueModel != null) {
                     if (getString(R.string.cu).equals(material)) {
-                        in = Constants.materialValueMap.get(diameter).cuValue;
+                        in = materialValueModel.cuValue;
                     } else if (getString(R.string.al).equals(material)) {
-                        in = Constants.materialValueMap.get(diameter).alValue;
+                        in = materialValueModel.alValue;
                     }
                     int min = Math.min(integer, in);
                     tvCurrentValue.setText(String.format(Locale.CHINESE, "%dA", min));
                     updateBtnStatus(true);
-                }else{
-                    updateBtnStatus(false);
                 }
-
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 toastShort(getString(R.string.enter_the_correct_number_format));
@@ -196,62 +194,17 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     }
 
     private void initCustomOptionPicker() {//条件选择器初始化，自定义布局
-        /**
-         * @description
-         *
-         * 注意事项：
-         * 自定义布局中，id为 optionspicker 或者 timepicker 的布局以及其子控件必须要有，否则会报空指针。
-         * 具体可参考demo 里面的两个自定义layout布局。
-         */
         final ArrayList<String> strings = new ArrayList<>();
         strings.addAll(Constants.materialValueMap.keySet());
-
-
-//        pvCustomOptions = new OptionsPickerBuilder(mActivity, new OnOptionsSelectListener() {
-//            @Override
-//            public void onOptionsSelect(int options1, int option2, int options3, View v) {
-//                //返回的分别是三个级别的选中位置
-//                String tx = strings.get(options1);
-//                acDeployConfigurationTvDiameter.setText(tx);
-//            }
-//        }).setLayoutRes(R.layout.pickerview_custom_options, new CustomListener() {
-//            @Override
-//            public void customLayout(View v) {
-//                final TextView tvSubmit = (TextView) v.findViewById(R.id.tv_finish);
-//                ImageView ivCancel = (ImageView) v.findViewById(R.id.iv_cancel);
-//                tvSubmit.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        pvCustomOptions.returnData();
-//                        pvCustomOptions.dismiss();
-//                    }
-//                });
-//
-//                ivCancel.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        pvCustomOptions.dismiss();
-//                    }
-//                });
-//            }
-//        })
-//                .isDialog(true)
-//                .setOutSideCancelable(false)
-//
-//                .build();
-//
-//        pvCustomOptions.setPicker(strings);//添加数据
         final String[] arr = {"16"};
         pvCustomOptions = new OptionsPickerBuilder(this, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 //返回的分别是三个级别的选中位置
                 String tx = strings.get(options1);
-                /* + options3Items.get(options1).get(options2).get(options3).getPickerViewText()*/
-                ;
                 acDeployConfigurationTvDiameter.setText(tx);
             }
-        }).setTitleText("线径选择")
+        }).setTitleText(mActivity.getString(R.string.wire_diameter))
                 .setContentTextSize(23)//设置滚轮文字大小
                 .setDividerColor(mActivity.getResources().getColor(R.color.c_e7e7e7))//设置分割线的颜色
                 .setSelectOptions(6)//默认选中项
@@ -264,8 +217,6 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
                 .setTextColorOut(mActivity.getResources().getColor(R.color.c_a6a6a6))
                 .isRestoreItem(true)//切换时是否还原，设置默认选中第一项。
                 .isCenterLabel(false) //是否只显示中间选中项的label文字，false则每项item全部都带有label。
-//                .setLabels("省", "市", "区")
-//                .setOutSideColor(0x00000000) //设置外部遮罩颜色
                 .setOnCancelClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -288,8 +239,6 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
                 acDeployConfigurationTvDiameter.setText(arr[0]);
             }
         });
-//        pvOptions.setSelectOptions(1,1);
-        /*pvOptions.setPicker(options1Items);//一级选择器*/
         pvCustomOptions.setPicker(strings);//二级选择器
 
     }
@@ -345,13 +294,14 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     }
 
 
-    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_deploy_configuration_tv_configuration, R.id.ll_wire_material, R.id.ll_wire_diameter, R.id.ll_current_info})
+    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.include_text_title_tv_subtitle, R.id.ac_deploy_configuration_tv_configuration, R.id.ll_wire_material, R.id.ll_wire_diameter, R.id.ll_current_info})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_deploy_configuration_tv_configuration:
-                mPresenter.doConfiguration(acDeployConfigurationEtEnter.getText().toString(), acDeployConfigurationTvDiameter.getText().toString());
+                mPresenter.doConfiguration(acDeployConfigurationTvWireMaterial.getText().toString(), acDeployConfigurationTvDiameter.getText().toString(), tvCurrentValue.getText().toString());
                 break;
             case R.id.include_text_title_imv_arrows_left:
+            case R.id.include_text_title_tv_subtitle:
                 finishAc();
                 break;
             case R.id.ll_wire_material:
@@ -433,6 +383,86 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     }
 
     @Override
+    public void setInputCurrentText(String text) {
+        if (text != null) {
+            acDeployConfigurationEtEnter.setText(text);
+            acDeployConfigurationEtEnter.setSelection(text.length());
+        }
+
+    }
+
+    @Override
+    public void setInputDiameterValueText(String text) {
+        acDeployConfigurationTvDiameter.setText(text);
+    }
+
+    @Override
+    public void setInputWireMaterialText(String text) {
+        acDeployConfigurationTvWireMaterial.setText(text);
+    }
+
+    @Override
+    public void setActualCurrentText(String text) {
+        tvCurrentValue.setText(text);
+    }
+
+    @Override
+    public void setAcDeployConfigurationTvConfigurationText(String text) {
+        acDeployConfigurationTvConfiguration.setText(text);
+    }
+
+    @Override
+    public void showOperationTipLoadingDialog() {
+        if (mOperatingUtil != null) {
+            mOperatingUtil.setTipText(mActivity.getString(R.string.configuring));
+            mOperatingUtil.show();
+        }
+    }
+
+    @Override
+    public void dismissOperatingLoadingDialog() {
+        if (mOperatingUtil != null) {
+            mOperatingUtil.dismiss();
+        }
+    }
+
+    @Override
+    public void showErrorTipDialog(String errorMsg) {
+        if (mTipUtils.isShowing()) {
+            mTipUtils.setTipMessageText(errorMsg);
+            return;
+        }
+        mTipUtils.setTipEtRootVisible(false);
+        mTipUtils.setTipTitleText(mActivity.getString(R.string.request_failed));
+        mTipUtils.setTipMessageText(errorMsg);
+        mTipUtils.setTipCancelText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
+        mTipUtils.setTipConfirmVisible(false);
+        mTipUtils.show();
+    }
+
+    @Override
+    public void dismissTipDialog() {
+        if (mTipUtils != null) {
+            mTipUtils.dismiss();
+        }
+    }
+
+    @Override
+    public void showOperationSuccessToast() {
+        SensoroSuccessToast.INSTANCE.showToast(mActivity, Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void setTitleImvArrowsLeftVisible(boolean isVisible) {
+        includeTextTitleImvArrowsLeft.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    public void setTitleTvSubtitleVisible(boolean isVisible) {
+        includeTextTitleTvSubtitle.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
     protected void onDestroy() {
         if (bleConfigDialog != null) {
             bleConfigDialog.onDestroy();
@@ -440,6 +470,12 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
 
         if (overCurrentDialog != null) {
             overCurrentDialog.destory();
+        }
+        if (mOperatingUtil != null) {
+            mOperatingUtil.destroy();
+        }
+        if (mTipUtils != null) {
+            mTipUtils.destroy();
         }
         super.onDestroy();
 

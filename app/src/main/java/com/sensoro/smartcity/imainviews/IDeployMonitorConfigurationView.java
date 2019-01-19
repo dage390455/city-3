@@ -27,4 +27,28 @@ public interface IDeployMonitorConfigurationView extends IToast, IActivityIntent
     void setLlAcDeployConfigurationDiameterVisible(boolean isVisible);
 
     void showOverCurrentDialog(ArrayList<EarlyWarningthresholdDialogUtilsAdapterModel> overCurrentDataList);
+
+    void setInputCurrentText(String text);
+
+    void setInputDiameterValueText(String text);
+
+    void setInputWireMaterialText(String text);
+
+    void setActualCurrentText(String text);
+
+    void setAcDeployConfigurationTvConfigurationText(String text);
+
+    void showOperationTipLoadingDialog();
+
+    void dismissOperatingLoadingDialog();
+
+    void showErrorTipDialog(String errorMsg);
+
+    void dismissTipDialog();
+
+    void showOperationSuccessToast();
+
+    void setTitleImvArrowsLeftVisible(boolean isVisible);
+    void setTitleTvSubtitleVisible(boolean isVisible);
 }
+

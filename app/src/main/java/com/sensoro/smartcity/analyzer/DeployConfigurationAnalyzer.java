@@ -25,7 +25,7 @@ public class DeployConfigurationAnalyzer {
         switch (deviceType) {
             case "fhsj_elec_fires":
                 //泛海三江电气火灾，没有配置
-                result[0] = 1;
+                result[0] = 0;
                 result[1] = 50;
                 break;
             case "acrel_fires":
@@ -33,7 +33,7 @@ public class DeployConfigurationAnalyzer {
                 break;
             case "acrel_single":
                 //安科瑞单相电
-                result[0] = 12;
+                result[0] = 0;
                 result[1] = 84;
                 break;
             case "mantun_fires":

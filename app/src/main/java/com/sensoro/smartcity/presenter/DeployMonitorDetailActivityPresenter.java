@@ -601,7 +601,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         } else {
             intent.setClass(mContext, DeployMapENActivity.class);
         }
-        deployAnalyzerModel.mapSourceType = DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL;
+        deployAnalyzerModel.mapSourceType = DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL;
         intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
         getView().startAC(intent);
     }
@@ -689,20 +689,9 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 if (data instanceof DeployControlSettingData) {
                     deployAnalyzerModel.settingData = (DeployControlSettingData) data;
                     int initValue = deployAnalyzerModel.settingData.getInitValue();
-                    String settingText;
                     if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
-                        Double diameterValue = deployAnalyzerModel.settingData.getDiameterValue();
-                        if (diameterValue != null) {
-                            String formatDouble = WidgetUtil.getFormatDouble(diameterValue, 2);
-                            settingText = mContext.getString(R.string.had_setting_detail) + initValue + "A" + " " + mContext.getString(R.string.diameter) + ":" + formatDouble + "m㎡";
-                        } else {
-                            settingText = mContext.getString(R.string.had_setting_detail) + initValue + "A" + " " + mContext.getString(R.string.diameter);
-                        }
-
-                    } else {
-                        settingText = mContext.getString(R.string.had_setting_detail) + initValue + "A";
+                        getView().setDeployDeviceDetailDeploySetting(mContext.getString(R.string.actual_overcurrent_threshold) + ":" + initValue + "A");
                     }
-                    getView().setDeployDeviceDetailDeploySetting(settingText);
                 } else {
                     getView().setDeployDeviceDetailDeploySetting(null);
                 }
@@ -1230,6 +1219,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     public void doDeployBleSetting() {
         Intent intent = new Intent(mContext, DeployMonitorConfigurationActivity.class);
+        if (deployAnalyzerModel.settingData != null) {
+            intent.putExtra(EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA, deployAnalyzerModel.settingData);
+        }
+        intent.putExtra(EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE);
         intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
         getView().startAC(intent);
     }
