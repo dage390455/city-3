@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/alarm_threshold_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/transparent"
@@ -7,7 +8,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_height="0dp"
         android:background="@drawable/shape_bg_solid_ff_corner"
         android:orientation="vertical">
 
@@ -21,21 +23,31 @@
             android:textSize="18sp" />
 
 
-        <android.support.v4.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_early_warning_threshold"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content">
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_early_warning_threshold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <ImageView
+                        android:id="@+id/no_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/no_content"
+                        android:contentDescription="@null"
+                        android:layout_gravity="center_horizontal"
+                        android:padding="18dp"
+                        android:visibility="gone"
+                        />
+                </RelativeLayout>
+
 
                 <TextView
                     android:id="@+id/dialog_tv_change_info"
@@ -56,17 +68,16 @@
                     android:visibility="gone" />
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
-
 
     </LinearLayout>
 
     <ImageView
         android:id="@+id/iv_cancel"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:paddingTop="20dp"
+        android:padding="20dp"
+        android:contentDescription="@null"
         android:src="@drawable/bd_ocr_cancel" />
 
 </LinearLayout>
