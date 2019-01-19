@@ -3,8 +3,10 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -15,6 +17,7 @@ import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMonitorConfigurationView> {
@@ -24,6 +27,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
     private Integer mEnterValue;
     private int[] mMinMaxValue;
     private Double diameterValue;
+    private ArrayList<EarlyWarningthresholdDialogUtilsAdapterModel> overCurrentDataList;
 
     @Override
     public void initData(Context context) {
@@ -40,6 +44,19 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         } else {
             getView().setTvEnterValueRange(mMinMaxValue[0], mMinMaxValue[1]);
         }
+
+        initOverCurrentData();
+    }
+
+    private void initOverCurrentData() {
+        overCurrentDataList = new ArrayList<>();
+        EarlyWarningthresholdDialogUtilsAdapterModel model = new EarlyWarningthresholdDialogUtilsAdapterModel();
+        model.content = mActivity.getString(R.string.over_current_description_one);
+        overCurrentDataList.add(model);
+        EarlyWarningthresholdDialogUtilsAdapterModel model1 = new EarlyWarningthresholdDialogUtilsAdapterModel();
+        model1.content = mActivity.getString(R.string.over_current_description_two);
+        overCurrentDataList.add(model1);
+
     }
 
     @Override
@@ -101,5 +118,11 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         eventData.data = deployControlSettingData;
         EventBus.getDefault().post(eventData);
         getView().finishAc();
+    }
+
+    public void showOverCurrentDialog() {
+        if (isAttachedView()) {
+            getView().showOverCurrentDialog(overCurrentDataList);
+        }
     }
 }

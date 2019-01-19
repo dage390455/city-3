@@ -783,4 +783,9 @@
     <string name="diameter_info">电线参数</string>
     <string name="diameter_material">电线材质</string>
     <string name="actual_overcurrent_threshold">实际过流阈值</string>
+    <string name="over_current_description_one">若空开额定电流 ≤ 电线载流量，\n则过流阈值 = 空开额定电流；</string>
+    <string name="over_current_description_two">若空开额定电流 > 电线载流量，\n则过流阈值 = 电线载流量。</string>
+    <string name="over_current">过流阈值</string>
+    <string name="cu">铜芯</string>
+    <string name="al">铝芯</string>
 </resources>

@@ -3,8 +3,10 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,14 +19,21 @@ import com.bigkoo.pickerview.listener.OnOptionsSelectChangeListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorConfigurationView;
 import com.sensoro.smartcity.presenter.DeployMonitorConfigurationPresenter;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.dialog.BleConfigurationDialogUtils;
+import com.sensoro.smartcity.widget.dialog.EarlyWarningThresholdDialogUtils;
+import com.sensoro.smartcity.widget.popup.SelectDialog;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,10 +69,16 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     LinearLayout llCurrentInfo;
     @BindView(R.id.ac_deploy_configuration_tv_near)
     TextView acDeployConfigurationTvNear;
+    @BindView(R.id.tv_current_value)
+    TextView tvCurrentValue;
     @BindView(R.id.ac_deploy_configuration_tv_diameter)
     TextView acDeployConfigurationTvDiameter;
+
+    private List<String> marterials = new ArrayList<>();
     private BleConfigurationDialogUtils bleConfigDialog;
     private OptionsPickerView pvCustomOptions;
+    private EarlyWarningThresholdDialogUtils overCurrentDialog;
+
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -89,10 +104,42 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
 
             @Override
             public void afterTextChanged(Editable s) {
-                updateBtnStatus(s.toString().length() > 0);
+                getCurrentValue();
             }
         });
         initCustomOptionPicker();
+        acDeployConfigurationTvDiameter.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                getCurrentValue();
+            }
+        });
+        acDeployConfigurationTvWireMaterial.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                getCurrentValue();
+            }
+        });
 //        acDeployConfigurationEtDiameter.addTextChangedListener(new TextWatcher() {
 //            @Override
 //            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -110,6 +157,37 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
 //            }
 //        });
         bleConfigDialog = new BleConfigurationDialogUtils(mActivity, mActivity.getString(R.string.connecting));
+        overCurrentDialog = new EarlyWarningThresholdDialogUtils(mActivity, mActivity.getString(R.string.over_current), true);
+
+        marterials.add(getString(R.string.cu));
+        marterials.add(getString(R.string.al));
+    }
+
+    private void getCurrentValue() {
+        String diameter = acDeployConfigurationTvDiameter.getText().toString();
+        String material = acDeployConfigurationTvWireMaterial.getText().toString();
+        String enterValue = acDeployConfigurationEtEnter.getText().toString();
+        if (!TextUtils.isEmpty(diameter) && !TextUtils.isEmpty(material) && !TextUtils.isEmpty(enterValue)) {
+            try {
+                Integer integer = Integer.valueOf(enterValue);
+                int in = integer;
+                if (getString(R.string.cu).equals(material)) {
+                    in = Constants.materialValueMap.get(diameter).cuValue;
+                } else if (getString(R.string.al).equals(material)) {
+                    in = Constants.materialValueMap.get(diameter).alValue;
+                }
+                int min = Math.min(integer, in);
+                tvCurrentValue.setText(String.format(Locale.CHINESE, "%dA", min));
+                updateBtnStatus(true);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                toastShort(getString(R.string.enter_the_correct_number_format));
+                updateBtnStatus(false);
+            }
+        } else {
+            tvCurrentValue.setText("");
+            updateBtnStatus(false);
+        }
     }
 
     private void initCustomOptionPicker() {//条件选择器初始化，自定义布局
@@ -121,9 +199,9 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
          * 具体可参考demo 里面的两个自定义layout布局。
          */
         final ArrayList<String> strings = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            strings.add(String.valueOf(i));
-        }
+        strings.addAll(Constants.materialValueMap.keySet());
+
+
 //        pvCustomOptions = new OptionsPickerBuilder(mActivity, new OnOptionsSelectListener() {
 //            @Override
 //            public void onOptionsSelect(int options1, int option2, int options3, View v) {
@@ -171,9 +249,9 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
         }).setTitleText("线径选择")
                 .setContentTextSize(23)//设置滚轮文字大小
                 .setDividerColor(mActivity.getResources().getColor(R.color.c_e7e7e7))//设置分割线的颜色
-                .setSelectOptions(3)//默认选中项
-                .setCancelColor(mActivity.getResources().getColor(R.color.c_a6a6a6))
-                .setSubmitColor(mActivity.getResources().getColor(R.color.colorAccent))
+                .setSelectOptions(6)//默认选中项
+                .setCancelColor(mActivity.getResources().getColor(R.color.transparent))
+                .setSubmitColor(mActivity.getResources().getColor(R.color.transparent))
                 .setBgColor(mActivity.getResources().getColor(R.color.c_f4f4f4))
                 .setTitleBgColor(mActivity.getResources().getColor(R.color.c_f4f4f4))
                 .setTitleColor(mActivity.getResources().getColor(R.color.c_252525))
@@ -272,13 +350,24 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
                 finishAc();
                 break;
             case R.id.ll_wire_material:
+                AppUtils.showDialog(mActivity, new SelectDialog.SelectDialogListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        setMaterial(marterials.get(position));
+                    }
+                }, marterials);
                 break;
             case R.id.ll_wire_diameter:
                 pvCustomOptions.show(); //弹出自定义条件选择器
                 break;
             case R.id.ll_current_info:
+                mPresenter.showOverCurrentDialog();
                 break;
         }
+    }
+
+    private void setMaterial(String material) {
+        acDeployConfigurationTvWireMaterial.setText(material);
     }
 
     @Override
@@ -332,8 +421,21 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     }
 
     @Override
+    public void showOverCurrentDialog(ArrayList<EarlyWarningthresholdDialogUtilsAdapterModel> overCurrentDataList) {
+        if (overCurrentDialog != null) {
+            overCurrentDialog.show(overCurrentDataList);
+        }
+    }
+
+    @Override
     protected void onDestroy() {
-        bleConfigDialog.onDestroy();
+        if (bleConfigDialog != null) {
+            bleConfigDialog.onDestroy();
+        }
+
+        if (overCurrentDialog != null) {
+            overCurrentDialog.destory();
+        }
         super.onDestroy();
 
     }
