@@ -1,6 +1,6 @@
 package com.sensoro.smartcity.util;
 
-import com.sensoro.libbleserver.ble.BLEDevice;
+import com.sensoro.libbleserver.ble.entity.BLEDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 
 import java.util.ArrayList;

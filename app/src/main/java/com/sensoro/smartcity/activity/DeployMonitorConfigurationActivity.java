@@ -194,15 +194,13 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     }
 
     private void initCustomOptionPicker() {//条件选择器初始化，自定义布局
-        final ArrayList<String> strings = new ArrayList<>();
-        strings.addAll(Constants.materialValueMap.keySet());
-        final String[] arr = {"16"};
+        final int[] arr = {0};
         pvCustomOptions = new OptionsPickerBuilder(this, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 //返回的分别是三个级别的选中位置
-                String tx = strings.get(options1);
-                acDeployConfigurationTvDiameter.setText(tx);
+                arr[0] = options1;
+                mPresenter.doCustomOptionPickerItemSelect(options1);
             }
         }).setTitleText(mActivity.getString(R.string.wire_diameter))
                 .setContentTextSize(23)//设置滚轮文字大小
@@ -220,15 +218,14 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
                 .setOnCancelClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        acDeployConfigurationTvDiameter.setText(arr[0]);
+                        mPresenter.doCustomOptionPickerItemSelect(arr[0]);
                     }
                 })
                 .setOutSideCancelable(true)
                 .setOptionsSelectChangeListener(new OnOptionsSelectChangeListener() {
                     @Override
                     public void onOptionsSelectChanged(int options1, int options2, int options3) {
-                        String s = strings.get(options1);
-                        arr[0] = s;
+                        arr[0] = options1;
                     }
                 })
                 .setCyclic(true, true, true)
@@ -236,11 +233,9 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
         pvCustomOptions.setOnDismissListener(new OnDismissListener() {
             @Override
             public void onDismiss(Object o) {
-                acDeployConfigurationTvDiameter.setText(arr[0]);
+                mPresenter.doCustomOptionPickerItemSelect(arr[0]);
             }
         });
-        pvCustomOptions.setPicker(strings);//二级选择器
-
     }
 
     @Override
@@ -460,6 +455,13 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     @Override
     public void setTitleTvSubtitleVisible(boolean isVisible) {
         includeTextTitleTvSubtitle.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void updatePvCustomOptions(List<String> list) {
+        if (pvCustomOptions != null && list != null) {
+            pvCustomOptions.setPicker(list);
+        }
     }
 
     @Override

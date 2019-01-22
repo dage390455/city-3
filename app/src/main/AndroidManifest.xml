@@ -238,7 +238,7 @@
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity android:name=".activity.AlarmHistoryLogActivity" />
 
-        <service android:name="com.sensoro.libbleserver.ble.scanner.BLEDeviceService" />
+        <service android:name="com.sensoro.libbleserver.ble.entity.BLEDeviceService" />
         <service
             android:name="com.igexin.download.DownloadService"
             android:process=":pushservice" />

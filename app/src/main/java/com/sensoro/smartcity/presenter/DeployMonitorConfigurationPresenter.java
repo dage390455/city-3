@@ -52,6 +52,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
 
         }
     };
+    private final ArrayList<String> pickerStrings = new ArrayList<>();
 
     @Override
     public void initData(Context context) {
@@ -103,7 +104,13 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
             getView().setTvEnterValueRange(mMinMaxValue[0], mMinMaxValue[1]);
         }
         initOverCurrentData();
+        initPickerData();
 
+    }
+
+    private void initPickerData() {
+        pickerStrings.addAll(Constants.materialValueMap.keySet());
+        getView().updatePvCustomOptions(pickerStrings);
     }
 
     private void initOverCurrentData() {
@@ -334,5 +341,12 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
     @Override
     public void onCreate() {
         EventBus.getDefault().register(this);
+    }
+
+    public void doCustomOptionPickerItemSelect(int position) {
+        String tx = pickerStrings.get(position);
+        if (!TextUtils.isEmpty(tx)) {
+            getView().setInputDiameterValueText(tx);
+        }
     }
 }

@@ -6,6 +6,7 @@ import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface IDeployMonitorConfigurationView extends IToast, IActivityIntent, IProgressDialog {
     void showBleConfigurationDialog(String message);
@@ -50,5 +51,6 @@ public interface IDeployMonitorConfigurationView extends IToast, IActivityIntent
 
     void setTitleImvArrowsLeftVisible(boolean isVisible);
     void setTitleTvSubtitleVisible(boolean isVisible);
+    void updatePvCustomOptions(List<String> list);
 }
 
