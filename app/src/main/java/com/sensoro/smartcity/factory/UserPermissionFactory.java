@@ -130,7 +130,7 @@ public class UserPermissionFactory {
     }
 
     /**
-     * 判断是否有子账户权限
+     * 判断是否有子账户查看权限
      *
      * @param grants
      * @return
@@ -146,7 +146,7 @@ public class UserPermissionFactory {
     }
 
     /**
-     * 判断是否有子账户权限
+     * 判断是否有子账户切换权限
      *
      * @param grants
      * @return

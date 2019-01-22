@@ -1,13 +1,10 @@
 package com.sensoro.smartcity.analyzer;
 
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.sensoro.libbleserver.ble.entity.SensoroDevice;
 import com.sensoro.libbleserver.ble.entity.SensoroMantunData;
 import com.sensoro.libbleserver.ble.entity.SensoroSensor;
-import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.Random;
 
@@ -109,13 +106,7 @@ public class DeployConfigurationAnalyzer {
         sensoroSensor.elecFireData.leakageTh = 300; //漏电(通道 1)
         sensoroSensor.elecFireData.tempTh = 80; //电线温度，通道2
         sensoroSensor.elecFireData.currentTh = value; //过流
-        sensoroSensor.elecFireData.loadTh = (int) (value * 220 / 1000 + 0.5f); //过载
-        try {
-            SensoroToast.INSTANCE.makeText("value = " + sensoroSensor.elecFireData.loadTh, Toast.LENGTH_SHORT).show();
-            LogUtils.loge("sensoroSensor.elecFireData.loadTh = " + sensoroSensor.elecFireData.loadTh);
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
+        sensoroSensor.elecFireData.loadTh = (int) Math.ceil(value * 220 / 1000); //过载
         sensoroSensor.elecFireData.volHighTh = 253; //过压 V
         sensoroSensor.elecFireData.volLowTh = 187; //欠压 V
         sensoroSensor.elecFireData.sensorPwd = new Random().nextInt(9999) + 1;// 1-9999 4位随机数

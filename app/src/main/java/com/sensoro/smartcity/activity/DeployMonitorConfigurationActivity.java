@@ -293,7 +293,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_deploy_configuration_tv_configuration:
-                mPresenter.doConfiguration(acDeployConfigurationTvWireMaterial.getText().toString(), acDeployConfigurationTvDiameter.getText().toString(), tvCurrentValue.getText().toString());
+                mPresenter.doConfiguration(acDeployConfigurationEtEnter.getText().toString(), acDeployConfigurationTvWireMaterial.getText().toString(), acDeployConfigurationTvDiameter.getText().toString(), tvCurrentValue.getText().toString());
                 break;
             case R.id.include_text_title_imv_arrows_left:
             case R.id.include_text_title_tv_subtitle:

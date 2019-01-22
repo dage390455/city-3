@@ -130,13 +130,39 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
             EventBus.getDefault().unregister(this);
         }
         mHandler.removeCallbacksAndMessages(null);
+        pickerStrings.clear();
     }
 
 
-    public void doConfiguration(String material, String diameter, String actualCurrent) {
+    public void doConfiguration(String inputCurrent, String material, String diameter, String actualCurrent) {
         int materialValue = 0;
         double diameterValue = 0;
         Integer mEnterValue;
+        try {
+            if (TextUtils.isEmpty(inputCurrent)) {
+                getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.enter_the_correct_number_format));
+                return;
+            }
+            if (mMinMaxValue == null) {
+                getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_failed));
+                return;
+            }
+            try {
+                int tempValue = Integer.parseInt(inputCurrent);
+                if (tempValue < mMinMaxValue[0] || tempValue > mMinMaxValue[1]) {
+                    getView().toastShort(mActivity.getString(R.string.empty_open_rated_current_is_out_of_range));
+                    return;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.enter_the_correct_number_format));
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.enter_the_correct_number_format));
+            return;
+        }
         if (needDiameter()) {
             if (mActivity.getString(R.string.cu).equals(material)) {
                 materialValue = 0;
@@ -170,7 +196,8 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
             try {
                 mEnterValue = Integer.parseInt(actualCurrent);
                 if (mEnterValue < mMinMaxValue[0] || mEnterValue > mMinMaxValue[1]) {
-                    getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.monitor_point_operation_error_value_range) + mMinMaxValue[0] + "-" + mMinMaxValue[1]);
+//                    getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.monitor_point_operation_error_value_range) + mMinMaxValue[0] + "-" + mMinMaxValue[1]);
+                    getView().toastShort(mActivity.getString(R.string.wire_current_carrying_capacity_is_not_within_the_open_range));
                     return;
                 }
             } catch (Exception e) {
@@ -238,51 +265,10 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         });
 
     }
-//    private void checkAndConnect(String valueStr, String diameter) {
-//        if (mMinMaxValue == null) {
-//            getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_failed));
-//            return;
-//        }
-//        try {
-//            mEnterValue = Integer.parseInt(valueStr);
-//            if (mEnterValue < mMinMaxValue[0] || mEnterValue > mMinMaxValue[1]) {
-//                getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.monitor_point_operation_error_value_range) + mMinMaxValue[0] + "-" + mMinMaxValue[1]);
-//                return;
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.enter_the_correct_number_format));
-//            return;
-//        }
-//        if (needDiameter()) {
-//            if (TextUtils.isEmpty(diameter)) {
-//                getView().toastShort(mActivity.getString(R.string.enter_wire_diameter_tip));
-//                return;
-//            }
-//            try {
-//                diameterValue = Double.parseDouble(diameter);
-//                if (diameterValue < 0 || diameterValue >= 200) {
-//                    getView().toastShort(mActivity.getString(R.string.diameter) + String.format(Locale.CHINESE, "%s%d-%d", mActivity.getString(R.string.monitor_point_operation_error_value_range), 0, 200));
-//                    return;
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                getView().toastShort(mActivity.getString(R.string.diameter) + mActivity.getString(R.string.enter_the_correct_number_format));
-//                return;
-//            }
-//        }
-//
-//        configCompleted();
-//    }
 
     public boolean needDiameter() {
         return Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
     }
-
-
-//    private void configCompleted() {
-//
-//    }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventData eventData) {
