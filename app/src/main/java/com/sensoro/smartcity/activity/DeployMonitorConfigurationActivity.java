@@ -157,7 +157,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
             }
         });
         bleConfigDialog = new BleConfigurationDialogUtils(mActivity, mActivity.getString(R.string.connecting));
-        overCurrentDialog = new EarlyWarningThresholdDialogUtils(mActivity, mActivity.getString(R.string.over_current), true);
+        overCurrentDialog = new EarlyWarningThresholdDialogUtils(mActivity, mActivity.getString(R.string.over_current));
 
         marterials.add(getString(R.string.cu));
         marterials.add(getString(R.string.al));

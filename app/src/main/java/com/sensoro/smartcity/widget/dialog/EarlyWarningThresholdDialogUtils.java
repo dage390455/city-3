@@ -3,10 +3,7 @@ package com.sensoro.smartcity.widget.dialog;
 import android.app.Activity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,11 +29,11 @@ public class EarlyWarningThresholdDialogUtils {
     private TextView tvTitle;
 
     public EarlyWarningThresholdDialogUtils(Activity activity) {
-        this(activity,activity.getString(R.string.warning_threshold),false);
+        this(activity, activity.getString(R.string.warning_threshold));
 
     }
 
-    public EarlyWarningThresholdDialogUtils(Activity activity,String title,boolean hideName) {
+    public EarlyWarningThresholdDialogUtils(Activity activity, String title) {
         View view = View.inflate(activity, R.layout.item_dialog_elect_threshold, null);
 //        mTvTitle = view.findViewById(R.id.dialog_tip_tv_title);
 //        mTvMessage = view.findViewById(R.id.dialog_tip_tv_message);
@@ -50,7 +47,7 @@ public class EarlyWarningThresholdDialogUtils {
         LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rvEarlyWarningThreshold.setLayoutManager(layoutManager);
-        mAdapter = new EarlyWarningThresholdDialogUtilsAdapter(activity,hideName);
+        mAdapter = new EarlyWarningThresholdDialogUtilsAdapter(activity);
         rvEarlyWarningThreshold.setAdapter(mAdapter);
 //        mTvConfirm = view.findViewById(R.id.dialog_tip_tv_confirm);
 //        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -62,7 +59,7 @@ public class EarlyWarningThresholdDialogUtils {
 //            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 //        }
 
-        mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view,560/750f);
+        mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view, 560 / 750f);
         ivCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,10 +100,10 @@ public class EarlyWarningThresholdDialogUtils {
 //        mTvConfirm.setTextColor(color);
 //    }
     public void updateEarlyWarningThresholdAdapter(List<EarlyWarningthresholdDialogUtilsAdapterModel> data) {
-        if(data == null || data.size() == 0){
+        if (data == null || data.size() == 0) {
             mImvNoContent.setVisibility(View.VISIBLE);
             rvEarlyWarningThreshold.setVisibility(View.GONE);
-        }else{
+        } else {
             mImvNoContent.setVisibility(View.GONE);
             rvEarlyWarningThreshold.setVisibility(View.VISIBLE);
             mAdapter.updateList(data);

@@ -18,6 +18,7 @@ import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.presenter.MainPresenter;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.widget.HomeViewPager;
+import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
@@ -32,9 +33,9 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     HomeViewPager acMainHvpContent;
     @BindView(R.id.ac_main_bottom_navigation_bar)
     BottomNavigationBar acMainBottomBar;
-
     private MainFragmentPageAdapter mPageAdapter;
     private BottomNavigationItem warnItem;
+    public ProgressUtils mProgressUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     }
 
     private void initView() {
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         initViewPager();
 
         initBottomBar();
@@ -113,12 +115,16 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     public void showProgressDialog() {
-
+        if (mProgressUtils != null) {
+            mProgressUtils.showProgress();
+        }
     }
 
     @Override
     public void dismissProgressDialog() {
-
+        if (mProgressUtils != null) {
+            mProgressUtils.dismissProgress();
+        }
     }
 
     @Override
@@ -227,5 +233,14 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     @Override
     public void onTabReselected(int position) {
         //
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
+            mProgressUtils = null;
+        }
+        super.onDestroy();
     }
 }
