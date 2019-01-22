@@ -63,6 +63,9 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
     }
 
     public void requestDataByDirection(int direction, boolean isForce, String searchText) {
+        if (!eventLoginData.hasSubMerchant) {
+            return;
+        }
         if (isForce) {
             getView().showProgressDialog();
         }
