@@ -318,7 +318,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
                 @Override
                 public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
                     if (deviceInfoListRsp.getData().size() == 0) {
-                        getView().toastShort(mContext.getString(R.string.account_has_been_disabled));
+                        getView().toastShort(mContext.getString(R.string.no_more_data));
                     } else {
                         getView().refreshData(mDataList);
                     }

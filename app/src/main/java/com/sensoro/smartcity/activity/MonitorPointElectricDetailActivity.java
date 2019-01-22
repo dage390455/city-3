@@ -409,7 +409,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
 
     @Override
     public void updateMonitorPhotos(final List<ScenesData> data) {
-        if (acMonitorDeployPhoto.isComputingLayout()){
+        if (acMonitorDeployPhoto.isComputingLayout()) {
             acMonitorDeployPhoto.post(new Runnable() {
                 @Override
                 public void run() {
@@ -481,6 +481,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             return;
         }
         mTipUtils.setTipEtRootVisible(false);
+        mTipUtils.setDiameterVisible(false);
         mTipUtils.setTipTitleText(mActivity.getString(R.string.request_failed));
         mTipUtils.setTipMessageText(errorMsg);
         mTipUtils.setTipCancelText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
