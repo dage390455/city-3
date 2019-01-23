@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
+import android.location.LocationManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
@@ -27,21 +28,28 @@ import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 
 public final class PermissionUtils {
     private static final int MY_REQUEST_PERMISSION_CODE = 0x114;
     private static final ArrayList<String> FORCE_REQUIRE_PERMISSIONS = new ArrayList<String>() {
-        {
-            add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            add(Manifest.permission.ACCESS_COARSE_LOCATION);
-            add(Manifest.permission.CAMERA);
-            add(Manifest.permission.RECORD_AUDIO);
-            add(Manifest.permission.ACCESS_FINE_LOCATION);
+        {   //
             add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            //
+            add(Manifest.permission.ACCESS_COARSE_LOCATION);
+            add(Manifest.permission.ACCESS_FINE_LOCATION);
+            //
+            add(Manifest.permission.RECORD_AUDIO);
+            //
+            add(Manifest.permission.CAMERA);
+            //
             add(Manifest.permission.READ_PHONE_STATE);
+            //
             add(Manifest.permission.CALL_PHONE);
+            //
             add(Manifest.permission.READ_CONTACTS);
             add(Manifest.permission.WRITE_CONTACTS);
         }
@@ -370,10 +378,6 @@ public final class PermissionUtils {
         }
     }
 
-    private boolean voicePermission() {
-        return (PackageManager.PERMISSION_GRANTED == ContextCompat.
-                checkSelfPermission(mContext.get(), android.Manifest.permission.RECORD_AUDIO));
-    }
 
     public boolean checkPhoto() {
         if (Build.VERSION.SDK_INT >= 23) {
@@ -451,7 +455,17 @@ public final class PermissionUtils {
         }
     }
 
-    public static boolean checkHasBlePermission(Activity activity) {
+    /**
+     * 是否有定位权限（蓝牙依赖权限）
+     *
+     * @param activity
+     * @return
+     */
+    public static synchronized boolean checkHasLocationPermission(Activity activity) {
+        Class<? extends Activity> aClass = activity.getClass();
+        int i = aClass.getSimpleName().hashCode() ^ aClass.getName().hashCode();
+        HashMap<Object, Integer> map = new HashMap<>();
+        //
         final ArrayList<String> blePermissions = new ArrayList<String>() {
             {
                 add(Manifest.permission.ACCESS_COARSE_LOCATION);
@@ -467,4 +481,154 @@ public final class PermissionUtils {
         }
         return true;
     }
+
+    /**
+     * 是否打开gps定位信息
+     *
+     * @param context
+     * @return
+     */
+    public static synchronized boolean isLocServiceEnable(Context context) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager != null) {
+            return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        }
+        return false;
+    }
+
+    /**
+     * 是否有读写联系人权限
+     *
+     * @param activity
+     * @return
+     */
+    public static synchronized boolean checkHasContactsPermission(Activity activity) {
+        final ArrayList<String> blePermissions = new ArrayList<String>() {
+            {
+                add(Manifest.permission.READ_CONTACTS);
+                add(Manifest.permission.WRITE_CONTACTS);
+            }
+
+        };
+        for (String permission : blePermissions) {
+            if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager
+                    .PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 是否有存储权限
+     *
+     * @param activity
+     * @return
+     */
+    public static synchronized boolean checkHasWriteExternalStoragePermission(Activity activity) {
+        final ArrayList<String> blePermissions = new ArrayList<String>() {
+            {
+                add(Manifest.permission.READ_EXTERNAL_STORAGE);
+                add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
+
+        };
+        for (String permission : blePermissions) {
+            if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager
+                    .PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 是否有打电话权限
+     *
+     * @param activity
+     * @return
+     */
+    public static synchronized boolean checkHasCallPhonePermission(Activity activity) {
+        final ArrayList<String> blePermissions = new ArrayList<String>() {
+            {
+                add(Manifest.permission.CALL_PHONE);
+            }
+
+        };
+        for (String permission : blePermissions) {
+            if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager
+                    .PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 是否有读取手机识别码权限
+     *
+     * @param activity
+     * @return
+     */
+    public static synchronized boolean checkHasReadPhoneStatePermission(Activity activity) {
+        final ArrayList<String> blePermissions = new ArrayList<String>() {
+            {
+                add(Manifest.permission.READ_PHONE_STATE);
+            }
+
+        };
+        for (String permission : blePermissions) {
+            if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager
+                    .PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 是否有照相权限
+     *
+     * @param activity
+     * @return
+     */
+    public static synchronized boolean checkHasCameraPermission(Activity activity) {
+        final ArrayList<String> blePermissions = new ArrayList<String>() {
+            {
+                add(Manifest.permission.CAMERA);
+            }
+
+        };
+        for (String permission : blePermissions) {
+            if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager
+                    .PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 是否有录音权限
+     *
+     * @param activity
+     * @return
+     */
+    public static synchronized boolean checkHasRecordAudioPermission(Activity activity) {
+        final ArrayList<String> blePermissions = new ArrayList<String>() {
+            {
+                add(Manifest.permission.RECORD_AUDIO);
+            }
+
+        };
+        for (String permission : blePermissions) {
+            if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager
+                    .PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
 }

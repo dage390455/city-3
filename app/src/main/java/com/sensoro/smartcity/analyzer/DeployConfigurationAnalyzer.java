@@ -25,7 +25,7 @@ public class DeployConfigurationAnalyzer {
         switch (deviceType) {
             case "fhsj_elec_fires":
                 //泛海三江电气火灾，没有配置
-                result[0] = 0;
+                result[0] = 1;
                 result[1] = 50;
                 break;
             case "acrel_fires":
@@ -33,7 +33,7 @@ public class DeployConfigurationAnalyzer {
                 break;
             case "acrel_single":
                 //安科瑞单相电
-                result[0] = 0;
+                result[0] = 12;
                 result[1] = 84;
                 break;
             case "mantun_fires":
@@ -169,6 +169,9 @@ public class DeployConfigurationAnalyzer {
                 mantunData.id = 0; //现阶段只有一组，所以id为0，如果多组，则依次赋值
                 mantunData.currentTh = value; //过流
                 mantunData.powerTh = value * 220; //过载
+                if (mantunData.powerTh == 0) {
+                    mantunData.powerTh = 1;
+                }
             }
         }
     }
