@@ -33,7 +33,8 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="40dp"
-            android:background="#cfcfcf" />
+            android:background="#cfcfcf"
+            android:visibility="visible"/>
 
     </FrameLayout>
 

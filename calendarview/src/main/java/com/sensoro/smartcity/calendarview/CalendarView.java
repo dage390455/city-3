@@ -18,6 +18,7 @@ package com.sensoro.smartcity.calendarview;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -108,6 +109,7 @@ public class CalendarView extends FrameLayout {
 
         this.mWeekLine = findViewById(R.id.line);
         this.mWeekLine.setBackgroundColor(mDelegate.getWeekLineBackground());
+//        this.mWeekLine.setBackgroundColor(Color.TRANSPARENT);
         LayoutParams lineParams = (LayoutParams) this.mWeekLine.getLayoutParams();
         lineParams.setMargins(mDelegate.getWeekLineMargin(),
                 mDelegate.getWeekBarHeight(),
