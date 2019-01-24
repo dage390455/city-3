@@ -57,7 +57,7 @@ public class CalendarView extends FrameLayout {
     /**
      * 星期栏的线
      */
-    private View mWeekLine;
+//    private View mWeekLine;
 
     /**
      * 月份快速选取
@@ -107,15 +107,15 @@ public class CalendarView extends FrameLayout {
         mWeekBar.setup(mDelegate);
         mWeekBar.onWeekStartChange(mDelegate.getWeekStart());
 
-        this.mWeekLine = findViewById(R.id.line);
-        this.mWeekLine.setBackgroundColor(mDelegate.getWeekLineBackground());
+//        this.mWeekLine = findViewById(R.id.line);
+//        this.mWeekLine.setBackgroundColor(mDelegate.getWeekLineBackground());
 //        this.mWeekLine.setBackgroundColor(Color.TRANSPARENT);
-        LayoutParams lineParams = (LayoutParams) this.mWeekLine.getLayoutParams();
-        lineParams.setMargins(mDelegate.getWeekLineMargin(),
-                mDelegate.getWeekBarHeight(),
-                mDelegate.getWeekLineMargin(),
-                0);
-        this.mWeekLine.setLayoutParams(lineParams);
+//        LayoutParams lineParams = (LayoutParams) this.mWeekLine.getLayoutParams();
+//        lineParams.setMargins(mDelegate.getWeekLineMargin(),
+//                mDelegate.getWeekBarHeight(),
+//                mDelegate.getWeekLineMargin(),
+//                0);
+//        this.mWeekLine.setLayoutParams(lineParams);
 
         this.mMonthPager = (MonthViewPager) findViewById(R.id.vp_month);
         this.mMonthPager.mWeekPager = mWeekPager;
@@ -958,7 +958,7 @@ public class CalendarView extends FrameLayout {
     public void setBackground(int yearViewBackground, int weekBackground, int lineBg) {
         mWeekBar.setBackgroundColor(weekBackground);
         mSelectLayout.setBackgroundColor(yearViewBackground);
-        mWeekLine.setBackgroundColor(lineBg);
+//        mWeekLine.setBackgroundColor(lineBg);
     }
 
 

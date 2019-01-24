@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.sensoro.smartcity.R;
@@ -17,13 +18,23 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
     private int space;
     private int color;
     private boolean isDrawTop;
-    private boolean isDrawFirstLeft;
-    private boolean isDrawLine;
+    private boolean isDrawFirstLeft = true;
+    private boolean isDrawLine = false;
+    private boolean isDrawRight = true;
+
 
     public SpacesItemDecoration(boolean isDrawLine, int space) {
         this.space = space;
         this.isDrawTop = true;
         this.isDrawLine = isDrawLine;
+        this.color = R.color.c_e7e7e7;
+    }
+
+    public SpacesItemDecoration(boolean isDrawLine, int space,boolean isDrawRight) {
+        this.space = space;
+        this.isDrawTop = true;
+        this.isDrawLine = isDrawLine;
+        this.isDrawRight = isDrawRight;
         this.color = R.color.c_e7e7e7;
     }
 
@@ -46,7 +57,6 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
         this.isDrawTop = isDrawTop;
         this.isDrawFirstLeft = isDrawFirstLeft;
         this.color = R.color.item_sensor_line;
-        this.isDrawLine = true;
     }
 
     public void setColor(int color) {
@@ -91,9 +101,19 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         int position = parent.getChildAdapterPosition(view);
+        if (position == 0 ) {
+            if (isDrawFirstLeft) {
+                outRect.left = space;
+            }else{
+                outRect.left = 0;
+            }
+        }else{
+            outRect.left = space;;
+        }
 
-        outRect.left = space;
-        outRect.right = space;
+        if(isDrawRight){
+            outRect.right = space;
+        }
         outRect.bottom = space;
 
         if (isDrawTop) {

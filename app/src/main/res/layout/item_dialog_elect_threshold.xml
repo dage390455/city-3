@@ -67,6 +67,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:paddingTop="20dp"
-        android:src="@drawable/bd_ocr_cancel" />
+        android:src="@drawable/early_warning_threshold_close" />
 
 </LinearLayout>
