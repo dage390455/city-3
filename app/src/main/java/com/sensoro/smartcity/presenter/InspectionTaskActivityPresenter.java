@@ -9,7 +9,7 @@ import android.text.TextUtils;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
-import com.sensoro.libbleserver.ble.BLEDevice;
+import com.sensoro.libbleserver.ble.entity.BLEDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;

@@ -7,10 +7,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
-import com.sensoro.libbleserver.ble.BLEDevice;
-import com.sensoro.libbleserver.ble.SensoroConnectionCallback;
-import com.sensoro.libbleserver.ble.SensoroDeviceConnection;
-import com.sensoro.libbleserver.ble.SensoroWriteCallback;
+import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
+import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
+import com.sensoro.libbleserver.ble.connection.SensoroDeviceConnection;
+import com.sensoro.libbleserver.ble.entity.BLEDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
