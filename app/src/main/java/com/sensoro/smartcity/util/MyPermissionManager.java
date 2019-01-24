@@ -27,6 +27,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static android.content.Context.ACTIVITY_SERVICE;
@@ -36,62 +37,49 @@ public final class MyPermissionManager {
         public int onActivityResultRequestCode;
         public int onRequestPermissionsResultCode;
         public Activity activity;
-        public ArrayList<String> permissions;
+        public ArrayList<MyPermissionModel> permissions;
 
-        public ArrayList<String> getPermissions(int... type) {
+        public ArrayList<MyPermissionModel> getPermissions(int... type) {
             return null;
         }
-//        add(Manifest.permission.READ_EXTERNAL_STORAGE);
-//        add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-//        //
-//        add(Manifest.permission.ACCESS_COARSE_LOCATION);
-//        add(Manifest.permission.ACCESS_FINE_LOCATION);
-//        //
-//        add(Manifest.permission.RECORD_AUDIO);
-//        //
-//        add(Manifest.permission.CAMERA);
-//        //
-//        add(Manifest.permission.READ_PHONE_STATE);
-//        //
-//        add(Manifest.permission.CALL_PHONE);
-//        //
-//        add(Manifest.permission.READ_CONTACTS);
-//        add(Manifest.permission.WRITE_CONTACTS);
     }
 
-    public static class MyPermissionModle {
+    public static class MyPermissionModel {
         public String permission;
         public String permissionName;
     }
 
-    public static MyPermissionModle createPermissionModle(String permission) {
+    private static MyPermissionModel createPermissionModel(String permission) {
         if (!TextUtils.isEmpty(permission)) {
-            MyPermissionModle myPermissionModle = new MyPermissionModle();
-            myPermissionModle.permission = permission;
+            MyPermissionModel myPermissionModel = new MyPermissionModel();
+            myPermissionModel.permission = permission;
             switch (permission) {
                 case Manifest.permission.READ_EXTERNAL_STORAGE:
                 case Manifest.permission.WRITE_EXTERNAL_STORAGE:
-                    myPermissionModle.permissionName = "读写";
+                    myPermissionModel.permissionName = "读写";
                     break;
                 case Manifest.permission.ACCESS_COARSE_LOCATION:
                 case Manifest.permission.ACCESS_FINE_LOCATION:
-                    myPermissionModle.permissionName = "定位";
+                    myPermissionModel.permissionName = "定位";
                     break;
                 case Manifest.permission.RECORD_AUDIO:
-                    myPermissionModle.permissionName = "录音";
+                    myPermissionModel.permissionName = "录音";
                     break;
                 case Manifest.permission.CAMERA:
-                    myPermissionModle.permissionName = "拍照";
+                    myPermissionModel.permissionName = "拍照";
                     break;
                 case Manifest.permission.READ_PHONE_STATE:
-                    myPermissionModle.permissionName = "手机识别码";
+                    myPermissionModel.permissionName = "手机识别码";
                     break;
                 case Manifest.permission.CALL_PHONE:
-                    myPermissionModle.permissionName = "拨打电话";
+                    myPermissionModel.permissionName = "拨打电话";
                     break;
                 case Manifest.permission.READ_CONTACTS:
                 case Manifest.permission.WRITE_CONTACTS:
-                    myPermissionModle.permissionName = "读写联系人";
+                    myPermissionModel.permissionName = "读写联系人";
+                    break;
+                default:
+                    myPermissionModel.permissionName = "";
                     break;
             }
         }
@@ -109,11 +97,6 @@ public final class MyPermissionManager {
             PermissionRequestCodeModel permissionRequestCodeModel = new PermissionRequestCodeModel();
             String simpleName = permissionsResultObserve.getClass().getSimpleName();
             String name = permissionsResultObserve.getClass().getName();
-            try {
-                LogUtils.loge("registerPermissionsResultObserve --simpleName = " + simpleName + ",name = " + name);
-            } catch (Throwable throwable) {
-                throwable.printStackTrace();
-            }
             permissionRequestCodeModel.onActivityResultRequestCode = simpleName.hashCode() ^ name.hashCode();
             permissionRequestCodeModel.onRequestPermissionsResultCode = permissionRequestCodeModel.onActivityResultRequestCode + 1;
             permissionRequestCodeModel.activity = activity;
@@ -137,16 +120,26 @@ public final class MyPermissionManager {
         PermissionRequestCodeModel permissionRequestCodeModel = PERMISSION_MAP.get(permissionsResultObserve);
         if (permissionRequestCodeModel != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                permissionRequestCodeModel.permissions = permissions;
-                //获取未通过的权限列表
-                ArrayList<String> newPermissions = checkEachSelfPermission(permissionRequestCodeModel, permissions);
-                if (newPermissions.size() > 0) {// 是否有未通过的权限
-                    requestEachPermissions(permissionRequestCodeModel, newPermissions.toArray(new String[newPermissions.size()]));
-                } else {// 权限已经都申请通过了
-                    if (permissionsResultObserve != null) {
-                        permissionsResultObserve.onPermissionGranted();
+                if (permissions != null) {
+                    ArrayList<MyPermissionModel> myPermissionModels = new ArrayList<>();
+                    for (String per : permissions) {
+                        MyPermissionModel permissionModel = createPermissionModel(per);
+                        if (permissionModel != null) {
+                            myPermissionModels.add(permissionModel);
+                        }
+                    }
+                    permissionRequestCodeModel.permissions = myPermissionModels;
+                    //获取未通过的权限列表
+                    ArrayList<MyPermissionModel> newPermissions = checkEachSelfPermission(permissionRequestCodeModel);
+                    if (newPermissions.size() > 0) {// 是否有未通过的权限
+                        requestEachPermissions(permissionRequestCodeModel, newPermissions);
+                    } else {// 权限已经都申请通过了
+                        if (permissionsResultObserve != null) {
+                            permissionsResultObserve.onPermissionGranted();
+                        }
                     }
                 }
+
             } else {
                 if (permissionsResultObserve != null) {
                     permissionsResultObserve.onPermissionGranted();
@@ -157,43 +150,42 @@ public final class MyPermissionManager {
     }
 
 
-    /**
-     * 申请权限前判断是否需要声明
-     *
-     * @param permissions
-     */
-
-    private static void requestEachPermissions(PermissionRequestCodeModel permissionRequestCodeModel, String[] permissions) {
-        if (shouldShowRequestPermissionRationale(permissionRequestCodeModel.activity, permissions)) {// 需要再次声明
-            showRationaleDialog(permissionRequestCodeModel.activity, permissions, permissionRequestCodeModel.onRequestPermissionsResultCode);
+    private static void requestEachPermissions(PermissionRequestCodeModel permissionRequestCodeModel, ArrayList<MyPermissionModel> newPermissions) {
+        if (shouldShowRequestPermissionRationale(permissionRequestCodeModel)) {// 需要再次声明
+            showRationaleDialog(permissionRequestCodeModel, newPermissions);
         } else {
             if (permissionRequestCodeModel.activity != null) {
-                ActivityCompat.requestPermissions(permissionRequestCodeModel.activity, permissions,
-                        permissionRequestCodeModel.onRequestPermissionsResultCode);
+                String[] innerPermission = getInnerPermission(newPermissions);
+                if (innerPermission != null) {
+                    ActivityCompat.requestPermissions(permissionRequestCodeModel.activity, innerPermission,
+                            permissionRequestCodeModel.onRequestPermissionsResultCode);
+                }
+
             }
         }
     }
 
-    private static void showRationaleDialog(final Activity activity, final String[] permissions, final int myRequestPermissionCode) {
-        if (activity != null) {
-            final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-            builder.setTitle(activity.getString(R.string.prompt))
-                    .setMessage(activity.getString(R.string.permission_descript))
-                    .setPositiveButton(activity.getString(R.string.dialog_input_confirm),
+    private static void showRationaleDialog(final PermissionRequestCodeModel permissionRequestCodeModel, final ArrayList<MyPermissionModel> permissions) {
+        if (permissionRequestCodeModel != null && permissionRequestCodeModel.activity != null) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(permissionRequestCodeModel.activity);
+            builder.setTitle(permissionRequestCodeModel.activity.getString(R.string.prompt))
+                    .setMessage(permissionRequestCodeModel.activity.getString(R.string.permission_descript))
+                    .setPositiveButton(permissionRequestCodeModel.activity.getString(R.string.dialog_input_confirm),
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    ActivityCompat.requestPermissions(activity, permissions,
-                                            myRequestPermissionCode);
+                                    String[] innerPermission = getInnerPermission(permissions);
+                                    ActivityCompat.requestPermissions(permissionRequestCodeModel.activity, innerPermission,
+                                            permissionRequestCodeModel.onRequestPermissionsResultCode);
                                 }
                             })
-                    .setNegativeButton(activity.getString(R.string.cancel),
+                    .setNegativeButton(permissionRequestCodeModel.activity.getString(R.string.cancel),
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                    SensoroToast.INSTANCE.makeText(activity, activity.getString(R.string.permission_instruction), Toast.LENGTH_SHORT).show();
-                                    activity.finish();
+                                    SensoroToast.INSTANCE.makeText(permissionRequestCodeModel.activity, permissionRequestCodeModel.activity.getString(R.string.permission_instruction), Toast.LENGTH_SHORT).show();
+                                    permissionRequestCodeModel.activity.finish();
                                 }
                             })
                     .setCancelable(false)
@@ -202,36 +194,46 @@ public final class MyPermissionManager {
 
     }
 
-    /**
-     * 检察每个权限是否申请
-     *
-     * @param permissions
-     * @return newPermissions.size > 0 表示有权限需要申请
-     */
-    private static ArrayList<String> checkEachSelfPermission(PermissionRequestCodeModel permissionRequestCodeModel, ArrayList<String> permissions) {
-        ArrayList<String> newPermissions = new ArrayList<String>();
-        for (String permission : permissions) {
-            if (permissionRequestCodeModel.activity != null && ContextCompat.checkSelfPermission(permissionRequestCodeModel.activity, permission) != PackageManager
-                    .PERMISSION_GRANTED) {
-                newPermissions.add(permission);
+    private static String[] getInnerPermission(ArrayList<MyPermissionModel> permissions) {
+        if (permissions != null && permissions.size() > 0) {
+            String[] strings = new String[permissions.size()];
+            for (int i = 0; i < permissions.size(); i++) {
+                strings[i] = permissions.get(i).permission;
+            }
+            return strings;
+        }
+        return null;
+    }
+
+    private static ArrayList<MyPermissionModel> checkEachSelfPermission(PermissionRequestCodeModel permissionRequestCodeModel) {
+        ArrayList<MyPermissionModel> newPermissions = new ArrayList<>();
+        if (permissionRequestCodeModel != null) {
+            if (permissionRequestCodeModel.permissions != null) {
+
+                for (MyPermissionModel permission : permissionRequestCodeModel.permissions) {
+                    if (permissionRequestCodeModel.activity != null && ContextCompat.checkSelfPermission(permissionRequestCodeModel.activity, permission.permission) != PackageManager
+                            .PERMISSION_GRANTED) {
+                        newPermissions.add(permission);
+                    }
+                }
             }
         }
+
         return newPermissions;
     }
 
 
-    /**
-     * 再次申请权限时，是否需要声明
-     *
-     * @param permissions
-     * @return
-     */
-    private static boolean shouldShowRequestPermissionRationale(Activity activity, String[] permissions) {
-        for (String permission : permissions) {
-            if (activity != null && ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
-                return true;
+    private static boolean shouldShowRequestPermissionRationale(PermissionRequestCodeModel permissionRequestCodeModel) {
+        if (permissionRequestCodeModel != null) {
+            if (permissionRequestCodeModel.activity != null && permissionRequestCodeModel.permissions != null) {
+                for (MyPermissionModel permission : permissionRequestCodeModel.permissions) {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(permissionRequestCodeModel.activity, permission.permission)) {
+                        return true;
+                    }
+                }
             }
         }
+
         return false;
     }
 
@@ -251,12 +253,11 @@ public final class MyPermissionManager {
         return true;
     }
 
-    private static ArrayList<String> checkForceRequirePermissionDenied(
-            ArrayList<String> forceRequirePermissions, ArrayList<String> deniedPermissions) {
-        ArrayList<String> forceRequirePermissionsDenied = new ArrayList<>();
+    private static ArrayList<MyPermissionModel> checkForceRequirePermissionDenied(ArrayList<MyPermissionModel> forceRequirePermissions, ArrayList<MyPermissionModel> deniedPermissions) {
+        ArrayList<MyPermissionModel> forceRequirePermissionsDenied = new ArrayList<>();
         if (forceRequirePermissions != null && forceRequirePermissions.size() > 0
                 && deniedPermissions != null && deniedPermissions.size() > 0) {
-            for (String forceRequire : forceRequirePermissions) {
+            for (MyPermissionModel forceRequire : forceRequirePermissions) {
                 if (deniedPermissions.contains(forceRequire)) {
                     forceRequirePermissionsDenied.add(forceRequire);
                 }
@@ -597,7 +598,7 @@ public final class MyPermissionManager {
             if (permissionRequestCodeModel != null) {
                 if (requestCode == permissionRequestCodeModel.onRequestPermissionsResultCode && permissions != null) {
                     // 获取被拒绝的权限列表
-                    ArrayList<String> deniedPermissions = new ArrayList<>();
+                    ArrayList<MyPermissionModel> deniedPermissions = new ArrayList<>();
                     if (checkEachPermissionsGranted(grantResults)) {
 //                        if (hasRecordPermission() && checkPhoto()) {
 //                            permissionsResultObserve.onPermissionGranted();
@@ -609,13 +610,12 @@ public final class MyPermissionManager {
                         for (String permission : permissions) {
                             if (permissionRequestCodeModel.activity != null && ContextCompat.checkSelfPermission(permissionRequestCodeModel.activity, permission) !=
                                     PackageManager.PERMISSION_GRANTED) {
-                                deniedPermissions.add(permission);
+                                deniedPermissions.add(createPermissionModel(permission));
                             }
                         }
                         if (permissionRequestCodeModel.permissions != null) {
                             // 判断被拒绝的权限中是否有包含必须具备的权限
-                            ArrayList<String> forceRequirePermissionsDenied =
-                                    checkForceRequirePermissionDenied(permissionRequestCodeModel.permissions, deniedPermissions);
+                            ArrayList<MyPermissionModel> forceRequirePermissionsDenied = checkForceRequirePermissionDenied(permissionRequestCodeModel.permissions, deniedPermissions);
                             if (forceRequirePermissionsDenied != null && forceRequirePermissionsDenied.size() > 0) {
                                 // 必备的权限被拒绝，
                                 showPermissionSettingDialog(permissionRequestCodeModel);
@@ -646,7 +646,11 @@ public final class MyPermissionManager {
                 if (requestCode == permissionRequestCodeModel.onActivityResultRequestCode) {
 //            requestPermission(mPermissionsList, mNeedFinish, myRequestPermissionCode);
                     if (permissionRequestCodeModel.permissions != null) {
-                        requestPermissions(permissionsResultObserve, permissionRequestCodeModel.permissions);
+                        String[] innerPermission = getInnerPermission(permissionRequestCodeModel.permissions);
+                        if (innerPermission != null) {
+                            requestPermissions(permissionsResultObserve, (ArrayList<String>) Arrays.asList(innerPermission));
+                        }
+
                     }
 
                 }
