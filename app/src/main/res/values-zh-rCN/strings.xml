@@ -377,8 +377,8 @@
     <string name="contract_info_site_nature">场地性质</string>
     <string name="contract_info_contract_service_life">合同服务年限</string>
     <string name="contract_info_contract_status">合同状态</string>
-    <string name="contract_info_contract_created_time">合同生成时间</string>
-    <string name="contract_info_contract_sign_time">合同签署时间</string>
+    <string name="contract_info_contract_created_time">生成时间：</string>
+    <string name="contract_info_contract_sign_time">签订时间：</string>
     <string name="contract_info_contract_qr_code">合同二维码</string>
     //合同result xml
     <string name="contract_result_title">二维码</string>
@@ -530,7 +530,7 @@
     <string name="normal_monitor">正常监测</string>
     <string name="inspection_test">巡检测试</string>
     <string name="company">企业</string>
-    <string name="contract_number">合同号</string>
+    <string name="contract_number">合同编号：</string>
     <string name="contract_created_time">生成时间</string>
     <string name="contract_signed_time">签订时间</string>
     <string name="co2">二氧化碳</string>
@@ -793,4 +793,7 @@
     <string name="business_name_phone">商户名称/联系人电话</string>
     <string name="empty_open_rated_current_is_out_of_range">空开额定电流超出范围</string>
     <string name="wire_current_carrying_capacity_is_not_within_the_open_range">电线载流量不在空开量程范围内</string>
+    <string name="modify_threshold">修改阈值</string>
+    <string name="contract_more_record">更多记录</string>
+    <string name="contract_info_contract_pay_time">支付时间：</string>
 </resources>

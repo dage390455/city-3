@@ -32,6 +32,7 @@ import com.sensoro.smartcity.model.Elect3DetailModel;
 import com.sensoro.smartcity.model.TaskOptionModel;
 import com.sensoro.smartcity.presenter.MonitorPointElectricDetailActivityPresenter;
 import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
@@ -175,10 +176,10 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             }
         };
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        int spacingInPixels = mActivity.getResources().getDimensionPixelSize(R.dimen.x10);
+        int spacingInPixels = AppUtils.dp2px(mActivity,8);
         monitorDetailRcTag.setIntercept(true);
         monitorDetailRcTag.setLayoutManager(layoutManager);
-        monitorDetailRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
+        monitorDetailRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels,false));
         monitorDetailRcTag.setAdapter(mTagAdapter);
         //
         mContentAdapter = new MonitoringPointRcContentAdapter(mActivity);
@@ -482,6 +483,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             return;
         }
         mTipUtils.setTipEtRootVisible(false);
+        mTipUtils.setDiameterVisible(false);
         mTipUtils.setTipTitleText(mActivity.getString(R.string.request_failed));
         mTipUtils.setTipMessageText(errorMsg);
         mTipUtils.setTipCancelText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));

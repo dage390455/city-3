@@ -2,12 +2,12 @@ package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
@@ -26,9 +26,17 @@ public class InspectionInstructionContentAdapter extends RecyclerView.Adapter<In
     private final Context mContext;
     private List<InspectionTaskInstructionModel.DataBean> dataList = new ArrayList<>();
     private OnInspectionInstructionContentPicClickListenter mListener;
+    private int mScreenWidth;
 
     public InspectionInstructionContentAdapter(Context context) {
         mContext = context;
+        WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        if (windowManager != null) {
+            mScreenWidth = windowManager.getDefaultDisplay().getWidth()-AppUtils.dp2px(mContext,40);//距离两边各20dp
+        }else {
+            mScreenWidth = AppUtils.dp2px(mContext,295);
+        }
+
     }
 
     @NonNull
@@ -53,7 +61,7 @@ public class InspectionInstructionContentAdapter extends RecyclerView.Adapter<In
             pics.add(scenesData);
         }
 
-        final InspectionInstructionImageAdapter mPhotoAdapter = new InspectionInstructionImageAdapter(mContext);
+        final InspectionInstructionImageAdapter mPhotoAdapter = new InspectionInstructionImageAdapter(mContext, mScreenWidth);
         LinearLayoutManager manager = new LinearLayoutManager(mContext) {
             @Override
             public boolean canScrollHorizontally() {
