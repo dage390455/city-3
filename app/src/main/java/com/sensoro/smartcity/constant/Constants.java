@@ -415,7 +415,7 @@ public interface Constants {
             add("fhsj_elec_fires");
             add("acrel_fires");
             add("acrel_single");
-            add("mantun_fires");
+//            add("mantun_fires");
         }
     };
     int[] MONTHS = {R.string.january, R.string.february, R.string.march, R.string.april, R.string.may, R.string.june

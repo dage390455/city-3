@@ -204,10 +204,8 @@
                     android:id="@+id/contract_ptr_list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:divider="@color/c_dfdfdf"
-                    android:dividerHeight="0.5dp"
+                    android:divider="@color/c_f4f4f4"
+                    android:dividerHeight="12dp"
                     android:fadingEdge="none"
                     android:scrollbars="none" />
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>

@@ -66,7 +66,6 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
             case 0: // 直接调起相机
-
                 Intent intent = new Intent(mActivity, ImageGridActivity.class);
                 intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
                 mActivity.startActivityForResult(intent, REQUEST_CODE_SELECT);
