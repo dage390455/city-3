@@ -146,11 +146,13 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
         String contract_number = contractListInfo.getContract_number();
         holder.tvContractNumber.setText(contract_number);
 
-        String tradeState = contractListInfo.getOrder().getTrade_state();
-
-        holder.ivPayStatus.setVisibility(tradeState != null && tradeState.equals(ContractOrderInfo.SUCCESS) ? View.VISIBLE : View.GONE);
-
-
+        ContractListInfo.Order order = contractListInfo.getOrder();
+        if (order != null) {
+            String tradeState = order.getTrade_state();
+            holder.ivPayStatus.setVisibility(ContractOrderInfo.SUCCESS.equals(tradeState) ? View.VISIBLE : View.GONE);
+        } else {
+            holder.ivPayStatus.setVisibility(View.GONE);
+        }
         return convertView;
     }
 
