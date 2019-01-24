@@ -98,7 +98,7 @@ public class DeployConfigurationAnalyzer {
         sensoroSensor.acrelFires.connectSw = 0;//关联脱扣器全部关闭
         sensoroSensor.acrelFires.ict = 2000;//漏电互感器变比 2000
         sensoroSensor.acrelFires.ct = dev / 5;
-        sensoroSensor.acrelFires.cmd = 2;
+        sensoroSensor.acrelFires.cmd = 2; //自检
     }
 
     private static void configFhsjElectFires(SensoroSensor sensoroSensor, int value) {

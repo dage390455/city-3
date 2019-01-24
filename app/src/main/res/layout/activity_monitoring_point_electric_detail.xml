@@ -684,16 +684,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:background="@drawable/bg_item_selector"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp">
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:text="@string/sensor_detail_sn"
-                    android:textColor="@color/c_626262"
-                    android:textSize="@dimen/x50" />
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
 
 
                 <TextView
@@ -701,17 +701,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="15dp"
+                    android:layout_marginEnd="20dp"
                     android:singleLine="true"
-                    android:textColor="#9b9b9b"
-                    android:textSize="@dimen/x50" />
+                    android:textColor="@color/c_252525"
+                    android:textSize="14sp" />
             </RelativeLayout>
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/y1"
-                android:layout_marginStart="12dp"
-                android:background="@color/c_e7e7e7"
+                android:layout_height="0.5dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@color/c_dfdfdf"
                 android:contentDescription="@null" />
 
             <RelativeLayout
@@ -720,16 +721,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:background="@drawable/bg_item_selector"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp">
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:text="@string/device_category"
-                    android:textColor="@color/c_626262"
-                    android:textSize="@dimen/x50" />
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
 
 
                 <TextView
@@ -737,17 +738,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="15dp"
+                    android:layout_marginEnd="20dp"
                     android:singleLine="true"
-                    android:textColor="#9b9b9b"
-                    android:textSize="@dimen/x50" />
+                    android:textColor="@color/c_252525"
+                    android:textSize="14sp" />
             </RelativeLayout>
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/y1"
-                android:layout_marginStart="12dp"
-                android:background="@color/c_e7e7e7"
+                android:layout_height="0.5dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@color/c_dfdfdf"
                 android:contentDescription="@null" />
 
             <LinearLayout
@@ -755,8 +757,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp">
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp">
 
                 <TextView
                     android:id="@+id/monitor_detail_tv_tag"
@@ -764,14 +766,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:text="@string/sensor_detail_tag"
-                    android:textColor="@color/c_626262"
-                    android:textSize="@dimen/x50" />
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
 
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="20dp"
                     android:layout_weight="1"
                     android:gravity="end|center_vertical">
 
@@ -787,17 +789,18 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/y1"
-                android:layout_marginStart="12dp"
-                android:background="@color/c_e7e7e7"
+                android:layout_height="0.5dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@color/c_dfdfdf"
                 android:contentDescription="@null" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_item_selector"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp">
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -805,8 +808,8 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginStart="20dp"
                     android:text="@string/sensor_detail_battery"
-                    android:textColor="@color/c_626262"
-                    android:textSize="@dimen/x50" />
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
 
 
                 <TextView
@@ -814,30 +817,30 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="20dp"
                     android:ellipsize="end"
                     android:maxEms="8"
                     android:singleLine="true"
-                    android:textColor="#9b9b9b"
-                    android:textSize="@dimen/x50" />
+                    android:textColor="@color/c_252525"
+                    android:textSize="14sp" />
 
             </RelativeLayout>
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/y1"
-                android:layout_marginStart="12dp"
-                android:background="@color/c_e7e7e7"
+                android:layout_height="0.5dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@color/c_dfdfdf"
                 android:contentDescription="@null" />
 
             <RelativeLayout
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_item_selector"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp">
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -845,8 +848,8 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginStart="20dp"
                     android:text="@string/sensor_detail_interval"
-                    android:textColor="@color/c_626262"
-                    android:textSize="@dimen/x50" />
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
 
 
                 <TextView
@@ -854,21 +857,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="20dp"
                     android:ellipsize="end"
                     android:maxEms="8"
                     android:singleLine="true"
-                    android:textColor="#9b9b9b"
-                    android:textSize="@dimen/x50" />
+                    android:textColor="@color/c_252525"
+                    android:textSize="14sp" />
 
             </RelativeLayout>
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/y1"
-                android:layout_marginStart="12dp"
-                android:background="@color/c_e7e7e7"
+                android:layout_height="0.5dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@color/c_dfdfdf"
+                android:visibility="gone"
                 android:contentDescription="@null" />
 
             <RelativeLayout
@@ -876,8 +881,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_item_selector"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
                 android:visibility="gone">
 
                 <TextView
@@ -886,8 +891,8 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginStart="20dp"
                     android:text="@string/elect_pwd"
-                    android:textColor="@color/c_626262"
-                    android:textSize="@dimen/x50" />
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
 
 
                 <TextView
@@ -895,13 +900,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="20dp"
                     android:ellipsize="end"
                     android:maxEms="8"
                     android:singleLine="true"
-                    android:textColor="#9b9b9b"
-                    android:textSize="@dimen/x50" />
+                    android:textColor="@color/c_252525"
+                    android:textSize="14sp" />
 
             </RelativeLayout>
         </LinearLayout>

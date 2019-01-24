@@ -57,9 +57,9 @@ public class CalendarPopUtils implements
     @BindView(R.id.calendar_view)
     CalendarView calendarView;
     @BindView(R.id.ac_calendar_tv_cancel)
-    Button acCalendarTvCancel;
+    TextView acCalendarTvCancel;
     @BindView(R.id.ac_calendar_tv_save)
-    Button acCalendarTvSave;
+    TextView acCalendarTvSave;
     @BindView(R.id.calendar_btn_layout)
     LinearLayout calendarBtnLayout;
     @BindView(R.id.sensor_calendar_date_layout)

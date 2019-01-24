@@ -2,6 +2,9 @@ package com.sensoro.smartcity.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,10 +15,13 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.util.AppUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,11 +30,13 @@ import butterknife.ButterKnife;
 
 public class InspectionInstructionImageAdapter extends RecyclerView.Adapter<InspectionInstructionImageAdapter.InspectionInstructionImageHolder> {
     private final Context mContext;
+    private final int mScreenWidth;
     private List<ScenesData> datas = new ArrayList<>();
     private boolean hasVideo = false;
 
-    public InspectionInstructionImageAdapter(Context context) {
+    public InspectionInstructionImageAdapter(Context context, int screenWidth) {
         mContext = context;
+        mScreenWidth = screenWidth;
     }
 
 
@@ -43,7 +51,7 @@ public class InspectionInstructionImageAdapter extends RecyclerView.Adapter<Insp
     }
 
     @Override
-    public void onBindViewHolder(InspectionInstructionImageHolder holder, final int position) {
+    public void onBindViewHolder(final InspectionInstructionImageHolder holder, final int position) {
         String url;
         if ("image".equals(datas.get(position).type)) {
             url = datas.get(position).url;
@@ -53,11 +61,23 @@ public class InspectionInstructionImageAdapter extends RecyclerView.Adapter<Insp
 
         Glide.with((Activity) mContext)
                 .load(url)
+                .asBitmap()
                 .error(R.drawable.ic_default_image)
                 .placeholder(R.drawable.ic_default_image)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                .override(AppUtils.dp2px(mContext,335),AppUtils.dp2px(mContext,201))
-                .into(holder.itemAdapterInspectionInstructionImv);
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        resource.compress(Bitmap.CompressFormat.PNG,100,baos);
+                        int height = resource.getHeight() * (mScreenWidth / resource.getWidth());
+                        Glide.with(mContext)
+                                .load( baos.toByteArray())
+                                .override(mScreenWidth,height)
+                                .into(holder.itemAdapterInspectionInstructionImv);
+                    }
+                });
+//                .into(holder.itemAdapterInspectionInstructionImv);
     }
 
     @Override

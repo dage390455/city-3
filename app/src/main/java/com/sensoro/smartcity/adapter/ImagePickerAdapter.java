@@ -66,7 +66,6 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
             }
         }
 
-
         notifyDataSetChanged();
     }
 

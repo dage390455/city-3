@@ -793,4 +793,5 @@
     <string name="business_name_phone">商户名称/联系人电话</string>
     <string name="empty_open_rated_current_is_out_of_range">空开额定电流超出范围</string>
     <string name="wire_current_carrying_capacity_is_not_within_the_open_range">电线载流量不在空开量程范围内</string>
+    <string name="modify_threshold">修改阈值</string>
 </resources>
