@@ -25,6 +25,7 @@ import com.sensoro.smartcity.adapter.TagAdapter;
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.imainviews.IMonitorPointElectricDetailActivityView;
 import com.sensoro.smartcity.model.Elect3DetailModel;
@@ -692,7 +693,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             mTipUtils.dismiss();
         }
         //控制线径显示
-        mTipUtils.setDiameterVisible(isEdit && "mantun_fires".equals(deviceType));
+        mTipUtils.setDiameterVisible(isEdit && Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType));
         mTipUtils.setTipEtRootVisible(isEdit);
         mTipUtils.setTipTitleText(mActivity.getString(title));
         mTipUtils.setTipMessageText(mActivity.getString(message), messageColor);

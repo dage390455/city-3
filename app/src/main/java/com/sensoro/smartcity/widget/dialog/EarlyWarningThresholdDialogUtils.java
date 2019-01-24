@@ -18,20 +18,31 @@ public class EarlyWarningThresholdDialogUtils {
     //    private final TextView mTvTitle;
     //    private AlertDialog mDialog;
 //    private final TextView mTvMessage;
-    private final TextView mTvCancel;
-    private final RecyclerView rvEarlyWarningThreshold;
-    private final EarlyWarningThresholdDialogUtilsAdapter mAdapter;
+    private TextView mTvCancel;
+    private RecyclerView rvEarlyWarningThreshold;
+    private EarlyWarningThresholdDialogUtilsAdapter mAdapter;
     //    private final TextView mTvConfirm;
     private DialogUtilsChangeClickListener listener;
     private CustomCornerDialog mDialog;
     private ImageView ivCancel;
+    private ImageView mImvNoContent;
+    private TextView tvTitle;
 
     public EarlyWarningThresholdDialogUtils(Activity activity) {
+        this(activity, activity.getString(R.string.warning_threshold));
+
+    }
+
+    public EarlyWarningThresholdDialogUtils(Activity activity, String title) {
         View view = View.inflate(activity, R.layout.item_dialog_elect_threshold, null);
 //        mTvTitle = view.findViewById(R.id.dialog_tip_tv_title);
 //        mTvMessage = view.findViewById(R.id.dialog_tip_tv_message);
+        tvTitle = view.findViewById(R.id.tv_early_warning_threshold_title);
         mTvCancel = view.findViewById(R.id.dialog_tv_change_info);
+        mImvNoContent = view.findViewById(R.id.no_content);
         ivCancel = view.findViewById(R.id.iv_cancel);
+
+        tvTitle.setText(title);
         rvEarlyWarningThreshold = view.findViewById(R.id.rv_early_warning_threshold);
         LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -48,7 +59,7 @@ public class EarlyWarningThresholdDialogUtils {
 //            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 //        }
 
-        mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view,560/750f);
+        mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view, 560 / 750f);
         ivCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,7 +100,15 @@ public class EarlyWarningThresholdDialogUtils {
 //        mTvConfirm.setTextColor(color);
 //    }
     public void updateEarlyWarningThresholdAdapter(List<EarlyWarningthresholdDialogUtilsAdapterModel> data) {
-        mAdapter.updateList(data);
+        if (data == null || data.size() == 0) {
+            mImvNoContent.setVisibility(View.VISIBLE);
+            rvEarlyWarningThreshold.setVisibility(View.GONE);
+        } else {
+            mImvNoContent.setVisibility(View.GONE);
+            rvEarlyWarningThreshold.setVisibility(View.VISIBLE);
+            mAdapter.updateList(data);
+        }
+
     }
 
     public void show() {

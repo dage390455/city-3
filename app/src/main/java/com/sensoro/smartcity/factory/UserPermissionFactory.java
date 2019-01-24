@@ -45,6 +45,9 @@ public class UserPermissionFactory {
         eventLoginData.hasSignalConfig = getHasSignalConfig(grants);
         eventLoginData.hasBadSignalUpload = getHasBadSignalUpload(grants);
         eventLoginData.hasDevicePositionCalibration = getHasDevicePositionCalibration(grants);
+        String controllerAid = userInfo.getControllerAid();
+        //通过controllerAid来判断是否可以返回主账户
+        eventLoginData.hasControllerAid = !TextUtils.isEmpty(controllerAid);
         try {
             LogUtils.loge("logPresenter", "eventLoginData = " + eventLoginData.toString());
         } catch (Throwable throwable) {
@@ -127,7 +130,7 @@ public class UserPermissionFactory {
     }
 
     /**
-     * 判断是否有子账户权限
+     * 判断是否有子账户查看权限
      *
      * @param grants
      * @return
@@ -143,7 +146,7 @@ public class UserPermissionFactory {
     }
 
     /**
-     * 判断是否有子账户权限
+     * 判断是否有子账户切换权限
      *
      * @param grants
      * @return

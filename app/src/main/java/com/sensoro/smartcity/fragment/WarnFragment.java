@@ -145,7 +145,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
 
             @Override
             public void afterTextChanged(Editable s) {
-                setSearchClearImvVisible(s.length()>0);
+                setSearchClearImvVisible(s.length() > 0);
             }
         });
 
@@ -175,7 +175,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     }
 
     private void initRcSearchHistory() {
-        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mRootFragment.getActivity()){
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mRootFragment.getActivity()) {
             @Override
             public boolean canScrollVertically() {
                 return false;
@@ -189,7 +189,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rvSearchHistory.setLayoutManager(layoutManager);
 //        int spacingInPixels = AppUtils.dp2px(mRootFragment.getActivity(),12);
-        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mRootFragment.getActivity(),6)));
+        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mRootFragment.getActivity(), 6)));
         mSearchHistoryAdapter = new SearchHistoryAdapter(mRootFragment.getActivity(), new
                 RecycleViewItemClickListener() {
                     @Override
@@ -201,9 +201,9 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
                         }
                         fgMainWarnFragmentImvClear.setVisibility(View.VISIBLE);
                         fgMainWarnEtSearch.clearFocus();
-                        AppUtils.dismissInputMethodManager(mRootFragment.getActivity(),fgMainWarnEtSearch);
+                        AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), fgMainWarnEtSearch);
                         setSearchHistoryVisible(false);
-                        mPresenter.requestSearchData(DIRECTION_DOWN,text);
+                        mPresenter.requestSearchData(DIRECTION_DOWN, text);
                     }
                 });
         rvSearchHistory.setAdapter(mSearchHistoryAdapter);
@@ -216,7 +216,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
 
     @Override
     public void updateSearchHistoryList(List<String> data) {
-        btnSearchClear.setVisibility(data.size() >0 ? View.VISIBLE : View.GONE);
+        btnSearchClear.setVisibility(data.size() > 0 ? View.VISIBLE : View.GONE);
         mSearchHistoryAdapter.updateSearchHistoryAdapter(data);
     }
 
@@ -286,14 +286,18 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     @Override
     public void showProgressDialog() {
         if (isShowDialog) {
-            mProgressUtils.showProgress();
+            if (mProgressUtils != null) {
+                mProgressUtils.showProgress();
+            }
         }
         isShowDialog = true;
     }
 
     @Override
     public void dismissProgressDialog() {
-        mProgressUtils.dismissProgress();
+        if (mProgressUtils != null) {
+            mProgressUtils.dismissProgress();
+        }
     }
 
     @Override
@@ -344,7 +348,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
                 if (xLinearLayoutManager.findFirstVisibleItemPosition() > 4) {
                     if (newState == 0) {
                         mReturnTopImageView.setVisibility(View.VISIBLE);
-                        if (returnTopAnimation!=null&&returnTopAnimation.hasEnded()) {
+                        if (returnTopAnimation != null && returnTopAnimation.hasEnded()) {
                             mReturnTopImageView.startAnimation(returnTopAnimation);
                         }
                     } else {
@@ -395,7 +399,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     }
 
     @OnClick({R.id.fg_main_top_search_frame_search, R.id.fg_main_top_search_et_search, R.id.fg_main_top_search_imv_calendar, R.id.fg_main_warn_top_search_date_close,
-            R.id.tv_top_search_alarm_search_cancel, R.id.alarm_return_top,R.id.fg_main_top_search_imv_clear,R.id.btn_search_clear})
+            R.id.tv_top_search_alarm_search_cancel, R.id.alarm_return_top, R.id.fg_main_top_search_imv_clear, R.id.btn_search_clear})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fg_main_top_search_frame_search:
@@ -408,7 +412,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
             case R.id.fg_main_top_search_imv_clear:
                 fgMainWarnEtSearch.getText().clear();
                 fgMainWarnEtSearch.requestFocus();
-                AppUtils.openInputMethodManager(mRootFragment.getActivity(),fgMainWarnEtSearch);
+                AppUtils.openInputMethodManager(mRootFragment.getActivity(), fgMainWarnEtSearch);
                 setSearchHistoryVisible(true);
                 break;
             case R.id.btn_search_clear:
@@ -416,19 +420,19 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
                 break;
             case R.id.fg_main_top_search_imv_calendar:
                 mPresenter.doCalendar(fgMainWarnTitleRoot);
-                AppUtils.dismissInputMethodManager(mRootFragment.getActivity(),fgMainWarnEtSearch);
+                AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), fgMainWarnEtSearch);
                 break;
             case R.id.fg_main_warn_top_search_date_close:
                 fgMainWarnRlDateEdit.setVisibility(View.GONE);
                 String text = fgMainWarnEtSearch.getText().toString();
                 setSearchHistoryVisible(false);
-                AppUtils.dismissInputMethodManager(mRootFragment.getActivity(),fgMainWarnEtSearch);
+                AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), fgMainWarnEtSearch);
                 mPresenter.requestSearchData(DIRECTION_DOWN, text);
                 break;
             case R.id.tv_top_search_alarm_search_cancel:
                 doCancelSearch();
                 setSearchHistoryVisible(false);
-                AppUtils.dismissInputMethodManager(mRootFragment.getActivity(),fgMainWarnEtSearch);
+                AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), fgMainWarnEtSearch);
                 break;
             case R.id.alarm_return_top:
                 fgMainWarnRcContent.smoothScrollToPosition(0);
@@ -507,7 +511,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
             tvWarnAlarmSearchCancel.setVisibility(View.VISIBLE);
 //            setEditTextState(false);
 //            AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), fgMainWarnEtSearch);
-        } else if(TextUtils.isEmpty(fgMainWarnEtSearch.getText().toString())){
+        } else if (TextUtils.isEmpty(fgMainWarnEtSearch.getText().toString())) {
             tvWarnAlarmSearchCancel.setVisibility(View.GONE);
 //            setEditTextState(true);
         }

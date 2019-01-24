@@ -3,8 +3,8 @@ package com.sensoro.smartcity.widget;
 import android.app.Activity;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,8 +24,8 @@ public class ProgressUtils {
     public void showProgress() {
         CustomCornerDialog progressDialog = builder.getProgressDialog();
         if (progressDialog != null) {
-            builder.startAnimation();
             progressDialog.show();
+            builder.startAnimation();
         }
     }
 
@@ -48,13 +48,35 @@ public class ProgressUtils {
         }
     }
 
+    private static class MyRotateAnimation {
+        private RotateAnimation rotateAnimation;
+
+        private MyRotateAnimation() {
+            rotateAnimation = new RotateAnimation(0, 359, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            rotateAnimation.setDuration(1000);
+//            rotateAnimation.setInterpolator(new LinearInterpolator());
+            rotateAnimation.setInterpolator(new AccelerateInterpolator());
+            rotateAnimation.setRepeatCount(Animation.INFINITE);
+            rotateAnimation.setFillBefore(true);
+            rotateAnimation.setFillAfter(true);
+        }
+
+
+        private static class MyRotateAnimationHolder {
+            private static final MyRotateAnimation instance = new MyRotateAnimation();
+        }
+
+        public static MyRotateAnimation getInstance() {
+            return MyRotateAnimationHolder.instance;
+        }
+    }
+
     public static final class Builder {
         private CustomCornerDialog progressDialog;
         private WeakReference<Activity> activity;
         private String message;
         private TextView mTv;
         private ImageView mImv;
-        private RotateAnimation rotateAnimation;
 
         public Builder(Activity ac) {
             activity = new WeakReference<>(ac);
@@ -69,12 +91,9 @@ public class ProgressUtils {
             mTv.setText(message);
             Window window = progressDialog.getWindow();
             if (window != null) {
+//                window.setType(WindowManager.LayoutParams.TYPE_TOAST);
                 window.setDimAmount(0f);
             }
-            rotateAnimation = new RotateAnimation(0, 359, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            rotateAnimation.setDuration(1000);
-            rotateAnimation.setInterpolator(new LinearInterpolator());
-            rotateAnimation.setRepeatCount(Animation.INFINITE);
             return this;
         }
 
@@ -98,6 +117,7 @@ public class ProgressUtils {
         }
 
         private void destroyProgressDialog() {
+            stopAnimation();
             if (progressDialog != null) {
                 progressDialog.cancel();
                 progressDialog = null;
@@ -108,15 +128,19 @@ public class ProgressUtils {
             }
         }
 
-        public void startAnimation() {
-            mImv.startAnimation(rotateAnimation);
+        private void startAnimation() {
+            if (mImv != null) {
+                mImv.startAnimation(MyRotateAnimation.getInstance().rotateAnimation);
+            }
         }
 
-        public void stopAnimation() {
-            mImv.clearAnimation();
+        private void stopAnimation() {
+            if (mImv != null) {
+                mImv.clearAnimation();
+            }
         }
 
-        public void updateMessage(String message) {
+        private void updateMessage(String message) {
             if (mTv != null) {
                 mTv.setText(message);
             }

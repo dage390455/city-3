@@ -78,6 +78,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                     //不在账户下
                     getView().setResultImageView(R.drawable.deploy_fail);
                     getView().setStateTextView(mContext.getString(R.string.failed));
+                    getView().setDeployResultTvStateTextColor(R.color.c_f34a4a);
                     if (!TextUtils.isEmpty(deployResultModel.sn)) {
                         getView().setSnTextView(deployResultModel.sn);
                     }
@@ -113,6 +114,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
             case TYPE_SCAN_DEPLOY_STATION:
                 getView().setResultImageView(R.drawable.deploy_succeed);
                 getView().setStateTextView(mContext.getString(R.string.success));
+                getView().setDeployResultTvStateTextColor(R.color.c_29c093);
                 getView().setTipsTextView(mContext.getResources().getString(R.string
                         .tips_deploy_station_success));
                 if (!TextUtils.isEmpty(deployResultModel.sn)) {
@@ -141,6 +143,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 //TODO 巡检设备更换
                 getView().setResultImageView(R.drawable.deploy_succeed);
                 getView().setStateTextView(mContext.getString(R.string.success));
+                getView().setDeployResultTvStateTextColor(R.color.c_29c093);
                 getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_success));
                 if (!TextUtils.isEmpty(deployResultModel.sn)) {
                     getView().setSnTextView(deployResultModel.sn);
@@ -190,6 +193,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 getView().setTipsTextView(mContext.getResources().getString(R.string
                         .tips_deploy_station_failed));
                 getView().setStateTextView(mContext.getString(R.string.failed));
+                getView().setDeployResultTvStateTextColor(R.color.c_f34a4a);
                 if (!TextUtils.isEmpty(deployResultModel.sn)) {
                     getView().setSnTextView(deployResultModel.sn);
                 }
@@ -217,6 +221,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
             case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 getView().setResultImageView(R.drawable.deploy_fail);
                 getView().setStateTextView(mContext.getString(R.string.failed));
+                getView().setDeployResultTvStateTextColor(R.color.c_f34a4a);
                 getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_failed));
                 if (!TextUtils.isEmpty(deployResultModel.sn)) {
                     getView().setSnTextView(deployResultModel.sn);

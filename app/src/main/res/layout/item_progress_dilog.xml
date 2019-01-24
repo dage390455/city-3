@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/progress_loading"
         android:contentDescription="@null"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="center"
         />
     <TextView
         android:id="@+id/progress_tv"
@@ -22,7 +22,7 @@
         android:textSize="14sp"
         android:textColor="@color/white"
         android:layout_marginTop="12dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="center"
         />
 
 

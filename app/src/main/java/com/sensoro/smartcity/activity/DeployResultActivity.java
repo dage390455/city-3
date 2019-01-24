@@ -250,6 +250,11 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
         acDeployResultTvSetting.setText(setting);
     }
 
+    @Override
+    public void setDeployResultTvStateTextColor(int resColor) {
+        acDeployResultTvState.setTextColor(mActivity.getResources().getColor(resColor));
+    }
+
 
     @Override
     public void toastShort(String msg) {

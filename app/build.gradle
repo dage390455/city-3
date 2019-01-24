@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 //apply plugin: 'android-apt'
 android {
-    def verName = "3.2.6"
+    def verName = "3.2.7"
     def verCode = 1
     def buildCode = 1
     def connector = '_v'
@@ -43,11 +43,11 @@ android {
                 GETUI_APP_KEY   : "zrfWS690Dh7r9bPUUfh1o2",
                 GETUI_APP_SECRET: "fN5extdlmHA5NDbdKPkP6A",
                 //TODO 测试版/正式版 使用其中一个
-//                APP_ICON        : "@mipmap/ic_launcher_beta",
-//                APP_ROUND_ICON  : "@mipmap/ic_launcher_beta_round"
+                APP_ICON        : "@mipmap/ic_launcher_beta",
+                APP_ROUND_ICON  : "@mipmap/ic_launcher_beta_round"
                 //
-                APP_ICON        : "@mipmap/ic_launcher",
-                APP_ROUND_ICON  : "@mipmap/ic_launcher_round"
+//                APP_ICON        : "@mipmap/ic_launcher",
+//                APP_ROUND_ICON  : "@mipmap/ic_launcher_round"
 
         ]
 
@@ -256,4 +256,5 @@ dependencies {
     compile('com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.3') {
         transitive = true
     }
+    compile project(path: ':pickerview')
 }

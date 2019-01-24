@@ -11,6 +11,7 @@ import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
 import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
 import com.sensoro.libbleserver.ble.connection.SensoroDeviceConnection;
 import com.sensoro.libbleserver.ble.entity.BLEDevice;
+import com.sensoro.libbleserver.ble.entity.SensoroDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
@@ -23,6 +24,7 @@ import com.sensoro.smartcity.activity.DeployMonitorDeployPicActivity;
 import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
 import com.sensoro.smartcity.activity.DeployMonitorWeChatRelationActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
+import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
@@ -88,7 +90,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         originName = deployAnalyzerModel.nameAndAddress;
         getView().setNotOwnVisible(deployAnalyzerModel.notOwn);
         init();
-        if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+        if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION || Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
             mHandler.post(this);
         }
         BleObserver.getInstance().registerBleObserver(this);
@@ -207,17 +209,58 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 //                if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
 //                    doUploadImages(lon, lan);
 //                } else {
-                if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
-                    changeDevice(lon, lan);
-                } else {
-                    doUploadImages(lon, lan);
-                }
-//                }
 
+//                if (PreferencesHelper.getInstance().getUserData().hasSignalConfig || Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+//                    changeDevice(lon, lan);
+//                } else {
+//                    doUploadImages(lon, lan);
+//                }
+//                }
+                handleBleSetting(lon, lan);
                 break;
             default:
                 break;
         }
+    }
+
+    private void handleBleSetting(double lon, double lan) {
+        if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
+            if (!TextUtils.isEmpty(deployAnalyzerModel.blePassword) && deployAnalyzerModel.channelMask.size() > 0) {
+                //需要配置频点信息
+                if (BLE_DEVICE_SET.contains(deployAnalyzerModel.sn)) {
+                    if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+                        if (deployAnalyzerModel.settingData != null) {
+                            //配置频点信息和初始配置
+                            getView().showBleConfigDialog();
+                            connectDevice();
+                        } else {
+                            getView().toastShort(mContext.getString(R.string.please_set_initial_configuration));
+                        }
+                    } else {
+                        //直接配置频点信息
+                        connectDevice();
+                    }
+
+                } else {
+                    getView().toastShort(mContext.getString(R.string.device_not_found_activate_Bluetooth));
+                }
+
+            } else {
+                getView().toastShort(mContext.getString(R.string.channel_mask_error_tip));
+            }
+            return;
+        } else {
+            if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+                //单独配置初始配置
+                if (BLE_DEVICE_SET.contains(deployAnalyzerModel.sn)) {
+                    connectDevice();
+                } else {
+                    getView().toastShort(mContext.getString(R.string.device_not_found_activate_Bluetooth));
+                }
+                return;
+            }
+        }
+        doUploadImages(lon, lan);
     }
 
     private void changeDevice(double lon, double lan) {
@@ -238,6 +281,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     }
 
     private void connectDevice() {
+        getView().showBleConfigDialog();
         if (sensoroDeviceConnection != null) {
             sensoroDeviceConnection.disconnect();
         }
@@ -557,7 +601,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         } else {
             intent.setClass(mContext, DeployMapENActivity.class);
         }
-        deployAnalyzerModel.mapSourceType = DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL;
+        deployAnalyzerModel.mapSourceType = DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL;
         intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
         getView().startAC(intent);
     }
@@ -645,20 +689,9 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 if (data instanceof DeployControlSettingData) {
                     deployAnalyzerModel.settingData = (DeployControlSettingData) data;
                     int initValue = deployAnalyzerModel.settingData.getInitValue();
-                    String settingText;
-                    if ("mantun_fires".equals(deployAnalyzerModel.deviceType)) {
-                        Double diameterValue = deployAnalyzerModel.settingData.getDiameterValue();
-                        if (diameterValue != null) {
-                            String formatDouble = WidgetUtil.getFormatDouble(diameterValue, 2);
-                            settingText = mContext.getString(R.string.had_setting_detail) + initValue + "A" + " " + mContext.getString(R.string.diameter) + ":" + formatDouble + "m㎡";
-                        } else {
-                            settingText = mContext.getString(R.string.had_setting_detail) + initValue + "A" + " " + mContext.getString(R.string.diameter);
-                        }
-
-                    } else {
-                        settingText = mContext.getString(R.string.had_setting_detail) + initValue + "A";
+                    if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+                        getView().setDeployDeviceDetailDeploySetting(mContext.getString(R.string.actual_overcurrent_threshold) + ":" + initValue + "A");
                     }
-                    getView().setDeployDeviceDetailDeploySetting(settingText);
                 } else {
                     getView().setDeployDeviceDetailDeploySetting(null);
                 }
@@ -941,73 +974,179 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     }
 
     @Override
-    public void onConnectedSuccess(BLEDevice bleDevice, int cmd) {
-        mContext.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (isAttachedView()) {
-                    getView().updateBleConfigDialogMessage(mContext.getString(R.string.loading_configuration_file));
-                    sensoroDeviceConnection.writeData05ChannelMask(deployAnalyzerModel.channelMask, new SensoroWriteCallback() {
-                        @Override
-                        public void onWriteSuccess(Object o, int cmd) {
-                            mContext.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (isAttachedView()) {
+    public void onConnectedSuccess(final BLEDevice bleDevice, int cmd) {
+        if (isAttachedView()) {
+            getView().updateBleConfigDialogMessage(mContext.getString(R.string.loading_configuration_file));
+            if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
+                try {
+                    LogUtils.loge("onConnectedSuccess--->> hasSignalConfig");
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+                sensoroDeviceConnection.writeData05ChannelMask(deployAnalyzerModel.channelMask, new SensoroWriteCallback() {
+                    @Override
+                    public void onWriteSuccess(Object o, int cmd) {
+                        if (isAttachedView()) {
+                            try {
+                                LogUtils.loge("onConnectedSuccess--->> hasSignalConfig writeData05ChannelMask suc");
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+                            if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+                                if (deployAnalyzerModel.settingData != null) {
+                                    SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getInitValue());
+                                    if (sensoroDevice != null) {
+                                        sensoroDeviceConnection.writeData05Configuration(sensoroDevice, new SensoroWriteCallback() {
+                                            @Override
+                                            public void onWriteSuccess(Object o, int cmd) {
+                                                if (isAttachedView()) {
+                                                    try {
+                                                        LogUtils.loge("onConnectedSuccess--->>hasSignalConfig writeData05Configuration suc");
+                                                    } catch (Throwable throwable) {
+                                                        throwable.printStackTrace();
+                                                    }
+                                                    getView().dismissBleConfigDialog();
+                                                    doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onWriteFailure(int errorCode, int cmd) {
+                                                if (isAttachedView()) {
+                                                    try {
+                                                        LogUtils.loge("onConnectedSuccess--->>hasSignalConfig writeData05Configuration suc");
+                                                    } catch (Throwable throwable) {
+                                                        throwable.printStackTrace();
+                                                    }
+                                                    getView().dismissBleConfigDialog();
+                                                    getView().updateUploadState(true);
+                                                    getView().toastShort(mContext.getString(R.string.device_ble_deploy_failed));
+                                                    sensoroDeviceConnection.disconnect();
+                                                }
+                                            }
+                                        });
+                                    } else {
                                         getView().dismissBleConfigDialog();
+                                        getView().toastShort(mContext.getString(R.string.deploy_configuration_analyze_data_failed));
                                         sensoroDeviceConnection.disconnect();
-                                        doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
+
                                     }
 
+                                } else {
+                                    getView().dismissBleConfigDialog();
+                                    getView().toastShort(mContext.getString(R.string.please_set_initial_configuration));
+                                    sensoroDeviceConnection.disconnect();
                                 }
-                            });
-
+                            } else {
+                                getView().dismissBleConfigDialog();
+                                doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
+                            }
                         }
 
-                        @Override
-                        public void onWriteFailure(int errorCode, int cmd) {
-                            mContext.runOnUiThread(new Runnable() {
+                    }
+
+                    @Override
+                    public void onWriteFailure(int errorCode, int cmd) {
+                        if (isAttachedView()) {
+                            try {
+                                LogUtils.loge("onConnectedSuccess--->>hasSignalConfig writeData05ChannelMask fal");
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+                            getView().dismissBleConfigDialog();
+                            getView().updateUploadState(true);
+                            getView().toastShort(mContext.getString(R.string.device_ble_deploy_failed));
+                            sensoroDeviceConnection.disconnect();
+                        }
+
+                    }
+
+                });
+            } else {
+                if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+                    try {
+                        LogUtils.loge("onConnectedSuccess--->>contains(deployAnalyzerModel.deviceType)");
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                    if (deployAnalyzerModel.settingData != null) {
+                        SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getInitValue());
+                        if (sensoroDevice != null) {
+                            sensoroDeviceConnection.writeData05Configuration(sensoroDevice, new SensoroWriteCallback() {
                                 @Override
-                                public void run() {
+                                public void onWriteSuccess(Object o, int cmd) {
                                     if (isAttachedView()) {
+                                        try {
+                                            LogUtils.loge("onConnectedSuccess--->>contains(deployAnalyzerModel.deviceType)  writeData05Configuration suc");
+                                        } catch (Throwable throwable) {
+                                            throwable.printStackTrace();
+                                        }
+                                        getView().dismissBleConfigDialog();
+                                        doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
+                                    }
+                                }
+
+                                @Override
+                                public void onWriteFailure(int errorCode, int cmd) {
+                                    if (isAttachedView()) {
+                                        try {
+                                            LogUtils.loge("onConnectedSuccess--->>contains(deployAnalyzerModel.deviceType)  writeData05Configuration fail");
+                                        } catch (Throwable throwable) {
+                                            throwable.printStackTrace();
+                                        }
                                         getView().dismissBleConfigDialog();
                                         getView().updateUploadState(true);
                                         getView().toastShort(mContext.getString(R.string.device_ble_deploy_failed));
+                                        sensoroDeviceConnection.disconnect();
                                     }
 
                                 }
                             });
-
+                        } else {
+                            getView().dismissBleConfigDialog();
+                            getView().toastShort(mContext.getString(R.string.deploy_configuration_analyze_data_failed));
+                            sensoroDeviceConnection.disconnect();
                         }
-                    });
+                    } else {
+                        getView().dismissBleConfigDialog();
+                        getView().toastShort(mContext.getString(R.string.please_set_initial_configuration));
+                        sensoroDeviceConnection.disconnect();
+                    }
+                } else {
+                    getView().dismissBleConfigDialog();
+                    doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
                 }
 
             }
-        });
+        }
 
 
     }
 
     @Override
     public void onConnectedFailure(int errorCode) {
-        mContext.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (isAttachedView()) {
-                    getView().dismissBleConfigDialog();
-                    getView().updateUploadState(true);
-                    getView().toastShort(mContext.getString(R.string.ble_connect_failed));
-                }
-
-            }
-        });
-
+        if (isAttachedView()) {
+            getView().dismissBleConfigDialog();
+            getView().updateUploadState(true);
+            getView().toastShort(mContext.getString(R.string.ble_connect_failed));
+        }
 
     }
 
     @Override
     public void onDisconnected() {
-
+//        if (getView() != null) {
+//            mContext.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (isAttachedView()) {
+//                        getView().dismissBleConfigDialog();
+//                        getView().toastShort(mContext.getString(R.string.ble_device_disconnected));
+//                    }
+//
+//                }
+//            });
+//        }
     }
 
     @Override
@@ -1080,6 +1219,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     public void doDeployBleSetting() {
         Intent intent = new Intent(mContext, DeployMonitorConfigurationActivity.class);
+        if (deployAnalyzerModel.settingData != null) {
+            intent.putExtra(EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA, deployAnalyzerModel.settingData);
+        }
+        intent.putExtra(EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE);
         intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
         getView().startAC(intent);
     }

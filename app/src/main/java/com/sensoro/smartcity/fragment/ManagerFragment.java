@@ -243,7 +243,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 mExitDialog.show();
                 break;
             case R.id.fg_main_manage_ll_signal_check:
-                if (PermissionUtils.checkHasBlePermission(mRootFragment.getActivity()) && SensoroCityApplication.getInstance().bleDeviceManager.isBluetoothEnabled()) {
+                if (PermissionUtils.checkHasLocationPermission(mRootFragment.getActivity()) && SensoroCityApplication.getInstance().bleDeviceManager.isBluetoothEnabled()) {
                     mPresenter.doSignalCheck();
                 } else {
                     showBleTips();

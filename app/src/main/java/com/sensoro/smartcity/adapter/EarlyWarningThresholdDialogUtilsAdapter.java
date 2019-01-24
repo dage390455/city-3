@@ -44,12 +44,14 @@ public class EarlyWarningThresholdDialogUtilsAdapter extends RecyclerView.Adapte
 
     @Override
     public void onBindViewHolder(EarlyWarningThresholdDialogUtilsHolder holder, int position) {
-        String name = mList.get(position).name;
-        if (TextUtils.isEmpty(name)) {
-            holder.nameTextView.setText(mContext.getString(R.string.unknown));
-        } else {
-            holder.nameTextView.setText(name);
-        }
+        //去掉标题
+//        String name = mList.get(position).name;
+//        if (TextUtils.isEmpty(name)) {
+//            holder.nameTextView.setText(mContext.getString(R.string.unknown));
+//        } else {
+//            holder.nameTextView.setText(name);
+//        }
+
         String content = mList.get(position).content;
         if (TextUtils.isEmpty(content)) {
             holder.contentTextView.setText(mContext.getString(R.string.unknown));

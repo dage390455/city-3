@@ -1,8 +1,10 @@
 package com.sensoro.smartcity.constant;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.model.MaterialValueModel;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -191,12 +193,15 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK = "extra_grants_has_device_signal_check";
     String EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG = "extra_grants_has_device_signal_config";
     String EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD = "extra_grants_has_bad_signal_upload";
+    String EXTRA_GRANTS_HAS_CONTROLLER_AID = "extra_grants_has_controller_aid";
     String EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION = "extra_grants_has_device_position_calibration";
     String EXTRA_DEVICE_INFO = "extra_device_info";
     String EXTRA_DEPLOY_ANALYZER_MODEL = "extra_deploy_analyzer_model";
+    String EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA = "extra_deploy_configuration_setting_data";
     String EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO = "extra_inspection_deploy_old_device_info";
     //扫描来源
     String EXTRA_SCAN_ORIGIN_TYPE = "extra_scan_origin_type";
+    String EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE = "extra_deploy_configuration_origin_type";
     String EXTRA_DEPLOY_SUCCESS_ADDRESS = "extra_deploy_success_address";
     String EXTRA_DEPLOY_RESULT_MODEL = "extra_deploy_result_model";
     //
@@ -385,9 +390,13 @@ public interface Constants {
     int DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT = -2;
     int DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS = 0;
     //地图部署回显来源
-    int DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL = 1;
+    int DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL = 1;
     int DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD = 2;
     int DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM = 3;
+
+    int DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE = 1;
+    int DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL = 2;
+
     int EVENT_DATA_DEVICE_SOCKET_FLUSH = 0x50;
     int EVENT_DATA_LOCK_SCREEN_ON = 0x51;
     int EVENT_DATA_NET_WORK_CHANGE = 0x52;
@@ -406,9 +415,30 @@ public interface Constants {
             add("fhsj_elec_fires");
             add("acrel_fires");
             add("acrel_single");
-            add("mantun_fires");
+//            add("mantun_fires");
         }
     };
-    int[] MONTHS = {R.string.january,R.string.february,R.string.march,R.string.april,R.string.may,R.string.june
-    ,R.string.july,R.string.august,R.string.september,R.string.october,R.string.november,R.string.december};
+    int[] MONTHS = {R.string.january, R.string.february, R.string.march, R.string.april, R.string.may, R.string.june
+            , R.string.july, R.string.august, R.string.september, R.string.october, R.string.november, R.string.december};
+
+    LinkedHashMap<String, MaterialValueModel> materialValueMap = new LinkedHashMap<String, MaterialValueModel>() {
+        {
+            put("1", new MaterialValueModel(16, 9));
+            put("1.5", new MaterialValueModel(20, 15));
+            put("2.5", new MaterialValueModel(27, 21));
+            put("4", new MaterialValueModel(36, 27));
+            put("6", new MaterialValueModel(47, 36));
+            put("10", new MaterialValueModel(64, 51));
+            put("16", new MaterialValueModel(90, 69));
+            put("25", new MaterialValueModel(119, 90));
+            put("35", new MaterialValueModel(147, 112));
+            put("50", new MaterialValueModel(185, 142));
+            put("70", new MaterialValueModel(229, 177));
+            put("95", new MaterialValueModel(281, 216));
+            put("120", new MaterialValueModel(324, 246));
+            put("150", new MaterialValueModel(371, 281));
+            put("185", new MaterialValueModel(423, 328));
+
+        }
+    };
 }
