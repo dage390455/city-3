@@ -45,6 +45,20 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <ImageView
+                    android:id="@+id/ac_contract_detail_imv_pay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_contract_pay"
+                    android:layout_marginStart = "8dp"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toEndOf="@id/ac_contract_detail_tv_contract_status"
+                    app:layout_constraintTop_toTopOf="@id/ac_contract_detail_tv_contract_status"
+                    app:layout_constraintBottom_toBottomOf="@id/ac_contract_detail_tv_contract_status"
+
+                    />
+
                 <TextView
                     android:id="@+id/ac_contract_detail_tv_contract_time"
                     android:layout_width="wrap_content"
@@ -109,6 +123,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+
                     >
                     <TextView
                         android:id="@+id/ac_contract_detail_tv_contract_create_time"

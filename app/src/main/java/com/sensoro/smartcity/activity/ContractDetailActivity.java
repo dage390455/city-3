@@ -77,6 +77,8 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
     TextView acContractDetailTvContractNumber;
     @BindView(R.id.ac_contract_detail_tv_contract_status)
     TextView acContractDetailTvContractStatus;
+    @BindView(R.id.ac_contract_detail_imv_pay)
+    ImageView acContractDetailImvPay;
     @BindView(R.id.ac_contract_detail_tv_contract_time)
     TextView acContractDetailTvContractTime;
     @BindView(R.id.ac_contract_detail_tv_contract_more)
@@ -313,6 +315,7 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
     public void setContractOrder(boolean isSuccess, String payTime) {
         acContractDetailViewContractPayTime.setVisibility(isSuccess ? View.VISIBLE : View.GONE);
         acContractDetailTvContractPayTime.setVisibility(isSuccess ? View.VISIBLE : View.GONE);
+        acContractDetailImvPay.setVisibility(isSuccess ? View.VISIBLE : View.GONE);
         if (!TextUtils.isEmpty(payTime)) {
             acContractDetailTvContractPayTime.setText(payTime);
         }
