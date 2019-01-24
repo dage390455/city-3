@@ -77,6 +77,22 @@ public final class MyPermissionManager {
                 case Manifest.permission.ACCESS_FINE_LOCATION:
                     myPermissionModle.permissionName = "定位";
                     break;
+                case Manifest.permission.RECORD_AUDIO:
+                    myPermissionModle.permissionName = "录音";
+                    break;
+                case Manifest.permission.CAMERA:
+                    myPermissionModle.permissionName = "拍照";
+                    break;
+                case Manifest.permission.READ_PHONE_STATE:
+                    myPermissionModle.permissionName = "手机识别码";
+                    break;
+                case Manifest.permission.CALL_PHONE:
+                    myPermissionModle.permissionName = "拨打电话";
+                    break;
+                case Manifest.permission.READ_CONTACTS:
+                case Manifest.permission.WRITE_CONTACTS:
+                    myPermissionModle.permissionName = "读写联系人";
+                    break;
             }
         }
         return null;
