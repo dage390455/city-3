@@ -56,7 +56,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
             getView().setContractVisible(hasContract && chineseLanguage);
             getView().setInspectionVisible(userData.hasInspectionTaskList && chineseLanguage);
             getView().setScanLoginVisible(userData.hasScanLogin);
-            getView().setMerchantVisible(userData.hasSubMerchant||userData.hasControllerAid);
+            getView().setMerchantVisible(userData.hasSubMerchant || userData.hasControllerAid);
             getView().changeMerchantTitle(userData.hasSubMerchant);
             getView().setSignalCheckVisible(userData.hasSignalCheck);
         }
@@ -75,7 +75,16 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
                 @Override
                 public void onErrorMsg(int errorCode, String errorMsg) {
                     getView().dismissProgressDialog();
-                    getView().toastShort(errorMsg);
+                    //不是网络位置错误直接退出
+                    if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                        getView().toastShort(errorMsg);
+                    } else {
+                        RetrofitServiceHelper.INSTANCE.clearLoginDataSessionId();
+                        Intent intent = new Intent(mContext, LoginActivity.class);
+                        getView().startAC(intent);
+                        getView().finishAc();
+                    }
+
                 }
 
                 @Override
@@ -143,7 +152,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
 
     public void doChangeMerchants() {
         if (PreferencesHelper.getInstance().getUserData() != null) {
-            if (PreferencesHelper.getInstance().getUserData().hasSubMerchant||PreferencesHelper.getInstance().getUserData().hasControllerAid) {
+            if (PreferencesHelper.getInstance().getUserData().hasSubMerchant || PreferencesHelper.getInstance().getUserData().hasControllerAid) {
                 Intent intent = new Intent(mContext, MerchantSwitchActivity.class);
                 intent.putExtra(EXTRA_EVENT_LOGIN_DATA, PreferencesHelper.getInstance().getUserData());
                 getView().startAC(intent);

@@ -54,7 +54,7 @@ public class ContractDetailPresenter extends BasePresenter<IContractDetailView> 
                     public void onCompleted(ContractInfoRsp responseBase) {
                         mContractInfo = responseBase.getData();
                         if (mContractInfo != null) {
-                            getView().setContractNumber(String.format(Locale.ROOT,"%s%s",mActivity.getString(R.string.contract_number),mContractInfo.getContract_number()));
+                            getView().setContractNumber(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.contract_number), mContractInfo.getContract_number()));
                             getView().setSignStatus(mContractInfo.isConfirmed());
                             getView().setCustomerEnterpriseName(mContractInfo.getCustomer_enterprise_name());
                             getView().setCustomerName(mContractInfo.getCustomer_name());
@@ -75,15 +75,18 @@ public class ContractDetailPresenter extends BasePresenter<IContractDetailView> 
                             getView().setTipText(mContractInfo.getContract_type());
 
                             if (mContractInfo.isConfirmed()) {
-                                getView().setContractTime(String.format(Locale.ROOT,"%s%s",mActivity.getString(R.string.contract_info_contract_sign_time),
+                                getView().setContractTime(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.contract_info_contract_sign_time),
                                         DateUtil.getChineseCalendar(mContractInfo.getConfirmTimestamp())));
-                                getView().setContractCreateTime(String.format(Locale.ROOT,"%s%s",mActivity.getString(R.string.contract_info_contract_created_time),
+                                getView().setContractCreateTime(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.contract_info_contract_created_time),
                                         DateUtil.getChineseCalendar(mContractInfo.getCreatedAtTimestamp())));
                                 ContractListInfo.Order order = mContractInfo.getOrder();
-                                getView().setContractOrder(order.getTrade_state().equals(ContractOrderInfo.SUCCESS),String.format(Locale.ROOT,"%s%s",mActivity.getString(R.string.contract_info_contract_pay_time),
-                                        DateUtil.getChineseCalendar(mContractInfo.getOrder().getPayTimestamp())));
-                            }else{
-                                getView().setContractTime(String.format(Locale.ROOT,"%s%s",mActivity.getString(R.string.contract_info_contract_created_time),
+                                if (order != null) {
+                                    getView().setContractOrder(ContractOrderInfo.SUCCESS.equals(order.getTrade_state()), String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.contract_info_contract_pay_time),
+                                            DateUtil.getChineseCalendar(order.getPayTimestamp())));
+                                }
+
+                            } else {
+                                getView().setContractTime(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.contract_info_contract_created_time),
                                         DateUtil.getChineseCalendar(mContractInfo.getCreatedAtTimestamp())));
                             }
 
