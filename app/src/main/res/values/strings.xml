@@ -799,4 +799,6 @@
     <string name="empty_open_rated_current_is_out_of_range">overcurrent rated current is out of range</string>
     <string name="wire_current_carrying_capacity_is_not_within_the_open_range">Wire current carrying capacity is not within the open range</string>
     <string name="modify_threshold">Modify Threshold</string>
+    <string name="contract_more_record">More</string>
+    <string name="contract_info_contract_pay_time">支付时间：</string>
 </resources>

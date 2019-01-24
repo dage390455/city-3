@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.constant.ContractOrderInfo;
 import com.sensoro.smartcity.server.bean.ContractListInfo;
+import com.sensoro.smartcity.util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,41 +135,22 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
             holder.tvContactsMangerStatus.setBackgroundResource(R.drawable.shape_bg_stroke_1_29c_full_corner);
             holder.tvContactsMangerTime.setText(R.string.contract_signed_time);
             String confirmTime = contractListInfo.getConfirmTime();
-            if (!TextUtils.isEmpty(confirmTime)) {
-                try {
-                    String[] ts = confirmTime.split("T");
-                    confirmTime = ts[0].replaceAll("-", ".");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    confirmTime = "-";
-                }
-
-                holder.etContactsMangerTime.setText(confirmTime);
-            } else {
-                holder.etContactsMangerTime.setText("-");
-            }
+            holder.etContactsMangerTime.setText(DateUtil.getStrTime_ymd(contractListInfo.getConfirmTimestamp()));
         } else {
             holder.tvContactsMangerStatus.setText(R.string.not_signed);
             holder.tvContactsMangerStatus.setTextColor(mContext.getResources().getColor(R.color.c_ff8d34));
             holder.tvContactsMangerStatus.setBackgroundResource(R.drawable.shape_bg_stroke_1_ff8d_full_corner);
             holder.tvContactsMangerTime.setText(R.string.contract_created_time);
-            //TODO 改为时间戳
-            String createdAt = contractListInfo.getCreatedAt();
-            if (!TextUtils.isEmpty(createdAt)) {
-                try {
-                    String[] ts = createdAt.split("T");
-                    createdAt = ts[0];
-                    createdAt = createdAt.replaceAll("-", ".");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                holder.etContactsMangerTime.setText(createdAt);
-            } else {
-                holder.etContactsMangerTime.setText("-");
-            }
+            holder.etContactsMangerTime.setText(DateUtil.getStrTime_ymd(contractListInfo.getCreatedAtTimestamp()));
         }
         String contract_number = contractListInfo.getContract_number();
         holder.tvContractNumber.setText(contract_number);
+
+        String tradeState = contractListInfo.getOrder().getTrade_state();
+
+        holder.ivPayStatus.setVisibility(tradeState != null && tradeState.equals(ContractOrderInfo.SUCCESS) ? View.VISIBLE : View.GONE);
+
+
         return convertView;
     }
 

@@ -26,8 +26,6 @@ public interface IContractDetailView extends IToast,IActivityIntent,IProgressDia
 
     void setContractCreateTime(String createdAt);
 
-    void setSignTime(String signTime);
-
     void updateContractTemplateAdapterInfo(List<ContractsTemplateInfo> devices);
 
     void setServerAge(String serverAge);
@@ -35,4 +33,10 @@ public interface IContractDetailView extends IToast,IActivityIntent,IProgressDia
     void setPeriodAge(String PeriodAge);
 
     void setFirstAge(String firstAge);
+
+    void setContractTime(String time);
+
+    void setContractNumber(String contractNumber);
+
+    void setContractOrder(boolean isSuccess, String payTime);
 }

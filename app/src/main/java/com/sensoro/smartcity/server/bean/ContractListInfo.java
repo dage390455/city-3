@@ -37,6 +37,10 @@ public class ContractListInfo implements Serializable {
     private String createdAt;
     private String updatedAt;
     private String fdd_viewpdf_url;
+    private long createdAtTimestamp;
+    private long confirmTimestamp;
+    private Order order;//交易状态
+
 
     public String getFdd_viewpdf_url() {
         return fdd_viewpdf_url;
@@ -295,6 +299,60 @@ public class ContractListInfo implements Serializable {
 
     public void setDevices(List<ContractsTemplateInfo> devices) {
         this.devices = devices;
+    }
+
+    public long getCreatedAtTimestamp() {
+        return createdAtTimestamp;
+    }
+
+    public void setCreatedAtTimestamp(long createdAtTimestamp) {
+        this.createdAtTimestamp = createdAtTimestamp;
+    }
+
+    public long getConfirmTimestamp() {
+        return confirmTimestamp;
+    }
+
+    public void setConfirmTimestamp(long confirmTimestamp) {
+        this.confirmTimestamp = confirmTimestamp;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public static class Order implements Serializable{
+        //交易状态
+        //SUCCESS—支付成功
+        //  REFUND—转入退款
+        //  NOTPAY—未支付
+        //  CLOSED—已关闭
+        //  REVOKED—已撤销（刷卡支付）
+        //  USERPAYING--用户支付中
+        //  PAYERROR--支付失败(其他原因，如银行返回失败)
+        private String trade_state;
+
+        public String getTrade_state() {
+            return trade_state;
+        }
+
+        public void setTrade_state(String trade_state) {
+            this.trade_state = trade_state;
+        }
+
+        public long getPayTimestamp() {
+            return payTimestamp;
+        }
+
+        public void setPayTimestamp(long payTimestamp) {
+            this.payTimestamp = payTimestamp;
+        }
+
+        private long payTimestamp;
     }
 
 }
