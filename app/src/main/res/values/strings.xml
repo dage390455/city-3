@@ -806,4 +806,11 @@
     <string name="permission_check">权限被拒绝，请前往设置打开</string>
     <string name="reauthorization">Reauthorization</string>
     <string name="go_setting">Setting</string>
+    <string name="permission_read_write">WriteStorage</string>
+    <string name="permission_location">Location</string>
+    <string name="permission_record">Record</string>
+    <string name="permission_camera">Camera</string>
+    <string name="permission_phone_state">PhoneState</string>
+    <string name="permission_call">CallPhone</string>
+    <string name="permission_contact">ReadContact</string>
 </resources>

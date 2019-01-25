@@ -16,6 +16,9 @@ import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.SensoroCityApplication;
+
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -25,33 +28,34 @@ public final class MyPermissionManager {
 
     public static String getPermissionTips(List<String> permission) {
         LinkedHashSet<String> perStr = new LinkedHashSet<>();
+        SensoroCityApplication app = SensoroCityApplication.getInstance();
         if (permission != null && permission.size() > 0) {
             for (String p : permission) {
                 if (!TextUtils.isEmpty(p)) {
                     switch (p) {
                         case Manifest.permission.READ_EXTERNAL_STORAGE:
                         case Manifest.permission.WRITE_EXTERNAL_STORAGE:
-                            perStr.add("读写");
+                            perStr.add(app.getString(R.string.permission_read_write));
                             break;
                         case Manifest.permission.ACCESS_COARSE_LOCATION:
                         case Manifest.permission.ACCESS_FINE_LOCATION:
-                            perStr.add("定位");
+                            perStr.add(app.getString(R.string.permission_location));
                             break;
                         case Manifest.permission.RECORD_AUDIO:
-                            perStr.add("录音");
+                            perStr.add(app.getString(R.string.permission_record));
                             break;
                         case Manifest.permission.CAMERA:
-                            perStr.add("拍照");
+                            perStr.add(app.getString(R.string.permission_camera));
                             break;
                         case Manifest.permission.READ_PHONE_STATE:
-                            perStr.add("手机识别码");
+                            perStr.add(app.getString(R.string.permission_phone_state));
                             break;
                         case Manifest.permission.CALL_PHONE:
-                            perStr.add("拨打电话");
+                            perStr.add(app.getString(R.string.permission_call));
                             break;
                         case Manifest.permission.READ_CONTACTS:
                         case Manifest.permission.WRITE_CONTACTS:
-                            perStr.add("读写联系人");
+                            perStr.add(app.getString(R.string.permission_contact));
                             break;
                         default:
                             break;

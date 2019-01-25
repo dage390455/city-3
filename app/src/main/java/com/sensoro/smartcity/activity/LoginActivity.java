@@ -26,8 +26,6 @@ import com.sensoro.smartcity.imainviews.ILoginView;
 import com.sensoro.smartcity.presenter.LoginPresenter;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.PermissionUtils;
-import com.sensoro.smartcity.util.PermissionsResultObserve;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
@@ -39,8 +37,7 @@ import butterknife.OnClick;
  * Created by sensoro on 17/7/24.
  */
 
-public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> implements ILoginView,
-        PermissionsResultObserve {
+public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> implements ILoginView{
 
     @BindView(R.id.login_btn)
     Button login_btn;
@@ -65,17 +62,15 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     @BindView(R.id.ac_login_root)
     FrameLayout acLoginRoot;
     private ProgressUtils mProgressUtils;
-    private PermissionUtils mPermissionUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(mActivity);
         mPresenter.onCreate();
-        mPermissionUtils = new PermissionUtils(mActivity);
-        mPermissionUtils.registerObserver(this);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        mPermissionUtils.requestPermission();
+        mPresenter.initData(mActivity);
+        initView();
     }
 
     @Override
@@ -160,19 +155,6 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     protected void onResume() {
         super.onResume();
     }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        mPermissionUtils.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        mPermissionUtils.onActivityResult(requestCode, resultCode, data);
-    }
-
 
     @Override
     protected LoginPresenter createPresenter() {
@@ -262,8 +244,6 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
 
     @Override
     protected void onDestroy() {
-//        rxPermissionUtils.unregisterObserver(this);
-        mPermissionUtils.unregisterObserver(this);
         mProgressUtils.destroyProgress();
         try {
             LogUtils.loge("onDestroy");
@@ -378,18 +358,6 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     public void setIntentResult(int resultCode, Intent data) {
 
     }
-
-    @Override
-    public void onPermissionGranted() {
-        mPresenter.initData(mActivity);
-        initView();
-    }
-
-    @Override
-    public void onPermissionDenied() {
-
-    }
-
 
     @OnClick({R.id.ac_login_et_account, R.id.ac_login_et_psd, R.id.ac_login_imv_account_clear,
             R.id.ac_login_imv_psd_clear, R.id.login_btn})

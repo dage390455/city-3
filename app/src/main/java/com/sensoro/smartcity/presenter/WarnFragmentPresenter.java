@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.LinearLayout;
 
 import com.sensoro.smartcity.R;
@@ -103,10 +102,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
 
     }
 
-    private void freshUI(int direction, DeviceAlarmLogRsp deviceAlarmLogRsp) {
-        if (direction == DIRECTION_DOWN) {
-            mDeviceAlarmLogInfoList.clear();
-        }
+    private void freshUI(final int direction, DeviceAlarmLogRsp deviceAlarmLogRsp) {
 //        if (!TextUtils.isEmpty(tempSearch)) {
 //            getView().setSearchButtonTextVisible(true);
 //        } else {
@@ -116,6 +112,9 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         ThreadPoolManager.getInstance().execute(new Runnable() {
             @Override
             public void run() {
+                if (direction == DIRECTION_DOWN) {
+                    mDeviceAlarmLogInfoList.clear();
+                }
                 synchronized (mDeviceAlarmLogInfoList) {
                     out:
                     for (int i = 0; i < deviceAlarmLogInfoList.size(); i++) {
@@ -132,7 +131,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                     mContext.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (isAttachedView()){
+                            if (isAttachedView()) {
                                 getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
                             }
 
@@ -312,7 +311,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (isAttachedView()){
+                        if (isAttachedView()) {
                             getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
                         }
 
@@ -380,7 +379,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (isAttachedView()){
+                        if (isAttachedView()) {
                             requestSearchData(DIRECTION_DOWN, null);
                         }
                     }
@@ -467,7 +466,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
             mContext.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (isAttachedView()){
+                    if (isAttachedView()) {
                         getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
                     }
                     needFresh = false;
@@ -515,9 +514,9 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
     }
 
     public void clearSearchHistory() {
-            PreferencesHelper.getInstance().clearSearchHistory(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
-            mSearchHistoryList.clear();
-            getView().updateSearchHistoryList(mSearchHistoryList);
+        PreferencesHelper.getInstance().clearSearchHistory(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
+        mSearchHistoryList.clear();
+        getView().updateSearchHistoryList(mSearchHistoryList);
     }
     //-------------------------------------------------------------------------------------------
     //去掉按照确认类型排序排序

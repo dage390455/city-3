@@ -801,4 +801,12 @@
     <string name="permission_check">权限被拒绝，请前往设置打开</string>
     <string name="reauthorization">重新授权</string>
     <string name="go_setting">去设置</string>
+    <string name="permission_read_write">读写</string>
+    <string name="permission_location">定位</string>
+    <string name="permission_record">录音</string>
+    <string name="permission_camera">相机</string>
+    <string name="permission_phone_state">手机识别码</string>
+    <string name="permission_call">拨打电话</string>
+    <string name="permission_contact">读写联系人</string>
+
 </resources>
