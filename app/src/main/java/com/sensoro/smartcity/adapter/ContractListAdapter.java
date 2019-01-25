@@ -135,13 +135,13 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
             holder.tvContactsMangerStatus.setBackgroundResource(R.drawable.shape_bg_stroke_1_29c_full_corner);
             holder.tvContactsMangerTime.setText(R.string.contract_signed_time);
             String confirmTime = contractListInfo.getConfirmTime();
-            holder.etContactsMangerTime.setText(DateUtil.getStrTime_ymd(contractListInfo.getConfirmTimestamp()));
+            holder.etContactsMangerTime.setText(DateUtil.getChineseCalendar(contractListInfo.getConfirmTimestamp()));
         } else {
             holder.tvContactsMangerStatus.setText(R.string.not_signed);
             holder.tvContactsMangerStatus.setTextColor(mContext.getResources().getColor(R.color.c_ff8d34));
             holder.tvContactsMangerStatus.setBackgroundResource(R.drawable.shape_bg_stroke_1_ff8d_full_corner);
             holder.tvContactsMangerTime.setText(R.string.contract_created_time);
-            holder.etContactsMangerTime.setText(DateUtil.getStrTime_ymd(contractListInfo.getCreatedAtTimestamp()));
+            holder.etContactsMangerTime.setText(DateUtil.getChineseCalendar(contractListInfo.getCreatedAtTimestamp()));
         }
         String contract_number = contractListInfo.getContract_number();
         holder.tvContractNumber.setText(contract_number);

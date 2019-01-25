@@ -516,7 +516,7 @@ public class DateUtil {
     public static String getChineseCalendar(long time) {
         Calendar instance = Calendar.getInstance();
         instance.setTimeInMillis(time);
-        return String.format(Locale.ROOT,"%d年%d月%d日 %d:%d",instance.get(Calendar.YEAR),instance.get(Calendar.MONTH)+1,
+        return String.format(Locale.ROOT,"%d年%02d月%02d日 %02d:%02d",instance.get(Calendar.YEAR),instance.get(Calendar.MONTH)+1,
                 instance.get(Calendar.DAY_OF_MONTH),instance.get(Calendar.HOUR_OF_DAY),instance.get(Calendar.MINUTE));
     }
 }

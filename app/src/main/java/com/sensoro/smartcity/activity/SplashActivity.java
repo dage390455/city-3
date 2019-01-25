@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -16,10 +15,7 @@ import com.sensoro.smartcity.imainviews.ISplashActivityView;
 import com.sensoro.smartcity.presenter.SplashActivityPresenter;
 import com.sensoro.smartcity.util.AppUtils;
 
-import java.util.Locale;
-
 public class SplashActivity extends BaseActivity<ISplashActivityView, SplashActivityPresenter> implements ISplashActivityView {
-
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
 //        startAC(new Intent(mActivity,DeployMonitorDetailActivity.class));
@@ -32,6 +28,18 @@ public class SplashActivity extends BaseActivity<ISplashActivityView, SplashActi
             bgFrame.setBackgroundResource(R.drawable.bg_splash_launcher_en);
         }
         mPresenter.initData(mActivity);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mPresenter.onStart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override

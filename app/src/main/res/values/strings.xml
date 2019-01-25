@@ -801,4 +801,9 @@
     <string name="modify_threshold">Modify Threshold</string>
     <string name="contract_more_record">More</string>
     <string name="contract_info_contract_pay_time">支付时间：</string>
+    <string name="permission_tip">Tips</string>
+    <string name="quit_app">Quit App</string>
+    <string name="permission_check">权限被拒绝，请前往设置打开</string>
+    <string name="reauthorization">Reauthorization</string>
+    <string name="go_setting">Setting</string>
 </resources>

@@ -777,7 +777,7 @@
     <string name="identification_failed_try_again">识别失败，请重试</string>
     <string name="is_alarm">时报警</string>
     <string name="sensoro_number">升哲安全服务</string>
-    <string name="back_to_main_merchant">返回主账户</string>
+    <string name="back_to_main_merchant">返回主账号</string>
     <string name="current_merchant">当前商户</string>
     <string name="sub_merchant">下级商户</string>
     <string name="diameter_info">电线参数</string>
@@ -796,4 +796,9 @@
     <string name="modify_threshold">修改阈值</string>
     <string name="contract_more_record">更多记录</string>
     <string name="contract_info_contract_pay_time">支付时间：</string>
+    <string name="permission_tip">温馨提示</string>
+    <string name="quit_app">退出应用</string>
+    <string name="permission_check">权限被拒绝，请前往设置打开</string>
+    <string name="reauthorization">重新授权</string>
+    <string name="go_setting">去设置</string>
 </resources>
