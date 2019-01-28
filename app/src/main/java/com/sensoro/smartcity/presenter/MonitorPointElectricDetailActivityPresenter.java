@@ -761,7 +761,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 if (alarms != null) {
                     AlarmInfo.RuleInfo rules[] = alarms.getRules();
                     if (rules != null && rules.length > 0) {
-
                         for (AlarmInfo.RuleInfo ruleInfo : rules) {
                             String sensorTypeStr = ruleInfo.getSensorTypes();
                             if (!TextUtils.isEmpty(sensorTypeStr)) {
@@ -778,15 +777,8 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     }
 
                 }
-                mContext.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isAttachedView()) {
-                            getView().setElectInfoTipVisible(!ruleInfoHashMap.isEmpty());
-                        }
-                    }
-                });
                 mEarlyWarningthresholdDialogUtilsAdapterModels.clear();
+                boolean hasMonitorOptions = false;
                 if (monitorOptions != null && monitorOptions.size() > 0) {
                     for (MonitorOptionsBean monitorOptionsBean : monitorOptions) {
                         EarlyWarningthresholdDialogUtilsAdapterModel earlyWarningthresholdDialogUtilsAdapterModel = new EarlyWarningthresholdDialogUtilsAdapterModel();
@@ -800,6 +792,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         StringBuilder stringBuilder = new StringBuilder();
                         for (MonitorOptionsBean.SensorTypesBean sensorTypeBean : sensorTypes) {
                             if (sensorTypeBean != null) {
+                                hasMonitorOptions = true;
                                 String key;
                                 String id = sensorTypeBean.getId();
                                 String conditionType = sensorTypeBean.getConditionType();
@@ -853,16 +846,25 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
                         }
                         String content = stringBuilder.toString();
-                        if (TextUtils.isEmpty(content)) {
-                            content = mContext.getString(R.string.not_set);
+                        if (!TextUtils.isEmpty(content)) {
+                            if (content.endsWith("\n")) {
+                                content = content.substring(0, content.lastIndexOf("\n"));
+                            }
+                            earlyWarningthresholdDialogUtilsAdapterModel.content = content;
+                            mEarlyWarningthresholdDialogUtilsAdapterModels.add(earlyWarningthresholdDialogUtilsAdapterModel);
                         }
-                        if (content.endsWith("\n")) {
-                            content = content.substring(0, content.lastIndexOf("\n"));
-                        }
-                        earlyWarningthresholdDialogUtilsAdapterModel.content = content;
-                        mEarlyWarningthresholdDialogUtilsAdapterModels.add(earlyWarningthresholdDialogUtilsAdapterModel);
+
                     }
                 }
+                final boolean finalHasMonitorOptions = hasMonitorOptions;
+                mContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isAttachedView()) {
+                            getView().setElectInfoTipVisible(finalHasMonitorOptions);
+                        }
+                    }
+                });
             }
         }
 
@@ -1200,6 +1202,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     }
 
     public void showEarlyWarningThresholdDialogUtils() {
+
         mContext.runOnUiThread(new Runnable() {
             @Override
             public void run() {
