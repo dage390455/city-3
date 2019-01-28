@@ -80,18 +80,18 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
             if (isFire) {
                 //TODO 是否配置过电器火灾字段字段
                 if (mDeployRecordInfo.getConfig() != null) {
-                    DeployControlSettingData deployControlSettingData = mDeployRecordInfo.getConfig().get(mDeployRecordInfo.getDeviceType());
+                    DeployControlSettingData deployControlSettingData = mDeployRecordInfo.getConfig();
                     if (deployControlSettingData != null) {
                         //线径的判断，暂时不需要了
-//                        if (deployControlSettingData.getDiameterValue() != null) {
-//                            String formatDouble = WidgetUtil.getFormatDouble(deployControlSettingData.getDiameterValue(), 2);
-////                            getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getInitValue() + "A" + " " + mActivity.getString(R.string.diameter) + ":" + formatDouble + "m㎡");
+//                        if (deployControlSettingData.getWireDiameter() != null) {
+//                            String formatDouble = WidgetUtil.getFormatDouble(deployControlSettingData.getWireDiameter(), 2);
+////                            getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getSwitchSpec() + "A" + " " + mActivity.getString(R.string.diameter) + ":" + formatDouble + "m㎡");
 //
 //
 //                        } else {
-//                            getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getInitValue() + "A");
+//                            getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getSwitchSpec() + "A");
 //                        }
-                        getView().setDeployDeviceDetailDeploySetting(String.format(Locale.CHINA,mActivity.getString(R.string.actual_overcurrent_threshold_format),deployControlSettingData.getInitValue()));
+                        getView().setDeployDeviceDetailDeploySetting(String.format(Locale.CHINA, mActivity.getString(R.string.actual_overcurrent_threshold_format), deployControlSettingData.getSwitchSpec()));
                         return;
                     }
                 }

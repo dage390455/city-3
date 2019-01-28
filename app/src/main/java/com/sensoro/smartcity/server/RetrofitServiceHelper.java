@@ -58,9 +58,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
@@ -502,7 +500,7 @@ public enum RetrofitServiceHelper {
      * @return
      */
     public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, List<String> tags, String
-            name, String contact, String content, String wxPhone, List<String> imgUrls, HashMap<String, DeployControlSettingData> settingMap) {
+            name, String contact, String content, String wxPhone, List<String> imgUrls, DeployControlSettingData deployControlSettingData) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("lon", lon);
@@ -533,20 +531,29 @@ public enum RetrofitServiceHelper {
             if (!TextUtils.isEmpty(wxPhone)) {
                 jsonObject.put("wxPhone", wxPhone);
             }
-            if (settingMap != null) {
+//            if (settingMap != null) {
+//                JSONObject jsonObjectOut = new JSONObject();
+//                for (Map.Entry<String, DeployControlSettingData> entrySet : settingMap.entrySet()) {
+//                    String key = entrySet.getKey();
+//                    if (!TextUtils.isEmpty(key)) {
+//                        DeployControlSettingData value = entrySet.getValue();
+//                        JSONObject jsonObjectIn = new JSONObject();
+//                        jsonObjectIn.put("initValue", value.getSwitchSpec());
+//                        Double diameterValue = value.getWireDiameter();
+//                        if (diameterValue != null) {
+//                            jsonObjectIn.put("diameterValue", diameterValue);
+//                        }
+//                        jsonObjectOut.put(key, jsonObjectIn);
+//                    }
+//                }
+//                jsonObject.put("config", jsonObjectOut);
+//            }
+            if (deployControlSettingData != null) {
                 JSONObject jsonObjectOut = new JSONObject();
-                for (Map.Entry<String, DeployControlSettingData> entrySet : settingMap.entrySet()) {
-                    String key = entrySet.getKey();
-                    if (!TextUtils.isEmpty(key)) {
-                        DeployControlSettingData value = entrySet.getValue();
-                        JSONObject jsonObjectIn = new JSONObject();
-                        jsonObjectIn.put("initValue", value.getInitValue());
-                        Double diameterValue = value.getDiameterValue();
-                        if (diameterValue != null) {
-                            jsonObjectIn.put("diameterValue", diameterValue);
-                        }
-                        jsonObjectOut.put(key, jsonObjectIn);
-                    }
+                jsonObjectOut.put("switchSpec", deployControlSettingData.getSwitchSpec());
+                Double diameterValue = deployControlSettingData.getWireDiameter();
+                if (diameterValue != null) {
+                    jsonObjectOut.put("diameterValue", diameterValue);
                 }
                 jsonObject.put("config", jsonObjectOut);
             }

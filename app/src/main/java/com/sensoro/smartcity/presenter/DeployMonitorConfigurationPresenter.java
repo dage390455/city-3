@@ -67,13 +67,13 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                 getView().setAcDeployConfigurationTvConfigurationText(mActivity.getString(R.string.save));
                 DeployControlSettingData deployControlSettingData = (DeployControlSettingData) mActivity.getIntent().getSerializableExtra(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA);
                 if (deployControlSettingData != null) {
-                    Double diameterValue = deployControlSettingData.getDiameterValue();
+                    Double diameterValue = deployControlSettingData.getWireDiameter();
                     if (diameterValue != null) {
                         NumberFormat nf = NumberFormat.getInstance();
                         String formatStr = nf.format(diameterValue);
                         getView().setInputDiameterValueText(formatStr);
                     }
-                    int initValue = deployControlSettingData.getInitValue();
+                    int initValue = deployControlSettingData.getSwitchSpec();
                     getView().setInputCurrentText(String.valueOf(initValue));
                     int wireMaterial = deployControlSettingData.getWireMaterial();
                     if (0 == wireMaterial) {
@@ -217,8 +217,8 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                 eventData.code = Constants.EVENT_DATA_DEPLOY_INIT_CONFIG_CODE;
                 DeployControlSettingData deployControlSettingData = new DeployControlSettingData();
                 deployControlSettingData.setInitValue(mEnterValue);
-                deployControlSettingData.setDiameterValue(diameterValue);
-                deployControlSettingData.setWireMeterial(materialValue);
+                deployControlSettingData.setWireDiameter(diameterValue);
+                deployControlSettingData.setWireMaterial(materialValue);
                 eventData.data = deployControlSettingData;
                 EventBus.getDefault().post(eventData);
                 getView().finishAc();

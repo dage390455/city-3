@@ -56,7 +56,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -369,16 +368,16 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 //TODO 添加电气火灾配置支持
 //                deployAnalyzerModel.weChatAccount = null;
                 boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
-                HashMap<String, DeployControlSettingData> map = null;
+                //暂时添加 后续可以删除
+                DeployControlSettingData deployControlSettingData = null;
                 if (isFire) {
-                    map = new HashMap<>();
-                    if (deployAnalyzerModel.settingData != null) {
-                        map.put(deployAnalyzerModel.deviceType, deployAnalyzerModel.settingData);
-                    }
+                    deployControlSettingData = deployAnalyzerModel.settingData;
+                } else {
+                    deployAnalyzerModel.settingData = null;
                 }
                 final long currentTimeMillis = System.currentTimeMillis();
                 RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, map).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, deployControlSettingData).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new CityObserver<DeviceDeployRsp>(this) {
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
@@ -688,7 +687,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             case EVENT_DATA_DEPLOY_INIT_CONFIG_CODE:
                 if (data instanceof DeployControlSettingData) {
                     deployAnalyzerModel.settingData = (DeployControlSettingData) data;
-                    int initValue = deployAnalyzerModel.settingData.getInitValue();
+                    int initValue = deployAnalyzerModel.settingData.getSwitchSpec();
                     if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                         getView().setDeployDeviceDetailDeploySetting(mContext.getString(R.string.actual_overcurrent_threshold) + ":" + initValue + "A");
                     }
@@ -994,7 +993,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             }
                             if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                                 if (deployAnalyzerModel.settingData != null) {
-                                    SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getInitValue());
+                                    SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec());
                                     if (sensoroDevice != null) {
                                         sensoroDeviceConnection.writeData05Configuration(sensoroDevice, new SensoroWriteCallback() {
                                             @Override
@@ -1070,7 +1069,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         throwable.printStackTrace();
                     }
                     if (deployAnalyzerModel.settingData != null) {
-                        SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getInitValue());
+                        SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec());
                         if (sensoroDevice != null) {
                             sensoroDeviceConnection.writeData05Configuration(sensoroDevice, new SensoroWriteCallback() {
                                 @Override

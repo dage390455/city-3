@@ -3,34 +3,34 @@ package com.sensoro.smartcity.server.bean;
 import java.io.Serializable;
 
 public class DeployControlSettingData implements Serializable {
-    private int initValue;
+    private int switchSpec;
     // 线径
-    private Double diameterValue;
+    private Double wireDiameter;
 
     // 线材  0 铜 1 铝
     private int wireMaterial;
 
-    public int getInitValue() {
-        return initValue;
+    public int getSwitchSpec() {
+        return switchSpec;
     }
 
-    public void setInitValue(int initValue) {
-        this.initValue = initValue;
+    public void setInitValue(int switchSpec) {
+        this.switchSpec = switchSpec;
     }
 
-    public Double getDiameterValue() {
-        return diameterValue;
+    public Double getWireDiameter() {
+        return wireDiameter;
     }
 
-    public void setDiameterValue(Double diameterValue) {
-        this.diameterValue = diameterValue;
+    public void setWireDiameter(Double wireDiameter) {
+        this.wireDiameter = wireDiameter;
     }
 
     public int getWireMaterial() {
         return wireMaterial;
     }
 
-    public void setWireMeterial(int wireMaterial) {
+    public void setWireMaterial(int wireMaterial) {
         this.wireMaterial = wireMaterial;
     }
 }
