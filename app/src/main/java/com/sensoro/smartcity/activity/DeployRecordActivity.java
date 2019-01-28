@@ -37,6 +37,8 @@ import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
+import com.sensoro.smartcity.widget.divider.BottomNoDividerItemDecoration;
+import com.sensoro.smartcity.widget.divider.CustomDivider;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
@@ -222,7 +224,7 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
         mContentAdapter = new DeployRecordContentAdapter(mActivity);
         final LinearLayoutManager manager = new LinearLayoutManager(mActivity);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL);
+        CustomDivider dividerItemDecoration = new CustomDivider(mActivity, DividerItemDecoration.VERTICAL);
         acDeployRecordRcContent.addItemDecoration(dividerItemDecoration);
         acDeployRecordRcContent.setLayoutManager(manager);
         acDeployRecordRcContent.setAdapter(mContentAdapter);

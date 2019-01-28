@@ -132,19 +132,22 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/ac_inspection_task_ll_select"
+            <RelativeLayout
+                android:id="@+id/ac_inspection_task_rl_select"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:orientation="horizontal">
 
-                <FrameLayout
-                    android:id="@+id/ac_inspection_task_fl_state"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="1">
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="1dp"
+                    android:layout_height="16dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/c_dfdfdf" />
+
 
                     <TextView
                         android:id="@+id/ac_inspection_task_tv_state"
@@ -156,25 +159,16 @@
                         android:paddingTop="4dp"
                         android:paddingBottom="12dp"
                         android:text="@string/all_states"
+                        android:layout_alignEnd="@id/view"
+                        android:paddingStart="43dp"
+                        android:paddingEnd="43dp"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="12sp"
 
                         />
-                </FrameLayout>
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="12dp"
-                    android:background="@color/c_dfdfdf" />
 
-                <FrameLayout
-                    android:id="@+id/ac_inspection_task_fl_type"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="12dp"
-                    android:layout_weight="1">
+
 
                     <TextView
                         android:id="@+id/ac_inspection_task_tv_type"
@@ -185,12 +179,14 @@
                         android:drawablePadding="4dp"
                         android:paddingTop="4dp"
                         android:paddingBottom="12dp"
+                        android:paddingStart="43dp"
+                        android:paddingEnd="43dp"
+                        android:layout_alignStart="@id/view"
                         android:text="@string/all_types"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="12sp"
 
                         />
-                </FrameLayout>
 
                 <ImageView
                     android:id="@+id/ac_inspection_task_imv_map"
@@ -202,8 +198,8 @@
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp"
                     android:src="@drawable/map_mode"
-                    android:visibility="invisible" />
-            </LinearLayout>
+                    android:visibility="gone" />
+            </RelativeLayout>
         </LinearLayout>
 
         <RelativeLayout

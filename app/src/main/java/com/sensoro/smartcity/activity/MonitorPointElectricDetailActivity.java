@@ -179,7 +179,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         int spacingInPixels = AppUtils.dp2px(mActivity,8);
         monitorDetailRcTag.setIntercept(true);
         monitorDetailRcTag.setLayoutManager(layoutManager);
-        monitorDetailRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels,false));
+        monitorDetailRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels,false,false));
         monitorDetailRcTag.setAdapter(mTagAdapter);
         //
         mContentAdapter = new MonitoringPointRcContentAdapter(mActivity);
@@ -227,8 +227,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             }
         };
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        int spacingInPixels = mActivity.getResources().getDimensionPixelSize(R.dimen.x10);
-        acMonitorDeployPhoto.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
+        layoutManager.setReverseLayout(true);
+        acMonitorDeployPhoto.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(this,8),false));
         acMonitorDeployPhoto.setLayoutManager(layoutManager);
         mAdapter = new MonitorDeployDetailPhotoAdapter(mActivity);
         acMonitorDeployPhoto.setAdapter(mAdapter);
