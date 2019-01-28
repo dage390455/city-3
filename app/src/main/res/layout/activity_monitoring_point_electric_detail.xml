@@ -633,7 +633,7 @@
             android:orientation="vertical"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/ac_monitoring_point_tv_operation"

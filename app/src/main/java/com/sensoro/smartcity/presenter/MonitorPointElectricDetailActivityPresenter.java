@@ -229,28 +229,24 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     }
 
     private void refreshOperationStatus() {
-        boolean isContains = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType());
-        getView().setDeviceOperationVisible(isContains);
-        if (isContains) {
-            //消音
-            int status = mDeviceInfo.getStatus();
-            HashMap<String, TaskOptionModel> taskOptionModelMap = MonitorPointModelsFactory.createTaskOptionModelMap(status);
-            //TODO 配置文件显示状态
-            DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(mDeviceInfo.getDeviceType());
-            if (configDeviceType != null) {
-                List<String> taskOptions = configDeviceType.getTaskOptions();
-                if (taskOptions != null && taskOptions.size() > 0) {
-                    ArrayList<TaskOptionModel> taskOptionModelList = new ArrayList<>();
-                    for (String string : taskOptions) {
-                        TaskOptionModel taskOptionModel = taskOptionModelMap.get(string);
-                        if (taskOptionModel != null) {
-                            taskOptionModelList.add(taskOptionModel);
-                        }
+        int status = mDeviceInfo.getStatus();
+        HashMap<String, TaskOptionModel> taskOptionModelMap = MonitorPointModelsFactory.createTaskOptionModelMap(status);
+        //TODO 配置文件显示状态
+        DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(mDeviceInfo.getDeviceType());
+        if (configDeviceType != null) {
+            List<String> taskOptions = configDeviceType.getTaskOptions();
+            if (taskOptions != null && taskOptions.size() > 0) {
+                ArrayList<TaskOptionModel> taskOptionModelList = new ArrayList<>();
+                for (String string : taskOptions) {
+                    TaskOptionModel taskOptionModel = taskOptionModelMap.get(string);
+                    if (taskOptionModel != null) {
+                        taskOptionModelList.add(taskOptionModel);
                     }
-                    getView().updateTaskOptionModelAdapter(taskOptionModelList);
-                } else {
-                    getView().setDeviceOperationVisible(false);
                 }
+                getView().setDeviceOperationVisible(true);
+                getView().updateTaskOptionModelAdapter(taskOptionModelList);
+            } else {
+                getView().setDeviceOperationVisible(false);
             }
         }
     }
@@ -1147,7 +1143,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         getView().dismissTipDialog();
         getView().showOperationTipLoadingDialog();
         mScheduleNo = null;
-        RetrofitServiceHelper.INSTANCE.doMonitorPointOperation(sns, operationType, null, null, switchSpec, null,diameter)
+        RetrofitServiceHelper.INSTANCE.doMonitorPointOperation(sns, operationType, null, null, switchSpec, null, diameter)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>(this) {
             @Override
             public void onCompleted(MonitorPointOperationRequestRsp response) {
