@@ -608,14 +608,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_weight="1"
-                    android:gravity="end">
+                    android:layout_marginEnd="10dp"
+                    >
 
                     <com.sensoro.smartcity.widget.TouchRecycleView
                         android:id="@+id/ac_monitor_deploy_photo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="20dp" />
+                       />
                 </RelativeLayout>
 
             </LinearLayout>

@@ -17,7 +17,7 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
 
     private int space;
     private int color;
-    private boolean isDrawTop;
+    private boolean isDrawTop = true;
     private boolean isDrawFirstLeft = true;
     private boolean isDrawLine = false;
     private boolean isDrawRight = true;
@@ -33,6 +33,16 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
     public SpacesItemDecoration(boolean isDrawLine, int space,boolean isDrawRight) {
         this.space = space;
         this.isDrawTop = true;
+        this.isDrawLine = isDrawLine;
+        this.isDrawRight = isDrawRight;
+        this.color = R.color.c_e7e7e7;
+        Log.e("设置",":::"+isDrawRight);
+    }
+
+    public SpacesItemDecoration(boolean isDrawLine, int space,boolean isDrawRight,boolean isDrawTop) {
+        this.space = space;
+        this.isDrawTop = isDrawTop;
+        Log.e("hcs","设置:::"+this.isDrawTop);
         this.isDrawLine = isDrawLine;
         this.isDrawRight = isDrawRight;
         this.color = R.color.c_e7e7e7;
@@ -118,8 +128,10 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
 
         if (isDrawTop) {
             outRect.top = space;
+        }else{
+            outRect.top = 0;
         }
-
+        Log.e("hcs","right:::"+outRect.right+isDrawRight);
     }
 
     public int getSpace(){
