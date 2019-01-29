@@ -99,7 +99,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     private String mScheduleNo;
     private GeocodeSearch geocoderSearch;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
-    private final HashMap<String, BLEDevice> bleDeviceMap = new HashMap<>();
+    private volatile HashMap<String,BLEDevice> bleDeviceMap = new HashMap<>();
     private final Runnable DeviceTaskOvertime = new Runnable() {
         @Override
         public void run() {
@@ -1287,7 +1287,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     @Override
     public void onNewDevice(BLEDevice bleDevice) {
-        bleDeviceMap.put(bleDevice.getSn(), bleDevice);
+        bleDeviceMap.put(bleDevice.getSn(),bleDevice);
     }
 
     @Override
