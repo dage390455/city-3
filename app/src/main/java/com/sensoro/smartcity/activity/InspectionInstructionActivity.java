@@ -110,7 +110,7 @@ public class InspectionInstructionActivity extends BaseActivity<IInspectionInstr
 
     @Override
     public void startAC(Intent intent) {
-        startActivity(intent);
+        mActivity.startActivity(intent);
     }
 
     @Override

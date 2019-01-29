@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.ContractEditorActivity;
 import com.sensoro.smartcity.adapter.ContractTemplateAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IPersonalContractView;
@@ -24,12 +23,12 @@ import com.sensoro.smartcity.presenter.PersonalContractPresenter;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
 import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -159,17 +158,17 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
 
     @Override
     public void startAC(Intent intent) {
-        startActivity(intent);
+        Objects.requireNonNull(mRootFragment.getActivity()).startActivity(intent);
     }
 
     @Override
     public void finishAc() {
-        mRootFragment.getActivity().finish();
+        Objects.requireNonNull(mRootFragment.getActivity()).finish();
     }
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-        startActivityForResult(intent,requestCode);
+        Objects.requireNonNull(mRootFragment.getActivity()).startActivityForResult(intent,requestCode);
     }
 
     @Override

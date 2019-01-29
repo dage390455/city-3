@@ -102,12 +102,12 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
 
     @Override
     public void finishAc() {
-        finish();
+        mActivity.finish();
     }
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-        startActivityForResult(intent, requestCode);
+        mActivity.startActivityForResult(intent, requestCode);
     }
 
     @Override

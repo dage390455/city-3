@@ -122,7 +122,6 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         super.onCreate();
         instance = this;
         init();
-        Mapbox.getInstance(getApplicationContext(), getString(R.string.mapbox_access_token));
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not initView your app in this process.
@@ -218,6 +217,12 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         if (pushHandler == null) {
             pushHandler = new PushHandler();
         }
+        pushHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Mapbox.getInstance(instance.getApplicationContext(), instance.getString(R.string.mapbox_access_token));
+            }
+        }, 1000);
         ThreadPoolManager.getInstance().execute(this);
     }
 

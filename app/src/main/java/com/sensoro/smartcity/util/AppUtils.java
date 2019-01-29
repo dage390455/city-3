@@ -37,6 +37,7 @@ import com.sensoro.smartcity.widget.popup.SelectDialog;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -58,6 +59,8 @@ public class AppUtils {
         return pName.contains(packageName);
     }
 
+    private static volatile int statusBarHeight;
+
     public static boolean isActivityTop(Context context, Class<?> activityClass) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         String name = null;
@@ -65,6 +68,29 @@ public class AppUtils {
             name = manager.getRunningTasks(1).get(0).topActivity.getClassName();
         }
         return name != null && name.equals(activityClass.getName());
+    }
+
+    /**
+     * 获取状态栏高度
+     *
+     * @param context
+     * @return
+     */
+    public static int getStatusBarHeight(Context context) {
+        if (statusBarHeight == 0) {
+            synchronized (AppUtils.class) {
+                try {
+                    Class<?> c = Class.forName("com.android.internal.R$dimen");
+                    Object obj = c.newInstance();
+                    Field field = c.getField("status_bar_height");
+                    int x = Integer.parseInt(field.get(obj).toString());
+                    statusBarHeight = context.getResources().getDimensionPixelSize(x);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+        return statusBarHeight;
     }
 
     /**

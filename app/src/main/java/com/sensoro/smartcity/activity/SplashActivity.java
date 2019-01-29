@@ -4,9 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
@@ -18,15 +19,23 @@ import com.sensoro.smartcity.util.AppUtils;
 public class SplashActivity extends BaseActivity<ISplashActivityView, SplashActivityPresenter> implements ISplashActivityView {
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
-//        startAC(new Intent(mActivity,DeployMonitorDetailActivity.class));
         checkActivity();
-//        setWindowStatusBarColor(this, R.color.white);
-//        cancelFullScreen(this);
-        setContentView(R.layout.activity_splash);
-        if (!AppUtils.isChineseLanguage()) {
-            FrameLayout bgFrame = findViewById(R.id.ac_splash_bg);
-            bgFrame.setBackgroundResource(R.drawable.bg_splash_launcher_en);
+        final View view = new View(mActivity);
+        if (AppUtils.isChineseLanguage()) {
+            view.setBackgroundResource(R.drawable.bg_splash_launcher);
+        } else {
+            view.setBackgroundResource(R.drawable.bg_splash_launcher_en);
         }
+        super.setContentView(view);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+//                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);//这一步最好要做，因为如果这两个flag没有清除的话下面没有生效
+//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);//设置布局能够延伸到状态栏(StatusBar)和导航栏(NavigationBar)里面
+//            getWindow().setStatusBarColor(Color.TRANSPARENT);//设置状态栏(StatusBar)颜色透明
+//            getWindow().setNavigationBarColor(Color.TRANSPARENT);//设置导航栏(NavigationBar)颜色透明
+//            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+//        }
+//        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mPresenter.initData(mActivity);
 
     }
@@ -114,5 +123,13 @@ public class SplashActivity extends BaseActivity<ISplashActivityView, SplashActi
                 .statusBarDarkFont(false)
                 .init();
         return true;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

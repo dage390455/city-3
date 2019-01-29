@@ -100,12 +100,12 @@ public class MalfunctionDetailActivity extends BaseActivity<IMalfunctionDetailAc
 
     @Override
     public void startAC(Intent intent) {
-        startActivity(intent);
+        mActivity.startActivity(intent);
     }
 
     @Override
     public void finishAc() {
-        finish();
+        mActivity.finish();
     }
 
     @Override

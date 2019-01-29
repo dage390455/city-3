@@ -107,6 +107,7 @@ public final class MyPermissionManager {
         if (TextUtils.isEmpty(packageName)) return;
         ((AppCompatActivity) context).startActivityForResult(
                 getAppDetailsSettingsIntent(packageName), requestCode);
+        ((AppCompatActivity) context).overridePendingTransition(R.anim.slide_left, R.anim.slide_out);
     }
 
     /**

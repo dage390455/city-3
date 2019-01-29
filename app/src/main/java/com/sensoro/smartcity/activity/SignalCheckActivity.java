@@ -140,12 +140,12 @@ public class SignalCheckActivity extends BaseActivity<ISignalCheckActivityView, 
 
     @Override
     public void startAC(Intent intent) {
-        startActivity(intent);
+        mActivity.startActivity(intent);
     }
 
     @Override
     public void finishAc() {
-        finish();
+        mActivity.finish();
     }
 
     @Override

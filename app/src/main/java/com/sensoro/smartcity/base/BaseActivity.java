@@ -48,6 +48,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mPresenter = createPresenter();
         mPresenter.attachView((V) this);
         V view = mPresenter.getView();
@@ -62,7 +63,6 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
             mActivity = this;
         }
         setTheme(R.style.MyTheme);
-        super.onCreate(savedInstanceState);
         //取消bar
         ActionBar supportActionBar = mActivity.getSupportActionBar();
         if (supportActionBar != null) {
@@ -239,5 +239,21 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         return hasNavigationBar;
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_out, R.anim.slide_right);
+    }
 
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransition(R.anim.slide_left, R.anim.slide_out);
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        super.startActivityForResult(intent, requestCode);
+        overridePendingTransition(R.anim.slide_left, R.anim.slide_out);
+    }
 }

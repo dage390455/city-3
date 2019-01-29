@@ -128,7 +128,7 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
                 if (linearLayoutManager.findFirstVisibleItemPosition() > 4) {
                     if (newState == 0) {
                         mReturnTopImageView.setVisibility(View.VISIBLE);
-                        if (returnTopAnimation!=null&&returnTopAnimation.hasEnded()) {
+                        if (returnTopAnimation != null && returnTopAnimation.hasEnded()) {
                             mReturnTopImageView.startAnimation(returnTopAnimation);
                         }
                     } else {

@@ -108,7 +108,7 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Splash">
+            android:theme="@style/AppTheme.Splash_Color">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -238,7 +238,7 @@
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity android:name=".activity.AlarmHistoryLogActivity" />
 
-        <service android:name="com.sensoro.libbleserver.ble.entity.BLEDeviceService" />
+        <service android:name="com.sensoro.libbleserver.ble.scanner.BLEDeviceService" />
         <service
             android:name="com.igexin.download.DownloadService"
             android:process=":pushservice" />

@@ -128,17 +128,17 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
 
     @Override
     public void startAC(Intent intent) {
-        startActivity(intent);
+        mActivity.startActivity(intent);
     }
 
     @Override
     public void finishAc() {
-        finish();
+        mActivity.finish();
     }
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-        startActivityForResult(intent, requestCode);
+        mActivity.startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -177,7 +177,7 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
 
 
     @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_contract_detail_tv_contract_preview, R.id.ac_contract_detail_tv_create_qr_code
-            , R.id.include_text_title_tv_subtitle,R.id.ac_contract_detail_tv_contract_more, R.id.ac_contract_detail_ll_contract_look_qr_code})
+            , R.id.include_text_title_tv_subtitle, R.id.ac_contract_detail_tv_contract_more, R.id.ac_contract_detail_ll_contract_look_qr_code})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
@@ -202,13 +202,13 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
     private void doMore() {
         if (acContractDetailLlExpand.getVisibility() == View.VISIBLE) {
             Drawable drawable = getResources().getDrawable(R.drawable.contract_expand_down);
-            drawable.setBounds(0,0,drawable.getMinimumWidth(),drawable.getMinimumHeight());
-            acContractDetailTvContractMore.setCompoundDrawables(null,null,drawable,null);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            acContractDetailTvContractMore.setCompoundDrawables(null, null, drawable, null);
             acContractDetailLlExpand.setVisibility(View.GONE);
-        }else {
+        } else {
             Drawable drawable = getResources().getDrawable(R.drawable.contract_expand_up);
-            drawable.setBounds(0,0,drawable.getMinimumWidth(),drawable.getMinimumHeight());
-            acContractDetailTvContractMore.setCompoundDrawables(null,null,drawable,null);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            acContractDetailTvContractMore.setCompoundDrawables(null, null, drawable, null);
             acContractDetailLlExpand.setVisibility(View.VISIBLE);
         }
     }
