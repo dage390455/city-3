@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.FocusSurfaceView;
@@ -200,12 +199,12 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
             for (MediaObject.MediaPart part : medaParts) {
                 mMediaObject.removePart(part, true);
             }
-            deleteDir(SensoroCityApplication.VIDEO_PATH);
+//            deleteDir(SensoroCityApplication.VIDEO_PATH);
         }
     }
 
     /**
-     * 删除文件夹下所有文件
+     * 删除文件夹下所有文件,暂时去掉此类敏感操作，部分rom会拒接导致终止
      */
     public void deleteDir(String dirPath) {
 
