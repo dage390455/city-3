@@ -345,7 +345,6 @@ public class CalendarPopUtils implements
             endDate = startDate;
             setStartDate(calendar.getMonth() + "." + calendar.getDay(), String.valueOf(calendar.getYear()));
         }
-        Log.e("hcs","start:::"+startDate+"end"+endDate);
     }
 
     @Override

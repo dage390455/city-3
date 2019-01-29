@@ -36,13 +36,11 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
         this.isDrawLine = isDrawLine;
         this.isDrawRight = isDrawRight;
         this.color = R.color.c_e7e7e7;
-        Log.e("设置",":::"+isDrawRight);
     }
 
     public SpacesItemDecoration(boolean isDrawLine, int space,boolean isDrawRight,boolean isDrawTop) {
         this.space = space;
         this.isDrawTop = isDrawTop;
-        Log.e("hcs","设置:::"+this.isDrawTop);
         this.isDrawLine = isDrawLine;
         this.isDrawRight = isDrawRight;
         this.color = R.color.c_e7e7e7;
@@ -131,7 +129,6 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
         }else{
             outRect.top = 0;
         }
-        Log.e("hcs","right:::"+outRect.right+isDrawRight);
     }
 
     public int getSpace(){

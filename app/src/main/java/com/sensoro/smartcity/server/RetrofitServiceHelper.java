@@ -567,6 +567,13 @@ public enum RetrofitServiceHelper {
         return deviceDeployRspObservable;
     }
 
+    /**
+     * 获取蓝牙信息，包括蓝牙密码和基带信息
+     * @param sn
+     * @param longitude
+     * @param latitude
+     * @return
+     */
     public Observable<DeployDeviceDetailRsp> getDeployDeviceDetail(String sn, Double longitude, Double latitude) {
         Observable<DeployDeviceDetailRsp> deployDeviceDetail = retrofitService.getDeployDeviceDetail(sn, longitude, latitude);
         RxApiManager.getInstance().add("deployDeviceDetail", deployDeviceDetail.subscribe());

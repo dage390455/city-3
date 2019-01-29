@@ -521,7 +521,10 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
                     break;
 
             }
-            mOperatingUtil.show();
+            if (!mOperatingUtil.isShowing()) {
+                mOperatingUtil.show();
+            }
+
         }
     }
 

@@ -205,11 +205,13 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
             drawable.setBounds(0,0,drawable.getMinimumWidth(),drawable.getMinimumHeight());
             acContractDetailTvContractMore.setCompoundDrawables(null,null,drawable,null);
             acContractDetailLlExpand.setVisibility(View.GONE);
+            acContractDetailTvContractMore.setText(mActivity.getString(R.string.contract_more_record));
         }else {
             Drawable drawable = getResources().getDrawable(R.drawable.contract_expand_up);
             drawable.setBounds(0,0,drawable.getMinimumWidth(),drawable.getMinimumHeight());
             acContractDetailTvContractMore.setCompoundDrawables(null,null,drawable,null);
             acContractDetailLlExpand.setVisibility(View.VISIBLE);
+            acContractDetailTvContractMore.setText(mActivity.getString(R.string.collapse));
         }
     }
 

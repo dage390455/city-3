@@ -242,7 +242,7 @@ public class MonitorPointModelsFactory {
 //        int AIR_SWITCH_POWER_OFF = 0x07;
 //        int AIR_SWITCH_POWER_ON = 0x08;
         TaskOptionModel muteModel = new TaskOptionModel();
-        muteModel.id = "mute";
+        muteModel.id = MonitorPointOperationCode.ERASURE_STR;
         muteModel.optionType = MonitorPointOperationCode.ERASURE;
         boolean muteClickable = status == SENSOR_STATUS_ALARM || status == SENSOR_STATUS_MALFUNCTION;
         muteModel.clickable = muteClickable;
@@ -252,7 +252,7 @@ public class MonitorPointModelsFactory {
         map.put(muteModel.id, muteModel);
         //复位
         TaskOptionModel resetModel = new TaskOptionModel();
-        resetModel.id = "reset";
+        resetModel.id = MonitorPointOperationCode.RESET_STR;
         resetModel.optionType = MonitorPointOperationCode.RESET;
         boolean resetClickable = status == SENSOR_STATUS_ALARM || status == SENSOR_STATUS_MALFUNCTION;
         resetModel.clickable = resetClickable;
@@ -262,7 +262,7 @@ public class MonitorPointModelsFactory {
         map.put(resetModel.id, resetModel);
         //修改密码
         TaskOptionModel passwordModel = new TaskOptionModel();
-        passwordModel.id = "password";
+        passwordModel.id =MonitorPointOperationCode.PSD_STR;
         passwordModel.optionType = MonitorPointOperationCode.PSD;
         boolean passwordClickable = status != SENSOR_STATUS_LOST && status != SENSOR_STATUS_INACTIVE;
         passwordModel.clickable = passwordClickable;
@@ -272,7 +272,7 @@ public class MonitorPointModelsFactory {
         map.put(passwordModel.id, passwordModel);
         //查询
         TaskOptionModel viewModel = new TaskOptionModel();
-        viewModel.id = "view";
+        viewModel.id = MonitorPointOperationCode.QUERY_STR;
         viewModel.optionType = MonitorPointOperationCode.QUERY;
         boolean viewClickable = status != SENSOR_STATUS_LOST && status != SENSOR_STATUS_INACTIVE;
         viewModel.clickable = viewClickable;
@@ -282,7 +282,7 @@ public class MonitorPointModelsFactory {
         map.put(viewModel.id, viewModel);
         //自检
         TaskOptionModel checkModel = new TaskOptionModel();
-        checkModel.id = "check";
+        checkModel.id = MonitorPointOperationCode.SELF_CHECK_STR;
         checkModel.optionType = MonitorPointOperationCode.SELF_CHECK;
         boolean checkClickable = status != SENSOR_STATUS_LOST && status != SENSOR_STATUS_INACTIVE;
         checkModel.clickable = checkClickable;
@@ -292,7 +292,7 @@ public class MonitorPointModelsFactory {
         map.put(checkModel.id, checkModel);
         //初始配置
         TaskOptionModel configModel = new TaskOptionModel();
-        configModel.id = "config";
+        configModel.id = MonitorPointOperationCode.AIR_SWITCH_CONFIG_STR;
         configModel.optionType = MonitorPointOperationCode.AIR_SWITCH_CONFIG;
         boolean configClickable = status != SENSOR_STATUS_LOST && status != SENSOR_STATUS_INACTIVE;
         configModel.clickable = configClickable;
@@ -302,7 +302,7 @@ public class MonitorPointModelsFactory {
         map.put(configModel.id, configModel);
         //断电
         TaskOptionModel openModel = new TaskOptionModel();
-        openModel.id = "open";
+        openModel.id = MonitorPointOperationCode.AIR_SWITCH_POWER_OFF_STR;
         openModel.optionType = MonitorPointOperationCode.AIR_SWITCH_POWER_OFF;
         boolean openClickable = status != SENSOR_STATUS_LOST && status != SENSOR_STATUS_INACTIVE;
         openModel.clickable = openClickable;
@@ -312,7 +312,7 @@ public class MonitorPointModelsFactory {
         map.put(openModel.id, openModel);
         //上电
         TaskOptionModel closeModel = new TaskOptionModel();
-        closeModel.id = "close";
+        closeModel.id = MonitorPointOperationCode.AIR_SWITCH_POWER_ON_STR;
         closeModel.optionType = MonitorPointOperationCode.AIR_SWITCH_POWER_ON;
         boolean closeClickable = status != SENSOR_STATUS_LOST && status != SENSOR_STATUS_INACTIVE;
         closeModel.clickable = closeClickable;
