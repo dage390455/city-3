@@ -45,6 +45,7 @@ import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -250,12 +251,12 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
 
     @Override
     public void startAC(Intent intent) {
-        mRootFragment.getActivity().startActivity(intent);
+        Objects.requireNonNull(mRootFragment.getActivity()).startActivity(intent);
     }
 
     @Override
     public void finishAc() {
-        mRootFragment.getActivity().finish();
+        Objects.requireNonNull(mRootFragment.getActivity()).finish();
     }
 
     @Override

@@ -118,6 +118,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     TableRow trElectT;
     @BindView(R.id.elect_info)
     ImageView electInfo;
+    @BindView(R.id.ll_all_info)
+    LinearLayout llAllInfo;
     @BindView(R.id.tv_elect_main)
     TextView tvElectMain;
     @BindView(R.id.elect_main_type)
@@ -176,7 +178,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             }
         };
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        int spacingInPixels = AppUtils.dp2px(mActivity,8);
+        int spacingInPixels = AppUtils.dp2px(mActivity, 8);
         monitorDetailRcTag.setIntercept(true);
         monitorDetailRcTag.setLayoutManager(layoutManager);
         monitorDetailRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels,false,false));
@@ -661,7 +663,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
 
 
     @OnClick({R.id.include_text_title_tv_subtitle, R.id.ac_monitoring_point_cl_alert_contact, R.id.ac_monitoring_point_imv_location, R.id.ac_monitoring_point_cl_location_navigation,
-            R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left, R.id.ll_elect_more, R.id.elect_info})
+            R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left, R.id.ll_elect_more, R.id.ll_all_info})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
@@ -684,8 +686,10 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
                 showDetail = !showDetail;
                 setElectDetailVisible(showDetail);
                 break;
-            case R.id.elect_info:
-                mPresenter.showEarlyWarningThresholdDialogUtils();
+            case R.id.ll_all_info:
+                if (electInfo.getVisibility() == View.VISIBLE) {
+                    mPresenter.showEarlyWarningThresholdDialogUtils();
+                }
                 break;
         }
     }

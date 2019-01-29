@@ -145,7 +145,7 @@ public class InspectionExceptionDetailActivity extends BaseActivity<IInspectionE
 
     @Override
     public void startAC(Intent intent) {
-        startActivity(intent);
+        mActivity.startActivity(intent);
     }
 
     @Override

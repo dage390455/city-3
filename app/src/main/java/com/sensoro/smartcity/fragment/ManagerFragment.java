@@ -23,6 +23,8 @@ import com.sensoro.smartcity.widget.dialog.TipDialogUtils;
 import com.sensoro.smartcity.widget.dialog.VersionDialogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.Unbinder;
@@ -135,12 +137,12 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
 
     @Override
     public void startAC(Intent intent) {
-        mRootFragment.getActivity().startActivity(intent);
+        Objects.requireNonNull(mRootFragment.getActivity()).startActivity(intent);
     }
 
     @Override
     public void finishAc() {
-        mRootFragment.getActivity().finish();
+        Objects.requireNonNull(mRootFragment.getActivity()).finish();
     }
 
     @Override

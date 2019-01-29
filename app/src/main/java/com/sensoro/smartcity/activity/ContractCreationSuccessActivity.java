@@ -49,7 +49,7 @@ public class ContractCreationSuccessActivity extends BaseActivity<IContractCreat
 
     @Override
     public void finishAc() {
-        finish();
+        mActivity.finish();
     }
 
     @Override

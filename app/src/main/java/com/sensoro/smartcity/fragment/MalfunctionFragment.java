@@ -41,6 +41,7 @@ import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -336,7 +337,7 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
 
     @Override
     public void startAC(Intent intent) {
-        startActivity(intent);
+        Objects.requireNonNull(mRootFragment.getActivity()).startActivity(intent);
     }
 
     @Override
