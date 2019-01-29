@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import com.amap.api.services.core.LatLonPoint;
@@ -47,6 +46,7 @@ import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
+import com.sensoro.smartcity.server.bean.DeployDeviceInfo;
 import com.sensoro.smartcity.server.bean.DeployRecordInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
@@ -90,11 +90,10 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<IMonitorPointElectricDetailActivityView> implements IOnCreate, Constants,
-        GeocodeSearch.OnGeocodeSearchListener, MonitorDetailOperationAdapter.OnMonitorDetailOperationAdapterListener ,BLEDeviceListener<BLEDevice>
-,SensoroConnectionCallback ,SensoroWriteCallback {
+        GeocodeSearch.OnGeocodeSearchListener, MonitorDetailOperationAdapter.OnMonitorDetailOperationAdapterListener, BLEDeviceListener<BLEDevice>
+        , SensoroConnectionCallback, SensoroWriteCallback {
     private Activity mContext;
     private DeviceInfo mDeviceInfo;
-
     private String content;
     private boolean hasPhoneNumber;
     private String mScheduleNo;
@@ -106,9 +105,10 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         public void run() {
             mHandler.removeCallbacks(DeviceTaskOvertime);
             mScheduleNo = null;
-            getView().dismissOperatingLoadingDialog();
-            getView().showErrorTipDialog(mContext.getString(R.string.operation_request_time_out));
-
+            if (isAttachedView()) {
+                getView().dismissOperatingLoadingDialog();
+                getView().showErrorTipDialog(mContext.getString(R.string.operation_request_time_out));
+            }
         }
     };
     private final Runnable bleRunnable = new Runnable() {
@@ -126,7 +126,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             mHandler.postDelayed(this, 2000);
         }
     };
-    private final ArrayList<EarlyWarningthresholdDialogUtilsAdapterModel> mEarlyWarningthresholdDialogUtilsAdapterModels = new ArrayList<>();
+    private final ArrayList<EarlyWarningthresholdDialogUtilsAdapterModel> mEarlyWarningThresholdDialogUtilsAdapterModels = new ArrayList<>();
     private String blePassword = null;
     private SensoroDeviceConnection sensoroDeviceConnection;
     private String mOperationType;
@@ -279,7 +279,8 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 getView().setDeviceOperationVisible(false);
             }
         }
-        if(status == Constants.SENSOR_STATUS_ALARM || status == Constants.SENSOR_STATUS_MALFUNCTION){
+        if (status == Constants.SENSOR_STATUS_ALARM || status == Constants.SENSOR_STATUS_MALFUNCTION) {
+            mHandler.removeCallbacks(bleRunnable);
             mHandler.post(bleRunnable);
         }
     }
@@ -357,9 +358,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 getView().toastShort(errorMsg);
             }
         });
-
         requestBlePassword();
-
     }
 
     private void requestBlePassword() {
@@ -368,8 +367,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
             @Override
             public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
-                if (deployDeviceDetailRsp.getData() != null) {
-                    blePassword = deployDeviceDetailRsp.getData().getBlePassword();
+                DeployDeviceInfo data = deployDeviceDetailRsp.getData();
+                if (data != null) {
+                    blePassword = data.getBlePassword();
                 }
             }
 
@@ -468,7 +468,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             }
                             List<String> minors = displayOptions.getMinors();
                             if (minors != null && minors.size() > 0) {
-
                                 for (String type : minors) {
                                     MonitoringPointRcContentAdapterModel model = MonitorPointModelsFactory.createMonitoringPointRcContentAdapterModel(mContext, mDeviceInfo, sensoroDetails, type);
                                     if (model != null) {
@@ -490,7 +489,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                         }
                                     }
                                 });
-
                             }
                             // 控制九宫格显示
                             DisplayOptionsBean.SpecialBean special = displayOptions.getSpecial();
@@ -503,73 +501,37 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                         if (dataBeans0 != null && dataBeans0.size() >= 4) {
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean01 = dataBeans0.get(1);
                                             final Elect3DetailModel elect3TopModel1 = MonitorPointModelsFactory.createElect3NameModel(mContext, 1, dataBean01);
-                                            if (elect3TopModel1 != null) {
-
-                                                mContext.runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        if (isAttachedView()) {
-                                                            getView().set3ElectTopDetail(elect3TopModel1);
-                                                        }
-                                                    }
-                                                });
-                                            }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean02 = dataBeans0.get(2);
                                             final Elect3DetailModel elect3TopModel2 = MonitorPointModelsFactory.createElect3NameModel(mContext, 2, dataBean02);
-                                            if (elect3TopModel2 != null) {
-                                                mContext.runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        if (isAttachedView()) {
-                                                            getView().set3ElectTopDetail(elect3TopModel2);
-                                                        }
-                                                    }
-                                                });
-
-                                            }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean03 = dataBeans0.get(3);
                                             final Elect3DetailModel elect3TopModel3 = MonitorPointModelsFactory.createElect3NameModel(mContext, 3, dataBean03);
-                                            if (elect3TopModel3 != null) {
-                                                mContext.runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        if (isAttachedView()) {
+                                            mContext.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if (isAttachedView()) {
+                                                        if (elect3TopModel1 != null) {
+                                                            getView().set3ElectTopDetail(elect3TopModel1);
+                                                        }
+                                                        if (elect3TopModel2 != null) {
+                                                            getView().set3ElectTopDetail(elect3TopModel2);
+                                                        }
+                                                        if (elect3TopModel3 != null) {
                                                             getView().set3ElectTopDetail(elect3TopModel3);
                                                         }
                                                     }
-                                                });
-
-                                            }
+                                                }
+                                            });
                                         }
                                         List<DisplayOptionsBean.SpecialBean.DataBean> dataBeans1 = specialData.get(1);
                                         if (dataBeans1 != null && dataBeans1.size() >= 4) {
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean10 = dataBeans1.get(0);
                                             final Elect3DetailModel elect3NameModel10 = MonitorPointModelsFactory.createElect3NameModel(mContext, 0, dataBean10);
-                                            if (elect3NameModel10 != null) {
-                                                mContext.runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        if (isAttachedView()) {
-                                                            getView().set3ElectVDetail(elect3NameModel10);
-                                                        }
-                                                    }
-                                                });
-                                            }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean11 = dataBeans1.get(1);
                                             final Elect3DetailModel elect3DetailModel1 = MonitorPointModelsFactory.createElect3DetailModel(mDeviceInfo, 1, dataBean11, sensoroDetails);
                                             if (elect3DetailModel1 != null) {
                                                 if (elect3DetailModel1.hasAlarmStatus()) {
                                                     hasAlarmStatus = true;
                                                 }
-                                                mContext.runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        if (isAttachedView()) {
-                                                            getView().set3ElectVDetail(elect3DetailModel1);
-                                                        }
-                                                    }
-                                                });
-
                                             }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean12 = dataBeans1.get(2);
                                             final Elect3DetailModel elect3DetailModel2 = MonitorPointModelsFactory.createElect3DetailModel(mDeviceInfo, 2, dataBean12, sensoroDetails);
@@ -577,15 +539,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                                 if (elect3DetailModel2.hasAlarmStatus()) {
                                                     hasAlarmStatus = true;
                                                 }
-                                                mContext.runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        if (isAttachedView()) {
-                                                            getView().set3ElectVDetail(elect3DetailModel2);
-                                                        }
-                                                    }
-                                                });
-
                                             }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean13 = dataBeans1.get(3);
                                             final Elect3DetailModel elect3DetailModel3 = MonitorPointModelsFactory.createElect3DetailModel(mDeviceInfo, 3, dataBean13, sensoroDetails);
@@ -593,48 +546,40 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                                 if (elect3DetailModel3.hasAlarmStatus()) {
                                                     hasAlarmStatus = true;
                                                 }
-                                                mContext.runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        if (isAttachedView()) {
+                                            }
+                                            mContext.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if (isAttachedView()) {
+                                                        if (elect3NameModel10 != null) {
+                                                            getView().set3ElectVDetail(elect3NameModel10);
+                                                        }
+                                                        if (elect3DetailModel1 != null) {
+                                                            getView().set3ElectVDetail(elect3DetailModel1);
+
+                                                        }
+                                                        if (elect3DetailModel2 != null) {
+                                                            getView().set3ElectVDetail(elect3DetailModel2);
+                                                        }
+                                                        if (elect3DetailModel3 != null) {
                                                             getView().set3ElectVDetail(elect3DetailModel3);
+
                                                         }
                                                     }
-                                                });
-
-                                            }
-
+                                                }
+                                            });
                                         }
 //
                                         List<DisplayOptionsBean.SpecialBean.DataBean> dataBeans2 = specialData.get(2);
                                         if (dataBeans2 != null && dataBeans2.size() >= 4) {
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean20 = dataBeans2.get(0);
                                             final Elect3DetailModel elect3NameModel20 = MonitorPointModelsFactory.createElect3NameModel(mContext, 0, dataBean20);
-                                            if (elect3NameModel20 != null) {
-                                                mContext.runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        if (isAttachedView()) {
-                                                            getView().set3ElectADetail(elect3NameModel20);
-                                                        }
-                                                    }
-                                                });
-                                            }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean21 = dataBeans2.get(1);
                                             final Elect3DetailModel elect3DetailModel1 = MonitorPointModelsFactory.createElect3DetailModel(mDeviceInfo, 1, dataBean21, sensoroDetails);
                                             if (elect3DetailModel1 != null) {
                                                 if (elect3DetailModel1.hasAlarmStatus()) {
                                                     hasAlarmStatus = true;
                                                 }
-                                                mContext.runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        if (isAttachedView()) {
-                                                            getView().set3ElectADetail(elect3DetailModel1);
-                                                        }
-                                                    }
-                                                });
-
                                             }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean22 = dataBeans2.get(2);
                                             final Elect3DetailModel elect3DetailModel2 = MonitorPointModelsFactory.createElect3DetailModel(mDeviceInfo, 2, dataBean22, sensoroDetails);
@@ -642,15 +587,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                                 if (elect3DetailModel2.hasAlarmStatus()) {
                                                     hasAlarmStatus = true;
                                                 }
-                                                mContext.runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        if (isAttachedView()) {
-                                                            getView().set3ElectADetail(elect3DetailModel2);
-                                                        }
-                                                    }
-                                                });
-
                                             }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean23 = dataBeans2.get(3);
                                             final Elect3DetailModel elect3DetailModel3 = MonitorPointModelsFactory.createElect3DetailModel(mDeviceInfo, 3, dataBean23, sensoroDetails);
@@ -658,47 +594,39 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                                 if (elect3DetailModel3.hasAlarmStatus()) {
                                                     hasAlarmStatus = true;
                                                 }
-                                                mContext.runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        if (isAttachedView()) {
+                                            }
+                                            mContext.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if (isAttachedView()) {
+                                                        if (elect3NameModel20 != null) {
+                                                            getView().set3ElectADetail(elect3NameModel20);
+                                                        }
+                                                        if (elect3DetailModel1 != null) {
+                                                            getView().set3ElectADetail(elect3DetailModel1);
+                                                        }
+                                                        if (elect3DetailModel2 != null) {
+                                                            getView().set3ElectADetail(elect3DetailModel2);
+
+                                                        }
+                                                        if (elect3DetailModel3 != null) {
                                                             getView().set3ElectADetail(elect3DetailModel3);
                                                         }
                                                     }
-                                                });
-
-                                            }
+                                                }
+                                            });
                                         }
 
                                         List<DisplayOptionsBean.SpecialBean.DataBean> dataBeans3 = specialData.get(3);
                                         if (dataBeans3 != null && dataBeans3.size() >= 3) {
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean30 = dataBeans3.get(0);
                                             final Elect3DetailModel elect3NameModel30 = MonitorPointModelsFactory.createElect3NameModel(mContext, 0, dataBean30);
-                                            if (elect3NameModel30 != null) {
-                                                mContext.runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        if (isAttachedView()) {
-                                                            getView().set3ElectTDetail(elect3NameModel30);
-                                                        }
-                                                    }
-                                                });
-                                            }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean31 = dataBeans3.get(1);
                                             final Elect3DetailModel elect3DetailModel1 = MonitorPointModelsFactory.createElect3DetailModel(mDeviceInfo, 1, dataBean31, sensoroDetails);
                                             if (elect3DetailModel1 != null) {
                                                 if (elect3DetailModel1.hasAlarmStatus()) {
                                                     hasAlarmStatus = true;
                                                 }
-                                                mContext.runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        if (isAttachedView()) {
-                                                            getView().set3ElectTDetail(elect3DetailModel1);
-                                                        }
-                                                    }
-                                                });
-
                                             }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean32 = dataBeans3.get(2);
                                             final Elect3DetailModel elect3DetailModel2 = MonitorPointModelsFactory.createElect3DetailModel(mDeviceInfo, 2, dataBean32, sensoroDetails);
@@ -706,15 +634,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                                 if (elect3DetailModel2.hasAlarmStatus()) {
                                                     hasAlarmStatus = true;
                                                 }
-                                                mContext.runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        if (isAttachedView()) {
-                                                            getView().set3ElectTDetail(elect3DetailModel2);
-                                                        }
-                                                    }
-                                                });
-
                                             }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean33 = dataBeans3.get(3);
                                             final Elect3DetailModel elect3DetailModel3 = MonitorPointModelsFactory.createElect3DetailModel(mDeviceInfo, 3, dataBean33, sensoroDetails);
@@ -722,15 +641,26 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                                 if (elect3DetailModel3.hasAlarmStatus()) {
                                                     hasAlarmStatus = true;
                                                 }
-                                                mContext.runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        if (isAttachedView()) {
+                                            }
+                                            mContext.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if (isAttachedView()) {
+                                                        if (elect3NameModel30 != null) {
+                                                            getView().set3ElectTDetail(elect3NameModel30);
+                                                        }
+                                                        if (elect3DetailModel1 != null) {
+                                                            getView().set3ElectTDetail(elect3DetailModel1);
+                                                        }
+                                                        if (elect3DetailModel2 != null) {
+                                                            getView().set3ElectTDetail(elect3DetailModel2);
+                                                        }
+                                                        if (elect3DetailModel3 != null) {
                                                             getView().set3ElectTDetail(elect3DetailModel3);
                                                         }
                                                     }
-                                                });
-                                            }
+                                                }
+                                            });
                                         }
                                         mContext.runOnUiThread(new Runnable() {
                                             @Override
@@ -806,7 +736,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
      * @param monitorOptions
      */
     private void handleEarlyWarningThresholdModel(List<MonitorOptionsBean> monitorOptions) {
-        synchronized (mEarlyWarningthresholdDialogUtilsAdapterModels) {
+        synchronized (mEarlyWarningThresholdDialogUtilsAdapterModels) {
             if (mDeviceInfo != null) {
                 AlarmInfo alarms = mDeviceInfo.getAlarms();
                 final HashMap<String, AlarmInfo.RuleInfo> ruleInfoHashMap = new HashMap<>();
@@ -830,7 +760,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     }
 
                 }
-                mEarlyWarningthresholdDialogUtilsAdapterModels.clear();
+                mEarlyWarningThresholdDialogUtilsAdapterModels.clear();
                 boolean hasMonitorOptions = false;
                 if (monitorOptions != null && monitorOptions.size() > 0) {
                     for (MonitorOptionsBean monitorOptionsBean : monitorOptions) {
@@ -904,7 +834,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                 content = content.substring(0, content.lastIndexOf("\n"));
                             }
                             earlyWarningthresholdDialogUtilsAdapterModel.content = content;
-                            mEarlyWarningthresholdDialogUtilsAdapterModels.add(earlyWarningthresholdDialogUtilsAdapterModel);
+                            mEarlyWarningThresholdDialogUtilsAdapterModels.add(earlyWarningthresholdDialogUtilsAdapterModel);
                         }
 
                     }
@@ -1135,7 +1065,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         switch (type) {
             case MonitorPointOperationCode.ERASURE:
                 mOperationType = MonitorPointOperationCode.ERASURE_STR;
-                if(bleDeviceMap.containsKey(mDeviceInfo.getSn())&& !TextUtils.isEmpty(blePassword)){
+                if (bleDeviceMap.containsKey(mDeviceInfo.getSn()) && !TextUtils.isEmpty(blePassword)) {
                     String macAddress = bleDeviceMap.get(mDeviceInfo.getSn()).getMacAddress();
                     if (!TextUtils.isEmpty(macAddress)) {
                         doBleMute(macAddress);
@@ -1155,7 +1085,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             case MonitorPointOperationCode.SELF_CHECK:
                 mOperationType = MonitorPointOperationCode.SELF_CHECK_STR;
                 break;
-                //这里没有dialog设置
+            //这里没有dialog设置
 //            case MonitorPointOperationCode.AIR_SWITCH_CONFIG:
 //                mOperationType = MonitorPointOperationCode.AIR_SWITCH_CONFIG_STR;
 //                if (TextUtils.isEmpty(content)) {
@@ -1308,7 +1238,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             @Override
             public void run() {
                 if (isAttachedView()) {
-                    getView().updateEarlyWarningThresholdAdapterDialogUtils(mEarlyWarningthresholdDialogUtilsAdapterModels);
+                    getView().updateEarlyWarningThresholdAdapterDialogUtils(mEarlyWarningThresholdDialogUtilsAdapterModels);
                 }
             }
         });
@@ -1373,21 +1303,24 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     public void onUpdateDevices(ArrayList<BLEDevice> deviceList) {
         for (BLEDevice device : deviceList) {
             if (device != null) {
-                bleDeviceMap.put(device.getSn(),device);
+                bleDeviceMap.put(device.getSn(), device);
             }
         }
     }
 
     @Override
     public void onConnectedSuccess(BLEDevice bleDevice, int cmd) {
-        OperationCmdAnalyzer.doOperation(mDeviceInfo.getDeviceType(),mOperationType,sensoroDeviceConnection,this);
+        if (isAttachedView()) {
+            OperationCmdAnalyzer.doOperation(mDeviceInfo.getDeviceType(), mOperationType, sensoroDeviceConnection, this);
+        }
     }
 
 
     @Override
     public void onConnectedFailure(int errorCode) {
-        bleRequestCmd();
-
+        if (isAttachedView()) {
+            bleRequestCmd();
+        }
     }
 
     @Override
@@ -1400,13 +1333,17 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         if (sensoroDeviceConnection != null) {
             sensoroDeviceConnection.disconnect();
         }
-        getView().dismissOperatingLoadingDialog();
-        getView().showOperationSuccessToast();
+        if (isAttachedView()) {
+            getView().dismissOperatingLoadingDialog();
+            getView().showOperationSuccessToast();
+        }
     }
 
     @Override
     public void onWriteFailure(int errorCode, int cmd) {
-        bleRequestCmd();
+        if (isAttachedView()) {
+            bleRequestCmd();
+        }
     }
 
 }

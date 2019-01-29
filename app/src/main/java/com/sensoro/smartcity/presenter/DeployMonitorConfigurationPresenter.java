@@ -248,6 +248,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                     String[] split = scheduleNo.split(",");
                     if (split.length > 0) {
                         mScheduleNo = split[0];
+                        mHandler.removeCallbacks(DeviceTaskOvertime);
                         mHandler.postDelayed(DeviceTaskOvertime, 10 * 1000);
                     } else {
                         getView().dismissOperatingLoadingDialog();

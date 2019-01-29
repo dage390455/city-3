@@ -58,7 +58,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
     private CalendarPopUtils mCalendarPopUtils;
     private String tempSearch;
     private volatile boolean needFresh = false;
-    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
     private final Comparator<DeviceAlarmLogInfo> deviceAlarmLogInfoComparator = new Comparator<DeviceAlarmLogInfo>() {
         @Override
         public int compare(DeviceAlarmLogInfo o1, DeviceAlarmLogInfo o2) {
