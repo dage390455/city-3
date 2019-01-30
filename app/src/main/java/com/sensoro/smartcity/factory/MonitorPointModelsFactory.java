@@ -307,7 +307,7 @@ public class MonitorPointModelsFactory {
         boolean openClickable = status != SENSOR_STATUS_LOST && status != SENSOR_STATUS_INACTIVE;
         openModel.clickable = openClickable;
         openModel.contentResId = R.string.command_elec_disconnect_btn_title;
-        openModel.drawableResId = openClickable ? R.drawable.power_on : R.drawable.power_off_gray;
+        openModel.drawableResId = openClickable ? R.drawable.power_off : R.drawable.power_off_gray;
         openModel.textColorResId = openClickable ? R.color.c_252525 : R.color.c_a6a6a6;
         map.put(openModel.id, openModel);
         //上电
