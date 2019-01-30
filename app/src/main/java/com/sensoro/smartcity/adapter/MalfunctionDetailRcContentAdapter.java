@@ -155,9 +155,16 @@ public class MalfunctionDetailRcContentAdapter extends RecyclerView.Adapter<Malf
         SpannableString spannableString = new SpannableString(stringBuffer);
 
         for (StringBuilder sb : tempList) {
-            ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(R.color.c_252525));
-            int i = stringBuffer.indexOf(sb.toString());
-            spannableString.setSpan(foregroundColorSpan, i, i + sb.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            try {
+                ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(R.color.c_252525));
+                int i = stringBuffer.indexOf(sb.toString());
+                if (i == -1) {
+                    i = 0;
+                }
+                spannableString.setSpan(foregroundColorSpan, i, i + sb.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
         return spannableString;

@@ -196,18 +196,23 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     @Override
     public void onCameraAmbientBrightnessChanged(boolean isDark) {
         if (mPresenter.scanType != Constants.TYPE_SCAN_LOGIN) {
-            // 这里是通过修改提示文案来展示环境是否过暗的状态，接入方也可以根据 isDark 的值来实现其他交互效果
-            String tipText = acScanQrView.getScanBoxView().getTipText();
-            String ambientBrightnessTip = "\n" + mActivity.getString(R.string.the_environment_is_too_dark_please_turn_on_the_flash);
-            if (isDark) {
-                if (!tipText.contains(ambientBrightnessTip)) {
-                    acScanQrView.getScanBoxView().setTipText(tipText + ambientBrightnessTip);
+            try {
+                // 这里是通过修改提示文案来展示环境是否过暗的状态，接入方也可以根据 isDark 的值来实现其他交互效果
+                String tipText = acScanQrView.getScanBoxView().getTipText();
+                String ambientBrightnessTip = "\n" + mActivity.getString(R.string.the_environment_is_too_dark_please_turn_on_the_flash);
+                if (isDark) {
+                    if (!tipText.contains(ambientBrightnessTip)) {
+                        acScanQrView.getScanBoxView().setTipText(tipText + ambientBrightnessTip);
+                    }
+                } else {
+                    if (tipText.contains(ambientBrightnessTip)) {
+                        int endIndex = tipText.indexOf(ambientBrightnessTip);
+                        tipText = tipText.substring(0, endIndex);
+                        acScanQrView.getScanBoxView().setTipText(tipText);
+                    }
                 }
-            } else {
-                if (tipText.contains(ambientBrightnessTip)) {
-                    tipText = tipText.substring(0, tipText.indexOf(ambientBrightnessTip));
-                    acScanQrView.getScanBoxView().setTipText(tipText);
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
