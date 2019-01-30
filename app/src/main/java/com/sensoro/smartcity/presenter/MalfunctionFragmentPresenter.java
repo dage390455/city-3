@@ -54,7 +54,6 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
             mSearchHistoryList.addAll(list);
             getView().UpdateSearchHistoryList(mSearchHistoryList);
         }
-        requestSearchData(DIRECTION_DOWN, null);
     }
 
 

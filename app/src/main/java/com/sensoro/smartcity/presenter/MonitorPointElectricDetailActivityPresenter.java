@@ -167,7 +167,8 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         refreshOperationStatus();
         String statusText;
         int textColor;
-        switch (mDeviceInfo.getStatus()) {
+        int status = mDeviceInfo.getStatus();
+        switch (status) {
             case SENSOR_STATUS_ALARM:
                 textColor = mContext.getResources().getColor(R.color.c_f34a4a);
                 statusText = mContext.getString(R.string.main_page_warn);
@@ -254,6 +255,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         Integer interval = mDeviceInfo.getInterval();
         if (interval != null) {
             getView().setInterval(DateUtil.secToTimeBefore(mContext, interval));
+        }
+        if (SENSOR_STATUS_ALARM == status) {
+
         }
 
     }
