@@ -258,4 +258,5 @@ dependencies {
     }
     compile project(path: ':pickerview')
     compile 'com.yanzhenjie:permission:2.0.0-rc12'
+//    compile 'com.hjq:toast:5.2'
 }

@@ -140,7 +140,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     public void setHpCurrentItem(int position) {
-        acMainHvpContent.setCurrentItem(position);
+        acMainHvpContent.setCurrentItem(position,false);
 
     }
 
@@ -208,6 +208,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         mPageAdapter = new MainFragmentPageAdapter(mActivity.getSupportFragmentManager());
         acMainHvpContent.setAdapter(mPageAdapter);
         acMainHvpContent.setOffscreenPageLimit(6);
+
     }
 
     @Override

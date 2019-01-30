@@ -362,7 +362,7 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
 
     @Override
     public void onFragmentStart() {
-
+        mPresenter.requestSearchData(DIRECTION_DOWN, null);
     }
 
     @Override

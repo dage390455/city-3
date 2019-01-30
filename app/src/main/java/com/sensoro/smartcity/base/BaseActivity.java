@@ -1,19 +1,15 @@
 package com.sensoro.smartcity.base;
 
-import android.annotation.SuppressLint;
-import android.app.AppOpsManager;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import com.baidu.mobstat.StatService;
@@ -21,10 +17,9 @@ import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.widget.dialog.PermissionDialogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
@@ -33,8 +28,23 @@ import java.lang.reflect.Method;
  */
 
 public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCompatActivity {
-    private static final String CHECK_OP_NO_THROW = "checkOpNoThrow";
-    private static final String OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION";
+    //    private static final String CHECK_OP_NO_THROW = "checkOpNoThrow";
+//    private static final String OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION";
+    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Runnable notificationsTask = new Runnable() {
+        @Override
+        public void run() {
+            boolean hasNo = NotificationManagerCompat.from(mActivity).areNotificationsEnabled();
+//        final NotificationManagerCompat manager = NotificationManagerCompat.from(mActivity);
+//        boolean isOpened = manager.areNotificationsEnabled();
+//        if (!isNotificationEnabled(mActivity) && !isOpened) {
+//            showRationaleDialog();
+//        }
+            if (!hasNo) {
+                showRationaleDialog();
+            }
+        }
+    };
     /**
      * 代理者
      */
@@ -44,7 +54,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
      */
     protected BaseActivity mActivity;
     public ImmersionBar immersionBar;
-
+    private PermissionDialogUtils permissionDialogUtils;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +72,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
             }
             mActivity = this;
         }
+        permissionDialogUtils = new PermissionDialogUtils(mActivity);
         setTheme(R.style.MyTheme);
         //取消bar
         ActionBar supportActionBar = mActivity.getSupportActionBar();
@@ -72,7 +83,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         //控制顶部状态栏显示
 //        StatusBarCompat.translucentStatusBar(thi®s);
 //        StatusBarCompat.setStatusBarIconDark(this,true);
-        boolean darkmode = true;
+//        boolean darkmode = true;
         if (!isActivityOverrideStatusBar()) {
             immersionBar = ImmersionBar.with(this);
             immersionBar.fitsSystemWindows(true, R.color.white)
@@ -107,33 +118,30 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
 
     @Override
     protected void onDestroy() {
+        if (permissionDialogUtils != null) {
+            permissionDialogUtils.destroy();
+        }
         mPresenter.onDestroy();
         mPresenter.detachView();
         SensoroToast.INSTANCE.cancelToast();
         if (immersionBar != null) {
             immersionBar.destroy();
         }
+        mHandler.removeCallbacksAndMessages(null);
         super.onDestroy();
     }
 
     @Override
     protected void onResume() {
-        boolean hasNo = NotificationManagerCompat.from(mActivity).areNotificationsEnabled();
-//        final NotificationManagerCompat manager = NotificationManagerCompat.from(mActivity);
-//        boolean isOpened = manager.areNotificationsEnabled();
-//        if (!isNotificationEnabled(mActivity) && !isOpened) {
-//            showRationaleDialog();
-//        }
-        if (!hasNo) {
-            showRationaleDialog();
-        }
         super.onResume();
+        mHandler.postDelayed(notificationsTask, 1000);
         StatService.onResume(mActivity);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        mHandler.removeCallbacks(notificationsTask);
         StatService.onPause(mActivity);
     }
 
@@ -145,76 +153,69 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
     protected abstract P createPresenter();
 
 
-    /**
-     * 检查通知权限
-     *
-     * @param context
-     * @return
-     */
-    @SuppressLint("NewApi")
-    private boolean isNotificationEnabled(Context context) {
-
-        AppOpsManager mAppOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-        ApplicationInfo appInfo = context.getApplicationInfo();
-        String pkg = context.getApplicationContext().getPackageName();
-        int uid = appInfo.uid;
-
-        Class appOpsClass = null;
-        /* Context.APP_OPS_MANAGER */
-        try {
-            appOpsClass = Class.forName(AppOpsManager.class.getName());
-            Method checkOpNoThrowMethod = appOpsClass.getMethod(CHECK_OP_NO_THROW, Integer.TYPE, Integer.TYPE,
-                    String.class);
-            Field opPostNotificationValue = appOpsClass.getDeclaredField(OP_POST_NOTIFICATION);
-
-            int value = (Integer) opPostNotificationValue.get(Integer.class);
-            return ((Integer) checkOpNoThrowMethod.invoke(mAppOps, value, uid, pkg) == AppOpsManager.MODE_ALLOWED);
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+//    /**
+//     * 检查通知权限
+//     *
+//     * @param context
+//     * @return
+//     */
+//    @SuppressLint("NewApi")
+//    private boolean isNotificationEnabled(Context context) {
+//
+//        AppOpsManager mAppOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+//        ApplicationInfo appInfo = context.getApplicationInfo();
+//        String pkg = context.getApplicationContext().getPackageName();
+//        int uid = appInfo.uid;
+//
+//        Class appOpsClass = null;
+//        /* Context.APP_OPS_MANAGER */
+//        try {
+//            appOpsClass = Class.forName(AppOpsManager.class.getName());
+//            Method checkOpNoThrowMethod = appOpsClass.getMethod(CHECK_OP_NO_THROW, Integer.TYPE, Integer.TYPE,
+//                    String.class);
+//            Field opPostNotificationValue = appOpsClass.getDeclaredField(OP_POST_NOTIFICATION);
+//
+//            int value = (Integer) opPostNotificationValue.get(Integer.class);
+//            return ((Integer) checkOpNoThrowMethod.invoke(mAppOps, value, uid, pkg) == AppOpsManager.MODE_ALLOWED);
+//
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (NoSuchMethodException e) {
+//            e.printStackTrace();
+//        } catch (NoSuchFieldException e) {
+//            e.printStackTrace();
+//        } catch (InvocationTargetException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        }
+//        return false;
+//    }
 
 
     /**
      * 弹出声明的 Dialog
      */
     private void showRationaleDialog() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-        builder.setTitle(R.string.prompt)
-                .setMessage(R.string.notification_prompt)
-                .setPositiveButton(R.string.go_to_settings,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //去设置界面
-                                Intent intent = new Intent();
-                                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                Uri uri = Uri.fromParts("package", SensoroCityApplication.getInstance()
-                                        .getPackageName(), null);
-                                intent.setData(uri);
-                                dialog.dismiss();
-                                startActivity(intent);
-                            }
-                        })
-                .setNegativeButton(R.string.cancel,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        })
-                .setCancelable(false)
-                .show();
+        if (permissionDialogUtils != null) {
+            permissionDialogUtils.setTipMessageText(mActivity.getString(R.string.notification_prompt)).setTipCacnleText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_a6a6a6)).setTipConfirmText(mActivity.getString(R.string.go_setting), mActivity.getResources().getColor(R.color.colorAccent)).show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
+                @Override
+                public void onCancelClick() {
+                    permissionDialogUtils.dismiss();
+                }
+
+                @Override
+                public void onConfirmClick() {
+                    Intent intent = new Intent();
+                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri uri = Uri.fromParts("package", SensoroCityApplication.getInstance()
+                            .getPackageName(), null);
+                    intent.setData(uri);
+                    startActivity(intent);
+                    permissionDialogUtils.dismiss();
+                }
+            });
+        }
     }
 
     public boolean checkDeviceHasNavigationBar() {
