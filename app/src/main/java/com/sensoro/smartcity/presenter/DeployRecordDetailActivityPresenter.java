@@ -80,7 +80,7 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
             if (isFire) {
                 //TODO 是否配置过电器火灾字段字段
                 if (mDeployRecordInfo.getConfig() != null) {
-                    DeployControlSettingData deployControlSettingData = mDeployRecordInfo.getConfig();
+                    DeployControlSettingData deployControlSettingData = mDeployRecordInfo.getConfig().get(mDeployRecordInfo.getDeviceType());
                     if (deployControlSettingData != null) {
                         //线径的判断，暂时不需要了
 //                        if (deployControlSettingData.getWireDiameter() != null) {

@@ -56,6 +56,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -369,15 +370,16 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 //                deployAnalyzerModel.weChatAccount = null;
                 boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                 //暂时添加 后续可以删除
-                DeployControlSettingData deployControlSettingData = null;
+                HashMap<String, DeployControlSettingData> map = null;
                 if (isFire) {
-                    deployControlSettingData = deployAnalyzerModel.settingData;
-                } else {
-                    deployAnalyzerModel.settingData = null;
+                    map = new HashMap<>();
+                    if (deployAnalyzerModel.settingData != null) {
+                        map.put(deployAnalyzerModel.deviceType, deployAnalyzerModel.settingData);
+                    }
                 }
                 final long currentTimeMillis = System.currentTimeMillis();
                 RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, deployControlSettingData).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, map).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new CityObserver<DeviceDeployRsp>(this) {
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
