@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@color/c_f4f4f4"
     android:orientation="vertical">
 
     <include layout="@layout/item_include_text_title" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/c_f4f4f4">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <TextView
                     android:id="@+id/ac_deploy_device_record_detail_tv_device_sn"
                     android:layout_width="wrap_content"
@@ -26,18 +28,19 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginEnd="20dp"
                     android:layout_marginBottom="20dp"
-                    android:textColor="@color/c_a6a6a6"
                     android:text="111"
+                    android:textColor="@color/c_a6a6a6"
                     android:textSize="14sp" />
+
                 <TextView
                     android:id="@+id/ac_deploy_device_record_detail_tv_device_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginTop="20dp"
                     android:layout_marginEnd="20dp"
-                    android:layout_alignParentEnd="true"
-                    android:text="2222"
                     android:layout_marginBottom="20dp"
+                    android:text="2222"
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="14sp" />
             </RelativeLayout>
@@ -108,7 +111,8 @@
                             android:id="@+id/ac_deploy_record_detail_rc_tag"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true">
+                            android:layout_alignParentEnd="true"
+                            >
 
                         </android.support.v7.widget.RecyclerView>
                     </RelativeLayout>
@@ -183,7 +187,8 @@
                             android:id="@+id/ac_deploy_record_detail_rc_contact"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true">
+                            android:layout_alignParentEnd="true"
+                            >
 
                         </android.support.v7.widget.RecyclerView>
                     </RelativeLayout>

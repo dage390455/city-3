@@ -129,6 +129,7 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
         }else{
             outRect.top = 0;
         }
+
     }
 
     public int getSpace(){
