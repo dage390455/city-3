@@ -194,7 +194,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     }
 
     private void initCustomOptionPicker() {//条件选择器初始化，自定义布局
-        final int[] arr = {0};
+        final int[] arr = {6};
         pvCustomOptions = new OptionsPickerBuilder(this, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {

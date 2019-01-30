@@ -33,17 +33,19 @@
                 android:layout_marginTop="12dp"
                 android:background="@color/white"
                 android:paddingStart="20dp"
-                android:paddingTop="16dp"
                 android:paddingEnd="20dp"
-                android:paddingBottom="16dp">
+                android:clipChildren="true"
+                >
 
                 <TextView
                     android:id="@+id/ac_contract_detail_tv_contract_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
+                    android:layout_marginTop="16dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
 
                 <ImageView
                     android:id="@+id/ac_contract_detail_imv_pay"
@@ -67,7 +69,10 @@
                     android:layout_marginTop="8dp"
                     android:textColor="@color/c_252525"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/ac_contract_detail_tv_contract_status" />
+                    app:layout_goneMarginBottom="16dp"
+                    app:layout_constraintTop_toBottomOf="@id/ac_contract_detail_tv_contract_status"
+                    app:layout_constraintBottom_toTopOf="@+id/ac_contract_detail_ll_expand"
+                    />
 
 
                 <TextView
@@ -86,10 +91,10 @@
                 <LinearLayout
                     android:id="@+id/ac_contract_detail_ll_contract_look_qr_code"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:orientation="horizontal"
                     android:layout_marginStart="20dp"
-                    android:gravity="end"
+                    android:gravity="end|center_vertical"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toEndOf="@id/ac_contract_detail_tv_contract_time"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -119,6 +124,7 @@
                     android:orientation="vertical"
                     android:layout_marginTop="8dp"
                     android:visibility="gone"
+                    android:layout_marginBottom="16dp"
                     app:layout_constraintTop_toBottomOf="@id/ac_contract_detail_tv_contract_time"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
