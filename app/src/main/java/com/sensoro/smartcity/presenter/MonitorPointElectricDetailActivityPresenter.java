@@ -99,7 +99,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     private String mScheduleNo;
     private GeocodeSearch geocoderSearch;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
-    private volatile HashMap<String,BLEDevice> bleDeviceMap = new HashMap<>();
+    private volatile HashMap<String, BLEDevice> bleDeviceMap = new HashMap<>();
     private final Runnable DeviceTaskOvertime = new Runnable() {
         @Override
         public void run() {
@@ -385,11 +385,12 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             @Override
             public void run() {
                 if (mDeviceInfo != null) {
+                    final ArrayList<MonitoringPointRcContentAdapterModel> malfunctionBeanData = new ArrayList<>();
                     if (mDeviceInfo.getStatus() == SENSOR_STATUS_MALFUNCTION) {
                         Map<String, MalfunctionDataBean> malfunctionData = mDeviceInfo.getMalfunctionData();
                         //TODO 添加故障字段数组
                         if (malfunctionData != null) {
-                            final ArrayList<MonitoringPointRcContentAdapterModel> malfunctionBeanData = new ArrayList<>();
+
                             Set<String> keySet = malfunctionData.keySet();
                             ArrayList<String> keyList = new ArrayList<>();
                             for (String key : keySet) {
@@ -417,15 +418,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                 malfunctionBeanData.add(monitoringPointRcContentAdapterModel);
 
                             }
-                            mContext.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (isAttachedView()) {
-                                        getView().updateDeviceMalfunctionInfoAdapter(malfunctionBeanData);
-                                    }
-
-                                }
-                            });
                         }
                     }
                     //
@@ -434,13 +426,14 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deviceType);
                     Map<String, SensorStruct> sensoroDetails = mDeviceInfo.getSensoroDetails();
                     final ArrayList<MonitoringPointRcContentAdapterModel> dataBean = new ArrayList<>();
+                    boolean hasAlarmStatus = false;
                     if (configDeviceType != null) {
                         //预警阈值信息处理
                         List<MonitorOptionsBean> monitorOptions = configDeviceType.getMonitorOptions();
                         handleEarlyWarningThresholdModel(monitorOptions);
                         //特殊头部展示
                         DisplayOptionsBean displayOptions = configDeviceType.getDisplayOptions();
-                        boolean hasAlarmStatus = false;
+
                         if (displayOptions != null) {
                             List<String> majors = displayOptions.getMajors();
                             if (majors != null && majors.size() > 0) {
@@ -674,23 +667,16 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
                                 }
                             }
-                            final boolean finalHasAlarmStatus = hasAlarmStatus;
-                            mContext.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (isAttachedView()) {
-                                        getView().setIvAlarmStatusVisible(finalHasAlarmStatus);
-                                    }
-                                }
-                            });
                         }
                     }
-
+                    final boolean finalHasAlarmStatus = hasAlarmStatus;
                     if (needTop) {
                         mContext.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 if (isAttachedView()) {
+                                    getView().setIvAlarmStatusVisible(finalHasAlarmStatus);
+                                    getView().updateDeviceMalfunctionInfoAdapter(malfunctionBeanData);
                                     getView().setAcMonitoringElectPointLineVisible(true);
                                     getView().setLlElectTopVisible(true);
                                 }
@@ -716,6 +702,8 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             @Override
                             public void run() {
                                 if (isAttachedView()) {
+                                    getView().setIvAlarmStatusVisible(finalHasAlarmStatus);
+                                    getView().updateDeviceMalfunctionInfoAdapter(malfunctionBeanData);
                                     getView().setElectDetailVisible(true);
                                     getView().updateDeviceInfoAdapter(dataBean);
                                     getView().setLlElectTopVisible(false);
@@ -1287,7 +1275,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     @Override
     public void onNewDevice(BLEDevice bleDevice) {
-        bleDeviceMap.put(bleDevice.getSn(),bleDevice);
+        bleDeviceMap.put(bleDevice.getSn(), bleDevice);
     }
 
     @Override
