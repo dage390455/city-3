@@ -134,7 +134,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
     @Override
     protected void onResume() {
         super.onResume();
-        mHandler.postDelayed(notificationsTask, 3000);
+        mHandler.postDelayed(notificationsTask, 1000);
         StatService.onResume(mActivity);
     }
 

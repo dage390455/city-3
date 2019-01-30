@@ -96,7 +96,6 @@ public class PermissionDialogUtils {
         }
     }
 
-
     public void dismiss() {
         if (mDialog != null) {
             mDialog.dismiss();

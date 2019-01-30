@@ -37,7 +37,7 @@ import butterknife.OnClick;
  * Created by sensoro on 17/7/24.
  */
 
-public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> implements ILoginView{
+public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> implements ILoginView {
 
     @BindView(R.id.login_btn)
     Button login_btn;
@@ -265,7 +265,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
