@@ -406,7 +406,7 @@ public class DateUtil {
     }
 
     public static String getCalendarYearMothDayFormatDate(long time) {
-        return new SimpleDateFormat("YYYY-MM-dd", Locale.ROOT).format(new Date(time));
+        return new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT).format(new Date(time));
     }
 
     public static int dayForWeek(String pTime) throws Exception {
