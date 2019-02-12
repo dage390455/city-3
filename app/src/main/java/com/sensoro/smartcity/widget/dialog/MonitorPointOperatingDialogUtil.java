@@ -57,4 +57,11 @@ public class MonitorPointOperatingDialogUtil {
             mDialog = null;
         }
     }
+
+    public boolean  isShowing(){
+        if (mDialog != null) {
+            return mDialog.isShowing();
+        }
+        return false;
+    }
 }

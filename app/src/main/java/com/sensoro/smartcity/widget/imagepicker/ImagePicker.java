@@ -15,6 +15,7 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageFolder;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.loader.ImageLoader;
@@ -290,6 +291,7 @@ public class ImagePicker {
             }
         }
         activity.startActivityForResult(takePictureIntent, requestCode);
+        activity.overridePendingTransition(R.anim.slide_left, R.anim.slide_out);
     }
 
     /**

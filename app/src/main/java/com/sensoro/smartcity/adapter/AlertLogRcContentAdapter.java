@@ -21,7 +21,6 @@ import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.util.DateUtil;
-import com.sensoro.smartcity.util.ImageFactory;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
 
@@ -347,9 +346,16 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         SpannableString spannableString = new SpannableString(stringBuffer);
 
         for (StringBuilder sb : tempList) {
-            ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(R.color.c_252525));
-            int i = stringBuffer.indexOf(sb.toString());
-            spannableString.setSpan(foregroundColorSpan, i, i + sb.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            try {
+                ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(R.color.c_252525));
+                int i = stringBuffer.indexOf(sb.toString());
+                if (i == -1) {
+                    i = 0;
+                }
+                spannableString.setSpan(foregroundColorSpan, i, i + sb.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return spannableString;
@@ -367,6 +373,9 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         int i = 0;
         try {
             i = content.indexOf(temp);
+            if (i == -1) {
+                i = 0;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -6,51 +6,93 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
-import com.sensoro.libbleserver.ble.BLEDevice;
-import com.sensoro.libbleserver.ble.SensoroConnectionCallback;
-import com.sensoro.libbleserver.ble.SensoroDevice;
-import com.sensoro.libbleserver.ble.SensoroDeviceConnection;
-import com.sensoro.libbleserver.ble.SensoroWriteCallback;
-import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
+import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorConfigurationView;
+import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.EventData;
+import com.sensoro.smartcity.server.CityObserver;
+import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeployControlSettingData;
-import com.sensoro.smartcity.util.BleObserver;
+import com.sensoro.smartcity.server.bean.MonitorPointOperationTaskResultInfo;
+import com.sensoro.smartcity.server.response.MonitorPointOperationRequestRsp;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Locale;
 
-public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMonitorConfigurationView>
-        implements Runnable, BLEDeviceListener<BLEDevice>, SensoroConnectionCallback, SensoroWriteCallback {
-    private Handler mHandler;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
+public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMonitorConfigurationView> implements Constants, IOnCreate {
     private Activity mActivity;
-    private boolean bleHasOpen;
     private DeployAnalyzerModel deployAnalyzerModel;
-    private String mMacAddress;
-    private SensoroDeviceConnection mConnection;
-    private Integer mEnterValue;
-    private final HashSet<String> bleList = new HashSet<>();
     private int[] mMinMaxValue;
-    private Double diameterValue;
+    private ArrayList<EarlyWarningthresholdDialogUtilsAdapterModel> overCurrentDataList;
+    private int configurationSource;
+    private String mScheduleNo;
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Runnable DeviceTaskOvertime = new Runnable() {
+        @Override
+        public void run() {
+            mHandler.removeCallbacks(DeviceTaskOvertime);
+            mScheduleNo = null;
+            getView().dismissOperatingLoadingDialog();
+            getView().showErrorTipDialog(mActivity.getString(R.string.operation_request_time_out));
+
+        }
+    };
+    private final ArrayList<String> pickerStrings = new ArrayList<>();
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
         deployAnalyzerModel = (DeployAnalyzerModel) mActivity.getIntent().getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
-        mHandler = new Handler(Looper.getMainLooper());
-        mHandler.post(this);
+        configurationSource = mActivity.getIntent().getIntExtra(EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
+        switch (configurationSource) {
+            case DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE:
+                //部署
+                getView().setTitleImvArrowsLeftVisible(true);
+                getView().setTitleTvSubtitleVisible(false);
+                getView().setAcDeployConfigurationTvConfigurationText(mActivity.getString(R.string.save));
+                DeployControlSettingData deployControlSettingData = (DeployControlSettingData) mActivity.getIntent().getSerializableExtra(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA);
+                if (deployControlSettingData != null) {
+                    Double diameterValue = deployControlSettingData.getWireDiameter();
+                    if (diameterValue != null) {
+                        NumberFormat nf = NumberFormat.getInstance();
+                        String formatStr = nf.format(diameterValue);
+                        getView().setInputDiameterValueText(formatStr);
+                    }
+                    int initValue = deployControlSettingData.getSwitchSpec();
+                    getView().setInputCurrentText(String.valueOf(initValue));
+                    int wireMaterial = deployControlSettingData.getWireMaterial();
+                    if (0 == wireMaterial) {
+                        getView().setInputWireMaterialText(mActivity.getString(R.string.cu));
+                    } else if (1 == wireMaterial) {
+                        getView().setInputWireMaterialText(mActivity.getString(R.string.al));
+                    }
+                }
+                break;
+            case DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL:
+                getView().setTitleImvArrowsLeftVisible(false);
+                getView().setTitleTvSubtitleVisible(true);
+                onCreate();
+                getView().setAcDeployConfigurationTvConfigurationText(mActivity.getString(R.string.air_switch_config));
+                //详情
+                break;
+
+        }
         getView().setLlAcDeployConfigurationDiameterVisible(needDiameter());
-        BleObserver.getInstance().registerBleObserver(this);
         init();
     }
 
@@ -61,252 +103,237 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         } else {
             getView().setTvEnterValueRange(mMinMaxValue[0], mMinMaxValue[1]);
         }
+        initOverCurrentData();
+        initPickerData();
+
+    }
+
+    private void initPickerData() {
+        pickerStrings.addAll(Constants.materialValueMap.keySet());
+        getView().updatePvCustomOptions(pickerStrings);
+    }
+
+    private void initOverCurrentData() {
+        overCurrentDataList = new ArrayList<>();
+        EarlyWarningthresholdDialogUtilsAdapterModel model = new EarlyWarningthresholdDialogUtilsAdapterModel();
+        model.content = mActivity.getString(R.string.over_current_description_one);
+        overCurrentDataList.add(model);
+        EarlyWarningthresholdDialogUtilsAdapterModel model1 = new EarlyWarningthresholdDialogUtilsAdapterModel();
+        model1.content = mActivity.getString(R.string.over_current_description_two);
+        overCurrentDataList.add(model1);
+
     }
 
     @Override
     public void onDestroy() {
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
         mHandler.removeCallbacksAndMessages(null);
-        BleObserver.getInstance().unregisterBleObserver(this);
-        if (mConnection != null) {
-            mConnection.disconnect();
-        }
-        SensoroCityApplication.getInstance().bleDeviceManager.stopService();
+        pickerStrings.clear();
     }
 
 
-    public void doConfiguration(String valueStr, String diameter) {
-        if (!bleList.contains(deployAnalyzerModel.sn)) {
-            getView().toastShort(mActivity.getString(R.string.deploy_configuration_not_discover_device));
-            return;
-        }
-        checkAndConnect(valueStr, diameter);
-    }
-
-    private void checkAndConnect(String valueStr, String diameter) {
-        if (mMinMaxValue == null) {
-            getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_failed));
-            return;
-        }
+    public void doConfiguration(String inputCurrent, String material, String diameter, String actualCurrent) {
+        int materialValue = 0;
+        double diameterValue = 0;
+        Integer mEnterValue;
         try {
-            mEnterValue = Integer.parseInt(valueStr);
-            if (mEnterValue < mMinMaxValue[0] || mEnterValue > mMinMaxValue[1]) {
-                getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.monitor_point_operation_error_value_range) + mMinMaxValue[0] + "-" + mMinMaxValue[1]);
+            if (TextUtils.isEmpty(inputCurrent)) {
+                getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.enter_the_correct_number_format));
                 return;
             }
-            mConnection = new SensoroDeviceConnection(mActivity, mMacAddress);
+            if (mMinMaxValue == null) {
+                getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_failed));
+                return;
+            }
+            try {
+                int tempValue = Integer.parseInt(inputCurrent);
+                if (tempValue < mMinMaxValue[0] || tempValue > mMinMaxValue[1]) {
+                    getView().toastShort(mActivity.getString(R.string.empty_open_rated_current_is_out_of_range));
+                    return;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.enter_the_correct_number_format));
+                return;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.enter_the_correct_number_format));
             return;
         }
         if (needDiameter()) {
+            if (mActivity.getString(R.string.cu).equals(material)) {
+                materialValue = 0;
+            } else if (mActivity.getString(R.string.al).equals(material)) {
+                materialValue = 1;
+            }
             if (TextUtils.isEmpty(diameter)) {
                 getView().toastShort(mActivity.getString(R.string.enter_wire_diameter_tip));
                 return;
             }
             try {
                 diameterValue = Double.parseDouble(diameter);
-                if (diameterValue < 0 || diameterValue >= 200) {
-                    getView().toastShort(mActivity.getString(R.string.diameter) + String.format(Locale.CHINESE, "%s%d-%d", mActivity.getString(R.string.monitor_point_operation_error_value_range), 0, 200));
-                    return;
-                }
             } catch (Exception e) {
                 e.printStackTrace();
                 getView().toastShort(mActivity.getString(R.string.diameter) + mActivity.getString(R.string.enter_the_correct_number_format));
                 return;
             }
         }
+
         try {
-            getView().showBleConfigurationDialog(mActivity.getString(R.string.connecting));
-            mConnection.connect(deployAnalyzerModel.blePassword, DeployMonitorConfigurationPresenter.this);
+            if (!TextUtils.isEmpty(actualCurrent) && actualCurrent.endsWith("A")) {
+                actualCurrent = actualCurrent.substring(0, actualCurrent.lastIndexOf("A"));
+            } else {
+                getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.enter_the_correct_number_format));
+                return;
+            }
+            if (mMinMaxValue == null) {
+                getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_failed));
+                return;
+            }
+            try {
+                mEnterValue = Integer.parseInt(actualCurrent);
+                if (mEnterValue < mMinMaxValue[0] || mEnterValue > mMinMaxValue[1]) {
+//                    getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.monitor_point_operation_error_value_range) + mMinMaxValue[0] + "-" + mMinMaxValue[1]);
+                    getView().toastShort(mActivity.getString(R.string.wire_current_carrying_capacity_is_not_within_the_open_range));
+                    return;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.enter_the_correct_number_format));
+                return;
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            getView().dismissBleConfigurationDialog();
-            getView().toastShort(mActivity.getString(R.string.ble_connect_failed));
+            getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.enter_the_correct_number_format));
+            return;
         }
+        switch (configurationSource) {
+            case DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE:
+                //部署
+                EventData eventData = new EventData();
+                eventData.code = Constants.EVENT_DATA_DEPLOY_INIT_CONFIG_CODE;
+                DeployControlSettingData deployControlSettingData = new DeployControlSettingData();
+                deployControlSettingData.setInitValue(mEnterValue);
+                deployControlSettingData.setWireDiameter(diameterValue);
+                deployControlSettingData.setWireMaterial(materialValue);
+                eventData.data = deployControlSettingData;
+                EventBus.getDefault().post(eventData);
+                getView().finishAc();
+                break;
+            case DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL:
+                //详情
+                requestCmd(mEnterValue, materialValue, diameterValue);
+                break;
+        }
+
+    }
+
+    private void requestCmd(Integer value, int material, Double diameter) {
+        ArrayList<String> sns = new ArrayList<>();
+        sns.add(deployAnalyzerModel.sn);
+        getView().showOperationTipLoadingDialog();
+        mScheduleNo = null;
+        RetrofitServiceHelper.INSTANCE.doMonitorPointOperation(sns, "config", null, null, value, material, diameter)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>(this) {
+            @Override
+            public void onCompleted(MonitorPointOperationRequestRsp response) {
+                String scheduleNo = response.getScheduleNo();
+                if (TextUtils.isEmpty(scheduleNo)) {
+                    getView().dismissOperatingLoadingDialog();
+                    getView().showErrorTipDialog(mActivity.getString(R.string.monitor_point_operation_schedule_no_error));
+                } else {
+                    String[] split = scheduleNo.split(",");
+                    if (split.length > 0) {
+                        mScheduleNo = split[0];
+                        mHandler.removeCallbacks(DeviceTaskOvertime);
+                        mHandler.postDelayed(DeviceTaskOvertime, 10 * 1000);
+                    } else {
+                        getView().dismissOperatingLoadingDialog();
+                        getView().showErrorTipDialog(mActivity.getString(R.string.monitor_point_operation_schedule_no_error));
+
+                    }
+                }
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().dismissOperatingLoadingDialog();
+                getView().showErrorTipDialog(errorMsg);
+            }
+        });
+
     }
 
     public boolean needDiameter() {
-        return "mantun_fires".equals(deployAnalyzerModel.deviceType);
+        return Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
     }
 
-    @Override
-    public void run() {
-        try {
-            bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.startService();
-        } catch (Exception e) {
-            e.printStackTrace();
-            //TODO 提示
-            getView().toastShort(mActivity.getString(R.string.check_ble_status));
-        }
-        if (!bleHasOpen) {
-            bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.enEnableBle();
-            if (!bleHasOpen) {
-                getView().toastShort(mActivity.getString(R.string.check_ble_status));
-            }
-        }
-        boolean isNearby = bleList.contains(deployAnalyzerModel.sn);
-        getView().setTvNearVisible(isNearby);
-        mHandler.postDelayed(this, 2000);
-    }
-
-    @Override
-    public void onNewDevice(BLEDevice bleDevice) {
-        String sn = bleDevice.getSn();
-        try {
-            LogUtils.loge("deployConfig", sn + " " + deployAnalyzerModel.sn.equals(sn));
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
-        bleList.add(sn);
-        if (TextUtils.isEmpty(mMacAddress)) {
-            if (deployAnalyzerModel.sn.equals(sn)) {
-                mMacAddress = bleDevice.getMacAddress();
-            }
-
-        }
-
-    }
-
-    @Override
-    public void onGoneDevice(BLEDevice bleDevice) {
-        String sn = bleDevice.getSn();
-        bleList.remove(sn);
-    }
-
-    @Override
-    public void onUpdateDevices(ArrayList<BLEDevice> deviceList) {
-        for (BLEDevice device : deviceList) {
-            String sn = device.getSn();
-            bleList.add(sn);
-            if (TextUtils.isEmpty(mMacAddress)) {
-                if (deployAnalyzerModel.sn.equals(sn)) {
-                    mMacAddress = device.getMacAddress();
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onConnectedSuccess(BLEDevice bleDevice, int cmd) {
-        if (getView() != null) {
-            mActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (isAttachedView()) {
-                        getView().updateBleConfigurationDialogText(mActivity.getString(R.string.now_configuration));
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(EventData eventData) {
+        int code = eventData.code;
+        Object data = eventData.data;
+        switch (code) {
+            case EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT:
+                if (data instanceof MonitorPointOperationTaskResultInfo) {
+                    try {
+                        LogUtils.loge("EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT --->>");
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
                     }
-                }
-            });
-            SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, mEnterValue);
-            if (sensoroDevice != null) {
-                mConnection.writeData05Configuration(sensoroDevice, this);
-            } else {
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isAttachedView()) {
-                            getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_data_failed));
-                            mConnection.disconnect();
+                    MonitorPointOperationTaskResultInfo info = (MonitorPointOperationTaskResultInfo) data;
+                    final String scheduleNo = info.getScheduleNo();
+                    if (!TextUtils.isEmpty(scheduleNo) && info.getTotal() == info.getComplete()) {
+                        String[] split = scheduleNo.split(",");
+                        if (split.length > 0) {
+                            final String temp = split[0];
+                            if (!TextUtils.isEmpty(temp)) {
+                                if (AppUtils.isActivityTop(mActivity, DeployMonitorConfigurationActivity.class)) {
+                                    mActivity.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
+                                                mHandler.removeCallbacks(DeviceTaskOvertime);
+                                                if (isAttachedView()) {
+                                                    getView().dismissOperatingLoadingDialog();
+                                                    getView().showOperationSuccessToast();
+                                                    mHandler.postDelayed(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            getView().finishAc();
+                                                        }
+                                                    }, 1000);
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
+                            }
                         }
 
                     }
-                });
-
-            }
-
-        }
-
-    }
-
-    private void configCompleted() {
-        EventData eventData = new EventData();
-        eventData.code = Constants.EVENT_DATA_DEPLOY_INIT_CONFIG_CODE;
-        DeployControlSettingData deployControlSettingData = new DeployControlSettingData();
-        deployControlSettingData.setInitValue(mEnterValue);
-        deployControlSettingData.setDiameterValue(diameterValue);
-        eventData.data = deployControlSettingData;
-        EventBus.getDefault().post(eventData);
-        getView().finishAc();
-    }
-
-
-    @Override
-    public void onConnectedFailure(int errorCode) {
-        if (getView() != null) {
-            mActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (isAttachedView()) {
-                        getView().dismissBleConfigurationDialog();
-                        getView().toastShort(mActivity.getString(R.string.ble_connect_failed));
-                    }
-
                 }
-            });
+                break;
         }
-
-
     }
 
-    @Override
-    public void onDisconnected() {
-        if (getView() != null) {
-            mActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (isAttachedView()) {
-                        getView().dismissBleConfigurationDialog();
-                        getView().toastShort(mActivity.getString(R.string.ble_device_disconnected));
-                    }
-
-                }
-            });
+    public void showOverCurrentDialog() {
+        if (isAttachedView()) {
+            getView().showOverCurrentDialog(overCurrentDataList);
         }
     }
 
     @Override
-    public void onWriteSuccess(Object o, int cmd) {
-        if (getView() != null) {
-            mActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (isAttachedView()) {
-                        getView().updateBleConfigurationDialogText(mActivity.getString(R.string.ble_config_success));
-                        getView().updateBleConfigurationDialogSuccessImv();
-                    }
-
-                }
-            });
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (getView() != null) {
-                        getView().dismissBleConfigurationDialog();
-                        configCompleted();
-                    }
-
-                }
-            }, 1000);
-        }
-
+    public void onCreate() {
+        EventBus.getDefault().register(this);
     }
 
-    @Override
-    public void onWriteFailure(int errorCode, int cmd) {
-        if (getView() != null) {
-            mActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (isAttachedView()) {
-                        getView().dismissBleConfigurationDialog();
-                        getView().toastShort(mActivity.getString(R.string.ble_config_failed));
-                        mConnection.disconnect();
-                    }
-
-                }
-            });
+    public void doCustomOptionPickerItemSelect(int position) {
+        String tx = pickerStrings.get(position);
+        if (!TextUtils.isEmpty(tx)) {
+            getView().setInputDiameterValueText(tx);
         }
-
     }
 }

@@ -25,8 +25,7 @@ public class DeployRecordInfo implements Serializable {
     private List<String> tags;
     private List<Double> lonlat;
     private List<String> deployPics;
-    private Map<String,DeployControlSettingData> config;
-
+    private Map<String, DeployControlSettingData> config;
 
 
     public Map<String, DeployControlSettingData> getConfig() {
@@ -36,6 +35,7 @@ public class DeployRecordInfo implements Serializable {
     public void setConfig(Map<String, DeployControlSettingData> config) {
         this.config = config;
     }
+
     public String getWxPhone() {
         return wxPhone;
     }

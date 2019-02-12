@@ -61,10 +61,6 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     RelativeLayout acInspectionTaskLlSearch;
     @BindView(R.id.fg_main_top_search_imv_clear)
     ImageView acInspectionTaskImvSearchClear;
-    @BindView(R.id.ac_inspection_task_fl_state)
-    FrameLayout acInspectionTaskFlState;
-    @BindView(R.id.ac_inspection_task_fl_type)
-    FrameLayout acInspectionTaskFlType;
     @BindView(R.id.ac_inspection_task_rc_content)
     RecyclerView acInspectionTaskRcContent;
     @BindView(R.id.refreshLayout)
@@ -85,8 +81,8 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     TextView acInspectionTaskTvState;
     @BindView(R.id.ac_inspection_task_tv_type)
     TextView acInspectionTaskTvType;
-    @BindView(R.id.ac_inspection_task_ll_select)
-    LinearLayout acInspectionTaskLlSelect;
+    @BindView(R.id.ac_inspection_task_rl_select)
+    RelativeLayout acInspectionTaskLlSelect;
     @BindView(R.id.no_content)
     ImageView imvNoContent;
     @BindView(R.id.ic_no_content)
@@ -395,12 +391,12 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
 
     @Override
     public void startAC(Intent intent) {
-        startActivity(intent);
+        mActivity.startActivity(intent);
     }
 
     @Override
     public void finishAc() {
-        finish();
+        mActivity.finish();
     }
 
     @Override
@@ -450,7 +446,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
 
 
     @OnClick({R.id.ac_inspection_task_imv_arrows_left, R.id.ac_inspection_task_ll_search, R.id.ac_inspection_task_et_search,
-            R.id.ac_inspection_task_fl_state, R.id.ac_inspection_task_fl_type, R.id.ac_inspection_task_imv_scan, R.id.tv_inspection_task_search_cancel
+            R.id.ac_inspection_task_tv_state, R.id.ac_inspection_task_tv_type, R.id.ac_inspection_task_imv_scan, R.id.tv_inspection_task_search_cancel
             , R.id.ac_inspection_task_imv_map, R.id.fg_main_top_search_imv_clear, R.id.btn_search_clear})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -463,7 +459,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
                 acInspectionTaskEtSearch.setCursorVisible(true);
                 setSearchHistoryVisible(true);
                 break;
-            case R.id.ac_inspection_task_fl_state:
+            case R.id.ac_inspection_task_tv_state:
                 if (mSelectDeviceTypePop != null) {
                     if (mSelectStatusPop.isData()) {
                         showSelectDeviceStatusPop();
@@ -472,7 +468,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
                     }
                 }
                 break;
-            case R.id.ac_inspection_task_fl_type:
+            case R.id.ac_inspection_task_tv_type:
                 if (mSelectStatusPop != null && mSelectStatusPop.isShowing()) {
                     mSelectStatusPop.dismiss();
                 }

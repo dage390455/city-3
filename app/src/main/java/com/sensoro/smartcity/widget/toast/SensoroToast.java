@@ -27,8 +27,8 @@ public enum SensoroToast {
 
 
     INSTANCE;
-    private Toast mToast;
-    private TextView textView;
+    private volatile Toast mToast;
+    private volatile TextView textView;
 
     private void showToast(Context context, CharSequence content, int duration) {
         if (mToast == null) {

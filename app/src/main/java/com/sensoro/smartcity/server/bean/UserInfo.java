@@ -22,7 +22,6 @@ public class UserInfo implements Serializable {
     private String isSpecific;
     private String roles;
     private String sessionID;
-    private String controllerUid;
     private UserInfo chirldren[];
     private Character character;
     private long createdTime;
@@ -30,8 +29,15 @@ public class UserInfo implements Serializable {
     private boolean isStop;
     private Account account;
     private boolean addUserEnable = true;
+    private String controllerAid;
 
+    public String getControllerAid() {
+        return controllerAid;
+    }
 
+    public void setControllerAid(String controllerAid) {
+        this.controllerAid = controllerAid;
+    }
     public boolean isAddUserEnable() {
         return addUserEnable;
     }
@@ -178,14 +184,6 @@ public class UserInfo implements Serializable {
         this.chirldren = chirldren;
     }
 
-    public String getControllerUid() {
-        return controllerUid;
-    }
-
-    public void setControllerUid(String controllerUid) {
-        this.controllerUid = controllerUid;
-    }
-
     public boolean isStop() {
         return isStop;
     }
@@ -217,7 +215,7 @@ public class UserInfo implements Serializable {
                 ", isSpecific='" + isSpecific + '\'' +
                 ", roles='" + roles + '\'' +
                 ", sessionID='" + sessionID + '\'' +
-                ", controllerUid='" + controllerUid + '\'' +
+                ", controllerAid='" + controllerAid + '\'' +
                 ", chirldren=" + Arrays.toString(chirldren) +
                 ", character=" + character +
                 ", createdTime=" + createdTime +

@@ -377,8 +377,8 @@
     <string name="contract_info_site_nature">场地性质</string>
     <string name="contract_info_contract_service_life">合同服务年限</string>
     <string name="contract_info_contract_status">合同状态</string>
-    <string name="contract_info_contract_created_time">合同生成时间</string>
-    <string name="contract_info_contract_sign_time">合同签署时间</string>
+    <string name="contract_info_contract_created_time">生成时间：</string>
+    <string name="contract_info_contract_sign_time">签订时间：</string>
     <string name="contract_info_contract_qr_code">合同二维码</string>
     //合同result xml
     <string name="contract_result_title">二维码</string>
@@ -530,7 +530,7 @@
     <string name="normal_monitor">正常监测</string>
     <string name="inspection_test">巡检测试</string>
     <string name="company">企业</string>
-    <string name="contract_number">合同号</string>
+    <string name="contract_number">合同编号：</string>
     <string name="contract_created_time">生成时间</string>
     <string name="contract_signed_time">签订时间</string>
     <string name="co2">二氧化碳</string>
@@ -777,4 +777,36 @@
     <string name="identification_failed_try_again">识别失败，请重试</string>
     <string name="is_alarm">时报警</string>
     <string name="sensoro_number">升哲安全服务</string>
+    <string name="back_to_main_merchant">返回主账号</string>
+    <string name="current_merchant">当前商户</string>
+    <string name="sub_merchant">下级商户</string>
+    <string name="diameter_info">电线参数</string>
+    <string name="diameter_material">电线材质</string>
+    <string name="actual_overcurrent_threshold">实际过流阈值</string>
+    <string name="over_current_description_one">若空开额定电流 ≤ 电线载流量，\n则过流阈值 = 空开额定电流；</string>
+    <string name="over_current_description_two">若空开额定电流 > 电线载流量，\n则过流阈值 = 电线载流量。</string>
+    <string name="over_current">过流阈值</string>
+    <string name="cu">铜芯</string>
+    <string name="al">铝芯</string>
+    <string name="please_set_initial_configuration">请先设置初始配置信息</string>
+    <string name="actual_overcurrent_threshold_format">实际过流阈值：%dA</string>
+    <string name="business_name_phone">商户名称/联系人电话</string>
+    <string name="empty_open_rated_current_is_out_of_range">空开额定电流超出范围</string>
+    <string name="wire_current_carrying_capacity_is_not_within_the_open_range">电线载流量不在空开量程范围内</string>
+    <string name="modify_threshold">修改阈值</string>
+    <string name="contract_more_record">更多记录</string>
+    <string name="contract_info_contract_pay_time">支付时间：</string>
+    <string name="permission_tip">温馨提示</string>
+    <string name="quit_app">退出应用</string>
+    <string name="permission_check">权限被拒绝，请前往设置打开</string>
+    <string name="reauthorization">重新授权</string>
+    <string name="go_setting">去设置</string>
+    <string name="permission_read_write">读写</string>
+    <string name="permission_location">定位</string>
+    <string name="permission_record">录音</string>
+    <string name="permission_camera">相机</string>
+    <string name="permission_phone_state">手机识别码</string>
+    <string name="permission_call">拨打电话</string>
+    <string name="permission_contact">读写联系人</string>
+
 </resources>

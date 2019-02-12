@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.constant.ContractOrderInfo;
 import com.sensoro.smartcity.server.bean.ContractListInfo;
+import com.sensoro.smartcity.util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,23 +62,29 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
         if (convertView == null) {
             holder = new ContractViewHolder();
             convertView = mInflater.inflate(R.layout.item_contracts_manger, null);
-            holder.itemTvLine1 = (TextView) convertView.findViewById(R.id.tv_contacts_manger_line1);
-            holder.itemEtLine1 = (TextView) convertView.findViewById(R.id.et_contacts_manger_line1);
-            holder.itemTvType = (TextView) convertView.findViewById(R.id.tv_contacts_manger_type);
-            holder.itemTvStatus = convertView.findViewById(R.id.tv_contacts_manger_status);
-            //
-            holder.itemTvLine2 = (TextView) convertView.findViewById(R.id.tv_contacts_manger_line2);
-            holder.itemEtLine2 = (TextView) convertView.findViewById(R.id.et_contacts_manger_line2);
-            holder.itemEtNumber = (TextView) convertView.findViewById(R.id.et_contacts_manger_number);
-            holder.itemEtDate = (TextView) convertView.findViewById(R.id.et_contacts_manger_time);
-            holder.itemEtSignTime = convertView.findViewById(R.id.et_contacts_manger_sign_time);
-            holder.itemRlContactsEnterprise = convertView.findViewById(R.id.rl_contacts_manger_enterprise);
+            holder.tvContractNumber = (TextView) convertView.findViewById(R.id.tv_contract_number);
+            holder.tvContactsMangerType = (TextView) convertView.findViewById(R.id.tv_contacts_manger_type);
+            holder.tvContactsMangerStatus = convertView.findViewById(R.id.tv_contacts_manger_status);
+            holder.ivPayStatus = convertView.findViewById(R.id.iv_pay_status);
+
+
+            holder.tvContactsMangerCustom = (TextView) convertView.findViewById(R.id.tv_contacts_manger_custom);
+            holder.etContactsMangerCustom = (TextView) convertView.findViewById(R.id.et_contacts_manger_custom);
+
             holder.itemTvContactsEnterprise = convertView.findViewById(R.id.tv_contacts_manger_enterprise);
             holder.itemEtContactsEnterprise = convertView.findViewById(R.id.et_contacts_manger_enterprise);
+            //
+            holder.tvContactsMangerAddress = (TextView) convertView.findViewById(R.id.tv_contacts_manger_address);
+            holder.etContactsMangerAddress = (TextView) convertView.findViewById(R.id.et_contacts_manger_address);
+
+            holder.tvContactsMangerTime = (TextView) convertView.findViewById(R.id.tv_contacts_manger_time);
+            holder.etContactsMangerTime = (TextView) convertView.findViewById(R.id.et_contacts_manger_time);
+            //
             convertView.setTag(holder);
         } else {
             holder = (ContractViewHolder) convertView.getTag();
         }
+        //
         ContractListInfo contractListInfo = mList.get(position);
         int contract_type = contractListInfo.getContract_type();
         String customer_enterprise_name = contractListInfo.getCustomer_enterprise_name();
@@ -93,71 +101,57 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
         }
         switch (contract_type) {
             case 1:
-                holder.itemTvType.setText(R.string.company);
-                holder.itemTvLine1.setText(mContext.getString(R.string.legal_name));
-                holder.itemEtLine1.setText(customer_name);
+                holder.tvContactsMangerType.setText(R.string.company);
+                holder.tvContactsMangerCustom.setText(mContext.getString(R.string.legal_name));
+                holder.etContactsMangerCustom.setText(customer_name);
                 holder.itemTvContactsEnterprise.setText(R.string.business_merchant_name);
                 holder.itemEtContactsEnterprise.setText(customer_enterprise_name);
-                holder.itemTvLine2.setText(R.string.register_address);
-                holder.itemEtLine2.setText(customer_address);
+                holder.tvContactsMangerAddress.setText(R.string.register_address);
+                holder.etContactsMangerAddress.setText(customer_address);
                 break;
             case 2:
-                holder.itemTvType.setText(R.string.personal);
-                holder.itemTvLine1.setText(R.string.owners_name);
-                holder.itemEtLine1.setText(customer_name);
+                holder.tvContactsMangerType.setText(R.string.personal);
+                holder.tvContactsMangerCustom.setText(R.string.owners_name);
+                holder.etContactsMangerCustom.setText(customer_name);
                 holder.itemTvContactsEnterprise.setText(R.string.party_a_customer_name);
                 holder.itemEtContactsEnterprise.setText(customer_enterprise_name);
-                holder.itemTvLine2.setText(R.string.home_address);
-                holder.itemEtLine2.setText(customer_address);
+                holder.tvContactsMangerAddress.setText(R.string.home_address);
+                holder.etContactsMangerAddress.setText(customer_address);
                 break;
             default:
-                holder.itemTvType.setText(R.string.company);
-                holder.itemTvLine1.setText(mContext.getString(R.string.legal_name));
-                holder.itemEtLine1.setText(customer_name);
+                holder.tvContactsMangerType.setText(R.string.company);
+                holder.tvContactsMangerCustom.setText(mContext.getString(R.string.legal_name));
+                holder.etContactsMangerCustom.setText(customer_name);
                 holder.itemTvContactsEnterprise.setText(R.string.business_merchant_name);
                 holder.itemEtContactsEnterprise.setText(customer_enterprise_name);
-                holder.itemTvLine2.setText(R.string.register_address);
-                holder.itemEtLine2.setText(customer_address);
+                holder.tvContactsMangerAddress.setText(R.string.register_address);
+                holder.etContactsMangerAddress.setText(customer_address);
                 break;
         }
 
         if (contractListInfo.isConfirmed()) {
-            holder.itemTvStatus.setText(R.string.signed);
-            holder.itemTvStatus.setTextColor(mContext.getResources().getColor(R.color.c_29c093));
-            holder.itemTvStatus.setBackgroundResource(R.drawable.shape_bg_stroke_1_29c_full_corner);
+            holder.tvContactsMangerStatus.setText(R.string.signed);
+            holder.tvContactsMangerStatus.setTextColor(mContext.getResources().getColor(R.color.c_29c093));
+            holder.tvContactsMangerStatus.setBackgroundResource(R.drawable.shape_bg_stroke_1_29c_full_corner);
+            holder.tvContactsMangerTime.setText(R.string.contract_signed_time);
+            String confirmTime = contractListInfo.getConfirmTime();
+            holder.etContactsMangerTime.setText(DateUtil.getChineseCalendar(contractListInfo.getConfirmTimestamp()));
         } else {
-            holder.itemTvStatus.setText(R.string.not_signed);
-            holder.itemTvStatus.setTextColor(mContext.getResources().getColor(R.color.c_ff8d34));
-            holder.itemTvStatus.setBackgroundResource(R.drawable.shape_bg_stroke_1_ff8d_full_corner);
+            holder.tvContactsMangerStatus.setText(R.string.not_signed);
+            holder.tvContactsMangerStatus.setTextColor(mContext.getResources().getColor(R.color.c_ff8d34));
+            holder.tvContactsMangerStatus.setBackgroundResource(R.drawable.shape_bg_stroke_1_ff8d_full_corner);
+            holder.tvContactsMangerTime.setText(R.string.contract_created_time);
+            holder.etContactsMangerTime.setText(DateUtil.getChineseCalendar(contractListInfo.getCreatedAtTimestamp()));
         }
         String contract_number = contractListInfo.getContract_number();
-        holder.itemEtNumber.setText(contract_number);
-        //TODO 改为时间戳
-        String createdAt = contractListInfo.getCreatedAt();
-        if (!TextUtils.isEmpty(createdAt)) {
-            try {
-                String[] ts = createdAt.split("T");
-                createdAt = ts[0];
-                createdAt = createdAt.replaceAll("-", ".");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            holder.itemEtDate.setText(createdAt);
-        }
-        //
-        String confirmTime = contractListInfo.getConfirmTime();
-        if (!TextUtils.isEmpty(confirmTime)) {
-            try {
-                String[] ts = confirmTime.split("T");
-                confirmTime = ts[0].replaceAll("-", ".");
-            } catch (Exception e) {
-                e.printStackTrace();
-                confirmTime = "-";
-            }
+        holder.tvContractNumber.setText(contract_number);
 
-            holder.itemEtSignTime.setText(confirmTime);
+        ContractListInfo.Order order = contractListInfo.getOrder();
+        if (order != null) {
+            String tradeState = order.getTrade_state();
+            holder.ivPayStatus.setVisibility(ContractOrderInfo.SUCCESS.equals(tradeState) ? View.VISIBLE : View.GONE);
         } else {
-            holder.itemEtSignTime.setText("-");
+            holder.ivPayStatus.setVisibility(View.GONE);
         }
         return convertView;
     }
@@ -165,18 +159,18 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
 
     static class ContractViewHolder {
 
-        TextView itemTvLine1;
-        TextView itemEtLine1;
-        TextView itemTvType;
-        TextView itemTvLine2;
-        TextView itemEtLine2;
-        TextView itemEtNumber;
-        TextView itemEtDate;
-        TextView itemTvStatus;
-        TextView itemEtSignTime;
+        TextView tvContactsMangerCustom;
+        TextView etContactsMangerCustom;
+        TextView tvContactsMangerAddress;
+        TextView etContactsMangerAddress;
+        TextView tvContactsMangerTime;
+        TextView etContactsMangerTime;
+        TextView tvContractNumber;
+        TextView tvContactsMangerType;
+        TextView tvContactsMangerStatus;
+        ImageView ivPayStatus;
         TextView itemTvContactsEnterprise;
         TextView itemEtContactsEnterprise;
-        RelativeLayout itemRlContactsEnterprise;
 
         ContractViewHolder() {
 

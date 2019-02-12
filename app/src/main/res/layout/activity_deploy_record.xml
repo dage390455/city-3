@@ -38,8 +38,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/shape_bg_full_corner">
 
                 <ImageView
@@ -80,8 +80,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
                 android:padding="8dp"
                 android:text="@string/cancel"
                 android:textColor="@color/c_252525"

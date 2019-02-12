@@ -58,7 +58,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -502,7 +501,7 @@ public enum RetrofitServiceHelper {
      * @return
      */
     public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, List<String> tags, String
-            name, String contact, String content, String wxPhone, List<String> imgUrls, HashMap<String, DeployControlSettingData> settingMap) {
+            name, String contact, String content, String wxPhone, List<String> imgUrls, Map<String, DeployControlSettingData> settingMap) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("lon", lon);
@@ -540,16 +539,28 @@ public enum RetrofitServiceHelper {
                     if (!TextUtils.isEmpty(key)) {
                         DeployControlSettingData value = entrySet.getValue();
                         JSONObject jsonObjectIn = new JSONObject();
-                        jsonObjectIn.put("initValue", value.getInitValue());
-                        Double diameterValue = value.getDiameterValue();
+                        jsonObjectIn.put("initValue", value.getSwitchSpec());
+                        Double diameterValue = value.getWireDiameter();
                         if (diameterValue != null) {
-                            jsonObjectIn.put("diameterValue", diameterValue);
+                            jsonObjectIn.put("wireDiameter", diameterValue);
                         }
+                        int wireMaterial = value.getWireMaterial();
+                        jsonObjectIn.put("wireMaterial", wireMaterial);
                         jsonObjectOut.put(key, jsonObjectIn);
+
                     }
                 }
                 jsonObject.put("config", jsonObjectOut);
             }
+//            if (deployControlSettingData != null) {
+//                JSONObject jsonObjectOut = new JSONObject();
+//                jsonObjectOut.put("switchSpec", deployControlSettingData.getSwitchSpec());
+//                Double diameterValue = deployControlSettingData.getWireDiameter();
+//                if (diameterValue != null) {
+//                    jsonObjectOut.put("diameterValue", diameterValue);
+//                }
+//                jsonObject.put("config", jsonObjectOut);
+//            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -560,6 +571,14 @@ public enum RetrofitServiceHelper {
         return deviceDeployRspObservable;
     }
 
+    /**
+     * 获取蓝牙信息，包括蓝牙密码和基带信息
+     *
+     * @param sn
+     * @param longitude
+     * @param latitude
+     * @return
+     */
     public Observable<DeployDeviceDetailRsp> getDeployDeviceDetail(String sn, Double longitude, Double latitude) {
         Observable<DeployDeviceDetailRsp> deployDeviceDetail = retrofitService.getDeployDeviceDetail(sn, longitude, latitude);
         RxApiManager.getInstance().add("deployDeviceDetail", deployDeviceDetail.subscribe());
@@ -1239,7 +1258,7 @@ public enum RetrofitServiceHelper {
         return devicesMergeTypes;
     }
 
-    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer switchSpec, Double diameter) {
+    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer switchSpec, Integer wireMaterial, Double diameter) {
         JSONObject jsonObject = new JSONObject();
 
         try {
@@ -1260,13 +1279,19 @@ public enum RetrofitServiceHelper {
                 }
                 jsonObject.put("rules", jsonRules);
             }
+            JSONObject jsonObjectConfig = new JSONObject();
             if (switchSpec != null) {
-                jsonObject.put("switchSpec", switchSpec);
+                jsonObjectConfig.put("switchSpec", switchSpec);
+            }
+            if (wireMaterial != null) {
+                jsonObjectConfig.put("wireMaterial", wireMaterial);
             }
             if (diameter != null) {
-                jsonObject.put("wireDiameter", diameter);
+                jsonObjectConfig.put("wireDiameter", diameter);
             }
-
+            if (switchSpec != null || wireMaterial != null || diameter != null) {
+                jsonObject.put("config", jsonObjectConfig);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -1380,5 +1405,14 @@ public enum RetrofitServiceHelper {
      */
     public Observable<ResponseBase> getDeviceNameValid(String name) {
         return retrofitService.getDeviceNameValid(name);
+    }
+
+    /**
+     * 解除账号控制返回主账户
+     *
+     * @return
+     */
+    public Observable<LoginRsp> backMainAccount() {
+        return retrofitService.backMainControlling();
     }
 }

@@ -50,20 +50,20 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivityView, MerchantSwitchActivityPresenter> implements IMerchantSwitchActivityView
         , View.OnClickListener, AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
+    @BindView(R.id.ll_main_merchant)
+    LinearLayout llMainMerchant;
+    @BindView(R.id.tv_back_to_main_merchant)
+    TextView tvBackToMainMerchant;
     @BindView(R.id.fragment_merchant_list)
     ListView mPullListView;
     @BindView(R.id.merchant_iv_menu_list)
     ImageView mMenuListImageView;
-    @BindView(R.id.merchant_list_sep)
-    View seperatorView;
     @BindView(R.id.merchant_list_bottom_sep)
     View seperatorBottomView;
     @BindView(R.id.merchant_current_name)
     TextView mCurrentNameTextView;
     @BindView(R.id.merchant_current_phone)
     TextView mCurrentPhoneTextView;
-    @BindView(R.id.merchant_current_status)
-    ImageView mCurrentStatusImageView;
     @BindView(R.id.rl_title_account)
     RelativeLayout rlTitleAccount;
     @BindView(R.id.merchant_return_top)
@@ -96,6 +96,20 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     private boolean isShowDialog = true;
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private MerchantAdapter mMerchantAdapter;
+
+    @Override
+    protected void onCreateInit(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_merchant);
+        ButterKnife.bind(mActivity);
+        initView();
+        mPresenter.initData(mActivity);
+    }
+
+    @Override
+    protected MerchantSwitchActivityPresenter createPresenter() {
+        return new MerchantSwitchActivityPresenter();
+    }
+
     @Override
     protected void onDestroy() {
         if (mProgressUtils != null) {
@@ -196,8 +210,8 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
         merchantTvCancel.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
-    private void setRlTitleAccountVisible(boolean isVisible) {
-        rlTitleAccount.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    private void setLlMainAccountVisible(boolean isVisible) {
+        llMainMerchant.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     private void initRcHistorySearch() {
@@ -225,11 +239,11 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
                             mMerchantEtSearch.setText(text);
                             mMerchantEtSearch.setSelection(mMerchantEtSearch.getText().toString().length());
                         }
+                        mPresenter.requestSearchData(DIRECTION_DOWN, text);
                         mMerchantEtClear.setVisibility(View.VISIBLE);
                         mMerchantEtSearch.clearFocus();
                         AppUtils.dismissInputMethodManager(mActivity, mMerchantEtSearch);
                         setSearchHistoryVisible(false);
-                        mPresenter.requestSearchData(DIRECTION_DOWN, text);
                     }
                 });
         rvSearchHistory.setAdapter(mSearchHistoryAdapter);
@@ -251,7 +265,7 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
         mPresenter.clickItem(userInfo);
     }
 
-    @OnClick({R.id.merchant_frame_search, R.id.merchant_et_search, R.id.btn_search_clear, R.id.merchant_imv_clear, R.id.merchant_tv_cancel})
+    @OnClick({R.id.merchant_frame_search, R.id.merchant_et_search, R.id.btn_search_clear, R.id.merchant_imv_clear, R.id.merchant_tv_cancel, R.id.tv_back_to_main_merchant})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.merchant_frame_search:
@@ -259,7 +273,7 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
                 mMerchantEtSearch.requestFocus();
                 mMerchantEtSearch.setCursorVisible(true);
                 setSearchHistoryVisible(true);
-                setRlTitleAccountVisible(false);
+                setLlMainAccountVisible(false);
                 setTvCancelVisible(true);
                 break;
             case R.id.btn_search_clear:
@@ -276,7 +290,10 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
                 setSearchHistoryVisible(false);
                 setTvCancelVisible(false);
                 AppUtils.dismissInputMethodManager(mActivity, mMerchantEtSearch);
-                setRlTitleAccountVisible(true);
+                setLlMainAccountVisible(true);
+                break;
+            case R.id.tv_back_to_main_merchant:
+                mPresenter.doBackToMainMerchant();
                 break;
 
         }
@@ -348,11 +365,6 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     }
 
     @Override
-    public void setCurrentStatusImageViewVisible(boolean visible) {
-        mCurrentStatusImageView.setVisibility(visible ? View.VISIBLE : View.GONE);
-    }
-
-    @Override
     public void setCurrentNameAndPhone(String name, String phone) {
         if (name != null) {
             mCurrentNameTextView.setText(name);
@@ -390,7 +402,7 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     }
 
     private boolean isRlTitleAccountVisible() {
-        return rlTitleAccount.getVisibility() == View.VISIBLE;
+        return llMainMerchant.getVisibility() == View.VISIBLE;
     }
 
 
@@ -405,6 +417,11 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     public void updateSearchHistoryList(List<String> data) {
         btnSearchClear.setVisibility(data.size() > 0 ? View.VISIBLE : View.GONE);
         mSearchHistoryAdapter.updateSearchHistoryAdapter(data);
+    }
+
+    @Override
+    public void setTvBackToMainMerchantVisible(boolean isVisible) {
+        tvBackToMainMerchant.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
 
@@ -423,19 +440,6 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
         } else {
             mReturnTopImageView.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    protected void onCreateInit(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_merchant);
-        ButterKnife.bind(mActivity);
-        initView();
-        mPresenter.initData(mActivity);
-    }
-
-    @Override
-    protected MerchantSwitchActivityPresenter createPresenter() {
-        return new MerchantSwitchActivityPresenter();
     }
 
 }

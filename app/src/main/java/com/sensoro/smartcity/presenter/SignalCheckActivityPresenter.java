@@ -219,8 +219,8 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
     }
 
     private void sendDetectionCmd(SensoroDevice sensoroDevice) {
-        mConnection.writeSignalData(selectedFreq, sensoroDevice.getLoraDr(), sensoroDevice.getLoraTxp(),
-                5, this);
+        //暂时不写入dr等信息
+        mConnection.writeSignalData(selectedFreq, 0, 0, 0, this);
 
     }
 

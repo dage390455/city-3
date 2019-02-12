@@ -25,12 +25,14 @@ import com.sensoro.smartcity.adapter.TagAdapter;
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.imainviews.IMonitorPointElectricDetailActivityView;
 import com.sensoro.smartcity.model.Elect3DetailModel;
 import com.sensoro.smartcity.model.TaskOptionModel;
 import com.sensoro.smartcity.presenter.MonitorPointElectricDetailActivityPresenter;
 import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
@@ -116,6 +118,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     TableRow trElectT;
     @BindView(R.id.elect_info)
     ImageView electInfo;
+    @BindView(R.id.ll_all_info)
+    LinearLayout llAllInfo;
     @BindView(R.id.tv_elect_main)
     TextView tvElectMain;
     @BindView(R.id.elect_main_type)
@@ -174,10 +178,10 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             }
         };
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        int spacingInPixels = mActivity.getResources().getDimensionPixelSize(R.dimen.x10);
+        int spacingInPixels = AppUtils.dp2px(mActivity, 8);
         monitorDetailRcTag.setIntercept(true);
         monitorDetailRcTag.setLayoutManager(layoutManager);
-        monitorDetailRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
+        monitorDetailRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels,false,false));
         monitorDetailRcTag.setAdapter(mTagAdapter);
         //
         mContentAdapter = new MonitoringPointRcContentAdapter(mActivity);
@@ -225,8 +229,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             }
         };
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        int spacingInPixels = mActivity.getResources().getDimensionPixelSize(R.dimen.x10);
-        acMonitorDeployPhoto.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
+        layoutManager.setReverseLayout(true);
+        acMonitorDeployPhoto.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(this,8),false));
         acMonitorDeployPhoto.setLayoutManager(layoutManager);
         mAdapter = new MonitorDeployDetailPhotoAdapter(mActivity);
         acMonitorDeployPhoto.setAdapter(mAdapter);
@@ -519,7 +523,10 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
                     break;
 
             }
-            mOperatingUtil.show();
+            if (!mOperatingUtil.isShowing()) {
+                mOperatingUtil.show();
+            }
+
         }
     }
 
@@ -656,7 +663,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
 
 
     @OnClick({R.id.include_text_title_tv_subtitle, R.id.ac_monitoring_point_cl_alert_contact, R.id.ac_monitoring_point_imv_location, R.id.ac_monitoring_point_cl_location_navigation,
-            R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left, R.id.ll_elect_more, R.id.elect_info})
+            R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left, R.id.ll_elect_more, R.id.ll_all_info})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
@@ -679,8 +686,10 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
                 showDetail = !showDetail;
                 setElectDetailVisible(showDetail);
                 break;
-            case R.id.elect_info:
-                mPresenter.showEarlyWarningThresholdDialogUtils();
+            case R.id.ll_all_info:
+                if (electInfo.getVisibility() == View.VISIBLE) {
+                    mPresenter.showEarlyWarningThresholdDialogUtils();
+                }
                 break;
         }
     }
@@ -692,7 +701,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             mTipUtils.dismiss();
         }
         //控制线径显示
-        mTipUtils.setDiameterVisible(isEdit && "mantun_fires".equals(deviceType));
+        mTipUtils.setDiameterVisible(isEdit && Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType));
         mTipUtils.setTipEtRootVisible(isEdit);
         mTipUtils.setTipTitleText(mActivity.getString(title));
         mTipUtils.setTipMessageText(mActivity.getString(message), messageColor);

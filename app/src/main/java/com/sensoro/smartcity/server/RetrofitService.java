@@ -37,6 +37,7 @@ import com.sensoro.smartcity.server.response.UserAccountRsp;
 
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -280,5 +281,8 @@ public interface RetrofitService {
     @GET("devices/valid")
 //    Observable<DevicesMergeTypesRsp> getDevicesMergeTypes(@Header("x-session-id") String sessionId);
     Observable<ResponseBase> getDeviceNameValid(@Query("name") String name);
+
+    @DELETE("prov1/accounts/controlling")
+    Observable<LoginRsp> backMainControlling();
 }
 

@@ -11,12 +11,14 @@ import com.sensoro.smartcity.activity.ContractPreviewActivity;
 import com.sensoro.smartcity.activity.ContractResultActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.constant.ContractOrderInfo;
 import com.sensoro.smartcity.imainviews.IContractDetailView;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.ContractListInfo;
 import com.sensoro.smartcity.server.response.ContractInfoRsp;
+import com.sensoro.smartcity.util.DateUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -52,6 +54,7 @@ public class ContractDetailPresenter extends BasePresenter<IContractDetailView> 
                     public void onCompleted(ContractInfoRsp responseBase) {
                         mContractInfo = responseBase.getData();
                         if (mContractInfo != null) {
+                            getView().setContractNumber(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.contract_number), mContractInfo.getContract_number()));
                             getView().setSignStatus(mContractInfo.isConfirmed());
                             getView().setCustomerEnterpriseName(mContractInfo.getCustomer_enterprise_name());
                             getView().setCustomerName(mContractInfo.getCustomer_name());
@@ -70,34 +73,22 @@ public class ContractDetailPresenter extends BasePresenter<IContractDetailView> 
                                     break;
                             }
                             getView().setTipText(mContractInfo.getContract_type());
-                            String createdAt = mContractInfo.getCreatedAt();
 
-                            if (TextUtils.isEmpty(createdAt)) {
-                                createdAt = "-";
-                            } else {
-                                try {
-                                    String[] ts = createdAt.split("T");
-                                    createdAt = ts[0].replaceAll("-", ".");
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    createdAt = "-";
+                            if (mContractInfo.isConfirmed()) {
+                                getView().setContractTime(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.contract_info_contract_sign_time),
+                                        DateUtil.getChineseCalendar(mContractInfo.getConfirmTimestamp())));
+                                getView().setContractCreateTime(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.contract_info_contract_created_time),
+                                        DateUtil.getChineseCalendar(mContractInfo.getCreatedAtTimestamp())));
+                                ContractListInfo.Order order = mContractInfo.getOrder();
+                                if (order != null) {
+                                    getView().setContractOrder(ContractOrderInfo.SUCCESS.equals(order.getTrade_state()), String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.contract_info_contract_pay_time),
+                                            DateUtil.getChineseCalendar(order.getPayTimestamp())));
                                 }
-                            }
-                            getView().setContractCreateTime(createdAt);
 
-                            String confirmTime = mContractInfo.getConfirmTime();
-                            if (TextUtils.isEmpty(confirmTime)) {
-                                confirmTime = "-";
                             } else {
-                                try {
-                                    String[] ts = confirmTime.split("T");
-                                    confirmTime = ts[0].replaceAll("-", ".");
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    confirmTime = "-";
-                                }
+                                getView().setContractTime(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.contract_info_contract_created_time),
+                                        DateUtil.getChineseCalendar(mContractInfo.getCreatedAtTimestamp())));
                             }
-                            getView().setSignTime(confirmTime);
 
                             getView().updateContractTemplateAdapterInfo(mContractInfo.getDevices());
                         } else {

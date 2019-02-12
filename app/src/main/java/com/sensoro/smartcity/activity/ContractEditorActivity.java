@@ -82,7 +82,7 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
 
     @Override
     public void startAC(Intent intent) {
-        startActivity(intent);
+        mActivity.startActivity(intent);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-        startActivityForResult(intent, requestCode);
+        mActivity.startActivityForResult(intent, requestCode);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.sensoro.smartcity.model;
 
+import com.sensoro.smartcity.constant.MonitorPointOperationCode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,14 +26,14 @@ public class TaskOptionModel {
 //                * ]
     public static final List<String> taskOptionsList = new ArrayList<String>() {
         {
-            add("mute");
-            add("reset");
-            add("password");
-            add("view");
-            add("check");
-            add("config");
-            add("open");
-            add("close");
+            add(MonitorPointOperationCode.ERASURE_STR);
+            add(MonitorPointOperationCode.RESET_STR);
+            add(MonitorPointOperationCode.PSD_STR);
+            add(MonitorPointOperationCode.QUERY_STR);
+            add(MonitorPointOperationCode.SELF_CHECK_STR);
+            add(MonitorPointOperationCode.AIR_SWITCH_CONFIG_STR);
+            add(MonitorPointOperationCode.AIR_SWITCH_POWER_OFF_STR);
+            add(MonitorPointOperationCode.AIR_SWITCH_POWER_ON_STR);
         }
     };
     public int optionType;

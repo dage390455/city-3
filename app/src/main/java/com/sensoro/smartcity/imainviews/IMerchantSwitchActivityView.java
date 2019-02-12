@@ -8,8 +8,6 @@ import com.sensoro.smartcity.server.bean.UserInfo;
 import java.util.List;
 
 public interface IMerchantSwitchActivityView extends IProgressDialog, IActivityIntent, IToast {
-    void setCurrentStatusImageViewVisible(boolean visible);
-
     void setCurrentNameAndPhone(String name, String phone);
 
     void updateAdapterUserInfo(List<UserInfo> data);
@@ -17,4 +15,6 @@ public interface IMerchantSwitchActivityView extends IProgressDialog, IActivityI
     void onPullRefreshComplete();
 
     void updateSearchHistoryList(List<String> data);
+
+    void setTvBackToMainMerchantVisible(boolean isVisible);
 }

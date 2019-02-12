@@ -28,6 +28,7 @@ import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -158,17 +159,17 @@ public class BusinessContractFragment extends BaseFragment<IBusinessContractView
 
     @Override
     public void startAC(Intent intent) {
-        startActivity(intent);
+        Objects.requireNonNull(mRootFragment.getActivity()).startActivity(intent);
     }
 
     @Override
     public void finishAc() {
-        mRootFragment.getActivity().finish();
+        Objects.requireNonNull(mRootFragment.getActivity()).finish();
     }
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-        startActivityForResult(intent,requestCode);
+        Objects.requireNonNull(mRootFragment.getActivity()).startActivityForResult(intent,requestCode);
     }
 
     @Override

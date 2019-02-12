@@ -221,7 +221,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     public void doSaveLocation() {
         if (deployAnalyzerModel.latLng.size() == 2) {
             switch (deployAnalyzerModel.mapSourceType) {
-                case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL:
+                case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
                     getView().showProgressDialog();
                     if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
                         RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1))
@@ -287,7 +287,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     public void refreshSignal() {
         //TODO 哪里能刷新信号
         switch (deployAnalyzerModel.mapSourceType) {
-            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL:
+            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(deployAnalyzerModel.sn, null, 1).subscribeOn(Schedulers.io()).observeOn
                         (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
@@ -323,7 +323,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
         switch (deployAnalyzerModel.mapSourceType) {
             case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
                 break;
-            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL:
+            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
             case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
                 if (cameraPosition != null) {
                     //解决不能回显的bug 不能直接赋值
@@ -348,7 +348,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                 }
 
                 break;
-            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL:
+            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
             case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
                 if (cameraPosition != null) {
                     deployAnalyzerModel.latLng.clear();
@@ -459,7 +459,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                         deviceMarker.setPosition(latLng);
                     }
                     break;
-                case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL:
+                case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
                 case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
                     AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
                     if (lastKnownLocation != null) {

@@ -26,6 +26,7 @@ public final class EventLoginData implements Serializable {
     public boolean hasBadSignalUpload = false;
     public boolean hasDevicePositionCalibration = false;
     public boolean needAuth = false;
+    public boolean hasControllerAid = false;
 
     @Override
     public String toString() {
@@ -53,6 +54,7 @@ public final class EventLoginData implements Serializable {
                 ", hasBadSignalUpload=" + hasBadSignalUpload +
                 ", hasDevicePositionCalibration=" + hasDevicePositionCalibration +
                 ", needAuth=" + needAuth +
+                ", hasControllerAid=" + hasControllerAid +
                 '}';
     }
 }

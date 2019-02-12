@@ -243,9 +243,11 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
             intent.putExtra(ImagePreviewActivity.ISORIGIN, isOrigin);
             intent.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
             startActivityForResult(intent, ImagePicker.REQUEST_CODE_PREVIEW);
+            overridePendingTransition(R.anim.slide_left, R.anim.slide_out);
         } else if (id == R.id.btn_back) {
             //点击返回按钮
             finish();
+            overridePendingTransition(R.anim.slide_out, R.anim.slide_right);
         }
     }
 
@@ -411,15 +413,18 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
                 if (imagePicker.isCrop()) {
                     Intent intent = new Intent(ImageGridActivity.this, ImageCropActivity.class);
                     startActivityForResult(intent, ImagePicker.REQUEST_CODE_CROP);  //单选需要裁剪，进入裁剪界面
+                    overridePendingTransition(R.anim.slide_left, R.anim.slide_out);
                 } else {
                     Intent intent = new Intent();
                     intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS, imagePicker.getSelectedImages());
                     setResult(ImagePicker.RESULT_CODE_ITEMS, intent);   //单选不需要裁剪，返回数据
                     intent.putExtra(ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO, true);
                     finish();
+                    overridePendingTransition(R.anim.slide_out, R.anim.slide_right);
                 }
             } else if (directPhoto) {
                 finish();
+                overridePendingTransition(R.anim.slide_out, R.anim.slide_right);
             }
         }
     }

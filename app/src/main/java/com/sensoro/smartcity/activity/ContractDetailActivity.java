@@ -1,12 +1,15 @@
 package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,22 +63,36 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
     TextView acContractDetailTvSiteNature;
     @BindView(R.id.ac_contract_detail_rc_device)
     RecyclerView acContractDetailRcDevice;
-    @BindView(R.id.ac_contract_detail_sign_status)
-    TextView acContractDetailSignStatus;
     @BindView(R.id.ac_contract_detail_serve_life)
     TextView acContractDetailServeLife;
     @BindView(R.id.ac_contract_detail_first_age)
     TextView acContractDetailFirstAge;
     @BindView(R.id.ac_contract_detail_period_age)
     TextView acContractDetailPeriodAge;
-    @BindView(R.id.ac_contract_detail_created_time)
-    TextView acContractDetailCreatedTime;
-    @BindView(R.id.ac_contract_detail_sign_time)
-    TextView acContractDetailSignTime;
     @BindView(R.id.ac_contract_detail_tv_contract_preview)
     TextView acContractDetailTvContractPreview;
     @BindView(R.id.ac_contract_detail_tv_create_qr_code)
     TextView acContractDetailTvCreateQrCode;
+    @BindView(R.id.ac_contract_detail_tv_contract_number)
+    TextView acContractDetailTvContractNumber;
+    @BindView(R.id.ac_contract_detail_tv_contract_status)
+    TextView acContractDetailTvContractStatus;
+    @BindView(R.id.ac_contract_detail_imv_pay)
+    ImageView acContractDetailImvPay;
+    @BindView(R.id.ac_contract_detail_tv_contract_time)
+    TextView acContractDetailTvContractTime;
+    @BindView(R.id.ac_contract_detail_tv_contract_more)
+    TextView acContractDetailTvContractMore;
+    @BindView(R.id.ac_contract_detail_ll_contract_look_qr_code)
+    LinearLayout acContractDetailLlContractLookQrCode;
+    @BindView(R.id.ac_contract_detail_tv_contract_create_time)
+    TextView acContractDetailTvContractCreateTime;
+    @BindView(R.id.ac_contract_detail_tv_contract_pay_time)
+    TextView acContractDetailTvContractPayTime;
+    @BindView(R.id.ac_contract_detail_view_contract_pay_time)
+    View acContractDetailViewContractPayTime;
+    @BindView(R.id.ac_contract_detail_ll_expand)
+    LinearLayout acContractDetailLlExpand;
     private ProgressUtils mProgressUtils;
     private ContractTemplateShowAdapter contractTemplateShowAdapter;
 
@@ -94,7 +111,7 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
         includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_29c093));
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
 
-       initRCDevices();
+        initRCDevices();
     }
 
     private void initRCDevices() {
@@ -111,17 +128,17 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
 
     @Override
     public void startAC(Intent intent) {
-        startActivity(intent);
+        mActivity.startActivity(intent);
     }
 
     @Override
     public void finishAc() {
-        finish();
+        mActivity.finish();
     }
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-        startActivityForResult(intent, requestCode);
+        mActivity.startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -160,7 +177,7 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
 
 
     @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_contract_detail_tv_contract_preview, R.id.ac_contract_detail_tv_create_qr_code
-    ,R.id.include_text_title_tv_subtitle})
+            , R.id.include_text_title_tv_subtitle, R.id.ac_contract_detail_tv_contract_more, R.id.ac_contract_detail_ll_contract_look_qr_code})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
@@ -173,22 +190,43 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
                 mPresenter.doPreviewActivity();
                 break;
             case R.id.ac_contract_detail_tv_create_qr_code:
+            case R.id.ac_contract_detail_ll_contract_look_qr_code:
                 mPresenter.doViewContractQrCode();
                 break;
+            case R.id.ac_contract_detail_tv_contract_more:
+                doMore();
+                break;
+        }
+    }
+
+    private void doMore() {
+        if (acContractDetailLlExpand.getVisibility() == View.VISIBLE) {
+            Drawable drawable = getResources().getDrawable(R.drawable.contract_expand_down);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            acContractDetailTvContractMore.setCompoundDrawables(null, null, drawable, null);
+            acContractDetailLlExpand.setVisibility(View.GONE);
+            acContractDetailTvContractMore.setText(mActivity.getString(R.string.contract_more_record));
+        } else {
+            Drawable drawable = getResources().getDrawable(R.drawable.contract_expand_up);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            acContractDetailTvContractMore.setCompoundDrawables(null, null, drawable, null);
+            acContractDetailLlExpand.setVisibility(View.VISIBLE);
+            acContractDetailTvContractMore.setText(mActivity.getString(R.string.collapse));
         }
     }
 
     @Override
     public void setSignStatus(boolean isSigned) {
         includeTextTitleTvSubtitle.setVisibility(isSigned ? View.GONE : View.VISIBLE);
-        acContractDetailSignStatus.setText(isSigned ? R.string.signed : R.string.not_signed);
-        acContractDetailSignStatus.setTextColor(isSigned ? getResources().getColor(R.color.c_29c093) :
+
+        acContractDetailTvContractStatus.setText(isSigned ? R.string.signed : R.string.not_signed);
+        acContractDetailTvContractStatus.setTextColor(isSigned ? getResources().getColor(R.color.c_29c093) :
                 getResources().getColor(R.color.c_ff8d34));
-        acContractDetailSignStatus.setBackgroundResource(isSigned ? R.drawable.shape_bg_stroke_1_29c_full_corner :
-                R.drawable.shape_bg_stroke_1_ff8d_full_corner);
+        acContractDetailLlContractLookQrCode.setVisibility(isSigned ? View.GONE : View.VISIBLE);
+        acContractDetailTvContractMore.setVisibility(isSigned ? View.VISIBLE : View.GONE);
 
         acContractDetailTvContractPreview.setVisibility(isSigned ? View.GONE : View.VISIBLE);
-        acContractDetailTvCreateQrCode.setText(mActivity.getString(isSigned ? R.string.view_signed_contract :R.string.view_contract_qr_code));
+        acContractDetailTvCreateQrCode.setText(mActivity.getString(isSigned ? R.string.view_signed_contract : R.string.view_contract_qr_code));
     }
 
     @Override
@@ -223,7 +261,7 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
 
     @Override
     public void setTipText(int contractType) {
-        switch (contractType){
+        switch (contractType) {
             case 1:
                 acContractDetailTvPartAEnterprise.setText(mActivity.getString(R.string.business_merchant_name));
                 acContractDetailTvOwnerCustomerName.setText(mActivity.getString(R.string.legal_name));
@@ -241,13 +279,9 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
 
     @Override
     public void setContractCreateTime(String createdAt) {
-        acContractDetailCreatedTime.setText(createdAt);
+        acContractDetailTvContractCreateTime.setText(createdAt);
     }
 
-    @Override
-    public void setSignTime(String signTime) {
-        acContractDetailSignTime.setText(signTime);
-    }
 
     @Override
     public void updateContractTemplateAdapterInfo(List<ContractsTemplateInfo> devices) {
@@ -267,6 +301,26 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
     @Override
     public void setFirstAge(String firstAge) {
         acContractDetailFirstAge.setText(firstAge);
+    }
+
+    @Override
+    public void setContractTime(String time) {
+        acContractDetailTvContractTime.setText(time);
+    }
+
+    @Override
+    public void setContractNumber(String contractNumber) {
+        acContractDetailTvContractNumber.setText(contractNumber);
+    }
+
+    @Override
+    public void setContractOrder(boolean isSuccess, String payTime) {
+        acContractDetailViewContractPayTime.setVisibility(isSuccess ? View.VISIBLE : View.GONE);
+        acContractDetailTvContractPayTime.setVisibility(isSuccess ? View.VISIBLE : View.GONE);
+        acContractDetailImvPay.setVisibility(isSuccess ? View.VISIBLE : View.GONE);
+        if (!TextUtils.isEmpty(payTime)) {
+            acContractDetailTvContractPayTime.setText(payTime);
+        }
     }
 
 }

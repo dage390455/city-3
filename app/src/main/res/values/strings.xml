@@ -601,7 +601,7 @@
     <string name="necessary_permission_are_denied">The necessary permission are denied</string>
     <string name="monitor_point_detail_self_check">Check</string>
     <string name="monitor_point_detail_query">Query</string>
-    <string name="monitor_point_detail_psd">Change password</string>
+    <string name="monitor_point_detail_psd">Password</string>
     <string name="monitor_point_detail_reset">Reset</string>
     <string name="is_device_erasure">Mute the alarm device? </string>
     <string name="device_erasure_tip_message">Alarming,mute the alarm device？</string>
@@ -679,7 +679,7 @@
     <string name="please_select_device_pic">Please select a device picture</string>
     <string name="please_select_installation_site">Please select a site photo</string>
     <string name="rated_current">RC/A</string>
-    <string name="deploy_configuration_enter_tip">Input error,Range:</string>
+    <string name="deploy_configuration_enter_tip">Please enter the rated current of the installation site air switch,Range:</string>
     <string name="deploy_configuration">Start configuration</string>
     <string name="if_it_is_a_store_please_upload">Should be uploaded if it is a store</string>
     <string name="check_ble_status">Please check bluetooth status</string>
@@ -690,7 +690,7 @@
     <string name="alarm_pop_security_risks">Security risk</string>
     <string name="alarm_pop_misdescription">False alarm</string>
     <string name="alarm_pop_test_patrol">Test/Inspection</string>
-    <string name="deploy_has_no_configuration_tip">请先配置安装现场空气开关的额定电流</string>
+    <string name="deploy_has_no_configuration_tip">Please configure the rated current of the installation site air switch first</string>
     <string name="had_setting">Configured</string>
     <string name="optional">Optional</string>
     <string name="required">Required</string>
@@ -706,7 +706,7 @@
     <string name="deploy_configuration_analyze_failed">Device type parsing failed</string>
     <string name="deploy_configuration_analyze_data_failed">Data configuration failed</string>
     <string name="elect_pwd">Password</string>
-    <string name="warning_threshold">预警阈值</string>
+    <string name="warning_threshold">Warning threshold</string>
     <string name="contract_personal">个人合同</string>
     <string name="contract_contact_info">联系方式</string>
     <string name="home_address">居住地址</string>
@@ -760,7 +760,7 @@
     <string name="preview_contract_failed">合同预览生成失败</string>
     <string name="contract_id_failed">合同id生成失败</string>
     <string name="save_success">保存成功</string>
-    <string name="upgrade_tip">升级提示</string>
+    <string name="upgrade_tip">Upgrade Tip</string>
     <string name="the_environment_is_too_dark_please_turn_on_the_flash">Dark, please turn on the flash</string>
     <string name="do_not_enter_illegal_characters_such_as_english_and_numbers">Do not enter illegal characters such as English and numbers</string>
     <string name="collapse">Collapse</string>
@@ -782,4 +782,35 @@
     <string name="identification_failed_try_again">识别失败，请重试</string>
     <string name="is_alarm">Alarm</string>
     <string name="sensoro_number">Sensoro Security Service</string>
+    <string name="back_to_main_merchant">Back Origin</string>
+    <string name="current_merchant">Current Merchant</string>
+    <string name="sub_merchant">Sub Merchant</string>
+    <string name="diameter_info">Diameter Info</string>
+    <string name="diameter_material">Diameter Material</string>
+    <string name="actual_overcurrent_threshold">Actual overcurrent threshold</string>
+    <string name="over_current_description_one">if current  ≤ carrying current\nOvercurrent threshold = air rated current</string>
+    <string name="over_current_description_two">if current ＞ carrying current\nOvercurrent threshold = carrying current</string>
+    <string name="over_current">Overcurrent threshold</string>
+    <string name="cu">Copper core</string>
+    <string name="al">Aluminum core</string>
+    <string name="please_set_initial_configuration">Please set the initial configuration first</string>
+    <string name="actual_overcurrent_threshold_format">Actual overcurrent threshold：%dA</string>
+    <string name="business_name_phone">Merchant Name/Phone</string>
+    <string name="empty_open_rated_current_is_out_of_range">overcurrent rated current is out of range</string>
+    <string name="wire_current_carrying_capacity_is_not_within_the_open_range">Wire current carrying capacity is not within the open range</string>
+    <string name="modify_threshold">Modify Threshold</string>
+    <string name="contract_more_record">More</string>
+    <string name="contract_info_contract_pay_time">支付时间：</string>
+    <string name="permission_tip">Tips</string>
+    <string name="quit_app">Quit App</string>
+    <string name="permission_check">权限被拒绝，请前往设置打开</string>
+    <string name="reauthorization">Reauthorization</string>
+    <string name="go_setting">Setting</string>
+    <string name="permission_read_write">WriteStorage</string>
+    <string name="permission_location">Location</string>
+    <string name="permission_record">Record</string>
+    <string name="permission_camera">Camera</string>
+    <string name="permission_phone_state">PhoneState</string>
+    <string name="permission_call">CallPhone</string>
+    <string name="permission_contact">ReadContact</string>
 </resources>

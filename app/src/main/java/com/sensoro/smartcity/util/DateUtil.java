@@ -406,7 +406,7 @@ public class DateUtil {
     }
 
     public static String getCalendarYearMothDayFormatDate(long time) {
-        return new SimpleDateFormat("YYYY-MM-dd", Locale.ROOT).format(new Date(time));
+        return new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT).format(new Date(time));
     }
 
     public static int dayForWeek(String pTime) throws Exception {
@@ -513,4 +513,10 @@ public class DateUtil {
     }
 
 
+    public static String getChineseCalendar(long time) {
+        Calendar instance = Calendar.getInstance();
+        instance.setTimeInMillis(time);
+        return String.format(Locale.ROOT,"%d年%02d月%02d日 %02d:%02d",instance.get(Calendar.YEAR),instance.get(Calendar.MONTH)+1,
+                instance.get(Calendar.DAY_OF_MONTH),instance.get(Calendar.HOUR_OF_DAY),instance.get(Calendar.MINUTE));
+    }
 }

@@ -179,24 +179,50 @@ public enum DeployAnalyzerUtils implements Constants {
             @Override
             public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
                 DeployDeviceInfo data = deployDeviceDetailRsp.getData();
-                DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
-                deployAnalyzerModel.deployType = TYPE_SCAN_SIGNAL_CHECK;
-                deployAnalyzerModel.status = data.getStatus();
-                deployAnalyzerModel.updatedTime = data.getUpdatedTime();
-                deployAnalyzerModel.nameAndAddress = data.getName();
-                deployAnalyzerModel.status = data.getStatus();
-                deployAnalyzerModel.deviceType = data.getDeviceType();
-                deployAnalyzerModel.sn = data.getSn();
-                deployAnalyzerModel.blePassword = data.getBlePassword();
-                List<String> tags = data.getTags();
-                if (tags != null && tags.size() > 0) {
-                    deployAnalyzerModel.tagList.clear();
-                    deployAnalyzerModel.tagList.addAll(tags);
+                if (data == null) {
+                    //查找新设备
+                    Intent intent = new Intent();
+                    intent.setClass(activity, DeployResultActivity.class);
+                    DeployResultModel deployResultModel = new DeployResultModel();
+                    deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
+                    deployResultModel.sn = signalCheckNum;
+                    deployResultModel.scanType = TYPE_SCAN_SIGNAL_CHECK;
+                    intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                    listener.onError(0, intent, null);
+                } else {
+                    String sn = data.getSn();
+                    if (TextUtils.isEmpty(sn)) {
+                        //拿不到sn认为为空对象
+                        //查找新设备
+                        Intent intent = new Intent();
+                        intent.setClass(activity, DeployResultActivity.class);
+                        DeployResultModel deployResultModel = new DeployResultModel();
+                        deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
+                        deployResultModel.sn = signalCheckNum;
+                        deployResultModel.scanType = TYPE_SCAN_SIGNAL_CHECK;
+                        intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                        listener.onError(0, intent, null);
+                    } else {
+                        DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
+                        deployAnalyzerModel.deployType = TYPE_SCAN_SIGNAL_CHECK;
+                        deployAnalyzerModel.status = data.getStatus();
+                        deployAnalyzerModel.updatedTime = data.getUpdatedTime();
+                        deployAnalyzerModel.nameAndAddress = data.getName();
+                        deployAnalyzerModel.status = data.getStatus();
+                        deployAnalyzerModel.deviceType = data.getDeviceType();
+                        deployAnalyzerModel.sn = data.getSn();
+                        deployAnalyzerModel.blePassword = data.getBlePassword();
+                        List<String> tags = data.getTags();
+                        if (tags != null && tags.size() > 0) {
+                            deployAnalyzerModel.tagList.clear();
+                            deployAnalyzerModel.tagList.addAll(tags);
+                        }
+                        Intent intent = new Intent();
+                        intent.setClass(activity, SignalCheckActivity.class);
+                        intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+                        listener.onSuccess(intent);
+                    }
                 }
-                Intent intent = new Intent();
-                intent.setClass(activity, SignalCheckActivity.class);
-                intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
-                listener.onSuccess(intent);
             }
         });
 
@@ -604,41 +630,64 @@ public enum DeployAnalyzerUtils implements Constants {
             @Override
             public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
                 DeployDeviceInfo data = deployDeviceDetailRsp.getData();
-                deployAnalyzerModel.deployType = scanType;
-                deployAnalyzerModel.nameAndAddress = data.getName();
-                deployAnalyzerModel.status = data.getStatus();
-                deployAnalyzerModel.deviceType = data.getDeviceType();
-                deployAnalyzerModel.weChatAccount = data.getWxPhone();
-                deployAnalyzerModel.status = data.getStatus();
-                List<Double> lonlat = data.getLonlat();
-                if (lonlat != null && lonlat.size() > 1 && lonlat.get(0) != 0 && lonlat.get(1) != 0) {
-                    deployAnalyzerModel.latLng.clear();
-                    deployAnalyzerModel.latLng.addAll(lonlat);
-                }
-                deployAnalyzerModel.signal = data.getSignal();
-                List<String> tags = data.getTags();
-                if (tags != null && tags.size() > 0) {
-                    deployAnalyzerModel.tagList.clear();
-                    deployAnalyzerModel.tagList.addAll(tags);
-                }
-                deployAnalyzerModel.updatedTime = data.getUpdatedTime();
-                AlarmInfo alarmInfo = data.getAlarms();
-                if (alarmInfo != null) {
-                    AlarmInfo.NotificationInfo notification = alarmInfo.getNotification();
-                    if (notification != null) {
-                        String contact = notification.getContact();
-                        String content = notification.getContent();
-                        if (!TextUtils.isEmpty(contact) && !TextUtils.isEmpty(content)) {
-                            deployAnalyzerModel.deployContactModelList.clear();
-                            DeployContactModel deployContactModel = new DeployContactModel();
-                            deployContactModel.name = contact;
-                            deployContactModel.phone = content;
-                            deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                if (data == null) {
+                    Intent intent = new Intent();
+                    intent.setClass(activity, DeployResultActivity.class);
+                    DeployResultModel deployResultModel = new DeployResultModel();
+                    deployResultModel.scanType = scanType;
+                    deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
+                    deployResultModel.sn = scanSerialNumber;
+                    intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                    listener.onError(0, intent, null);
+                } else {
+                    String sn = data.getSn();
+                    if (TextUtils.isEmpty(sn)) {
+                        //拿不到sn认为为空对象
+                        Intent intent = new Intent();
+                        intent.setClass(activity, DeployResultActivity.class);
+                        DeployResultModel deployResultModel = new DeployResultModel();
+                        deployResultModel.scanType = scanType;
+                        deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
+                        deployResultModel.sn = scanSerialNumber;
+                        intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                        listener.onError(0, intent, null);
+                    } else {
+                        deployAnalyzerModel.deployType = scanType;
+                        deployAnalyzerModel.nameAndAddress = data.getName();
+                        deployAnalyzerModel.status = data.getStatus();
+                        deployAnalyzerModel.deviceType = data.getDeviceType();
+                        deployAnalyzerModel.weChatAccount = data.getWxPhone();
+                        deployAnalyzerModel.status = data.getStatus();
+                        List<Double> lonlat = data.getLonlat();
+                        if (lonlat != null && lonlat.size() > 1 && lonlat.get(0) != 0 && lonlat.get(1) != 0) {
+                            deployAnalyzerModel.latLng.clear();
+                            deployAnalyzerModel.latLng.addAll(lonlat);
                         }
+                        deployAnalyzerModel.signal = data.getSignal();
+                        List<String> tags = data.getTags();
+                        if (tags != null && tags.size() > 0) {
+                            deployAnalyzerModel.tagList.clear();
+                            deployAnalyzerModel.tagList.addAll(tags);
+                        }
+                        deployAnalyzerModel.updatedTime = data.getUpdatedTime();
+                        AlarmInfo alarmInfo = data.getAlarms();
+                        if (alarmInfo != null) {
+                            AlarmInfo.NotificationInfo notification = alarmInfo.getNotification();
+                            if (notification != null) {
+                                String contact = notification.getContact();
+                                String content = notification.getContent();
+                                if (!TextUtils.isEmpty(contact) && !TextUtils.isEmpty(content)) {
+                                    deployAnalyzerModel.deployContactModelList.clear();
+                                    DeployContactModel deployContactModel = new DeployContactModel();
+                                    deployContactModel.name = contact;
+                                    deployContactModel.phone = content;
+                                    deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                                }
+                            }
+                        }
+                        getNesDeviceInfo();
                     }
                 }
-
-                getNesDeviceInfo();
             }
         });
     }

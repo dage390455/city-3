@@ -9,8 +9,8 @@
         android:id="@+id/iv_img"
         android:layout_width="74dp"
         android:layout_height="74dp"
+        android:layout_marginTop="5dp"
         android:scaleType="centerCrop"
-        android:layout_centerInParent="true"
         android:contentDescription="@null"
         android:visibility="gone" />
 
@@ -18,7 +18,7 @@
         android:id="@+id/ll_add"
         android:layout_width="74dp"
         android:layout_height="74dp"
-        android:layout_centerInParent="true"
+        android:layout_marginTop="5dp"
         android:background="@drawable/shape_item_image_picker_bg"
         android:orientation="vertical"
         android:gravity="center"
@@ -27,6 +27,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:contentDescription="@null"
             android:src="@mipmap/pic_add" />
 
@@ -34,8 +35,8 @@
             android:id="@+id/tv_add_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:layout_marginTop="3dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             android:text="@string/camera_photo"
             android:textColor="@color/c_252525"
             android:textSize="10sp" />
@@ -47,7 +48,7 @@
         android:layout_height="20dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:layout_marginEnd="2dp"
+        android:layout_marginEnd="5dp"
         android:contentDescription="@null"
         android:src="@mipmap/picture_del"
         android:visibility="gone" />

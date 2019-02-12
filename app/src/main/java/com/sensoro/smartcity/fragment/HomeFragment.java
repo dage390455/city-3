@@ -38,12 +38,12 @@ import com.sensoro.smartcity.presenter.HomeFragmentPresenter;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroHomeAlarmView;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.smartcity.widget.calendar.cardgallery.BannerAlphaHelper;
 import com.sensoro.smartcity.widget.calendar.cardgallery.BannerRecyclerView;
 import com.sensoro.smartcity.widget.calendar.cardgallery.BannerScaleHelper;
 import com.sensoro.smartcity.widget.popup.SelectDeviceTypePopUtils;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
 import java.util.Objects;
@@ -408,14 +408,18 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     @Override
     public void showProgressDialog() {
         if (isShowDialog) {
-            mProgressUtils.showProgress();
+            if (mProgressUtils != null) {
+                mProgressUtils.showProgress();
+            }
         }
         isShowDialog = true;
     }
 
     @Override
     public void dismissProgressDialog() {
-        mProgressUtils.dismissProgress();
+        if (mProgressUtils != null) {
+            mProgressUtils.dismissProgress();
+        }
     }
 
     @Override

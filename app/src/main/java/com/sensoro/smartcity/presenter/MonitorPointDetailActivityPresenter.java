@@ -679,22 +679,22 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         Integer switchSpec = null;
         switch (type) {
             case MonitorPointOperationCode.ERASURE:
-                operationType = "mute";
+                operationType = MonitorPointOperationCode.ERASURE_STR;
                 break;
             case MonitorPointOperationCode.RESET:
-                operationType = "reset";
+                operationType = MonitorPointOperationCode.RESET_STR;
                 break;
             case MonitorPointOperationCode.PSD:
-                operationType = "password";
+                operationType = MonitorPointOperationCode.PSD_STR;
                 break;
             case MonitorPointOperationCode.QUERY:
-                operationType = "view";
+                operationType = MonitorPointOperationCode.QUERY_STR;
                 break;
             case MonitorPointOperationCode.SELF_CHECK:
-                operationType = "check";
+                operationType = MonitorPointOperationCode.SELF_CHECK_STR;
                 break;
             case MonitorPointOperationCode.AIR_SWITCH_CONFIG:
-                operationType = "config";
+                operationType = MonitorPointOperationCode.AIR_SWITCH_CONFIG_STR;
                 Integer integer = null;
                 if (TextUtils.isEmpty(content)) {
                     getView().toastShort(mContext.getString(R.string.input_not_null));
@@ -727,7 +727,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         getView().dismissTipDialog();
         getView().showOperationTipLoadingDialog();
         mScheduleNo = null;
-        RetrofitServiceHelper.INSTANCE.doMonitorPointOperation(sns, operationType, null, null, switchSpec,null)
+        RetrofitServiceHelper.INSTANCE.doMonitorPointOperation(sns, operationType, null, null, switchSpec,null,null)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>(this) {
             @Override
             public void onCompleted(MonitorPointOperationRequestRsp response) {

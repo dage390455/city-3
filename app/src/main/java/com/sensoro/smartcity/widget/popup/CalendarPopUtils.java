@@ -57,9 +57,9 @@ public class CalendarPopUtils implements
     @BindView(R.id.calendar_view)
     CalendarView calendarView;
     @BindView(R.id.ac_calendar_tv_cancel)
-    Button acCalendarTvCancel;
+    TextView acCalendarTvCancel;
     @BindView(R.id.ac_calendar_tv_save)
-    Button acCalendarTvSave;
+    TextView acCalendarTvSave;
     @BindView(R.id.calendar_btn_layout)
     LinearLayout calendarBtnLayout;
     @BindView(R.id.sensor_calendar_date_layout)
@@ -345,7 +345,6 @@ public class CalendarPopUtils implements
             endDate = startDate;
             setStartDate(calendar.getMonth() + "." + calendar.getDay(), String.valueOf(calendar.getYear()));
         }
-        Log.e("hcs","start:::"+startDate+"end"+endDate);
     }
 
     @Override

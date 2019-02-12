@@ -98,7 +98,7 @@ public class DeployConfigurationAnalyzer {
         sensoroSensor.acrelFires.connectSw = 0;//关联脱扣器全部关闭
         sensoroSensor.acrelFires.ict = 2000;//漏电互感器变比 2000
         sensoroSensor.acrelFires.ct = dev / 5;
-        sensoroSensor.acrelFires.cmd = 2;
+        sensoroSensor.acrelFires.cmd = 2; //自检
     }
 
     private static void configFhsjElectFires(SensoroSensor sensoroSensor, int value) {
@@ -106,7 +106,7 @@ public class DeployConfigurationAnalyzer {
         sensoroSensor.elecFireData.leakageTh = 300; //漏电(通道 1)
         sensoroSensor.elecFireData.tempTh = 80; //电线温度，通道2
         sensoroSensor.elecFireData.currentTh = value; //过流
-        sensoroSensor.elecFireData.loadTh = value * 220 / 1000; //过载
+        sensoroSensor.elecFireData.loadTh = (int) Math.ceil(value * 220 / 1000); //过载
         sensoroSensor.elecFireData.volHighTh = 253; //过压 V
         sensoroSensor.elecFireData.volLowTh = 187; //欠压 V
         sensoroSensor.elecFireData.sensorPwd = new Random().nextInt(9999) + 1;// 1-9999 4位随机数
@@ -136,13 +136,31 @@ public class DeployConfigurationAnalyzer {
         sensoroSensor.acrelFires.t1Th = 80;//电线温度 通道1
         sensoroSensor.acrelFires.t2Th = 60;//箱体温度 通道2
         sensoroSensor.acrelFires.valHighSet = 1150;//过压
-        sensoroSensor.acrelFires.currHighSet = 1000 * value / 60;//过流
+        sensoroSensor.acrelFires.currHighSet = value * 100 * 10 / 60; //过流 10 ： 放大比，100 ： 转换为百分数
         sensoroSensor.acrelFires.valLowSet = 850;//欠压
         sensoroSensor.acrelFires.passwd = new Random().nextInt(9999) + 1;// 1-9999 4位随机数
         sensoroSensor.acrelFires.ict = 2000;//漏电互感器变比 2000
         sensoroSensor.acrelFires.ct = 1;
         sensoroSensor.acrelFires.cmd = 2;
         sensoroSensor.acrelFires.currHighType = 1;
+        sensoroSensor.acrelFires.valLowType = 1; //
+        sensoroSensor.acrelFires.valHighType = 1; //
+        sensoroSensor.acrelFires.chEnable = 0x07; // 打开温度，打开漏电保护
+        //
+//        param.leakageTh = 300; //漏电
+//        param.t1Th = 80; //电线温度，通道1
+//        param.t2Th = 60; //箱体温度，通道2
+//        param.currHighSet = initialValue * 100 * 10 / 60; //过流 10 ： 放大比，100 ： 转换为百分数
+//        param.valHighSet = 1150; //过压
+//        param.valLowSet = 850; //欠压
+//        param.currHighType = 1;//打开过流开关
+//        param.valLowType = 1; //
+//        param.valHighType = 1; //
+//        param.chEnable = 0x07 // 打开温度，打开漏电保护
+//        param.passwd = UInt32.random(in:1.. .9999); //生成4位随机数
+//        param.ict = 2000; //漏电互感器变比 2000
+//        param.ct = 1; //
+//        param.cmd = 2; //自检命令
     }
 
     private static void configMantunFires(SensoroSensor sensoroSensor, int value) {
@@ -151,6 +169,9 @@ public class DeployConfigurationAnalyzer {
                 mantunData.id = 0; //现阶段只有一组，所以id为0，如果多组，则依次赋值
                 mantunData.currentTh = value; //过流
                 mantunData.powerTh = value * 220; //过载
+                if (mantunData.powerTh == 0) {
+                    mantunData.powerTh = 1;
+                }
             }
         }
     }

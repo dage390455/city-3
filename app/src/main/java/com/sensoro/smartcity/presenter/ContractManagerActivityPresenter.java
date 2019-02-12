@@ -108,7 +108,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
 
     public void startToAdd() {
         Intent intent = new Intent(mContext, ContractEditorActivity.class);
-        intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE,1);
+        intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE, 1);
         getView().startAC(intent);
     }
 
@@ -212,7 +212,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
         ContractListInfo contractListInfo = dataList.get(position);
         Intent intent = new Intent();
         intent.setClass(mContext, ContractDetailActivity.class);
-        intent.putExtra(Constants.EXTRA_CONTRACT_ID,contractListInfo.getId());
+        intent.putExtra(Constants.EXTRA_CONTRACT_ID, contractListInfo.getId());
         getView().startAC(intent);
 //
 //        int created_type = contractListInfo.getCreated_type();
@@ -443,7 +443,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
                 if (data instanceof Boolean) {
                     boolean needFinish = (boolean) data;
                     if (needFinish) {
-                        requestDataByDirection(DIRECTION_DOWN, true);
+                        requestDataByDirection(DIRECTION_DOWN, false);
                     }
                 }
                 break;

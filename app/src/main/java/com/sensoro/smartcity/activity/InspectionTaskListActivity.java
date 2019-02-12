@@ -31,6 +31,7 @@ import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
+import com.sensoro.smartcity.widget.divider.CustomDivider;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
 
@@ -108,7 +109,7 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
         final LinearLayoutManager manager = new LinearLayoutManager(mActivity);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         acInspectionTaskListRcContent.setLayoutManager(manager);
-        acInspectionTaskListRcContent.addItemDecoration(new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL));
+        acInspectionTaskListRcContent.addItemDecoration(new CustomDivider(mActivity, DividerItemDecoration.VERTICAL));
         acInspectionTaskListRcContent.setAdapter(mTaskAdapter);
 
         mTaskAdapter.setOnRecycleViewItemClickListener(new RecycleViewItemClickListener() {
@@ -184,12 +185,12 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
 
     @Override
     public void startAC(Intent intent) {
-        startActivity(intent);
+        mActivity.startActivity(intent);
     }
 
     @Override
     public void finishAc() {
-        finish();
+        mActivity.finish();
 
     }
 
