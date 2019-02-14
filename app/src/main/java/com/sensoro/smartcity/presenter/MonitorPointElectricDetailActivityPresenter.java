@@ -364,31 +364,28 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         if (createdTime != 0) {
                             getView().setMonitorDeployTime(DateUtil.getFullDate(createdTime));
                         }
-                        Map<String, DeployControlSettingData> config = deployRecordInfo.getConfig();
-                        if (config != null) {
-                            DeployControlSettingData deployControlSettingData = config.get(mDeviceInfo.getDeviceType());
-                            if (deployControlSettingData != null) {
-                                int switchSpec = deployControlSettingData.getSwitchSpec();
-                                switchSpecStr[0] = switchSpec + "A";
-                                int wireMaterial = deployControlSettingData.getWireMaterial();
-                                switch (wireMaterial) {
-                                    case 0:
-                                        switchSpecStr[1] = mContext.getString(R.string.cu);
-                                        break;
-                                    case 1:
-                                        switchSpecStr[1] = mContext.getString(R.string.al);
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                Double wireDiameter = deployControlSettingData.getWireDiameter();
-                                if (wireDiameter != null) {
-                                    String formatDouble = WidgetUtil.getFormatDouble(wireDiameter, 2);
-                                    switchSpecStr[2] = formatDouble + "m㎡";
-                                }
-
-
+                        DeployControlSettingData deployControlSettingData = deployRecordInfo.getConfig();
+                        if (deployControlSettingData != null) {
+                            int switchSpec = deployControlSettingData.getSwitchSpec();
+                            switchSpecStr[0] = switchSpec + "A";
+                            int wireMaterial = deployControlSettingData.getWireMaterial();
+                            switch (wireMaterial) {
+                                case 0:
+                                    switchSpecStr[1] = mContext.getString(R.string.cu);
+                                    break;
+                                case 1:
+                                    switchSpecStr[1] = mContext.getString(R.string.al);
+                                    break;
+                                default:
+                                    break;
                             }
+                            Double wireDiameter = deployControlSettingData.getWireDiameter();
+                            if (wireDiameter != null) {
+                                String formatDouble = WidgetUtil.getFormatDouble(wireDiameter, 2);
+                                switchSpecStr[2] = formatDouble + "m㎡";
+                            }
+
+
                         }
                     }
                 }
