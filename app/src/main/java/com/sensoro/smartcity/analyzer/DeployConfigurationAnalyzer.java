@@ -2,9 +2,9 @@ package com.sensoro.smartcity.analyzer;
 
 import android.text.TextUtils;
 
-import com.sensoro.libbleserver.ble.SensoroDevice;
-import com.sensoro.libbleserver.ble.SensoroMantunData;
-import com.sensoro.libbleserver.ble.SensoroSensor;
+import com.sensoro.libbleserver.ble.entity.SensoroDevice;
+import com.sensoro.libbleserver.ble.entity.SensoroMantunData;
+import com.sensoro.libbleserver.ble.entity.SensoroSensor;
 
 import java.util.Random;
 
