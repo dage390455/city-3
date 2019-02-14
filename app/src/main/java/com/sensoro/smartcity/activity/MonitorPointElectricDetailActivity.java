@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -146,6 +147,33 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     TextView monitorDetailTvCategory;
     @BindView(R.id.ac_monitoring_point_rc_operation)
     RecyclerView acMonitoringPointRcOperation;
+    //部署时间
+    @BindView(R.id.ll_monitor_deploy_time)
+    LinearLayout llMonitorDeployTime;
+    @BindView(R.id.monitor_detail_tv_deploy_time)
+    TextView monitorDetailTvDeployTime;
+    //线材
+    @BindView(R.id.iv_line_diameter_material)
+    ImageView ivLineDiameterMaterial;
+    @BindView(R.id.rl_monitor_diameter_material)
+    RelativeLayout rlMonitorDiameterMaterial;
+    @BindView(R.id.monitor_detail_tv_diameter_material)
+    TextView monitorDetailTvDiameterMaterial;
+    //线径
+    @BindView(R.id.iv_line_diameter)
+    ImageView ivLineDiameter;
+    @BindView(R.id.rl_monitor_diameter)
+    RelativeLayout rlMonitorDiameter;
+    @BindView(R.id.monitor_detail_tv_diameter)
+    TextView monitorDetailTvDiameter;
+    //过流阈值
+    @BindView(R.id.iv_line_over_current)
+    ImageView ivLineOverCurrent;
+    @BindView(R.id.rl_monitor_over_current)
+    RelativeLayout rlMonitorOverCurrent;
+    @BindView(R.id.monitor_detail_tv_over_current)
+    TextView monitorDetailTvOverCurrent;
+
     private boolean showDetail = false;
     private MonitoringPointRcContentAdapter mContentAdapter;
     private MonitoringPointRcMalfunctionContentAdapter mContentMalfunctionAdapter;
@@ -181,7 +209,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         int spacingInPixels = AppUtils.dp2px(mActivity, 8);
         monitorDetailRcTag.setIntercept(true);
         monitorDetailRcTag.setLayoutManager(layoutManager);
-        monitorDetailRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels,false,false));
+        monitorDetailRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels, false, false));
         monitorDetailRcTag.setAdapter(mTagAdapter);
         //
         mContentAdapter = new MonitoringPointRcContentAdapter(mActivity);
@@ -230,7 +258,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         };
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         layoutManager.setReverseLayout(true);
-        acMonitorDeployPhoto.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(this,8),false));
+        acMonitorDeployPhoto.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(this, 8), false));
         acMonitorDeployPhoto.setLayoutManager(layoutManager);
         mAdapter = new MonitorDeployDetailPhotoAdapter(mActivity);
         acMonitorDeployPhoto.setAdapter(mAdapter);
@@ -724,6 +752,33 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             return;
         }
         monitorDetailOperationAdapter.updateMonitorDetailOperations(optionModels);
+    }
+
+    @Override
+    public void setMonitorDeployTime(String time) {
+        monitorDetailTvDeployTime.setVisibility(View.VISIBLE);
+        monitorDetailTvDeployTime.setText(time);
+    }
+
+    @Override
+    public void setMonitorSwitchSpec(String text) {
+        ivLineOverCurrent.setVisibility(View.VISIBLE);
+        rlMonitorOverCurrent.setVisibility(View.VISIBLE);
+        monitorDetailTvOverCurrent.setText(text);
+    }
+
+    @Override
+    public void setMonitorWireMaterial(String text) {
+        ivLineDiameterMaterial.setVisibility(View.VISIBLE);
+        rlMonitorDiameterMaterial.setVisibility(View.VISIBLE);
+        monitorDetailTvDiameterMaterial.setText(text);
+    }
+
+    @Override
+    public void setMonitorWireDiameter(String text) {
+        ivLineDiameter.setVisibility(View.VISIBLE);
+        rlMonitorDiameter.setVisibility(View.VISIBLE);
+        monitorDetailTvDiameter.setText(text);
     }
 
     //tip dialog 点击事件

@@ -142,10 +142,10 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
             }
         };
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        int spacingInPixels = AppUtils.dp2px(mActivity,8);
+        int spacingInPixels = AppUtils.dp2px(mActivity, 8);
         monitorDetailRcTag.setIntercept(true);
         monitorDetailRcTag.setLayoutManager(layoutManager);
-        monitorDetailRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels,false));
+        monitorDetailRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels, false));
         monitorDetailRcTag.setAdapter(mTagAdapter);
         //
         mContentAdapter = new MonitoringPointRcContentAdapter(mActivity);
@@ -581,7 +581,7 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     }
 
     @Override
-    public void onConfirmClick(String content,String diameter) {
+    public void onConfirmClick(String content, String diameter) {
         mPresenter.doOperation(mTipDialogType, content);
     }
 

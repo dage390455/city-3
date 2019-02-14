@@ -99,4 +99,12 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
     void showTipDialog(boolean isEdit, String deviceType, @StringRes int title, @StringRes int message, @ColorRes int messageColor, @StringRes int confirm, @ColorRes int confirmColor, int type);
 
     void updateTaskOptionModelAdapter(ArrayList<TaskOptionModel> optionModels);
+
+    void setMonitorDeployTime(String time);
+
+    void setMonitorSwitchSpec(String text);
+
+    void setMonitorWireMaterial(String text);
+
+    void setMonitorWireDiameter(String text);
 }

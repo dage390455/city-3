@@ -46,6 +46,7 @@ import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
+import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.server.bean.DeployDeviceInfo;
 import com.sensoro.smartcity.server.bean.DeployRecordInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
@@ -333,12 +334,19 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 getView().toastShort(errorMsg);
             }
         });
+        final String[] switchSpecStr = new String[3];
+        if (DEVICE_CONTROL_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
+            switchSpecStr[0] = "-";
+            switchSpecStr[1] = "-";
+            switchSpecStr[2] = "-";
+        }
         //静默拉取图片记录内容
         RetrofitServiceHelper.INSTANCE.getDeployRecordList(mDeviceInfo.getSn(), null, null, null, null, null, 1, 0, true).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployRecordRsp>(this) {
             @Override
             public void onCompleted(DeployRecordRsp recordRsp) {
                 List<DeployRecordInfo> data = recordRsp.getData();
+
                 if (data != null && data.size() > 0) {
                     DeployRecordInfo deployRecordInfo = data.get(0);
                     if (deployRecordInfo != null) {
@@ -352,17 +360,61 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             }
                             getView().updateMonitorPhotos(list);
                         }
+                        long createdTime = deployRecordInfo.getCreatedTime();
+                        if (createdTime != 0) {
+                            getView().setMonitorDeployTime(DateUtil.getFullDate(createdTime));
+                        }
+                        Map<String, DeployControlSettingData> config = deployRecordInfo.getConfig();
+                        if (config != null) {
+                            DeployControlSettingData deployControlSettingData = config.get(mDeviceInfo.getDeviceType());
+                            if (deployControlSettingData != null) {
+                                int switchSpec = deployControlSettingData.getSwitchSpec();
+                                switchSpecStr[0] = switchSpec + "A";
+                                int wireMaterial = deployControlSettingData.getWireMaterial();
+                                switch (wireMaterial) {
+                                    case 0:
+                                        switchSpecStr[1] = mContext.getString(R.string.cu);
+                                        break;
+                                    case 1:
+                                        switchSpecStr[1] = mContext.getString(R.string.al);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                Double wireDiameter = deployControlSettingData.getWireDiameter();
+                                if (wireDiameter != null) {
+                                    String formatDouble = WidgetUtil.getFormatDouble(wireDiameter, 2);
+                                    switchSpecStr[2] = formatDouble + "m㎡";
+                                }
+
+
+                            }
+                        }
                     }
                 }
+                setElectInitValue(switchSpecStr[0], switchSpecStr[1], switchSpecStr[2]);
 
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().toastShort(errorMsg);
+                setElectInitValue(switchSpecStr[0], switchSpecStr[1], switchSpecStr[2]);
             }
         });
         requestBlePassword();
+    }
+
+    private void setElectInitValue(String switchSpecStr, String wireMaterialStr, String wireDiameterStr) {
+        if (!TextUtils.isEmpty(switchSpecStr)) {
+            getView().setMonitorSwitchSpec(switchSpecStr);
+        }
+        if (!TextUtils.isEmpty(wireMaterialStr)) {
+            getView().setMonitorWireMaterial(wireMaterialStr);
+        }
+        if (!TextUtils.isEmpty(wireDiameterStr)) {
+            getView().setMonitorWireDiameter(wireDiameterStr);
+        }
     }
 
     private void requestBlePassword() {
@@ -394,7 +446,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         Map<String, MalfunctionDataBean> malfunctionData = mDeviceInfo.getMalfunctionData();
                         //TODO 添加故障字段数组
                         if (malfunctionData != null) {
-
                             Set<String> keySet = malfunctionData.keySet();
                             ArrayList<String> keyList = new ArrayList<>();
                             for (String key : keySet) {
