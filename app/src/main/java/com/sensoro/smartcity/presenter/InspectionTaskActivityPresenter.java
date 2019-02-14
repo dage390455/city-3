@@ -131,7 +131,6 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
 
     @Override
     public void onNewDevice(BLEDevice bleDevice) {
-        Log.e("ljh",":::"+bleDevice.getSn()+">>"+"02900017C607231D".equals(bleDevice.getSn()));
         BLE_DEVICE_SET.put(bleDevice.getSn(),bleDevice);
     }
 
@@ -463,8 +462,8 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         }
         mHandler.postDelayed(this, 3 * 1000);
 //
-        if (BLE_DEVICE_SET.containsKey("02900017C607231D")) {
-            BLEDevice bleDevice = BLE_DEVICE_SET.get("02900017C607231D");
+        if (BLE_DEVICE_SET.containsKey("02C41117C72BC418")) {
+            BLEDevice bleDevice = BLE_DEVICE_SET.get("02C41117C72BC418");
             Intent intent = new Intent(mContext, TestUpdateActivity.class);
             intent.putExtra("sensoro_device", bleDevice);
             getView().startAC(intent);
