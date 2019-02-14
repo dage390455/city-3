@@ -75,7 +75,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                     }
                     int initValue = deployControlSettingData.getSwitchSpec();
                     getView().setInputCurrentText(String.valueOf(initValue));
-                    int wireMaterial = deployControlSettingData.getWireMaterial();
+                    Integer wireMaterial = deployControlSettingData.getWireMaterial();
                     if (0 == wireMaterial) {
                         getView().setInputWireMaterialText(mActivity.getString(R.string.cu));
                     } else if (1 == wireMaterial) {

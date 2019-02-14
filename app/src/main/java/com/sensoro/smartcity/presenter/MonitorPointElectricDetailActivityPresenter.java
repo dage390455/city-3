@@ -368,17 +368,20 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         if (deployControlSettingData != null) {
                             int switchSpec = deployControlSettingData.getSwitchSpec();
                             switchSpecStr[0] = switchSpec + "A";
-                            int wireMaterial = deployControlSettingData.getWireMaterial();
-                            switch (wireMaterial) {
-                                case 0:
-                                    switchSpecStr[1] = mContext.getString(R.string.cu);
-                                    break;
-                                case 1:
-                                    switchSpecStr[1] = mContext.getString(R.string.al);
-                                    break;
-                                default:
-                                    break;
+                            Integer wireMaterial = deployControlSettingData.getWireMaterial();
+                            if (wireMaterial != null) {
+                                switch (wireMaterial) {
+                                    case 0:
+                                        switchSpecStr[1] = mContext.getString(R.string.cu);
+                                        break;
+                                    case 1:
+                                        switchSpecStr[1] = mContext.getString(R.string.al);
+                                        break;
+                                    default:
+                                        break;
+                                }
                             }
+
                             Double wireDiameter = deployControlSettingData.getWireDiameter();
                             if (wireDiameter != null) {
                                 String formatDouble = WidgetUtil.getFormatDouble(wireDiameter, 2);
