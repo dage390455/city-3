@@ -49,7 +49,9 @@ public class TestUpdateActivity extends Activity {
             loge("成功创建文件" + file.mkdir());
         }
 //        String fileName = "tracker_dfu_test.zip";
-        String fileName = "SENSORO_SMOKE_FHSJ_H605_V110_DFU_v2.1.0_828ff7b_20190213.zip";
+//        String fileName = "SENSORO_SMOKE_FHSJ_H605_V110_DFU_v2.1.0_828ff7b_20190213.zip";
+//        String fileName = "SENSORO_BIGBANGTRACKER_SWC11XE_DFU_v1.1.3_a7cc004_20190214.bin";
+        String fileName = "SENSORO_BIGBANGTRACKER_SWC11XE_DFU_v1.5.2_a7cc004_20190213.bin";
         tempPath = file.getAbsolutePath() + "/" + fileName;
         File file1 = new File(tempPath);
         if (file1.exists() && file1.isFile()) {
@@ -93,7 +95,7 @@ public class TestUpdateActivity extends Activity {
         //参数1:升级文件路径
         //参数2：密码
         //参数3：监听
-        mSensoroDeviceSession.startUpdate(tempPath, "2go5AP?M8:7c&!s{", new OnDeviceUpdateObserver() {
+        mSensoroDeviceSession.startChipEUpdate(tempPath, /*"2go5AP?M8:7c&!s{"*/"]EY.BioU(u!6Y020", new OnDeviceUpdateObserver() {
             @Override
             public void onEnteringDFU(String s, String s1, String s2) {
                 toast("正在进入DFU-->>");
@@ -231,7 +233,8 @@ public class TestUpdateActivity extends Activity {
 
         InputStream myInput;
         OutputStream myOutput = new FileOutputStream(tempPath);
-        myInput = this.getAssets().open("SENSORO_SMOKE_FHSJ_H605_V110_DFU_v2.1.0_828ff7b_20190213.zip");
+//        myInput = this.getAssets().open("SENSORO_SMOKE_FHSJ_H605_V110_DFU_v2.1.0_828ff7b_20190213.zip");
+        myInput = this.getAssets().open("SENSORO_BIGBANGTRACKER_SWC11XE_DFU_v1.5.2_a7cc004_20190213.bin");
 //        myInput = this.getAssets().open("tracker_dfu_test.zip");
         byte[] buffer = new byte[1024];
         int length = myInput.read(buffer);
