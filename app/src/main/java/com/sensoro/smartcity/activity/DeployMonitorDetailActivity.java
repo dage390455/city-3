@@ -230,6 +230,18 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mPresenter.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mPresenter.onStop();
+    }
+
+    @Override
     protected void onDestroy() {
         if (mProgressUtils != null) {
             mProgressUtils.destroyProgress();

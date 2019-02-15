@@ -92,7 +92,6 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     ImageView ivHeaderTitleLeft;
     @BindView(R.id.iv_header_title_right)
     ImageView ivHeaderTitleRight;
-    private MainHomeFragRcContentAdapterHorizontal mMainHomeFragRcContentAdapter;
     @BindView(R.id.home_iv_top_add)
     ImageButton homeIvTopAdd;
     @BindView(R.id.refreshLayout)
@@ -102,6 +101,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     @BindView(R.id.nsv_no_content)
     LinearLayout noContent;
     private MainHomeFragRcTypeAdapter mMainHomeFragRcTypeHeaderAdapter;
+    private MainHomeFragRcContentAdapterHorizontal mMainHomeFragRcContentAdapter;
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
     private SelectDeviceTypePopUtils mSelectDeviceTypePop;

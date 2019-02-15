@@ -38,6 +38,7 @@ import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IMonitorPointElectricDetailActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.Elect3DetailModel;
 import com.sensoro.smartcity.model.EventData;
@@ -92,7 +93,7 @@ import rx.schedulers.Schedulers;
 
 public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<IMonitorPointElectricDetailActivityView> implements IOnCreate, Constants,
         GeocodeSearch.OnGeocodeSearchListener, MonitorDetailOperationAdapter.OnMonitorDetailOperationAdapterListener, BLEDeviceListener<BLEDevice>
-        , SensoroConnectionCallback, SensoroWriteCallback {
+        , SensoroConnectionCallback, SensoroWriteCallback ,IOnStart {
     private Activity mContext;
     private DeviceInfo mDeviceInfo;
     private String content;
@@ -1389,4 +1390,13 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         }
     }
 
+    @Override
+    public void onStart() {
+        SensoroCityApplication.getInstance().bleDeviceManager.startScan();
+    }
+
+    @Override
+    public void onStop() {
+        SensoroCityApplication.getInstance().bleDeviceManager.stopScan();
+    }
 }

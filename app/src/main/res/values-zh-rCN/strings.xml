@@ -808,5 +808,6 @@
     <string name="permission_phone_state">手机识别码</string>
     <string name="permission_call">拨打电话</string>
     <string name="permission_contact">读写联系人</string>
+    <string name="record_more_than_ten_seconds">视频长度不能小于10秒</string>
 
 </resources>

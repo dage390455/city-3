@@ -813,4 +813,5 @@
     <string name="permission_phone_state">PhoneState</string>
     <string name="permission_call">CallPhone</string>
     <string name="permission_contact">ReadContact</string>
+    <string name="record_more_than_ten_seconds">Video length can not be less than 10 seconds</string>
 </resources>

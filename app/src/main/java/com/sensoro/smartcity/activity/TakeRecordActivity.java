@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -277,6 +278,17 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
     public void onEncodeComplete() {
         //TODO
         dismissProgress();
+        if (mMediaObject.getDuration() <10000) {
+//            initMediaRecorderState();
+            LinkedList<MediaObject.MediaPart> medaParts = mMediaObject.getMedaParts();
+            for (MediaObject.MediaPart part : medaParts) {
+                mMediaObject.removePart(part, true);
+            }
+            mMediaRecorder.startPreview();
+            recordedOver = false;
+            SensoroToast.INSTANCE.makeText(getString(R.string.record_more_than_ten_seconds),Toast.LENGTH_SHORT).show();
+            return;
+        }
         final String videoPath = mMediaObject.getOutputTempVideoPath();
         if (!TextUtils.isEmpty(videoPath)) {
             vv_play.setVisibility(View.VISIBLE);
