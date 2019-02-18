@@ -3,7 +3,6 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
-import android.support.annotation.StringRes;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,6 +39,7 @@ import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.TouchRecycleView;
 import com.sensoro.smartcity.widget.dialog.EarlyWarningThresholdDialogUtils;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
+import com.sensoro.smartcity.widget.dialog.TipDeviceUpdateDialogUtils;
 import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.divider.BottomNoDividerItemDecoration;
 import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
@@ -173,7 +173,13 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     RelativeLayout rlMonitorOverCurrent;
     @BindView(R.id.monitor_detail_tv_over_current)
     TextView monitorDetailTvOverCurrent;
-
+    //固件版本
+    @BindView(R.id.rl_monitor_device_update)
+    RelativeLayout rlMonitorDeviceUpdate;
+    @BindView(R.id.monitor_detail_tv_device_vision)
+    TextView monitorDetailTvDeviceVision;
+    @BindView(R.id.iv_has_new_version)
+    ImageView ivHasNewVersion;
     private boolean showDetail = false;
     private MonitoringPointRcContentAdapter mContentAdapter;
     private MonitoringPointRcMalfunctionContentAdapter mContentMalfunctionAdapter;
@@ -184,6 +190,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     private int mTipDialogType;
     private EarlyWarningThresholdDialogUtils earlyWarningThresholdDialogUtils;
     private MonitorDetailOperationAdapter monitorDetailOperationAdapter;
+    private TipDeviceUpdateDialogUtils tipDeviceUpdateDialogUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -232,6 +239,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         initMonitorOperation();
         earlyWarningThresholdDialogUtils = new EarlyWarningThresholdDialogUtils(mActivity);
         earlyWarningThresholdDialogUtils.setDialogUtilsChangeClickListener(this);
+        tipDeviceUpdateDialogUtils = new TipDeviceUpdateDialogUtils(mActivity);
+        tipDeviceUpdateDialogUtils.setTipDialogUtilsClickListener(mPresenter);
 
     }
 
@@ -422,6 +431,9 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         if (mOperatingUtil != null) {
             mOperatingUtil.destroy();
         }
+        if (tipDeviceUpdateDialogUtils != null) {
+            tipDeviceUpdateDialogUtils.destory();
+        }
         super.onDestroy();
     }
 
@@ -526,6 +538,9 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         if (mOperatingUtil != null) {
             switch (mTipDialogType) {
                 case MonitorPointOperationCode.ERASURE:
+                    mOperatingUtil.setTipText(mActivity.getString(R.string.erasuring));
+                    break;
+                case MonitorPointOperationCode.ERASURE_LONG:
                     mOperatingUtil.setTipText(mActivity.getString(R.string.erasuring));
                     break;
                 case MonitorPointOperationCode.RESET:
@@ -659,6 +674,24 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     @Override
+    public void showUpdateDialogUtils(String title, String version, String date, boolean hasNewVersion) {
+        if (tipDeviceUpdateDialogUtils != null) {
+            tipDeviceUpdateDialogUtils.setTipTitleText(title);
+            tipDeviceUpdateDialogUtils.setTipNewVersionText(version);
+            tipDeviceUpdateDialogUtils.setTipVersionDateText(date);
+            tipDeviceUpdateDialogUtils.setTipButtonVisible(hasNewVersion);
+            tipDeviceUpdateDialogUtils.show();
+        }
+    }
+
+    @Override
+    public void dismissUpdateDialogUtils() {
+        if (tipDeviceUpdateDialogUtils != null) {
+            tipDeviceUpdateDialogUtils.dismiss();
+        }
+    }
+
+    @Override
     public void setLlElectTopVisible(boolean isVisible) {
         llElectTop.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
@@ -691,7 +724,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
 
 
     @OnClick({R.id.include_text_title_tv_subtitle, R.id.ac_monitoring_point_cl_alert_contact, R.id.ac_monitoring_point_imv_location, R.id.ac_monitoring_point_cl_location_navigation,
-            R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left, R.id.ll_elect_more, R.id.ll_all_info})
+            R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left, R.id.ll_elect_more, R.id.ll_all_info, R.id.rl_monitor_device_update})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
@@ -719,23 +752,28 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
                     mPresenter.showEarlyWarningThresholdDialogUtils();
                 }
                 break;
+            case R.id.rl_monitor_device_update:
+                //固件升级
+//                toastShort("固件升级");
+                showUpdateDialogUtils("title", "1.2.2", "2019.2.2", true);
+                break;
         }
     }
 
     //TODO 包含慢炖空开配置
     @Override
-    public void showTipDialog(boolean isEdit, String deviceType, @StringRes int title, @StringRes int message, @ColorRes int messageColor, @StringRes int confirm, @ColorRes int confirmColor, int type) {
+    public void showTipDialog(boolean isEdit, String deviceType, CharSequence title, CharSequence message, @ColorRes int messageColor, CharSequence confirm, @ColorRes int confirmColor, int type) {
         if (mTipUtils.isShowing()) {
             mTipUtils.dismiss();
         }
         //控制线径显示
         mTipUtils.setDiameterVisible(isEdit && Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType));
         mTipUtils.setTipEtRootVisible(isEdit);
-        mTipUtils.setTipTitleText(mActivity.getString(title));
-        mTipUtils.setTipMessageText(mActivity.getString(message), messageColor);
+        mTipUtils.setTipTitleText(title);
+        mTipUtils.setTipMessageText(message, messageColor);
         mTipUtils.setTipConfirmVisible(true);
         mTipUtils.setTipCancelText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
-        mTipUtils.setTipConfirmText(mActivity.getString(confirm), mActivity.getResources().getColor(confirmColor));
+        mTipUtils.setTipConfirmText(confirm, mActivity.getResources().getColor(confirmColor));
         mTipDialogType = type;
         mTipUtils.show();
     }
@@ -779,6 +817,11 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         ivLineDiameter.setVisibility(View.VISIBLE);
         rlMonitorDiameter.setVisibility(View.VISIBLE);
         monitorDetailTvDiameter.setText(text);
+    }
+
+    @Override
+    public void setDeviceVision(String text) {
+        monitorDetailTvDeviceVision.setText(text);
     }
 
     //tip dialog 点击事件

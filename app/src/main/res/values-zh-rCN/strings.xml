@@ -465,6 +465,7 @@
     <string name="monitor_point_detail_monitor_parameter">监控参数</string>
     <string name="monitor_point_detail_operation">操作</string>
     <string name="monitor_point_detail_erasure">消音</string>
+    <string name="monitor_point_detail_erasure_long">长消音</string>
     <string name="monitor_point_firmware_upgrade">固件升级</string>
     <string name="monitor_point_information">基本信息</string>
     //名称和地址
@@ -553,10 +554,10 @@
     <string name="is_delete_image">要删除这张照片吗？</string>
     <string name="am">上午</string>
     <string name="noon">中午</string>
-    <string name="early_morning">凌晨</string>
-    <string name="morning">早上</string>
+    <string name="early_morning">上午</string>
+    <string name="morning">上午</string>
     <string name="pm">下午</string>
-    <string name="night">晚上</string>
+    <string name="night">下午</string>
     <string name="today">今天&#160;</string>
     <string name="yesterday">昨天&#160;</string>
     <string name="before_yesterday">前天&#160;</string>
@@ -604,9 +605,13 @@
     <string name="monitor_point_detail_psd">修改密码</string>
     <string name="monitor_point_detail_reset">复位</string>
     <string name="is_device_erasure">是否将报警设备消音</string>
+    <string name="is_device_erasure_long">是否将报警设备长消音</string>
+    <string name="device_erasure_long_tip_red">本次报警</string>
     <string name="device_erasure_tip_message">当前设备发声报警中，是否将报警设备消音</string>
+    <string name="device_erasure_long_tip_message">长消音后本次报警设备将不再发声，是否将报警设备消音</string>
     <string name="back">返回</string>
-    <string name="erasure">消音</string>
+    <string name="erasure">确认消音</string>
+    <string name="erasure_long">确认长消音</string>
     <string name="is_device_self_check">是否自检设备</string>
     <string name="device_self_check_tip_message">自检成功后，可通过近距离观察设备指示灯和蜂鸣器工作是否正常</string>
     <string name="self_check">自检</string>
@@ -732,7 +737,7 @@
     <string name="please_select_devices_more_1">至少选择添加一种设备</string>
     <string name="not_obtain_device_cout">未获取到设备信息，请重试</string>
     <string name="create_contract">生成合同</string>
-    <string name="create_contract_tip_message">点击确认后，再生成一份新的合同，在签订前仍可继续修改</string>
+    <string name="create_contract_tip_message">合同创建成功，请生成二维码与业主签订合同</string>
     <string name="info_check_faild">未通过信息校验</string>
     <string name="contract_creation_success_tip_message">合同创建成功，你可以在线预览或生成二维码与业主签订合同</string>
     <string name="contract_preview">合同预览</string>
@@ -808,5 +813,7 @@
     <string name="permission_phone_state">手机识别码</string>
     <string name="permission_call">拨打电话</string>
     <string name="permission_contact">读写联系人</string>
+    <string name="firmware_version">固件版本</string>
+    <string name="firmware_update">固件更新</string>
 
 </resources>

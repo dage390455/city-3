@@ -603,10 +603,14 @@
     <string name="monitor_point_detail_query">Query</string>
     <string name="monitor_point_detail_psd">Password</string>
     <string name="monitor_point_detail_reset">Reset</string>
-    <string name="is_device_erasure">Mute the alarm device? </string>
+    <string name="is_device_erasure">Mute the alarm device</string>
+    <string name="is_device_erasure_long">Mute the alarm device till next?</string>
     <string name="device_erasure_tip_message">Alarming,mute the alarm device？</string>
+    <string name="device_erasure_long_tip_message">After mute this alarm device, this alarm will not trigger sound again till next alarming, mute the alarm device？</string>
+    <string name="device_erasure_long_tip_red">this alarm device</string>
     <string name="back">Back</string>
     <string name="erasure">Mute</string>
+    <string name="erasure_long">Mute till next</string>
     <string name="is_device_self_check">Would you like to perform self-check？</string>
     <string name="device_self_check_tip_message">After the self-check is success, observe the device indicator and the buzzer working status closely</string>
     <string name="self_check">Self-check</string>
@@ -640,6 +644,7 @@
 
     <string name="upload_photo_dialog_append_title3"></string>
     <string name="monitor_point_detail_erasure">Mute</string>
+    <string name="monitor_point_detail_erasure_long">Mute-Long</string>
     <string name="monitor_point_detail_operation">Operate</string>
     <string name="text_fire_alarm_empty"></string>
     <string name="main_home_menu_scan_login">Scan</string>
@@ -813,4 +818,6 @@
     <string name="permission_phone_state">PhoneState</string>
     <string name="permission_call">CallPhone</string>
     <string name="permission_contact">ReadContact</string>
+    <string name="firmware_version">Firmware Version</string>
+    <string name="firmware_update">Firmware Update</string>
 </resources>

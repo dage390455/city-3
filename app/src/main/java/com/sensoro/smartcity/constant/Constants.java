@@ -195,6 +195,8 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD = "extra_grants_has_bad_signal_upload";
     String EXTRA_GRANTS_HAS_CONTROLLER_AID = "extra_grants_has_controller_aid";
     String EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION = "extra_grants_has_device_position_calibration";
+    String EXTRA_GRANTS_HAS_DEVICE_MUTE_SHORT = "extra_grants_has_device_mute_short";
+    String EXTRA_GRANTS_HAS_DEVICE_MUTE_LONG = "extra_grants_has_device_mute_long";
     String EXTRA_DEVICE_INFO = "extra_device_info";
     String EXTRA_DEPLOY_ANALYZER_MODEL = "extra_deploy_analyzer_model";
     String EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA = "extra_deploy_configuration_setting_data";

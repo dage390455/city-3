@@ -97,25 +97,25 @@ public class TipOperationDialogUtils {
         return false;
     }
 
-    public void setTipTitleText(String text) {
+    public void setTipTitleText(CharSequence text) {
         mTvTitle.setText(text);
     }
 
-    public void setTipMessageText(String text) {
+    public void setTipMessageText(CharSequence text) {
         mTvMessage.setText(text);
     }
 
-    public void setTipMessageText(String text, int color) {
+    public void setTipMessageText(CharSequence text, int color) {
         mTvMessage.setText(text);
         mTvMessage.setTextColor(mActivity.getResources().getColor(color));
     }
 
-    public void setTipCancelText(String text, @ColorInt int color) {
+    public void setTipCancelText(CharSequence text, @ColorInt int color) {
         mTvCancel.setText(text);
         mTvCancel.setTextColor(color);
     }
 
-    public void setTipConfirmText(String text, @ColorInt int color) {
+    public void setTipConfirmText(CharSequence text, @ColorInt int color) {
         mTvConfirm.setText(text);
         mTvConfirm.setTextColor(color);
     }

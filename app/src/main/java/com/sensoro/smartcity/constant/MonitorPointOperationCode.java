@@ -1,7 +1,7 @@
 package com.sensoro.smartcity.constant;
 
 public interface MonitorPointOperationCode {
-    //消音
+    //短消音
     int ERASURE = 0x01;
     String ERASURE_STR = "mute";
     //复位
@@ -25,5 +25,8 @@ public interface MonitorPointOperationCode {
     //上电
     int AIR_SWITCH_POWER_ON = 0x08;
     String AIR_SWITCH_POWER_ON_STR = "close";
+    //长消音
+    int ERASURE_LONG = 0x09;
+    String ERASURE_LONG_STR = "mute2";
 
 }
