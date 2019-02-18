@@ -29,6 +29,7 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.model.DeployResultModel;
@@ -62,7 +63,7 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployMonitorDetailActivityView> implements IOnCreate, Constants
+public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployMonitorDetailActivityView> implements IOnCreate, IOnStart,Constants
         , SensoroConnectionCallback, BLEDeviceListener<BLEDevice>, Runnable {
     private Activity mContext;
     private SensoroDeviceConnection sensoroDeviceConnection;
@@ -1222,5 +1223,15 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         intent.putExtra(EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE);
         intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
         getView().startAC(intent);
+    }
+
+    @Override
+    public void onStart() {
+        SensoroCityApplication.getInstance().bleDeviceManager.startScan();
+    }
+
+    @Override
+    public void onStop() {
+        SensoroCityApplication.getInstance().bleDeviceManager.stopScan();
     }
 }

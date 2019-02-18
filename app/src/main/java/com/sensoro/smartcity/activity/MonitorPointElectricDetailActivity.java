@@ -417,6 +417,18 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mPresenter.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mPresenter.onStop();
+    }
+
+    @Override
     protected void onDestroy() {
 //        if (mAlarmPopupView != null) {
 //            mAlarmPopupView.onDestroyPop();

@@ -381,12 +381,19 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     @Override
     public void onApplicationResumed() {
         isAPPBack = false;
+        if (mLocationClient != null) {
+            mLocationClient.startLocation();
+        }
     }
 
     @Override
     public void onApplicationPaused() {
         isAPPBack = true;
+        if (mLocationClient != null) {
+            mLocationClient.stopLocation();
+        }
     }
+
 
     public static void sendMessage(Message msg) {
         pushHandler.sendMessage(msg);
