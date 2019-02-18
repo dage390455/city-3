@@ -3,6 +3,8 @@ package com.sensoro.smartcity.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,13 +16,17 @@ import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.DeployPicAdapter;
+import com.sensoro.smartcity.adapter.model.DeployPicModel;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDeployPicView;
 import com.sensoro.smartcity.presenter.DeployMonitorDeployPicPresenter;
+import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -75,6 +81,9 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     TextView acDeployPicTvSave;
     @BindView(R.id.ac_deploy_pic_tv_installation_site_tip)
     TextView acDeployPicTvInstallationSiteTip;
+    @BindView(R.id.ac_deploy_pic_rc)
+    RecyclerView acDeployPicRc;
+    private DeployPicAdapter mDeployPicAdapter;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -87,6 +96,33 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     private void initView() {
         includeTextTitleTvTitle.setText(mActivity.getString(R.string.deploy_photo));
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
+
+        initRC();
+    }
+
+    private void initRC() {
+        mDeployPicAdapter = new DeployPicAdapter(mActivity);
+        LinearLayoutManager manager = new LinearLayoutManager(mActivity);
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        acDeployPicRc.setLayoutManager(manager);
+        acDeployPicRc.setAdapter(mDeployPicAdapter);
+
+        mDeployPicAdapter.setDeployPicClickListener(new DeployPicAdapter.DeployPicClickListener() {
+            @Override
+            public void onTakePhotoClick(int position) {
+                mPresenter.doAddPic(position);
+            }
+
+            @Override
+            public void onDeletePhotoClick(int position) {
+                mPresenter.deletePic(position);
+            }
+
+            @Override
+            public void onPreviewPhoto(int position) {
+                mPresenter.doPreviewPic(position);
+            }
+        });
     }
 
     @Override
@@ -240,6 +276,11 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     @Override
     public void setDeployPicTvInstallationSiteTipVisible(boolean isVisible) {
         acDeployPicTvInstallationSiteTip.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void updateData(ArrayList<DeployPicModel> data) {
+        mDeployPicAdapter.updateData(data);
     }
 
     @Override

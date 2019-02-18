@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.TakeRecordActivity;
+import com.sensoro.smartcity.adapter.model.DeployPicModel;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDeployPicView;
@@ -27,6 +28,7 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
     private Activity mActivity;
     private final ImageItem[] selImages = new ImageItem[3];
     private volatile int mAddPicIndex = -1;
+    private ArrayList<DeployPicModel> deployPicModels;
 
     @Override
     public void initData(Context context) {
@@ -42,6 +44,14 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
             checkCanSave();
         }
 
+        deployPicModels = new ArrayList<>();
+        DeployPicModel deployPicModel1 = new DeployPicModel("设备1", "描述1", null, null);
+        DeployPicModel deployPicModel2 = new DeployPicModel("设备2", "描述1", null, null);
+        DeployPicModel deployPicModel3 = new DeployPicModel("设备3", "描述1", null, null);
+        deployPicModels.add(deployPicModel1);
+        deployPicModels.add(deployPicModel2);
+        deployPicModels.add(deployPicModel3);
+        getView().updateData(deployPicModels);
 
     }
 
@@ -97,6 +107,9 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
                     }
                     selImages[mAddPicIndex] = tempImages.get(0);
                     getView().displayPic(selImages, mAddPicIndex);
+                    DeployPicModel model = deployPicModels.get(mAddPicIndex);
+                    model.photoItem = tempImages.get(0);
+                    getView().updateData(deployPicModels);
                 }
                 checkCanSave();
             }
@@ -125,6 +138,8 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
 
     public void deletePic(int index) {
         selImages[index] = null;
+        deployPicModels.get(index).photoItem = null;
+        getView().updateData(deployPicModels);
         checkCanSave();
     }
 
