@@ -3,6 +3,7 @@ package com.sensoro.smartcity.server;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
@@ -57,7 +58,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -69,11 +73,15 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 import static com.sensoro.smartcity.server.RetrofitService.SCOPE_DEMO;
 import static com.sensoro.smartcity.server.RetrofitService.SCOPE_MASTER;
@@ -1419,4 +1427,121 @@ public enum RetrofitServiceHelper {
     public Observable<LoginRsp> backMainAccount() {
         return retrofitService.backMainControlling();
     }
+
+    /**
+     * 获取可升级固件版本列表信息
+     *
+     * @param sn
+     * @param deviceType
+     * @param band
+     * @param fromVersion
+     * @param page
+     * @param count
+     * @return
+     */
+    public Observable<ResponseBase> getDeviceUpdateVision(String sn, String deviceType, String band, String fromVersion, Integer page, Integer count) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(deviceType)) {
+                jsonObject.put("deviceType", deviceType);
+            }
+            if (!TextUtils.isEmpty(band)) {
+                jsonObject.put("band", band);
+            }
+            if (!TextUtils.isEmpty(fromVersion)) {
+                jsonObject.put("fromVersion", fromVersion);
+            }
+            if (page != null) {
+                jsonObject.put("page", page);
+            }
+            if (count != null) {
+                jsonObject.put("count", count);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        Observable<ResponseBase> deviceUpdateVision = retrofitService.getDeviceUpdateVision(sn, body);
+        RxApiManager.getInstance().add("getDeviceUpdateVision", deviceUpdateVision.subscribe());
+        return deviceUpdateVision;
+    }
+
+    /**
+     * 回传版本信息
+     *
+     * @param sn
+     * @param firmwareVersion
+     * @return
+     */
+    public Observable<ResponseBase> upLoadDeviceUpdateVision(String sn, String firmwareVersion) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(firmwareVersion)) {
+                jsonObject.put("firmwareVersion", firmwareVersion);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        Observable<ResponseBase> upLoadDeviceUpdateVision = retrofitService.upLoadDeviceUpdateVision(sn, body);
+        RxApiManager.getInstance().add("upLoadDeviceUpdateVision", upLoadDeviceUpdateVision.subscribe());
+        return upLoadDeviceUpdateVision;
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param url
+     * @param filePath
+     * @param observer
+     */
+    public void downloadDeviceFirmwareFile(String url, final String filePath, CityObserver<Boolean> observer) {
+        retrofitService.downloadDeviceFirmwareFile(url).subscribeOn(Schedulers.io()).map(new Func1<ResponseBody, Boolean>() {
+            @Override
+            public Boolean call(ResponseBody responseBody) {
+                return writeResponseBodyToDisk(responseBody, filePath);
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(observer);
+    }
+
+    private boolean writeResponseBodyToDisk(ResponseBody body, String filePath) {
+        try {
+            // todo change the file location/name according to your needs
+//            File futureStudioIconFile = new File(getExternalFilesDir(null) + File.separator + "Future Studio Icon.png");
+            File futureStudioIconFile = new File(filePath);
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+            try {
+                byte[] fileReader = new byte[4096];
+                long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
+                inputStream = body.byteStream();
+                outputStream = new FileOutputStream(futureStudioIconFile);
+                while (true) {
+                    int read = inputStream.read(fileReader);
+                    if (read == -1) {
+                        break;
+                    }
+                    outputStream.write(fileReader, 0, read);
+                    fileSizeDownloaded += read;
+                    Log.d("", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                }
+                outputStream.flush();
+                return true;
+            } catch (IOException e) {
+                return false;
+            } finally {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            }
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+
 }
