@@ -180,6 +180,11 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     TextView monitorDetailTvDeviceVision;
     @BindView(R.id.iv_has_new_version)
     ImageView ivHasNewVersion;
+    //信号
+    @BindView(R.id.iv_monitor_signal)
+    ImageView ivMonitorSignal;
+    @BindView(R.id.tv_monitor_signal)
+    TextView tvMonitorSignal;
     private boolean showDetail = false;
     private MonitoringPointRcContentAdapter mContentAdapter;
     private MonitoringPointRcMalfunctionContentAdapter mContentMalfunctionAdapter;
@@ -198,6 +203,18 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         ButterKnife.bind(this);
         initView();
         mPresenter.initData(mActivity);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPresenter.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPresenter.onPause();
     }
 
     private void initView() {
@@ -706,8 +723,19 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     @Override
     public void updateDialogProgress(String msg, int progress, int status) {
         if (tipDeviceUpdateDialogUtils != null) {
-            tipDeviceUpdateDialogUtils.updateDialog(msg,progress,status);
+            tipDeviceUpdateDialogUtils.updateDialog(msg, progress, status);
         }
+    }
+
+    @Override
+    public void setIvHasNewVersionViewVisible(boolean isVisible) {
+        ivHasNewVersion.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setSignalStatus(int drawable, String text) {
+        ivMonitorSignal.setImageResource(drawable);
+        tvMonitorSignal.setText(text);
     }
 
     @Override
@@ -774,7 +802,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             case R.id.rl_monitor_device_update:
                 //固件升级
 //                toastShort("固件升级");
-                showUpdateDialogUtils("title", "1.2.2", "2019.2.2", true);
+                mPresenter.doDeviceUpdate();
                 break;
         }
     }

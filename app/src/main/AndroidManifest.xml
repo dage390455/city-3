@@ -142,6 +142,9 @@
                 <action android:name="com.igexin.sdk.action.service.message" />
             </intent-filter>
         </service>
+        <service
+            android:name="com.sensoro.libbleserver.ble.service.DfuService"
+            android:exported="true" />
 
         <receiver android:name="com.igexin.sdk.PushReceiver">
             <intent-filter>

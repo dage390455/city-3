@@ -1,6 +1,8 @@
 package com.sensoro.smartcity.widget.dialog;
 
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
@@ -53,7 +55,6 @@ public class TipDeviceUpdateDialogUtils {
             @Override
             public void onClick(View v) {
                 if (listener != null) {
-                    updateDialog("准备更新",-1,0);
                     listener.onUpdateClick();
                 }
             }
@@ -62,6 +63,14 @@ public class TipDeviceUpdateDialogUtils {
             @Override
             public void onClick(View v) {
                 dismiss();
+            }
+        });
+        mDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if (imvDialogRotate != null) {
+                    imvDialogRotate.clearAnimation();
+                }
             }
         });
     }
@@ -79,12 +88,21 @@ public class TipDeviceUpdateDialogUtils {
     }
 
     public void setTipVersionDateText(String text) {
-        tvDialogUpdateDate.setText(text);
+        if (TextUtils.isEmpty(text)) {
+            tvDialogUpdateDate.setVisibility(View.GONE);
+        } else {
+            tvDialogUpdateDate.setVisibility(View.VISIBLE);
+            tvDialogUpdateDate.setText(text);
+        }
+
     }
 
     public void show() {
         if (mDialog != null) {
             mDialog.show();
+            //TODO
+            llReadyUpdate.setVisibility(View.VISIBLE);
+            llUpdating.setVisibility(View.GONE);
 //            WindowManager m = mDialog.getWindow().getWindowManager();
 //            Display d = m.getDefaultDisplay();
 //            WindowManager.LayoutParams p = mDialog.getWindow().getAttributes();
@@ -96,7 +114,6 @@ public class TipDeviceUpdateDialogUtils {
     public void dismiss() {
         if (mDialog != null) {
             mDialog.dismiss();
-            imvDialogRotate.clearAnimation();
         }
     }
 
@@ -112,18 +129,18 @@ public class TipDeviceUpdateDialogUtils {
         this.listener = listener;
     }
 
-    public void updateDialog(String msg, int progress,int status) {
-        if(status == 0){
+    public void updateDialog(String msg, int progress, int status) {
+        if (status == 0) {
             llReadyUpdate.setVisibility(View.GONE);
             llUpdating.setVisibility(View.VISIBLE);
             imvDialogRotate.setVisibility(View.VISIBLE);
             imvDialogRotate.startAnimation(rotateAnimation);
-        }else if(status == 1){
+        } else if (status == 1) {
             imvDialogRotate.clearAnimation();
             progressBarCircle.setVisibility(View.VISIBLE);
             imvDialogRotate.setVisibility(View.GONE);
             progressBarCircle.setProgress(progress);
-        }else if(status == 2){
+        } else if (status == 2) {
             imvDialogRotate.setVisibility(View.VISIBLE);
             progressBarCircle.setVisibility(View.GONE);
             imvDialogRotate.startAnimation(rotateAnimation);

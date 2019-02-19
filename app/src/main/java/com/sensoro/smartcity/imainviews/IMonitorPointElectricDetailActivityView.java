@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.imainviews;
 
 import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
@@ -114,4 +115,8 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
     void setDeviceVision(String text);
 
     void updateDialogProgress(String msg, int progress, int status);
+
+    void setIvHasNewVersionViewVisible(boolean isVisible);
+
+    void setSignalStatus(@DrawableRes int drawable, String text);
 }

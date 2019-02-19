@@ -20,10 +20,12 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
+import com.sensoro.libbleserver.ble.callback.OnDeviceUpdateObserver;
 import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
 import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
 import com.sensoro.libbleserver.ble.connection.SensoroDeviceConnection;
 import com.sensoro.libbleserver.ble.entity.BLEDevice;
+import com.sensoro.libbleserver.ble.entity.SensoroDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
@@ -42,7 +44,9 @@ import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IMonitorPointElectricDetailActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.smartcity.iwidget.IOnResume;
 import com.sensoro.smartcity.iwidget.IOnStart;
+import com.sensoro.smartcity.model.BleUpdateModel;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.Elect3DetailModel;
 import com.sensoro.smartcity.model.EventData;
@@ -56,6 +60,7 @@ import com.sensoro.smartcity.server.bean.DeployDeviceInfo;
 import com.sensoro.smartcity.server.bean.DeployRecordInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
+import com.sensoro.smartcity.server.bean.DeviceUpdateFirmwareData;
 import com.sensoro.smartcity.server.bean.DisplayOptionsBean;
 import com.sensoro.smartcity.server.bean.MalfunctionDataBean;
 import com.sensoro.smartcity.server.bean.MalfunctionTypeStyles;
@@ -68,6 +73,7 @@ import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.DeployRecordRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
+import com.sensoro.smartcity.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.smartcity.server.response.MonitorPointOperationRequestRsp;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.BleObserver;
@@ -84,6 +90,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,10 +101,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<IMonitorPointElectricDetailActivityView> implements IOnCreate, Constants,
+public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<IMonitorPointElectricDetailActivityView> implements IOnCreate, Constants, IOnResume,
         GeocodeSearch.OnGeocodeSearchListener, MonitorDetailOperationAdapter.OnMonitorDetailOperationAdapterListener, BLEDeviceListener<BLEDevice>
         , SensoroConnectionCallback, SensoroWriteCallback, TipDeviceUpdateDialogUtils.TipDialogUpdateClickListener, IOnStart {
     private Activity mContext;
@@ -119,6 +128,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             }
         }
     };
+    private BleUpdateModel bleUpdateModel;
     private final Runnable bleRunnable = new Runnable() {
         @Override
         public void run() {
@@ -135,18 +145,20 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         }
     };
     private final ArrayList<EarlyWarningthresholdDialogUtilsAdapterModel> mEarlyWarningThresholdDialogUtilsAdapterModels = new ArrayList<>();
-    private String blePassword = null;
     private SensoroDeviceConnection sensoroDeviceConnection;
     private String mOperationType;
-    private int progress;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        bleUpdateModel = new BleUpdateModel();
         onCreate();
         mDeviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
         geocoderSearch = new GeocodeSearch(mContext);
         geocoderSearch.setOnGeocodeSearchListener(this);
+        bleUpdateModel.sn = mDeviceInfo.getSn();
+        bleUpdateModel.deviceType = mDeviceInfo.getDeviceType();
+        bleUpdateModel.filePath = mContext.getExternalFilesDir(null) + File.separator + "bleDeviceUpdatePackage";
         BleObserver.getInstance().registerBleObserver(this);
         requestDeviceRecentLog();
     }
@@ -159,6 +171,30 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         String deviceType = mDeviceInfo.getDeviceType();
         if (TextUtils.isEmpty(mergeType)) {
             mergeType = WidgetUtil.handleMergeType(deviceType);
+        }
+        String signal = mDeviceInfo.getSignal();
+        int resId = R.drawable.signal_bad;
+        if (!TextUtils.isEmpty(signal)) {
+            switch (signal) {
+                case "good":
+                    resId = R.drawable.signal_good;
+                    getView().setSignalStatus(resId, "优");
+                    break;
+                case "normal":
+                    resId = R.drawable.signal_normal;
+                    getView().setSignalStatus(resId, "良");
+                    break;
+                case "bad":
+                    resId = R.drawable.signal_bad;
+                    getView().setSignalStatus(resId, "差");
+                    break;
+                default:
+                    resId = R.drawable.signal_good;
+                    getView().setSignalStatus(resId, "无");
+                    break;
+            }
+        } else {
+            getView().setSignalStatus(resId, "无");
         }
         DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deviceType);
         if (configDeviceType != null) {
@@ -302,7 +338,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 getView().setDeviceOperationVisible(false);
             }
         }
-        if (status == Constants.SENSOR_STATUS_ALARM || status == Constants.SENSOR_STATUS_MALFUNCTION) {
+        if (status == Constants.SENSOR_STATUS_ALARM || status == Constants.SENSOR_STATUS_MALFUNCTION || PreferencesHelper.getInstance().getUserData().hasDeviceFirmwareUpdate) {
             mHandler.removeCallbacks(bleRunnable);
             mHandler.post(bleRunnable);
         }
@@ -428,24 +464,61 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     private void requestBlePassword() {
         //TODO 获取固件版本和下载固件的地址信息
         RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(mDeviceInfo.getSn(), null, null).subscribeOn
-                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(this) {
-
+                (Schedulers.io()).flatMap(new Func1<DeployDeviceDetailRsp, Observable<DeviceUpdateFirmwareDataRsp>>() {
             @Override
-            public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
+            public Observable<DeviceUpdateFirmwareDataRsp> call(DeployDeviceDetailRsp deployDeviceDetailRsp) {
                 DeployDeviceInfo data = deployDeviceDetailRsp.getData();
                 if (data != null) {
-                    blePassword = data.getBlePassword();
-                    String firmwareVersion = data.getFirmwareVersion();
-                    getView().setDeviceVision("V" + firmwareVersion);
-
+                    bleUpdateModel.blePassword = data.getBlePassword();
+                    bleUpdateModel.currentFirmVersion = data.getFirmwareVersion();
+                    bleUpdateModel.band = data.getBand();
+                    bleUpdateModel.hardwareVersion = data.getHardwareVersion();
+                    //TODO delete
+                    bleUpdateModel.currentFirmVersion = "1.0.0";
                 }
+                return RetrofitServiceHelper.INSTANCE.getDeviceUpdateVision(bleUpdateModel.sn, bleUpdateModel.deviceType, bleUpdateModel.band, bleUpdateModel.currentFirmVersion, bleUpdateModel.hardwareVersion, 1, 100);
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceUpdateFirmwareDataRsp>(this) {
+
+            @Override
+            public void onCompleted(DeviceUpdateFirmwareDataRsp deviceUpdateFirmwareDataRsp) {
+                List<DeviceUpdateFirmwareData> data = deviceUpdateFirmwareDataRsp.getData();
+                if (data != null && data.size() > 0) {
+                    DeviceUpdateFirmwareData deviceUpdateFirmwareData = data.get(0);
+                    if (deviceUpdateFirmwareData != null) {
+                        bleUpdateModel.serverFirmVersion = deviceUpdateFirmwareData.getVersion();
+                        bleUpdateModel.firmUrl = deviceUpdateFirmwareData.getUrl();
+                        bleUpdateModel.serverFirmCreateTime = deviceUpdateFirmwareData.getCreatedTime();
+                    }
+                    for (DeviceUpdateFirmwareData firmwareData : data) {
+                        if (bleUpdateModel.currentFirmVersion != null) {
+                            if (bleUpdateModel.currentFirmVersion.equals(firmwareData.getVersion())) {
+                                bleUpdateModel.currentFirmCreateTime = firmwareData.getCreatedTime();
+                                break;
+                            }
+                        }
+
+                    }
+                }
+                freshDeviceUpdateVersionInfo();
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-
+                freshDeviceUpdateVersionInfo();
             }
         });
+    }
+
+    private void freshDeviceUpdateVersionInfo() {
+        boolean hasNewVersion = WidgetUtil.isNewVersion(bleUpdateModel.currentFirmVersion, bleUpdateModel.serverFirmVersion);
+        if (!PreferencesHelper.getInstance().getUserData().hasDeviceFirmwareUpdate) {
+            hasNewVersion = false;
+        }
+        getView().setIvHasNewVersionViewVisible(hasNewVersion);
+        if (!TextUtils.isEmpty(bleUpdateModel.currentFirmVersion)) {
+            getView().setDeviceVision("V" + bleUpdateModel.currentFirmVersion);
+        }
     }
 
     private void handleDeviceInfoAdapter() {
@@ -1120,7 +1193,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         switch (type) {
             case MonitorPointOperationCode.ERASURE:
                 mOperationType = MonitorPointOperationCode.ERASURE_STR;
-                if (bleDeviceMap.containsKey(mDeviceInfo.getSn()) && !TextUtils.isEmpty(blePassword)) {
+                if (bleDeviceMap.containsKey(mDeviceInfo.getSn()) && !TextUtils.isEmpty(bleUpdateModel.blePassword)) {
                     String macAddress = bleDeviceMap.get(mDeviceInfo.getSn()).getMacAddress();
                     if (!TextUtils.isEmpty(macAddress)) {
                         doBleMute(macAddress);
@@ -1130,7 +1203,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 break;
             case MonitorPointOperationCode.ERASURE_LONG:
                 mOperationType = MonitorPointOperationCode.ERASURE_LONG_STR;
-                if (bleDeviceMap.containsKey(mDeviceInfo.getSn()) && !TextUtils.isEmpty(blePassword)) {
+                if (bleDeviceMap.containsKey(mDeviceInfo.getSn()) && !TextUtils.isEmpty(bleUpdateModel.blePassword)) {
                     String macAddress = bleDeviceMap.get(mDeviceInfo.getSn()).getMacAddress();
                     if (!TextUtils.isEmpty(macAddress)) {
                         doBleMute(macAddress);
@@ -1209,7 +1282,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         getView().showOperationTipLoadingDialog();
         sensoroDeviceConnection = new SensoroDeviceConnection(mContext, macAddress);
         try {
-            sensoroDeviceConnection.connect(blePassword, MonitorPointElectricDetailActivityPresenter.this);
+            sensoroDeviceConnection.connect(bleUpdateModel.blePassword, MonitorPointElectricDetailActivityPresenter.this);
         } catch (Exception e) {
             e.printStackTrace();
             bleRequestCmd();
@@ -1426,61 +1499,87 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     @Override
     public void onUpdateClick() {
-//        sensoroDeviceConnection.startUpdate(null, null, new OnDeviceUpdateObserver() {
-//            @Override
-//            public void onEnteringDFU(String deviceMacAddress, String filePath, String msg) {
-//
-//            }
-//
-//            @Override
-//            public void onUpdateCompleted(String filePath, String deviceMacAddress, String msg) {
-//
-//            }
-//
-//            @Override
-//            public void onDFUTransfer(String deviceAddress, int percent, float speed, float avgSpeed, int currentPart, int partsTotal, String msg) {
-//
-//            }
-//
-//            @Override
-//            public void onUpdateValidating(String deviceMacAddress, String msg) {
-//
-//            }
-//
-//            @Override
-//            public void onUpdateTimeout(int code, Object data, String msg) {
-//
-//            }
-//
-//            @Override
-//            public void onDisconnecting() {
-//
-//            }
-//
-//            @Override
-//            public void onFailed(String deviceMacAddress, String errorMsg, Throwable e) {
-//
-//            }
-//        });
-        progress = 0;
-        mHandler.postDelayed(runnable,2000);
+        boolean bluetoothEnabled = SensoroCityApplication.getInstance().bleDeviceManager.isBluetoothEnabled();
+        if (bluetoothEnabled) {
 
-    }
-    Runnable runnable = new Runnable(){
-        @Override
-        public void run() {
-            if(progress <=100){
-                getView().updateDialogProgress(String.format(Locale.ROOT,"固件更新，已传输%d%%",progress),progress,1);
-                progress += 10;
-                mHandler.postDelayed(runnable,200);
-            }else{
-                mHandler.removeCallbacks(runnable);
-                getView().updateDialogProgress("传输结束",-1, 2);
-                getView().dismissUpdateDialogUtils();
-            }
+        } else {
 
         }
-    };
+        getView().updateDialogProgress("准备更新", -1, 0);
+        RetrofitServiceHelper.INSTANCE.downloadDeviceFirmwareFile(bleUpdateModel.firmUrl, bleUpdateModel.filePath, new CityObserver<Boolean>(this) {
+            @Override
+            public void onCompleted(Boolean aBoolean) {
+                if (aBoolean) {
+                    if (bleDeviceMap.containsKey(mDeviceInfo.getSn())) {
+                        if (sensoroDeviceConnection != null) {
+                            sensoroDeviceConnection.disconnect();
+                        }
+                        BLEDevice bleDevice = bleDeviceMap.get(mDeviceInfo.getSn());
+                        sensoroDeviceConnection = new SensoroDeviceConnection(mContext, (SensoroDevice) bleDevice);
+                        onResume();
+                        final OnDeviceUpdateObserver onDeviceUpdateObserver = new OnDeviceUpdateObserver() {
+                            @Override
+                            public void onEnteringDFU(String deviceMacAddress, String filePath, String msg) {
+                                getView().updateDialogProgress(String.format(Locale.ROOT, "固件更新，已传输%d%%", 0), 0, 1);
+                            }
+
+                            @Override
+                            public void onUpdateCompleted(String filePath, String deviceMacAddress, String msg) {
+                                getView().updateDialogProgress("传输结束", -1, 2);
+                                //TODO 进行版本检查
+                            }
+
+                            @Override
+                            public void onDFUTransfer(String deviceAddress, int percent, float speed, float avgSpeed, int currentPart, int partsTotal, String msg) {
+                                getView().updateDialogProgress(String.format(Locale.ROOT, "固件更新，已传输%d%%", percent), percent, 1);
+                            }
+
+                            @Override
+                            public void onUpdateValidating(String deviceMacAddress, String msg) {
+
+                            }
+
+                            @Override
+                            public void onUpdateTimeout(int code, Object data, String msg) {
+
+                            }
+
+                            @Override
+                            public void onDisconnecting() {
+
+                            }
+
+                            @Override
+                            public void onFailed(String deviceMacAddress, String errorMsg, Throwable e) {
+                                getView().dismissUpdateDialogUtils();
+                                getView().toastShort("更新失败请稍后重试");
+                            }
+                        };
+                        if (DEVICE_UPDATE_FIRMWARE_CHIP_TYPES.contains(bleUpdateModel.deviceType)) {
+                            sensoroDeviceConnection.startChipEUpdate(bleUpdateModel.filePath, bleUpdateModel.blePassword, onDeviceUpdateObserver);
+                        } else {
+                            sensoroDeviceConnection.startUpdate(bleUpdateModel.filePath, bleUpdateModel.blePassword, onDeviceUpdateObserver);
+                        }
+                    } else {
+                        getView().toastShort("设备不在附近请稍后再试");
+                        getView().dismissUpdateDialogUtils();
+                    }
+                } else {
+                    getView().toastShort("下载失败，请稍后重试");
+                    getView().dismissUpdateDialogUtils();
+                }
+
+
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().toastShort(errorMsg);
+                getView().dismissUpdateDialogUtils();
+            }
+        });
+    }
+
     @Override
     public void onStart() {
         SensoroCityApplication.getInstance().bleDeviceManager.startScan();
@@ -1489,5 +1588,43 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     @Override
     public void onStop() {
         SensoroCityApplication.getInstance().bleDeviceManager.stopScan();
+    }
+
+    public void doDeviceUpdate() {
+        String title;
+        String desc;
+        String timeStr = null;
+        boolean hasNewVersion = WidgetUtil.isNewVersion(bleUpdateModel.currentFirmVersion, bleUpdateModel.serverFirmVersion);
+        if (!PreferencesHelper.getInstance().getUserData().hasDeviceFirmwareUpdate) {
+            hasNewVersion = false;
+        }
+        if (hasNewVersion) {
+            title = "发现新版本";
+            desc = "最新版本：V" + bleUpdateModel.serverFirmVersion;
+            if (bleUpdateModel.serverFirmCreateTime != 0) {
+                timeStr = "固件发布日期：" + DateUtil.getStrTime_ymd(bleUpdateModel.serverFirmCreateTime);
+            }
+        } else {
+            title = "已是最新版本";
+            desc = "当前版本：V" + bleUpdateModel.currentFirmVersion;
+            if (bleUpdateModel.currentFirmCreateTime != 0) {
+                timeStr = "固件发布日期：" + DateUtil.getStrTime_ymd(bleUpdateModel.currentFirmCreateTime);
+            }
+        }
+        getView().showUpdateDialogUtils(title, desc, timeStr, hasNewVersion);
+    }
+
+    @Override
+    public void onResume() {
+        if (sensoroDeviceConnection != null) {
+            sensoroDeviceConnection.onSessionResume();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        if (sensoroDeviceConnection != null) {
+            sensoroDeviceConnection.onSessonPause();
+        }
     }
 }

@@ -19,6 +19,7 @@ import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
+import com.sensoro.smartcity.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskExceptionDeviceRsp;
@@ -296,7 +297,7 @@ public interface RetrofitService {
      * @return
      */
     @POST("devices/version/list/{sn}")
-    Observable<ResponseBase> getDeviceUpdateVision(@Path("sn") String sn, @Body RequestBody requestBody);
+    Observable<DeviceUpdateFirmwareDataRsp> getDeviceUpdateVision(@Path("sn") String sn, @Body RequestBody requestBody);
 
     /**
      * 回写固件版本到iot

@@ -3,7 +3,6 @@ package com.sensoro.smartcity.server;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
@@ -34,6 +33,7 @@ import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
+import com.sensoro.smartcity.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskExceptionDeviceRsp;
@@ -1439,7 +1439,7 @@ public enum RetrofitServiceHelper {
      * @param count
      * @return
      */
-    public Observable<ResponseBase> getDeviceUpdateVision(String sn, String deviceType, String band, String fromVersion, Integer page, Integer count) {
+    public Observable<DeviceUpdateFirmwareDataRsp> getDeviceUpdateVision(String sn, String deviceType, String band, String fromVersion, String hardwareVersion, Integer page, Integer count) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(deviceType)) {
@@ -1451,6 +1451,9 @@ public enum RetrofitServiceHelper {
             if (!TextUtils.isEmpty(fromVersion)) {
                 jsonObject.put("fromVersion", fromVersion);
             }
+            if (!TextUtils.isEmpty(hardwareVersion)) {
+                jsonObject.put("hardwareVersion", hardwareVersion);
+            }
             if (page != null) {
                 jsonObject.put("page", page);
             }
@@ -1461,7 +1464,7 @@ public enum RetrofitServiceHelper {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<ResponseBase> deviceUpdateVision = retrofitService.getDeviceUpdateVision(sn, body);
+        Observable<DeviceUpdateFirmwareDataRsp> deviceUpdateVision = retrofitService.getDeviceUpdateVision(sn, body);
         RxApiManager.getInstance().add("getDeviceUpdateVision", deviceUpdateVision.subscribe());
         return deviceUpdateVision;
     }
@@ -1524,7 +1527,11 @@ public enum RetrofitServiceHelper {
                     }
                     outputStream.write(fileReader, 0, read);
                     fileSizeDownloaded += read;
-                    Log.d("", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                    try {
+                        LogUtils.loge("writeResponseBodyToDisk-->> file download: " + fileSizeDownloaded + " of " + fileSize);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                 }
                 outputStream.flush();
                 return true;
