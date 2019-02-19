@@ -21,7 +21,7 @@ public class DynamicTimeFormat extends SimpleDateFormat {
 
     private static Locale locale = Locale.CHINA;
     private static String weeks[] = {"周日", "周一", "周二", "周三", "周四", "周五", "周六"};
-    private static String moments[] = {"中午", "凌晨", "早上", "下午", "晚上"};
+    private static String moments[] = {"中午", "上午", "上午", "下午", "下午"};
 
     private String mFormat = "%s";
 

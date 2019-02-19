@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.imainviews;
 
 import android.support.annotation.ColorRes;
-import android.support.annotation.StringRes;
 
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
@@ -84,6 +83,10 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
 
     void dismissEarlyWarningThresholdAdapterDialogUtils();
 
+    void showUpdateDialogUtils(String title, String version, String date, boolean hasNewVersion);
+
+    void dismissUpdateDialogUtils();
+
     void setLlElectTopVisible(boolean isVisible);
 
     void setTopElectData(String value, int color, String typeName);
@@ -96,7 +99,7 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
 
     void setMonitorDetailTvCategory(String category);
 
-    void showTipDialog(boolean isEdit, String deviceType, @StringRes int title, @StringRes int message, @ColorRes int messageColor, @StringRes int confirm, @ColorRes int confirmColor, int type);
+    void showTipDialog(boolean isEdit, String deviceType, CharSequence title, CharSequence message, @ColorRes int messageColor, CharSequence confirm, @ColorRes int confirmColor, int type);
 
     void updateTaskOptionModelAdapter(ArrayList<TaskOptionModel> optionModels);
 
@@ -107,4 +110,8 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
     void setMonitorWireMaterial(String text);
 
     void setMonitorWireDiameter(String text);
+
+    void setDeviceVision(String text);
+
+    void updateDialogProgress(String msg, int progress, int status);
 }

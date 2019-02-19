@@ -44,6 +44,7 @@ public class DeviceInfo implements Serializable, Comparable {
     private Map<String, MalfunctionDataBean> malfunctionData;
     private String address;
     private boolean deployFlag;
+    private List<String> deployPics;
 
 
     public boolean isDeployFlag() {
@@ -430,4 +431,11 @@ public class DeviceInfo implements Serializable, Comparable {
         return this;
     }
 
+    public List<String> getDeployPics() {
+        return deployPics;
+    }
+
+    public void setDeployPics(List<String> deployPics) {
+        this.deployPics = deployPics;
+    }
 }
