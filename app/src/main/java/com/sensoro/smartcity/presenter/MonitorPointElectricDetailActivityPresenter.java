@@ -90,6 +90,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -137,6 +138,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     private String blePassword = null;
     private SensoroDeviceConnection sensoroDeviceConnection;
     private String mOperationType;
+    private int progress;
 
     @Override
     public void initData(Context context) {
@@ -1424,10 +1426,61 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     @Override
     public void onUpdateClick() {
-
+//        sensoroDeviceConnection.startUpdate(null, null, new OnDeviceUpdateObserver() {
+//            @Override
+//            public void onEnteringDFU(String deviceMacAddress, String filePath, String msg) {
+//
+//            }
+//
+//            @Override
+//            public void onUpdateCompleted(String filePath, String deviceMacAddress, String msg) {
+//
+//            }
+//
+//            @Override
+//            public void onDFUTransfer(String deviceAddress, int percent, float speed, float avgSpeed, int currentPart, int partsTotal, String msg) {
+//
+//            }
+//
+//            @Override
+//            public void onUpdateValidating(String deviceMacAddress, String msg) {
+//
+//            }
+//
+//            @Override
+//            public void onUpdateTimeout(int code, Object data, String msg) {
+//
+//            }
+//
+//            @Override
+//            public void onDisconnecting() {
+//
+//            }
+//
+//            @Override
+//            public void onFailed(String deviceMacAddress, String errorMsg, Throwable e) {
+//
+//            }
+//        });
+        progress = 0;
+        mHandler.postDelayed(runnable,2000);
 
     }
+    Runnable runnable = new Runnable(){
+        @Override
+        public void run() {
+            if(progress <=100){
+                getView().updateDialogProgress(String.format(Locale.ROOT,"固件更新，已传输%d%%",progress),progress,1);
+                progress += 10;
+                mHandler.postDelayed(runnable,200);
+            }else{
+                mHandler.removeCallbacks(runnable);
+                getView().updateDialogProgress("传输结束",-1, 2);
+                getView().dismissUpdateDialogUtils();
+            }
 
+        }
+    };
     @Override
     public void onStart() {
         SensoroCityApplication.getInstance().bleDeviceManager.startScan();

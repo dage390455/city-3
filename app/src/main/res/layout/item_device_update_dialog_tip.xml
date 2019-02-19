@@ -1,74 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/transparent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
     <LinearLayout
+        android:id="@+id/ll_updating"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_bg_solid_ff_corner"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp"
+        android:visibility="gone">
 
-        <TextView
-            android:id="@+id/tv_dialog_tip_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <RelativeLayout
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="24dp"
-            android:text="发现新版本"
-            android:textColor="@color/c_25292d"
-            android:textSize="18sp" />
+           >
 
+            <ImageView
+                android:id="@+id/imv_dialog_rotate"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:src="@drawable/update_device_rotate_imv"
+                android:visibility="gone" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar_circle"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:progressDrawable="@drawable/circle_progress_bar"
+                tools:max="100"
+                tools:progress="20" />
+        </RelativeLayout>
         <TextView
-            android:id="@+id/tv_dialog_update_version"
+            android:id="@+id/tv_dialog_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="23dp"
             android:layout_marginEnd="20dp"
-            android:text="当前版本：V 1.1.12"
+            android:layout_gravity="center_horizontal"
+            android:textSize="14sp"
+            android:layout_marginTop="12dp"
             android:textColor="@color/c_252525"
-            android:textSize="14sp" />
 
-        <TextView
-
-            android:id="@+id/tv_dialog_update_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
-            android:text="固件发布日期：2019.2.23"
-            android:textColor="@color/c_252525"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/tv_dialog_update"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/shape_btn_corner_29c_bg_4dp"
-            android:gravity="center"
-            android:paddingTop="11dp"
-            android:paddingBottom="11dp"
-            android:text="@string/firmware_update"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            />
     </LinearLayout>
 
-
-    <ImageView
-        android:id="@+id/iv_cancel"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/ll_ready_update"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:contentDescription="@null"
-        android:paddingTop="20dp"
-        android:src="@drawable/early_warning_threshold_close" />
+        android:background="@color/transparent"
+        android:orientation="vertical"
+        android:visibility="visible">
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_bg_solid_ff_corner"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_dialog_tip_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="24dp"
+                android:text="发现新版本"
+                android:textColor="@color/c_25292d"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_dialog_update_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="23dp"
+                android:layout_marginEnd="20dp"
+                android:text="当前版本：V 1.1.12"
+                android:textColor="@color/c_252525"
+                android:textSize="14sp" />
+
+            <TextView
+
+                android:id="@+id/tv_dialog_update_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:text="固件发布日期：2019.2.23"
+                android:textColor="@color/c_252525"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_dialog_update"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/shape_btn_corner_29c_bg_4dp"
+                android:gravity="center"
+                android:paddingTop="11dp"
+                android:paddingBottom="11dp"
+                android:text="@string/firmware_update"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/iv_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:paddingTop="20dp"
+            android:src="@drawable/early_warning_threshold_close" />
+
+    </LinearLayout>
+</RelativeLayout>

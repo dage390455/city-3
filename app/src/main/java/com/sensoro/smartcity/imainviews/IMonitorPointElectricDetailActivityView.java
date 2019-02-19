@@ -112,4 +112,6 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
     void setMonitorWireDiameter(String text);
 
     void setDeviceVision(String text);
+
+    void updateDialogProgress(String msg, int progress, int status);
 }

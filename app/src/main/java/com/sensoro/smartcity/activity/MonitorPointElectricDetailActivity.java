@@ -704,6 +704,13 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     @Override
+    public void updateDialogProgress(String msg, int progress, int status) {
+        if (tipDeviceUpdateDialogUtils != null) {
+            tipDeviceUpdateDialogUtils.updateDialog(msg,progress,status);
+        }
+    }
+
+    @Override
     public void setLlElectTopVisible(boolean isVisible) {
         llElectTop.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
@@ -835,6 +842,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     public void setDeviceVision(String text) {
         monitorDetailTvDeviceVision.setText(text);
     }
+
 
     //tip dialog 点击事件
     @Override
