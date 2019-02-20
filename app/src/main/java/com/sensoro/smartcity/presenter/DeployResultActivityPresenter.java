@@ -11,7 +11,10 @@ import com.sensoro.smartcity.imainviews.IDeployResultActivityView;
 import com.sensoro.smartcity.model.DeployResultModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.bean.DeployControlSettingData;
+import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
+import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.PreferencesHelper;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -179,6 +182,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                     }
 
                 }
+                checkMergeTypeConfigInfo();
                 break;
             default:
                 break;
@@ -263,6 +267,27 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
             default:
                 break;
         }
+    }
+
+    /**
+     * 检查配置参数是否符合要求
+     */
+    private void checkMergeTypeConfigInfo() {
+        DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deployResultModel.deviceType);
+        if (configDeviceType != null) {
+            String mergeType = configDeviceType.getMergeType();
+            if (!TextUtils.isEmpty(mergeType)) {
+                MergeTypeStyles configMergeType = PreferencesHelper.getInstance().getConfigMergeType(mergeType);
+                if (configMergeType != null) {
+                    //有configMergeType认为设备配置信息满足要求
+                    return;
+                }
+            }
+        }
+        //发送同更新当前的
+        EventData eventData = new EventData();
+        eventData.code = EVENT_DATA_CHECK_MERGE_TYPE_CONFIG_DATA;
+        EventBus.getDefault().post(eventData);
     }
 
     public void gotoContinue() {
