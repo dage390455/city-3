@@ -519,4 +519,9 @@ public class DateUtil {
         return String.format(Locale.ROOT,"%d年%02d月%02d日 %02d:%02d",instance.get(Calendar.YEAR),instance.get(Calendar.MONTH)+1,
                 instance.get(Calendar.DAY_OF_MONTH),instance.get(Calendar.HOUR_OF_DAY),instance.get(Calendar.MINUTE));
     }
+
+    public static String getStrTime_yymmdd(long time) {
+       SimpleDateFormat simpleDateFormat =  new SimpleDateFormat("yyyyMMdd",Locale.ROOT);
+       return simpleDateFormat.format(new Date(time));
+    }
 }

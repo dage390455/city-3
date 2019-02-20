@@ -17,8 +17,10 @@ public class OperationCmdAnalyzer {
 
         switch (deviceType) {
             case "smoke":
-            case "fhsj_smoke":
                 doSmoke(mOperationType, sensoroDeviceConnection, callback);
+                break;
+            case "fhsj_smoke":
+                doFhsjSmoke(mOperationType, sensoroDeviceConnection, callback);
                 break;
             case "cayman_smoke":
                 //自研烟感
@@ -39,6 +41,7 @@ public class OperationCmdAnalyzer {
 
 
     }
+
 
 
     private static void doMantunFires(String mOperationType, SensoroDeviceConnection sensoroDeviceConnection, SensoroWriteCallback callback) {
@@ -136,6 +139,22 @@ public class OperationCmdAnalyzer {
                 return;
         }
         sensoroDeviceConnection.writeCaymanCmd(builder, callback);
+    }
+
+    private static void doFhsjSmoke(String mOperationType, SensoroDeviceConnection sensoroDeviceConnection, SensoroWriteCallback callback) {
+        MsgNode1V1M5.AppParam.Builder builder = MsgNode1V1M5.AppParam.newBuilder();
+        switch (mOperationType) {
+            case MonitorPointOperationCode.ERASURE_STR:
+                builder.setSmokeCtrl(MsgNode1V1M5.SmokeCtrl.SMOKE_ERASURE);
+                break;
+            case MonitorPointOperationCode.ERASURE_LONG_STR:
+                builder.setSmokeCtrl(MsgNode1V1M5.SmokeCtrl.SMOKE_ERASURE_LONE);
+                break;
+            default:
+                callback.onWriteFailure(0, 0);
+                return;
+        }
+        sensoroDeviceConnection.writeSmokeCmd(builder, callback);
     }
 
     private static void doSmoke(String mOperationType, SensoroDeviceConnection sensoroDeviceConnection, SensoroWriteCallback callback) {

@@ -19,5 +19,15 @@ public interface IDeployMonitorDeployPicView extends IToast,IActivityIntent,IPro
     void setSaveBtnStatus(boolean isEnable);
     void setDeployPicTvInstallationSiteTipVisible(boolean isVisible);
 
-    void updateData(ArrayList<DeployPicModel> data);
+    void updateData(List<DeployPicModel> data);
+
+    DeployPicModel getDeployPicItem(int position);
+
+    void showDeployPicExampleDialog(DeployPicModel item, int position);
+
+    void dismissDeployPicExampleDialog();
+
+    List<DeployPicModel> getDeployPicData();
+
+    void updateIndexData(ImageItem imageItem, int mAddPicIndex);
 }

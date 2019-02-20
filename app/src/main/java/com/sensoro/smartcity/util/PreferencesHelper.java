@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -525,5 +526,23 @@ public final class PreferencesHelper implements Constants {
             }
         }
         return null;
+    }
+
+    /**
+     * 存储示例照片今日不再提示的时间
+     * @param key
+     */
+    public void saveDeployExamplePicTimestamp(String key) {
+        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_EXAMPLE_PIC, Context
+                .MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(key, DateUtil.getStrTime_yymmdd(System.currentTimeMillis()));
+        editor.apply();
+    }
+
+    public String getDeployExamplePicTimestamp(String key) {
+        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_EXAMPLE_PIC, Context
+                .MODE_PRIVATE);
+       return sp.getString(key,"");
     }
 }
