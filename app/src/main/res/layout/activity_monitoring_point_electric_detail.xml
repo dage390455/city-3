@@ -83,7 +83,7 @@
                     android:id="@+id/ac_monitoring_point_tv_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="12dp"
                     android:textColor="@color/c_252525"
                     android:textSize="14sp" />
 
@@ -91,14 +91,13 @@
                     android:id="@+id/iv_monitor_signal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:src="@drawable/delete_tag" />
+                    android:layout_marginStart="12dp" />
 
                 <TextView
                     android:id="@+id/tv_monitor_signal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="优"
+                    android:layout_marginStart="4dp"
                     android:textColor="@color/c_5d5d5d"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -835,129 +834,6 @@
             </LinearLayout>
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:background="@color/c_dfdfdf"
-                android:contentDescription="@null" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_item_selector"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="20dp"
-                    android:text="@string/sensor_detail_battery"
-                    android:textColor="@color/c_252525"
-                    android:textSize="16sp" />
-
-
-                <TextView
-                    android:id="@+id/monitor_detail_tv_battery"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginEnd="20dp"
-                    android:ellipsize="end"
-                    android:maxEms="8"
-                    android:singleLine="true"
-                    android:textColor="@color/c_252525"
-                    android:textSize="14sp" />
-
-            </RelativeLayout>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:background="@color/c_dfdfdf"
-                android:contentDescription="@null" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_item_selector"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="20dp"
-                    android:text="@string/sensor_detail_interval"
-                    android:textColor="@color/c_252525"
-                    android:textSize="16sp" />
-
-
-                <TextView
-                    android:id="@+id/monitor_detail_tv_interval"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginEnd="20dp"
-                    android:ellipsize="end"
-                    android:maxEms="8"
-                    android:singleLine="true"
-                    android:textColor="@color/c_252525"
-                    android:textSize="14sp" />
-
-            </RelativeLayout>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:background="@color/c_dfdfdf"
-                android:contentDescription="@null"
-                android:visibility="gone" />
-
-            <RelativeLayout
-
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_item_selector"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp"
-                android:visibility="gone">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="20dp"
-                    android:text="@string/elect_pwd"
-                    android:textColor="@color/c_252525"
-                    android:textSize="16sp" />
-
-
-                <TextView
-                    android:id="@+id/monitor_detail_tv_ble_pwd"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginEnd="20dp"
-                    android:ellipsize="end"
-                    android:maxEms="8"
-                    android:singleLine="true"
-                    android:textColor="@color/c_252525"
-                    android:textSize="14sp" />
-
-            </RelativeLayout>
-
-            <ImageView
                 android:id="@+id/iv_line_diameter_material"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_divider_height"
@@ -1087,6 +963,129 @@
             </RelativeLayout>
 
             <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@color/c_dfdfdf"
+                android:contentDescription="@null" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_item_selector"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/sensor_detail_battery"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
+
+
+                <TextView
+                    android:id="@+id/monitor_detail_tv_battery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="20dp"
+                    android:ellipsize="end"
+                    android:maxEms="8"
+                    android:singleLine="true"
+                    android:textColor="@color/c_252525"
+                    android:textSize="14sp" />
+
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@color/c_dfdfdf"
+                android:contentDescription="@null" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_item_selector"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/sensor_detail_interval"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
+
+
+                <TextView
+                    android:id="@+id/monitor_detail_tv_interval"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="20dp"
+                    android:ellipsize="end"
+                    android:maxEms="8"
+                    android:singleLine="true"
+                    android:textColor="@color/c_252525"
+                    android:textSize="14sp" />
+
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@color/c_dfdfdf"
+                android:contentDescription="@null"
+                android:visibility="gone" />
+
+            <RelativeLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_item_selector"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/elect_pwd"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
+
+
+                <TextView
+                    android:id="@+id/monitor_detail_tv_ble_pwd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="20dp"
+                    android:ellipsize="end"
+                    android:maxEms="8"
+                    android:singleLine="true"
+                    android:textColor="@color/c_252525"
+                    android:textSize="14sp" />
+
+            </RelativeLayout>
+
+            <ImageView
                 android:id="@+id/iv_line_device_version"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_divider_height"
@@ -1133,7 +1132,6 @@
                     android:layout_toStartOf="@id/iv_monitor_device_version"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:text="V1.2.1"
                     android:textColor="@color/c_252525"
                     android:textSize="14sp" />
 
@@ -1143,7 +1141,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toStartOf="@id/monitor_detail_tv_device_vision"
-                    android:src="@drawable/shape_oval_29c_8dp" />
+                    android:src="@drawable/shape_oval_29c_8dp"
+                    android:visibility="gone" />
             </RelativeLayout>
         </LinearLayout>
 

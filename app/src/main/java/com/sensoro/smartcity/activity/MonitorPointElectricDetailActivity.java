@@ -39,6 +39,7 @@ import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.TouchRecycleView;
 import com.sensoro.smartcity.widget.dialog.EarlyWarningThresholdDialogUtils;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
+import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
 import com.sensoro.smartcity.widget.dialog.TipDeviceUpdateDialogUtils;
 import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.divider.BottomNoDividerItemDecoration;
@@ -180,6 +181,11 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     TextView monitorDetailTvDeviceVision;
     @BindView(R.id.iv_has_new_version)
     ImageView ivHasNewVersion;
+    //信号
+    @BindView(R.id.iv_monitor_signal)
+    ImageView ivMonitorSignal;
+    @BindView(R.id.tv_monitor_signal)
+    TextView tvMonitorSignal;
     private boolean showDetail = false;
     private MonitoringPointRcContentAdapter mContentAdapter;
     private MonitoringPointRcMalfunctionContentAdapter mContentMalfunctionAdapter;
@@ -191,6 +197,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     private EarlyWarningThresholdDialogUtils earlyWarningThresholdDialogUtils;
     private MonitorDetailOperationAdapter monitorDetailOperationAdapter;
     private TipDeviceUpdateDialogUtils tipDeviceUpdateDialogUtils;
+    private TipBleDialogUtils tipBleDialogUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -198,6 +205,18 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         ButterKnife.bind(this);
         initView();
         mPresenter.initData(mActivity);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPresenter.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPresenter.onPause();
     }
 
     private void initView() {
@@ -237,6 +256,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         initMonitorPhoto();
         initMalfunctionData();
         initMonitorOperation();
+        tipBleDialogUtils = new TipBleDialogUtils(mActivity);
         earlyWarningThresholdDialogUtils = new EarlyWarningThresholdDialogUtils(mActivity);
         earlyWarningThresholdDialogUtils.setDialogUtilsChangeClickListener(this);
         tipDeviceUpdateDialogUtils = new TipDeviceUpdateDialogUtils(mActivity);
@@ -446,6 +466,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         if (tipDeviceUpdateDialogUtils != null) {
             tipDeviceUpdateDialogUtils.destory();
         }
+        SensoroSuccessToast.INSTANCE.cancelToast();
         super.onDestroy();
     }
 
@@ -528,6 +549,11 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     @Override
     public void showOperationSuccessToast() {
         SensoroSuccessToast.INSTANCE.showToast(mActivity, Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void showOperationSuccessToast(String text) {
+        SensoroSuccessToast.INSTANCE.showToast(mActivity, Toast.LENGTH_LONG, text);
     }
 
     @Override
@@ -692,6 +718,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             tipDeviceUpdateDialogUtils.setTipNewVersionText(version);
             tipDeviceUpdateDialogUtils.setTipVersionDateText(date);
             tipDeviceUpdateDialogUtils.setTipButtonVisible(hasNewVersion);
+            tipDeviceUpdateDialogUtils.setCancelable(true);
+            tipDeviceUpdateDialogUtils.setCanceledOnTouchOutside(true);
             tipDeviceUpdateDialogUtils.show();
         }
     }
@@ -706,8 +734,21 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     @Override
     public void updateDialogProgress(String msg, int progress, int status) {
         if (tipDeviceUpdateDialogUtils != null) {
-            tipDeviceUpdateDialogUtils.updateDialog(msg,progress,status);
+            tipDeviceUpdateDialogUtils.setCancelable(false);
+            tipDeviceUpdateDialogUtils.setCanceledOnTouchOutside(false);
+            tipDeviceUpdateDialogUtils.updateDialog(msg, progress, status);
         }
+    }
+
+    @Override
+    public void setIvHasNewVersionViewVisible(boolean isVisible) {
+        ivHasNewVersion.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setSignalStatus(int drawable, String text) {
+        ivMonitorSignal.setImageResource(drawable);
+        tvMonitorSignal.setText(text);
     }
 
     @Override
@@ -774,7 +815,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             case R.id.rl_monitor_device_update:
                 //固件升级
 //                toastShort("固件升级");
-                showUpdateDialogUtils("title", "1.2.2", "2019.2.2", true);
+                mPresenter.doDeviceUpdate();
                 break;
         }
     }
@@ -866,5 +907,27 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     @Override
     public void onChangeInfoClick() {
         //TODO 前往修改阈值
+    }
+
+    @Override
+    public void showBleTips() {
+        if (tipBleDialogUtils != null && !tipBleDialogUtils.isShowing()) {
+            tipBleDialogUtils.show();
+        }
+    }
+
+    @Override
+    public void hideBleTips() {
+        if (tipBleDialogUtils != null && tipBleDialogUtils.isShowing()) {
+            tipBleDialogUtils.dismiss();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (tipBleDialogUtils != null) {
+            tipBleDialogUtils.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

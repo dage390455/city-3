@@ -47,6 +47,7 @@ public class UserPermissionFactory {
         eventLoginData.hasDevicePositionCalibration = getHasDevicePositionCalibration(grants);
         eventLoginData.hasDeviceMuteShort = getHasMuteShort(grants);
         eventLoginData.hasDeviceMuteLong = getHasMuteLong(grants);
+        eventLoginData.hasDeviceFirmwareUpdate = getHasDeviceFirmUpdate(grants);
         String controllerAid = userInfo.getControllerAid();
         //通过controllerAid来判断是否可以返回主账户
         eventLoginData.hasControllerAid = !TextUtils.isEmpty(controllerAid);
@@ -364,6 +365,23 @@ public class UserPermissionFactory {
             }
         }
         return false;
+    }
+
+    /**
+     * 是否有设备升级权限
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasDeviceFirmUpdate(GrantsInfo grants) {
+        //TODO 暂时给予权限
+//        if (grants != null) {
+//            List<String> grantsControl = grants.getControl();
+//            if (grantsControl != null) {
+//                return grantsControl.contains("mute2");
+//            }
+//        }
+        return true;
     }
 
 }

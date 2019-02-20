@@ -821,8 +821,26 @@
     <string name="firmware_version">Firmware Version</string>
     <string name="firmware_update">Firmware Update</string>
     <string name="record_more_than_ten_seconds">Video length can not be less than 10 seconds</string>
+
     <string name="deploy_pic_required" >Require</string>
     <string name="deploy_pic_optional">Optional</string>
     <string name="deploy_pic_today_no_tip">no more prompts today</string>
     <string name="deploy_pic_example_pic">Example of</string>
+    <string name="discover_new_version">Discover new version</string>
+    <string name="already_the_latest_version">Already the latest version</string>
+    <string name="current_version">Current version</string>
+    <string name="latest_version">Latest version</string>
+    <string name="firmware_release_date">Firmware release date</string>
+    <string name="device_upgrade_failed">Upgrade failed, please try again later</string>
+    <string name="device_update_success">update successed</string>
+    <string name="sending_upgrade_version">Sending upgrade version to server</string>
+    <string name="checking_version_bluetooth">Checking version via Bluetooth</string>
+    <string name="verifying_firmware_information">Verifying firmware information</string>
+    <string name="device_is_not_nearby">The device is not nearby, please try again later</string>
+    <string name="firmware_update_transferred">Firmware update, transferred</string>
+    <string name="firmware_update_in_preparation">Firmware update, in preparation</string>
+    <string name="s_good">Good</string>
+    <string name="s_normal">Normal</string>
+    <string name="s_bad">Bad</string>
+    <string name="s_none">None</string>
 </resources>

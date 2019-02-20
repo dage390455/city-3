@@ -198,6 +198,7 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION = "extra_grants_has_device_position_calibration";
     String EXTRA_GRANTS_HAS_DEVICE_MUTE_SHORT = "extra_grants_has_device_mute_short";
     String EXTRA_GRANTS_HAS_DEVICE_MUTE_LONG = "extra_grants_has_device_mute_long";
+    String EXTRA_GRANTS_HAS_DEVICE_FIRMWARE_UPDATE = "extra_grants_has_device_firmware_update";
     String EXTRA_DEVICE_INFO = "extra_device_info";
     String EXTRA_DEPLOY_ANALYZER_MODEL = "extra_deploy_analyzer_model";
     String EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA = "extra_deploy_configuration_setting_data";
@@ -421,6 +422,14 @@ public interface Constants {
 //            add("mantun_fires");
         }
     };
+    ArrayList<String> DEVICE_UPDATE_FIRMWARE_CHIP_TYPES = new ArrayList<String>(3) {
+        {
+            add("t1");
+            add("chip_e");
+            add("bigbang_tracker");
+        }
+    };
+
     int[] MONTHS = {R.string.january, R.string.february, R.string.march, R.string.april, R.string.may, R.string.june
             , R.string.july, R.string.august, R.string.september, R.string.october, R.string.november, R.string.december};
 
