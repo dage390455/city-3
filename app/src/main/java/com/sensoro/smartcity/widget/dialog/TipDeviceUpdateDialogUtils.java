@@ -73,6 +73,20 @@ public class TipDeviceUpdateDialogUtils {
                 }
             }
         });
+
+    }
+
+    public void setCanceledOnTouchOutside(boolean canceled) {
+        if (mDialog != null) {
+            mDialog.setCanceledOnTouchOutside(canceled);
+        }
+    }
+
+    public void setCancelable(boolean flag) {
+        if (mDialog != null) {
+            mDialog.setCancelable(flag);
+        }
+
     }
 
     public void setTipTitleText(String text) {

@@ -56,6 +56,8 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
 
     void showOperationSuccessToast();
 
+    void showOperationSuccessToast(String text);
+
     void showErrorTipDialog(String errorMsg);
 
     void showOperationTipLoadingDialog();
@@ -119,4 +121,8 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
     void setIvHasNewVersionViewVisible(boolean isVisible);
 
     void setSignalStatus(@DrawableRes int drawable, String text);
+
+    void showBleTips();
+
+    void hideBleTips();
 }

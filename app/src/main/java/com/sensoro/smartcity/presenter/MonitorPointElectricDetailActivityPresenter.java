@@ -75,6 +75,7 @@ import com.sensoro.smartcity.server.response.DeployRecordRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.smartcity.server.response.MonitorPointOperationRequestRsp;
+import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.DateUtil;
@@ -97,7 +98,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -128,7 +128,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             }
         }
     };
-    private BleUpdateModel bleUpdateModel;
+    private final BleUpdateModel bleUpdateModel = new BleUpdateModel();
     private final Runnable bleRunnable = new Runnable() {
         @Override
         public void run() {
@@ -138,10 +138,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.startService();
                 } catch (Exception e) {
                     e.printStackTrace();
-//                    getView().showBleTips();
                 }
             }
-            mHandler.postDelayed(this, 2000);
+            mHandler.postDelayed(this, 1000);
         }
     };
     private final ArrayList<EarlyWarningthresholdDialogUtilsAdapterModel> mEarlyWarningThresholdDialogUtilsAdapterModels = new ArrayList<>();
@@ -151,7 +150,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        bleUpdateModel = new BleUpdateModel();
         onCreate();
         mDeviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
         geocoderSearch = new GeocodeSearch(mContext);
@@ -173,29 +171,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             mergeType = WidgetUtil.handleMergeType(deviceType);
         }
         String signal = mDeviceInfo.getSignal();
-        int resId = R.drawable.signal_bad;
-        if (!TextUtils.isEmpty(signal)) {
-            switch (signal) {
-                case "good":
-                    resId = R.drawable.signal_good;
-                    getView().setSignalStatus(resId, "优");
-                    break;
-                case "normal":
-                    resId = R.drawable.signal_normal;
-                    getView().setSignalStatus(resId, "良");
-                    break;
-                case "bad":
-                    resId = R.drawable.signal_bad;
-                    getView().setSignalStatus(resId, "差");
-                    break;
-                default:
-                    resId = R.drawable.signal_good;
-                    getView().setSignalStatus(resId, "无");
-                    break;
-            }
-        } else {
-            getView().setSignalStatus(resId, "无");
-        }
         DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deviceType);
         if (configDeviceType != null) {
             String category = configDeviceType.getCategory();
@@ -223,6 +198,31 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             getView().updateMonitorPhotos(list);
         }
         int status = mDeviceInfo.getStatus();
+        int resId = R.drawable.signal_bad;
+        if (SENSOR_STATUS_LOST != status && SENSOR_STATUS_INACTIVE != status) {
+            if (!TextUtils.isEmpty(signal)) {
+                switch (signal) {
+                    case "good":
+                        resId = R.drawable.signal_good;
+                        getView().setSignalStatus(resId, mContext.getString(R.string.s_good));
+                        break;
+                    case "normal":
+                        resId = R.drawable.signal_normal;
+                        getView().setSignalStatus(resId, mContext.getString(R.string.s_normal));
+                        break;
+                    case "bad":
+                        resId = R.drawable.signal_bad;
+                        getView().setSignalStatus(resId, mContext.getString(R.string.s_bad));
+                        break;
+                    default:
+                        resId = R.drawable.signal_good;
+                        getView().setSignalStatus(resId, mContext.getString(R.string.s_none));
+                        break;
+                }
+            } else {
+                getView().setSignalStatus(resId, mContext.getString(R.string.s_none));
+            }
+        }
         switch (status) {
             case SENSOR_STATUS_ALARM:
                 textColor = mContext.getResources().getColor(R.color.c_f34a4a);
@@ -311,10 +311,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         if (interval != null) {
             getView().setInterval(DateUtil.secToTimeBefore(mContext, interval));
         }
-        if (SENSOR_STATUS_ALARM == status) {
-
-        }
-
     }
 
     private void refreshOperationStatus() {
@@ -1422,7 +1418,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 deployAnalyzerModel.sn = mDeviceInfo.getSn();
                 intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                 getView().startAC(intent);
-//                getView().showTipDialog(true, mDeviceInfo.getDeviceType(), R.string.is_device_air_switch_config, R.string.device_air_switch_config_tip_message, R.color.c_a6a6a6, R.string.air_switch_config, R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_CONFIG);
                 break;
             case MonitorPointOperationCode.AIR_SWITCH_POWER_OFF:
                 //断电
@@ -1500,12 +1495,11 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     @Override
     public void onUpdateClick() {
         boolean bluetoothEnabled = SensoroCityApplication.getInstance().bleDeviceManager.isBluetoothEnabled();
-        if (bluetoothEnabled) {
-
-        } else {
-
+        if (!bluetoothEnabled) {
+            getView().showBleTips();
+            return;
         }
-        getView().updateDialogProgress("准备更新", -1, 0);
+        getView().updateDialogProgress(mContext.getString(R.string.firmware_update_in_preparation), -1, 0);
         RetrofitServiceHelper.INSTANCE.downloadDeviceFirmwareFile(bleUpdateModel.firmUrl, bleUpdateModel.filePath, new CityObserver<Boolean>(this) {
             @Override
             public void onCompleted(Boolean aBoolean) {
@@ -1520,23 +1514,30 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         final OnDeviceUpdateObserver onDeviceUpdateObserver = new OnDeviceUpdateObserver() {
                             @Override
                             public void onEnteringDFU(String deviceMacAddress, String filePath, String msg) {
-                                getView().updateDialogProgress(String.format(Locale.ROOT, "固件更新，已传输%d%%", 0), 0, 1);
+                                if (isAttachedView()) {
+                                    getView().updateDialogProgress(mContext.getString(R.string.firmware_update_transferred) + "0%", 0, 1);
+                                }
                             }
 
                             @Override
                             public void onUpdateCompleted(String filePath, String deviceMacAddress, String msg) {
-                                getView().updateDialogProgress("传输结束", -1, 2);
-                                //TODO 进行版本检查
+                                if (isAttachedView()) {
+                                    checkBleUpdateState();
+                                }
                             }
 
                             @Override
                             public void onDFUTransfer(String deviceAddress, int percent, float speed, float avgSpeed, int currentPart, int partsTotal, String msg) {
-                                getView().updateDialogProgress(String.format(Locale.ROOT, "固件更新，已传输%d%%", percent), percent, 1);
+                                if (isAttachedView()) {
+                                    getView().updateDialogProgress(mContext.getString(R.string.firmware_update_transferred) + percent + "%", percent, 1);
+                                }
                             }
 
                             @Override
                             public void onUpdateValidating(String deviceMacAddress, String msg) {
-
+                                if (isAttachedView()) {
+                                    getView().updateDialogProgress(mContext.getString(R.string.verifying_firmware_information), 100, 1);
+                                }
                             }
 
                             @Override
@@ -1546,13 +1547,17 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
                             @Override
                             public void onDisconnecting() {
-
+                                if (isAttachedView()) {
+                                    getView().updateDialogProgress(mContext.getString(R.string.verifying_firmware_information), 100, 1);
+                                }
                             }
 
                             @Override
                             public void onFailed(String deviceMacAddress, String errorMsg, Throwable e) {
-                                getView().dismissUpdateDialogUtils();
-                                getView().toastShort("更新失败请稍后重试");
+                                if (isAttachedView()) {
+                                    getView().dismissUpdateDialogUtils();
+                                    getView().toastShort(mContext.getString(R.string.device_upgrade_failed));
+                                }
                             }
                         };
                         if (DEVICE_UPDATE_FIRMWARE_CHIP_TYPES.contains(bleUpdateModel.deviceType)) {
@@ -1561,11 +1566,11 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             sensoroDeviceConnection.startUpdate(bleUpdateModel.filePath, bleUpdateModel.blePassword, onDeviceUpdateObserver);
                         }
                     } else {
-                        getView().toastShort("设备不在附近请稍后再试");
+                        getView().toastShort(mContext.getString(R.string.device_is_not_nearby));
                         getView().dismissUpdateDialogUtils();
                     }
                 } else {
-                    getView().toastShort("下载失败，请稍后重试");
+                    getView().toastShort(mContext.getString(R.string.device_upgrade_failed));
                     getView().dismissUpdateDialogUtils();
                 }
 
@@ -1579,6 +1584,78 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             }
         });
     }
+
+    private void checkBleUpdateState() {
+        getView().updateDialogProgress(mContext.getString(R.string.checking_version_bluetooth), -1, 2);
+        mHandler.postDelayed(checkUpdateTask, 1000);
+        bleDeviceMap.remove(bleUpdateModel.sn);
+    }
+
+    private volatile int checkUpdateCount = 1;
+    private final Runnable checkUpdateTask = new Runnable() {
+        @Override
+        public void run() {
+            if (checkUpdateCount < 5) {
+                if (bleDeviceMap.containsKey(bleUpdateModel.sn)) {
+                    BLEDevice bleDevice = bleDeviceMap.get(bleUpdateModel.sn);
+                    if (bleDevice != null) {
+                        if (bleUpdateModel.serverFirmVersion.contains(bleDevice.firmwareVersion)) {
+                            mHandler.removeCallbacks(checkUpdateTask);
+                            //升级成功
+                            if (isAttachedView()) {
+                                getView().updateDialogProgress(mContext.getString(R.string.sending_upgrade_version), -1, 2);
+                                RetrofitServiceHelper.INSTANCE.upLoadDeviceUpdateVision(bleUpdateModel.sn, bleUpdateModel.serverFirmVersion)
+                                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).
+                                        subscribe(new CityObserver<ResponseBase>(MonitorPointElectricDetailActivityPresenter.this) {
+                                            @Override
+                                            public void onCompleted(ResponseBase responseBase) {
+                                                getView().showOperationSuccessToast(mContext.getString(R.string.device_update_success));
+                                                getView().dismissUpdateDialogUtils();
+                                                getView().setIvHasNewVersionViewVisible(false);
+                                                bleUpdateModel.currentFirmVersion = bleUpdateModel.serverFirmVersion;
+                                                freshDeviceUpdateVersionInfo();
+                                                //改变当前UI
+                                            }
+
+                                            @Override
+                                            public void onErrorMsg(int errorCode, String errorMsg) {
+                                                try {
+                                                    LogUtils.loge("升级--->> 回传服务器失败！！");
+                                                } catch (Throwable throwable) {
+                                                    throwable.printStackTrace();
+                                                }
+                                                getView().toastShort(mContext.getString(R.string.device_upgrade_failed));
+                                                getView().dismissUpdateDialogUtils();
+                                                //告诉升级失败
+                                            }
+                                        });
+                            }
+                        } else {
+                            if (isAttachedView()) {
+                                try {
+                                    LogUtils.loge("升级--->> 广播不包含！！");
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
+                                getView().toastShort(mContext.getString(R.string.device_upgrade_failed));
+                            }
+                        }
+                        return;
+                    }
+                }
+                checkUpdateCount++;
+                mHandler.postDelayed(checkUpdateTask, 1000);
+            } else {
+                mHandler.removeCallbacks(checkUpdateTask);
+                checkUpdateCount = 1;
+                //超时
+                if (isAttachedView()) {
+                    getView().toastShort(mContext.getString(R.string.device_upgrade_failed));
+                    getView().dismissUpdateDialogUtils();
+                }
+            }
+        }
+    };
 
     @Override
     public void onStart() {
@@ -1599,16 +1676,16 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             hasNewVersion = false;
         }
         if (hasNewVersion) {
-            title = "发现新版本";
-            desc = "最新版本：V" + bleUpdateModel.serverFirmVersion;
+            title = mContext.getString(R.string.discover_new_version);
+            desc = mContext.getString(R.string.latest_version) + "：V" + bleUpdateModel.serverFirmVersion;
             if (bleUpdateModel.serverFirmCreateTime != 0) {
-                timeStr = "固件发布日期：" + DateUtil.getStrTime_ymd(bleUpdateModel.serverFirmCreateTime);
+                timeStr = mContext.getString(R.string.firmware_release_date) + "：" + DateUtil.getStrTime_ymd(bleUpdateModel.serverFirmCreateTime);
             }
         } else {
-            title = "已是最新版本";
-            desc = "当前版本：V" + bleUpdateModel.currentFirmVersion;
+            title = mContext.getString(R.string.already_the_latest_version);
+            desc = mContext.getString(R.string.current_version) + "：V" + bleUpdateModel.currentFirmVersion;
             if (bleUpdateModel.currentFirmCreateTime != 0) {
-                timeStr = "固件发布日期：" + DateUtil.getStrTime_ymd(bleUpdateModel.currentFirmCreateTime);
+                timeStr = mContext.getString(R.string.firmware_release_date) + "：" + DateUtil.getStrTime_ymd(bleUpdateModel.currentFirmCreateTime);
             }
         }
         getView().showUpdateDialogUtils(title, desc, timeStr, hasNewVersion);

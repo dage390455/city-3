@@ -39,6 +39,7 @@ import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.TouchRecycleView;
 import com.sensoro.smartcity.widget.dialog.EarlyWarningThresholdDialogUtils;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
+import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
 import com.sensoro.smartcity.widget.dialog.TipDeviceUpdateDialogUtils;
 import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.divider.BottomNoDividerItemDecoration;
@@ -196,6 +197,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     private EarlyWarningThresholdDialogUtils earlyWarningThresholdDialogUtils;
     private MonitorDetailOperationAdapter monitorDetailOperationAdapter;
     private TipDeviceUpdateDialogUtils tipDeviceUpdateDialogUtils;
+    private TipBleDialogUtils tipBleDialogUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -254,6 +256,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         initMonitorPhoto();
         initMalfunctionData();
         initMonitorOperation();
+        tipBleDialogUtils = new TipBleDialogUtils(mActivity);
         earlyWarningThresholdDialogUtils = new EarlyWarningThresholdDialogUtils(mActivity);
         earlyWarningThresholdDialogUtils.setDialogUtilsChangeClickListener(this);
         tipDeviceUpdateDialogUtils = new TipDeviceUpdateDialogUtils(mActivity);
@@ -463,6 +466,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         if (tipDeviceUpdateDialogUtils != null) {
             tipDeviceUpdateDialogUtils.destory();
         }
+        SensoroSuccessToast.INSTANCE.cancelToast();
         super.onDestroy();
     }
 
@@ -545,6 +549,11 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     @Override
     public void showOperationSuccessToast() {
         SensoroSuccessToast.INSTANCE.showToast(mActivity, Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void showOperationSuccessToast(String text) {
+        SensoroSuccessToast.INSTANCE.showToast(mActivity, Toast.LENGTH_LONG, text);
     }
 
     @Override
@@ -709,6 +718,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             tipDeviceUpdateDialogUtils.setTipNewVersionText(version);
             tipDeviceUpdateDialogUtils.setTipVersionDateText(date);
             tipDeviceUpdateDialogUtils.setTipButtonVisible(hasNewVersion);
+            tipDeviceUpdateDialogUtils.setCancelable(true);
+            tipDeviceUpdateDialogUtils.setCanceledOnTouchOutside(true);
             tipDeviceUpdateDialogUtils.show();
         }
     }
@@ -723,6 +734,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     @Override
     public void updateDialogProgress(String msg, int progress, int status) {
         if (tipDeviceUpdateDialogUtils != null) {
+            tipDeviceUpdateDialogUtils.setCancelable(false);
+            tipDeviceUpdateDialogUtils.setCanceledOnTouchOutside(false);
             tipDeviceUpdateDialogUtils.updateDialog(msg, progress, status);
         }
     }
@@ -894,5 +907,27 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     @Override
     public void onChangeInfoClick() {
         //TODO 前往修改阈值
+    }
+
+    @Override
+    public void showBleTips() {
+        if (tipBleDialogUtils != null && !tipBleDialogUtils.isShowing()) {
+            tipBleDialogUtils.show();
+        }
+    }
+
+    @Override
+    public void hideBleTips() {
+        if (tipBleDialogUtils != null && tipBleDialogUtils.isShowing()) {
+            tipBleDialogUtils.dismiss();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (tipBleDialogUtils != null) {
+            tipBleDialogUtils.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

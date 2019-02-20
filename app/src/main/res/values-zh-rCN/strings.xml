@@ -816,4 +816,21 @@
     <string name="firmware_version">固件版本</string>
     <string name="firmware_update">固件更新</string>
     <string name="record_more_than_ten_seconds">视频长度不能小于10秒</string>
+    <string name="discover_new_version">发现新版本</string>
+    <string name="already_the_latest_version">已是最新版本</string>
+    <string name="current_version">当前版本</string>
+    <string name="latest_version">最新版本</string>
+    <string name="firmware_release_date">固件发布日期</string>
+    <string name="device_upgrade_failed">升级失败请稍后再试</string>
+    <string name="device_update_success">升级成功</string>
+    <string name="sending_upgrade_version">正在向服务器发送升级版本信息</string>
+    <string name="checking_version_bluetooth">正在通过蓝牙检查版本信息</string>
+    <string name="verifying_firmware_information">正在校验固件信息</string>
+    <string name="device_is_not_nearby">设备不在附近请稍后再试</string>
+    <string name="firmware_update_transferred">固件更新，已传输</string>
+    <string name="firmware_update_in_preparation">固件更新，准备中</string>
+    <string name="s_good">优</string>
+    <string name="s_normal">良</string>
+    <string name="s_bad">差</string>
+    <string name="s_none">无</string>
 </resources>
