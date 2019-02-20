@@ -21,7 +21,7 @@ import com.sensoro.smartcity.adapter.model.DeployPicModel;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDeployPicView;
 import com.sensoro.smartcity.presenter.DeployMonitorDeployPicPresenter;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
+import com.sensoro.smartcity.widget.dialog.DeployPicExampleDialogUtils;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
@@ -84,6 +84,7 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     @BindView(R.id.ac_deploy_pic_rc)
     RecyclerView acDeployPicRc;
     private DeployPicAdapter mDeployPicAdapter;
+    private DeployPicExampleDialogUtils mPicExampleDialogUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -96,7 +97,8 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     private void initView() {
         includeTextTitleTvTitle.setText(mActivity.getString(R.string.deploy_photo));
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
-
+        mPicExampleDialogUtils = new DeployPicExampleDialogUtils(mActivity);
+        mPicExampleDialogUtils.setDeployPicExampleClickListener(mPresenter);
         initRC();
     }
 
@@ -110,7 +112,8 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
         mDeployPicAdapter.setDeployPicClickListener(new DeployPicAdapter.DeployPicClickListener() {
             @Override
             public void onTakePhotoClick(int position) {
-                mPresenter.doAddPic(position);
+//                mPresenter.doAddPic(position);
+                mPresenter.doTakePhoto(position);
             }
 
             @Override
@@ -238,6 +241,8 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
         }
     }
 
+
+
     @Override
     public void displayPic(ImageItem[] selImages, int index) {
         DrawableRequestBuilder<String> builder = Glide.with((Activity) mActivity)                             //配置上下文
@@ -268,6 +273,13 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     }
 
     @Override
+    protected void onDestroy() {
+        mPicExampleDialogUtils.destroy();
+        super.onDestroy();
+
+    }
+
+    @Override
     public void setSaveBtnStatus(boolean isEnable) {
         acDeployPicTvSave.setEnabled(isEnable);
         acDeployPicTvSave.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_solid_df_corner);
@@ -279,8 +291,33 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     }
 
     @Override
-    public void updateData(ArrayList<DeployPicModel> data) {
+    public void updateData(List<DeployPicModel> data) {
         mDeployPicAdapter.updateData(data);
+    }
+
+    @Override
+    public DeployPicModel getDeployPicItem(int position) {
+        return mDeployPicAdapter.getItem(position);
+    }
+
+    @Override
+    public void showDeployPicExampleDialog(DeployPicModel item, int position) {
+        mPicExampleDialogUtils.show(item.exampleUrl,item.title,position);
+    }
+
+    @Override
+    public void dismissDeployPicExampleDialog() {
+        mPicExampleDialogUtils.dismiss();
+    }
+
+    @Override
+    public List<DeployPicModel> getDeployPicData() {
+        return mDeployPicAdapter.getData();
+    }
+
+    @Override
+    public void updateIndexData(ImageItem imageItem, int mAddPicIndex) {
+        mDeployPicAdapter.updateIndexData(imageItem,mAddPicIndex);
     }
 
     @Override

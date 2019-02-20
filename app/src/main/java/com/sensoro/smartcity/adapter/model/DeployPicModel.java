@@ -7,11 +7,13 @@ public class DeployPicModel {
     public String content;
     public String exampleUrl;
     public ImageItem photoItem;
+    public boolean isRequired;
 
-    public DeployPicModel(String title, String content, String exampleUrl, ImageItem photoItem) {
+    public DeployPicModel(String title, String content, String exampleUrl, ImageItem photoItem,boolean isRequired) {
         this.title = title;
         this.content = content;
         this.exampleUrl = exampleUrl;
         this.photoItem = photoItem;
+        this.isRequired = isRequired;
     }
 }

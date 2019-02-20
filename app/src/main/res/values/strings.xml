@@ -679,14 +679,14 @@
     <string name="deploy_pic_device_pic">DeviceMap</string>
     <string name="deploy_pic_device_pic_tip">SN should be recognised</string>
     <string name="deploy_pic_take_photo">Photo</string>
-    <string name="deploy_pic_installation_site">Installation site</string>
+    <string name="deploy_pic_installation_site">Installation environment</string>
     <string name="deploy_pic_shop_pic">Store Picture（Optional）</string>
     <string name="please_select_device_pic">Please select a device picture</string>
     <string name="please_select_installation_site">Please select a site photo</string>
     <string name="rated_current">RC/A</string>
     <string name="deploy_configuration_enter_tip">Please enter the rated current of the installation site air switch,Range:</string>
     <string name="deploy_configuration">Start configuration</string>
-    <string name="if_it_is_a_store_please_upload">Should be uploaded if it is a store</string>
+    <string name="if_it_is_a_store_please_upload">Store name should be recognised</string>
     <string name="check_ble_status">Please check bluetooth status</string>
     <string name="now_configuration">Configuring</string>
     <string name="ble_config_failed">Configuration failed,please try again</string>
@@ -821,4 +821,8 @@
     <string name="firmware_version">Firmware Version</string>
     <string name="firmware_update">Firmware Update</string>
     <string name="record_more_than_ten_seconds">Video length can not be less than 10 seconds</string>
+    <string name="deploy_pic_required" >Require</string>
+    <string name="deploy_pic_optional">Optional</string>
+    <string name="deploy_pic_today_no_tip">no more prompts today</string>
+    <string name="deploy_pic_example_pic">Example of</string>
 </resources>

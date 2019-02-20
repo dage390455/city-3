@@ -300,6 +300,7 @@
             </RelativeLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/ac_deploy_pic_rc"
         android:layout_width="match_parent"

@@ -19,6 +19,7 @@ public interface Constants {
     String SOCKET_EVENT_DEVICE_TASK_RESULT = "city.task.result";
     String SOCKET_EVENT_DEVICE_FLUSH = "city.device.flush";
     String PREFERENCE_SCOPE = "alpha_tool_scope";
+    String PREFERENCE_DEPLOY_EXAMPLE_PIC = "preference_deploy_example_pic";
     String PREFERENCE_KEY_URL = "url";
     String PREFERENCE_DEVICE_HISTORY = "city_device_history";
     String PREFERENCE_ALARM_SEARCH_HISTORY = "preference_alarm_search_history";

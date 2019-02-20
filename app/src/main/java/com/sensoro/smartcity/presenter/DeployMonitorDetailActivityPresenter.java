@@ -300,7 +300,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     }
 
     private void doUploadImages(final double lon, final double lan) {
-        if (deployAnalyzerModel.images.size() > 0) {
+        if (getRealImageSize(deployAnalyzerModel.images) > 0) {
             //TODO 图片提交
             final UpLoadPhotosUtils.UpLoadPhotoListener upLoadPhotoListener = new UpLoadPhotosUtils
                     .UpLoadPhotoListener() {
@@ -353,7 +353,13 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 }
             };
             UpLoadPhotosUtils upLoadPhotosUtils = new UpLoadPhotosUtils(mContext, upLoadPhotoListener);
-            upLoadPhotosUtils.doUploadPhoto(deployAnalyzerModel.images);
+            ArrayList<ImageItem> list = new ArrayList<>();
+            for (ImageItem image : deployAnalyzerModel.images) {
+                if (image != null) {
+                    list.add(image);
+                }
+            }
+            upLoadPhotosUtils.doUploadPhoto(list);
         } else {
             doDeployResult(lon, lan, null);
         }
@@ -585,7 +591,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     public void doSettingPhoto() {
         Intent intent = new Intent(mContext, DeployMonitorDeployPicActivity.class);
-        if (deployAnalyzerModel.images.size() > 0) {
+        if (getRealImageSize(deployAnalyzerModel.images) > 0) {
             intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
         }
         intent.putExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
@@ -640,9 +646,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             case EVENT_DATA_DEPLOY_SETTING_PHOTO:
                 if (data instanceof List) {
                     deployAnalyzerModel.images.clear();
+
                     deployAnalyzerModel.images.addAll((ArrayList<ImageItem>) data);
-                    if (deployAnalyzerModel.images.size() > 0) {
-                        getView().setDeployPhotoText(mContext.getString(R.string.added) + deployAnalyzerModel.images.size() + mContext.getString(R.string.images));
+
+                    if (getRealImageSize( deployAnalyzerModel.images) > 0) {
+                        getView().setDeployPhotoText(mContext.getString(R.string.added) + getRealImageSize( deployAnalyzerModel.images) + mContext.getString(R.string.images));
                     } else {
                         getView().setDeployPhotoText(mContext.getString(R.string.not_added));
                     }
@@ -697,6 +705,16 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             default:
                 break;
         }
+    }
+
+    private int getRealImageSize(ArrayList<ImageItem> images) {
+        int count = 0;
+        for (ImageItem image : deployAnalyzerModel.images) {
+            if (image != null) {
+                count++;
+            }
+        }
+        return count;
     }
 
     @Override
@@ -758,7 +776,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         }
         switch (deployAnalyzerModel.deployType) {
             case TYPE_SCAN_DEPLOY_STATION:
-                if (deployAnalyzerModel.images.size() == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+                if (getRealImageSize(deployAnalyzerModel.images) == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
                     return false;
                 }
                 //经纬度校验
@@ -782,7 +800,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     return false;
                 }
                 //照片校验
-                if (deployAnalyzerModel.images.size() == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+                if (getRealImageSize(deployAnalyzerModel.images) == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
                     return false;
                 }
                 //经纬度校验
@@ -896,7 +914,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
      * @return
      */
     private boolean checkHasPhoto() {
-        if (deployAnalyzerModel.images.size() == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+        if (getRealImageSize(deployAnalyzerModel.images) == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
             getView().toastShort(mContext.getString(R.string.please_add_at_least_one_image));
             getView().updateUploadState(true);
             return true;

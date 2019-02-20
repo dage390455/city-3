@@ -3,6 +3,9 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaTimestamp;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -13,6 +16,9 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDeployPicView;
 import com.sensoro.smartcity.model.EventData;
+import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.PreferencesHelper;
+import com.sensoro.smartcity.widget.dialog.DeployPicExampleDialogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
@@ -20,39 +26,43 @@ import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
 
 import org.greenrobot.eventbus.EventBus;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonitorDeployPicView>
-        implements SelectDialog.SelectDialogListener, Constants {
+        implements SelectDialog.SelectDialogListener, Constants, DeployPicExampleDialogUtils.DeployPicExampleClickListener {
     private Activity mActivity;
-    private final ImageItem[] selImages = new ImageItem[3];
+//    private final ImageItem[] selImages = new ImageItem[3];
     private volatile int mAddPicIndex = -1;
-    private ArrayList<DeployPicModel> deployPicModels;
+    private String deviceType;
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
-        String deviceType = mActivity.getIntent().getStringExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE);
+        deviceType = mActivity.getIntent().getStringExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE);
         getView().setDeployPicTvInstallationSiteTipVisible(DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType));
         ArrayList<ImageItem> imageList = (ArrayList<ImageItem>) mActivity.getIntent().getSerializableExtra(EXTRA_DEPLOY_TO_PHOTO);
-        if (imageList != null && imageList.size() > 0 && imageList.size() < 4) {
-            for (int i = 0; i < imageList.size(); i++) {
-                selImages[i] = imageList.get(i);
-                getView().displayPic(selImages, i);
-            }
-            checkCanSave();
-        }
 
-        deployPicModels = new ArrayList<>();
-        DeployPicModel deployPicModel1 = new DeployPicModel("设备1", "描述1", null, null);
-        DeployPicModel deployPicModel2 = new DeployPicModel("设备2", "描述1", null, null);
-        DeployPicModel deployPicModel3 = new DeployPicModel("设备3", "描述1", null, null);
+        ArrayList<DeployPicModel> deployPicModels = new ArrayList<>();
+        DeployPicModel deployPicModel1 = new DeployPicModel(mActivity.getString(R.string.deploy_pic_device_pic), mActivity.getString(R.string.deploy_pic_device_pic_tip), null, null, true);
+        DeployPicModel deployPicModel2 = new DeployPicModel(mActivity.getString(R.string.deploy_pic_installation_site), mActivity.getString(R.string.need_to_see_the_wire_diameter_connection), null, null, true);
+        DeployPicModel deployPicModel3 = new DeployPicModel(mActivity.getString(R.string.deploy_pic_shop_pic), mActivity.getString(R.string.if_it_is_a_store_please_upload), null, null, false);
         deployPicModels.add(deployPicModel1);
         deployPicModels.add(deployPicModel2);
         deployPicModels.add(deployPicModel3);
-        getView().updateData(deployPicModels);
 
+        if (imageList != null && imageList.size() > 0 && imageList.size() < 4) {
+            for (int i = 0; i < imageList.size(); i++) {
+//                selImages[i] = imageList.get(i);
+//                getView().displayPic(selImages, i);
+                deployPicModels.get(i).photoItem = imageList.get(i);
+            }
+        }
+        getView().updateData(deployPicModels);
+        checkCanSave();
     }
 
     @Override
@@ -105,11 +115,14 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
                     if (mAddPicIndex == -1) {
                         return;
                     }
-                    selImages[mAddPicIndex] = tempImages.get(0);
-                    getView().displayPic(selImages, mAddPicIndex);
-                    DeployPicModel model = deployPicModels.get(mAddPicIndex);
-                    model.photoItem = tempImages.get(0);
-                    getView().updateData(deployPicModels);
+//                    selImages[mAddPicIndex] = tempImages.get(0);
+//                    getView().displayPic(selImages, mAddPicIndex);
+//                    DeployPicModel model = deployPicModels.get(mAddPicIndex);
+//                    model.photoItem = tempImages.get(0);
+                    if (isAttachedView()) {
+                        getView().updateIndexData(tempImages.get(0),mAddPicIndex);
+                    }
+
                 }
                 checkCanSave();
             }
@@ -129,34 +142,53 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
     }
 
     private void checkCanSave() {
-        if (selImages[0] != null && selImages[1] != null) {
-            getView().setSaveBtnStatus(true);
-        } else {
-            getView().setSaveBtnStatus(false);
+        if (isAttachedView()) {
+            List<DeployPicModel> deployPicData = getView().getDeployPicData();
+            boolean isCanSave = true;
+            for (DeployPicModel deployPicDatum : deployPicData) {
+                if (deployPicDatum.isRequired && deployPicDatum.photoItem == null) {
+                    isCanSave = false;
+                    break;
+                }
+            }
+            getView().setSaveBtnStatus(isCanSave);
         }
+
+//        if (selImages[0] != null && selImages[1] != null) {
+//            getView().setSaveBtnStatus(true);
+//        } else {
+//            getView().setSaveBtnStatus(false);
+//        }
     }
 
     public void deletePic(int index) {
-        selImages[index] = null;
-        deployPicModels.get(index).photoItem = null;
-        getView().updateData(deployPicModels);
-        checkCanSave();
+//        selImages[index] = null;
+
+        if (isAttachedView()) {
+            getView().updateIndexData(null,index);
+            checkCanSave();
+        }
+
     }
 
     public void doSave() {
-        if (selImages[0] == null) {
-            getView().toastShort(mActivity.getString(R.string.please_select_device_pic));
-            return;
-        }
-        if (selImages[1] == null) {
-            getView().toastShort(mActivity.getString(R.string.please_select_installation_site));
-            return;
-        }
+//        if (selImages[0] == null) {
+//            getView().toastShort(mActivity.getString(R.string.please_select_device_pic));
+//            return;
+//        }
+//        if (selImages[1] == null) {
+//            getView().toastShort(mActivity.getString(R.string.please_select_installation_site));
+//            return;
+//        }
         ArrayList<ImageItem> imageItems = new ArrayList<>();
-        imageItems.add(selImages[0]);
-        imageItems.add(selImages[1]);
-        if (selImages[2] != null) {
-            imageItems.add(selImages[2]);
+//        imageItems.add(selImages[0]);
+//        imageItems.add(selImages[1]);
+//        if (selImages[2] != null) {
+//            imageItems.add(selImages[2]);
+//        }
+        List<DeployPicModel> deployPicData = getView().getDeployPicData();
+        for (DeployPicModel deployPicDatum : deployPicData) {
+                imageItems.add(deployPicDatum.photoItem);
         }
 
         EventData eventData = new EventData();
@@ -169,21 +201,60 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
     public void doPreviewPic(int index) {
         Intent intentPreview = new Intent(mActivity, ImagePreviewDelActivity.class);
         ArrayList<ImageItem> list = new ArrayList<>();
-        for (int i = 0; i < selImages.length; i++) {
-            if (selImages[i] == null) {
-                if (i == 0) {
-                    index = index - 1;
-                } else if (i == 1 && index == 2) {
-                    index = 1;
+        List<DeployPicModel> deployPicData = getView().getDeployPicData();
+        for (int i = 0; i < deployPicData.size(); i++) {
+            ImageItem photoItem = deployPicData.get(i).photoItem;
+            if (photoItem == null  ) {
+                if (i != deployPicData.size() -1) {
+                    index -= 1;
                 }
+
             } else {
-                list.add(selImages[i]);
+                list.add(photoItem);
             }
+        }
+//        for (int i = 0; i < selImages.length; i++) {
+//            if (selImages[i] == null) {
+//                if (i == 0) {
+//                    index = index - 1;
+//                } else if (i == 1 && index == 2) {
+//                    index = 1;
+//                }
+//            } else {
+//                list.add(selImages[i]);
+//            }
+//        }
+        if (index < 0) {
+            index = 0;
         }
         intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, list);
         intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, index);
         intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
         intentPreview.putExtra(EXTRA_JUST_DISPLAY_PIC, true);
         getView().startACForResult(intentPreview, REQUEST_CODE_PREVIEW);
+    }
+
+    /**
+     * 示例照片对话框中拍照按钮
+     */
+    @Override
+    public void onTakePhotoClick(String title, int position) {
+        if (!TextUtils.isEmpty(title)) {
+            PreferencesHelper.getInstance().saveDeployExamplePicTimestamp(String.format(Locale.ROOT,"%s%s",deviceType,title));
+        }
+        getView().dismissDeployPicExampleDialog();
+        doAddPic(position);
+    }
+
+    public void doTakePhoto(int position) {
+        DeployPicModel item = getView().getDeployPicItem(position);
+        if (/*TextUtils.isEmpty(item.exampleUrl)||*/
+                DateUtil.getStrTime_yymmdd(System.currentTimeMillis()).
+                        equals(PreferencesHelper.getInstance().getDeployExamplePicTimestamp(String.format(Locale.ROOT,"%s%s",deviceType,item.title)))) {
+            doAddPic(position);
+        } else {
+            getView().showDeployPicExampleDialog(item, position);
+        }
+
     }
 }
