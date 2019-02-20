@@ -1573,7 +1573,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             @Override
                             public void onUpdateValidating(String deviceMacAddress, String msg) {
                                 if (isAttachedView()) {
-                                    SensoroCityApplication.getInstance().bleDeviceManager.stopScan();
                                     getView().updateDialogProgress(mContext.getString(R.string.verifying_firmware_information), -1, 2);
                                 }
                             }
@@ -1586,7 +1585,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             @Override
                             public void onDisconnecting() {
                                 if (isAttachedView()) {
-                                    SensoroCityApplication.getInstance().bleDeviceManager.stopScan();
                                     getView().updateDialogProgress(mContext.getString(R.string.verifying_firmware_information), -1, 2);
                                 }
                             }
@@ -1596,7 +1594,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                 if (isAttachedView()) {
                                     getView().dismissUpdateDialogUtils();
                                     getView().toastShort(mContext.getString(R.string.device_upgrade_failed));
-                                    SensoroCityApplication.getInstance().bleDeviceManager.startScan();
                                 }
                             }
                         };
@@ -1629,7 +1626,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         getView().updateDialogProgress(mContext.getString(R.string.checking_version_bluetooth), -1, 2);
         mHandler.postDelayed(checkUpdateTask, 1000);
         bleDeviceMap.remove(bleUpdateModel.sn);
-        SensoroCityApplication.getInstance().bleDeviceManager.startScan();
     }
 
     private volatile int checkUpdateCount = 1;
