@@ -376,9 +376,9 @@ public class UserPermissionFactory {
     private static boolean getHasDeviceFirmUpdate(GrantsInfo grants) {
         //TODO 暂时给予权限
 //        if (grants != null) {
-//            List<String> grantsControl = grants.getControl();
-//            if (grantsControl != null) {
-//                return grantsControl.contains("mute2");
+//            List<String> grantsDevice = grants.getDevice();
+//            if (grantsDevice != null) {
+//                return grantsDevice.contains("_updateFirmware");
 //            }
 //        }
         return true;
