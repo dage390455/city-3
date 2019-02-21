@@ -111,7 +111,7 @@ public class DeployPicAdapter extends RecyclerView.Adapter<DeployPicAdapter.Depl
         String require = mContext.getString(model.isRequired ? R.string.deploy_pic_required : R.string.deploy_pic_optional);
 
         holder.tvDeployPicTitle.setText(String.format(Locale.ROOT,"%s (%s)",title,require));
-        holder.tvDeployPicDescription.setText(TextUtils.isEmpty(model.content) ? mContext.getString(R.string.unknown) : model.content);
+        holder.tvDeployPicDescription.setText(TextUtils.isEmpty(model.content) ? "" : model.content);
         if (model.photoItem == null) {
             holder.llAddDeployPic.setVisibility(View.VISIBLE);
             holder.rlDeployPic.setVisibility(View.GONE);
