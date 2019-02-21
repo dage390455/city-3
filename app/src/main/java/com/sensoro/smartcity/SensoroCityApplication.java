@@ -159,7 +159,8 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         try {
             bleDeviceManager = BLEDeviceManager.getInstance(this);
             bleDeviceManager.setForegroundScanPeriod(7 * 1000);
-            bleDeviceManager.setOutOfRangeDelay(15 * 1000);
+            bleDeviceManager.setForegroundBetweenScanPeriod(2*1000);
+            bleDeviceManager.setOutOfRangeDelay(10 * 1000);
             bleDeviceManager.setBackgroundMode(false);
             bleDeviceManager.setBLEDeviceListener(BleObserver.getInstance());
         } catch (Exception e) {
