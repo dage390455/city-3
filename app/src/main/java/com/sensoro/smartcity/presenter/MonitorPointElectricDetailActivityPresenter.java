@@ -1242,12 +1242,10 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 if (bleDeviceMap.containsKey(mDeviceInfo.getSn()) && !TextUtils.isEmpty(bleUpdateModel.blePassword)) {
                     String macAddress = bleDeviceMap.get(mDeviceInfo.getSn()).getMacAddress();
                     if (!TextUtils.isEmpty(macAddress)) {
-                        Log.e("ljh", "::蓝牙消音:");
                         doBleMute(macAddress);
                         return;
                     }
                 }
-                Log.e("ljh", ":下行消音::");
                 break;
             case MonitorPointOperationCode.RESET:
                 mOperationType = MonitorPointOperationCode.RESET_STR;
@@ -1313,7 +1311,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     }
 
     private void doBleMute(String macAddress) {
-        Log.e("ljh", ":长消音开始连接::");
         if (sensoroDeviceConnection != null) {
             sensoroDeviceConnection.disconnect();
         }
@@ -1351,7 +1348,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             @Override
             public void onCompleted(MonitorPointOperationRequestRsp response) {
                 clearOperationType();
-                Log.e("ljh", ":下行消音成功::");
                 String scheduleNo = response.getScheduleNo();
                 if (TextUtils.isEmpty(scheduleNo)) {
                     getView().dismissOperatingLoadingDialog();
@@ -1374,7 +1370,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 clearOperationType();
                 getView().dismissOperatingLoadingDialog();
                 getView().showErrorTipDialog(errorMsg);
-                Log.e("ljh", "下行消音失败:::" + errorMsg);
             }
         });
 
@@ -1476,7 +1471,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     @Override
     public void onNewDevice(BLEDevice bleDevice) {
-        Log.e("ljh", ":::" + bleDevice.getSn().contains(/*8F8E*/"0881"));
         bleDeviceMap.put(bleDevice.getSn(), bleDevice);
     }
 
@@ -1502,7 +1496,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     public void onConnectedSuccess(BLEDevice bleDevice, int cmd) {
         if (isAttachedView()) {
             //TODO 添加长消音类型命令字
-            Log.e("ljh", "连接成功:::" + mOperationType);
             OperationCmdAnalyzer.doOperation(mDeviceInfo.getDeviceType(), mOperationType, sensoroDeviceConnection, this);
         }
     }
@@ -1511,7 +1504,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     @Override
     public void onConnectedFailure(int errorCode) {
         if (isAttachedView()) {
-            Log.e("ljh", "连接失败:::");
             bleRequestCmd();
         }
     }
@@ -1535,7 +1527,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     @Override
     public void onWriteFailure(int errorCode, int cmd) {
         if (isAttachedView()) {
-            Log.e("ljh", "蓝牙小消音命令错误:::");
             bleRequestCmd();
         }
     }

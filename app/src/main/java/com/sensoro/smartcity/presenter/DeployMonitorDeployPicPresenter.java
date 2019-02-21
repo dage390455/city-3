@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -44,15 +45,18 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
         ArrayList<ImageItem> imageList = (ArrayList<ImageItem>) mActivity.getIntent().getSerializableExtra(EXTRA_DEPLOY_TO_PHOTO);
         List<DeployPicInfo> deployPicInfos = new ArrayList<>();
         List<DeployPicInfo> configDeviceDeployPic = PreferencesHelper.getInstance().getConfigDeviceDeployPic(deviceType);
+
         if (configDeviceDeployPic != null && configDeviceDeployPic.size() > 0) {
             for (int i = 0; i < configDeviceDeployPic.size(); i++) {
+                DeployPicInfo copy = configDeviceDeployPic.get(i).copy();
                 try {
-                    deployPicInfos.get(i).photoItem = imageList.get(i);
+                    copy.photoItem = imageList.get(i);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                deployPicInfos.add(copy);
             }
-            deployPicInfos.addAll(configDeviceDeployPic);
+
         } else {
             DeployPicInfo deployPicInfo1 = new DeployPicInfo();
             deployPicInfo1.title = mActivity.getString(R.string.deploy_pic_device_pic);
@@ -208,6 +212,9 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
         List<DeployPicInfo> deployPicData = getView().getDeployPicData();
         for (DeployPicInfo deployPicDatum : deployPicData) {
             imageItems.add(deployPicDatum.photoItem);
+            if (deployPicDatum.photoItem != null) {
+            }
+
         }
 
         EventData eventData = new EventData();
