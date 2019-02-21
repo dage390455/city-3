@@ -48,7 +48,7 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
 
         ArrayList<DeployPicModel> deployPicModels = new ArrayList<>();
         DeployPicModel deployPicModel1 = new DeployPicModel(mActivity.getString(R.string.deploy_pic_device_pic), mActivity.getString(R.string.deploy_pic_device_pic_tip), null, null, true);
-        DeployPicModel deployPicModel2 = new DeployPicModel(mActivity.getString(R.string.deploy_pic_installation_site), mActivity.getString(R.string.need_to_see_the_wire_diameter_connection), null, null, true);
+        DeployPicModel deployPicModel2 = new DeployPicModel(mActivity.getString(R.string.deploy_pic_installation_site), null, null, null, true);
         DeployPicModel deployPicModel3 = new DeployPicModel(mActivity.getString(R.string.deploy_pic_shop_pic), mActivity.getString(R.string.if_it_is_a_store_please_upload), null, null, false);
         deployPicModels.add(deployPicModel1);
         deployPicModels.add(deployPicModel2);

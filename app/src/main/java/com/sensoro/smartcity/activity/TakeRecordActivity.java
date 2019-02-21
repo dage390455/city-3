@@ -118,19 +118,19 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
     private void videoFinish() {
         dismissProgress();
         mMediaRecorder.stopRecord();
-        if (mMediaObject.getDuration() <10000) {
-//            initMediaRecorderState();
-            LinkedList<MediaObject.MediaPart> medaParts = mMediaObject.getMedaParts();
-            for (MediaObject.MediaPart part : medaParts) {
-                mMediaObject.removePart(part, true);
-            }
-            mMediaRecorder.startPreview();
-            recordedOver = false;
-            SensoroToast.INSTANCE.makeText(getString(R.string.record_more_than_ten_seconds),Toast.LENGTH_SHORT).show();
-        }else{
+//        if (mMediaObject.getDuration() <10000) {
+////            initMediaRecorderState();
+//            LinkedList<MediaObject.MediaPart> medaParts = mMediaObject.getMedaParts();
+//            for (MediaObject.MediaPart part : medaParts) {
+//                mMediaObject.removePart(part, true);
+//            }
+//            mMediaRecorder.startPreview();
+//            recordedOver = false;
+//            SensoroToast.INSTANCE.makeText(getString(R.string.record_more_than_ten_seconds),Toast.LENGTH_SHORT).show();
+//        }else{
             //开始合成视频, 异步
             mMediaRecorder.startEncoding();
-        }
+//        }
 
     }
 
