@@ -199,8 +199,10 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             getView().updateMonitorPhotos(list);
         }
         int status = mDeviceInfo.getStatus();
-        int resId = R.drawable.signal_bad;
-        if (SENSOR_STATUS_LOST != status && SENSOR_STATUS_INACTIVE != status) {
+        int resId = R.drawable.signal_none;
+        if (SENSOR_STATUS_LOST == status || SENSOR_STATUS_INACTIVE == status) {
+            getView().setSignalStatus(resId, mContext.getString(R.string.s_none));
+        } else {
             if (!TextUtils.isEmpty(signal)) {
                 switch (signal) {
                     case "good":
@@ -1240,12 +1242,12 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 if (bleDeviceMap.containsKey(mDeviceInfo.getSn()) && !TextUtils.isEmpty(bleUpdateModel.blePassword)) {
                     String macAddress = bleDeviceMap.get(mDeviceInfo.getSn()).getMacAddress();
                     if (!TextUtils.isEmpty(macAddress)) {
-                        Log.e("ljh","::蓝牙消音:");
+                        Log.e("ljh", "::蓝牙消音:");
                         doBleMute(macAddress);
                         return;
                     }
                 }
-                Log.e("ljh",":下行消音::");
+                Log.e("ljh", ":下行消音::");
                 break;
             case MonitorPointOperationCode.RESET:
                 mOperationType = MonitorPointOperationCode.RESET_STR;
@@ -1311,7 +1313,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     }
 
     private void doBleMute(String macAddress) {
-        Log.e("ljh",":长消音开始连接::");
+        Log.e("ljh", ":长消音开始连接::");
         if (sensoroDeviceConnection != null) {
             sensoroDeviceConnection.disconnect();
         }
@@ -1349,7 +1351,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             @Override
             public void onCompleted(MonitorPointOperationRequestRsp response) {
                 clearOperationType();
-                Log.e("ljh",":下行消音成功::");
+                Log.e("ljh", ":下行消音成功::");
                 String scheduleNo = response.getScheduleNo();
                 if (TextUtils.isEmpty(scheduleNo)) {
                     getView().dismissOperatingLoadingDialog();
@@ -1372,7 +1374,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 clearOperationType();
                 getView().dismissOperatingLoadingDialog();
                 getView().showErrorTipDialog(errorMsg);
-                Log.e("ljh","下行消音失败:::"+errorMsg);
+                Log.e("ljh", "下行消音失败:::" + errorMsg);
             }
         });
 
@@ -1474,7 +1476,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     @Override
     public void onNewDevice(BLEDevice bleDevice) {
-        Log.e("ljh",":::"+bleDevice.getSn().contains(/*8F8E*/"0881"));
+        Log.e("ljh", ":::" + bleDevice.getSn().contains(/*8F8E*/"0881"));
         bleDeviceMap.put(bleDevice.getSn(), bleDevice);
     }
 
@@ -1500,7 +1502,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     public void onConnectedSuccess(BLEDevice bleDevice, int cmd) {
         if (isAttachedView()) {
             //TODO 添加长消音类型命令字
-            Log.e("ljh","连接成功:::"+mOperationType);
+            Log.e("ljh", "连接成功:::" + mOperationType);
             OperationCmdAnalyzer.doOperation(mDeviceInfo.getDeviceType(), mOperationType, sensoroDeviceConnection, this);
         }
     }
@@ -1509,7 +1511,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     @Override
     public void onConnectedFailure(int errorCode) {
         if (isAttachedView()) {
-            Log.e("ljh","连接失败:::");
+            Log.e("ljh", "连接失败:::");
             bleRequestCmd();
         }
     }
@@ -1533,7 +1535,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     @Override
     public void onWriteFailure(int errorCode, int cmd) {
         if (isAttachedView()) {
-            Log.e("ljh","蓝牙小消音命令错误:::");
+            Log.e("ljh", "蓝牙小消音命令错误:::");
             bleRequestCmd();
         }
     }

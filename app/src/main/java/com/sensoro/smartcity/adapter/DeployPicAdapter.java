@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.model.DeployPicModel;
+import com.sensoro.smartcity.server.bean.DeployPicInfo;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
 
 public class DeployPicAdapter extends RecyclerView.Adapter<DeployPicAdapter.DeployPicHolder> {
     private final Context mContext;
-    private List<DeployPicModel> list = new ArrayList<>();
+    private List<DeployPicInfo> list = new ArrayList<>();
     private DeployPicClickListener listener;
 
     public DeployPicAdapter(Context context) {
@@ -44,7 +44,7 @@ public class DeployPicAdapter extends RecyclerView.Adapter<DeployPicAdapter.Depl
 
     @Override
     public void onBindViewHolder(@NonNull final DeployPicHolder holder, int position) {
-        DeployPicModel model = list.get(position);
+        DeployPicInfo model = list.get(position);
 //        holder.itemAdapterDeployPicTvTitle.setText(TextUtils.isEmpty(model.title) ? mContext.getString(R.string.unknown) : model.title);
 //        holder.itemAdapterDeployPicTvContent.setText(TextUtils.isEmpty(model.content) ? mContext.getString(R.string.unknown) : model.title);
 
@@ -111,7 +111,7 @@ public class DeployPicAdapter extends RecyclerView.Adapter<DeployPicAdapter.Depl
         String require = mContext.getString(model.isRequired ? R.string.deploy_pic_required : R.string.deploy_pic_optional);
 
         holder.tvDeployPicTitle.setText(String.format(Locale.ROOT,"%s (%s)",title,require));
-        holder.tvDeployPicDescription.setText(TextUtils.isEmpty(model.content) ? "" : model.content);
+        holder.tvDeployPicDescription.setText(TextUtils.isEmpty(model.description) ? "" : model.description);
         if (model.photoItem == null) {
             holder.llAddDeployPic.setVisibility(View.VISIBLE);
             holder.rlDeployPic.setVisibility(View.GONE);
@@ -162,11 +162,11 @@ public class DeployPicAdapter extends RecyclerView.Adapter<DeployPicAdapter.Depl
         return list.size();
     }
 
-    public DeployPicModel getItem(int position){
+    public DeployPicInfo getItem(int position){
         return list.get(position);
     }
 
-    public void updateData(List<DeployPicModel> data) {
+    public void updateData(List<DeployPicInfo> data) {
         list.clear();
         list.addAll(data);
         notifyDataSetChanged();
@@ -176,7 +176,7 @@ public class DeployPicAdapter extends RecyclerView.Adapter<DeployPicAdapter.Depl
         this.listener = listener;
     }
 
-    public List<DeployPicModel> getData() {
+    public List<DeployPicInfo> getData() {
         return list;
     }
 

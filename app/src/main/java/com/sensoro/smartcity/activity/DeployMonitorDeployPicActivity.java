@@ -17,7 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeployPicAdapter;
-import com.sensoro.smartcity.adapter.model.DeployPicModel;
+import com.sensoro.smartcity.server.bean.DeployPicInfo;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDeployPicView;
 import com.sensoro.smartcity.presenter.DeployMonitorDeployPicPresenter;
@@ -26,7 +26,6 @@ import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -291,18 +290,18 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     }
 
     @Override
-    public void updateData(List<DeployPicModel> data) {
+    public void updateData(List<DeployPicInfo> data) {
         mDeployPicAdapter.updateData(data);
     }
 
     @Override
-    public DeployPicModel getDeployPicItem(int position) {
+    public DeployPicInfo getDeployPicItem(int position) {
         return mDeployPicAdapter.getItem(position);
     }
 
     @Override
-    public void showDeployPicExampleDialog(DeployPicModel item, int position) {
-        mPicExampleDialogUtils.show(item.exampleUrl,item.title,position);
+    public void showDeployPicExampleDialog(DeployPicInfo item, int position) {
+        mPicExampleDialogUtils.show(item.imgUrl,item.title,position);
     }
 
     @Override
@@ -311,7 +310,7 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     }
 
     @Override
-    public List<DeployPicModel> getDeployPicData() {
+    public List<DeployPicInfo> getDeployPicData() {
         return mDeployPicAdapter.getData();
     }
 

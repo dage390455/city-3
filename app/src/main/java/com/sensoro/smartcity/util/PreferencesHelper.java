@@ -10,6 +10,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.DeployPicInfo;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
 import com.sensoro.smartcity.server.bean.MalfunctionTypeStyles;
@@ -20,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -273,6 +273,7 @@ public final class PreferencesHelper implements Constants {
         try {
             if (mDeviceMergeTypesInfo == null) {
                 String json = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, null);
+                LogUtils.loge("DeviceMergeTypesInfo json : " + json);
                 if (!TextUtils.isEmpty(json)) {
                     mDeviceMergeTypesInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, DeviceMergeTypesInfo.class);
                 }
@@ -489,6 +490,20 @@ public final class PreferencesHelper implements Constants {
     }
 
     /**
+     * 获取部署照片中的配置字段
+     *
+     * @param deviceType
+     * @return
+     */
+    public List<DeployPicInfo> getConfigDeviceDeployPic(String deviceType) {
+        DeviceTypeStyles configDeviceType = getConfigDeviceType(deviceType);
+        if (configDeviceType != null) {
+            return configDeviceType.getDeployPicConfig();
+        }
+        return null;
+    }
+
+    /**
      * 获取配置字段 --设备主类型
      *
      * @param mergeType
@@ -530,6 +545,7 @@ public final class PreferencesHelper implements Constants {
 
     /**
      * 存储示例照片今日不再提示的时间
+     *
      * @param key
      */
     public void saveDeployExamplePicTimestamp(String key) {
@@ -543,6 +559,6 @@ public final class PreferencesHelper implements Constants {
     public String getDeployExamplePicTimestamp(String key) {
         SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_EXAMPLE_PIC, Context
                 .MODE_PRIVATE);
-       return sp.getString(key,"");
+        return sp.getString(key, "");
     }
 }

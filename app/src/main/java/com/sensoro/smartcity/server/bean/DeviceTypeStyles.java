@@ -42,6 +42,8 @@ public class DeviceTypeStyles {
      * @return
      */
     private List<String> taskOptions;
+    private List<DeployPicInfo> deployPicConfig;
+
 
     @Override
     public String toString() {
@@ -152,5 +154,13 @@ public class DeviceTypeStyles {
 
     public void setTaskOptions(List<String> taskOptions) {
         this.taskOptions = taskOptions;
+    }
+
+    public List<DeployPicInfo> getDeployPicConfig() {
+        return deployPicConfig;
+    }
+
+    public void setDeployPicConfig(List<DeployPicInfo> deployPicConfig) {
+        this.deployPicConfig = deployPicConfig;
     }
 }

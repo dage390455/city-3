@@ -3,15 +3,13 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaTimestamp;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.TakeRecordActivity;
-import com.sensoro.smartcity.adapter.model.DeployPicModel;
+import com.sensoro.smartcity.server.bean.DeployPicInfo;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDeployPicView;
@@ -26,7 +24,6 @@ import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
 
 import org.greenrobot.eventbus.EventBus;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +32,7 @@ import java.util.Locale;
 public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonitorDeployPicView>
         implements SelectDialog.SelectDialogListener, Constants, DeployPicExampleDialogUtils.DeployPicExampleClickListener {
     private Activity mActivity;
-//    private final ImageItem[] selImages = new ImageItem[3];
+    //    private final ImageItem[] selImages = new ImageItem[3];
     private volatile int mAddPicIndex = -1;
     private String deviceType;
 
@@ -45,23 +42,45 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
         deviceType = mActivity.getIntent().getStringExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE);
         getView().setDeployPicTvInstallationSiteTipVisible(DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType));
         ArrayList<ImageItem> imageList = (ArrayList<ImageItem>) mActivity.getIntent().getSerializableExtra(EXTRA_DEPLOY_TO_PHOTO);
+        List<DeployPicInfo> deployPicInfos = new ArrayList<>();
+        List<DeployPicInfo> configDeviceDeployPic = PreferencesHelper.getInstance().getConfigDeviceDeployPic(deviceType);
+        if (configDeviceDeployPic != null && configDeviceDeployPic.size() > 0) {
+            for (int i = 0; i < configDeviceDeployPic.size(); i++) {
+                try {
+                    deployPicInfos.get(i).photoItem = imageList.get(i);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            deployPicInfos.addAll(configDeviceDeployPic);
+        } else {
+            DeployPicInfo deployPicInfo1 = new DeployPicInfo();
+            deployPicInfo1.title = mActivity.getString(R.string.deploy_pic_device_pic);
+            deployPicInfo1.isRequired = true;
+            deployPicInfo1.description = mActivity.getString(R.string.deploy_pic_device_pic_tip);
+            DeployPicInfo deployPicInfo2 = new DeployPicInfo();
+            deployPicInfo2.isRequired = true;
+            deployPicInfo2.title = mActivity.getString(R.string.deploy_pic_installation_site);
 
-        ArrayList<DeployPicModel> deployPicModels = new ArrayList<>();
-        DeployPicModel deployPicModel1 = new DeployPicModel(mActivity.getString(R.string.deploy_pic_device_pic), mActivity.getString(R.string.deploy_pic_device_pic_tip), null, null, true);
-        DeployPicModel deployPicModel2 = new DeployPicModel(mActivity.getString(R.string.deploy_pic_installation_site), null, null, null, true);
-        DeployPicModel deployPicModel3 = new DeployPicModel(mActivity.getString(R.string.deploy_pic_shop_pic), mActivity.getString(R.string.if_it_is_a_store_please_upload), null, null, false);
-        deployPicModels.add(deployPicModel1);
-        deployPicModels.add(deployPicModel2);
-        deployPicModels.add(deployPicModel3);
+            DeployPicInfo deployPicInfo3 = new DeployPicInfo();
+            deployPicInfo3.title = mActivity.getString(R.string.deploy_pic_shop_pic);
+            deployPicInfo3.description = mActivity.getString(R.string.if_it_is_a_store_please_upload);
+            deployPicInfo3.isRequired = false;
+            deployPicInfos.add(deployPicInfo1);
+            deployPicInfos.add(deployPicInfo2);
+            deployPicInfos.add(deployPicInfo3);
+            if (imageList != null && imageList.size() > 0 && imageList.size() < 4) {
+                for (int i = 0; i < imageList.size(); i++) {
+                    try {
+                        deployPicInfos.get(i).photoItem = imageList.get(i);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
-        if (imageList != null && imageList.size() > 0 && imageList.size() < 4) {
-            for (int i = 0; i < imageList.size(); i++) {
-//                selImages[i] = imageList.get(i);
-//                getView().displayPic(selImages, i);
-                deployPicModels.get(i).photoItem = imageList.get(i);
+                }
             }
         }
-        getView().updateData(deployPicModels);
+        getView().updateData(deployPicInfos);
         checkCanSave();
     }
 
@@ -117,10 +136,10 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
                     }
 //                    selImages[mAddPicIndex] = tempImages.get(0);
 //                    getView().displayPic(selImages, mAddPicIndex);
-//                    DeployPicModel model = deployPicModels.get(mAddPicIndex);
+//                    DeployPicInfo model = deployPicModels.get(mAddPicIndex);
 //                    model.photoItem = tempImages.get(0);
                     if (isAttachedView()) {
-                        getView().updateIndexData(tempImages.get(0),mAddPicIndex);
+                        getView().updateIndexData(tempImages.get(0), mAddPicIndex);
                     }
 
                 }
@@ -143,9 +162,9 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
 
     private void checkCanSave() {
         if (isAttachedView()) {
-            List<DeployPicModel> deployPicData = getView().getDeployPicData();
+            List<DeployPicInfo> deployPicData = getView().getDeployPicData();
             boolean isCanSave = true;
-            for (DeployPicModel deployPicDatum : deployPicData) {
+            for (DeployPicInfo deployPicDatum : deployPicData) {
                 if (deployPicDatum.isRequired && deployPicDatum.photoItem == null) {
                     isCanSave = false;
                     break;
@@ -165,7 +184,7 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
 //        selImages[index] = null;
 
         if (isAttachedView()) {
-            getView().updateIndexData(null,index);
+            getView().updateIndexData(null, index);
             checkCanSave();
         }
 
@@ -186,9 +205,9 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
 //        if (selImages[2] != null) {
 //            imageItems.add(selImages[2]);
 //        }
-        List<DeployPicModel> deployPicData = getView().getDeployPicData();
-        for (DeployPicModel deployPicDatum : deployPicData) {
-                imageItems.add(deployPicDatum.photoItem);
+        List<DeployPicInfo> deployPicData = getView().getDeployPicData();
+        for (DeployPicInfo deployPicDatum : deployPicData) {
+            imageItems.add(deployPicDatum.photoItem);
         }
 
         EventData eventData = new EventData();
@@ -201,11 +220,11 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
     public void doPreviewPic(int index) {
         Intent intentPreview = new Intent(mActivity, ImagePreviewDelActivity.class);
         ArrayList<ImageItem> list = new ArrayList<>();
-        List<DeployPicModel> deployPicData = getView().getDeployPicData();
+        List<DeployPicInfo> deployPicData = getView().getDeployPicData();
         for (int i = 0; i < deployPicData.size(); i++) {
             ImageItem photoItem = deployPicData.get(i).photoItem;
-            if (photoItem == null  ) {
-                if (i != deployPicData.size() -1) {
+            if (photoItem == null) {
+                if (i != deployPicData.size() - 1) {
                     index -= 1;
                 }
 
@@ -240,17 +259,16 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
     @Override
     public void onTakePhotoClick(String title, int position) {
         if (!TextUtils.isEmpty(title)) {
-            PreferencesHelper.getInstance().saveDeployExamplePicTimestamp(String.format(Locale.ROOT,"%s%s",deviceType,title));
+            PreferencesHelper.getInstance().saveDeployExamplePicTimestamp(String.format(Locale.ROOT, "%s%s", deviceType, title));
         }
         getView().dismissDeployPicExampleDialog();
         doAddPic(position);
     }
 
     public void doTakePhoto(int position) {
-        DeployPicModel item = getView().getDeployPicItem(position);
-        if (/*TextUtils.isEmpty(item.exampleUrl)||*/
-                DateUtil.getStrTime_yymmdd(System.currentTimeMillis()).
-                        equals(PreferencesHelper.getInstance().getDeployExamplePicTimestamp(String.format(Locale.ROOT,"%s%s",deviceType,item.title)))) {
+        DeployPicInfo item = getView().getDeployPicItem(position);
+        if (TextUtils.isEmpty(item.imgUrl) || DateUtil.getStrTime_yymmdd(System.currentTimeMillis()).
+                equals(PreferencesHelper.getInstance().getDeployExamplePicTimestamp(String.format(Locale.ROOT, "%s%s", deviceType, item.title)))) {
             doAddPic(position);
         } else {
             getView().showDeployPicExampleDialog(item, position);
