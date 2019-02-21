@@ -35,8 +35,10 @@ import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceAlarmCount;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
+import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -57,6 +59,7 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
@@ -692,6 +695,34 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                     }
 
                 }
+                break;
+            case EVENT_DATA_CHECK_MERGE_TYPE_CONFIG_DATA:
+                //mergeTypeConfig配置参数需要更新
+                RetrofitServiceHelper.INSTANCE.getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Action1<DevicesMergeTypesRsp>() {
+                    @Override
+                    public void call(DevicesMergeTypesRsp devicesMergeTypesRsp) {
+                        DeviceMergeTypesInfo data = devicesMergeTypesRsp.getData();
+                        PreferencesHelper.getInstance().saveLocalDevicesMergeTypes(data);
+                    }
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesMergeTypesRsp>(MainPresenter.this) {
+                    @Override
+                    public void onCompleted(DevicesMergeTypesRsp devicesMergeTypesRsp) {
+                        try {
+                            LogUtils.loge("更新配置参数成功 .....");
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        try {
+                            LogUtils.loge("更新配置参数失败 -->>" + errorMsg);
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                    }
+                });
                 break;
         }
     }

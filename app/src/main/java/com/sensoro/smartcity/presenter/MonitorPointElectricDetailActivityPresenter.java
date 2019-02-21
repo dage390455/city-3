@@ -471,6 +471,11 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     bleUpdateModel.band = data.getBand();
                     bleUpdateModel.hardwareVersion = data.getHardwareVersion();
                     //TODO delete
+                    try {
+                        LogUtils.loge("升级--->> 版本信息 ： " + bleUpdateModel.currentFirmVersion);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                     bleUpdateModel.currentFirmVersion = "1.0.0";
                 }
                 return RetrofitServiceHelper.INSTANCE.getDeviceUpdateVision(bleUpdateModel.sn, bleUpdateModel.deviceType, bleUpdateModel.band, bleUpdateModel.currentFirmVersion, bleUpdateModel.hardwareVersion, 1, 100);
@@ -1008,6 +1013,38 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     }
                 }
                 break;
+            case EVENT_DATA_DEPLOY_INIT_CONFIG_CODE:
+                if (data instanceof DeployControlSettingData) {
+                    DeployControlSettingData deployControlSettingData = (DeployControlSettingData) data;
+                    final String[] switchSpecStr = new String[3];
+                    int switchSpec = deployControlSettingData.getSwitchSpec();
+                    switchSpecStr[0] = switchSpec + "A";
+                    Integer wireMaterial = deployControlSettingData.getWireMaterial();
+                    if (wireMaterial != null) {
+                        switch (wireMaterial) {
+                            case 0:
+                                switchSpecStr[1] = mContext.getString(R.string.cu);
+                                break;
+                            case 1:
+                                switchSpecStr[1] = mContext.getString(R.string.al);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    Double wireDiameter = deployControlSettingData.getWireDiameter();
+                    if (wireDiameter != null) {
+                        String formatDouble = WidgetUtil.getFormatDouble(wireDiameter, 2);
+                        switchSpecStr[2] = formatDouble + "m㎡";
+                    }
+                    mContext.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setElectInitValue(switchSpecStr[0], switchSpecStr[1], switchSpecStr[2]);
+                        }
+                    });
+
+                }
             case EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT:
                 if (data instanceof MonitorPointOperationTaskResultInfo) {
                     MonitorPointOperationTaskResultInfo info = (MonitorPointOperationTaskResultInfo) data;
@@ -1545,8 +1582,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             @Override
                             public void onUpdateValidating(String deviceMacAddress, String msg) {
                                 if (isAttachedView()) {
-                                    SensoroCityApplication.getInstance().bleDeviceManager.stopScan();
-                                    getView().updateDialogProgress(mContext.getString(R.string.verifying_firmware_information), 100, 1);
+                                    getView().updateDialogProgress(mContext.getString(R.string.verifying_firmware_information), -1, 2);
                                 }
                             }
 
@@ -1558,8 +1594,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             @Override
                             public void onDisconnecting() {
                                 if (isAttachedView()) {
-                                    SensoroCityApplication.getInstance().bleDeviceManager.stopScan();
-                                    getView().updateDialogProgress(mContext.getString(R.string.verifying_firmware_information), 100, 1);
+                                    getView().updateDialogProgress(mContext.getString(R.string.verifying_firmware_information), -1, 2);
                                 }
                             }
 
@@ -1568,7 +1603,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                 if (isAttachedView()) {
                                     getView().dismissUpdateDialogUtils();
                                     getView().toastShort(mContext.getString(R.string.device_upgrade_failed));
-                                    SensoroCityApplication.getInstance().bleDeviceManager.startScan();
                                 }
                             }
                         };
@@ -1601,7 +1635,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         getView().updateDialogProgress(mContext.getString(R.string.checking_version_bluetooth), -1, 2);
         mHandler.postDelayed(checkUpdateTask, 1000);
         bleDeviceMap.remove(bleUpdateModel.sn);
-        SensoroCityApplication.getInstance().bleDeviceManager.startScan();
     }
 
     private volatile int checkUpdateCount = 1;
@@ -1623,7 +1656,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                             @Override
                                             public void onCompleted(ResponseBase responseBase) {
                                                 try {
-                                                    LogUtils.loge("升级--->> 成功！！次数="+checkUpdateCount);
+                                                    LogUtils.loge("升级--->> 成功！！次数=" + checkUpdateCount);
                                                 } catch (Throwable throwable) {
                                                     throwable.printStackTrace();
                                                 }
@@ -1631,6 +1664,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                                 getView().dismissUpdateDialogUtils();
                                                 getView().setIvHasNewVersionViewVisible(false);
                                                 bleUpdateModel.currentFirmVersion = bleUpdateModel.serverFirmVersion;
+                                                bleUpdateModel.currentFirmCreateTime = bleUpdateModel.serverFirmCreateTime;
                                                 freshDeviceUpdateVersionInfo();
                                                 //改变当前UI
                                             }
@@ -1666,7 +1700,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             } else {
                 mHandler.removeCallbacks(checkUpdateTask);
                 try {
-                    LogUtils.loge("升级--->> 超时！！次数="+checkUpdateCount);
+                    LogUtils.loge("升级--->> 超时！！次数=" + checkUpdateCount);
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }

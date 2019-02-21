@@ -1,7 +1,6 @@
 package com.sensoro.smartcity;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -159,18 +158,8 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     private void initSensoroSDK() {
         try {
             bleDeviceManager = BLEDeviceManager.getInstance(this);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                bleDeviceManager.setForegroundScanPeriod(3 * 1000);
-                bleDeviceManager.setOutOfRangeDelay(7 * 1000);
-            }
-//            else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-//                bleDeviceManager.setForegroundScanPeriod(5000);
-//                bleDeviceManager.setOutOfRangeDelay(15000);
-//            }
-            else {
-                bleDeviceManager.setOutOfRangeDelay(7 * 1000);
-            }
+            bleDeviceManager.setForegroundScanPeriod(7 * 1000);
+            bleDeviceManager.setOutOfRangeDelay(15 * 1000);
             bleDeviceManager.setBackgroundMode(false);
             bleDeviceManager.setBLEDeviceListener(BleObserver.getInstance());
         } catch (Exception e) {

@@ -407,6 +407,9 @@ public interface Constants {
     //合同
     int EVENT_DATA_CONTRACT_CREATION_SUCCESS = 0X53;
 
+    int EVENT_DATA_CHECK_MERGE_TYPE_CONFIG_DATA = 0X54;
+
+
     List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{
         add("elec_fire");
         add("smoke");
