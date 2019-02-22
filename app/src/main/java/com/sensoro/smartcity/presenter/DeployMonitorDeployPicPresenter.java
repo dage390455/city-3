@@ -42,6 +42,7 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
         deviceType = mActivity.getIntent().getStringExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE);
         getView().setDeployPicTvInstallationSiteTipVisible(DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType));
         ArrayList<ImageItem> imageList = (ArrayList<ImageItem>) mActivity.getIntent().getSerializableExtra(EXTRA_DEPLOY_TO_PHOTO);
+
         List<DeployPicInfo> deployPicInfos = new ArrayList<>();
         List<DeployPicInfo> configDeviceDeployPic = PreferencesHelper.getInstance().getConfigDeviceDeployPic(deviceType);
         if (configDeviceDeployPic != null && configDeviceDeployPic.size() > 0) {
