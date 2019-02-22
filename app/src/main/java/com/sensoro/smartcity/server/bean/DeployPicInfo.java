@@ -15,4 +15,14 @@ public class DeployPicInfo {
 
     public DeployPicInfo() {
     }
+
+    public DeployPicInfo copy() {
+        DeployPicInfo deployPicInfo = new DeployPicInfo();
+        deployPicInfo.title = this.title;
+        deployPicInfo.description = this.description;
+        deployPicInfo.isRequired = this.isRequired;
+        deployPicInfo.imgUrl = this.imgUrl;
+
+        return deployPicInfo;
+    }
 }

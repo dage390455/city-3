@@ -45,68 +45,6 @@ public class DeployPicAdapter extends RecyclerView.Adapter<DeployPicAdapter.Depl
     @Override
     public void onBindViewHolder(@NonNull final DeployPicHolder holder, int position) {
         DeployPicInfo model = list.get(position);
-//        holder.itemAdapterDeployPicTvTitle.setText(TextUtils.isEmpty(model.title) ? mContext.getString(R.string.unknown) : model.title);
-//        holder.itemAdapterDeployPicTvContent.setText(TextUtils.isEmpty(model.content) ? mContext.getString(R.string.unknown) : model.title);
-
-//        if (TextUtils.isEmpty(model.exampleUrl)) {
-//            holder.itemAdapterDeployPicImvExample.setVisibility(View.INVISIBLE);
-//        }else{
-//            holder.itemAdapterDeployPicImvExample.setVisibility(View.VISIBLE);
-//            Glide.with(mContext)                             //配置上下文
-//                    .load(model.exampleUrl)
-//                    .thumbnail(0.01f)//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-////                    .error(R.drawable.ic_default_image)           //设置错误图片
-////                    .placeholder(R.drawable.ic_default_image)    //设置占位图片
-//                    .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
-//                    .into(holder.itemAdapterDeployPicImvExample);
-//        }
-//
-//        if (model.photoItem == null) {
-//            holder.itemAdapterDeployPicRlTakePhoto.setBackgroundResource(R.drawable.shape_bg_solid_ff_stroke_df_corner_2dp);
-//            holder.itemAdapterDeployPicTvTakePhoto.setVisibility(View.VISIBLE);
-//            holder.itemAdapterDeployPicImvPhoto.setVisibility(View.INVISIBLE);
-//            holder.itemAdapterDeployPicImvDeletePhoto.setVisibility(View.GONE);
-//        } else {
-//            holder.itemAdapterDeployPicRlTakePhoto.setBackgroundResource(0);
-//            holder.itemAdapterDeployPicTvTakePhoto.setVisibility(View.GONE);
-//            holder.itemAdapterDeployPicImvPhoto.setVisibility(View.VISIBLE);
-//            holder.itemAdapterDeployPicImvDeletePhoto.setVisibility(View.VISIBLE);
-//            Glide.with(mContext)                             //配置上下文
-//                    .load(model.photoItem.path)
-//                    .thumbnail(0.01f)//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-//                    .error(R.drawable.ic_default_image)           //设置错误图片
-//                    .placeholder(R.drawable.ic_default_image)    //设置占位图片
-//                    .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
-//                    .into(holder.itemAdapterDeployPicImvPhoto);
-//        }
-//
-//        holder.itemAdapterDeployPicTvTakePhoto.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (listener != null) {
-//                    listener.onTakePhotoClick(holder.getAdapterPosition());
-//                }
-//
-//            }
-//        });
-//
-//        holder.itemAdapterDeployPicImvDeletePhoto.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (listener != null) {
-//                    listener.onDeletePhotoClick(holder.getAdapterPosition());
-//                }
-//            }
-//        });
-//
-//        holder.itemAdapterDeployPicImvPhoto.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (listener != null) {
-//                    listener.onPreviewPhoto(holder.getAdapterPosition());
-//                }
-//            }
-//        });
         String title = TextUtils.isEmpty(model.title) ? mContext.getString(R.string.unknown) : model.title;
         String require = mContext.getString(model.isRequired ? R.string.deploy_pic_required : R.string.deploy_pic_optional);
 
@@ -189,23 +127,6 @@ public class DeployPicAdapter extends RecyclerView.Adapter<DeployPicAdapter.Depl
 
 
     class DeployPicHolder extends RecyclerView.ViewHolder {
-
-        @BindView(R.id.item_adapter_deploy_pic_tv_title)
-        TextView itemAdapterDeployPicTvTitle;
-        @BindView(R.id.item_adapter_deploy_pic_tv_content)
-        TextView itemAdapterDeployPicTvContent;
-        @BindView(R.id.item_adapter_deploy_pic_imv_example)
-        ImageView itemAdapterDeployPicImvExample;
-        @BindView(R.id.item_adapter_deploy_pic_imv_photo)
-        ImageView itemAdapterDeployPicImvPhoto;
-        @BindView(R.id.item_adapter_deploy_pic_tv_take_photo)
-        TextView itemAdapterDeployPicTvTakePhoto;
-        @BindView(R.id.item_adapter_deploy_pic_cl_imv)
-        ConstraintLayout itemAdapterDeployPicRlImv;
-        @BindView(R.id.item_adapter_deploy_pic_rl_take_photo)
-        RelativeLayout itemAdapterDeployPicRlTakePhoto;
-        @BindView(R.id.item_adapter_deploy_pic_imv_delete_pic)
-        ImageView itemAdapterDeployPicImvDeletePhoto;
 
         @BindView(R.id.tv_deploy_pic_title)
         TextView tvDeployPicTitle;
