@@ -474,13 +474,11 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     bleUpdateModel.currentFirmVersion = data.getFirmwareVersion();
                     bleUpdateModel.band = data.getBand();
                     bleUpdateModel.hardwareVersion = data.getHardwareVersion();
-                    //TODO delete
                     try {
                         LogUtils.loge("升级--->> 版本信息 ： " + bleUpdateModel.currentFirmVersion);
                     } catch (Throwable throwable) {
                         throwable.printStackTrace();
                     }
-                    bleUpdateModel.currentFirmVersion = "1.0.0";
                 }
                 return RetrofitServiceHelper.INSTANCE.getDeviceUpdateVision(bleUpdateModel.sn, bleUpdateModel.deviceType, bleUpdateModel.band, bleUpdateModel.currentFirmVersion, bleUpdateModel.hardwareVersion, 1, 100);
             }
@@ -1499,7 +1497,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     @Override
     public void onConnectedSuccess(BLEDevice bleDevice, int cmd) {
         if (isAttachedView()) {
-            //TODO 添加长消音类型命令字
             OperationCmdAnalyzer.doOperation(mDeviceInfo.getDeviceType(), mOperationType, sensoroDeviceConnection, this);
         }
     }

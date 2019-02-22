@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.smartcity.R;
@@ -118,7 +117,6 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         }
         long createdTime = deviceAlarmLogInfo.getCreatedTime();
         String alarmTime = DateUtil.getStrTimeToday(mContext, createdTime, 1);
-        //TODO 半年累计报警次数
         long current = System.currentTimeMillis();
         if (isInit) {
             if (isAttachedView()) {

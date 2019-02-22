@@ -2,7 +2,6 @@ package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -58,7 +57,7 @@ public class DeployPicAdapter extends RecyclerView.Adapter<DeployPicAdapter.Depl
             holder.rlDeployPic.setVisibility(View.VISIBLE);
             Glide.with(mContext)                             //配置上下文
                     .load(model.photoItem.path)
-                    .thumbnail(0.01f)//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+//                    .thumbnail(0.01f)//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
                     .error(R.drawable.ic_default_image)           //设置错误图片
                     .placeholder(R.drawable.ic_default_image)    //设置占位图片
                     .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸

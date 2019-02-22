@@ -167,7 +167,6 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
     }
 
     public void refreshSignal() {
-        //TODO 哪里能刷新信号
         switch (deployAnalyzerModel.mapSourceType) {
             case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
                 getView().showProgressDialog();

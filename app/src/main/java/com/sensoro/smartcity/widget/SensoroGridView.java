@@ -16,7 +16,6 @@ import com.sensoro.smartcity.R;
 public class SensoroGridView extends GridView {
     public SensoroGridView(Context context) {
         super(context);
-        // TODO Auto-generated constructor stub
     }
 
     public SensoroGridView(Context context, AttributeSet attrs) {
