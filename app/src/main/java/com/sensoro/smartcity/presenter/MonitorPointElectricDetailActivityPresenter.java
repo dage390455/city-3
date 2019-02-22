@@ -10,7 +10,6 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 
 import com.amap.api.services.core.LatLonPoint;
@@ -409,8 +408,11 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         }
                         DeployControlSettingData deployControlSettingData = deployRecordInfo.getConfig();
                         if (deployControlSettingData != null) {
-                            int switchSpec = deployControlSettingData.getSwitchSpec();
-                            switchSpecStr[0] = switchSpec + "A";
+                            Integer switchSpec = deployControlSettingData.getSwitchSpec();
+                            if (switchSpec != null) {
+                                switchSpecStr[0] = switchSpec + "A";
+                            }
+
                             Integer wireMaterial = deployControlSettingData.getWireMaterial();
                             if (wireMaterial != null) {
                                 switch (wireMaterial) {
@@ -1019,8 +1021,10 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 if (data instanceof DeployControlSettingData) {
                     DeployControlSettingData deployControlSettingData = (DeployControlSettingData) data;
                     final String[] switchSpecStr = new String[3];
-                    int switchSpec = deployControlSettingData.getSwitchSpec();
-                    switchSpecStr[0] = switchSpec + "A";
+                    Integer switchSpec = deployControlSettingData.getSwitchSpec();
+                    if (switchSpec != null) {
+                        switchSpecStr[0] = switchSpec + "A";
+                    }
                     Integer wireMaterial = deployControlSettingData.getWireMaterial();
                     if (wireMaterial != null) {
                         switch (wireMaterial) {
