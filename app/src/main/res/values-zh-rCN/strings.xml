@@ -837,4 +837,5 @@
     <string name="s_normal">良</string>
     <string name="s_bad">差</string>
     <string name="s_none">无</string>
+    <string name="splash_copyright">Copyright \u00a9 %s SENSORO</string>
 </resources>

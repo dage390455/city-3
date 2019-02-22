@@ -524,4 +524,9 @@ public class DateUtil {
        SimpleDateFormat simpleDateFormat =  new SimpleDateFormat("yyyyMMdd",Locale.ROOT);
        return simpleDateFormat.format(new Date(time));
     }
+
+    public static String getStrTime_yy(long time) {
+        SimpleDateFormat simpleDateFormat =  new SimpleDateFormat("yyyy",Locale.ROOT);
+        return simpleDateFormat.format(new Date(time));
+    }
 }

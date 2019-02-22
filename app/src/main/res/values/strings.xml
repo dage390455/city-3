@@ -837,10 +837,14 @@
     <string name="checking_version_bluetooth">Checking version via Bluetooth</string>
     <string name="verifying_firmware_information">Verifying firmware information</string>
     <string name="device_is_not_nearby">The device is not nearby, please try again later</string>
+
+
+
     <string name="firmware_update_transferred">Firmware update, transferred</string>
     <string name="firmware_update_in_preparation">Firmware update, in preparation</string>
     <string name="s_good">Good</string>
     <string name="s_normal">Normal</string>
     <string name="s_bad">Bad</string>
     <string name="s_none">None</string>
+    <string name="splash_copyright">Copyright \u00a9 %s SENSORO</string>
 </resources>
