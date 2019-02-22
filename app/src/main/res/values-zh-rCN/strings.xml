@@ -816,7 +816,7 @@
     <string name="firmware_version">固件版本</string>
     <string name="firmware_update">固件更新</string>
     <string name="record_more_than_ten_seconds">视频长度不能小于10秒</string>
-    <string name="deploy_pic_required" >必须上传</string>
+    <string name="deploy_pic_required">必须上传</string>
     <string name="deploy_pic_optional">可选上传</string>
     <string name="deploy_pic_today_no_tip">今日不再提示</string>
     <string name="deploy_pic_example_pic">示例照片</string>>
@@ -839,5 +839,5 @@
     <string name="s_none">无</string>
     <string name="air_rated_current">空开额定电流</string>
     <string name="monitor_material">线材</string>
-
+    <string name="splash_copyright">Copyright \u00a9 %s SENSORO</string>
 </resources>
