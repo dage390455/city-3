@@ -63,7 +63,7 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployMonitorDetailActivityView> implements IOnCreate, IOnStart,Constants
+public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployMonitorDetailActivityView> implements IOnCreate, IOnStart, Constants
         , SensoroConnectionCallback, BLEDeviceListener<BLEDevice>, Runnable {
     private Activity mContext;
     private SensoroDeviceConnection sensoroDeviceConnection;
@@ -649,8 +649,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
                     deployAnalyzerModel.images.addAll((ArrayList<ImageItem>) data);
 
-                    if (getRealImageSize( deployAnalyzerModel.images) > 0) {
-                        getView().setDeployPhotoText(mContext.getString(R.string.added) + getRealImageSize( deployAnalyzerModel.images) + mContext.getString(R.string.images));
+                    if (getRealImageSize(deployAnalyzerModel.images) > 0) {
+                        getView().setDeployPhotoText(mContext.getString(R.string.added) + getRealImageSize(deployAnalyzerModel.images) + mContext.getString(R.string.images));
                     } else {
                         getView().setDeployPhotoText(mContext.getString(R.string.not_added));
                     }
@@ -694,9 +694,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             case EVENT_DATA_DEPLOY_INIT_CONFIG_CODE:
                 if (data instanceof DeployControlSettingData) {
                     deployAnalyzerModel.settingData = (DeployControlSettingData) data;
-                    int initValue = deployAnalyzerModel.settingData.getSwitchSpec();
+                    Integer initValue = deployAnalyzerModel.settingData.getSwitchSpec();
                     if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
-                        getView().setDeployDeviceDetailDeploySetting(mContext.getString(R.string.actual_overcurrent_threshold) + ":" + initValue + "A");
+                        if (initValue != null) {
+                            getView().setDeployDeviceDetailDeploySetting(mContext.getString(R.string.actual_overcurrent_threshold) + ":" + initValue + "A");
+                        }
                     }
                 } else {
                     getView().setDeployDeviceDetailDeploySetting(null);

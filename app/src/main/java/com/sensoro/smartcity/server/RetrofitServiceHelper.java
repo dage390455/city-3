@@ -561,8 +561,10 @@ public enum RetrofitServiceHelper {
 //            }
             if (deployControlSettingData != null) {
                 JSONObject jsonObjectOut = new JSONObject();
-                int switchSpec = deployControlSettingData.getSwitchSpec();
-                jsonObjectOut.put("switchSpec", switchSpec);
+                Integer switchSpec = deployControlSettingData.getSwitchSpec();
+                if (switchSpec != null) {
+                    jsonObjectOut.put("switchSpec", switchSpec);
+                }
                 Double wireDiameter = deployControlSettingData.getWireDiameter();
                 if (wireDiameter != null) {
                     jsonObjectOut.put("wireDiameter", wireDiameter);

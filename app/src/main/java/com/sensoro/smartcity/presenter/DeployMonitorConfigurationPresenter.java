@@ -74,8 +74,10 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                         String formatStr = nf.format(diameterValue);
                         getView().setInputDiameterValueText(formatStr);
                     }
-                    int initValue = deployControlSettingData.getSwitchSpec();
-                    getView().setInputCurrentText(String.valueOf(initValue));
+                    Integer initValue = deployControlSettingData.getSwitchSpec();
+                    if (initValue != null) {
+                        getView().setInputCurrentText(String.valueOf(initValue));
+                    }
                     Integer wireMaterial = deployControlSettingData.getWireMaterial();
                     if (0 == wireMaterial) {
                         getView().setInputWireMaterialText(mActivity.getString(R.string.cu));
@@ -217,7 +219,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                 EventData eventData = new EventData();
                 eventData.code = Constants.EVENT_DATA_DEPLOY_INIT_CONFIG_CODE;
                 deployControlSettingData = new DeployControlSettingData();
-                deployControlSettingData.setInitValue(mEnterValue);
+                deployControlSettingData.setSwitchSpec(mEnterValue);
                 deployControlSettingData.setWireDiameter(diameterValue);
                 deployControlSettingData.setWireMaterial(materialValue);
                 eventData.data = deployControlSettingData;
@@ -257,7 +259,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
 
                     }
                     deployControlSettingData = new DeployControlSettingData();
-                    deployControlSettingData.setInitValue(value);
+                    deployControlSettingData.setSwitchSpec(value);
                     deployControlSettingData.setWireDiameter(diameter);
                     deployControlSettingData.setWireMaterial(material);
                 }

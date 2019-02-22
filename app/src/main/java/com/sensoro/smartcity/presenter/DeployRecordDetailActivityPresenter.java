@@ -91,16 +91,20 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
 //                        } else {
 //                            getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getSwitchSpec() + "A");
 //                        }
-                        getView().setDeployDeviceDetailDeploySetting(String.format(Locale.CHINA, mActivity.getString(R.string.actual_overcurrent_threshold_format), deployControlSettingData.getSwitchSpec()));
-                        return;
+                        Integer switchSpec = deployControlSettingData.getSwitchSpec();
+                        if (switchSpec != null) {
+                            getView().setDeployDeviceDetailDeploySetting(String.format(Locale.CHINA, mActivity.getString(R.string.actual_overcurrent_threshold_format), switchSpec));
+                            return;
+                        }
                     }
                 }
-                getView().setDeployDeviceDetailDeploySetting(null);
-
             }
+            getView().setDeployDeviceDetailDeploySetting(null);
 
         }
+
     }
+
 
     @Override
     public void onDestroy() {

@@ -822,7 +822,7 @@
     <string name="firmware_update">Firmware Update</string>
     <string name="record_more_than_ten_seconds">Video length can not be less than 10 seconds</string>
 
-    <string name="deploy_pic_required" >Require</string>
+    <string name="deploy_pic_required">Require</string>
     <string name="deploy_pic_optional">Optional</string>
     <string name="deploy_pic_today_no_tip">no more prompts today</string>
     <string name="deploy_pic_example_pic">Example of</string>
@@ -843,4 +843,6 @@
     <string name="s_normal">Normal</string>
     <string name="s_bad">Bad</string>
     <string name="s_none">None</string>
+    <string name="air_rated_current">Air rated current</string>
+    <string name="monitor_material">Material</string>
 </resources>

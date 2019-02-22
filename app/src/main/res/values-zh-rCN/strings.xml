@@ -837,4 +837,7 @@
     <string name="s_normal">良</string>
     <string name="s_bad">差</string>
     <string name="s_none">无</string>
+    <string name="air_rated_current">空开额定电流</string>
+    <string name="monitor_material">线材</string>
+
 </resources>
