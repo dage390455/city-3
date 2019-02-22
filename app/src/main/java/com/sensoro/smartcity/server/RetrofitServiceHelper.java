@@ -1511,8 +1511,6 @@ public enum RetrofitServiceHelper {
 
     private boolean writeResponseBodyToDisk(ResponseBody body, String filePath) {
         try {
-            // todo change the file location/name according to your needs
-//            File futureStudioIconFile = new File(getExternalFilesDir(null) + File.separator + "Future Studio Icon.png");
             File futureStudioIconFile = new File(filePath);
             InputStream inputStream = null;
             OutputStream outputStream = null;

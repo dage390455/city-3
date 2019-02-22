@@ -374,7 +374,6 @@ public class UserPermissionFactory {
      * @return
      */
     private static boolean getHasDeviceFirmUpdate(GrantsInfo grants) {
-        //TODO 暂时给予权限
         if (grants != null) {
             List<String> grantsDevice = grants.getDevice();
             if (grantsDevice != null) {
