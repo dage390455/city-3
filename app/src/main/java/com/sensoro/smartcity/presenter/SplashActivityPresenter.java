@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import com.igexin.sdk.PushManager;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.activity.DeployMonitorCheckActivity;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -47,6 +48,8 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
 //        }
         mContext = (Activity) context;
         permissionDialogUtils = new PermissionDialogUtils(mContext);
+        getView().startAC(new Intent(mContext, DeployMonitorCheckActivity.class));
+        getView().finishAc();
     }
 
     private void checkLoginState() {
@@ -213,7 +216,7 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
 
     @Override
     public void onStart() {
-        requestPermissions(requestPermissions);
+//        requestPermissions(requestPermissions);
     }
 
     @Override
