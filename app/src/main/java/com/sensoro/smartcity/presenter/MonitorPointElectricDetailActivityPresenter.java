@@ -392,7 +392,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             switchSpecStr[1] = "-";
             switchSpecStr[2] = "-";
         }
-        //静默拉取图片记录内容
+        //静默拉取初始配置内容
         RetrofitServiceHelper.INSTANCE.getDeployRecordList(mDeviceInfo.getSn(), null, null, null, null, null, 1, 0, true).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployRecordRsp>(this) {
             @Override
@@ -463,7 +463,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     }
 
     private void requestBlePassword() {
-        //TODO 获取固件版本和下载固件的地址信息
+        // 获取固件版本和下载固件的地址信息
         RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(mDeviceInfo.getSn(), null, null).subscribeOn
                 (Schedulers.io()).flatMap(new Func1<DeployDeviceDetailRsp, Observable<DeviceUpdateFirmwareDataRsp>>() {
             @Override
