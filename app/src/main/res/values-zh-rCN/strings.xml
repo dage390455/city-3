@@ -844,4 +844,11 @@
     <string name="please_record_at_least_5_seconds">请至少拍摄5秒</string>
     <string name="has_close">未开启</string>
     <string name="has_open">已开启</string>
+    <string name="confirm_open">确认开启</string>
+    <string name="confirm_close">确认关闭</string>
+    <string name="close_demo_mode">关闭演示模式</string>
+    <string name="close_demo_mode_content">关闭后，设备自检按钮恢复为正常自检功能，设备可重新正常部署</string>
+    <string name="open_demo_mode">开启演示模式</string>
+    <string name="open_demo_mode_content">开启后，按下设备自检按钮将发出预警信息</string>
+    <string name="open_demo_mode_description">温馨提示：演示模式下设备无法被部署，建议演示后关闭此模式</string>
 </resources>
