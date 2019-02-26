@@ -840,4 +840,5 @@
     <string name="air_rated_current">空开额定电流</string>
     <string name="monitor_material">线材</string>
     <string name="splash_copyright">Copyright \u00a9 %s SENSORO</string>
+    <string name="please_record_at_least_5_seconds">请至少拍摄5秒</string>
 </resources>
