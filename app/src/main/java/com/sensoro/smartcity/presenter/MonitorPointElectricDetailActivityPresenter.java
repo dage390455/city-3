@@ -145,6 +145,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     private final ArrayList<EarlyWarningthresholdDialogUtilsAdapterModel> mEarlyWarningThresholdDialogUtilsAdapterModels = new ArrayList<>();
     private SensoroDeviceConnection sensoroDeviceConnection;
     private String mOperationType;
+    private volatile int deviceDemoMode = DEVICE_DEMO_MODE_NOT_SUPPORT;
 
     @Override
     public void initData(Context context) {
@@ -395,27 +396,28 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     private void handleDeviceModeInfo() {
         if (mDeviceInfo != null) {
-            int mode = 0;
             if (Objects.requireNonNull(PreferencesHelper.getInstance().getConfigDeviceType(mDeviceInfo.getDeviceType())).isDemoSupported()) {
                 if (PreferencesHelper.getInstance().getUserData().hasDeviceDemoMode) {
                     Integer demoMode = mDeviceInfo.getDemoMode();
                     if (demoMode != null) {
                         switch (demoMode) {
                             case 0:
-                                mode = 3;
+                                //正常模式
+                                deviceDemoMode = DEVICE_DEMO_MODE_CLOSE;
                                 break;
                             case 1:
-                                mode = 2;
+                                //演示模式
+                                deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
                                 break;
                             default:
                                 break;
                         }
                     }
                 } else {
-                    mode = 1;
+                    deviceDemoMode = DEVICE_DEMO_MODE_NO_PERMISSION;
                 }
             }
-            getView().setDeviceDemoModeViewStatus(mode);
+            getView().setDeviceDemoModeViewStatus(deviceDemoMode);
         }
     }
 

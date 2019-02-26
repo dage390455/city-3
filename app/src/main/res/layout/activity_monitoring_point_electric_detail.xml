@@ -1188,7 +1188,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="20dp"
+                        android:paddingEnd="20dp"
                         android:src="@drawable/ic_switch_none" />
 
                     <TextView
@@ -1203,6 +1203,7 @@
                         android:singleLine="true"
                         android:text="@string/has_close"
                         android:textColor="@color/c_a6a6a6"
+                        android:visibility="gone"
                         android:textSize="14sp" />
 
                 </RelativeLayout>

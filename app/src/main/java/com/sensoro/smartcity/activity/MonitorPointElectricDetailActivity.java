@@ -931,24 +931,24 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     @Override
     public void setDeviceDemoModeViewStatus(int status) {
         switch (status) {
-            case 0:
+            case Constants.DEVICE_DEMO_MODE_NOT_SUPPORT:
                 //不显示条目
                 ivLineDeviceDemo.setVisibility(View.GONE);
                 rlMonitorDeviceDemo.setVisibility(View.GONE);
                 break;
-            case 1:
+            case Constants.DEVICE_DEMO_MODE_NO_PERMISSION:
                 //不可点击
                 ivLineDeviceDemo.setVisibility(View.VISIBLE);
                 rlMonitorDeviceDemo.setVisibility(View.VISIBLE);
                 ivMonitorDeviceDemo.setImageResource(R.drawable.ic_switch_none);
                 break;
-            case 2:
-                //演示状态状态
+            case Constants.DEVICE_DEMO_MODE_OPEN:
+                //演示状态
                 ivLineDeviceDemo.setVisibility(View.VISIBLE);
                 rlMonitorDeviceDemo.setVisibility(View.VISIBLE);
                 ivMonitorDeviceDemo.setImageResource(R.drawable.ic_switch_open);
                 break;
-            case 3:
+            case Constants.DEVICE_DEMO_MODE_CLOSE:
                 //非演示状态
                 ivLineDeviceDemo.setVisibility(View.VISIBLE);
                 rlMonitorDeviceDemo.setVisibility(View.VISIBLE);
