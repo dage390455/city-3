@@ -38,6 +38,7 @@ import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.TouchRecycleView;
 import com.sensoro.smartcity.widget.dialog.EarlyWarningThresholdDialogUtils;
+import com.sensoro.smartcity.widget.dialog.MonitorPointDemoDialogUtils;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
 import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
 import com.sensoro.smartcity.widget.dialog.TipDeviceUpdateDialogUtils;
@@ -198,6 +199,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     private MonitorDetailOperationAdapter monitorDetailOperationAdapter;
     private TipDeviceUpdateDialogUtils tipDeviceUpdateDialogUtils;
     private TipBleDialogUtils tipBleDialogUtils;
+    private MonitorPointDemoDialogUtils mCloseDemoDialogUtils;
+    private MonitorPointDemoDialogUtils mOpenDemoDialogUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -257,11 +260,48 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         initMalfunctionData();
         initMonitorOperation();
         tipBleDialogUtils = new TipBleDialogUtils(mActivity);
-        earlyWarningThresholdDialogUtils = new EarlyWarningThresholdDialogUtils(mActivity);
-        earlyWarningThresholdDialogUtils.setDialogUtilsChangeClickListener(this);
+        initEarlyWarningThresholdDilog();
+        initTipDeviceUpdateDialog();
+        initOpenDemoDialog();
+        initCloseDemoDialog();
+
+    }
+
+    private void initCloseDemoDialog() {
+        mCloseDemoDialogUtils = new MonitorPointDemoDialogUtils(mActivity);
+        mCloseDemoDialogUtils.setDemoTitleText(getString(R.string.close_demo_mode));
+        mCloseDemoDialogUtils.setDemoContent(getString(R.string.close_demo_mode_content));
+        mCloseDemoDialogUtils.setDemoBtnText(getString(R.string.confirm_close));
+        mCloseDemoDialogUtils.setMonitorPointDemoClickListener(new MonitorPointDemoDialogUtils.MonitorPointDemolickListener() {
+            @Override
+            public void onConfirmClick() {
+
+            }
+        });
+    }
+
+    private void initOpenDemoDialog() {
+        mOpenDemoDialogUtils = new MonitorPointDemoDialogUtils(mActivity);
+        mOpenDemoDialogUtils.setDemoTitleText(getString(R.string.open_demo_mode));
+        mOpenDemoDialogUtils.setDemoContent(getString(R.string.open_demo_mode_content));
+        mOpenDemoDialogUtils.setDemoDescription(getString(R.string.open_demo_mode_description));
+        mOpenDemoDialogUtils.setDemoBtnText(getString(R.string.confirm_open));
+        mOpenDemoDialogUtils.setMonitorPointDemoClickListener(new MonitorPointDemoDialogUtils.MonitorPointDemolickListener() {
+            @Override
+            public void onConfirmClick() {
+
+            }
+        });
+    }
+
+    private void initTipDeviceUpdateDialog() {
         tipDeviceUpdateDialogUtils = new TipDeviceUpdateDialogUtils(mActivity);
         tipDeviceUpdateDialogUtils.setTipDialogUtilsClickListener(mPresenter);
+    }
 
+    private void initEarlyWarningThresholdDilog() {
+        earlyWarningThresholdDialogUtils = new EarlyWarningThresholdDialogUtils(mActivity);
+        earlyWarningThresholdDialogUtils.setDialogUtilsChangeClickListener(this);
     }
 
     private void initMalfunctionData() {
@@ -788,7 +828,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
-                mPresenter.doMonitorHistory();
+                showCloseDemoDialog();
+//                mPresenter.doMonitorHistory();
                 break;
             case R.id.ac_monitoring_point_cl_alert_contact:
                 mPresenter.doContact();
@@ -815,7 +856,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             case R.id.rl_monitor_device_update:
                 //固件升级
 //                toastShort("固件升级");
-                mPresenter.doDeviceUpdate();
+                showOpenDemoDialog();
+//                mPresenter.doDeviceUpdate();
                 break;
         }
     }
@@ -920,6 +962,35 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     public void hideBleTips() {
         if (tipBleDialogUtils != null && tipBleDialogUtils.isShowing()) {
             tipBleDialogUtils.dismiss();
+        }
+    }
+
+    @Override
+    public void showOpenDemoDialog() {
+        if (mOpenDemoDialogUtils != null) {
+            mOpenDemoDialogUtils.show();
+        }
+
+    }
+
+    @Override
+    public void dismissOpenDemoDialog() {
+        if (mOpenDemoDialogUtils != null) {
+            mOpenDemoDialogUtils.dismiss();
+        }
+    }
+
+    @Override
+    public void showCloseDemoDialog() {
+        if (mCloseDemoDialogUtils != null) {
+            mCloseDemoDialogUtils.show();
+        }
+    }
+
+    @Override
+    public void dismissCloseDemoDialog() {
+        if (mCloseDemoDialogUtils != null) {
+            mCloseDemoDialogUtils.dismiss();
         }
     }
 

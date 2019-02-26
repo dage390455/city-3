@@ -125,4 +125,12 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
     void showBleTips();
 
     void hideBleTips();
+
+    void showOpenDemoDialog();
+
+    void dismissOpenDemoDialog();
+
+    void showCloseDemoDialog();
+
+    void dismissCloseDemoDialog();
 }
