@@ -504,7 +504,12 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
     @Override
     public void onPrepared(MediaPlayer mp) {
         vv_play.setLooping(true);
-        vv_play.start();
+        myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                vv_play.start();
+            }
+        }, 50);
     }
 
 }

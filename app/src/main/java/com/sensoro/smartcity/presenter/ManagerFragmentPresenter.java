@@ -164,15 +164,15 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     }
 
     public void doScanDeploy() {
-        if (PreferencesHelper.getInstance().getUserData() != null) {
-            if (!PreferencesHelper.getInstance().getUserData().isSupperAccount) {
-                Intent intent = new Intent(mContext, DeployRecordActivity.class);
+//        if (PreferencesHelper.getInstance().getUserData() != null) {
+//            if (!PreferencesHelper.getInstance().getUserData().isSupperAccount) {
+        Intent intent = new Intent(mContext, DeployRecordActivity.class);
 //                intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
-                getView().startAC(intent);
-                return;
-            }
-        }
-        getView().toastShort(mContext.getString(R.string.no_such_permission));
+        getView().startAC(intent);
+//                return;
+//            }
+//        }
+//        getView().toastShort(mContext.getString(R.string.no_such_permission));
 
     }
 
