@@ -12,14 +12,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mapbox.mapboxsdk.utils.AnimatorUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
@@ -37,7 +35,6 @@ import com.yixia.videoeditor.adapter.UtilityAdapter;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 
@@ -68,20 +65,21 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
         public void handleMessage(Message msg) {
             if (!recordedOver) {
                 int duration = mMediaObject.getDuration();
-                if(duration > 15 * 1000){
+                if (duration > 15 * 1000) {
                     recordFinish();
                     return;
                 }
                 rb_start.setProgress(duration);
                 myHandler.sendEmptyMessageDelayed(0, 50);
                 tv_hint.setVisibility(duration > 5000 ? View.GONE : View.VISIBLE);
-                tv_record_time.setText(String.format(Locale.ROOT,"00:%02d",duration/1000));
+                tv_record_time.setText(String.format(Locale.ROOT, "00:%02d", duration / 1000));
 
             }
         }
     };
     private Point displayPoint;
     private boolean isEncodingFinish = true;
+    private ValueAnimator va;
 
     private void recordFinish() {
         recordedOver = true;
@@ -91,7 +89,6 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
         tv_retake.setVisibility(View.GONE);
         videoFinish();
     }
-
 
 
     @Override
@@ -107,13 +104,13 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
         iv_back = (ImageView) findViewById(R.id.iv_back);
         tv_hint = (TextView) findViewById(R.id.tv_hint);
         tv_record_time = (TextView) findViewById(R.id.tv_record_time);
-        imv_back =  findViewById(R.id.imv_back);
-        tv_retake =  findViewById(R.id.tv_retake);
+        imv_back = findViewById(R.id.imv_back);
+        tv_retake = findViewById(R.id.tv_retake);
 
         displayPoint = new Point();
         getWindowManager().getDefaultDisplay().getSize(displayPoint);
         // 返回 确认按钮设置为距离两个边为58dp,view大小是70dp，所以应该减掉是58+35
-        dp100 = displayPoint.x /2 - AppUtils.dp2px(this,93);
+        dp100 = displayPoint.x / 2 - AppUtils.dp2px(this, 93);
 
         initMediaRecorder();
         initProgressDialog();
@@ -146,7 +143,7 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
         vv_play.setVisibility(View.GONE);
         vv_play.pause();
 
-        iv_back.setX(iv_back.getX()+dp100);
+        iv_back.setX(iv_back.getX() + dp100);
         iv_finish.setX(iv_finish.getX() - dp100);
 
         rb_start.setVisibility(View.VISIBLE);
@@ -168,7 +165,7 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
         rb_start.setVisibility(View.GONE);
         iv_finish.setVisibility(View.VISIBLE);
         iv_back.setVisibility(View.VISIBLE);
-        ValueAnimator va = ValueAnimator.ofFloat(0, dp100).setDuration(300);
+        va = ValueAnimator.ofFloat(0, dp100).setDuration(300);
         va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -382,6 +379,9 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
         if (progressDialog != null) {
             progressDialog.cancel();
         }
+        if (va != null) {
+            va.cancel();
+        }
         if (rb_start != null) {
             rb_start.onDestroy();
         }
@@ -398,8 +398,8 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
 
     @Override
     public void onLongClick() {
-        mMediaRecorder.startRecord();
-        myHandler.sendEmptyMessageDelayed(0, 50);
+//        mMediaRecorder.startRecord();
+//        myHandler.sendEmptyMessageDelayed(0, 50);
     }
 
     @Override
@@ -424,13 +424,13 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
-                if(isEncodingFinish){
+                if (isEncodingFinish) {
                     onBackPressed();
                 }
 
                 break;
             case R.id.iv_finish:
-                if(isEncodingFinish){
+                if (isEncodingFinish) {
                     final String videoPath = mMediaObject.getOutputTempVideoPath();
                     final String videoThumbPath = WidgetUtil.bitmap2File(WidgetUtil.getVideoThumbnail(videoPath), videoPath);
                     final long endTime = mMediaObject.getCurrentPart().endTime;
@@ -458,10 +458,10 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
                 break;
 
             case R.id.rb_start:
-                if(isEncodingFinish){
+                if (isEncodingFinish) {
                     if (recordedOver) {
                         recordStart();
-                    }else{
+                    } else {
                         if (mMediaObject.getDuration() > 5000) {
                             recordFinish();
                         }
