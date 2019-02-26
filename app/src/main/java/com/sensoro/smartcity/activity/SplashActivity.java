@@ -26,7 +26,7 @@ public class SplashActivity extends BaseActivity<ISplashActivityView, SplashActi
         checkActivity();
         super.setContentView(R.layout.activity_splash);
         TextView tvBottom = findViewById(R.id.ac_splash_tv_bottom);
-        tvBottom.setText(String.format(Locale.ROOT,getString(R.string.splash_copyright),DateUtil.getStrTime_yy(System.currentTimeMillis())));
+        tvBottom.setText(String.format(Locale.ROOT,"Copyright \u00a9 %s SENSORO",DateUtil.getStrTime_yy(System.currentTimeMillis())));
         mPresenter.initData(mActivity);
 
     }

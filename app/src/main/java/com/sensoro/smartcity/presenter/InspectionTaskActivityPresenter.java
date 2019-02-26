@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
@@ -46,7 +45,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -287,7 +285,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     }
 
     public void requestSearchData(final int direction, String searchText) {
-        if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
+        if (!PreferencesHelper.getInstance().getUserData().hasInspectionDeviceList) {
             return;
         }
         if (TextUtils.isEmpty(searchText)) {

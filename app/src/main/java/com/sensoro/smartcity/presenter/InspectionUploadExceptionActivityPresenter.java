@@ -109,6 +109,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                 Intent intent = new Intent();
                 intent.setClass(mContext, VideoPlayActivity.class);
                 intent.putExtra("path_record", (Serializable) imageItem);
+                intent.putExtra("video_del",true);
                 mContext.startActivityForResult(intent, REQUEST_CODE_PLAY_RECORD);
             } else {
                 Intent intentPreview = new Intent(mContext, ImagePreviewDelActivity.class);
