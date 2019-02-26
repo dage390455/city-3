@@ -108,7 +108,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         GeocodeSearch.OnGeocodeSearchListener, MonitorDetailOperationAdapter.OnMonitorDetailOperationAdapterListener, BLEDeviceListener<BLEDevice>
         , SensoroConnectionCallback, SensoroWriteCallback, TipDeviceUpdateDialogUtils.TipDialogUpdateClickListener, IOnStart {
     private Activity mContext;
-    private DeviceInfo mDeviceInfo;
+    private volatile DeviceInfo mDeviceInfo;
     private String content;
     private boolean hasPhoneNumber;
     private String mScheduleNo;
@@ -372,6 +372,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 if (deviceInfoListRsp.getData().size() > 0) {
                     mDeviceInfo = deviceInfoListRsp.getData().get(0);
                 }
+                requestBlePassword();
                 freshLocationDeviceInfo();
                 handleDeployInfo();
                 freshTopData();
@@ -381,12 +382,12 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
+                requestBlePassword();
                 handleDeployInfo();
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
             }
         });
-        requestBlePassword();
     }
 
     private void handleDeployInfo() {
@@ -1488,10 +1489,15 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     public void onUpdateClick() {
         boolean bluetoothEnabled = SensoroCityApplication.getInstance().bleDeviceManager.isBluetoothEnabled();
         if (!bluetoothEnabled) {
-            getView().showBleTips();
+            if (isAttachedView()) {
+                getView().showBleTips();
+            }
+
             return;
         }
-        getView().updateDialogProgress(mContext.getString(R.string.firmware_update_in_preparation), -1, 0);
+        if (isAttachedView()) {
+            getView().updateDialogProgress(mContext.getString(R.string.firmware_update_in_preparation), -1, 0);
+        }
         RetrofitServiceHelper.INSTANCE.downloadDeviceFirmwareFile(bleUpdateModel.firmUrl, bleUpdateModel.filePath, new CityObserver<Boolean>(this) {
             @Override
             public void onCompleted(Boolean aBoolean) {
@@ -1558,15 +1564,18 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             sensoroDeviceConnection.startUpdate(bleUpdateModel.filePath, bleUpdateModel.blePassword, onDeviceUpdateObserver);
                         }
                     } else {
-                        getView().toastShort(mContext.getString(R.string.device_is_not_nearby));
-                        getView().dismissUpdateDialogUtils();
+                        if (isAttachedView()) {
+                            getView().toastShort(mContext.getString(R.string.device_is_not_nearby));
+                            getView().dismissUpdateDialogUtils();
+                        }
+
                     }
                 } else {
-                    getView().toastShort(mContext.getString(R.string.device_upgrade_failed));
-                    getView().dismissUpdateDialogUtils();
+                    if (isAttachedView()) {
+                        getView().toastShort(mContext.getString(R.string.device_upgrade_failed));
+                        getView().dismissUpdateDialogUtils();
+                    }
                 }
-
-
             }
 
             @Override
@@ -1578,7 +1587,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     }
 
     private void checkBleUpdateState() {
-        getView().updateDialogProgress(mContext.getString(R.string.checking_version_bluetooth), -1, 2);
+        if (isAttachedView()) {
+            getView().updateDialogProgress(mContext.getString(R.string.checking_version_bluetooth), -1, 2);
+        }
         mHandler.postDelayed(checkUpdateTask, 1000);
         bleDeviceMap.remove(bleUpdateModel.sn);
     }
@@ -1629,12 +1640,12 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                         });
                             }
                         } else {
+                            try {
+                                LogUtils.loge("升级--->> 广播不包含！！");
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                             if (isAttachedView()) {
-                                try {
-                                    LogUtils.loge("升级--->> 广播不包含！！");
-                                } catch (Throwable throwable) {
-                                    throwable.printStackTrace();
-                                }
                                 getView().toastShort(mContext.getString(R.string.device_upgrade_failed));
                             }
                         }
@@ -1687,7 +1698,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         } else {
             title = mContext.getString(R.string.already_the_latest_version);
             if (TextUtils.isEmpty(bleUpdateModel.currentFirmVersion)) {
-                desc = mContext.getString(R.string.current_version);
+                desc = mContext.getString(R.string.current_version) + "：- ";
             } else {
                 desc = mContext.getString(R.string.current_version) + "：V " + bleUpdateModel.currentFirmVersion;
             }
