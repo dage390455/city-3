@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.activity;
 
+import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mapbox.mapboxsdk.utils.AnimatorUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
@@ -35,6 +37,7 @@ import com.yixia.videoeditor.adapter.UtilityAdapter;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 
@@ -77,6 +80,8 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
             }
         }
     };
+    private Point displayPoint;
+    private boolean isEncodingFinish = true;
 
     private void recordFinish() {
         recordedOver = true;
@@ -105,10 +110,10 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
         imv_back =  findViewById(R.id.imv_back);
         tv_retake =  findViewById(R.id.tv_retake);
 
-        Point point = new Point();
-        getWindowManager().getDefaultDisplay().getSize(point);
+        displayPoint = new Point();
+        getWindowManager().getDefaultDisplay().getSize(displayPoint);
         // 返回 确认按钮设置为距离两个边为58dp,view大小是70dp，所以应该减掉是58+35
-        dp100 = point.x /2 - AppUtils.dp2px(this,93);
+        dp100 = displayPoint.x /2 - AppUtils.dp2px(this,93);
 
         initMediaRecorder();
         initProgressDialog();
@@ -155,6 +160,7 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
         mMediaRecorder.stopRecord();
         //开始合成视频, 异步
         mMediaRecorder.startEncoding();
+        isEncodingFinish = false;
     }
 
     private void startAnim() {
@@ -172,6 +178,28 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
                 iv_back.setX(iv_back.getX() - dis);
                 iv_finish.setX(iv_finish.getX() + dis);
                 lastValue = value;
+            }
+
+        });
+        va.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                isEncodingFinish = true;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
             }
         });
         va.start();
@@ -213,6 +241,12 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
         if (rb_start.getVisibility() != View.VISIBLE) {
             initMediaRecorderState();
             LinkedList<MediaObject.MediaPart> medaParts = mMediaObject.getMedaParts();
+//            Iterator<MediaObject.MediaPart> iterator = medaParts.iterator();
+//            while (iterator.hasNext()){
+//                MediaObject.MediaPart next = iterator.next();
+//                mMediaObject.removePart(next,true);
+//                iterator.remove();
+//            }
             for (MediaObject.MediaPart part : medaParts) {
                 mMediaObject.removePart(part, true);
             }
@@ -338,6 +372,9 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
+
+        SensoroToast.INSTANCE.makeText(getString(R.string.video_recording_failed_please_try_again), Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     @Override
@@ -352,6 +389,7 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
             vv_play.release();
         }
         if (mMediaRecorder != null) {
+            mMediaRecorder.stopRecord();
             mMediaRecorder.release();
         }
         myHandler.removeCallbacksAndMessages(null);
@@ -386,42 +424,51 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
-                onBackPressed();
+                if(isEncodingFinish){
+                    onBackPressed();
+                }
+
                 break;
             case R.id.iv_finish:
-                final String videoPath = mMediaObject.getOutputTempVideoPath();
-                final String videoThumbPath = WidgetUtil.bitmap2File(WidgetUtil.getVideoThumbnail(videoPath), videoPath);
-                final long endTime = mMediaObject.getCurrentPart().endTime;
-                try {
-                    LogUtils.loge("videoThumbPath = " + videoThumbPath);
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
+                if(isEncodingFinish){
+                    final String videoPath = mMediaObject.getOutputTempVideoPath();
+                    final String videoThumbPath = WidgetUtil.bitmap2File(WidgetUtil.getVideoThumbnail(videoPath), videoPath);
+                    final long endTime = mMediaObject.getCurrentPart().endTime;
+                    try {
+                        LogUtils.loge("videoThumbPath = " + videoThumbPath);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                    //                    initMediaRecorderState();
+                    if (vv_play != null) {
+                        vv_play.pause();
+                    }
+                    Intent intent = new Intent();
+                    final ImageItem imageItem = new ImageItem();
+                    imageItem.isRecord = true;
+                    imageItem.addTime = endTime;
+                    imageItem.path = videoPath;
+                    imageItem.thumbPath = videoThumbPath;
+                    imageItem.name = videoPath.substring(videoPath.lastIndexOf("/") + 1);
+                    intent.putExtra("path_record", (Serializable) imageItem);
+                    setResult(RESULT_CODE_RECORD, intent);
+                    finish();
                 }
-                //                    initMediaRecorderState();
-                if (vv_play != null) {
-                    vv_play.pause();
-                }
-                Intent intent = new Intent();
-                final ImageItem imageItem = new ImageItem();
-                imageItem.isRecord = true;
-                imageItem.addTime = endTime;
-                imageItem.path = videoPath;
-                imageItem.thumbPath = videoThumbPath;
-                imageItem.name = videoPath.substring(videoPath.lastIndexOf("/") + 1);
-                intent.putExtra("path_record", (Serializable) imageItem);
-                setResult(RESULT_CODE_RECORD, intent);
-                finish();
+
                 break;
 
             case R.id.rb_start:
-                if (recordedOver) {
-                    recordStart();
-                }else{
-                    if (mMediaObject.getDuration() > 5000) {
-                        recordFinish();
-                    }
+                if(isEncodingFinish){
+                    if (recordedOver) {
+                        recordStart();
+                    }else{
+                        if (mMediaObject.getDuration() > 5000) {
+                            recordFinish();
+                        }
 
+                    }
                 }
+
                 break;
             case R.id.imv_back:
                 finish();
