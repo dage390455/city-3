@@ -452,8 +452,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 DeployDeviceInfo data = deployDeviceDetailRsp.getData();
                 if (data != null) {
                     bleUpdateModel.blePassword = data.getBlePassword();
-//                    bleUpdateModel.currentFirmVersion = data.getFirmwareVersion();
-                    bleUpdateModel.currentFirmVersion = "1.0.0";
+                    bleUpdateModel.currentFirmVersion = data.getFirmwareVersion();
                     bleUpdateModel.band = data.getBand();
                     bleUpdateModel.hardwareVersion = data.getHardwareVersion();
                     try {
