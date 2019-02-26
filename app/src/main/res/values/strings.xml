@@ -850,4 +850,6 @@
     <string name="splash_copyright">Copyright \u00a9 %s SENSORO</string>
     <string name="device_demo_mode">Demo mode</string>
     <string name="please_record_at_least_5_seconds">Please take at least five seconds</string>
+    <string name="has_close">Close</string>
+    <string name="has_open">Open</string>
 </resources>

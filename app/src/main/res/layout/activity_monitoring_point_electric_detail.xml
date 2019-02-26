@@ -1161,7 +1161,8 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/c_dfdfdf"
-                    android:contentDescription="@null" />
+                    android:contentDescription="@null"
+                    android:visibility="gone" />
 
                 <RelativeLayout
                     android:id="@+id/rl_monitor_device_demo"
@@ -1169,7 +1170,7 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -1181,13 +1182,14 @@
                         android:textColor="@color/c_252525"
                         android:textSize="16sp" />
 
-                    <Switch
-                        android:id="@+id/s_monitor_device_demo"
-                        android:layout_width="51dp"
-                        android:layout_height="31dp"
+                    <ImageView
+                        android:id="@+id/iv_monitor_device_demo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="20dp" />
+                        android:layout_marginEnd="20dp"
+                        android:src="@drawable/ic_switch_none" />
 
                     <TextView
                         android:id="@+id/monitor_detail_tv_device_demo"
@@ -1196,10 +1198,10 @@
                         android:layout_centerVertical="true"
                         android:layout_marginStart="12dp"
                         android:layout_marginEnd="20dp"
-                        android:layout_toStartOf="@id/s_monitor_device_demo"
+                        android:layout_toStartOf="@id/iv_monitor_device_demo"
                         android:ellipsize="end"
                         android:singleLine="true"
-                        android:text="未开启"
+                        android:text="@string/has_close"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 

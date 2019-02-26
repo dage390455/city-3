@@ -28,6 +28,7 @@ public final class EventLoginData implements Serializable {
     public boolean hasDeviceMuteShort = false;
     public boolean hasDeviceMuteLong = false;
     public boolean hasDeviceFirmwareUpdate = false;
+    public boolean hasDeviceDemoMode = false;
     public boolean needAuth = false;
     public boolean hasControllerAid = false;
 
@@ -59,6 +60,7 @@ public final class EventLoginData implements Serializable {
                 ", hasDeviceMuteShort=" + hasDeviceMuteShort +
                 ", hasDeviceMuteLong=" + hasDeviceMuteLong +
                 ", hasDeviceFirmwareUpdate=" + hasDeviceFirmwareUpdate +
+                ", hasDeviceDemoMode=" + hasDeviceDemoMode +
                 ", needAuth=" + needAuth +
                 ", hasControllerAid=" + hasControllerAid +
                 '}';

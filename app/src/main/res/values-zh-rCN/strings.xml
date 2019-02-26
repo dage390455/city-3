@@ -842,4 +842,6 @@
     <string name="splash_copyright">Copyright \u00a9 %s SENSORO</string>
     <string name="device_demo_mode">演示模式</string>
     <string name="please_record_at_least_5_seconds">请至少拍摄5秒</string>
+    <string name="has_close">未开启</string>
+    <string name="has_open">已开启</string>
 </resources>

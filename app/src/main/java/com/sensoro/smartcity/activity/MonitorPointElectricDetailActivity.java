@@ -2,18 +2,15 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.ColorRes;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -189,8 +186,12 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     ImageView ivMonitorSignal;
     @BindView(R.id.tv_monitor_signal)
     TextView tvMonitorSignal;
-    @BindView(R.id.s_monitor_device_demo)
-    Switch s_monitor_device_demo;
+    @BindView(R.id.iv_monitor_device_demo)
+    ImageView ivMonitorDeviceDemo;
+    @BindView(R.id.iv_line_device_demo)
+    ImageView ivLineDeviceDemo;
+    @BindView(R.id.rl_monitor_device_demo)
+    RelativeLayout rlMonitorDeviceDemo;
     private boolean showDetail = false;
     private MonitoringPointRcContentAdapter mContentAdapter;
     private MonitoringPointRcMalfunctionContentAdapter mContentMalfunctionAdapter;
@@ -266,30 +267,6 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         earlyWarningThresholdDialogUtils.setDialogUtilsChangeClickListener(this);
         tipDeviceUpdateDialogUtils = new TipDeviceUpdateDialogUtils(mActivity);
         tipDeviceUpdateDialogUtils.setTipDialogUtilsClickListener(mPresenter);
-        s_monitor_device_demo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toastShort("onClick ");
-            }
-        });
-        s_monitor_device_demo.setEnabled(true);
-        s_monitor_device_demo.setClickable(false);
-        s_monitor_device_demo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                toastShort("isChecked = " + isChecked);
-            }
-        });
-        final Handler handler = new Handler();
-        final boolean[] isCheck = {false};
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                s_monitor_device_demo.setChecked(isCheck[0]);
-                isCheck[0] = !isCheck[0];
-                handler.postDelayed(this, 3000);
-            }
-        }, 3000);
     }
 
     private void initMalfunctionData() {
@@ -948,6 +925,39 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     public void hideBleTips() {
         if (tipBleDialogUtils != null && tipBleDialogUtils.isShowing()) {
             tipBleDialogUtils.dismiss();
+        }
+    }
+
+    @Override
+    public void setDeviceDemoModeViewStatus(int status) {
+        switch (status) {
+            case 0:
+                //不显示条目
+                ivLineDeviceDemo.setVisibility(View.GONE);
+                rlMonitorDeviceDemo.setVisibility(View.GONE);
+                break;
+            case 1:
+                //不可点击
+                ivLineDeviceDemo.setVisibility(View.VISIBLE);
+                rlMonitorDeviceDemo.setVisibility(View.VISIBLE);
+                ivMonitorDeviceDemo.setImageResource(R.drawable.ic_switch_none);
+                break;
+            case 2:
+                //演示状态状态
+                ivLineDeviceDemo.setVisibility(View.VISIBLE);
+                rlMonitorDeviceDemo.setVisibility(View.VISIBLE);
+                ivMonitorDeviceDemo.setImageResource(R.drawable.ic_switch_open);
+                break;
+            case 3:
+                //非演示状态
+                ivLineDeviceDemo.setVisibility(View.VISIBLE);
+                rlMonitorDeviceDemo.setVisibility(View.VISIBLE);
+                ivMonitorDeviceDemo.setImageResource(R.drawable.ic_switch_close);
+                break;
+            default:
+                ivLineDeviceDemo.setVisibility(View.GONE);
+                rlMonitorDeviceDemo.setVisibility(View.GONE);
+                break;
         }
     }
 

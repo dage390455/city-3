@@ -97,6 +97,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import rx.Observable;
@@ -375,6 +376,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 requestBlePassword();
                 freshLocationDeviceInfo();
                 handleDeployInfo();
+                handleDeviceModeInfo();
                 freshTopData();
                 handleDeviceInfoAdapter();
                 getView().dismissProgressDialog();
@@ -384,10 +386,37 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             public void onErrorMsg(int errorCode, String errorMsg) {
                 requestBlePassword();
                 handleDeployInfo();
+                handleDeviceModeInfo();
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
             }
         });
+    }
+
+    private void handleDeviceModeInfo() {
+        if (mDeviceInfo != null) {
+            int mode = 0;
+            if (Objects.requireNonNull(PreferencesHelper.getInstance().getConfigDeviceType(mDeviceInfo.getDeviceType())).isDemoSupported()) {
+                if (PreferencesHelper.getInstance().getUserData().hasDeviceDemoMode) {
+                    Integer demoMode = mDeviceInfo.getDemoMode();
+                    if (demoMode != null) {
+                        switch (demoMode) {
+                            case 0:
+                                mode = 3;
+                                break;
+                            case 1:
+                                mode = 2;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                } else {
+                    mode = 1;
+                }
+            }
+            getView().setDeviceDemoModeViewStatus(mode);
+        }
     }
 
     private void handleDeployInfo() {
