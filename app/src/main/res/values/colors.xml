@@ -98,5 +98,7 @@
     <color name="c_fff7e2">#FFF7E2</color>
     <color name="c_922c2c">#922C2C</color>
     <color name="c_fde4e4">#FDE4E4</color>
+    <color name="c_4dffffff">#66FFFFFF</color>
+    <color name="c_03ffffff">#33FFFFFF</color>
 
 </resources>

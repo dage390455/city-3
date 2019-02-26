@@ -401,6 +401,7 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
                 Intent intent = new Intent();
                 intent.setClass(mActivity, VideoPlayActivity.class);
                 intent.putExtra("path_record", (Serializable) imageItem);
+                intent.putExtra("video_del",true);
                 mActivity.startActivityForResult(intent, REQUEST_CODE_PLAY_RECORD);
             } else {
                 Intent intentPreview = new Intent(mActivity, ImagePreviewDelActivity.class);
