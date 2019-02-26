@@ -371,7 +371,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     @Override
     public void onFragmentStart() {
         //检查更新
-        mPresenter.checkUpgrade();
+//        mPresenter.checkUpgrade();
     }
 
     @Override

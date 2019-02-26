@@ -17,6 +17,7 @@ import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
 import com.baidu.ocr.sdk.exception.OCRError;
 import com.baidu.ocr.sdk.model.AccessToken;
+import com.github.moduth.blockcanary.BlockCanary;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.qiniu.android.common.FixedZone;
 import com.qiniu.android.storage.Configuration;
@@ -33,6 +34,7 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceManager;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.EventData;
+import com.sensoro.smartcity.push.AppBlockCanaryContext;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
 import com.sensoro.smartcity.push.ThreadPoolManager;
@@ -121,12 +123,6 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         super.onCreate();
         instance = this;
         init();
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not initView your app in this process.
-            return;
-        }
-        LeakCanary.install(this);
     }
 
 //    private void customAdaptForExternal() {
@@ -464,6 +460,13 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         locate();
         initSmartRefresh();
         initBugLy();
+        BlockCanary.install(this, new AppBlockCanaryContext()).start();
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not initView your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
     }
 
     /**

@@ -510,6 +510,14 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                     });
                 }
             });
+            if (mSocket != null && !mSocket.connected()) {
+                boolean reconnect = reconnect();
+                try {
+                    LogUtils.loge("mSocket  断开---->>> reconnect = " + reconnect);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }
         }
     }
 
@@ -594,7 +602,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         reconnect();
     }
 
-    private void reconnect() {
+    private boolean reconnect() {
         try {
             if (mSocket != null) {
                 mSocket.disconnect();
@@ -627,11 +635,12 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
             }
             if (hasAlarmInfoControl() || hasDeviceBriefControl()) {
-                mSocket.connect();
+                return mSocket.connect().connected();
             }
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     @Override

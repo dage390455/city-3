@@ -741,9 +741,9 @@
     <string name="please_select_devices_more_1">至少选择添加一种设备</string>
     <string name="not_obtain_device_cout">未获取到设备信息，请重试</string>
     <string name="create_contract">生成合同</string>
-    <string name="create_contract_tip_message">点击确认后，再生成一份新的合同，在签订前仍可继续修改</string>
+    <string name="create_contract_tip_message">点击确认后将生成一份新合同，在签订前仍可进行修改</string>
     <string name="info_check_faild">未通过信息校验</string>
-    <string name="contract_creation_success_tip_message">合同创建成功，你可以在线预览或生成二维码与业主签订合同</string>
+    <string name="contract_creation_success_tip_message">合同创建成功，请生成二维码与业主签订合同</string>
     <string name="contract_preview">合同预览</string>
     <string name="create_qr_code">生成二维码</string>
     <string name="contract_creattion">创建合同</string>

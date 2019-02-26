@@ -57,7 +57,6 @@ import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.server.bean.DeployDeviceInfo;
-import com.sensoro.smartcity.server.bean.DeployRecordInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
 import com.sensoro.smartcity.server.bean.DeviceUpdateFirmwareData;
@@ -71,7 +70,6 @@ import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
-import com.sensoro.smartcity.server.response.DeployRecordRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.smartcity.server.response.MonitorPointOperationRequestRsp;
@@ -375,6 +373,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     mDeviceInfo = deviceInfoListRsp.getData().get(0);
                 }
                 freshLocationDeviceInfo();
+                handleDeployInfo();
                 freshTopData();
                 handleDeviceInfoAdapter();
                 getView().dismissProgressDialog();
@@ -382,88 +381,70 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
+                handleDeployInfo();
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
-            }
-        });
-        final String[] switchSpecStr = new String[3];
-        if (DEVICE_CONTROL_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
-            switchSpecStr[0] = "-";
-            switchSpecStr[1] = "-";
-            switchSpecStr[2] = "-";
-        }
-        //静默拉取图片记录内容
-        RetrofitServiceHelper.INSTANCE.getDeployRecordList(mDeviceInfo.getSn(), null, null, null, null, null, 1, 0, true).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployRecordRsp>(this) {
-            @Override
-            public void onCompleted(DeployRecordRsp recordRsp) {
-                List<DeployRecordInfo> data = recordRsp.getData();
-
-                if (data != null && data.size() > 0) {
-                    DeployRecordInfo deployRecordInfo = data.get(0);
-                    if (deployRecordInfo != null) {
-                        long createdTime = deployRecordInfo.getCreatedTime();
-                        if (createdTime != 0) {
-                            getView().setMonitorDeployTime(DateUtil.getFullDate(createdTime));
-                        }
-                        DeployControlSettingData deployControlSettingData = deployRecordInfo.getConfig();
-                        if (deployControlSettingData != null) {
-                            Integer switchSpec = deployControlSettingData.getSwitchSpec();
-                            if (switchSpec != null) {
-                                switchSpecStr[0] = switchSpec + "A";
-                            }
-
-                            Integer wireMaterial = deployControlSettingData.getWireMaterial();
-                            if (wireMaterial != null) {
-                                switch (wireMaterial) {
-                                    case 0:
-                                        switchSpecStr[1] = mContext.getString(R.string.cu);
-                                        break;
-                                    case 1:
-                                        switchSpecStr[1] = mContext.getString(R.string.al);
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
-
-                            Double wireDiameter = deployControlSettingData.getWireDiameter();
-                            if (wireDiameter != null) {
-                                String formatDouble = WidgetUtil.getFormatDouble(wireDiameter, 2);
-                                switchSpecStr[2] = formatDouble + "m㎡";
-                            }
-
-
-                        }
-                    }
-                }
-                setElectInitValue(switchSpecStr[0], switchSpecStr[1], switchSpecStr[2]);
-
-            }
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().toastShort(errorMsg);
-                setElectInitValue(switchSpecStr[0], switchSpecStr[1], switchSpecStr[2]);
             }
         });
         requestBlePassword();
     }
 
-    private void setElectInitValue(String switchSpecStr, String wireMaterialStr, String wireDiameterStr) {
-        if (!TextUtils.isEmpty(switchSpecStr)) {
-            getView().setMonitorSwitchSpec(switchSpecStr);
+    private void handleDeployInfo() {
+        if (mDeviceInfo != null) {
+            //部署时间
+            Long createdTime = mDeviceInfo.getDeployTime();
+            if (createdTime != null) {
+                getView().setMonitorDeployTime(DateUtil.getFullDate(createdTime));
+            }
+            //配置信息
+            setMonitorConfigInfo(mDeviceInfo.getConfig());
         }
-        if (!TextUtils.isEmpty(wireMaterialStr)) {
-            getView().setMonitorWireMaterial(wireMaterialStr);
-        }
-        if (!TextUtils.isEmpty(wireDiameterStr)) {
-            getView().setMonitorWireDiameter(wireDiameterStr);
+    }
+
+    private void setMonitorConfigInfo(DeployControlSettingData deployControlSettingData) {
+        if (DEVICE_CONTROL_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
+            final String[] switchSpecStr = {"-", "-", "-"};
+            if (deployControlSettingData != null) {
+                Integer switchSpec = deployControlSettingData.getSwitchSpec();
+                if (switchSpec != null) {
+                    switchSpecStr[0] = switchSpec + "A";
+                }
+                Integer wireMaterial = deployControlSettingData.getWireMaterial();
+                if (wireMaterial != null) {
+                    switch (wireMaterial) {
+                        case 0:
+                            switchSpecStr[1] = mContext.getString(R.string.cu);
+                            break;
+                        case 1:
+                            switchSpecStr[1] = mContext.getString(R.string.al);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                Double wireDiameter = deployControlSettingData.getWireDiameter();
+                if (wireDiameter != null) {
+                    String formatDouble = WidgetUtil.getFormatDouble(wireDiameter, 2);
+                    switchSpecStr[2] = formatDouble + "m㎡";
+                }
+            }
+            mContext.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (isAttachedView()) {
+                        getView().setMonitorSwitchSpec(switchSpecStr[0]);
+                        getView().setMonitorWireMaterial(switchSpecStr[1]);
+                        getView().setMonitorWireDiameter(switchSpecStr[2]);
+                    }
+
+                }
+            });
+
         }
     }
 
     private void requestBlePassword() {
-        //TODO 获取固件版本和下载固件的地址信息
+        // 获取固件版本和下载固件的地址信息
         RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(mDeviceInfo.getSn(), null, null).subscribeOn
                 (Schedulers.io()).flatMap(new Func1<DeployDeviceDetailRsp, Observable<DeviceUpdateFirmwareDataRsp>>() {
             @Override
@@ -1018,36 +999,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             case EVENT_DATA_DEPLOY_INIT_CONFIG_CODE:
                 if (data instanceof DeployControlSettingData) {
                     DeployControlSettingData deployControlSettingData = (DeployControlSettingData) data;
-                    final String[] switchSpecStr = new String[3];
-                    Integer switchSpec = deployControlSettingData.getSwitchSpec();
-                    if (switchSpec != null) {
-                        switchSpecStr[0] = switchSpec + "A";
-                    }
-                    Integer wireMaterial = deployControlSettingData.getWireMaterial();
-                    if (wireMaterial != null) {
-                        switch (wireMaterial) {
-                            case 0:
-                                switchSpecStr[1] = mContext.getString(R.string.cu);
-                                break;
-                            case 1:
-                                switchSpecStr[1] = mContext.getString(R.string.al);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    Double wireDiameter = deployControlSettingData.getWireDiameter();
-                    if (wireDiameter != null) {
-                        String formatDouble = WidgetUtil.getFormatDouble(wireDiameter, 2);
-                        switchSpecStr[2] = formatDouble + "m㎡";
-                    }
-                    mContext.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            setElectInitValue(switchSpecStr[0], switchSpecStr[1], switchSpecStr[2]);
-                        }
-                    });
-
+                    setMonitorConfigInfo(deployControlSettingData);
                 }
             case EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT:
                 if (data instanceof MonitorPointOperationTaskResultInfo) {
@@ -1720,7 +1672,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     public void doDeviceUpdate() {
         String title;
-        String desc;
+        String desc = null;
         String timeStr = null;
         boolean hasNewVersion = WidgetUtil.isNewVersion(bleUpdateModel.currentFirmVersion, bleUpdateModel.serverFirmVersion);
         if (!PreferencesHelper.getInstance().getUserData().hasDeviceFirmwareUpdate) {
@@ -1734,7 +1686,11 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             }
         } else {
             title = mContext.getString(R.string.already_the_latest_version);
-            desc = mContext.getString(R.string.current_version) + "：V " + bleUpdateModel.currentFirmVersion;
+            if (TextUtils.isEmpty(bleUpdateModel.currentFirmVersion)) {
+                desc = mContext.getString(R.string.current_version);
+            } else {
+                desc = mContext.getString(R.string.current_version) + "：V " + bleUpdateModel.currentFirmVersion;
+            }
             if (bleUpdateModel.currentFirmCreateTime != 0) {
                 timeStr = mContext.getString(R.string.firmware_release_date) + "：" + DateUtil.getStrTime_ymd(bleUpdateModel.currentFirmCreateTime);
             }

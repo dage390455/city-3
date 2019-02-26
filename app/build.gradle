@@ -259,4 +259,6 @@ dependencies {
     compile project(path: ':pickerview')
     compile 'com.yanzhenjie:permission:2.0.0-rc12'
 //    compile 'com.hjq:toast:5.2'
+    debugCompile 'com.github.markzhai:blockcanary-android:1.5.0'
+    releaseCompile 'com.github.markzhai:blockcanary-no-op:1.5.0'
 }

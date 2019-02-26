@@ -45,6 +45,8 @@ public class DeviceInfo implements Serializable, Comparable {
     private String address;
     private boolean deployFlag;
     private List<String> deployPics;
+    private Long deployTime;
+    private DeployControlSettingData config;
 
 
     public boolean isDeployFlag() {
@@ -437,5 +439,21 @@ public class DeviceInfo implements Serializable, Comparable {
 
     public void setDeployPics(List<String> deployPics) {
         this.deployPics = deployPics;
+    }
+
+    public Long getDeployTime() {
+        return deployTime;
+    }
+
+    public void setDeployTime(Long deployTime) {
+        this.deployTime = deployTime;
+    }
+
+    public DeployControlSettingData getConfig() {
+        return config;
+    }
+
+    public void setConfig(DeployControlSettingData config) {
+        this.config = config;
     }
 }
