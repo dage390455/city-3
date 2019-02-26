@@ -58,7 +58,8 @@
             android:shadowRadius="2"
             android:padding="8dp"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:visibility="gone"/>
     </RelativeLayout>
 
 
