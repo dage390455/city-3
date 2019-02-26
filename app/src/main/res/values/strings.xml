@@ -849,4 +849,5 @@
     <string name="air_rated_current">Air rated current</string>
     <string name="monitor_material">Material</string>
     <string name="splash_copyright">Copyright \u00a9 %s SENSORO</string>
+    <string name="device_demo_mode">Demo mode</string>
 </resources>

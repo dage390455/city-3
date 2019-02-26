@@ -2,15 +2,18 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.ColorRes;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -186,6 +189,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     ImageView ivMonitorSignal;
     @BindView(R.id.tv_monitor_signal)
     TextView tvMonitorSignal;
+    @BindView(R.id.s_monitor_device_demo)
+    Switch s_monitor_device_demo;
     private boolean showDetail = false;
     private MonitoringPointRcContentAdapter mContentAdapter;
     private MonitoringPointRcMalfunctionContentAdapter mContentMalfunctionAdapter;
@@ -261,7 +266,30 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         earlyWarningThresholdDialogUtils.setDialogUtilsChangeClickListener(this);
         tipDeviceUpdateDialogUtils = new TipDeviceUpdateDialogUtils(mActivity);
         tipDeviceUpdateDialogUtils.setTipDialogUtilsClickListener(mPresenter);
-
+        s_monitor_device_demo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toastShort("onClick ");
+            }
+        });
+        s_monitor_device_demo.setEnabled(true);
+        s_monitor_device_demo.setClickable(false);
+        s_monitor_device_demo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                toastShort("isChecked = " + isChecked);
+            }
+        });
+        final Handler handler = new Handler();
+        final boolean[] isCheck = {false};
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                s_monitor_device_demo.setChecked(isCheck[0]);
+                isCheck[0] = !isCheck[0];
+                handler.postDelayed(this, 3000);
+            }
+        }, 3000);
     }
 
     private void initMalfunctionData() {
