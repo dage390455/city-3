@@ -506,6 +506,12 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         if (tipDeviceUpdateDialogUtils != null) {
             tipDeviceUpdateDialogUtils.destory();
         }
+        if (mOpenDemoDialogUtils != null) {
+            mOpenDemoDialogUtils.destory();
+        }
+        if (mCloseDemoDialogUtils != null) {
+            mCloseDemoDialogUtils.destory();
+        }
         SensoroSuccessToast.INSTANCE.cancelToast();
         super.onDestroy();
     }
