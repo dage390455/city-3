@@ -522,6 +522,11 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
                 //
                 break;
             case 1:
+                Intent intent2 = new Intent(mActivity, TakeRecordActivity.class);
+//                                    intent2.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
+                mActivity.startActivityForResult(intent2, REQUEST_CODE_RECORD);
+                break;
+            case 2:
                 //打开选择,本次允许选择的数量
                 //修改选择逻辑
 //                                    ImagePicker.getInstance().setSelectLimit(maxImgCount - selImageList.size());
@@ -533,11 +538,7 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
                 intent1.putExtra(ImageGridActivity.EXTRAS_IMAGES, selImageList);
                 mActivity.startActivityForResult(intent1, REQUEST_CODE_SELECT);
                 break;
-            case 2:
-                Intent intent2 = new Intent(mActivity, TakeRecordActivity.class);
-//                                    intent2.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
-                mActivity.startActivityForResult(intent2, REQUEST_CODE_RECORD);
-                break;
+
             default:
                 break;
         }
