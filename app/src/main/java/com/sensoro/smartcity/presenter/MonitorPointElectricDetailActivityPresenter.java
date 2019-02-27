@@ -1716,7 +1716,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 break;
             case Constants.DEVICE_DEMO_MODE_NO_PERMISSION:
                 //不可点击
-                getView().toastShort("无此权限");
+                getView().toastShort(mContext.getString(R.string.no_permission_));
                 break;
             case Constants.DEVICE_DEMO_MODE_OPEN:
                 //演示状态
@@ -1733,11 +1733,20 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     }
 
     public void doDemoConfigSwitch(final int mode) {
+        boolean bluetoothEnabled = SensoroCityApplication.getInstance().bleDeviceManager.isBluetoothEnabled();
+        if (!bluetoothEnabled) {
+            if (isAttachedView()) {
+                getView().showBleTips();
+            }
+            return;
+        }
+        getView().dismissCloseDemoDialog();
+        getView().dismissOpenDemoDialog();
         if (bleDeviceMap.containsKey(mDeviceInfo.getSn())) {
             if (sensoroDeviceConnection != null) {
                 sensoroDeviceConnection.disconnect();
             }
-            getView().showProgressDialog();
+            getView().showOperationTipLoadingDialog(mContext.getString(R.string.mode_switch));
             sensoroDeviceConnection = new SensoroDeviceConnection(mContext, bleDeviceMap.get(mDeviceInfo.getSn()).getMacAddress());
             try {
                 final SensoroWriteCallback bleDemoModeWriteCallback = new SensoroWriteCallback() {
@@ -1756,20 +1765,21 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                 deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
                                 break;
                         }
-                        getView().setDeviceDemoModeViewStatus(deviceDemoMode);
+
                         if (sensoroDeviceConnection != null) {
                             sensoroDeviceConnection.disconnect();
                         }
                         if (isAttachedView()) {
-                            getView().dismissProgressDialog();
+                            getView().setDeviceDemoModeViewStatus(deviceDemoMode);
                             getView().showOperationSuccessToast(finalTipText);
+                            getView().dismissOperatingLoadingDialog();
                         }
                     }
 
                     @Override
                     public void onWriteFailure(int errorCode, int cmd) {
                         if (isAttachedView()) {
-                            getView().dismissProgressDialog();
+                            getView().dismissOperatingLoadingDialog();
                             getView().toastShort(mContext.getString(R.string.ble_config_failed));
                         }
                     }
@@ -1785,7 +1795,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     @Override
                     public void onConnectedFailure(int errorCode) {
                         if (isAttachedView()) {
-                            getView().dismissProgressDialog();
+                            getView().dismissOperatingLoadingDialog();
                             getView().toastShort(mContext.getString(R.string.ble_connect_failed));
                         }
                     }
@@ -1798,7 +1808,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 sensoroDeviceConnection.connect(bleUpdateModel.blePassword, bleDemoModeConnectionCallback);
             } catch (Exception e) {
                 e.printStackTrace();
-                getView().dismissProgressDialog();
+                getView().dismissOperatingLoadingDialog();
                 getView().toastShort(mContext.getString(R.string.ble_connect_failed));
             }
         } else {

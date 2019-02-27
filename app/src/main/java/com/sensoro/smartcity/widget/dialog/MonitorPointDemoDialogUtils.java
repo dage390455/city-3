@@ -1,14 +1,9 @@
 package com.sensoro.smartcity.widget.dialog;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
@@ -105,7 +100,7 @@ public class MonitorPointDemoDialogUtils {
         }
     }
 
-    public void destory() {
+    public void destroy() {
         if (mDialog != null) {
             mDialog.cancel();
             mDialog = null;

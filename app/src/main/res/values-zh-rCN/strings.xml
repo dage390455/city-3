@@ -853,4 +853,7 @@
     <string name="open_demo_mode_description">温馨提示：演示模式下设备无法被部署，建议演示后关闭此模式</string>
     <string name="demo_mode_has_open">演示模式已开启</string>
     <string name="demo_mode_has_close">演示模式已关闭</string>
+    <string name="mode_switch">模式切换中</string>
+    <string name="no_permission_">暂无权限：请联系管理员开启</string>
+
 </resources>

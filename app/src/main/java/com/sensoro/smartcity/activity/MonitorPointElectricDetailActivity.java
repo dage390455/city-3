@@ -513,10 +513,10 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             tipDeviceUpdateDialogUtils.destory();
         }
         if (mOpenDemoDialogUtils != null) {
-            mOpenDemoDialogUtils.destory();
+            mOpenDemoDialogUtils.destroy();
         }
         if (mCloseDemoDialogUtils != null) {
-            mCloseDemoDialogUtils.destory();
+            mCloseDemoDialogUtils.destroy();
         }
         SensoroSuccessToast.INSTANCE.cancelToast();
         super.onDestroy();
@@ -656,6 +656,17 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
                     break;
 
             }
+            if (!mOperatingUtil.isShowing()) {
+                mOperatingUtil.show();
+            }
+
+        }
+    }
+
+    @Override
+    public void showOperationTipLoadingDialog(String text) {
+        if (mOperatingUtil != null) {
+            mOperatingUtil.setTipText(text);
             if (!mOperatingUtil.isShowing()) {
                 mOperatingUtil.show();
             }

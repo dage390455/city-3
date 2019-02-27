@@ -860,4 +860,6 @@
     <string name="open_demo_mode_description">Tips: The device cannot be deployed in demo mode. It is recommended to turn off this mode after the demo</string>
     <string name="demo_mode_has_open">Demo mode has open</string>
     <string name="demo_mode_has_close">Demo mode has close</string>
+    <string name="mode_switch">Mode Switching</string>
+    <string name="no_permission_">No permission：Please contact the administrator to open</string>
 </resources>
