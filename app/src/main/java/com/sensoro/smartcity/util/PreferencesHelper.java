@@ -564,4 +564,34 @@ public final class PreferencesHelper implements Constants {
                 .MODE_PRIVATE);
         return sp.getString(key, "");
     }
+
+    public int getLocalDemoModeState(String sn) {
+        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEMO_MODE_JSON, Context
+                .MODE_PRIVATE);
+        String json = sp.getString(PREFERENCE_DEMO_MODE_JSON, null);
+        if (!TextUtils.isEmpty(json)) {
+            HashMap map = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, HashMap.class);
+            Object value = map.get(sn);
+            if (value instanceof Integer) {
+                return (int) value;
+            }
+        }
+        return 0;
+    }
+
+    public void saveLocalDemoModeState(String sn, int mode) {
+        final HashMap<String, Integer> localDemoModeMap = new HashMap<>();
+        localDemoModeMap.put(sn, mode);
+        try {
+            String json = RetrofitServiceHelper.INSTANCE.getGson().toJson(localDemoModeMap);
+            SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEMO_MODE_JSON, Context
+                    .MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString(PREFERENCE_DEMO_MODE_JSON, json);
+            editor.apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

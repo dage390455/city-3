@@ -1738,22 +1738,25 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 sensoroDeviceConnection.disconnect();
             }
             getView().showProgressDialog();
-            String tipText = "";
-            switch (mode) {
-                case 0:
-                    tipText = mContext.getString(R.string.demo_mode_has_close);
-                    break;
-                case 1:
-                    tipText = mContext.getString(R.string.demo_mode_has_open);
-                    ;
-                    break;
-            }
             sensoroDeviceConnection = new SensoroDeviceConnection(mContext, bleDeviceMap.get(mDeviceInfo.getSn()).getMacAddress());
             try {
-                final String finalTipText = tipText;
                 final SensoroWriteCallback bleDemoModeWriteCallback = new SensoroWriteCallback() {
                     @Override
                     public void onWriteSuccess(Object o, int cmd) {
+                        String finalTipText = "";
+                        switch (mode) {
+                            case 0:
+                                //演示模式关闭成功
+                                finalTipText = mContext.getString(R.string.demo_mode_has_close);
+                                deviceDemoMode = DEVICE_DEMO_MODE_CLOSE;
+                                break;
+                            case 1:
+                                //演示模式开启成功
+                                finalTipText = mContext.getString(R.string.demo_mode_has_open);
+                                deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
+                                break;
+                        }
+                        getView().setDeviceDemoModeViewStatus(deviceDemoMode);
                         if (sensoroDeviceConnection != null) {
                             sensoroDeviceConnection.disconnect();
                         }
