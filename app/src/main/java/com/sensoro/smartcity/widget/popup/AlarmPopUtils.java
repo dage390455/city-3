@@ -380,6 +380,7 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
         } else if (IMAGE_ITEM_ADD == position) {
             List<String> names = new ArrayList<>();
             names.add(mActivity.getString(R.string.take_photo));
+            names.add(mActivity.getString(R.string.shooting_video));
             names.add(mActivity.getString(R.string.album));
 //            boolean needRecord = true;
 //            for (ImageItem imageItem : selImageList) {
@@ -392,7 +393,7 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
 //            if (needRecord) {
 //                names.add("拍摄视频");
 //            }
-            names.add(mActivity.getString(R.string.shooting_video));
+
             showDialog(this, names);
         } else {
             //打开预览

@@ -36,12 +36,34 @@ public class OperationCmdAnalyzer {
             case "mantun_fires":
                 doMantunFires(mOperationType, sensoroDeviceConnection, callback);
                 break;
+            case "baymax_lpg":
+            case "baymax_ch4":
+                doBaymax(mOperationType,sensoroDeviceConnection,callback);
+                break;
 
         }
 
 
     }
 
+    private static void doBaymax(String mOperationType, SensoroDeviceConnection sensoroDeviceConnection, SensoroWriteCallback callback) {
+        MsgNode1V1M5.Baymax.Builder builder = MsgNode1V1M5.Baymax.newBuilder();
+        switch (mOperationType) {
+            case MonitorPointOperationCode.ERASURE_STR:
+                builder.setGasDeviceCMD(0b100);
+                break;
+            case MonitorPointOperationCode.ERASURE_LONG_STR:
+                builder.setGasDeviceCMD(3);
+                break;
+            case MonitorPointOperationCode.SELF_CHECK_STR:
+                builder.setGasDeviceCMD(0b01);
+                break;
+            default:
+                callback.onWriteFailure(0, 0);
+                return;
+        }
+        sensoroDeviceConnection.writeBaymaxCmd(builder, callback);
+    }
 
 
     private static void doMantunFires(String mOperationType, SensoroDeviceConnection sensoroDeviceConnection, SensoroWriteCallback callback) {

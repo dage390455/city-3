@@ -392,9 +392,9 @@ public class UserPermissionFactory {
      */
     private static boolean getHasDeviceDemoMode(GrantsInfo grants) {
         if (grants != null) {
-            List<String> grantsControl = grants.getControl();
-            if (grantsControl != null) {
-                return grantsControl.contains("demo");
+            List<String> grantsDevice = grants.getDevice();
+            if (grantsDevice != null) {
+                return grantsDevice.contains("demo");
             }
         }
         return false;

@@ -184,7 +184,7 @@
     <string name="please_enter_contact_phone">请输入联系人名称和电话号码</string>
     <string name="loading_configuration_file">正在加载配置文件&#8230;</string>
     <string name="must_enter_name_address">必须输入名称/地址</string>
-    <string name="album">相册</string>
+    <string name="album">从相册选择照片</string>
     <string name="take_photo">拍照</string>
     <string name="no_photos_added">未添加照片</string>
     <string name="continue_to_replace">继续更换</string>
@@ -201,7 +201,7 @@
     <string name="report_failure">上报失败</string>
     <string name="account_no_patrol_device_permissions">该账户没有巡检设备权限</string>
     <string name="account_does_not_have_permission_to_view_the_inspection_device_list">该账户没有查看巡检设备列表权限</string>
-    <string name="shooting_video">拍摄视频</string>
+    <string name="shooting_video">录像</string>
     <string name="abnormal_reporting_success">异常上报成功</string>
     <string name="abnormal_reporting_failure">异常上报失败</string>
     <string name="please_wait">请稍后</string>
@@ -851,4 +851,6 @@
     <string name="open_demo_mode">开启演示模式</string>
     <string name="open_demo_mode_content">开启后，按下设备自检按钮将发出预警信息</string>
     <string name="open_demo_mode_description">温馨提示：演示模式下设备无法被部署，建议演示后关闭此模式</string>
+    <string name="demo_mode_has_open">演示模式已开启</string>
+    <string name="demo_mode_has_close">演示模式已关闭</string>
 </resources>

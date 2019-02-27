@@ -548,7 +548,7 @@
                 <View
                     android:id="@+id/ac_monitoring_point_line"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="@dimen/view_divider_width"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="20dp"
@@ -604,7 +604,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="@dimen/view_divider_width"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="20dp"
@@ -1141,6 +1141,7 @@
                         android:layout_toStartOf="@id/iv_monitor_device_version"
                         android:ellipsize="end"
                         android:singleLine="true"
+                        android:text="-"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 
@@ -1168,9 +1169,9 @@
                     android:id="@+id/rl_monitor_device_demo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
-                    android:visibility="gone">
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:visibility="visible">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -1203,8 +1204,8 @@
                         android:singleLine="true"
                         android:text="@string/has_close"
                         android:textColor="@color/c_a6a6a6"
-                        android:visibility="gone"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        android:visibility="gone" />
 
                 </RelativeLayout>
             </LinearLayout>

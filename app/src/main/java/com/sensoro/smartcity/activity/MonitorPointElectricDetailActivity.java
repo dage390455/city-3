@@ -281,7 +281,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         mCloseDemoDialogUtils.setMonitorPointDemoClickListener(new MonitorPointDemoDialogUtils.MonitorPointDemolickListener() {
             @Override
             public void onConfirmClick() {
-
+                mPresenter.doDemoConfigSwitch(0);
             }
         });
     }
@@ -295,7 +295,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         mOpenDemoDialogUtils.setMonitorPointDemoClickListener(new MonitorPointDemoDialogUtils.MonitorPointDemolickListener() {
             @Override
             public void onConfirmClick() {
-
+                mPresenter.doDemoConfigSwitch(1);
             }
         });
     }
@@ -511,6 +511,12 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         }
         if (tipDeviceUpdateDialogUtils != null) {
             tipDeviceUpdateDialogUtils.destory();
+        }
+        if (mOpenDemoDialogUtils != null) {
+            mOpenDemoDialogUtils.destory();
+        }
+        if (mCloseDemoDialogUtils != null) {
+            mCloseDemoDialogUtils.destory();
         }
         SensoroSuccessToast.INSTANCE.cancelToast();
         super.onDestroy();
@@ -830,12 +836,11 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
 
 
     @OnClick({R.id.include_text_title_tv_subtitle, R.id.ac_monitoring_point_cl_alert_contact, R.id.ac_monitoring_point_imv_location, R.id.ac_monitoring_point_cl_location_navigation,
-            R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left, R.id.ll_elect_more, R.id.ll_all_info, R.id.rl_monitor_device_update})
+            R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left, R.id.ll_elect_more, R.id.ll_all_info, R.id.rl_monitor_device_update, R.id.iv_monitor_device_demo})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
-                showCloseDemoDialog();
-//                mPresenter.doMonitorHistory();
+                mPresenter.doMonitorHistory();
                 break;
             case R.id.ac_monitoring_point_cl_alert_contact:
                 mPresenter.doContact();
@@ -862,8 +867,10 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             case R.id.rl_monitor_device_update:
                 //固件升级
 //                toastShort("固件升级");
-                showOpenDemoDialog();
-//                mPresenter.doDeviceUpdate();
+                mPresenter.doDeviceUpdate();
+                break;
+            case R.id.iv_monitor_device_demo:
+                mPresenter.showDemoModeDialog();
                 break;
         }
     }
@@ -943,7 +950,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
 
     @Override
     public void onConfirmClick(String content, String diameter) {
-        mPresenter.doOperation(mTipDialogType, content, diameter);
+        mPresenter.doOperation(mTipDialogType);
     }
 
     @Override
