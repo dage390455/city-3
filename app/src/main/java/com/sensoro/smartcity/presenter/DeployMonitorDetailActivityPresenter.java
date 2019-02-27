@@ -57,7 +57,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -68,8 +68,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     private Activity mContext;
     private SensoroDeviceConnection sensoroDeviceConnection;
     private Handler mHandler;
-    private String bleAddress;
-    private final HashSet<String> BLE_DEVICE_SET = new HashSet<>();
+    private final HashMap<String, BLEDevice> BLE_DEVICE_SET = new HashMap<>();
     private DeployAnalyzerModel deployAnalyzerModel;
     private final Runnable signalTask = new Runnable() {
         @Override
@@ -227,7 +226,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
             if (!TextUtils.isEmpty(deployAnalyzerModel.blePassword) && deployAnalyzerModel.channelMask.size() > 0) {
                 //需要配置频点信息
-                if (BLE_DEVICE_SET.contains(deployAnalyzerModel.sn)) {
+                if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
                     if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                         if (deployAnalyzerModel.settingData != null) {
                             //配置频点信息和初始配置
@@ -252,7 +251,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         } else {
             if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                 //单独配置初始配置
-                if (BLE_DEVICE_SET.contains(deployAnalyzerModel.sn)) {
+                if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
                     connectDevice();
                 } else {
                     getView().toastShort(mContext.getString(R.string.device_not_found_activate_Bluetooth));
@@ -265,7 +264,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     private void changeDevice(double lon, double lan) {
         if (!TextUtils.isEmpty(deployAnalyzerModel.blePassword) && deployAnalyzerModel.channelMask.size() > 0) {
-            if (BLE_DEVICE_SET.contains(deployAnalyzerModel.sn)) {
+            if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
                 getView().showBleConfigDialog();
                 connectDevice();
             } else {
@@ -285,8 +284,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         if (sensoroDeviceConnection != null) {
             sensoroDeviceConnection.disconnect();
         }
-        sensoroDeviceConnection = new SensoroDeviceConnection(mContext, bleAddress);
         try {
+            sensoroDeviceConnection = new SensoroDeviceConnection(mContext, BLE_DEVICE_SET.get(deployAnalyzerModel.sn).getMacAddress());
             sensoroDeviceConnection.connect(deployAnalyzerModel.blePassword, DeployMonitorDetailActivityPresenter.this);
         } catch (Exception e) {
             e.printStackTrace();
@@ -1169,12 +1168,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     @Override
     public void onNewDevice(final BLEDevice bleDevice) {
-        BLE_DEVICE_SET.add(bleDevice.getSn());
-        if (TextUtils.isEmpty(bleAddress)) {
-            if (bleDevice.getSn().equals(deployAnalyzerModel.sn)) {
-                bleAddress = bleDevice.getMacAddress();
-            }
-        }
+        BLE_DEVICE_SET.put(bleDevice.getSn(), bleDevice);
     }
 
     @Override
@@ -1190,12 +1184,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     public void onUpdateDevices(ArrayList<BLEDevice> deviceList) {
         for (BLEDevice device : deviceList) {
             if (device != null) {
-                BLE_DEVICE_SET.add(device.getSn());
-                if (TextUtils.isEmpty(bleAddress)) {
-                    if (device.getSn().equals(deployAnalyzerModel.sn)) {
-                        bleAddress = device.getMacAddress();
-                    }
-                }
+                BLE_DEVICE_SET.put(device.getSn(), device);
             }
         }
     }
@@ -1219,7 +1208,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             getView().showBleTips();
         }
         mHandler.postDelayed(this, 2000);
-        getView().setDeployDeviceDetailFixedPointNearVisible(BLE_DEVICE_SET.contains(deployAnalyzerModel.sn));
+        getView().setDeployDeviceDetailFixedPointNearVisible(BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn));
 
     }
 
