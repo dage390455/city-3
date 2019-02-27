@@ -1296,7 +1296,8 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         }
                     };
                     sensoroDeviceConnection.connect(bleUpdateModel.blePassword, bleMuteOperationConnectionCallback);
-                } catch (Exception e) {
+                    LogUtils.loge("--->>  蓝牙消音");
+                } catch (Throwable e) {
                     e.printStackTrace();
                     bleRequestCmd();
                 }
