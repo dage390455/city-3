@@ -1689,7 +1689,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             } else {
                 desc = mContext.getString(R.string.current_version) + "：V " + bleUpdateModel.currentFirmVersion;
             }
-            if (bleUpdateModel.currentFirmCreateTime != 0) {
+            if (bleUpdateModel.currentFirmCreateTime == 0) {
+                timeStr = mContext.getString(R.string.firmware_release_date) + "：-";
+            } else {
                 timeStr = mContext.getString(R.string.firmware_release_date) + "：" + DateUtil.getStrTime_ymd(bleUpdateModel.currentFirmCreateTime);
             }
         }
