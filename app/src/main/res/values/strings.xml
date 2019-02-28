@@ -854,6 +854,7 @@
     <string name="has_open">Open</string>
     <string name="confirm_open">Open</string>
     <string name="confirm_close">Close</string>
+    <string name="open_demo_mode">Turn on Demo Mode</string>
     <string name="close_demo_mode">Turn off Demo Mode</string>
     <string name="close_demo_mode_content">After turning off demo mode, the self-check button of device is restored to the function of self-check as usual, and the device could be deployed again</string>
     <string name="open_demo_mode_content">When turned on, pressing self-check button will lead to an alarm</string>
