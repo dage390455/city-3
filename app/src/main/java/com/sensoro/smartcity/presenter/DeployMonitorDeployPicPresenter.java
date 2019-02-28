@@ -4,19 +4,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.TakeRecordActivity;
-import com.sensoro.smartcity.server.bean.DeployPicInfo;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDeployPicView;
 import com.sensoro.smartcity.model.EventData;
+import com.sensoro.smartcity.server.bean.DeployPicInfo;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.PreferencesHelper;
+import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.dialog.DeployPicExampleDialogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
@@ -35,12 +35,17 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
     private Activity mActivity;
     //    private final ImageItem[] selImages = new ImageItem[3];
     private volatile int mAddPicIndex = -1;
-    private String deviceType;
+    private String mergeType;
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
-        deviceType = mActivity.getIntent().getStringExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE);
+        String deviceType = mActivity.getIntent().getStringExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE);
+        mergeType = WidgetUtil.handleMergeType(deviceType);
+        if (mergeType == null) {
+            //主要用来存储今日是否提示，如果为空，就直接存储
+            mergeType = "unknown";
+        }
         getView().setDeployPicTvInstallationSiteTipVisible(DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType));
         ArrayList<ImageItem> imageList = (ArrayList<ImageItem>) mActivity.getIntent().getSerializableExtra(EXTRA_DEPLOY_TO_PHOTO);
 
@@ -267,7 +272,7 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
     @Override
     public void onTakePhotoClick(String title, int position) {
         if (!TextUtils.isEmpty(title)) {
-            PreferencesHelper.getInstance().saveDeployExamplePicTimestamp(String.format(Locale.ROOT, "%s%s", deviceType, title));
+            PreferencesHelper.getInstance().saveDeployExamplePicTimestamp(String.format(Locale.ROOT, "%s%s", mergeType, title));
         }
         getView().dismissDeployPicExampleDialog();
         doAddPic(position);
@@ -276,7 +281,7 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
     public void doTakePhoto(int position) {
         DeployPicInfo item = getView().getDeployPicItem(position);
         if (TextUtils.isEmpty(item.imgUrl) || DateUtil.getStrTime_yymmdd(System.currentTimeMillis()).
-                equals(PreferencesHelper.getInstance().getDeployExamplePicTimestamp(String.format(Locale.ROOT, "%s%s", deviceType, item.title)))) {
+                equals(PreferencesHelper.getInstance().getDeployExamplePicTimestamp(String.format(Locale.ROOT, "%s%s", mergeType, item.title)))) {
             doAddPic(position);
         } else {
             getView().showDeployPicExampleDialog(item, position);
