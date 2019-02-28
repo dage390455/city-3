@@ -855,5 +855,6 @@
     <string name="demo_mode_has_close">演示模式已关闭</string>
     <string name="mode_switch">模式切换中</string>
     <string name="no_permission_">暂无权限：请联系管理员开启</string>
+    <string name="monitor_top_demo_mode_tips">演示模式按下自检按钮将模拟设备报警</string>
 
 </resources>

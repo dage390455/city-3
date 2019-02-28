@@ -484,13 +484,11 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     @Override
     public void onStart() {
         BleObserver.getInstance().registerBleObserver(this);
-        SensoroCityApplication.getInstance().bleDeviceManager.startScan();
     }
 
     @Override
     public void onStop() {
         BleObserver.getInstance().unregisterBleObserver(this);
-        SensoroCityApplication.getInstance().bleDeviceManager.stopScan();
     }
 
     public void doInspectionScan() {
