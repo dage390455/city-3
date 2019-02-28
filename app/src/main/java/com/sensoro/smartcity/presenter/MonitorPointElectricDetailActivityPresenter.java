@@ -572,7 +572,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                 }
                                 monitoringPointRcContentAdapterModel.content = mContext.getString(R.string.unknown);
                                 malfunctionBeanData.add(monitoringPointRcContentAdapterModel);
-
                             }
                         }
                     }

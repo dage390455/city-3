@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.widget.dialog;
 
 import android.app.Activity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ public class DeployPicExampleDialogUtils {
     private final ImageView imvCheck;
     private final FixedAspectRationImageView imvExample;
     private final Activity mActivity;
+    private final TextView tvDescription;
     //    private AlertDialog mDialog;
     private CustomCornerDialog mDialog;
     private final TextView tvTitle;
@@ -29,6 +31,7 @@ public class DeployPicExampleDialogUtils {
     public DeployPicExampleDialogUtils(Activity activity) {
         View view = View.inflate(activity, R.layout.item_dialog_deploy_pic_example, null);
         tvTitle = view.findViewById(R.id.item_dialog_deploy_pic_tv_title);
+        tvDescription = view.findViewById(R.id.item_dialog_deploy_pic_tv_description);
         tvTakePhoto = view.findViewById(R.id.item_dialog_deploy_pic_tv_take_photo);
         imvCheck = view.findViewById(R.id.item_dialog_deploy_pic_imv_check);
         imvExample = view.findViewById(R.id.item_dialog_deploy_pic_imv_example);
@@ -57,7 +60,7 @@ public class DeployPicExampleDialogUtils {
     }
 
 
-    public void show(String exampleUrl,String title, int position){
+    public void show(String exampleUrl,String title, String description,int position){
         if (mDialog != null) {
             mPosition = position;
             mTitle = title;
@@ -65,6 +68,12 @@ public class DeployPicExampleDialogUtils {
                 tvTitle.setText(String.format(Locale.ROOT,"%s%s",title,mActivity.getString(R.string.deploy_pic_example_pic)));
             }else{
                 tvTitle.setText(String.format(Locale.ROOT,"%s%s",mActivity.getString(R.string.deploy_pic_example_pic),title));
+            }
+            if (TextUtils.isEmpty(description)) {
+                tvDescription.setVisibility(View.GONE);
+            }else{
+                tvDescription.setText(description);
+                tvDescription.setVisibility(View.VISIBLE);
             }
             isCheck = false;
             imvCheck.setImageResource(R.drawable.deploy_pic_no_check);
