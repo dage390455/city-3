@@ -50,6 +50,7 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
         onCreate();
         startTime = System.currentTimeMillis();
         mDeviceDetail = (InspectionTaskDeviceDetail) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL);
+        mHandler.post(this);
         if (mDeviceDetail != null) {
             List<String> tags = mDeviceDetail.getTags();
             getView().updateTagsData(tags);
@@ -62,13 +63,13 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
                 String inspectionDeviceName = WidgetUtil.getInspectionDeviceName(mDeviceDetail.getDeviceType());
                 getView().setMonitorSn(inspectionDeviceName + " " + sn);
             }
-            mHandler.post(this);
         }
 
     }
 
     @Override
     public void onDestroy() {
+        BleObserver.getInstance().unregisterBleObserver(this);
         EventBus.getDefault().unregister(this);
         mHandler.removeCallbacksAndMessages(null);
     }
@@ -153,6 +154,7 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
     @Override
     public void onCreate() {
         EventBus.getDefault().register(this);
+        BleObserver.getInstance().registerBleObserver(this);
     }
 
     @Override
@@ -164,11 +166,12 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
 
     @Override
     public void onStart() {
-        BleObserver.getInstance().registerBleObserver(this);
+        //todo 两个几面跳转 暂时去掉
+//        SensoroCityApplication.getInstance().bleDeviceManager.startScan();
     }
 
     @Override
     public void onStop() {
-        BleObserver.getInstance().unregisterBleObserver(this);
+//        SensoroCityApplication.getInstance().bleDeviceManager.stopScan();
     }
 }

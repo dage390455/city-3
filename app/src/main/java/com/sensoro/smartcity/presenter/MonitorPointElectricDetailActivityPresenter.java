@@ -414,6 +414,8 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     deviceDemoMode = DEVICE_DEMO_MODE_NO_PERMISSION;
                 }
             }
+            //TODO delete
+//            deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
             getView().setDeviceDemoModeViewStatus(deviceDemoMode);
         }
     }
@@ -570,7 +572,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                 }
                                 monitoringPointRcContentAdapterModel.content = mContext.getString(R.string.unknown);
                                 malfunctionBeanData.add(monitoringPointRcContentAdapterModel);
-
                             }
                         }
                     }

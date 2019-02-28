@@ -60,6 +60,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     ImageView includeImvTitleImvArrowsLeft;
     @BindView(R.id.include_text_title_tv_title)
     TextView includeImvTitleTvTitle;
+    @BindView(R.id.include_text_title_divider)
+    View includeTextTitleDivider;
     @BindView(R.id.include_text_title_tv_subtitle)
     TextView includeTextTitleTvSubtitle;
     @BindView(R.id.ac_monitoring_point_tv_name)
@@ -193,6 +195,12 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     ImageView ivLineDeviceDemo;
     @BindView(R.id.rl_monitor_device_demo)
     RelativeLayout rlMonitorDeviceDemo;
+    @BindView(R.id.rl_monitor_demo_mode_tip)
+    RelativeLayout rlMonitorDemoModeTip;
+    @BindView(R.id.iv_demo_mode_tip)
+    ImageView ivDemoModeTip;
+    @BindView(R.id.v_top_margin)
+    View vTopMargin;
     private boolean showDetail = false;
     private MonitoringPointRcContentAdapter mContentAdapter;
     private MonitoringPointRcMalfunctionContentAdapter mContentMalfunctionAdapter;
@@ -229,6 +237,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     private void initView() {
+        ivDemoModeTip.setColorFilter(mActivity.getResources().getColor(R.color.c_197358));
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeImvTitleTvTitle.setText(R.string.monitoring_point_details);
         includeTextTitleTvSubtitle.setText(R.string.historical_log);
@@ -484,8 +493,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
 
     @Override
     protected void onStart() {
-        super.onStart();
         mPresenter.onStart();
+        super.onStart();
     }
 
     @Override
@@ -847,7 +856,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
 
 
     @OnClick({R.id.include_text_title_tv_subtitle, R.id.ac_monitoring_point_cl_alert_contact, R.id.ac_monitoring_point_imv_location, R.id.ac_monitoring_point_cl_location_navigation,
-            R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left, R.id.ll_elect_more, R.id.ll_all_info, R.id.rl_monitor_device_update, R.id.iv_monitor_device_demo})
+            R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left, R.id.ll_elect_more, R.id.ll_all_info, R.id.rl_monitor_device_update, R.id.iv_monitor_device_demo, R.id.rl_monitor_demo_mode_tip})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
@@ -881,6 +890,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
                 mPresenter.doDeviceUpdate();
                 break;
             case R.id.iv_monitor_device_demo:
+            case R.id.rl_monitor_demo_mode_tip:
                 mPresenter.showDemoModeDialog();
                 break;
         }
@@ -996,28 +1006,43 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
                 //不显示条目
                 ivLineDeviceDemo.setVisibility(View.GONE);
                 rlMonitorDeviceDemo.setVisibility(View.GONE);
+                rlMonitorDemoModeTip.setVisibility(View.GONE);
+                vTopMargin.setVisibility(View.VISIBLE);
+                includeTextTitleDivider.setVisibility(View.VISIBLE);
                 break;
             case Constants.DEVICE_DEMO_MODE_NO_PERMISSION:
                 //不可点击
                 ivLineDeviceDemo.setVisibility(View.VISIBLE);
                 rlMonitorDeviceDemo.setVisibility(View.VISIBLE);
                 ivMonitorDeviceDemo.setImageResource(R.drawable.ic_switch_none);
+                rlMonitorDemoModeTip.setVisibility(View.GONE);
+                vTopMargin.setVisibility(View.VISIBLE);
+                includeTextTitleDivider.setVisibility(View.VISIBLE);
                 break;
             case Constants.DEVICE_DEMO_MODE_OPEN:
                 //演示状态
                 ivLineDeviceDemo.setVisibility(View.VISIBLE);
                 rlMonitorDeviceDemo.setVisibility(View.VISIBLE);
                 ivMonitorDeviceDemo.setImageResource(R.drawable.ic_switch_open);
+                rlMonitorDemoModeTip.setVisibility(View.VISIBLE);
+                vTopMargin.setVisibility(View.GONE);
+                includeTextTitleDivider.setVisibility(View.GONE);
                 break;
             case Constants.DEVICE_DEMO_MODE_CLOSE:
                 //非演示状态
                 ivLineDeviceDemo.setVisibility(View.VISIBLE);
                 rlMonitorDeviceDemo.setVisibility(View.VISIBLE);
                 ivMonitorDeviceDemo.setImageResource(R.drawable.ic_switch_close);
+                rlMonitorDemoModeTip.setVisibility(View.GONE);
+                vTopMargin.setVisibility(View.VISIBLE);
+                includeTextTitleDivider.setVisibility(View.VISIBLE);
                 break;
             default:
                 ivLineDeviceDemo.setVisibility(View.GONE);
                 rlMonitorDeviceDemo.setVisibility(View.GONE);
+                rlMonitorDemoModeTip.setVisibility(View.GONE);
+                vTopMargin.setVisibility(View.VISIBLE);
+                includeTextTitleDivider.setVisibility(View.VISIBLE);
                 break;
 
         }

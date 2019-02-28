@@ -150,8 +150,8 @@ public class SignalCheckActivity extends BaseActivity<ISignalCheckActivityView, 
 
     @Override
     protected void onStart() {
-        super.onStart();
         mPresenter.onStart();
+        super.onStart();
     }
 
     @Override

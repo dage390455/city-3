@@ -14,6 +14,34 @@
         android:id="@+id/ac_monitoring_point_ic_title"
         layout="@layout/item_include_text_title" />
 
+    <RelativeLayout
+        android:id="@+id/rl_monitor_demo_mode_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:background="@color/c_dff6ef">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:text="@string/monitor_top_demo_mode_tips"
+            android:textColor="@color/c_197358"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/iv_demo_mode_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/arrows_right" />
+    </RelativeLayout>
+
     <android.support.v4.widget.NestedScrollView
 
         android:layout_width="match_parent"
@@ -27,11 +55,16 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:orientation="vertical">
+
+            <View
+                android:id="@+id/v_top_margin"
+                android:layout_width="match_parent"
+                android:layout_height="12dp"
+                android:background="@color/c_f4f4f4" />
             <!--监控参数-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
                 android:background="@color/white"
                 android:orientation="vertical">
 
