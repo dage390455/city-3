@@ -864,5 +864,4 @@
     <string name="mode_switch">Mode Switching</string>
     <string name="no_permission_">No permission：Please contact the administrator to open</string>
     <string name="monitor_top_demo_mode_tips">Press the device self-test button in demo mode to send an alert message</string>
-    <string name="open_demo_mode">Turn on Demo Mode</string>
 </resources>
