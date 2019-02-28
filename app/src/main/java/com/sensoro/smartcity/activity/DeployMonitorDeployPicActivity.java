@@ -301,7 +301,7 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
 
     @Override
     public void showDeployPicExampleDialog(DeployPicInfo item, int position) {
-        mPicExampleDialogUtils.show(item.imgUrl,item.title,position);
+        mPicExampleDialogUtils.show(item.imgUrl,item.title,item.description,position);
     }
 
     @Override
