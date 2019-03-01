@@ -1,19 +1,345 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <LinearLayout
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/c_f4f4f4"
+    >
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/c_f34a4a"
-        android:orientation="vertical">
-        <TextView
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="完善信息"
-            android:textColor="@color/white"
-            android:textSize="60sp"/>
-    </LinearLayout>
-</android.support.v4.widget.NestedScrollView>
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="20dp">
+                <TextView
+                    android:id="@+id/tv_fg_deploy_upload_check_device_sn"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:textColor="@color/c_a6a6a6"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/tv_fg_deploy_upload_check_device_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/c_a6a6a6"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_fg_deploy_upload_check_alarm_contact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:id="@+id/ll_fg_deploy_upload_check_name_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/deploy_device_detail_name_address"
+                        android:textColor="@color/c_a6a6a6"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fg_deploy_upload_check_name_location"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:gravity="end"
+                        android:text="@string/required"
+                        android:textColor="@color/c_a6a6a6"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="20dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/arrows_right" />
+
+                </LinearLayout>
+                <View
+                    android:id="@+id/view_fg_deploy_upload_check_name_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_divider_height"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/c_dfdfdf" />
+                <RelativeLayout
+                    android:id="@+id/rl_fg_deploy_upload_check_tag"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_fg_deploy_upload_check_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/sensor_detail_tag"
+                        android:textColor="@color/c_a6a6a6"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:id="@+id/imv_fg_deploy_upload_check_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="20dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/arrows_right" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="16dp"
+                        android:layout_toStartOf="@id/imv_fg_deploy_upload_check_tag"
+                        android:layout_toEndOf="@id/tv_fg_deploy_upload_check_tag">
+
+                        <TextView
+                            android:id="@+id/tv_fg_deploy_upload_check_tag_required"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/optional"
+                            android:textColor="@color/c_a6a6a6"
+                            android:textSize="14sp"
+                            android:visibility="visible" />
+
+                        <com.sensoro.smartcity.widget.TouchRecycleView
+                            android:id="@+id/rc_fg_deploy_upload_check_tag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:visibility="gone">
+
+                        </com.sensoro.smartcity.widget.TouchRecycleView>
+                    </RelativeLayout>
+
+
+                </RelativeLayout>
+                <View
+                    android:id="@+id/view_fg_deploy_upload_check_tag"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_divider_height"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/c_dfdfdf" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/alert_contact"
+                        android:textColor="@color/c_a6a6a6"
+                        android:textSize="14sp" />
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/tv_fg_deploy_upload_check_alarm_contact_required"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/required"
+                            android:textColor="@color/c_a6a6a6"
+                            android:textSize="14sp"
+                            android:visibility="visible" />
+
+                        <com.sensoro.smartcity.widget.TouchRecycleView
+                            android:id="@+id/rc_fg_deploy_upload_check_alarm_contact"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="4dp"
+                            android:visibility="gone">
+
+                        </com.sensoro.smartcity.widget.TouchRecycleView>
+                    </RelativeLayout>
+
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="20dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/arrows_right" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/view_fg_deploy_upload_check_alarm_contact"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_divider_height"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/c_dfdfdf" />
+
+                <LinearLayout
+                    android:id="@+id/ll_fg_deploy_upload_check_deploy_pic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="20dp"
+                    android:paddingTop="12dp"
+                    android:paddingEnd="20dp"
+                    android:paddingBottom="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/deploy_device_detail_deploy_photo"
+                        android:textColor="@color/c_a6a6a6"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fg_deploy_upload_check_pic_size"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:text="@string/required"
+                        android:textColor="@color/c_a6a6a6" />
+
+                    <ImageView
+                        android:id="@+id/iv_fg_deploy_upload_check_deploy_pic_arrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="8dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/arrows_right" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_fg_deploy_upload_check_mini_program"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:layout_marginTop="12dp"
+                android:background="@color/white"
+                >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/wechat_icon"
+                    android:contentDescription="@null"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/relation_mini_program_account"
+                    android:textSize="14sp"
+                    android:textColor="@color/c_252525"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    />
+                <TextView
+                    android:id="@+id/tv_fg_deploy_upload_check_mini_program"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:text="@string/optional"
+                    android:textColor="@color/c_a6a6a6" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="8dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/arrows_right" />
+
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/after_relation_owner_can_look_device"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="8dp"
+                />
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <TextView
+        android:id="@+id/tv_fg_deploy_upload_check_upload_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp"
+        android:text="@string/deploy_device_detail_add_all_required"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="14sp" />
+    <TextView
+        android:id="@+id/tv_fg_deploy_upload_check_upload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/shape_bg_solid_df_corner"
+        android:enabled="false"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="@string/deploy_device_detail_upload"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+</LinearLayout>

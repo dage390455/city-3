@@ -1,4 +1,6 @@
 package com.sensoro.smartcity.imainviews;
 
-public interface IDeployMonitorUploadCheckFragmentView {
+import com.sensoro.smartcity.iwidget.IActivityIntent;
+
+public interface IDeployMonitorUploadCheckFragmentView extends IActivityIntent {
 }
