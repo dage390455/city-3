@@ -5,7 +5,7 @@
     android:background="@color/c_f4f4f4"
     android:orientation="vertical">
 
-    <include layout="@layout/item_include_text_title" />
+    <include layout="@layout/item_include_text_title_step" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,30 +24,32 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/tv_deploy_check_circle_step_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape_deploy_check_unselect"
+                android:background="@drawable/shape_deploy_check_select"
                 android:gravity="center"
                 android:text="1"
-                android:textColor="@color/c_a6a6a6"
+                android:textColor="@color/white"
                 android:textSize="10sp" />
 
             <TextView
-                android:id="@+id/tv_deploy_monitor_local_check"
+                android:id="@+id/tv_deploy_check_title_step_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:text="安装配置"
-                android:textColor="@color/c_29c093"
+                android:textColor="@color/c_252525"
                 android:textSize="14sp" />
         </LinearLayout>
 
 
         <View
-            android:layout_width="35dp"
+            android:layout_width="0dp"
             android:layout_height="1.5dp"
             android:layout_marginStart="9dp"
             android:layout_marginEnd="9dp"
+            android:layout_weight="1"
             android:background="@drawable/shape_dash_line"
             android:gravity="center_vertical"
             android:layerType="software" />
@@ -59,16 +61,17 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/tv_deploy_check_circle_step_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape_deploy_check_select"
+                android:background="@drawable/shape_deploy_check_un_select"
                 android:gravity="center"
                 android:text="2"
-                android:textColor="@color/white"
+                android:textColor="@color/c_a6a6a6"
                 android:textSize="10sp" />
 
             <TextView
-                android:id="@+id/tv_deploy_monitor_upload_check"
+                android:id="@+id/tv_deploy_check_title_step_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -80,10 +83,11 @@
 
 
         <View
-            android:layout_width="35dp"
+            android:layout_width="0dp"
             android:layout_height="1.5dp"
             android:layout_marginStart="9dp"
             android:layout_marginEnd="9dp"
+            android:layout_weight="1"
             android:background="@drawable/shape_dash_line"
             android:gravity="center_vertical"
             android:layerType="software" />
@@ -95,15 +99,17 @@
             android:gravity="center_vertical">
 
             <TextView
+                android:id="@+id/tv_deploy_check_circle_step_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape_deploy_check_select"
+                android:background="@drawable/shape_deploy_check_un_select"
                 android:gravity="center"
                 android:text="3"
-                android:textColor="@color/white"
+                android:textColor="@color/c_a6a6a6"
                 android:textSize="10sp" />
 
             <TextView
+                android:id="@+id/tv_deploy_check_title_step_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"

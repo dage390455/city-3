@@ -10,4 +10,6 @@ public interface IDeployMonitorCheckActivityView {
     void deployMonitorLocalCheckFragmentSetArguments(Bundle bundle);
 
     void deployMonitorUploadCheckFragmentSetArguments(Bundle bundle);
+
+    void setDeployMonitorStep(int step);
 }

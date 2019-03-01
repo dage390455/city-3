@@ -856,5 +856,6 @@
     <string name="mode_switch">模式切换中</string>
     <string name="no_permission_">暂无权限：请联系管理员开启</string>
     <string name="monitor_top_demo_mode_tips">演示模式下按设备自检按钮将发送预警信息</string>
+    <string name="previous_step">上一步</string>
 
 </resources>
