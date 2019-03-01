@@ -158,9 +158,6 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
      * @param searchText
      */
     public void requestSearchData(final int direction, String searchText) {
-        if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
-            return;
-        }
         if (!PreferencesHelper.getInstance().getUserData().hasAlarmInfo) {
             return;
         }

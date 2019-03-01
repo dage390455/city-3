@@ -3,6 +3,7 @@ package com.sensoro.smartcity.server.bean;
 import java.io.Serializable;
 
 public class DeployControlSettingData implements Serializable {
+
     //部署特殊处理
     private Integer switchSpec;
     // 线径

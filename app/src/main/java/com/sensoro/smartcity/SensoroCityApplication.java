@@ -199,6 +199,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     }
 
     public void init() {
+        initSensoroSDK();
         VIDEO_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/camera/";
         if (pushHandler == null) {
             pushHandler = new PushHandler();
@@ -445,7 +446,6 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
 
     @Override
     public void run() {
-        initSensoroSDK();
         initORC();
         SensoroPushManager.getInstance().registerSensoroPushListener(this);
         Repause.init(this);

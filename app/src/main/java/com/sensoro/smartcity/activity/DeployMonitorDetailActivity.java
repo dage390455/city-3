@@ -231,8 +231,8 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
     @Override
     protected void onStart() {
-        super.onStart();
         mPresenter.onStart();
+        super.onStart();
     }
 
     @Override

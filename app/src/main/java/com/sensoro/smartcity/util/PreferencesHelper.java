@@ -84,6 +84,7 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_SHORT, eventLoginData.hasDeviceMuteShort);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_LONG, eventLoginData.hasDeviceMuteLong);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_FIRMWARE_UPDATE, eventLoginData.hasDeviceFirmwareUpdate);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_DEMO_MODE, eventLoginData.hasDeviceDemoMode);
         editor.putBoolean(EXTRA_GRANTS_HAS_CONTROLLER_AID, eventLoginData.hasControllerAid);
         //
         editor.apply();
@@ -123,6 +124,7 @@ public final class PreferencesHelper implements Constants {
             boolean hasDeviceMuteShort = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_SHORT, false);
             boolean hasDeviceMuteLong = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_LONG, false);
             boolean hasDeviceFirmUpdate = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_FIRMWARE_UPDATE, false);
+            boolean hasDeviceDemoMode = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_DEMO_MODE, false);
             boolean hasControllerAid = sp.getBoolean(EXTRA_GRANTS_HAS_CONTROLLER_AID, false);
             final EventLoginData eventLoginData = new EventLoginData();
             eventLoginData.phoneId = phoneId;
@@ -150,6 +152,7 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasDeviceMuteShort = hasDeviceMuteShort;
             eventLoginData.hasDeviceMuteLong = hasDeviceMuteLong;
             eventLoginData.hasDeviceFirmwareUpdate = hasDeviceFirmUpdate;
+            eventLoginData.hasDeviceDemoMode = hasDeviceDemoMode;
             eventLoginData.hasControllerAid = hasControllerAid;
             mEventLoginData = eventLoginData;
         }
@@ -561,4 +564,34 @@ public final class PreferencesHelper implements Constants {
                 .MODE_PRIVATE);
         return sp.getString(key, "");
     }
+
+    public int getLocalDemoModeState(String sn) {
+        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEMO_MODE_JSON, Context
+                .MODE_PRIVATE);
+        String json = sp.getString(PREFERENCE_DEMO_MODE_JSON, null);
+        if (!TextUtils.isEmpty(json)) {
+            HashMap map = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, HashMap.class);
+            Object value = map.get(sn);
+            if (value instanceof Integer) {
+                return (int) value;
+            }
+        }
+        return 0;
+    }
+
+    public void saveLocalDemoModeState(String sn, int mode) {
+        final HashMap<String, Integer> localDemoModeMap = new HashMap<>();
+        localDemoModeMap.put(sn, mode);
+        try {
+            String json = RetrofitServiceHelper.INSTANCE.getGson().toJson(localDemoModeMap);
+            SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEMO_MODE_JSON, Context
+                    .MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString(PREFERENCE_DEMO_MODE_JSON, json);
+            editor.apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

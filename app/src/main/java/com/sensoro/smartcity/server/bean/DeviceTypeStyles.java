@@ -44,6 +44,16 @@ public class DeviceTypeStyles {
     private List<String> taskOptions;
     private List<DeployPicInfo> deployPicConfig;
 
+    public boolean isDemoSupported() {
+        return demoSupported;
+    }
+
+    public void setDemoSupported(boolean demoSupported) {
+        this.demoSupported = demoSupported;
+    }
+
+    private boolean demoSupported;
+
 
     @Override
     public String toString() {

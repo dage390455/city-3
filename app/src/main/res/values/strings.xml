@@ -741,9 +741,9 @@
     <string name="please_select_devices_more_1">至少选择添加一种设备</string>
     <string name="not_obtain_device_cout">未获取到设备信息，请重试</string>
     <string name="create_contract">生成合同</string>
-    <string name="create_contract_tip_message">点击确认后，再生成一份新的合同，在签订前仍可继续修改</string>
+    <string name="create_contract_tip_message">点击确认后将生成一份新合同，在签订前仍可进行修改</string>
     <string name="info_check_faild">未通过信息校验</string>
-    <string name="contract_creation_success_tip_message">合同创建成功，你可以在线预览或生成二维码与业主签订合同</string>
+    <string name="contract_creation_success_tip_message">合同创建成功，请生成二维码与业主签订合同</string>
     <string name="contract_preview">合同预览</string>
     <string name="create_qr_code">生成二维码</string>
     <string name="contract_creattion">创建合同</string>
@@ -827,7 +827,7 @@
     <string name="deploy_pic_today_no_tip">no more prompts today</string>
     <string name="deploy_pic_example_pic">Example of</string>
     <string name="discover_new_version">Discover new version</string>
-    <string name="already_the_latest_version">Already the latest version</string>
+    <string name="already_the_latest_version">Firmware version</string>
     <string name="current_version">Current version</string>
     <string name="latest_version">Latest version</string>
     <string name="firmware_release_date">Firmware release date</string>
@@ -839,7 +839,6 @@
     <string name="device_is_not_nearby">The device is not nearby, please try again later</string>
 
 
-
     <string name="firmware_update_transferred">Firmware update, transferred</string>
     <string name="firmware_update_in_preparation">Firmware update, in preparation</string>
     <string name="s_good">Good</string>
@@ -849,4 +848,20 @@
     <string name="air_rated_current">Air rated current</string>
     <string name="monitor_material">Material</string>
     <string name="splash_copyright">Copyright \u00a9 %s SENSORO</string>
+    <string name="device_demo_mode">Demo mode</string>
+    <string name="please_record_at_least_5_seconds">Please take at least five seconds</string>
+    <string name="has_close">Close</string>
+    <string name="has_open">Open</string>
+    <string name="confirm_open">Open</string>
+    <string name="confirm_close">Close</string>
+    <string name="open_demo_mode">Turn on Demo Mode</string>
+    <string name="close_demo_mode">Turn off Demo Mode</string>
+    <string name="close_demo_mode_content">After turning off demo mode, the self-check button of device is restored to the function of self-check as usual, and the device could be deployed again</string>
+    <string name="open_demo_mode_content">When turned on, pressing self-check button will lead to an alarm</string>
+    <string name="open_demo_mode_description">Tips: The device cannot be deployed in demo mode. It is recommended to turn off this mode after the demo</string>
+    <string name="demo_mode_has_open">Demo mode has open</string>
+    <string name="demo_mode_has_close">Demo mode has close</string>
+    <string name="mode_switch">Mode Switching</string>
+    <string name="no_permission_">No permission：Please contact the administrator to open</string>
+    <string name="monitor_top_demo_mode_tips">Press the device self-test button in demo mode to send an alert message</string>
 </resources>

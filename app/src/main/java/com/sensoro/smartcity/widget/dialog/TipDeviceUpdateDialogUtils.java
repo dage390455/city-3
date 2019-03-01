@@ -90,7 +90,9 @@ public class TipDeviceUpdateDialogUtils {
     }
 
     public void setTipTitleText(String text) {
-        tvDialogTipTitle.setText(text);
+        if (!TextUtils.isEmpty(text)) {
+            tvDialogTipTitle.setText(text);
+        }
     }
 
     public void setTipButtonVisible(boolean isVisible) {
@@ -98,7 +100,10 @@ public class TipDeviceUpdateDialogUtils {
     }
 
     public void setTipNewVersionText(String text) {
-        tvDialogUpdateVersion.setText(text);
+        if (!TextUtils.isEmpty(text)) {
+            tvDialogUpdateVersion.setText(text);
+        }
+
     }
 
     public void setTipVersionDateText(String text) {

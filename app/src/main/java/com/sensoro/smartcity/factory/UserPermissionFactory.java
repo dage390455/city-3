@@ -48,6 +48,7 @@ public class UserPermissionFactory {
         eventLoginData.hasDeviceMuteShort = getHasMuteShort(grants);
         eventLoginData.hasDeviceMuteLong = getHasMuteLong(grants);
         eventLoginData.hasDeviceFirmwareUpdate = getHasDeviceFirmUpdate(grants);
+        eventLoginData.hasDeviceDemoMode = getHasDeviceDemoMode(grants);
         String controllerAid = userInfo.getControllerAid();
         //通过controllerAid来判断是否可以返回主账户
         eventLoginData.hasControllerAid = !TextUtils.isEmpty(controllerAid);
@@ -378,6 +379,22 @@ public class UserPermissionFactory {
             List<String> grantsDevice = grants.getDevice();
             if (grantsDevice != null) {
                 return grantsDevice.contains("_updateFirmware");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 用户是否有demo演示权限
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasDeviceDemoMode(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsDevice = grants.getDevice();
+            if (grantsDevice != null) {
+                return grantsDevice.contains("demo");
             }
         }
         return false;

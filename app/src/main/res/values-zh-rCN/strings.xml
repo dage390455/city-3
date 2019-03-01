@@ -184,7 +184,7 @@
     <string name="please_enter_contact_phone">请输入联系人名称和电话号码</string>
     <string name="loading_configuration_file">正在加载配置文件&#8230;</string>
     <string name="must_enter_name_address">必须输入名称/地址</string>
-    <string name="album">相册</string>
+    <string name="album">从相册选择照片</string>
     <string name="take_photo">拍照</string>
     <string name="no_photos_added">未添加照片</string>
     <string name="continue_to_replace">继续更换</string>
@@ -201,7 +201,7 @@
     <string name="report_failure">上报失败</string>
     <string name="account_no_patrol_device_permissions">该账户没有巡检设备权限</string>
     <string name="account_does_not_have_permission_to_view_the_inspection_device_list">该账户没有查看巡检设备列表权限</string>
-    <string name="shooting_video">拍摄视频</string>
+    <string name="shooting_video">录像</string>
     <string name="abnormal_reporting_success">异常上报成功</string>
     <string name="abnormal_reporting_failure">异常上报失败</string>
     <string name="please_wait">请稍后</string>
@@ -737,9 +737,9 @@
     <string name="please_select_devices_more_1">至少选择添加一种设备</string>
     <string name="not_obtain_device_cout">未获取到设备信息，请重试</string>
     <string name="create_contract">生成合同</string>
-    <string name="create_contract_tip_message">合同创建成功，请生成二维码与业主签订合同</string>
+    <string name="create_contract_tip_message">点击确认后将生成一份新合同，在签订前仍可进行修改</string>
     <string name="info_check_faild">未通过信息校验</string>
-    <string name="contract_creation_success_tip_message">合同创建成功，你可以在线预览或生成二维码与业主签订合同</string>
+    <string name="contract_creation_success_tip_message">合同创建成功，请生成二维码与业主签订合同</string>
     <string name="contract_preview">合同预览</string>
     <string name="create_qr_code">生成二维码</string>
     <string name="contract_creattion">创建合同</string>
@@ -821,7 +821,7 @@
     <string name="deploy_pic_today_no_tip">今日不再提示</string>
     <string name="deploy_pic_example_pic">示例照片</string>>
     <string name="discover_new_version">发现新版本</string>
-    <string name="already_the_latest_version">已是最新版本</string>
+    <string name="already_the_latest_version">固件版本</string>
     <string name="current_version">当前版本</string>
     <string name="latest_version">最新版本</string>
     <string name="firmware_release_date">固件发布日期</string>
@@ -840,4 +840,21 @@
     <string name="air_rated_current">空开额定电流</string>
     <string name="monitor_material">线材</string>
     <string name="splash_copyright">Copyright \u00a9 %s SENSORO</string>
+    <string name="device_demo_mode">演示模式</string>
+    <string name="please_record_at_least_5_seconds">请至少拍摄5秒</string>
+    <string name="has_close">未开启</string>
+    <string name="has_open">已开启</string>
+    <string name="confirm_open">确认开启</string>
+    <string name="confirm_close">确认关闭</string>
+    <string name="close_demo_mode">关闭演示模式</string>
+    <string name="close_demo_mode_content">关闭后，设备自检按钮恢复为正常自检功能，设备可重新正常部署</string>
+    <string name="open_demo_mode">开启演示模式</string>
+    <string name="open_demo_mode_content">开启后，按下设备自检按钮将发出预警信息</string>
+    <string name="open_demo_mode_description">温馨提示：演示模式下设备无法被部署，建议演示后关闭此模式</string>
+    <string name="demo_mode_has_open">演示模式已开启</string>
+    <string name="demo_mode_has_close">演示模式已关闭</string>
+    <string name="mode_switch">模式切换中</string>
+    <string name="no_permission_">暂无权限：请联系管理员开启</string>
+    <string name="monitor_top_demo_mode_tips">演示模式下按设备自检按钮将发送预警信息</string>
+
 </resources>

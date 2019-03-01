@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,44 +7,96 @@
         android:id="@+id/sv_ffmpeg"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
     <com.sensoro.smartcity.widget.MyVideoView
         android:id="@+id/vv_play"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:visibility="gone" />
+
     <RelativeLayout
         android:id="@+id/rl_bottom"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp">
+        android:layout_marginBottom="32dp">
+
         <ImageView
             android:id="@+id/iv_back"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_centerInParent="true"
-            android:src="@mipmap/record_delete"/>
+            android:contentDescription="@null"
+            android:src="@drawable/record_retake"
+            android:visibility="gone" />
+
         <ImageView
             android:id="@+id/iv_finish"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_centerInParent="true"
-            android:src="@mipmap/record_finish"/>
+            android:contentDescription="@null"
+            android:src="@drawable/record_save"
+            android:visibility="gone" />
+
         <com.sensoro.smartcity.widget.RecordedButton
             android:id="@+id/rb_start"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_centerInParent="true"/>
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerInParent="true" />
+        <TextView
+            android:id="@+id/tv_retake"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="18dp"
+            android:shadowColor="#B3000000"
+            android:shadowDy="2"
+            android:layout_toStartOf="@id/rb_start"
+            android:gravity="center"
+            android:text="@string/contract_service_retake"
+            android:shadowRadius="2"
+            android:padding="8dp"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:visibility="gone"/>
     </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/tv_record_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:shadowColor="#B3000000"
+        android:shadowDy="2"
+        android:shadowRadius="2"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
     <TextView
         android:id="@+id/tv_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/take_record_camera"
-        android:textSize="14sp"
-        android:textColor="#fff"
+        android:layout_below="@id/tv_record_time"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
-        android:layout_above="@id/rl_bottom"/>
+        android:layout_marginTop="8dp"
+        android:text="@string/please_record_at_least_5_seconds"
+        android:textColor="@color/white"
+        android:shadowDy="2"
+        android:shadowRadius="2"
+        android:visibility="gone"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/imv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="6dp"
+        android:contentDescription="@null"
+        android:padding="10dp"
+        android:src="@drawable/arrows_left_white" />
 
 </RelativeLayout>

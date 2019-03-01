@@ -67,9 +67,6 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
     }
 
     public void requestSearchData(int direction, String searchText) {
-        if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
-            return;
-        }
         if (TextUtils.isEmpty(searchText)) {
             tempSearch = null;
         } else {
