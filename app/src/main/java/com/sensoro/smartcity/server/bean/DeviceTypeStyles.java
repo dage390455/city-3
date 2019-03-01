@@ -42,6 +42,18 @@ public class DeviceTypeStyles {
      * @return
      */
     private List<String> taskOptions;
+    private List<DeployPicInfo> deployPicConfig;
+
+    public boolean isDemoSupported() {
+        return demoSupported;
+    }
+
+    public void setDemoSupported(boolean demoSupported) {
+        this.demoSupported = demoSupported;
+    }
+
+    private boolean demoSupported;
+
 
     @Override
     public String toString() {
@@ -152,5 +164,13 @@ public class DeviceTypeStyles {
 
     public void setTaskOptions(List<String> taskOptions) {
         this.taskOptions = taskOptions;
+    }
+
+    public List<DeployPicInfo> getDeployPicConfig() {
+        return deployPicConfig;
+    }
+
+    public void setDeployPicConfig(List<DeployPicInfo> deployPicConfig) {
+        this.deployPicConfig = deployPicConfig;
     }
 }

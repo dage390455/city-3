@@ -3,9 +3,13 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 
 import com.amap.api.services.core.LatLonPoint;
@@ -16,10 +20,12 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
-import com.sensoro.libbleserver.ble.BLEDevice;
-import com.sensoro.libbleserver.ble.SensoroConnectionCallback;
-import com.sensoro.libbleserver.ble.SensoroDeviceConnection;
-import com.sensoro.libbleserver.ble.SensoroWriteCallback;
+import com.sensoro.libbleserver.ble.callback.OnDeviceUpdateObserver;
+import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
+import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
+import com.sensoro.libbleserver.ble.connection.SensoroDeviceConnection;
+import com.sensoro.libbleserver.ble.entity.BLEDevice;
+import com.sensoro.libbleserver.ble.entity.SensoroDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
@@ -38,6 +44,9 @@ import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IMonitorPointElectricDetailActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.smartcity.iwidget.IOnResume;
+import com.sensoro.smartcity.iwidget.IOnStart;
+import com.sensoro.smartcity.model.BleUpdateModel;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.Elect3DetailModel;
 import com.sensoro.smartcity.model.EventData;
@@ -46,10 +55,11 @@ import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
+import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.server.bean.DeployDeviceInfo;
-import com.sensoro.smartcity.server.bean.DeployRecordInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
+import com.sensoro.smartcity.server.bean.DeviceUpdateFirmwareData;
 import com.sensoro.smartcity.server.bean.DisplayOptionsBean;
 import com.sensoro.smartcity.server.bean.MalfunctionDataBean;
 import com.sensoro.smartcity.server.bean.MalfunctionTypeStyles;
@@ -60,15 +70,17 @@ import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
-import com.sensoro.smartcity.server.response.DeployRecordRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
+import com.sensoro.smartcity.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.smartcity.server.response.MonitorPointOperationRequestRsp;
+import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.smartcity.widget.dialog.TipDeviceUpdateDialogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
@@ -77,6 +89,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,16 +97,19 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<IMonitorPointElectricDetailActivityView> implements IOnCreate, Constants,
+public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<IMonitorPointElectricDetailActivityView> implements IOnCreate, Constants, IOnResume,
         GeocodeSearch.OnGeocodeSearchListener, MonitorDetailOperationAdapter.OnMonitorDetailOperationAdapterListener, BLEDeviceListener<BLEDevice>
-        , SensoroConnectionCallback, SensoroWriteCallback {
+        , TipDeviceUpdateDialogUtils.TipDialogUpdateClickListener, IOnStart {
     private Activity mContext;
-    private DeviceInfo mDeviceInfo;
+    private volatile DeviceInfo mDeviceInfo;
     private String content;
     private boolean hasPhoneNumber;
     private String mScheduleNo;
@@ -111,6 +127,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             }
         }
     };
+    private final BleUpdateModel bleUpdateModel = new BleUpdateModel();
     private final Runnable bleRunnable = new Runnable() {
         @Override
         public void run() {
@@ -118,18 +135,18 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             if (bleHasOpen) {
                 try {
                     bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.startService();
-                } catch (Exception e) {
+                    LogUtils.loge("服务开启 ：" + bleHasOpen);
+                } catch (Throwable e) {
                     e.printStackTrace();
-//                    getView().showBleTips();
                 }
             }
-            mHandler.postDelayed(this, 2000);
+            mHandler.postDelayed(this, 1000);
         }
     };
     private final ArrayList<EarlyWarningthresholdDialogUtilsAdapterModel> mEarlyWarningThresholdDialogUtilsAdapterModels = new ArrayList<>();
-    private String blePassword = null;
     private SensoroDeviceConnection sensoroDeviceConnection;
     private String mOperationType;
+    private volatile int deviceDemoMode = DEVICE_DEMO_MODE_NOT_SUPPORT;
 
     @Override
     public void initData(Context context) {
@@ -138,6 +155,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         mDeviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
         geocoderSearch = new GeocodeSearch(mContext);
         geocoderSearch.setOnGeocodeSearchListener(this);
+        bleUpdateModel.sn = mDeviceInfo.getSn();
+        bleUpdateModel.deviceType = mDeviceInfo.getDeviceType();
+        bleUpdateModel.filePath = mContext.getExternalFilesDir(null) + File.separator + "bleDeviceUpdatePackage";
         BleObserver.getInstance().registerBleObserver(this);
         requestDeviceRecentLog();
     }
@@ -151,6 +171,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         if (TextUtils.isEmpty(mergeType)) {
             mergeType = WidgetUtil.handleMergeType(deviceType);
         }
+        String signal = mDeviceInfo.getSignal();
         DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deviceType);
         if (configDeviceType != null) {
             String category = configDeviceType.getCategory();
@@ -165,9 +186,46 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         }
         getView().setDeviceTypeName(typeName);
         refreshOperationStatus();
+        List<String> deployPics = mDeviceInfo.getDeployPics();
+        if (deployPics != null && deployPics.size() > 0) {
+            ArrayList<ScenesData> list = new ArrayList<>();
+            for (String url : deployPics) {
+                ScenesData scenesData = new ScenesData();
+                scenesData.url = url;
+                list.add(scenesData);
+            }
+            getView().updateMonitorPhotos(list);
+        }
+        int status = mDeviceInfo.getStatus();
+        int resId = R.drawable.signal_none;
+        if (SENSOR_STATUS_LOST == status || SENSOR_STATUS_INACTIVE == status) {
+            getView().setSignalStatus(resId, mContext.getString(R.string.s_none));
+        } else {
+            if (!TextUtils.isEmpty(signal)) {
+                switch (signal) {
+                    case "good":
+                        resId = R.drawable.signal_good;
+                        getView().setSignalStatus(resId, mContext.getString(R.string.s_good));
+                        break;
+                    case "normal":
+                        resId = R.drawable.signal_normal;
+                        getView().setSignalStatus(resId, mContext.getString(R.string.s_normal));
+                        break;
+                    case "bad":
+                        resId = R.drawable.signal_bad;
+                        getView().setSignalStatus(resId, mContext.getString(R.string.s_bad));
+                        break;
+                    default:
+                        resId = R.drawable.signal_good;
+                        getView().setSignalStatus(resId, mContext.getString(R.string.s_none));
+                        break;
+                }
+            } else {
+                getView().setSignalStatus(resId, mContext.getString(R.string.s_none));
+            }
+        }
         String statusText;
         int textColor;
-        int status = mDeviceInfo.getStatus();
         switch (status) {
             case SENSOR_STATUS_ALARM:
                 textColor = mContext.getResources().getColor(R.color.c_f34a4a);
@@ -251,21 +309,15 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 }
             }
         }
-
         Integer interval = mDeviceInfo.getInterval();
         if (interval != null) {
             getView().setInterval(DateUtil.secToTimeBefore(mContext, interval));
         }
-        if (SENSOR_STATUS_ALARM == status) {
-
-        }
-
     }
 
     private void refreshOperationStatus() {
         int status = mDeviceInfo.getStatus();
         HashMap<String, TaskOptionModel> taskOptionModelMap = MonitorPointModelsFactory.createTaskOptionModelMap(status);
-        //TODO 配置文件显示状态
         DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(mDeviceInfo.getDeviceType());
         if (configDeviceType != null) {
             List<String> taskOptions = configDeviceType.getTaskOptions();
@@ -283,7 +335,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 getView().setDeviceOperationVisible(false);
             }
         }
-        if (status == Constants.SENSOR_STATUS_ALARM || status == Constants.SENSOR_STATUS_MALFUNCTION) {
+        if (status == Constants.SENSOR_STATUS_ALARM || status == Constants.SENSOR_STATUS_MALFUNCTION || PreferencesHelper.getInstance().getUserData().hasDeviceFirmwareUpdate || PreferencesHelper.getInstance().getUserData().hasDeviceDemoMode) {
             mHandler.removeCallbacks(bleRunnable);
             mHandler.post(bleRunnable);
         }
@@ -305,9 +357,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             e.printStackTrace();
             getView().setDeviceLocationTextColor(R.color.c_a6a6a6);
             getView().setDeviceLocation(mContext.getString(R.string.not_positioned), false);
-
         }
-
     }
 
     private void requestDeviceRecentLog() {
@@ -321,7 +371,10 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 if (deviceInfoListRsp.getData().size() > 0) {
                     mDeviceInfo = deviceInfoListRsp.getData().get(0);
                 }
+                requestBlePassword();
                 freshLocationDeviceInfo();
+                handleDeployInfo();
+                handleDeviceModeInfo();
                 freshTopData();
                 handleDeviceInfoAdapter();
                 getView().dismissProgressDialog();
@@ -329,59 +382,159 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
+                requestBlePassword();
+                handleDeployInfo();
+                handleDeviceModeInfo();
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
             }
         });
-        //静默拉取图片记录内容
-        RetrofitServiceHelper.INSTANCE.getDeployRecordList(mDeviceInfo.getSn(), null, null, null, null, null, 1, 0, true).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployRecordRsp>(this) {
-            @Override
-            public void onCompleted(DeployRecordRsp recordRsp) {
-                List<DeployRecordInfo> data = recordRsp.getData();
-                if (data != null && data.size() > 0) {
-                    DeployRecordInfo deployRecordInfo = data.get(0);
-                    if (deployRecordInfo != null) {
-                        List<String> deployPics = deployRecordInfo.getDeployPics();
-                        if (deployPics != null) {
-                            ArrayList<ScenesData> list = new ArrayList<>();
-                            for (String url : deployPics) {
-                                ScenesData scenesData = new ScenesData();
-                                scenesData.url = url;
-                                list.add(scenesData);
-                            }
-                            getView().updateMonitorPhotos(list);
+    }
+
+    private void handleDeviceModeInfo() {
+        if (mDeviceInfo != null) {
+            if (Objects.requireNonNull(PreferencesHelper.getInstance().getConfigDeviceType(mDeviceInfo.getDeviceType())).isDemoSupported()) {
+                if (PreferencesHelper.getInstance().getUserData().hasDeviceDemoMode) {
+                    Integer demoMode = mDeviceInfo.getDemoMode();
+                    if (demoMode != null) {
+                        switch (demoMode) {
+                            case 0:
+                                //正常模式
+                                deviceDemoMode = DEVICE_DEMO_MODE_CLOSE;
+                                break;
+                            case 1:
+                                //演示模式
+                                deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
+                                break;
+                            default:
+                                break;
                         }
                     }
+                } else {
+                    deviceDemoMode = DEVICE_DEMO_MODE_NO_PERMISSION;
                 }
-
             }
+            //TODO delete
+//            deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
+            getView().setDeviceDemoModeViewStatus(deviceDemoMode);
+        }
+    }
 
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().toastShort(errorMsg);
+    private void handleDeployInfo() {
+        if (mDeviceInfo != null) {
+            //部署时间
+            Long createdTime = mDeviceInfo.getDeployTime();
+            if (createdTime != null) {
+                getView().setMonitorDeployTime(DateUtil.getFullDate(createdTime));
             }
-        });
-        requestBlePassword();
+            //配置信息
+            setMonitorConfigInfo(mDeviceInfo.getConfig());
+        }
+    }
+
+    private void setMonitorConfigInfo(DeployControlSettingData deployControlSettingData) {
+        if (DEVICE_CONTROL_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
+            final String[] switchSpecStr = {"-", "-", "-"};
+            if (deployControlSettingData != null) {
+                Integer switchSpec = deployControlSettingData.getSwitchSpec();
+                if (switchSpec != null) {
+                    switchSpecStr[0] = switchSpec + "A";
+                }
+                Integer wireMaterial = deployControlSettingData.getWireMaterial();
+                if (wireMaterial != null) {
+                    switch (wireMaterial) {
+                        case 0:
+                            switchSpecStr[1] = mContext.getString(R.string.cu);
+                            break;
+                        case 1:
+                            switchSpecStr[1] = mContext.getString(R.string.al);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                Double wireDiameter = deployControlSettingData.getWireDiameter();
+                if (wireDiameter != null) {
+                    String formatDouble = WidgetUtil.getFormatDouble(wireDiameter, 2);
+                    switchSpecStr[2] = formatDouble + "m㎡";
+                }
+            }
+            mContext.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (isAttachedView()) {
+                        getView().setMonitorSwitchSpec(switchSpecStr[0]);
+                        getView().setMonitorWireMaterial(switchSpecStr[1]);
+                        getView().setMonitorWireDiameter(switchSpecStr[2]);
+                    }
+
+                }
+            });
+
+        }
     }
 
     private void requestBlePassword() {
+        // 获取固件版本和下载固件的地址信息
         RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(mDeviceInfo.getSn(), null, null).subscribeOn
-                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(this) {
-
+                (Schedulers.io()).flatMap(new Func1<DeployDeviceDetailRsp, Observable<DeviceUpdateFirmwareDataRsp>>() {
             @Override
-            public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
+            public Observable<DeviceUpdateFirmwareDataRsp> call(DeployDeviceDetailRsp deployDeviceDetailRsp) {
                 DeployDeviceInfo data = deployDeviceDetailRsp.getData();
                 if (data != null) {
-                    blePassword = data.getBlePassword();
+                    bleUpdateModel.blePassword = data.getBlePassword();
+                    bleUpdateModel.currentFirmVersion = data.getFirmwareVersion();
+                    bleUpdateModel.band = data.getBand();
+                    bleUpdateModel.hardwareVersion = data.getHardwareVersion();
+                    try {
+                        LogUtils.loge("升级--->> 版本信息 ： " + bleUpdateModel.currentFirmVersion);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                 }
+                return RetrofitServiceHelper.INSTANCE.getDeviceUpdateVision(bleUpdateModel.sn, bleUpdateModel.deviceType, bleUpdateModel.band, bleUpdateModel.currentFirmVersion, bleUpdateModel.hardwareVersion, 1, 100);
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceUpdateFirmwareDataRsp>(this) {
+
+            @Override
+            public void onCompleted(DeviceUpdateFirmwareDataRsp deviceUpdateFirmwareDataRsp) {
+                List<DeviceUpdateFirmwareData> data = deviceUpdateFirmwareDataRsp.getData();
+                if (data != null && data.size() > 0) {
+                    DeviceUpdateFirmwareData deviceUpdateFirmwareData = data.get(0);
+                    if (deviceUpdateFirmwareData != null) {
+                        bleUpdateModel.serverFirmVersion = deviceUpdateFirmwareData.getVersion();
+                        bleUpdateModel.firmUrl = deviceUpdateFirmwareData.getUrl();
+                        bleUpdateModel.serverFirmCreateTime = deviceUpdateFirmwareData.getCreatedTime();
+                    }
+                    for (DeviceUpdateFirmwareData firmwareData : data) {
+                        if (bleUpdateModel.currentFirmVersion != null) {
+                            if (bleUpdateModel.currentFirmVersion.equals(firmwareData.getVersion())) {
+                                bleUpdateModel.currentFirmCreateTime = firmwareData.getCreatedTime();
+                                break;
+                            }
+                        }
+
+                    }
+                }
+                freshDeviceUpdateVersionInfo();
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-
+                freshDeviceUpdateVersionInfo();
             }
         });
+    }
+
+    private void freshDeviceUpdateVersionInfo() {
+        boolean hasNewVersion = WidgetUtil.isNewVersion(bleUpdateModel.currentFirmVersion, bleUpdateModel.serverFirmVersion);
+        if (!PreferencesHelper.getInstance().getUserData().hasDeviceFirmwareUpdate) {
+            hasNewVersion = false;
+        }
+        getView().setIvHasNewVersionViewVisible(hasNewVersion);
+        if (!TextUtils.isEmpty(bleUpdateModel.currentFirmVersion)) {
+            getView().setDeviceVision("V " + bleUpdateModel.currentFirmVersion);
+        }
     }
 
     private void handleDeviceInfoAdapter() {
@@ -394,7 +547,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         Map<String, MalfunctionDataBean> malfunctionData = mDeviceInfo.getMalfunctionData();
                         //TODO 添加故障字段数组
                         if (malfunctionData != null) {
-
                             Set<String> keySet = malfunctionData.keySet();
                             ArrayList<String> keyList = new ArrayList<>();
                             for (String key : keySet) {
@@ -420,7 +572,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                 }
                                 monitoringPointRcContentAdapterModel.content = mContext.getString(R.string.unknown);
                                 malfunctionBeanData.add(monitoringPointRcContentAdapterModel);
-
                             }
                         }
                     }
@@ -760,7 +911,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         String name = monitorOptionsBean.getName();
                         if (TextUtils.isEmpty(name)) {
                             name = "";
-//                            name = mContext.getString(R.string.unknown);
                         }
                         earlyWarningthresholdDialogUtilsAdapterModel.name = name;
                         List<MonitorOptionsBean.SensorTypesBean> sensorTypes = monitorOptionsBean.getSensorTypes();
@@ -875,6 +1025,11 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     }
                 }
                 break;
+            case EVENT_DATA_DEPLOY_INIT_CONFIG_CODE:
+                if (data instanceof DeployControlSettingData) {
+                    DeployControlSettingData deployControlSettingData = (DeployControlSettingData) data;
+                    setMonitorConfigInfo(deployControlSettingData);
+                }
             case EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT:
                 if (data instanceof MonitorPointOperationTaskResultInfo) {
                     MonitorPointOperationTaskResultInfo info = (MonitorPointOperationTaskResultInfo) data;
@@ -1051,18 +1206,18 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         getView().startAC(intent);
     }
 
-    public void doOperation(int type, String content, String diameter) {
-//        Integer switchSpec = null;
-//        Double d = null;
+    public void doOperation(int type) {
         switch (type) {
             case MonitorPointOperationCode.ERASURE:
                 mOperationType = MonitorPointOperationCode.ERASURE_STR;
-                if (bleDeviceMap.containsKey(mDeviceInfo.getSn()) && !TextUtils.isEmpty(blePassword)) {
-                    String macAddress = bleDeviceMap.get(mDeviceInfo.getSn()).getMacAddress();
-                    if (!TextUtils.isEmpty(macAddress)) {
-                        doBleMute(macAddress);
-                        return;
-                    }
+                if (doBleMuteOperation()) {
+                    return;
+                }
+                break;
+            case MonitorPointOperationCode.ERASURE_LONG:
+                mOperationType = MonitorPointOperationCode.ERASURE_LONG_STR;
+                if (doBleMuteOperation()) {
+                    return;
                 }
                 break;
             case MonitorPointOperationCode.RESET:
@@ -1077,44 +1232,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             case MonitorPointOperationCode.SELF_CHECK:
                 mOperationType = MonitorPointOperationCode.SELF_CHECK_STR;
                 break;
-            //这里没有dialog设置
-//            case MonitorPointOperationCode.AIR_SWITCH_CONFIG:
-//                mOperationType = MonitorPointOperationCode.AIR_SWITCH_CONFIG_STR;
-//                if (TextUtils.isEmpty(content)) {
-//                    getView().toastShort(mContext.getString(R.string.electric_current) + mContext.getString(R.string.input_not_null));
-//                    return;
-//                }
-//                try {
-//                    switchSpec = Integer.valueOf(content);
-//                    int[] ints = DeployConfigurationAnalyzer.analyzeDeviceType(mDeviceInfo.getDeviceType());
-//                    if (switchSpec < ints[0] || switchSpec > ints[1]) {
-//                        getView().toastShort(mContext.getString(R.string.electric_current) + String.format(Locale.CHINESE, "%s%d-%d", mContext.getString(R.string.monitor_point_operation_error_value_range), ints[0], ints[1]));
-//                        return;
-//                    }
-//                } catch (NumberFormatException e) {
-//                    e.printStackTrace();
-//                    getView().toastShort(mContext.getString(R.string.electric_current) + mContext.getString(R.string.enter_the_correct_number_format));
-//                    return;
-//                }
-//                if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
-//                    if (TextUtils.isEmpty(diameter)) {
-//                        getView().toastShort(mContext.getString(R.string.diameter) + mContext.getString(R.string.input_not_null));
-//                        return;
-//                    }
-//                    try {
-//                        d = Double.parseDouble(diameter);
-//                        if (d < 0 || d >= 200) {
-//                            getView().toastShort(mContext.getString(R.string.diameter) + String.format(Locale.CHINESE, "%s%d-%d", mContext.getString(R.string.monitor_point_operation_error_value_range), 0, 200));
-//                            return;
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                        getView().toastShort(mContext.getString(R.string.diameter) + mContext.getString(R.string.enter_the_correct_number_format));
-//                        return;
-//                    }
-//                }
-//
-//                break;
             case MonitorPointOperationCode.AIR_SWITCH_POWER_OFF:
                 mOperationType = MonitorPointOperationCode.AIR_SWITCH_POWER_OFF_STR;
                 //断电
@@ -1124,23 +1241,71 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 //上电
                 break;
         }
-
-        requestCmd(mOperationType, null, null);
+        requestServerCmd();
     }
 
-    private void doBleMute(String macAddress) {
-        if (sensoroDeviceConnection != null) {
-            sensoroDeviceConnection.disconnect();
+    private boolean doBleMuteOperation() {
+        if (bleDeviceMap.containsKey(mDeviceInfo.getSn()) && !TextUtils.isEmpty(bleUpdateModel.blePassword)) {
+            String macAddress = bleDeviceMap.get(mDeviceInfo.getSn()).getMacAddress();
+            if (!TextUtils.isEmpty(macAddress)) {
+                if (sensoroDeviceConnection != null) {
+                    sensoroDeviceConnection.disconnect();
+                }
+                getView().dismissTipDialog();
+                getView().showOperationTipLoadingDialog();
+                sensoroDeviceConnection = new SensoroDeviceConnection(mContext, macAddress);
+                try {
+                    final SensoroWriteCallback bleMuteOperationWriteCallback = new SensoroWriteCallback() {
+                        @Override
+                        public void onWriteSuccess(Object o, int cmd) {
+                            if (sensoroDeviceConnection != null) {
+                                sensoroDeviceConnection.disconnect();
+                            }
+                            if (isAttachedView()) {
+                                getView().dismissOperatingLoadingDialog();
+                                getView().showOperationSuccessToast();
+                            }
+
+                        }
+
+                        @Override
+                        public void onWriteFailure(int errorCode, int cmd) {
+                            if (isAttachedView()) {
+                                bleRequestCmd();
+                            }
+                        }
+                    };
+                    final SensoroConnectionCallback bleMuteOperationConnectionCallback = new SensoroConnectionCallback() {
+                        @Override
+                        public void onConnectedSuccess(BLEDevice bleDevice, int cmd) {
+                            if (isAttachedView()) {
+                                OperationCmdAnalyzer.doOperation(mDeviceInfo.getDeviceType(), mOperationType, sensoroDeviceConnection, bleMuteOperationWriteCallback);
+                            }
+
+                        }
+
+                        @Override
+                        public void onConnectedFailure(int errorCode) {
+                            if (isAttachedView()) {
+                                bleRequestCmd();
+                            }
+                        }
+
+                        @Override
+                        public void onDisconnected() {
+
+                        }
+                    };
+                    sensoroDeviceConnection.connect(bleUpdateModel.blePassword, bleMuteOperationConnectionCallback);
+                    LogUtils.loge("--->>  蓝牙消音");
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                    bleRequestCmd();
+                }
+                return true;
+            }
         }
-        getView().dismissTipDialog();
-        getView().showOperationTipLoadingDialog();
-        sensoroDeviceConnection = new SensoroDeviceConnection(mContext, macAddress);
-        try {
-            sensoroDeviceConnection.connect(blePassword, MonitorPointElectricDetailActivityPresenter.this);
-        } catch (Exception e) {
-            e.printStackTrace();
-            bleRequestCmd();
-        }
+        return false;
     }
 
     private void bleRequestCmd() {
@@ -1151,22 +1316,21 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             getView().dismissTipDialog();
             getView().toastShort(mContext.getString(R.string.unknown_error));
         } else {
-            requestCmd(mOperationType, null, null);
+            requestServerCmd();
         }
     }
 
-    private void requestCmd(String operationType, Integer switchSpec, Double diameter) {
+    private void requestServerCmd() {
         ArrayList<String> sns = new ArrayList<>();
         sns.add(mDeviceInfo.getSn());
         getView().dismissTipDialog();
         getView().showOperationTipLoadingDialog();
         mScheduleNo = null;
-        RetrofitServiceHelper.INSTANCE.doMonitorPointOperation(sns, operationType, null, null, switchSpec, null, diameter)
+        RetrofitServiceHelper.INSTANCE.doMonitorPointOperation(sns, mOperationType, null, null, null, null, null)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>(this) {
             @Override
             public void onCompleted(MonitorPointOperationRequestRsp response) {
                 clearOperationType();
-
                 String scheduleNo = response.getScheduleNo();
                 if (TextUtils.isEmpty(scheduleNo)) {
                     getView().dismissOperatingLoadingDialog();
@@ -1241,22 +1405,33 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
         switch (taskOptionModel.optionType) {
             case MonitorPointOperationCode.ERASURE:
-                getView().showTipDialog(false, null, R.string.is_device_erasure, R.string.device_erasure_tip_message, R.color.c_a6a6a6, R.string.erasure, R.color.c_f34a4a, MonitorPointOperationCode.ERASURE);
+                getView().showTipDialog(false, null, mContext.getString(R.string.is_device_erasure), mContext.getString(R.string.device_erasure_tip_message), R.color.c_a6a6a6, mContext.getString(R.string.erasure), R.color.c_f34a4a, MonitorPointOperationCode.ERASURE);
+                break;
+            case MonitorPointOperationCode.ERASURE_LONG:
+                String allStr = mContext.getString(R.string.device_erasure_long_tip_message);
+                try {
+                    SpannableString spannableString = new SpannableString(allStr);
+                    String redStr = mContext.getString(R.string.device_erasure_long_tip_red);
+                    spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#FF0000")), allStr.indexOf(redStr), allStr.indexOf(redStr) + redStr.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    getView().showTipDialog(false, null, mContext.getString(R.string.is_device_erasure_long), spannableString, R.color.c_a6a6a6, mContext.getString(R.string.erasure_long), R.color.c_f34a4a, MonitorPointOperationCode.ERASURE_LONG);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    getView().showTipDialog(false, null, mContext.getString(R.string.is_device_erasure_long), allStr, R.color.c_a6a6a6, mContext.getString(R.string.erasure_long), R.color.c_f34a4a, MonitorPointOperationCode.ERASURE_LONG);
+                }
                 break;
             case MonitorPointOperationCode.RESET:
-                getView().showTipDialog(false, null, R.string.is_device_reset, R.string.device_reset_tip_message, R.color.c_a6a6a6, R.string.reset, R.color.c_f34a4a, MonitorPointOperationCode.RESET);
+                getView().showTipDialog(false, null, mContext.getString(R.string.is_device_reset), mContext.getString(R.string.device_reset_tip_message), R.color.c_a6a6a6, mContext.getString(R.string.reset), R.color.c_f34a4a, MonitorPointOperationCode.RESET);
                 break;
             case MonitorPointOperationCode.PSD:
-                getView().showTipDialog(false, null, R.string.is_device_psd, R.string.device_psd_tip_message, R.color.c_a6a6a6, R.string.modify, R.color.c_f34a4a, MonitorPointOperationCode.PSD);
+                getView().showTipDialog(false, null, mContext.getString(R.string.is_device_psd), mContext.getString(R.string.device_psd_tip_message), R.color.c_a6a6a6, mContext.getString(R.string.modify), R.color.c_f34a4a, MonitorPointOperationCode.PSD);
                 break;
             case MonitorPointOperationCode.QUERY:
-                getView().showTipDialog(false, null, R.string.is_device_query, R.string.device_query_tip_message, R.color.c_a6a6a6, R.string.monitor_point_detail_query, R.color.c_29c093, MonitorPointOperationCode.QUERY);
+                getView().showTipDialog(false, null, mContext.getString(R.string.is_device_query), mContext.getString(R.string.device_query_tip_message), R.color.c_a6a6a6, mContext.getString(R.string.monitor_point_detail_query), R.color.c_29c093, MonitorPointOperationCode.QUERY);
                 break;
             case MonitorPointOperationCode.SELF_CHECK:
-                getView().showTipDialog(false, null, R.string.is_device_self_check, R.string.device_self_check_tip_message, R.color.c_a6a6a6, R.string.self_check, R.color.c_29c093, MonitorPointOperationCode.SELF_CHECK);
+                getView().showTipDialog(false, null, mContext.getString(R.string.is_device_self_check), mContext.getString(R.string.device_self_check_tip_message), R.color.c_a6a6a6, mContext.getString(R.string.self_check), R.color.c_29c093, MonitorPointOperationCode.SELF_CHECK);
                 break;
             case MonitorPointOperationCode.AIR_SWITCH_CONFIG:
-                //TODO 跳转阈值
                 Intent intent = new Intent(mContext, DeployMonitorConfigurationActivity.class);
                 intent.putExtra(EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
                 DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
@@ -1264,14 +1439,13 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 deployAnalyzerModel.sn = mDeviceInfo.getSn();
                 intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                 getView().startAC(intent);
-//                getView().showTipDialog(true, mDeviceInfo.getDeviceType(), R.string.is_device_air_switch_config, R.string.device_air_switch_config_tip_message, R.color.c_a6a6a6, R.string.air_switch_config, R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_CONFIG);
                 break;
             case MonitorPointOperationCode.AIR_SWITCH_POWER_OFF:
                 //断电
-                getView().showTipDialog(false, mDeviceInfo.getDeviceType(), R.string.command_elec_disconnect_title, R.string.command_elec_disconnect_desc, R.color.c_f34a4a, R.string.command_elec_disconnect_btn_title, R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_POWER_OFF);
+                getView().showTipDialog(false, mDeviceInfo.getDeviceType(), mContext.getString(R.string.command_elec_disconnect_title), mContext.getString(R.string.command_elec_disconnect_desc), R.color.c_f34a4a, mContext.getString(R.string.command_elec_disconnect_btn_title), R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_POWER_OFF);
                 break;
             case MonitorPointOperationCode.AIR_SWITCH_POWER_ON:
-                getView().showTipDialog(false, mDeviceInfo.getDeviceType(), R.string.command_elec_connect_title, R.string.command_elec_connect_desc, R.color.c_f34a4a, R.string.command_elec_connect_btn_title, R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_POWER_ON);
+                getView().showTipDialog(false, mDeviceInfo.getDeviceType(), mContext.getString(R.string.command_elec_connect_title), mContext.getString(R.string.command_elec_connect_desc), R.color.c_f34a4a, mContext.getString(R.string.command_elec_connect_btn_title), R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_POWER_ON);
                 //上电
                 break;
         }
@@ -1300,42 +1474,351 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         }
     }
 
+
     @Override
-    public void onConnectedSuccess(BLEDevice bleDevice, int cmd) {
-        if (isAttachedView()) {
-            OperationCmdAnalyzer.doOperation(mDeviceInfo.getDeviceType(), mOperationType, sensoroDeviceConnection, this);
+    public void onUpdateClick() {
+        boolean bluetoothEnabled = SensoroCityApplication.getInstance().bleDeviceManager.isBluetoothEnabled();
+        if (!bluetoothEnabled) {
+            if (isAttachedView()) {
+                getView().showBleTips();
+            }
+            return;
         }
-    }
-
-
-    @Override
-    public void onConnectedFailure(int errorCode) {
         if (isAttachedView()) {
-            bleRequestCmd();
+            getView().updateDialogProgress(mContext.getString(R.string.firmware_update_in_preparation), -1, 0);
         }
+        RetrofitServiceHelper.INSTANCE.downloadDeviceFirmwareFile(bleUpdateModel.firmUrl, bleUpdateModel.filePath, new CityObserver<Boolean>(this) {
+            @Override
+            public void onCompleted(Boolean aBoolean) {
+                if (aBoolean) {
+                    if (bleDeviceMap.containsKey(mDeviceInfo.getSn())) {
+                        if (sensoroDeviceConnection != null) {
+                            sensoroDeviceConnection.disconnect();
+                        }
+                        BLEDevice bleDevice = bleDeviceMap.get(mDeviceInfo.getSn());
+                        sensoroDeviceConnection = new SensoroDeviceConnection(mContext, (SensoroDevice) bleDevice);
+                        onResume();
+                        final OnDeviceUpdateObserver onDeviceUpdateObserver = new OnDeviceUpdateObserver() {
+                            @Override
+                            public void onEnteringDFU(String deviceMacAddress, String filePath, String msg) {
+                                if (isAttachedView()) {
+                                    getView().updateDialogProgress(mContext.getString(R.string.firmware_update_transferred) + "0%", 0, 1);
+                                }
+                            }
+
+                            @Override
+                            public void onUpdateCompleted(String filePath, String deviceMacAddress, String msg) {
+                                if (isAttachedView()) {
+                                    mHandler.postDelayed(checkUpdateTask, 1000);
+                                    bleDeviceMap.remove(bleUpdateModel.sn);
+                                    getView().updateDialogProgress(mContext.getString(R.string.checking_version_bluetooth), -1, 2);
+                                }
+                            }
+
+                            @Override
+                            public void onDFUTransfer(String deviceAddress, int percent, float speed, float avgSpeed, int currentPart, int partsTotal, String msg) {
+                                if (isAttachedView()) {
+                                    getView().updateDialogProgress(mContext.getString(R.string.firmware_update_transferred) + percent + "%", percent, 1);
+                                }
+                            }
+
+                            @Override
+                            public void onUpdateValidating(String deviceMacAddress, String msg) {
+                                if (isAttachedView()) {
+                                    getView().updateDialogProgress(mContext.getString(R.string.verifying_firmware_information), -1, 2);
+                                }
+                            }
+
+                            @Override
+                            public void onUpdateTimeout(int code, Object data, String msg) {
+
+                            }
+
+                            @Override
+                            public void onDisconnecting() {
+                                if (isAttachedView()) {
+                                    getView().updateDialogProgress(mContext.getString(R.string.verifying_firmware_information), -1, 2);
+                                }
+                            }
+
+                            @Override
+                            public void onFailed(String deviceMacAddress, String errorMsg, Throwable e) {
+                                if (isAttachedView()) {
+                                    getView().dismissUpdateDialogUtils();
+                                    getView().toastShort(mContext.getString(R.string.device_upgrade_failed));
+                                }
+                            }
+                        };
+                        if (DEVICE_UPDATE_FIRMWARE_CHIP_TYPES.contains(bleUpdateModel.deviceType)) {
+                            sensoroDeviceConnection.startChipEUpdate(bleUpdateModel.filePath, bleUpdateModel.blePassword, onDeviceUpdateObserver);
+                        } else {
+                            sensoroDeviceConnection.startUpdate(bleUpdateModel.filePath, bleUpdateModel.blePassword, onDeviceUpdateObserver);
+                        }
+                    } else {
+                        if (isAttachedView()) {
+                            getView().toastShort(mContext.getString(R.string.device_is_not_nearby));
+                            getView().dismissUpdateDialogUtils();
+                        }
+
+                    }
+                } else {
+                    if (isAttachedView()) {
+                        getView().toastShort(mContext.getString(R.string.device_upgrade_failed));
+                        getView().dismissUpdateDialogUtils();
+                    }
+                }
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().toastShort(errorMsg);
+                getView().dismissUpdateDialogUtils();
+            }
+        });
+    }
+
+    /**
+     * 检查升级状态
+     */
+    private final Runnable checkUpdateTask = new Runnable() {
+        private volatile int checkUpdateCount = 1;
+
+        @Override
+        public void run() {
+            if (checkUpdateCount < 10) {
+                if (bleDeviceMap.containsKey(bleUpdateModel.sn)) {
+                    BLEDevice bleDevice = bleDeviceMap.get(bleUpdateModel.sn);
+                    if (bleDevice != null) {
+                        if (bleUpdateModel.serverFirmVersion.contains(bleDevice.firmwareVersion)) {
+                            mHandler.removeCallbacks(checkUpdateTask);
+                            //升级成功
+                            if (isAttachedView()) {
+                                getView().updateDialogProgress(mContext.getString(R.string.sending_upgrade_version), -1, 2);
+                                RetrofitServiceHelper.INSTANCE.upLoadDeviceUpdateVision(bleUpdateModel.sn, bleUpdateModel.serverFirmVersion)
+                                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).
+                                        subscribe(new CityObserver<ResponseBase>(MonitorPointElectricDetailActivityPresenter.this) {
+                                            @Override
+                                            public void onCompleted(ResponseBase responseBase) {
+                                                try {
+                                                    LogUtils.loge("升级--->> 成功！！次数=" + checkUpdateCount);
+                                                } catch (Throwable throwable) {
+                                                    throwable.printStackTrace();
+                                                }
+                                                bleUpdateModel.currentFirmVersion = bleUpdateModel.serverFirmVersion;
+                                                bleUpdateModel.currentFirmCreateTime = bleUpdateModel.serverFirmCreateTime;
+                                                getView().showOperationSuccessToast(mContext.getString(R.string.device_update_success));
+                                                getView().dismissUpdateDialogUtils();
+                                                getView().setIvHasNewVersionViewVisible(false);
+                                                freshDeviceUpdateVersionInfo();
+                                                //改变当前UI
+                                            }
+
+                                            @Override
+                                            public void onErrorMsg(int errorCode, String errorMsg) {
+                                                try {
+                                                    LogUtils.loge("升级--->> 回传服务器失败！！");
+                                                } catch (Throwable throwable) {
+                                                    throwable.printStackTrace();
+                                                }
+                                                getView().toastShort(mContext.getString(R.string.device_upgrade_failed));
+                                                getView().dismissUpdateDialogUtils();
+                                                //告诉升级失败
+                                            }
+                                        });
+                            }
+                        } else {
+                            try {
+                                LogUtils.loge("升级--->> 广播不包含！！");
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+                            if (isAttachedView()) {
+                                getView().toastShort(mContext.getString(R.string.device_upgrade_failed));
+                            }
+                        }
+                        return;
+                    }
+                }
+                checkUpdateCount++;
+                mHandler.postDelayed(checkUpdateTask, 1000);
+            } else {
+                mHandler.removeCallbacks(checkUpdateTask);
+                try {
+                    LogUtils.loge("升级--->> 超时！！次数=" + checkUpdateCount);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+                checkUpdateCount = 1;
+                //超时
+                if (isAttachedView()) {
+                    getView().toastShort(mContext.getString(R.string.device_upgrade_failed));
+                    getView().dismissUpdateDialogUtils();
+                }
+            }
+        }
+    };
+
+    @Override
+    public void onStart() {
+        SensoroCityApplication.getInstance().bleDeviceManager.startScan();
     }
 
     @Override
-    public void onDisconnected() {
+    public void onStop() {
+        SensoroCityApplication.getInstance().bleDeviceManager.stopScan();
+    }
 
+    public void doDeviceUpdate() {
+        String title;
+        String desc;
+        String timeStr = null;
+        boolean hasNewVersion = WidgetUtil.isNewVersion(bleUpdateModel.currentFirmVersion, bleUpdateModel.serverFirmVersion);
+        if (!PreferencesHelper.getInstance().getUserData().hasDeviceFirmwareUpdate) {
+            hasNewVersion = false;
+        }
+        if (hasNewVersion) {
+            title = mContext.getString(R.string.discover_new_version);
+            desc = mContext.getString(R.string.latest_version) + "：V " + bleUpdateModel.serverFirmVersion;
+            if (bleUpdateModel.serverFirmCreateTime != 0) {
+                timeStr = mContext.getString(R.string.firmware_release_date) + "：" + DateUtil.getStrTime_ymd(bleUpdateModel.serverFirmCreateTime);
+            }
+        } else {
+            title = mContext.getString(R.string.already_the_latest_version);
+            if (TextUtils.isEmpty(bleUpdateModel.currentFirmVersion)) {
+                desc = mContext.getString(R.string.current_version) + "：- ";
+            } else {
+                desc = mContext.getString(R.string.current_version) + "：V " + bleUpdateModel.currentFirmVersion;
+            }
+            if (bleUpdateModel.currentFirmCreateTime == 0) {
+                timeStr = mContext.getString(R.string.firmware_release_date) + "：-";
+            } else {
+                timeStr = mContext.getString(R.string.firmware_release_date) + "：" + DateUtil.getStrTime_ymd(bleUpdateModel.currentFirmCreateTime);
+            }
+        }
+        getView().showUpdateDialogUtils(title, desc, timeStr, hasNewVersion);
     }
 
     @Override
-    public void onWriteSuccess(Object o, int cmd) {
+    public void onResume() {
         if (sensoroDeviceConnection != null) {
-            sensoroDeviceConnection.disconnect();
-        }
-        if (isAttachedView()) {
-            getView().dismissOperatingLoadingDialog();
-            getView().showOperationSuccessToast();
+            sensoroDeviceConnection.onSessionResume();
         }
     }
 
     @Override
-    public void onWriteFailure(int errorCode, int cmd) {
-        if (isAttachedView()) {
-            bleRequestCmd();
+    public void onPause() {
+        if (sensoroDeviceConnection != null) {
+            sensoroDeviceConnection.onSessonPause();
         }
     }
 
+    public void showDemoModeDialog() {
+        switch (deviceDemoMode) {
+            case Constants.DEVICE_DEMO_MODE_NOT_SUPPORT:
+                //不显示条目
+                break;
+            case Constants.DEVICE_DEMO_MODE_NO_PERMISSION:
+                //不可点击
+                getView().toastShort(mContext.getString(R.string.no_permission_));
+                break;
+            case Constants.DEVICE_DEMO_MODE_OPEN:
+                //演示状态
+                getView().showCloseDemoDialog();
+                break;
+            case Constants.DEVICE_DEMO_MODE_CLOSE:
+                //非演示状态
+                getView().showOpenDemoDialog();
+                break;
+            default:
+                break;
+
+        }
+    }
+
+    public void doDemoConfigSwitch(final int mode) {
+        boolean bluetoothEnabled = SensoroCityApplication.getInstance().bleDeviceManager.isBluetoothEnabled();
+        if (!bluetoothEnabled) {
+            if (isAttachedView()) {
+                getView().showBleTips();
+            }
+            return;
+        }
+        getView().dismissCloseDemoDialog();
+        getView().dismissOpenDemoDialog();
+        if (bleDeviceMap.containsKey(mDeviceInfo.getSn())) {
+            if (sensoroDeviceConnection != null) {
+                sensoroDeviceConnection.disconnect();
+            }
+            getView().showOperationTipLoadingDialog(mContext.getString(R.string.mode_switch));
+            sensoroDeviceConnection = new SensoroDeviceConnection(mContext, bleDeviceMap.get(mDeviceInfo.getSn()).getMacAddress());
+            try {
+                final SensoroWriteCallback bleDemoModeWriteCallback = new SensoroWriteCallback() {
+                    @Override
+                    public void onWriteSuccess(Object o, int cmd) {
+                        String finalTipText = "";
+                        switch (mode) {
+                            case 0:
+                                //演示模式关闭成功
+                                finalTipText = mContext.getString(R.string.demo_mode_has_close);
+                                deviceDemoMode = DEVICE_DEMO_MODE_CLOSE;
+                                break;
+                            case 1:
+                                //演示模式开启成功
+                                finalTipText = mContext.getString(R.string.demo_mode_has_open);
+                                deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
+                                break;
+                        }
+
+                        if (sensoroDeviceConnection != null) {
+                            sensoroDeviceConnection.disconnect();
+                        }
+                        if (isAttachedView()) {
+                            getView().setDeviceDemoModeViewStatus(deviceDemoMode);
+                            getView().showOperationSuccessToast(finalTipText);
+                            getView().dismissOperatingLoadingDialog();
+                        }
+                    }
+
+                    @Override
+                    public void onWriteFailure(int errorCode, int cmd) {
+                        if (isAttachedView()) {
+                            getView().dismissOperatingLoadingDialog();
+                            getView().toastShort(mContext.getString(R.string.ble_config_failed));
+                        }
+                    }
+                };
+                final SensoroConnectionCallback bleDemoModeConnectionCallback = new SensoroConnectionCallback() {
+                    @Override
+                    public void onConnectedSuccess(BLEDevice bleDevice, int cmd) {
+                        if (isAttachedView()) {
+                            sensoroDeviceConnection.writeDemoModeCmd(mode, bleDemoModeWriteCallback);
+                        }
+                    }
+
+                    @Override
+                    public void onConnectedFailure(int errorCode) {
+                        if (isAttachedView()) {
+                            getView().dismissOperatingLoadingDialog();
+                            getView().toastShort(mContext.getString(R.string.ble_connect_failed));
+                        }
+                    }
+
+                    @Override
+                    public void onDisconnected() {
+
+                    }
+                };
+                sensoroDeviceConnection.connect(bleUpdateModel.blePassword, bleDemoModeConnectionCallback);
+            } catch (Exception e) {
+                e.printStackTrace();
+                getView().dismissOperatingLoadingDialog();
+                getView().toastShort(mContext.getString(R.string.ble_connect_failed));
+            }
+        } else {
+            if (isAttachedView()) {
+                getView().toastShort(mContext.getString(R.string.device_is_not_nearby));
+            }
+
+        }
+    }
 }

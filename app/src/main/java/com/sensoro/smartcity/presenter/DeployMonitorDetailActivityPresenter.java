@@ -7,11 +7,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
-import com.sensoro.libbleserver.ble.BLEDevice;
-import com.sensoro.libbleserver.ble.SensoroConnectionCallback;
-import com.sensoro.libbleserver.ble.SensoroDevice;
-import com.sensoro.libbleserver.ble.SensoroDeviceConnection;
-import com.sensoro.libbleserver.ble.SensoroWriteCallback;
+import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
+import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
+import com.sensoro.libbleserver.ble.connection.SensoroDeviceConnection;
+import com.sensoro.libbleserver.ble.entity.BLEDevice;
+import com.sensoro.libbleserver.ble.entity.SensoroDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
@@ -29,6 +29,7 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.model.DeployResultModel;
@@ -57,19 +58,17 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployMonitorDetailActivityView> implements IOnCreate, Constants
+public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployMonitorDetailActivityView> implements IOnCreate, IOnStart, Constants
         , SensoroConnectionCallback, BLEDeviceListener<BLEDevice>, Runnable {
     private Activity mContext;
     private SensoroDeviceConnection sensoroDeviceConnection;
     private Handler mHandler;
-    private String bleAddress;
-    private final HashSet<String> BLE_DEVICE_SET = new HashSet<>();
+    private final HashMap<String, BLEDevice> BLE_DEVICE_SET = new HashMap<>();
     private DeployAnalyzerModel deployAnalyzerModel;
     private final Runnable signalTask = new Runnable() {
         @Override
@@ -227,7 +226,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
             if (!TextUtils.isEmpty(deployAnalyzerModel.blePassword) && deployAnalyzerModel.channelMask.size() > 0) {
                 //需要配置频点信息
-                if (BLE_DEVICE_SET.contains(deployAnalyzerModel.sn)) {
+                if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
                     if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                         if (deployAnalyzerModel.settingData != null) {
                             //配置频点信息和初始配置
@@ -252,7 +251,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         } else {
             if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                 //单独配置初始配置
-                if (BLE_DEVICE_SET.contains(deployAnalyzerModel.sn)) {
+                if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
                     connectDevice();
                 } else {
                     getView().toastShort(mContext.getString(R.string.device_not_found_activate_Bluetooth));
@@ -265,7 +264,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     private void changeDevice(double lon, double lan) {
         if (!TextUtils.isEmpty(deployAnalyzerModel.blePassword) && deployAnalyzerModel.channelMask.size() > 0) {
-            if (BLE_DEVICE_SET.contains(deployAnalyzerModel.sn)) {
+            if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
                 getView().showBleConfigDialog();
                 connectDevice();
             } else {
@@ -285,8 +284,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         if (sensoroDeviceConnection != null) {
             sensoroDeviceConnection.disconnect();
         }
-        sensoroDeviceConnection = new SensoroDeviceConnection(mContext, bleAddress);
         try {
+            sensoroDeviceConnection = new SensoroDeviceConnection(mContext, BLE_DEVICE_SET.get(deployAnalyzerModel.sn).getMacAddress());
             sensoroDeviceConnection.connect(deployAnalyzerModel.blePassword, DeployMonitorDetailActivityPresenter.this);
         } catch (Exception e) {
             e.printStackTrace();
@@ -300,7 +299,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     }
 
     private void doUploadImages(final double lon, final double lan) {
-        if (deployAnalyzerModel.images.size() > 0) {
+        if (getRealImageSize(deployAnalyzerModel.images) > 0) {
             //TODO 图片提交
             final UpLoadPhotosUtils.UpLoadPhotoListener upLoadPhotoListener = new UpLoadPhotosUtils
                     .UpLoadPhotoListener() {
@@ -353,7 +352,13 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 }
             };
             UpLoadPhotosUtils upLoadPhotosUtils = new UpLoadPhotosUtils(mContext, upLoadPhotoListener);
-            upLoadPhotosUtils.doUploadPhoto(deployAnalyzerModel.images);
+            ArrayList<ImageItem> list = new ArrayList<>();
+            for (ImageItem image : deployAnalyzerModel.images) {
+                if (image != null) {
+                    list.add(image);
+                }
+            }
+            upLoadPhotosUtils.doUploadPhoto(list);
         } else {
             doDeployResult(lon, lan, null);
         }
@@ -370,16 +375,13 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 //                deployAnalyzerModel.weChatAccount = null;
                 boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                 //暂时添加 后续可以删除
-                HashMap<String, DeployControlSettingData> map = null;
+                DeployControlSettingData settingData = null;
                 if (isFire) {
-                    map = new HashMap<>();
-                    if (deployAnalyzerModel.settingData != null) {
-                        map.put(deployAnalyzerModel.deviceType, deployAnalyzerModel.settingData);
-                    }
+                    settingData = deployAnalyzerModel.settingData;
                 }
                 final long currentTimeMillis = System.currentTimeMillis();
                 RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, map).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, settingData).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new CityObserver<DeviceDeployRsp>(this) {
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
@@ -588,7 +590,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     public void doSettingPhoto() {
         Intent intent = new Intent(mContext, DeployMonitorDeployPicActivity.class);
-        if (deployAnalyzerModel.images.size() > 0) {
+        if (getRealImageSize(deployAnalyzerModel.images) > 0) {
             intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
         }
         intent.putExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
@@ -643,9 +645,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             case EVENT_DATA_DEPLOY_SETTING_PHOTO:
                 if (data instanceof List) {
                     deployAnalyzerModel.images.clear();
+
                     deployAnalyzerModel.images.addAll((ArrayList<ImageItem>) data);
-                    if (deployAnalyzerModel.images.size() > 0) {
-                        getView().setDeployPhotoText(mContext.getString(R.string.added) + deployAnalyzerModel.images.size() + mContext.getString(R.string.images));
+
+                    if (getRealImageSize(deployAnalyzerModel.images) > 0) {
+                        getView().setDeployPhotoText(mContext.getString(R.string.added) + getRealImageSize(deployAnalyzerModel.images) + mContext.getString(R.string.images));
                     } else {
                         getView().setDeployPhotoText(mContext.getString(R.string.not_added));
                     }
@@ -689,9 +693,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             case EVENT_DATA_DEPLOY_INIT_CONFIG_CODE:
                 if (data instanceof DeployControlSettingData) {
                     deployAnalyzerModel.settingData = (DeployControlSettingData) data;
-                    int initValue = deployAnalyzerModel.settingData.getSwitchSpec();
+                    Integer initValue = deployAnalyzerModel.settingData.getSwitchSpec();
                     if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
-                        getView().setDeployDeviceDetailDeploySetting(mContext.getString(R.string.actual_overcurrent_threshold) + ":" + initValue + "A");
+                        if (initValue != null) {
+                            getView().setDeployDeviceDetailDeploySetting(mContext.getString(R.string.actual_overcurrent_threshold) + ":" + initValue + "A");
+                        }
                     }
                 } else {
                     getView().setDeployDeviceDetailDeploySetting(null);
@@ -700,6 +706,16 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             default:
                 break;
         }
+    }
+
+    private int getRealImageSize(ArrayList<ImageItem> images) {
+        int count = 0;
+        for (ImageItem image : deployAnalyzerModel.images) {
+            if (image != null) {
+                count++;
+            }
+        }
+        return count;
     }
 
     @Override
@@ -761,7 +777,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         }
         switch (deployAnalyzerModel.deployType) {
             case TYPE_SCAN_DEPLOY_STATION:
-                if (deployAnalyzerModel.images.size() == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+                if (getRealImageSize(deployAnalyzerModel.images) == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
                     return false;
                 }
                 //经纬度校验
@@ -785,7 +801,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     return false;
                 }
                 //照片校验
-                if (deployAnalyzerModel.images.size() == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+                if (getRealImageSize(deployAnalyzerModel.images) == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
                     return false;
                 }
                 //经纬度校验
@@ -899,7 +915,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
      * @return
      */
     private boolean checkHasPhoto() {
-        if (deployAnalyzerModel.images.size() == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+        if (getRealImageSize(deployAnalyzerModel.images) == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
             getView().toastShort(mContext.getString(R.string.please_add_at_least_one_image));
             getView().updateUploadState(true);
             return true;
@@ -1152,12 +1168,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     @Override
     public void onNewDevice(final BLEDevice bleDevice) {
-        BLE_DEVICE_SET.add(bleDevice.getSn());
-        if (TextUtils.isEmpty(bleAddress)) {
-            if (bleDevice.getSn().equals(deployAnalyzerModel.sn)) {
-                bleAddress = bleDevice.getMacAddress();
-            }
-        }
+        BLE_DEVICE_SET.put(bleDevice.getSn(), bleDevice);
     }
 
     @Override
@@ -1173,12 +1184,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     public void onUpdateDevices(ArrayList<BLEDevice> deviceList) {
         for (BLEDevice device : deviceList) {
             if (device != null) {
-                BLE_DEVICE_SET.add(device.getSn());
-                if (TextUtils.isEmpty(bleAddress)) {
-                    if (device.getSn().equals(deployAnalyzerModel.sn)) {
-                        bleAddress = device.getMacAddress();
-                    }
-                }
+                BLE_DEVICE_SET.put(device.getSn(), device);
             }
         }
     }
@@ -1202,7 +1208,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             getView().showBleTips();
         }
         mHandler.postDelayed(this, 2000);
-        getView().setDeployDeviceDetailFixedPointNearVisible(BLE_DEVICE_SET.contains(deployAnalyzerModel.sn));
+        getView().setDeployDeviceDetailFixedPointNearVisible(BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn));
 
     }
 
@@ -1226,5 +1232,15 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         intent.putExtra(EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE);
         intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
         getView().startAC(intent);
+    }
+
+    @Override
+    public void onStart() {
+        SensoroCityApplication.getInstance().bleDeviceManager.startScan();
+    }
+
+    @Override
+    public void onStop() {
+        SensoroCityApplication.getInstance().bleDeviceManager.stopScan();
     }
 }

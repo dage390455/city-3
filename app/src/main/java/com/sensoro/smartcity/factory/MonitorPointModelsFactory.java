@@ -232,7 +232,7 @@ public class MonitorPointModelsFactory {
 
     public static HashMap<String, TaskOptionModel> createTaskOptionModelMap(int status) {
         HashMap<String, TaskOptionModel> map = new HashMap<>();
-        //消音
+        //短消音
 //        int ERASURE = 0x01;
 //        int RESET = 0x02;
 //        int PSD = 0x03;
@@ -241,15 +241,30 @@ public class MonitorPointModelsFactory {
 //        int AIR_SWITCH_CONFIG = 0x06;
 //        int AIR_SWITCH_POWER_OFF = 0x07;
 //        int AIR_SWITCH_POWER_ON = 0x08;
-        TaskOptionModel muteModel = new TaskOptionModel();
-        muteModel.id = MonitorPointOperationCode.ERASURE_STR;
-        muteModel.optionType = MonitorPointOperationCode.ERASURE;
-        boolean muteClickable = status == SENSOR_STATUS_ALARM || status == SENSOR_STATUS_MALFUNCTION;
-        muteModel.clickable = muteClickable;
-        muteModel.contentResId = R.string.monitor_point_detail_erasure;
-        muteModel.drawableResId = muteClickable ? R.drawable.erasure_clickable : R.drawable.erasure_not_clickable;
-        muteModel.textColorResId = muteClickable ? R.color.c_252525 : R.color.c_a6a6a6;
-        map.put(muteModel.id, muteModel);
+        if (PreferencesHelper.getInstance().getUserData().hasDeviceMuteShort) {
+            TaskOptionModel muteModel = new TaskOptionModel();
+            muteModel.id = MonitorPointOperationCode.ERASURE_STR;
+            muteModel.optionType = MonitorPointOperationCode.ERASURE;
+            boolean muteClickable = status == SENSOR_STATUS_ALARM || status == SENSOR_STATUS_MALFUNCTION;
+            muteModel.clickable = muteClickable;
+            muteModel.contentResId = R.string.monitor_point_detail_erasure;
+            muteModel.drawableResId = muteClickable ? R.drawable.erasure_clickable : R.drawable.erasure_not_clickable;
+            muteModel.textColorResId = muteClickable ? R.color.c_252525 : R.color.c_a6a6a6;
+            map.put(muteModel.id, muteModel);
+        }
+        //长消音
+        if (PreferencesHelper.getInstance().getUserData().hasDeviceMuteLong) {
+            TaskOptionModel muteLongModel = new TaskOptionModel();
+            muteLongModel.id = MonitorPointOperationCode.ERASURE_LONG_STR;
+            muteLongModel.optionType = MonitorPointOperationCode.ERASURE_LONG;
+            boolean muteLongClickable = status == SENSOR_STATUS_ALARM || status == SENSOR_STATUS_MALFUNCTION;
+            muteLongModel.clickable = muteLongClickable;
+            muteLongModel.contentResId = R.string.monitor_point_detail_erasure_long;
+            muteLongModel.drawableResId = muteLongClickable ? R.drawable.erasure_clickable : R.drawable.erasure_not_clickable;
+            muteLongModel.textColorResId = muteLongClickable ? R.color.c_252525 : R.color.c_a6a6a6;
+            map.put(muteLongModel.id, muteLongModel);
+        }
+
         //复位
         TaskOptionModel resetModel = new TaskOptionModel();
         resetModel.id = MonitorPointOperationCode.RESET_STR;
@@ -262,7 +277,7 @@ public class MonitorPointModelsFactory {
         map.put(resetModel.id, resetModel);
         //修改密码
         TaskOptionModel passwordModel = new TaskOptionModel();
-        passwordModel.id =MonitorPointOperationCode.PSD_STR;
+        passwordModel.id = MonitorPointOperationCode.PSD_STR;
         passwordModel.optionType = MonitorPointOperationCode.PSD;
         boolean passwordClickable = status != SENSOR_STATUS_LOST && status != SENSOR_STATUS_INACTIVE;
         passwordModel.clickable = passwordClickable;

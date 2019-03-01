@@ -45,6 +45,7 @@ public class DeployDeviceInfo implements Serializable {
     private List<Integer> channelMask;
     private String wxPhone;
     private boolean notOwn;
+    private String firmwareVersion;
 
     public boolean isNotOwn() {
         return notOwn;
@@ -356,6 +357,14 @@ public class DeployDeviceInfo implements Serializable {
 
     public void setWxPhone(String wxPhone) {
         this.wxPhone = wxPhone;
+    }
+
+    public String getFirmwareVersion() {
+        return firmwareVersion;
+    }
+
+    public void setFirmwareVersion(String firmwareVersion) {
+        this.firmwareVersion = firmwareVersion;
     }
 
     //TODO 是否一样

@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
-import com.sensoro.libbleserver.ble.BLEDevice;
+import com.sensoro.libbleserver.ble.entity.BLEDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.InspectionInstructionActivity;
@@ -30,7 +30,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -42,8 +42,7 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private long startTime;
     private InspectionTaskDeviceDetail mDeviceDetail;
-    private final HashSet<String> tempBleDevice = new HashSet<>();
-    private boolean hasBleDevice = false;
+    private final HashMap<String, BLEDevice> tempBleDevice = new HashMap<>();
 
     @Override
     public void initData(Context context) {
@@ -51,6 +50,7 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
         onCreate();
         startTime = System.currentTimeMillis();
         mDeviceDetail = (InspectionTaskDeviceDetail) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL);
+        mHandler.post(this);
         if (mDeviceDetail != null) {
             List<String> tags = mDeviceDetail.getTags();
             getView().updateTagsData(tags);
@@ -63,13 +63,13 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
                 String inspectionDeviceName = WidgetUtil.getInspectionDeviceName(mDeviceDetail.getDeviceType());
                 getView().setMonitorSn(inspectionDeviceName + " " + sn);
             }
-            mHandler.post(this);
         }
 
     }
 
     @Override
     public void onDestroy() {
+        BleObserver.getInstance().unregisterBleObserver(this);
         EventBus.getDefault().unregister(this);
         mHandler.removeCallbacksAndMessages(null);
     }
@@ -119,23 +119,19 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
 
     @Override
     public void onNewDevice(BLEDevice bleDevice) {
-        if (!tempBleDevice.contains(bleDevice.getSn())) {
-            tempBleDevice.add(bleDevice.getSn());
-        }
+        tempBleDevice.put(bleDevice.getSn(), bleDevice);
     }
 
     @Override
     public void onGoneDevice(BLEDevice bleDevice) {
-        if (tempBleDevice.contains(bleDevice.getSn())) {
-            tempBleDevice.remove(bleDevice.getSn());
-        }
+        tempBleDevice.remove(bleDevice.getSn());
     }
 
     @Override
     public void onUpdateDevices(ArrayList<BLEDevice> deviceList) {
         for (BLEDevice device : deviceList) {
             if (device != null) {
-                tempBleDevice.add(device.getSn());
+                tempBleDevice.put(device.getSn(), device);
             }
         }
 
@@ -158,29 +154,24 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
     @Override
     public void onCreate() {
         EventBus.getDefault().register(this);
+        BleObserver.getInstance().registerBleObserver(this);
     }
 
     @Override
     public void run() {
-        if (hasBleDevice) {
-            return;
-        }
         String sn = mDeviceDetail.getSn();
-//        String sn = "02700017C6445B3B";
-        if (tempBleDevice.contains(sn)) {
-            hasBleDevice = true;
-            getView().setConfirmState(hasBleDevice);
-        }
+        getView().setConfirmState(tempBleDevice.containsKey(sn));
         mHandler.postDelayed(this, 1 * 1000);
     }
 
     @Override
     public void onStart() {
-        BleObserver.getInstance().registerBleObserver(this);
+        //todo 两个几面跳转 暂时去掉
+//        SensoroCityApplication.getInstance().bleDeviceManager.startScan();
     }
 
     @Override
     public void onStop() {
-        BleObserver.getInstance().unregisterBleObserver(this);
+//        SensoroCityApplication.getInstance().bleDeviceManager.stopScan();
     }
 }

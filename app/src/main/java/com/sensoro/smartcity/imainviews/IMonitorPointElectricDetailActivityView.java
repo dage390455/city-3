@@ -1,7 +1,7 @@
 package com.sensoro.smartcity.imainviews;
 
 import android.support.annotation.ColorRes;
-import android.support.annotation.StringRes;
+import android.support.annotation.DrawableRes;
 
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
@@ -56,6 +56,8 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
 
     void showOperationSuccessToast();
 
+    void showOperationSuccessToast(String text);
+
     void showErrorTipDialog(String errorMsg);
 
     void showOperationTipLoadingDialog();
@@ -84,6 +86,10 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
 
     void dismissEarlyWarningThresholdAdapterDialogUtils();
 
+    void showUpdateDialogUtils(String title, String version, String date, boolean hasNewVersion);
+
+    void dismissUpdateDialogUtils();
+
     void setLlElectTopVisible(boolean isVisible);
 
     void setTopElectData(String value, int color, String typeName);
@@ -96,7 +102,39 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
 
     void setMonitorDetailTvCategory(String category);
 
-    void showTipDialog(boolean isEdit, String deviceType, @StringRes int title, @StringRes int message, @ColorRes int messageColor, @StringRes int confirm, @ColorRes int confirmColor, int type);
+    void showTipDialog(boolean isEdit, String deviceType, CharSequence title, CharSequence message, @ColorRes int messageColor, CharSequence confirm, @ColorRes int confirmColor, int type);
 
     void updateTaskOptionModelAdapter(ArrayList<TaskOptionModel> optionModels);
+
+    void setMonitorDeployTime(String time);
+
+    void setMonitorSwitchSpec(String text);
+
+    void setMonitorWireMaterial(String text);
+
+    void setMonitorWireDiameter(String text);
+
+    void setDeviceVision(String text);
+
+    void updateDialogProgress(String msg, int progress, int status);
+
+    void setIvHasNewVersionViewVisible(boolean isVisible);
+
+    void setSignalStatus(@DrawableRes int drawable, String text);
+
+    void showBleTips();
+
+    void hideBleTips();
+
+    void setDeviceDemoModeViewStatus(int status);
+
+    void showOpenDemoDialog();
+
+    void dismissOpenDemoDialog();
+
+    void showCloseDemoDialog();
+
+    void dismissCloseDemoDialog();
+
+    void showOperationTipLoadingDialog(String text);
 }

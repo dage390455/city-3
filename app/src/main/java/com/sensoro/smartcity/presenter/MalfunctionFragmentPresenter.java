@@ -58,9 +58,6 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
 
 
     public void requestSearchData(final int direction, String searchText) {
-        if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
-            return;
-        }
         if (!PreferencesHelper.getInstance().getUserData().hasMalfunction) {
             return;
         }

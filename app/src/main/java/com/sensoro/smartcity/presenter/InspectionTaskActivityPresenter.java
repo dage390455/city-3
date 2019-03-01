@@ -9,7 +9,7 @@ import android.text.TextUtils;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
-import com.sensoro.libbleserver.ble.BLEDevice;
+import com.sensoro.libbleserver.ble.entity.BLEDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
@@ -32,6 +32,7 @@ import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.smartcity.server.bean.InspectionTaskExecutionModel;
 import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskExecutionRsp;
+import com.sensoro.smartcity.temp.TestUpdateActivity;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.LogUtils;
@@ -43,7 +44,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -58,7 +59,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     private int finish = 2;
     private final List<InspectionTaskDeviceDetail> mDevices = new ArrayList<>();
     private final List<String> mSearchHistoryList = new ArrayList<>();
-    private final HashSet<String> BLE_DEVICE_SET = new HashSet<>();
+    private final HashMap<String,BLEDevice> BLE_DEVICE_SET = new HashMap<String, BLEDevice>();
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private volatile boolean canFreshBle = true;
     private InspectionIndexTaskInfo mTaskInfo;
@@ -128,7 +129,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
 
     @Override
     public void onNewDevice(BLEDevice bleDevice) {
-        BLE_DEVICE_SET.add(bleDevice.getSn());
+        BLE_DEVICE_SET.put(bleDevice.getSn(),bleDevice);
     }
 
     @Override
@@ -146,7 +147,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         for (BLEDevice device : deviceList) {
             if (device != null) {
                 stringBuilder.append(device.getSn()).append(",");
-                BLE_DEVICE_SET.add(device.getSn());
+                BLE_DEVICE_SET.put(device.getSn(),device);
             }
         }
         try {
@@ -284,7 +285,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     }
 
     public void requestSearchData(final int direction, String searchText) {
-        if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
+        if (!PreferencesHelper.getInstance().getUserData().hasInspectionDeviceList) {
             return;
         }
         if (TextUtils.isEmpty(searchText)) {
@@ -422,7 +423,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     }
 
     private boolean isNearBy(InspectionTaskDeviceDetail inspectionTaskDeviceDetail) {
-        return BLE_DEVICE_SET.contains(inspectionTaskDeviceDetail.getSn());
+        return BLE_DEVICE_SET.containsKey(inspectionTaskDeviceDetail.getSn());
     }
 
     public void doSelectStatusDevice(InspectionStatusCountModel item, String searchText) {
@@ -458,6 +459,14 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
             throwable.printStackTrace();
         }
         mHandler.postDelayed(this, 3 * 1000);
+//
+        if (BLE_DEVICE_SET.containsKey("02C41117C72BC418")) {
+            BLEDevice bleDevice = BLE_DEVICE_SET.get("02C41117C72BC418");
+            Intent intent = new Intent(mContext, TestUpdateActivity.class);
+            intent.putExtra("sensoro_device", bleDevice);
+            getView().startAC(intent);
+            getView().finishAc();
+        }
     }
 
     public void doNavigation(int position) {

@@ -25,6 +25,10 @@ public final class EventLoginData implements Serializable {
     public boolean hasSignalConfig = false;
     public boolean hasBadSignalUpload = false;
     public boolean hasDevicePositionCalibration = false;
+    public boolean hasDeviceMuteShort = false;
+    public boolean hasDeviceMuteLong = false;
+    public boolean hasDeviceFirmwareUpdate = false;
+    public boolean hasDeviceDemoMode = false;
     public boolean needAuth = false;
     public boolean hasControllerAid = false;
 
@@ -53,6 +57,10 @@ public final class EventLoginData implements Serializable {
                 ", hasInspectionDeviceModify=" + hasInspectionDeviceModify +
                 ", hasBadSignalUpload=" + hasBadSignalUpload +
                 ", hasDevicePositionCalibration=" + hasDevicePositionCalibration +
+                ", hasDeviceMuteShort=" + hasDeviceMuteShort +
+                ", hasDeviceMuteLong=" + hasDeviceMuteLong +
+                ", hasDeviceFirmwareUpdate=" + hasDeviceFirmwareUpdate +
+                ", hasDeviceDemoMode=" + hasDeviceDemoMode +
                 ", needAuth=" + needAuth +
                 ", hasControllerAid=" + hasControllerAid +
                 '}';

@@ -1,7 +1,6 @@
 package com.sensoro.smartcity;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -18,6 +17,7 @@ import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
 import com.baidu.ocr.sdk.exception.OCRError;
 import com.baidu.ocr.sdk.model.AccessToken;
+import com.github.moduth.blockcanary.BlockCanary;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.qiniu.android.common.FixedZone;
 import com.qiniu.android.storage.Configuration;
@@ -34,6 +34,7 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceManager;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.EventData;
+import com.sensoro.smartcity.push.AppBlockCanaryContext;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
 import com.sensoro.smartcity.push.ThreadPoolManager;
@@ -122,12 +123,6 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         super.onCreate();
         instance = this;
         init();
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not initView your app in this process.
-            return;
-        }
-        LeakCanary.install(this);
     }
 
 //    private void customAdaptForExternal() {
@@ -159,18 +154,9 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     private void initSensoroSDK() {
         try {
             bleDeviceManager = BLEDeviceManager.getInstance(this);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                bleDeviceManager.setForegroundScanPeriod(3 * 1000);
-                bleDeviceManager.setOutOfRangeDelay(7 * 1000);
-            }
-//            else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-//                bleDeviceManager.setForegroundScanPeriod(5000);
-//                bleDeviceManager.setOutOfRangeDelay(15000);
-//            }
-            else {
-                bleDeviceManager.setOutOfRangeDelay(7 * 1000);
-            }
+            bleDeviceManager.setForegroundScanPeriod(7 * 1000);
+            bleDeviceManager.setForegroundBetweenScanPeriod(2 * 1000);
+            bleDeviceManager.setOutOfRangeDelay(10 * 1000);
             bleDeviceManager.setBackgroundMode(false);
             bleDeviceManager.setBLEDeviceListener(BleObserver.getInstance());
         } catch (Exception e) {
@@ -213,6 +199,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     }
 
     public void init() {
+        initSensoroSDK();
         VIDEO_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/camera/";
         if (pushHandler == null) {
             pushHandler = new PushHandler();
@@ -381,12 +368,19 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     @Override
     public void onApplicationResumed() {
         isAPPBack = false;
+        if (mLocationClient != null) {
+            mLocationClient.startLocation();
+        }
     }
 
     @Override
     public void onApplicationPaused() {
         isAPPBack = true;
+        if (mLocationClient != null) {
+            mLocationClient.stopLocation();
+        }
     }
+
 
     public static void sendMessage(Message msg) {
         pushHandler.sendMessage(msg);
@@ -452,7 +446,6 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
 
     @Override
     public void run() {
-        initSensoroSDK();
         initORC();
         SensoroPushManager.getInstance().registerSensoroPushListener(this);
         Repause.init(this);
@@ -467,6 +460,13 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         locate();
         initSmartRefresh();
         initBugLy();
+        BlockCanary.install(this, new AppBlockCanaryContext()).start();
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not initView your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
     }
 
     /**

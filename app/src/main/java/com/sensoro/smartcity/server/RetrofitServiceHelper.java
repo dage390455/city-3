@@ -33,6 +33,7 @@ import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
+import com.sensoro.smartcity.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskExceptionDeviceRsp;
@@ -57,9 +58,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
@@ -70,11 +73,15 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 import static com.sensoro.smartcity.server.RetrofitService.SCOPE_DEMO;
 import static com.sensoro.smartcity.server.RetrofitService.SCOPE_MASTER;
@@ -501,7 +508,7 @@ public enum RetrofitServiceHelper {
      * @return
      */
     public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, List<String> tags, String
-            name, String contact, String content, String wxPhone, List<String> imgUrls, Map<String, DeployControlSettingData> settingMap) {
+            name, String contact, String content, String wxPhone, List<String> imgUrls, DeployControlSettingData deployControlSettingData) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("lon", lon);
@@ -532,35 +539,42 @@ public enum RetrofitServiceHelper {
             if (!TextUtils.isEmpty(wxPhone)) {
                 jsonObject.put("wxPhone", wxPhone);
             }
-            if (settingMap != null) {
-                JSONObject jsonObjectOut = new JSONObject();
-                for (Map.Entry<String, DeployControlSettingData> entrySet : settingMap.entrySet()) {
-                    String key = entrySet.getKey();
-                    if (!TextUtils.isEmpty(key)) {
-                        DeployControlSettingData value = entrySet.getValue();
-                        JSONObject jsonObjectIn = new JSONObject();
-                        jsonObjectIn.put("initValue", value.getSwitchSpec());
-                        Double diameterValue = value.getWireDiameter();
-                        if (diameterValue != null) {
-                            jsonObjectIn.put("wireDiameter", diameterValue);
-                        }
-                        int wireMaterial = value.getWireMaterial();
-                        jsonObjectIn.put("wireMaterial", wireMaterial);
-                        jsonObjectOut.put(key, jsonObjectIn);
-
-                    }
-                }
-                jsonObject.put("config", jsonObjectOut);
-            }
-//            if (deployControlSettingData != null) {
+//            if (settingMap != null) {
 //                JSONObject jsonObjectOut = new JSONObject();
-//                jsonObjectOut.put("switchSpec", deployControlSettingData.getSwitchSpec());
-//                Double diameterValue = deployControlSettingData.getWireDiameter();
-//                if (diameterValue != null) {
-//                    jsonObjectOut.put("diameterValue", diameterValue);
+//                for (Map.Entry<String, DeployControlSettingData> entrySet : settingMap.entrySet()) {
+//                    String key = entrySet.getKey();
+//                    if (!TextUtils.isEmpty(key)) {
+//                        DeployControlSettingData value = entrySet.getValue();
+//                        JSONObject jsonObjectIn = new JSONObject();
+//                        jsonObjectIn.put("initValue", value.getSwitchSpec());
+//                        Double diameterValue = value.getWireDiameter();
+//                        if (diameterValue != null) {
+//                            jsonObjectIn.put("wireDiameter", diameterValue);
+//                        }
+//                        int wireMaterial = value.getWireMaterial();
+//                        jsonObjectIn.put("wireMaterial", wireMaterial);
+//                        jsonObjectOut.put(key, jsonObjectIn);
+//
+//                    }
 //                }
 //                jsonObject.put("config", jsonObjectOut);
 //            }
+            if (deployControlSettingData != null) {
+                JSONObject jsonObjectOut = new JSONObject();
+                Integer switchSpec = deployControlSettingData.getSwitchSpec();
+                if (switchSpec != null) {
+                    jsonObjectOut.put("switchSpec", switchSpec);
+                }
+                Double wireDiameter = deployControlSettingData.getWireDiameter();
+                if (wireDiameter != null) {
+                    jsonObjectOut.put("wireDiameter", wireDiameter);
+                }
+                Integer wireMaterial = deployControlSettingData.getWireMaterial();
+                if (wireMaterial != null) {
+                    jsonObjectOut.put("wireMaterial", wireMaterial);
+                }
+                jsonObject.put("config", jsonObjectOut);
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1415,4 +1429,126 @@ public enum RetrofitServiceHelper {
     public Observable<LoginRsp> backMainAccount() {
         return retrofitService.backMainControlling();
     }
+
+    /**
+     * 获取可升级固件版本列表信息
+     *
+     * @param sn
+     * @param deviceType
+     * @param band
+     * @param fromVersion
+     * @param page
+     * @param count
+     * @return
+     */
+    public Observable<DeviceUpdateFirmwareDataRsp> getDeviceUpdateVision(String sn, String deviceType, String band, String fromVersion, String hardwareVersion, Integer page, Integer count) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(deviceType)) {
+                jsonObject.put("deviceType", deviceType);
+            }
+            if (!TextUtils.isEmpty(band)) {
+                jsonObject.put("band", band);
+            }
+            if (!TextUtils.isEmpty(fromVersion)) {
+                jsonObject.put("fromVersion", fromVersion);
+            }
+            if (!TextUtils.isEmpty(hardwareVersion)) {
+                jsonObject.put("hardwareVersion", hardwareVersion);
+            }
+            if (page != null) {
+                jsonObject.put("page", page);
+            }
+            if (count != null) {
+                jsonObject.put("count", count);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        Observable<DeviceUpdateFirmwareDataRsp> deviceUpdateVision = retrofitService.getDeviceUpdateVision(sn, body);
+        RxApiManager.getInstance().add("getDeviceUpdateVision", deviceUpdateVision.subscribe());
+        return deviceUpdateVision;
+    }
+
+    /**
+     * 回传版本信息
+     *
+     * @param sn
+     * @param firmwareVersion
+     * @return
+     */
+    public Observable<ResponseBase> upLoadDeviceUpdateVision(String sn, String firmwareVersion) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(firmwareVersion)) {
+                jsonObject.put("firmwareVersion", firmwareVersion);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        Observable<ResponseBase> upLoadDeviceUpdateVision = retrofitService.upLoadDeviceUpdateVision(sn, body);
+        RxApiManager.getInstance().add("upLoadDeviceUpdateVision", upLoadDeviceUpdateVision.subscribe());
+        return upLoadDeviceUpdateVision;
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param url
+     * @param filePath
+     * @param observer
+     */
+    public void downloadDeviceFirmwareFile(String url, final String filePath, CityObserver<Boolean> observer) {
+        retrofitService.downloadDeviceFirmwareFile(url).subscribeOn(Schedulers.io()).map(new Func1<ResponseBody, Boolean>() {
+            @Override
+            public Boolean call(ResponseBody responseBody) {
+                return writeResponseBodyToDisk(responseBody, filePath);
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(observer);
+    }
+
+    private boolean writeResponseBodyToDisk(ResponseBody body, String filePath) {
+        try {
+            File futureStudioIconFile = new File(filePath);
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+            try {
+                byte[] fileReader = new byte[4096];
+                long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
+                inputStream = body.byteStream();
+                outputStream = new FileOutputStream(futureStudioIconFile);
+                while (true) {
+                    int read = inputStream.read(fileReader);
+                    if (read == -1) {
+                        break;
+                    }
+                    outputStream.write(fileReader, 0, read);
+                    fileSizeDownloaded += read;
+                    try {
+                        LogUtils.loge("writeResponseBodyToDisk-->> file download: " + fileSizeDownloaded + " of " + fileSize);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                }
+                outputStream.flush();
+                return true;
+            } catch (IOException e) {
+                return false;
+            } finally {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            }
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+
 }

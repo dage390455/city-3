@@ -10,6 +10,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.DeployPicInfo;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
 import com.sensoro.smartcity.server.bean.MalfunctionTypeStyles;
@@ -80,6 +81,10 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, eventLoginData.hasSignalConfig);
         editor.putBoolean(EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD, eventLoginData.hasBadSignalUpload);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION, eventLoginData.hasDevicePositionCalibration);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_SHORT, eventLoginData.hasDeviceMuteShort);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_LONG, eventLoginData.hasDeviceMuteLong);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_FIRMWARE_UPDATE, eventLoginData.hasDeviceFirmwareUpdate);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_DEMO_MODE, eventLoginData.hasDeviceDemoMode);
         editor.putBoolean(EXTRA_GRANTS_HAS_CONTROLLER_AID, eventLoginData.hasControllerAid);
         //
         editor.apply();
@@ -116,6 +121,10 @@ public final class PreferencesHelper implements Constants {
             boolean hasDeviceSignalConfig = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, false);
             boolean hasBadSignalUpload = sp.getBoolean(EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD, false);
             boolean hasDevicePositionCalibration = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION, false);
+            boolean hasDeviceMuteShort = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_SHORT, false);
+            boolean hasDeviceMuteLong = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_LONG, false);
+            boolean hasDeviceFirmUpdate = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_FIRMWARE_UPDATE, false);
+            boolean hasDeviceDemoMode = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_DEMO_MODE, false);
             boolean hasControllerAid = sp.getBoolean(EXTRA_GRANTS_HAS_CONTROLLER_AID, false);
             final EventLoginData eventLoginData = new EventLoginData();
             eventLoginData.phoneId = phoneId;
@@ -140,6 +149,10 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasSignalConfig = hasDeviceSignalConfig;
             eventLoginData.hasBadSignalUpload = hasBadSignalUpload;
             eventLoginData.hasDevicePositionCalibration = hasDevicePositionCalibration;
+            eventLoginData.hasDeviceMuteShort = hasDeviceMuteShort;
+            eventLoginData.hasDeviceMuteLong = hasDeviceMuteLong;
+            eventLoginData.hasDeviceFirmwareUpdate = hasDeviceFirmUpdate;
+            eventLoginData.hasDeviceDemoMode = hasDeviceDemoMode;
             eventLoginData.hasControllerAid = hasControllerAid;
             mEventLoginData = eventLoginData;
         }
@@ -263,6 +276,7 @@ public final class PreferencesHelper implements Constants {
         try {
             if (mDeviceMergeTypesInfo == null) {
                 String json = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, null);
+                LogUtils.loge("DeviceMergeTypesInfo json : " + json);
                 if (!TextUtils.isEmpty(json)) {
                     mDeviceMergeTypesInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, DeviceMergeTypesInfo.class);
                 }
@@ -479,6 +493,20 @@ public final class PreferencesHelper implements Constants {
     }
 
     /**
+     * 获取部署照片中的配置字段
+     *
+     * @param deviceType
+     * @return
+     */
+    public List<DeployPicInfo> getConfigDeviceDeployPic(String deviceType) {
+        DeviceTypeStyles configDeviceType = getConfigDeviceType(deviceType);
+        if (configDeviceType != null) {
+            return configDeviceType.getDeployPicConfig();
+        }
+        return null;
+    }
+
+    /**
      * 获取配置字段 --设备主类型
      *
      * @param mergeType
@@ -517,4 +545,53 @@ public final class PreferencesHelper implements Constants {
         }
         return null;
     }
+
+    /**
+     * 存储示例照片今日不再提示的时间
+     *
+     * @param key
+     */
+    public void saveDeployExamplePicTimestamp(String key) {
+        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_EXAMPLE_PIC, Context
+                .MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(key, DateUtil.getStrTime_yymmdd(System.currentTimeMillis()));
+        editor.apply();
+    }
+
+    public String getDeployExamplePicTimestamp(String key) {
+        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_EXAMPLE_PIC, Context
+                .MODE_PRIVATE);
+        return sp.getString(key, "");
+    }
+
+    public int getLocalDemoModeState(String sn) {
+        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEMO_MODE_JSON, Context
+                .MODE_PRIVATE);
+        String json = sp.getString(PREFERENCE_DEMO_MODE_JSON, null);
+        if (!TextUtils.isEmpty(json)) {
+            HashMap map = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, HashMap.class);
+            Object value = map.get(sn);
+            if (value instanceof Integer) {
+                return (int) value;
+            }
+        }
+        return 0;
+    }
+
+    public void saveLocalDemoModeState(String sn, int mode) {
+        final HashMap<String, Integer> localDemoModeMap = new HashMap<>();
+        localDemoModeMap.put(sn, mode);
+        try {
+            String json = RetrofitServiceHelper.INSTANCE.getGson().toJson(localDemoModeMap);
+            SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEMO_MODE_JSON, Context
+                    .MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString(PREFERENCE_DEMO_MODE_JSON, json);
+            editor.apply();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

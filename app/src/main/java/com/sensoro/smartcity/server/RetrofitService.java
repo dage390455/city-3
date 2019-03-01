@@ -10,6 +10,7 @@ import com.sensoro.smartcity.server.response.ContractsListRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
 import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.DeployRecordRsp;
+import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmTimeRsp;
@@ -18,6 +19,7 @@ import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
+import com.sensoro.smartcity.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskExceptionDeviceRsp;
@@ -30,12 +32,12 @@ import com.sensoro.smartcity.server.response.MalfunctionListRsp;
 import com.sensoro.smartcity.server.response.MonitorPointOperationRequestRsp;
 import com.sensoro.smartcity.server.response.QiNiuToken;
 import com.sensoro.smartcity.server.response.ResponseBase;
-import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
 import com.sensoro.smartcity.server.response.UpdateRsp;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
 
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
@@ -46,6 +48,8 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Streaming;
+import retrofit2.http.Url;
 import rx.Observable;
 
 public interface RetrofitService {
@@ -284,5 +288,35 @@ public interface RetrofitService {
 
     @DELETE("prov1/accounts/controlling")
     Observable<LoginRsp> backMainControlling();
+
+    /**
+     * 获取固件列表
+     *
+     * @param sn
+     * @param requestBody
+     * @return
+     */
+    @POST("devices/version/list/{sn}")
+    Observable<DeviceUpdateFirmwareDataRsp> getDeviceUpdateVision(@Path("sn") String sn, @Body RequestBody requestBody);
+
+    /**
+     * 回写固件版本到iot
+     *
+     * @param sn
+     * @param requestBody
+     * @return
+     */
+    @POST("devices/firmwareversion/update/{sn}")
+    Observable<ResponseBase> upLoadDeviceUpdateVision(@Path("sn") String sn, @Body RequestBody requestBody);
+
+    /**
+     * 下载文件
+     *
+     * @param url
+     * @return
+     */
+    @Streaming
+    @GET
+    Observable<ResponseBody> downloadDeviceFirmwareFile(@Url String url);
 }
 

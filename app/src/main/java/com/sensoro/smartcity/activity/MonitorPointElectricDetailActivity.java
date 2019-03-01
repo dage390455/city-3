@@ -3,7 +3,6 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
-import android.support.annotation.StringRes;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -38,7 +38,10 @@ import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.TouchRecycleView;
 import com.sensoro.smartcity.widget.dialog.EarlyWarningThresholdDialogUtils;
+import com.sensoro.smartcity.widget.dialog.MonitorPointDemoDialogUtils;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
+import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
+import com.sensoro.smartcity.widget.dialog.TipDeviceUpdateDialogUtils;
 import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.divider.BottomNoDividerItemDecoration;
 import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
@@ -57,6 +60,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     ImageView includeImvTitleImvArrowsLeft;
     @BindView(R.id.include_text_title_tv_title)
     TextView includeImvTitleTvTitle;
+    @BindView(R.id.include_text_title_divider)
+    View includeTextTitleDivider;
     @BindView(R.id.include_text_title_tv_subtitle)
     TextView includeTextTitleTvSubtitle;
     @BindView(R.id.ac_monitoring_point_tv_name)
@@ -146,6 +151,56 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     TextView monitorDetailTvCategory;
     @BindView(R.id.ac_monitoring_point_rc_operation)
     RecyclerView acMonitoringPointRcOperation;
+    //部署时间
+    @BindView(R.id.ll_monitor_deploy_time)
+    LinearLayout llMonitorDeployTime;
+    @BindView(R.id.monitor_detail_tv_deploy_time)
+    TextView monitorDetailTvDeployTime;
+    //线材
+    @BindView(R.id.iv_line_diameter_material)
+    ImageView ivLineDiameterMaterial;
+    @BindView(R.id.rl_monitor_diameter_material)
+    RelativeLayout rlMonitorDiameterMaterial;
+    @BindView(R.id.monitor_detail_tv_diameter_material)
+    TextView monitorDetailTvDiameterMaterial;
+    //线径
+    @BindView(R.id.iv_line_diameter)
+    ImageView ivLineDiameter;
+    @BindView(R.id.rl_monitor_diameter)
+    RelativeLayout rlMonitorDiameter;
+    @BindView(R.id.monitor_detail_tv_diameter)
+    TextView monitorDetailTvDiameter;
+    //过流阈值
+    @BindView(R.id.iv_line_over_current)
+    ImageView ivLineOverCurrent;
+    @BindView(R.id.rl_monitor_over_current)
+    RelativeLayout rlMonitorOverCurrent;
+    @BindView(R.id.monitor_detail_tv_over_current)
+    TextView monitorDetailTvOverCurrent;
+    //固件版本
+    @BindView(R.id.rl_monitor_device_update)
+    RelativeLayout rlMonitorDeviceUpdate;
+    @BindView(R.id.monitor_detail_tv_device_vision)
+    TextView monitorDetailTvDeviceVision;
+    @BindView(R.id.iv_has_new_version)
+    ImageView ivHasNewVersion;
+    //信号
+    @BindView(R.id.iv_monitor_signal)
+    ImageView ivMonitorSignal;
+    @BindView(R.id.tv_monitor_signal)
+    TextView tvMonitorSignal;
+    @BindView(R.id.iv_monitor_device_demo)
+    ImageView ivMonitorDeviceDemo;
+    @BindView(R.id.iv_line_device_demo)
+    ImageView ivLineDeviceDemo;
+    @BindView(R.id.rl_monitor_device_demo)
+    RelativeLayout rlMonitorDeviceDemo;
+    @BindView(R.id.rl_monitor_demo_mode_tip)
+    RelativeLayout rlMonitorDemoModeTip;
+    @BindView(R.id.iv_demo_mode_tip)
+    ImageView ivDemoModeTip;
+    @BindView(R.id.v_top_margin)
+    View vTopMargin;
     private boolean showDetail = false;
     private MonitoringPointRcContentAdapter mContentAdapter;
     private MonitoringPointRcMalfunctionContentAdapter mContentMalfunctionAdapter;
@@ -156,6 +211,10 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     private int mTipDialogType;
     private EarlyWarningThresholdDialogUtils earlyWarningThresholdDialogUtils;
     private MonitorDetailOperationAdapter monitorDetailOperationAdapter;
+    private TipDeviceUpdateDialogUtils tipDeviceUpdateDialogUtils;
+    private TipBleDialogUtils tipBleDialogUtils;
+    private MonitorPointDemoDialogUtils mCloseDemoDialogUtils;
+    private MonitorPointDemoDialogUtils mOpenDemoDialogUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -165,7 +224,20 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         mPresenter.initData(mActivity);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPresenter.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPresenter.onPause();
+    }
+
     private void initView() {
+        ivDemoModeTip.setColorFilter(mActivity.getResources().getColor(R.color.c_197358));
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeImvTitleTvTitle.setText(R.string.monitoring_point_details);
         includeTextTitleTvSubtitle.setText(R.string.historical_log);
@@ -181,7 +253,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         int spacingInPixels = AppUtils.dp2px(mActivity, 8);
         monitorDetailRcTag.setIntercept(true);
         monitorDetailRcTag.setLayoutManager(layoutManager);
-        monitorDetailRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels,false,false));
+        monitorDetailRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels, false, false));
         monitorDetailRcTag.setAdapter(mTagAdapter);
         //
         mContentAdapter = new MonitoringPointRcContentAdapter(mActivity);
@@ -202,9 +274,49 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         initMonitorPhoto();
         initMalfunctionData();
         initMonitorOperation();
+        tipBleDialogUtils = new TipBleDialogUtils(mActivity);
+        initEarlyWarningThresholdDialog();
+        initTipDeviceUpdateDialog();
+        initOpenDemoDialog();
+        initCloseDemoDialog();
+
+    }
+
+    private void initCloseDemoDialog() {
+        mCloseDemoDialogUtils = new MonitorPointDemoDialogUtils(mActivity);
+        mCloseDemoDialogUtils.setDemoTitleText(getString(R.string.close_demo_mode));
+        mCloseDemoDialogUtils.setDemoContent(getString(R.string.close_demo_mode_content));
+        mCloseDemoDialogUtils.setDemoBtnText(getString(R.string.confirm_close));
+        mCloseDemoDialogUtils.setMonitorPointDemoClickListener(new MonitorPointDemoDialogUtils.MonitorPointDemolickListener() {
+            @Override
+            public void onConfirmClick() {
+                mPresenter.doDemoConfigSwitch(0);
+            }
+        });
+    }
+
+    private void initOpenDemoDialog() {
+        mOpenDemoDialogUtils = new MonitorPointDemoDialogUtils(mActivity);
+        mOpenDemoDialogUtils.setDemoTitleText(getString(R.string.open_demo_mode));
+        mOpenDemoDialogUtils.setDemoContent(getString(R.string.open_demo_mode_content));
+        mOpenDemoDialogUtils.setDemoDescription(getString(R.string.open_demo_mode_description));
+        mOpenDemoDialogUtils.setDemoBtnText(getString(R.string.confirm_open));
+        mOpenDemoDialogUtils.setMonitorPointDemoClickListener(new MonitorPointDemoDialogUtils.MonitorPointDemolickListener() {
+            @Override
+            public void onConfirmClick() {
+                mPresenter.doDemoConfigSwitch(1);
+            }
+        });
+    }
+
+    private void initTipDeviceUpdateDialog() {
+        tipDeviceUpdateDialogUtils = new TipDeviceUpdateDialogUtils(mActivity);
+        tipDeviceUpdateDialogUtils.setTipDialogUtilsClickListener(mPresenter);
+    }
+
+    private void initEarlyWarningThresholdDialog() {
         earlyWarningThresholdDialogUtils = new EarlyWarningThresholdDialogUtils(mActivity);
         earlyWarningThresholdDialogUtils.setDialogUtilsChangeClickListener(this);
-
     }
 
     private void initMalfunctionData() {
@@ -230,7 +342,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         };
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         layoutManager.setReverseLayout(true);
-        acMonitorDeployPhoto.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(this,8),false));
+        acMonitorDeployPhoto.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(this, 8), false));
         acMonitorDeployPhoto.setLayoutManager(layoutManager);
         mAdapter = new MonitorDeployDetailPhotoAdapter(mActivity);
         acMonitorDeployPhoto.setAdapter(mAdapter);
@@ -380,6 +492,18 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     @Override
+    protected void onStart() {
+        mPresenter.onStart();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mPresenter.onStop();
+    }
+
+    @Override
     protected void onDestroy() {
 //        if (mAlarmPopupView != null) {
 //            mAlarmPopupView.onDestroyPop();
@@ -394,6 +518,16 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         if (mOperatingUtil != null) {
             mOperatingUtil.destroy();
         }
+        if (tipDeviceUpdateDialogUtils != null) {
+            tipDeviceUpdateDialogUtils.destory();
+        }
+        if (mOpenDemoDialogUtils != null) {
+            mOpenDemoDialogUtils.destroy();
+        }
+        if (mCloseDemoDialogUtils != null) {
+            mCloseDemoDialogUtils.destroy();
+        }
+        SensoroSuccessToast.INSTANCE.cancelToast();
         super.onDestroy();
     }
 
@@ -479,6 +613,11 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     @Override
+    public void showOperationSuccessToast(String text) {
+        SensoroSuccessToast.INSTANCE.showToast(mActivity, Toast.LENGTH_LONG, text);
+    }
+
+    @Override
     public void showErrorTipDialog(String errorMsg) {
         if (mTipUtils.isShowing()) {
             mTipUtils.setTipMessageText(errorMsg);
@@ -498,6 +637,9 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         if (mOperatingUtil != null) {
             switch (mTipDialogType) {
                 case MonitorPointOperationCode.ERASURE:
+                    mOperatingUtil.setTipText(mActivity.getString(R.string.erasuring));
+                    break;
+                case MonitorPointOperationCode.ERASURE_LONG:
                     mOperatingUtil.setTipText(mActivity.getString(R.string.erasuring));
                     break;
                 case MonitorPointOperationCode.RESET:
@@ -523,6 +665,17 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
                     break;
 
             }
+            if (!mOperatingUtil.isShowing()) {
+                mOperatingUtil.show();
+            }
+
+        }
+    }
+
+    @Override
+    public void showOperationTipLoadingDialog(String text) {
+        if (mOperatingUtil != null) {
+            mOperatingUtil.setTipText(text);
             if (!mOperatingUtil.isShowing()) {
                 mOperatingUtil.show();
             }
@@ -631,6 +784,46 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     @Override
+    public void showUpdateDialogUtils(String title, String version, String date, boolean hasNewVersion) {
+        if (tipDeviceUpdateDialogUtils != null) {
+            tipDeviceUpdateDialogUtils.setTipTitleText(title);
+            tipDeviceUpdateDialogUtils.setTipNewVersionText(version);
+            tipDeviceUpdateDialogUtils.setTipVersionDateText(date);
+            tipDeviceUpdateDialogUtils.setTipButtonVisible(hasNewVersion);
+            tipDeviceUpdateDialogUtils.setCancelable(true);
+            tipDeviceUpdateDialogUtils.setCanceledOnTouchOutside(true);
+            tipDeviceUpdateDialogUtils.show();
+        }
+    }
+
+    @Override
+    public void dismissUpdateDialogUtils() {
+        if (tipDeviceUpdateDialogUtils != null) {
+            tipDeviceUpdateDialogUtils.dismiss();
+        }
+    }
+
+    @Override
+    public void updateDialogProgress(String msg, int progress, int status) {
+        if (tipDeviceUpdateDialogUtils != null) {
+            tipDeviceUpdateDialogUtils.setCancelable(false);
+            tipDeviceUpdateDialogUtils.setCanceledOnTouchOutside(false);
+            tipDeviceUpdateDialogUtils.updateDialog(msg, progress, status);
+        }
+    }
+
+    @Override
+    public void setIvHasNewVersionViewVisible(boolean isVisible) {
+        ivHasNewVersion.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setSignalStatus(int drawable, String text) {
+        ivMonitorSignal.setImageResource(drawable);
+        tvMonitorSignal.setText(text);
+    }
+
+    @Override
     public void setLlElectTopVisible(boolean isVisible) {
         llElectTop.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
@@ -663,7 +856,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
 
 
     @OnClick({R.id.include_text_title_tv_subtitle, R.id.ac_monitoring_point_cl_alert_contact, R.id.ac_monitoring_point_imv_location, R.id.ac_monitoring_point_cl_location_navigation,
-            R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left, R.id.ll_elect_more, R.id.ll_all_info})
+            R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left, R.id.ll_elect_more, R.id.ll_all_info, R.id.rl_monitor_device_update, R.id.iv_monitor_device_demo, R.id.rl_monitor_demo_mode_tip})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
@@ -691,23 +884,32 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
                     mPresenter.showEarlyWarningThresholdDialogUtils();
                 }
                 break;
+            case R.id.rl_monitor_device_update:
+                //固件升级
+//                toastShort("固件升级");
+                mPresenter.doDeviceUpdate();
+                break;
+            case R.id.iv_monitor_device_demo:
+            case R.id.rl_monitor_demo_mode_tip:
+                mPresenter.showDemoModeDialog();
+                break;
         }
     }
 
     //TODO 包含慢炖空开配置
     @Override
-    public void showTipDialog(boolean isEdit, String deviceType, @StringRes int title, @StringRes int message, @ColorRes int messageColor, @StringRes int confirm, @ColorRes int confirmColor, int type) {
+    public void showTipDialog(boolean isEdit, String deviceType, CharSequence title, CharSequence message, @ColorRes int messageColor, CharSequence confirm, @ColorRes int confirmColor, int type) {
         if (mTipUtils.isShowing()) {
             mTipUtils.dismiss();
         }
         //控制线径显示
         mTipUtils.setDiameterVisible(isEdit && Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType));
         mTipUtils.setTipEtRootVisible(isEdit);
-        mTipUtils.setTipTitleText(mActivity.getString(title));
-        mTipUtils.setTipMessageText(mActivity.getString(message), messageColor);
+        mTipUtils.setTipTitleText(title);
+        mTipUtils.setTipMessageText(message, messageColor);
         mTipUtils.setTipConfirmVisible(true);
         mTipUtils.setTipCancelText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
-        mTipUtils.setTipConfirmText(mActivity.getString(confirm), mActivity.getResources().getColor(confirmColor));
+        mTipUtils.setTipConfirmText(confirm, mActivity.getResources().getColor(confirmColor));
         mTipDialogType = type;
         mTipUtils.show();
     }
@@ -726,6 +928,39 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         monitorDetailOperationAdapter.updateMonitorDetailOperations(optionModels);
     }
 
+    @Override
+    public void setMonitorDeployTime(String time) {
+        monitorDetailTvDeployTime.setVisibility(View.VISIBLE);
+        monitorDetailTvDeployTime.setText(time);
+    }
+
+    @Override
+    public void setMonitorSwitchSpec(String text) {
+        ivLineOverCurrent.setVisibility(View.VISIBLE);
+        rlMonitorOverCurrent.setVisibility(View.VISIBLE);
+        monitorDetailTvOverCurrent.setText(text);
+    }
+
+    @Override
+    public void setMonitorWireMaterial(String text) {
+        ivLineDiameterMaterial.setVisibility(View.VISIBLE);
+        rlMonitorDiameterMaterial.setVisibility(View.VISIBLE);
+        monitorDetailTvDiameterMaterial.setText(text);
+    }
+
+    @Override
+    public void setMonitorWireDiameter(String text) {
+        ivLineDiameter.setVisibility(View.VISIBLE);
+        rlMonitorDiameter.setVisibility(View.VISIBLE);
+        monitorDetailTvDiameter.setText(text);
+    }
+
+    @Override
+    public void setDeviceVision(String text) {
+        monitorDetailTvDeviceVision.setText(text);
+    }
+
+
     //tip dialog 点击事件
     @Override
     public void onCancelClick() {
@@ -736,7 +971,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
 
     @Override
     public void onConfirmClick(String content, String diameter) {
-        mPresenter.doOperation(mTipDialogType, content, diameter);
+        mPresenter.doOperation(mTipDialogType);
     }
 
     @Override
@@ -749,4 +984,104 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     public void onChangeInfoClick() {
         //TODO 前往修改阈值
     }
+
+    @Override
+    public void showBleTips() {
+        if (tipBleDialogUtils != null && !tipBleDialogUtils.isShowing()) {
+            tipBleDialogUtils.show();
+        }
+    }
+
+    @Override
+    public void hideBleTips() {
+        if (tipBleDialogUtils != null && tipBleDialogUtils.isShowing()) {
+            tipBleDialogUtils.dismiss();
+        }
+    }
+
+    @Override
+    public void setDeviceDemoModeViewStatus(int status) {
+        switch (status) {
+            case Constants.DEVICE_DEMO_MODE_NOT_SUPPORT:
+                //不显示条目
+                ivLineDeviceDemo.setVisibility(View.GONE);
+                rlMonitorDeviceDemo.setVisibility(View.GONE);
+                rlMonitorDemoModeTip.setVisibility(View.GONE);
+                vTopMargin.setVisibility(View.VISIBLE);
+                includeTextTitleDivider.setVisibility(View.VISIBLE);
+                break;
+            case Constants.DEVICE_DEMO_MODE_NO_PERMISSION:
+                //不可点击
+                ivLineDeviceDemo.setVisibility(View.VISIBLE);
+                rlMonitorDeviceDemo.setVisibility(View.VISIBLE);
+                ivMonitorDeviceDemo.setImageResource(R.drawable.ic_switch_none);
+                rlMonitorDemoModeTip.setVisibility(View.GONE);
+                vTopMargin.setVisibility(View.VISIBLE);
+                includeTextTitleDivider.setVisibility(View.VISIBLE);
+                break;
+            case Constants.DEVICE_DEMO_MODE_OPEN:
+                //演示状态
+                ivLineDeviceDemo.setVisibility(View.VISIBLE);
+                rlMonitorDeviceDemo.setVisibility(View.VISIBLE);
+                ivMonitorDeviceDemo.setImageResource(R.drawable.ic_switch_open);
+                rlMonitorDemoModeTip.setVisibility(View.VISIBLE);
+                vTopMargin.setVisibility(View.GONE);
+                includeTextTitleDivider.setVisibility(View.GONE);
+                break;
+            case Constants.DEVICE_DEMO_MODE_CLOSE:
+                //非演示状态
+                ivLineDeviceDemo.setVisibility(View.VISIBLE);
+                rlMonitorDeviceDemo.setVisibility(View.VISIBLE);
+                ivMonitorDeviceDemo.setImageResource(R.drawable.ic_switch_close);
+                rlMonitorDemoModeTip.setVisibility(View.GONE);
+                vTopMargin.setVisibility(View.VISIBLE);
+                includeTextTitleDivider.setVisibility(View.VISIBLE);
+                break;
+            default:
+                ivLineDeviceDemo.setVisibility(View.GONE);
+                rlMonitorDeviceDemo.setVisibility(View.GONE);
+                rlMonitorDemoModeTip.setVisibility(View.GONE);
+                vTopMargin.setVisibility(View.VISIBLE);
+                includeTextTitleDivider.setVisibility(View.VISIBLE);
+                break;
+
+        }
+    }
+
+    @Override
+    public void showOpenDemoDialog() {
+        if (mOpenDemoDialogUtils != null) {
+            mOpenDemoDialogUtils.show();
+        }
+
+    }
+
+    @Override
+    public void dismissOpenDemoDialog() {
+        if (mOpenDemoDialogUtils != null) {
+            mOpenDemoDialogUtils.dismiss();
+        }
+    }
+
+    @Override
+    public void showCloseDemoDialog() {
+        if (mCloseDemoDialogUtils != null) {
+            mCloseDemoDialogUtils.show();
+        }
+    }
+
+    public void dismissCloseDemoDialog() {
+        if (mCloseDemoDialogUtils != null) {
+            mCloseDemoDialogUtils.dismiss();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (tipBleDialogUtils != null) {
+            tipBleDialogUtils.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 }
+

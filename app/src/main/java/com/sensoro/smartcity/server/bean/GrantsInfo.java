@@ -26,6 +26,7 @@ public class GrantsInfo implements Serializable {
     private List<String> device;
     private List<String> monitor;
     private List<String> malfunction;
+    private List<String> control;
     private List<?> sysLog;
 
 
@@ -195,5 +196,13 @@ public class GrantsInfo implements Serializable {
 
     public void setSysLog(List<?> sysLog) {
         this.sysLog = sysLog;
+    }
+
+    public List<String> getControl() {
+        return control;
+    }
+
+    public void setControl(List<String> control) {
+        this.control = control;
     }
 }

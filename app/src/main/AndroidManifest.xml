@@ -142,6 +142,9 @@
                 <action android:name="com.igexin.sdk.action.service.message" />
             </intent-filter>
         </service>
+        <service
+            android:name="com.sensoro.libbleserver.ble.service.DfuService"
+            android:exported="true" />
 
         <receiver android:name="com.igexin.sdk.PushReceiver">
             <intent-filter>
@@ -209,7 +212,6 @@
         <activity android:name=".activity.DeployDeviceTagActivity" />
         <activity android:name=".activity.AlarmDetailLogActivity" />
         <activity android:name=".activity.ScanActivity" />
-        <activity android:name=".activity.MonitorPointDetailActivity" />
         <activity android:name=".activity.ContractManagerActivity" />
         <activity android:name=".activity.MerchantSwitchActivity" />
         <activity android:name=".activity.DeployMonitorAlarmContactActivity" />
@@ -238,7 +240,7 @@
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity android:name=".activity.AlarmHistoryLogActivity" />
 
-        <service android:name="com.sensoro.libbleserver.ble.scanner.BLEDeviceService" />
+        <service android:name="com.sensoro.libbleserver.ble.service.BLEDeviceService" />
         <service
             android:name="com.igexin.download.DownloadService"
             android:process=":pushservice" />
@@ -353,6 +355,7 @@
         <activity android:name=".activity.ContractCreationSuccessActivity" />
         <activity android:name=".activity.ContractDetailActivity" />
         <activity android:name=".activity.ContractPreviewActivity" />
+        <activity android:name=".temp.TestUpdateActivity" />
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"

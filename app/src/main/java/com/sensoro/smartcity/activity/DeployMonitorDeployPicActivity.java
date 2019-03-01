@@ -3,6 +3,8 @@ package com.sensoro.smartcity.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,9 +16,12 @@ import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.DeployPicAdapter;
+import com.sensoro.smartcity.server.bean.DeployPicInfo;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDeployPicView;
 import com.sensoro.smartcity.presenter.DeployMonitorDeployPicPresenter;
+import com.sensoro.smartcity.widget.dialog.DeployPicExampleDialogUtils;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
@@ -75,6 +80,10 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     TextView acDeployPicTvSave;
     @BindView(R.id.ac_deploy_pic_tv_installation_site_tip)
     TextView acDeployPicTvInstallationSiteTip;
+    @BindView(R.id.ac_deploy_pic_rc)
+    RecyclerView acDeployPicRc;
+    private DeployPicAdapter mDeployPicAdapter;
+    private DeployPicExampleDialogUtils mPicExampleDialogUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -87,6 +96,35 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     private void initView() {
         includeTextTitleTvTitle.setText(mActivity.getString(R.string.deploy_photo));
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
+        mPicExampleDialogUtils = new DeployPicExampleDialogUtils(mActivity);
+        mPicExampleDialogUtils.setDeployPicExampleClickListener(mPresenter);
+        initRC();
+    }
+
+    private void initRC() {
+        mDeployPicAdapter = new DeployPicAdapter(mActivity);
+        LinearLayoutManager manager = new LinearLayoutManager(mActivity);
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        acDeployPicRc.setLayoutManager(manager);
+        acDeployPicRc.setAdapter(mDeployPicAdapter);
+
+        mDeployPicAdapter.setDeployPicClickListener(new DeployPicAdapter.DeployPicClickListener() {
+            @Override
+            public void onTakePhotoClick(int position) {
+//                mPresenter.doAddPic(position);
+                mPresenter.doTakePhoto(position);
+            }
+
+            @Override
+            public void onDeletePhotoClick(int position) {
+                mPresenter.deletePic(position);
+            }
+
+            @Override
+            public void onPreviewPhoto(int position) {
+                mPresenter.doPreviewPic(position);
+            }
+        });
     }
 
     @Override
@@ -202,6 +240,8 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
         }
     }
 
+
+
     @Override
     public void displayPic(ImageItem[] selImages, int index) {
         DrawableRequestBuilder<String> builder = Glide.with((Activity) mActivity)                             //配置上下文
@@ -232,6 +272,13 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     }
 
     @Override
+    protected void onDestroy() {
+        mPicExampleDialogUtils.destroy();
+        super.onDestroy();
+
+    }
+
+    @Override
     public void setSaveBtnStatus(boolean isEnable) {
         acDeployPicTvSave.setEnabled(isEnable);
         acDeployPicTvSave.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_solid_df_corner);
@@ -240,6 +287,36 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     @Override
     public void setDeployPicTvInstallationSiteTipVisible(boolean isVisible) {
         acDeployPicTvInstallationSiteTip.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void updateData(List<DeployPicInfo> data) {
+        mDeployPicAdapter.updateData(data);
+    }
+
+    @Override
+    public DeployPicInfo getDeployPicItem(int position) {
+        return mDeployPicAdapter.getItem(position);
+    }
+
+    @Override
+    public void showDeployPicExampleDialog(DeployPicInfo item, int position) {
+        mPicExampleDialogUtils.show(item.imgUrl,item.title,item.description,position);
+    }
+
+    @Override
+    public void dismissDeployPicExampleDialog() {
+        mPicExampleDialogUtils.dismiss();
+    }
+
+    @Override
+    public List<DeployPicInfo> getDeployPicData() {
+        return mDeployPicAdapter.getData();
+    }
+
+    @Override
+    public void updateIndexData(ImageItem imageItem, int mAddPicIndex) {
+        mDeployPicAdapter.updateIndexData(imageItem,mAddPicIndex);
     }
 
     @Override

@@ -603,10 +603,14 @@
     <string name="monitor_point_detail_query">Query</string>
     <string name="monitor_point_detail_psd">Password</string>
     <string name="monitor_point_detail_reset">Reset</string>
-    <string name="is_device_erasure">Mute the alarm device? </string>
+    <string name="is_device_erasure">Mute the alarm device</string>
+    <string name="is_device_erasure_long">Mute the alarm device till next?</string>
     <string name="device_erasure_tip_message">Alarming,mute the alarm device？</string>
+    <string name="device_erasure_long_tip_message">After mute this alarm device, this alarm will not trigger sound again till next alarming, mute the alarm device？</string>
+    <string name="device_erasure_long_tip_red">this alarm device</string>
     <string name="back">Back</string>
     <string name="erasure">Mute</string>
+    <string name="erasure_long">Mute till next</string>
     <string name="is_device_self_check">Would you like to perform self-check？</string>
     <string name="device_self_check_tip_message">After the self-check is success, observe the device indicator and the buzzer working status closely</string>
     <string name="self_check">Self-check</string>
@@ -640,6 +644,7 @@
 
     <string name="upload_photo_dialog_append_title3"></string>
     <string name="monitor_point_detail_erasure">Mute</string>
+    <string name="monitor_point_detail_erasure_long">Mute-Long</string>
     <string name="monitor_point_detail_operation">Operate</string>
     <string name="text_fire_alarm_empty"></string>
     <string name="main_home_menu_scan_login">Scan</string>
@@ -674,14 +679,14 @@
     <string name="deploy_pic_device_pic">DeviceMap</string>
     <string name="deploy_pic_device_pic_tip">SN should be recognised</string>
     <string name="deploy_pic_take_photo">Photo</string>
-    <string name="deploy_pic_installation_site">Installation site</string>
+    <string name="deploy_pic_installation_site">Installation environment</string>
     <string name="deploy_pic_shop_pic">Store Picture（Optional）</string>
     <string name="please_select_device_pic">Please select a device picture</string>
     <string name="please_select_installation_site">Please select a site photo</string>
     <string name="rated_current">RC/A</string>
     <string name="deploy_configuration_enter_tip">Please enter the rated current of the installation site air switch,Range:</string>
     <string name="deploy_configuration">Start configuration</string>
-    <string name="if_it_is_a_store_please_upload">Should be uploaded if it is a store</string>
+    <string name="if_it_is_a_store_please_upload">Store name should be recognised</string>
     <string name="check_ble_status">Please check bluetooth status</string>
     <string name="now_configuration">Configuring</string>
     <string name="ble_config_failed">Configuration failed,please try again</string>
@@ -736,9 +741,9 @@
     <string name="please_select_devices_more_1">至少选择添加一种设备</string>
     <string name="not_obtain_device_cout">未获取到设备信息，请重试</string>
     <string name="create_contract">生成合同</string>
-    <string name="create_contract_tip_message">点击确认后，再生成一份新的合同，在签订前仍可继续修改</string>
+    <string name="create_contract_tip_message">点击确认后将生成一份新合同，在签订前仍可进行修改</string>
     <string name="info_check_faild">未通过信息校验</string>
-    <string name="contract_creation_success_tip_message">合同创建成功，你可以在线预览或生成二维码与业主签订合同</string>
+    <string name="contract_creation_success_tip_message">合同创建成功，请生成二维码与业主签订合同</string>
     <string name="contract_preview">合同预览</string>
     <string name="create_qr_code">生成二维码</string>
     <string name="contract_creattion">创建合同</string>
@@ -813,4 +818,50 @@
     <string name="permission_phone_state">PhoneState</string>
     <string name="permission_call">CallPhone</string>
     <string name="permission_contact">ReadContact</string>
+    <string name="firmware_version">Firmware Version</string>
+    <string name="firmware_update">Firmware Update</string>
+    <string name="record_more_than_ten_seconds">Video length can not be less than 10 seconds</string>
+
+    <string name="deploy_pic_required">Require</string>
+    <string name="deploy_pic_optional">Optional</string>
+    <string name="deploy_pic_today_no_tip">no more prompts today</string>
+    <string name="deploy_pic_example_pic">Example of</string>
+    <string name="discover_new_version">Discover new version</string>
+    <string name="already_the_latest_version">Firmware version</string>
+    <string name="current_version">Current version</string>
+    <string name="latest_version">Latest version</string>
+    <string name="firmware_release_date">Firmware release date</string>
+    <string name="device_upgrade_failed">Upgrade failed, please try again later</string>
+    <string name="device_update_success">update successed</string>
+    <string name="sending_upgrade_version">Sending upgrade version to server</string>
+    <string name="checking_version_bluetooth">Checking version via Bluetooth</string>
+    <string name="verifying_firmware_information">Verifying firmware information</string>
+    <string name="device_is_not_nearby">The device is not nearby, please try again later</string>
+
+
+    <string name="firmware_update_transferred">Firmware update, transferred</string>
+    <string name="firmware_update_in_preparation">Firmware update, in preparation</string>
+    <string name="s_good">Good</string>
+    <string name="s_normal">Normal</string>
+    <string name="s_bad">Bad</string>
+    <string name="s_none">None</string>
+    <string name="air_rated_current">Air rated current</string>
+    <string name="monitor_material">Material</string>
+    <string name="splash_copyright">Copyright \u00a9 %s SENSORO</string>
+    <string name="device_demo_mode">Demo mode</string>
+    <string name="please_record_at_least_5_seconds">Please take at least five seconds</string>
+    <string name="has_close">Close</string>
+    <string name="has_open">Open</string>
+    <string name="confirm_open">Open</string>
+    <string name="confirm_close">Close</string>
+    <string name="open_demo_mode">Turn on Demo Mode</string>
+    <string name="close_demo_mode">Turn off Demo Mode</string>
+    <string name="close_demo_mode_content">After turning off demo mode, the self-check button of device is restored to the function of self-check as usual, and the device could be deployed again</string>
+    <string name="open_demo_mode_content">When turned on, pressing self-check button will lead to an alarm</string>
+    <string name="open_demo_mode_description">Tips: The device cannot be deployed in demo mode. It is recommended to turn off this mode after the demo</string>
+    <string name="demo_mode_has_open">Demo mode has open</string>
+    <string name="demo_mode_has_close">Demo mode has close</string>
+    <string name="mode_switch">Mode Switching</string>
+    <string name="no_permission_">No permission：Please contact the administrator to open</string>
+    <string name="monitor_top_demo_mode_tips">Press the device self-test button in demo mode to send an alert message</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.widget.imagepicker.ui;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.widget.imagepicker.DataHolder;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.adapter.ImagePageAdapter;
@@ -14,6 +16,7 @@ import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.util.Utils;
 import com.sensoro.smartcity.widget.imagepicker.view.ViewPagerFixed;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -88,6 +91,23 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
             @Override
             public void OnPhotoTapListener(View view, float v, float v1) {
                 onImageSingleTap();
+            }
+        });
+        mAdapter.setVideoViewClickListener(new ImagePageAdapter.VideoViewClickListener() {
+            @Override
+            public void onVideoClickListener(View view, int position) {
+                try {
+                    ImageItem imageItem = mImageItems.get(position);
+                    Intent intent = new Intent();
+                    intent.setClass(ImagePreviewBaseActivity.this, VideoPlayActivity.class);
+                    intent.putExtra("path_record", (Serializable) imageItem);
+                    intent.putExtra("video_del", true);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
             }
         });
         mViewPager.setAdapter(mAdapter);

@@ -67,8 +67,8 @@ public class InspectionActivity extends BaseActivity<IInspectionActivityView, In
 
     @Override
     protected void onStart() {
-        super.onStart();
         mPresenter.onStart();
+        super.onStart();
     }
 
     @Override

@@ -53,6 +53,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         }
     };
     private final ArrayList<String> pickerStrings = new ArrayList<>();
+    private DeployControlSettingData deployControlSettingData;
 
     @Override
     public void initData(Context context) {
@@ -65,7 +66,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                 getView().setTitleImvArrowsLeftVisible(true);
                 getView().setTitleTvSubtitleVisible(false);
                 getView().setAcDeployConfigurationTvConfigurationText(mActivity.getString(R.string.save));
-                DeployControlSettingData deployControlSettingData = (DeployControlSettingData) mActivity.getIntent().getSerializableExtra(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA);
+                deployControlSettingData = (DeployControlSettingData) mActivity.getIntent().getSerializableExtra(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA);
                 if (deployControlSettingData != null) {
                     Double diameterValue = deployControlSettingData.getWireDiameter();
                     if (diameterValue != null) {
@@ -73,9 +74,11 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                         String formatStr = nf.format(diameterValue);
                         getView().setInputDiameterValueText(formatStr);
                     }
-                    int initValue = deployControlSettingData.getSwitchSpec();
-                    getView().setInputCurrentText(String.valueOf(initValue));
-                    int wireMaterial = deployControlSettingData.getWireMaterial();
+                    Integer initValue = deployControlSettingData.getSwitchSpec();
+                    if (initValue != null) {
+                        getView().setInputCurrentText(String.valueOf(initValue));
+                    }
+                    Integer wireMaterial = deployControlSettingData.getWireMaterial();
                     if (0 == wireMaterial) {
                         getView().setInputWireMaterialText(mActivity.getString(R.string.cu));
                     } else if (1 == wireMaterial) {
@@ -215,8 +218,8 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                 //部署
                 EventData eventData = new EventData();
                 eventData.code = Constants.EVENT_DATA_DEPLOY_INIT_CONFIG_CODE;
-                DeployControlSettingData deployControlSettingData = new DeployControlSettingData();
-                deployControlSettingData.setInitValue(mEnterValue);
+                deployControlSettingData = new DeployControlSettingData();
+                deployControlSettingData.setSwitchSpec(mEnterValue);
                 deployControlSettingData.setWireDiameter(diameterValue);
                 deployControlSettingData.setWireMaterial(materialValue);
                 eventData.data = deployControlSettingData;
@@ -231,7 +234,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
 
     }
 
-    private void requestCmd(Integer value, int material, Double diameter) {
+    private void requestCmd(final Integer value, final int material, final Double diameter) {
         ArrayList<String> sns = new ArrayList<>();
         sns.add(deployAnalyzerModel.sn);
         getView().showOperationTipLoadingDialog();
@@ -255,6 +258,10 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                         getView().showErrorTipDialog(mActivity.getString(R.string.monitor_point_operation_schedule_no_error));
 
                     }
+                    deployControlSettingData = new DeployControlSettingData();
+                    deployControlSettingData.setSwitchSpec(value);
+                    deployControlSettingData.setWireDiameter(diameter);
+                    deployControlSettingData.setWireMaterial(material);
                 }
             }
 
@@ -299,6 +306,8 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                                                 if (isAttachedView()) {
                                                     getView().dismissOperatingLoadingDialog();
                                                     getView().showOperationSuccessToast();
+                                                    //
+                                                    pushConfigResult();
                                                     mHandler.postDelayed(new Runnable() {
                                                         @Override
                                                         public void run() {
@@ -323,6 +332,13 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         if (isAttachedView()) {
             getView().showOverCurrentDialog(overCurrentDataList);
         }
+    }
+
+    private void pushConfigResult() {
+        EventData eventData = new EventData();
+        eventData.data = deployControlSettingData;
+        eventData.code = Constants.EVENT_DATA_DEPLOY_INIT_CONFIG_CODE;
+        EventBus.getDefault().post(eventData);
     }
 
     @Override

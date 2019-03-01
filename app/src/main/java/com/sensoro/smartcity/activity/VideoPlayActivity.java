@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -42,6 +44,7 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
     private SystemBarTintManager tintManager;
     private ProgressUtils mProgressUtils;
     private ImmersionBar immersionBar;
+    private Handler mainHandler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,16 +207,22 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
         mProgressUtils.destroyProgress();
         vv_play.release();
 
-        if(immersionBar != null){
+        if (immersionBar != null) {
             immersionBar.destroy();
         }
+        mainHandler.removeCallbacksAndMessages(null);
         super.onDestroy();
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        mProgressUtils.dismissProgress();
         vv_play.setLooping(true);
-        vv_play.start();
+        mainHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mProgressUtils.dismissProgress();
+                vv_play.start();
+            }
+        }, 50);
     }
 }

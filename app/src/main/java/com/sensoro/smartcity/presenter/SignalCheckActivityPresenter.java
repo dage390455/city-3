@@ -7,13 +7,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
-import com.sensoro.libbleserver.ble.BLEDevice;
-import com.sensoro.libbleserver.ble.CmdType;
-import com.sensoro.libbleserver.ble.ResultCode;
-import com.sensoro.libbleserver.ble.SensoroConnectionCallback;
-import com.sensoro.libbleserver.ble.SensoroDevice;
-import com.sensoro.libbleserver.ble.SensoroDeviceConnection;
-import com.sensoro.libbleserver.ble.SensoroWriteCallback;
+import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
+import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
+import com.sensoro.libbleserver.ble.connection.SensoroDeviceConnection;
+import com.sensoro.libbleserver.ble.constants.CmdType;
+import com.sensoro.libbleserver.ble.constants.ResultCode;
+import com.sensoro.libbleserver.ble.entity.BLEDevice;
+import com.sensoro.libbleserver.ble.entity.SensoroDevice;
 import com.sensoro.libbleserver.ble.proto.ProtoMsgTest1U1;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
@@ -21,6 +21,7 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISignalCheckActivityView;
+import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.SignalData;
 import com.sensoro.smartcity.util.BleObserver;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActivityView>
-        implements Constants, Runnable, BLEDeviceListener<BLEDevice>, SensoroConnectionCallback, SensoroWriteCallback {
+        implements Constants, Runnable, BLEDeviceListener<BLEDevice>, SensoroConnectionCallback, SensoroWriteCallback ,IOnStart {
     private Activity mActivity;
     private Handler mHandler;
     private boolean bleHasOpen;
@@ -375,4 +376,13 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         }
     }
 
+    @Override
+    public void onStart() {
+        SensoroCityApplication.getInstance().bleDeviceManager.startScan();
+    }
+
+    @Override
+    public void onStop() {
+        SensoroCityApplication.getInstance().bleDeviceManager.stopScan();
+    }
 }

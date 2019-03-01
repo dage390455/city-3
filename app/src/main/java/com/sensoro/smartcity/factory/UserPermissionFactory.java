@@ -45,6 +45,10 @@ public class UserPermissionFactory {
         eventLoginData.hasSignalConfig = getHasSignalConfig(grants);
         eventLoginData.hasBadSignalUpload = getHasBadSignalUpload(grants);
         eventLoginData.hasDevicePositionCalibration = getHasDevicePositionCalibration(grants);
+        eventLoginData.hasDeviceMuteShort = getHasMuteShort(grants);
+        eventLoginData.hasDeviceMuteLong = getHasMuteLong(grants);
+        eventLoginData.hasDeviceFirmwareUpdate = getHasDeviceFirmUpdate(grants);
+        eventLoginData.hasDeviceDemoMode = getHasDeviceDemoMode(grants);
         String controllerAid = userInfo.getControllerAid();
         //通过controllerAid来判断是否可以返回主账户
         eventLoginData.hasControllerAid = !TextUtils.isEmpty(controllerAid);
@@ -327,6 +331,70 @@ public class UserPermissionFactory {
             List<String> grantsDeploy = grants.getDeploy();
             if (grantsDeploy != null) {
                 return grantsDeploy.contains("_badSignalUpload");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 是否短消音权限
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasMuteShort(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsControl = grants.getControl();
+            if (grantsControl != null) {
+                return grantsControl.contains("mute");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 是否长消音权限
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasMuteLong(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsControl = grants.getControl();
+            if (grantsControl != null) {
+                return grantsControl.contains("mute2");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 是否有设备升级权限
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasDeviceFirmUpdate(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsDevice = grants.getDevice();
+            if (grantsDevice != null) {
+                return grantsDevice.contains("_updateFirmware");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 用户是否有demo演示权限
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasDeviceDemoMode(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsDevice = grants.getDevice();
+            if (grantsDevice != null) {
+                return grantsDevice.contains("demo");
             }
         }
         return false;

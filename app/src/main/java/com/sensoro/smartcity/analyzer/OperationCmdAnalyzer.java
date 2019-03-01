@@ -1,7 +1,7 @@
 package com.sensoro.smartcity.analyzer;
 
-import com.sensoro.libbleserver.ble.SensoroDeviceConnection;
-import com.sensoro.libbleserver.ble.SensoroWriteCallback;
+import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
+import com.sensoro.libbleserver.ble.connection.SensoroDeviceConnection;
 import com.sensoro.libbleserver.ble.proto.MsgNode1V1M5;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 
@@ -17,8 +17,10 @@ public class OperationCmdAnalyzer {
 
         switch (deviceType) {
             case "smoke":
-            case "fhsj_smoke":
                 doSmoke(mOperationType, sensoroDeviceConnection, callback);
+                break;
+            case "fhsj_smoke":
+                doFhsjSmoke(mOperationType, sensoroDeviceConnection, callback);
                 break;
             case "cayman_smoke":
                 //自研烟感
@@ -34,10 +36,33 @@ public class OperationCmdAnalyzer {
             case "mantun_fires":
                 doMantunFires(mOperationType, sensoroDeviceConnection, callback);
                 break;
+            case "baymax_lpg":
+            case "baymax_ch4":
+                doBaymax(mOperationType,sensoroDeviceConnection,callback);
+                break;
 
         }
 
 
+    }
+
+    private static void doBaymax(String mOperationType, SensoroDeviceConnection sensoroDeviceConnection, SensoroWriteCallback callback) {
+        MsgNode1V1M5.Baymax.Builder builder = MsgNode1V1M5.Baymax.newBuilder();
+        switch (mOperationType) {
+            case MonitorPointOperationCode.ERASURE_STR:
+                builder.setGasDeviceCMD(0b100);
+                break;
+            case MonitorPointOperationCode.ERASURE_LONG_STR:
+                builder.setGasDeviceCMD(3);
+                break;
+            case MonitorPointOperationCode.SELF_CHECK_STR:
+                builder.setGasDeviceCMD(0b01);
+                break;
+            default:
+                callback.onWriteFailure(0, 0);
+                return;
+        }
+        sensoroDeviceConnection.writeBaymaxCmd(builder, callback);
     }
 
 
@@ -136,6 +161,22 @@ public class OperationCmdAnalyzer {
                 return;
         }
         sensoroDeviceConnection.writeCaymanCmd(builder, callback);
+    }
+
+    private static void doFhsjSmoke(String mOperationType, SensoroDeviceConnection sensoroDeviceConnection, SensoroWriteCallback callback) {
+        MsgNode1V1M5.AppParam.Builder builder = MsgNode1V1M5.AppParam.newBuilder();
+        switch (mOperationType) {
+            case MonitorPointOperationCode.ERASURE_STR:
+                builder.setSmokeCtrl(MsgNode1V1M5.SmokeCtrl.SMOKE_ERASURE);
+                break;
+            case MonitorPointOperationCode.ERASURE_LONG_STR:
+                builder.setSmokeCtrl(MsgNode1V1M5.SmokeCtrl.SMOKE_ERASURE_LONE);
+                break;
+            default:
+                callback.onWriteFailure(0, 0);
+                return;
+        }
+        sensoroDeviceConnection.writeSmokeCmd(builder, callback);
     }
 
     private static void doSmoke(String mOperationType, SensoroDeviceConnection sensoroDeviceConnection, SensoroWriteCallback callback) {

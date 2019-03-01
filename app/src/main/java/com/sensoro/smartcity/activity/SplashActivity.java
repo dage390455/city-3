@@ -8,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
@@ -15,27 +16,17 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ISplashActivityView;
 import com.sensoro.smartcity.presenter.SplashActivityPresenter;
 import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.smartcity.util.DateUtil;
+
+import java.util.Locale;
 
 public class SplashActivity extends BaseActivity<ISplashActivityView, SplashActivityPresenter> implements ISplashActivityView {
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         checkActivity();
-        final View view = new View(mActivity);
-        if (AppUtils.isChineseLanguage()) {
-            view.setBackgroundResource(R.drawable.bg_splash_launcher);
-        } else {
-            view.setBackgroundResource(R.drawable.bg_splash_launcher_en);
-        }
-        super.setContentView(view);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-//                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);//这一步最好要做，因为如果这两个flag没有清除的话下面没有生效
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);//设置布局能够延伸到状态栏(StatusBar)和导航栏(NavigationBar)里面
-//            getWindow().setStatusBarColor(Color.TRANSPARENT);//设置状态栏(StatusBar)颜色透明
-//            getWindow().setNavigationBarColor(Color.TRANSPARENT);//设置导航栏(NavigationBar)颜色透明
-//            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-//        }
-//        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        super.setContentView(R.layout.activity_splash);
+        TextView tvBottom = findViewById(R.id.ac_splash_tv_bottom);
+        tvBottom.setText(String.format(Locale.ROOT,"Copyright \u00a9 %s SENSORO",DateUtil.getStrTime_yy(System.currentTimeMillis())));
         mPresenter.initData(mActivity);
 
     }

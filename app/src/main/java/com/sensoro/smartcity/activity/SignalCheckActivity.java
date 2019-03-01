@@ -149,6 +149,18 @@ public class SignalCheckActivity extends BaseActivity<ISignalCheckActivityView, 
     }
 
     @Override
+    protected void onStart() {
+        mPresenter.onStart();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mPresenter.onStop();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (mProgressUtils != null) {

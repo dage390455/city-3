@@ -139,10 +139,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
 
     public void requestInitData(boolean needShowProgressDialog) {
-        if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
-            needFreshAll = false;
-            return;
-        }
         if (!PreferencesHelper.getInstance().getUserData().hasDeviceBrief) {
             needFreshAll = false;
             return;
@@ -565,7 +561,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     public void requestWithDirection(int direction, boolean needShowProgress, final HomeTopModel homeTopModel) {
-        if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
+        if (!PreferencesHelper.getInstance().getUserData().hasDeviceBrief) {
             return;
         }
         try {

@@ -80,7 +80,7 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
             if (isFire) {
                 //TODO 是否配置过电器火灾字段字段
                 if (mDeployRecordInfo.getConfig() != null) {
-                    DeployControlSettingData deployControlSettingData = mDeployRecordInfo.getConfig().get(mDeployRecordInfo.getDeviceType());
+                    DeployControlSettingData deployControlSettingData = mDeployRecordInfo.getConfig();
                     if (deployControlSettingData != null) {
                         //线径的判断，暂时不需要了
 //                        if (deployControlSettingData.getWireDiameter() != null) {
@@ -91,16 +91,20 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
 //                        } else {
 //                            getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getSwitchSpec() + "A");
 //                        }
-                        getView().setDeployDeviceDetailDeploySetting(String.format(Locale.CHINA, mActivity.getString(R.string.actual_overcurrent_threshold_format), deployControlSettingData.getSwitchSpec()));
-                        return;
+                        Integer switchSpec = deployControlSettingData.getSwitchSpec();
+                        if (switchSpec != null) {
+                            getView().setDeployDeviceDetailDeploySetting(String.format(Locale.CHINA, mActivity.getString(R.string.actual_overcurrent_threshold_format), switchSpec));
+                            return;
+                        }
                     }
                 }
-                getView().setDeployDeviceDetailDeploySetting(null);
-
             }
+            getView().setDeployDeviceDetailDeploySetting(null);
 
         }
+
     }
+
 
     @Override
     public void onDestroy() {

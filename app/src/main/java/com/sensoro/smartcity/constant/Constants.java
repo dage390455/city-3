@@ -19,6 +19,8 @@ public interface Constants {
     String SOCKET_EVENT_DEVICE_TASK_RESULT = "city.task.result";
     String SOCKET_EVENT_DEVICE_FLUSH = "city.device.flush";
     String PREFERENCE_SCOPE = "alpha_tool_scope";
+    String PREFERENCE_DEPLOY_EXAMPLE_PIC = "preference_deploy_example_pic";
+    String PREFERENCE_DEMO_MODE_JSON = "preference_demo_mode_json";
     String PREFERENCE_KEY_URL = "url";
     String PREFERENCE_DEVICE_HISTORY = "city_device_history";
     String PREFERENCE_ALARM_SEARCH_HISTORY = "preference_alarm_search_history";
@@ -195,6 +197,10 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD = "extra_grants_has_bad_signal_upload";
     String EXTRA_GRANTS_HAS_CONTROLLER_AID = "extra_grants_has_controller_aid";
     String EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION = "extra_grants_has_device_position_calibration";
+    String EXTRA_GRANTS_HAS_DEVICE_MUTE_SHORT = "extra_grants_has_device_mute_short";
+    String EXTRA_GRANTS_HAS_DEVICE_MUTE_LONG = "extra_grants_has_device_mute_long";
+    String EXTRA_GRANTS_HAS_DEVICE_FIRMWARE_UPDATE = "extra_grants_has_device_firmware_update";
+    String EXTRA_GRANTS_HAS_DEVICE_DEMO_MODE = "extra_grants_has_device_demo_mode";
     String EXTRA_DEVICE_INFO = "extra_device_info";
     String EXTRA_DEPLOY_ANALYZER_MODEL = "extra_deploy_analyzer_model";
     String EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA = "extra_deploy_configuration_setting_data";
@@ -403,6 +409,14 @@ public interface Constants {
     //合同
     int EVENT_DATA_CONTRACT_CREATION_SUCCESS = 0X53;
 
+    int EVENT_DATA_CHECK_MERGE_TYPE_CONFIG_DATA = 0X54;
+    //
+    int DEVICE_DEMO_MODE_NOT_SUPPORT = 0;
+    int DEVICE_DEMO_MODE_NO_PERMISSION = 1;
+    int DEVICE_DEMO_MODE_OPEN = 2;
+    int DEVICE_DEMO_MODE_CLOSE = 3;
+
+
     List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{
         add("elec_fire");
         add("smoke");
@@ -418,6 +432,14 @@ public interface Constants {
 //            add("mantun_fires");
         }
     };
+    ArrayList<String> DEVICE_UPDATE_FIRMWARE_CHIP_TYPES = new ArrayList<String>(3) {
+        {
+            add("t1");
+            add("chip_e");
+            add("bigbang_tracker");
+        }
+    };
+
     int[] MONTHS = {R.string.january, R.string.february, R.string.march, R.string.april, R.string.may, R.string.june
             , R.string.july, R.string.august, R.string.september, R.string.october, R.string.november, R.string.december};
 
