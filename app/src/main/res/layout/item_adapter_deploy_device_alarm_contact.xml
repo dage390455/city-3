@@ -4,8 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="end"
-    android:paddingTop="4dp"
-    android:paddingBottom="4dp"
     android:orientation="horizontal">
     <TextView
         android:id="@+id/item_deploy_device_alarm_contact_name"

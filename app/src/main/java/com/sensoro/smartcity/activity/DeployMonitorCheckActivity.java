@@ -112,6 +112,7 @@ public class DeployMonitorCheckActivity extends BaseActivity<IDeployMonitorCheck
                 tvDeployCheckCircleStep3.setBackgroundResource(R.drawable.shape_deploy_check_un_select);
                 tvDeployCheckCircleStep3.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
                 tvDeployCheckTitleStep3.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+                tvIncludeTitleLeftText.setVisibility(View.GONE);
                 showDeployMonitorLocalCheckFragment();
                 break;
             case 2:
@@ -126,6 +127,7 @@ public class DeployMonitorCheckActivity extends BaseActivity<IDeployMonitorCheck
                 tvDeployCheckCircleStep3.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
                 tvDeployCheckTitleStep3.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
                 showDeployMonitorUploadCheckFragment();
+                tvIncludeTitleLeftText.setVisibility(View.VISIBLE);
                 break;
             case 3:
                 //部署结果
@@ -138,24 +140,41 @@ public class DeployMonitorCheckActivity extends BaseActivity<IDeployMonitorCheck
                 tvDeployCheckCircleStep3.setBackgroundResource(R.drawable.shape_deploy_check_select);
                 tvDeployCheckCircleStep3.setTextColor(mActivity.getResources().getColor(R.color.white));
                 tvDeployCheckTitleStep3.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+                tvIncludeTitleLeftText.setVisibility(View.VISIBLE);
+                break;
+            default:
+                index = 1;
+                return;
+        }
+        index = step;
+    }
+
+    private int index = 1;
+
+    @OnClick({R.id.tv_include_title_left_text, R.id.include_text_title_imv_arrows_left})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.include_text_title_imv_arrows_left:
+            case R.id.tv_include_title_left_text:
+                doPreStep();
                 break;
         }
     }
 
-    private int i = 1;
-
-    @OnClick({R.id.tv_include_title_left_text})
-    public void onViewClicked(View view) {
-
-        switch (view.getId()) {
-            case R.id.tv_include_title_left_text:
-                setDeployMonitorStep(i);
-                if (i < 3) {
-                    i++;
-                } else {
-                    i = 1;
-                }
-                break;
+    private void doPreStep() {
+        if (index == 1) {
+            finish();
+        } else if (index == 2) {
+            index--;
+            setDeployMonitorStep(index);
+        } else {
+            index = 1;
+            setDeployMonitorStep(index);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        doPreStep();
     }
 }

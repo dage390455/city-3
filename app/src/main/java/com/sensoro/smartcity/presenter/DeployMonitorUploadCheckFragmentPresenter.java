@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
@@ -17,7 +18,6 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorUploadCheckFragmentView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.iwidget.IOnDestroy;
-import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.model.DeployResultModel;
 import com.sensoro.smartcity.model.EventData;
@@ -31,11 +31,14 @@ import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.RegexUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.popup.UpLoadPhotosUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -63,7 +66,6 @@ import static com.sensoro.smartcity.constant.Constants.TYPE_SCAN_DEPLOY_INSPECTI
 import static com.sensoro.smartcity.constant.Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE;
 import static com.sensoro.smartcity.constant.Constants.TYPE_SCAN_DEPLOY_STATION;
 import static com.sensoro.smartcity.constant.Constants.TYPE_SCAN_INSPECTION;
-import static com.sensoro.smartcity.constant.Constants.materialValueMap;
 import static com.sensoro.smartcity.presenter.DeployMonitorCheckActivityPresenter.deployAnalyzerModel;
 
 public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDeployMonitorUploadCheckFragmentView> implements IOnCreate,IOnDestroy
@@ -88,7 +90,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
             switch (deployAnalyzerModel.deployType) {
                 case TYPE_SCAN_DEPLOY_STATION:
                     //基站部署
-                    getView().setDeployContactRelativeLayoutVisible(false);
+                    getView().setAlarmContactAndPicAndMiniProgramVisible(false);
                     getView().setDeployPhotoVisible(false);
                     getView().setDeviceSn(mActivity.getString(R.string.device_number) + deployAnalyzerModel.sn);
                     if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
@@ -97,14 +99,14 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                     break;
                 case TYPE_SCAN_DEPLOY_DEVICE:
                     //设备部署
-                    getView().setDeployContactRelativeLayoutVisible(true);
+                    getView().setAlarmContactAndPicAndMiniProgramVisible(true);
                     getView().setDeployPhotoVisible(true);
                     echoDeviceInfo();
                     break;
                 case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
                 case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                     //巡检设备更换
-                    getView().setDeployContactRelativeLayoutVisible(true);
+                    getView().setAlarmContactAndPicAndMiniProgramVisible(true);
                     getView().setDeployPhotoVisible(true);
                     getView().updateUploadTvText(mActivity.getString(R.string.replacement_equipment));
                     echoDeviceInfo();
@@ -160,13 +162,13 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
         }
         switch (deployAnalyzerModel.deployType) {
             case TYPE_SCAN_DEPLOY_STATION:
-                if (getRealImageSize(deployAnalyzerModel.images) == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
-                    return false;
-                }
-                //经纬度校验
-                if (deployAnalyzerModel.latLng.size() != 2) {
-                    return false;
-                }
+//                if (getRealImageSize(deployAnalyzerModel.images) == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+//                    return false;
+//                }
+//                //经纬度校验
+//                if (deployAnalyzerModel.latLng.size() != 2) {
+//                    return false;
+//                }
                 break;
             case TYPE_SCAN_DEPLOY_DEVICE:
             case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
@@ -188,15 +190,15 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                     return false;
                 }
                 //经纬度校验
-                if (deployAnalyzerModel.latLng.size() != 2) {
-                    return false;
-                }
-                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
-                if (isFire) {
-                    if (deployAnalyzerModel.settingData == null) {
-                        return false;
-                    }
-                }
+//                if (deployAnalyzerModel.latLng.size() != 2) {
+//                    return false;
+//                }
+//                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+//                if (isFire) {
+//                    if (deployAnalyzerModel.settingData == null) {
+//                        return false;
+//                    }
+//                }
                 break;
             default:
                 break;
@@ -374,9 +376,9 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
         //姓名地址校验
         switch (deployAnalyzerModel.deployType) {
             case TYPE_SCAN_DEPLOY_STATION:
-                if (checkHasPhoto()) return;
-                //经纬度校验
-                if (checkHasNoLatLng()) return;
+//                if (checkHasPhoto()) return;
+//                //经纬度校验
+//                if (checkHasNoLatLng()) return;
                 requestUpload();
                 break;
             case TYPE_SCAN_DEPLOY_DEVICE:
@@ -386,14 +388,14 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                 if (checkHasContact()) return;
                 if (checkHasPhoto()) return;
                 //经纬度校验
-                if (checkHasNoLatLng()) return;
-                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
-                if (isFire) {
-                    if (deployAnalyzerModel.settingData == null) {
-                        getView().toastShort(mActivity.getString(R.string.deploy_has_no_configuration_tip));
-                        return;
-                    }
-                }
+//                if (checkHasNoLatLng()) return;
+//                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+//                if (isFire) {
+//                    if (deployAnalyzerModel.settingData == null) {
+//                        getView().toastShort(mActivity.getString(R.string.deploy_has_no_configuration_tip));
+//                        return;
+//                    }
+//                }
 //                if (checkNeedSignal()) {
 //                    checkHasForceUploadPermission();
 //                } else {

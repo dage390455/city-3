@@ -65,7 +65,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll_fg_deploy_upload_check_alarm_contact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
@@ -126,8 +125,7 @@
                     android:layout_height="wrap_content"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp">
+                    >
 
                     <TextView
                         android:id="@+id/tv_fg_deploy_upload_check_tag"
@@ -135,6 +133,8 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
                         android:text="@string/sensor_detail_tag"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
@@ -189,12 +189,11 @@
                     android:layout_marginEnd="20dp"
                     android:background="@color/c_dfdfdf" />
                 <LinearLayout
+                    android:id="@+id/ll_fg_deploy_upload_check_alarm_contact"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -203,6 +202,8 @@
                         android:layout_gravity="center_vertical"
                         android:text="@string/alert_contact"
                         android:textColor="@color/c_a6a6a6"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
                         android:textSize="14sp" />
 
                     <RelativeLayout
@@ -228,8 +229,6 @@
                             android:id="@+id/rc_fg_deploy_upload_check_alarm_contact"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginBottom="4dp"
                             android:visibility="gone">
 
                         </com.sensoro.smartcity.widget.TouchRecycleView>
@@ -338,6 +337,7 @@
 
             </LinearLayout>
             <TextView
+                android:id="@+id/tv_fg_deploy_upload_check_mini_program_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/after_relation_owner_can_look_device"

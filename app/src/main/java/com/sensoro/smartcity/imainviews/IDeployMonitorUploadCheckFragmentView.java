@@ -8,7 +8,7 @@ import com.sensoro.smartcity.model.DeployContactModel;
 import java.util.List;
 
 public interface IDeployMonitorUploadCheckFragmentView extends IActivityIntent ,IToast ,IProgressDialog {
-    void setDeployContactRelativeLayoutVisible(boolean isVisible);
+    void setAlarmContactAndPicAndMiniProgramVisible(boolean isVisible);
 
     void setDeployPhotoVisible(boolean isVisible);
 

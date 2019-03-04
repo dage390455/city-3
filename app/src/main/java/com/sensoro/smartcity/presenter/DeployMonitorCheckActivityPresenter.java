@@ -2,7 +2,6 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -17,11 +16,12 @@ public class DeployMonitorCheckActivityPresenter extends BasePresenter<IDeployMo
     public void initData(Context context) {
         mActivity = (Activity) context;
         deployAnalyzerModel = (DeployAnalyzerModel) mActivity.getIntent().getSerializableExtra(EXTRA_DEPLOY_ANALYZER_MODEL);
-        getView().showDeployMonitorUploadCheckFragment();
+        getView().setDeployMonitorStep(2);
     }
 
     @Override
     public void onDestroy() {
-
+        deployAnalyzerModel = null;
     }
+
 }

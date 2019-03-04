@@ -31,14 +31,13 @@ import static com.sensoro.smartcity.widget.dialog.TagDialogUtils.DIALOG_TAG_EDIT
 
 public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivityView, DeployDeviceTagActivityPresenter>
         implements IDeployDeviceTagActivityView, DeployDeviceTagAddTagAdapter.DeployDeviceTagAddTagItemClickListener, RecycleViewItemClickListener, TagDialogUtils.OnTagDialogListener {
-    @BindView(R.id.include_text_title_imv_arrows_left)
-    ImageView includeTextTitleImvArrowsLeft;
+    @BindView(R.id.include_text_title_tv_cancel)
+    TextView includeTextTitleTvCancel;
     @BindView(R.id.include_text_title_tv_title)
     TextView includeTextTitleTvTitle;
     @BindView(R.id.include_text_title_tv_subtitle)
     TextView includeTextTitleTvSubtitle;
-    @BindView(R.id.ac_deploy_device_tag_commit)
-    TextView acDeployDeviceTagCommit;
+
     @BindView(R.id.ac_deploy_device_tag_rc_add_tag)
     RecyclerView acDeployDeviceTagRcAddTag;
     @BindView(R.id.ac_deploy_device_tag_rc_history_tag)
@@ -58,13 +57,21 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
     private void initView() {
         tagDialogUtils = new TagDialogUtils(mActivity);
         tagDialogUtils.registerListener(this);
-        includeTextTitleTvTitle.setText(R.string.sensor_detail_tag);
-        includeTextTitleTvSubtitle.setVisibility(View.GONE);
-
+        initTitle();
         initRcAddTag();
 
         initRcHistoryTag();
 
+    }
+
+    private void initTitle() {
+        includeTextTitleTvTitle.setText(R.string.sensor_detail_tag);
+        includeTextTitleTvCancel.setVisibility(View.VISIBLE);
+        includeTextTitleTvCancel.setTextColor(getResources().getColor(R.color.c_b6b6b6));
+        includeTextTitleTvCancel.setText(R.string.cancel);
+        includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
+        includeTextTitleTvSubtitle.setText(getString(R.string.save));
+        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_29c093));
     }
 
 
@@ -133,13 +140,13 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
         super.onDestroy();
     }
 
-    @OnClick({R.id.ac_deploy_device_tag_commit, R.id.include_text_title_imv_arrows_left})
+    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.ac_deploy_device_tag_commit:
+            case R.id.include_text_title_tv_subtitle:
                 mPresenter.doFinish();
                 break;
-            case R.id.include_text_title_imv_arrows_left:
+            case R.id.include_text_title_tv_cancel:
                 finishAc();
                 break;
         }

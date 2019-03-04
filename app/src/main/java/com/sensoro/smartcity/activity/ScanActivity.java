@@ -23,13 +23,14 @@ import com.sensoro.smartcity.widget.toast.SensoroToast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.bingoogolapple.qrcode.core.BarcodeType;
 import cn.bingoogolapple.qrcode.core.QRCodeView;
-import cn.bingoogolapple.qrcode.zxing.ZXingView;
+import cn.bingoogolapple.qrcode.zbar.ZBarView;
 
 public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPresenter> implements
         IScanActivityView, QRCodeView.Delegate {
     @BindView(R.id.ac_scan_qr_view)
-    ZXingView acScanQrView;
+    ZBarView acScanQrView;
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
     @BindView(R.id.include_text_title_tv_title)
@@ -60,27 +61,19 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     }
 
     private void initView() {
+        includeTextTitleImvArrowsLeft.setColorFilter(mActivity.getResources().getColor(R.color.white));
         acScanDivider.setVisibility(View.GONE);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeTextTitleTvTitle.setTextColor(Color.WHITE);
         includeTextTitleTvSubTitle.setVisibility(View.GONE);
         includeTextTitleClRoot.setBackgroundColor(Color.TRANSPARENT);
-        changeIconArrowsColor();
-
         acScanQrView.setDelegate(this);
-        acScanQrView.getScanBoxView().setOnlyDecodeScanBoxArea(true);
-//        acScanQrView.getCameraPreview().setAutoFocusFailureDelay(0);
+        acScanQrView.getScanBoxView().setOnlyDecodeScanBoxArea(false);
+        acScanQrView.getScanBoxView().setShowLocationPoint(false);
+        acScanQrView.getScanBoxView().setAutoZoom(true);
+        acScanQrView.changeToScanQRCodeStyle(); // 切换成扫描二维码样式
+        acScanQrView.setType(BarcodeType.ONLY_QR_CODE, null); // 只识别 QR_CODE
 
-    }
-
-    private void changeIconArrowsColor() {
-//        Drawable drawable = mActivity.getResources().getDrawable(R.drawable.arrows_left);
-//        Drawable.ConstantState state = drawable.getConstantState();
-//        DrawableCompat.wrap(state == null ? drawable : state.newDrawable());
-//        drawable.setBounds(0, 0, drawable.getIntrinsicHeight(), drawable.getIntrinsicHeight());
-//        DrawableCompat.setTint(drawable, Color.WHITE);
-//        includeTextTitleImvArrowsLeft.setImageDrawable(drawable);
-        includeTextTitleImvArrowsLeft.setColorFilter(mActivity.getResources().getColor(R.color.white));
     }
 
     @Override
@@ -100,6 +93,8 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     @Override
     protected void onStart() {
         super.onStart();
+        acScanQrView.startCamera(); // 打开后置摄像头开始预览，但是并未开始识别
+//        mZBarView.startCamera(Camera.CameraInfo.CAMERA_FACING_FRONT); // 打开前置摄像头开始预览，但是并未开始识别
         startScan();
     }
 

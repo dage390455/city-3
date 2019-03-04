@@ -38,10 +38,9 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
     TextView acWeChatRelationTvHistory;
     @BindView(R.id.ac_chat_relation_rc_history)
     RecyclerView acWeChatRelationRcHistory;
-    @BindView(R.id.ac_chat_relation_tv_save)
-    TextView acWeChatRelationTvSave;
-    @BindView(R.id.include_text_title_imv_arrows_left)
-    ImageView includeTextTitleImvArrowsLeft;
+
+    @BindView(R.id.include_text_title_tv_cancel)
+    TextView includeTextTitleTvCancel;
     @BindView(R.id.include_text_title_tv_title)
     TextView includeTextTitleTvTitle;
     @BindView(R.id.include_text_title_tv_subtitle)
@@ -57,9 +56,18 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
     }
 
     private void initView() {
-        includeTextTitleTvTitle.setText(R.string.we_chat_relation);
-        includeTextTitleTvSubtitle.setVisibility(View.GONE);
+        initTitle();
         initRcHistory();
+    }
+
+    private void initTitle() {
+        includeTextTitleTvTitle.setText(R.string.we_chat_relation);
+        includeTextTitleTvCancel.setVisibility(View.VISIBLE);
+        includeTextTitleTvCancel.setTextColor(getResources().getColor(R.color.c_b6b6b6));
+        includeTextTitleTvCancel.setText(R.string.cancel);
+        includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
+        includeTextTitleTvSubtitle.setText(getString(R.string.save));
+        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_29c093));
     }
 
     private void initRcHistory() {
@@ -120,14 +128,14 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
     }
 
 
-    @OnClick({R.id.ac_chat_relation_tv_save, R.id.include_text_title_imv_arrows_left})
+    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.ac_chat_relation_tv_save:
+            case R.id.include_text_title_tv_subtitle:
                 String text = acWeChatRelationEt.getText().toString();
                 mPresenter.doChoose(text);
                 break;
-            case R.id.include_text_title_imv_arrows_left:
+            case R.id.include_text_title_tv_cancel:
                 finishAc();
                 break;
         }

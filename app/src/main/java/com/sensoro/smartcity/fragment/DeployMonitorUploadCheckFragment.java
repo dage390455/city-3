@@ -1,5 +1,7 @@
 package com.sensoro.smartcity.fragment;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,7 +23,9 @@ import com.sensoro.smartcity.adapter.TagAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IDeployMonitorUploadCheckFragmentView;
 import com.sensoro.smartcity.model.DeployContactModel;
+import com.sensoro.smartcity.presenter.DeployMonitorCheckActivityPresenter;
 import com.sensoro.smartcity.presenter.DeployMonitorUploadCheckFragmentPresenter;
+import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
@@ -80,14 +84,19 @@ public class DeployMonitorUploadCheckFragment extends BaseFragment<IDeployMonito
     TextView tvFgDeployUploadCheckMiniProgram;
     @BindView(R.id.iv_fg_deploy_upload_check_mini_program_arrow_icon)
     ImageView ivFgDeployUploadCheckMiniProgramArrow_icon;
+    @BindView(R.id.tv_fg_deploy_upload_check_mini_program_description)
+    TextView tvFgDeployUploadCheckMiniProgramDescription;
     @BindView(R.id.ll_fg_deploy_upload_check_mini_program)
     LinearLayout llFgDeployUploadCheckMiniProgram;
     private DeployDeviceDetailAlarmContactAdapter mAlarmContactAdapter;
     private TagAdapter mTagAdapter;
     private ProgressUtils mProgressUtils;
+    private Activity mActivity;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void initData(Context activity) {
+        mActivity = (Activity) activity;
         initView();
         mPresenter.initData(activity);
     }
@@ -96,6 +105,15 @@ public class DeployMonitorUploadCheckFragment extends BaseFragment<IDeployMonito
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
         initRcAlarmContact();
         initRcDeployDeviceTag();
+        initUploadDialog();
+    }
+
+    private void initUploadDialog() {
+        progressDialog = new ProgressDialog(mActivity);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setMax(100);
+        progressDialog.setProgressNumberFormat("");
+        progressDialog.setCancelable(false);
     }
 
     private void initRcDeployDeviceTag() {
@@ -111,7 +129,7 @@ public class DeployMonitorUploadCheckFragment extends BaseFragment<IDeployMonito
 
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
-        rcFgDeployUploadCheckTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
+        rcFgDeployUploadCheckTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels,false,false));
         rcFgDeployUploadCheckTag.setLayoutManager(layoutManager);
         rcFgDeployUploadCheckTag.setAdapter(mTagAdapter);
     }
@@ -138,6 +156,11 @@ public class DeployMonitorUploadCheckFragment extends BaseFragment<IDeployMonito
     @Override
     public void onFragmentStart() {
 
+        try {
+            LogUtils.loge("---->>>" + DeployMonitorCheckActivityPresenter.deployAnalyzerModel.address);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     @Override
@@ -148,7 +171,7 @@ public class DeployMonitorUploadCheckFragment extends BaseFragment<IDeployMonito
 
     @OnClick({R.id.ll_fg_deploy_upload_check_name_location, R.id.rl_fg_deploy_upload_check_tag,
             R.id.ll_fg_deploy_upload_check_deploy_pic, R.id.ll_fg_deploy_upload_check_alarm_contact
-            , R.id.ll_fg_deploy_upload_check_mini_program,R.id.tv_fg_deploy_upload_check_upload})
+            , R.id.ll_fg_deploy_upload_check_mini_program, R.id.tv_fg_deploy_upload_check_upload})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ll_fg_deploy_upload_check_name_location:
@@ -158,7 +181,7 @@ public class DeployMonitorUploadCheckFragment extends BaseFragment<IDeployMonito
                 mPresenter.doTag();
                 break;
             case R.id.ll_fg_deploy_upload_check_deploy_pic:
-               mPresenter.doSettingPhoto();
+                mPresenter.doSettingPhoto();
                 break;
             case R.id.ll_fg_deploy_upload_check_alarm_contact:
                 mPresenter.doAlarmContact();
@@ -167,7 +190,7 @@ public class DeployMonitorUploadCheckFragment extends BaseFragment<IDeployMonito
                 mPresenter.doWeChatRelation();
                 break;
             case R.id.tv_fg_deploy_upload_check_upload:
-               mPresenter.doConfirm();
+                mPresenter.doConfirm();
                 break;
         }
     }
@@ -175,7 +198,7 @@ public class DeployMonitorUploadCheckFragment extends BaseFragment<IDeployMonito
 
     @Override
     public void startAC(Intent intent) {
-        if (mRootFragment.getActivity() !=  null) {
+        if (mRootFragment.getActivity() != null) {
             mRootFragment.getActivity().startActivity(intent);
         }
 
@@ -183,7 +206,7 @@ public class DeployMonitorUploadCheckFragment extends BaseFragment<IDeployMonito
 
     @Override
     public void finishAc() {
-        if (mRootFragment.getActivity() !=  null) {
+        if (mRootFragment.getActivity() != null) {
             mRootFragment.getActivity().finish();
         }
     }
@@ -204,8 +227,12 @@ public class DeployMonitorUploadCheckFragment extends BaseFragment<IDeployMonito
     }
 
     @Override
-    public void setDeployContactRelativeLayoutVisible(boolean isVisible) {
+    public void setAlarmContactAndPicAndMiniProgramVisible(boolean isVisible) {
         llFgDeployUploadCheckAlarmContact.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        viewFgDeployUploadCheckAlarmContact.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        llFgDeployUploadCheckDeployPic.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        llFgDeployUploadCheckMiniProgram.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        tvFgDeployUploadCheckMiniProgramDescription.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -300,27 +327,34 @@ public class DeployMonitorUploadCheckFragment extends BaseFragment<IDeployMonito
 
     @Override
     public void showStartUploadProgressDialog() {
-
+        progressDialog.setTitle(mActivity.getString(R.string.please_wait));
+        progressDialog.setProgress(0);
+        progressDialog.show();
     }
 
     @Override
     public void dismissUploadProgressDialog() {
-
+        progressDialog.dismiss();
     }
 
     @Override
     public void showUploadProgressDialog(String content, double percent) {
-
+        if (progressDialog != null) {
+//            String title = "正在上传第" + currentNum + "张，总共" + count + "张";
+            progressDialog.setProgress((int) (percent * 100));
+            progressDialog.setTitle(content);
+            progressDialog.show();
+        }
     }
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(msg,Toast.LENGTH_SHORT).show();
+        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void toastLong(String msg) {
-        SensoroToast.INSTANCE.makeText(msg,Toast.LENGTH_LONG).show();
+        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_LONG).show();
     }
 
     @Override

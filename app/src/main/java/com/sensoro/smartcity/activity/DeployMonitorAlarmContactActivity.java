@@ -24,14 +24,13 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
         implements IAlarmContactActivityView {
 
 
-    @BindView(R.id.include_text_title_imv_arrows_left)
-    ImageView includeTextTitleImvArrowsLeft;
+    @BindView(R.id.include_text_title_tv_cancel)
+    TextView includeTextTitleTvCancel;
     @BindView(R.id.include_text_title_tv_title)
     TextView includeTextTitleTvTitle;
     @BindView(R.id.include_text_title_tv_subtitle)
     TextView includeTextTitleTvSubtitle;
-    @BindView(R.id.ac_alarm_contact_tv_save)
-    TextView acAlarmContactTvSave;
+
     @BindView(R.id.ac_name_address_et_alarm_contact_name)
     EditText acNameAddressEtAlarmContactName;
     @BindView(R.id.ac_name_address_et_alarm_contact_phone)
@@ -53,7 +52,18 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
 //        initRcContent();
         includeTextTitleTvTitle.setText(R.string.alert_contact);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
+        initTitle();
 
+    }
+
+    private void initTitle() {
+        includeTextTitleTvTitle.setText(R.string.alert_contact);
+        includeTextTitleTvCancel.setVisibility(View.VISIBLE);
+        includeTextTitleTvCancel.setTextColor(getResources().getColor(R.color.c_b6b6b6));
+        includeTextTitleTvCancel.setText(R.string.cancel);
+        includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
+        includeTextTitleTvSubtitle.setText(getString(R.string.save));
+        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_29c093));
     }
 
     private void initRcContent() {
@@ -101,13 +111,13 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
     }
 
 
-    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_alarm_contact_tv_save})
+    @OnClick({R.id.include_text_title_tv_cancel, R.id.include_text_title_tv_subtitle})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.include_text_title_imv_arrows_left:
+            case R.id.include_text_title_tv_cancel:
                 finishAc();
                 break;
-            case R.id.ac_alarm_contact_tv_save:
+            case R.id.include_text_title_tv_subtitle:
                 String name = acNameAddressEtAlarmContactName.getText().toString();
                 String phone = acNameAddressEtAlarmContactPhone.getText().toString();
                 mPresenter.doFinish(name,phone);
