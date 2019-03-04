@@ -21,6 +21,8 @@ import butterknife.OnClick;
 public class DeployMonitorCheckActivity extends BaseActivity<IDeployMonitorCheckActivityView, DeployMonitorCheckActivityPresenter> implements IDeployMonitorCheckActivityView {
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
+    @BindView(R.id.tv_include_title_left_text)
+    TextView tvIncludeTitleLeftText;
     @BindView(R.id.include_text_title_tv_title)
     TextView includeTextTitleTvTitle;
     @BindView(R.id.include_text_title_tv_subtitle)
@@ -29,10 +31,18 @@ public class DeployMonitorCheckActivity extends BaseActivity<IDeployMonitorCheck
     View includeLineDivider;
     @BindView(R.id.fl_deploy_check_root)
     FrameLayout flDeployCheckRoot;
-    @BindView(R.id.tv_deploy_monitor_local_check)
-    TextView tvDeployMonitorLocalCheck;
-    @BindView(R.id.tv_deploy_monitor_upload_check)
-    TextView tvDeployMonitorUploadCheck;
+    @BindView(R.id.tv_deploy_check_circle_step_1)
+    TextView tvDeployCheckCircleStep1;
+    @BindView(R.id.tv_deploy_check_title_step_1)
+    TextView tvDeployCheckTitleStep1;
+    @BindView(R.id.tv_deploy_check_circle_step_2)
+    TextView tvDeployCheckCircleStep2;
+    @BindView(R.id.tv_deploy_check_title_step_2)
+    TextView tvDeployCheckTitleStep2;
+    @BindView(R.id.tv_deploy_check_circle_step_3)
+    TextView tvDeployCheckCircleStep3;
+    @BindView(R.id.tv_deploy_check_title_step_3)
+    TextView tvDeployCheckTitleStep3;
     private DeployMonitorLocalCheckFragment mDeployMonitorLocalCheckFragment;
     private DeployMonitorUploadCheckFragment mDeployMonitorUploadCheckFragment;
 
@@ -88,14 +98,63 @@ public class DeployMonitorCheckActivity extends BaseActivity<IDeployMonitorCheck
         mDeployMonitorUploadCheckFragment.setArguments(bundle);
     }
 
-    @OnClick({R.id.tv_deploy_monitor_local_check, R.id.tv_deploy_monitor_upload_check})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.tv_deploy_monitor_local_check:
+    @Override
+    public void setDeployMonitorStep(int step) {
+        switch (step) {
+            case 1:
+                //安装检测
+                tvDeployCheckCircleStep1.setBackgroundResource(R.drawable.shape_deploy_check_select);
+                tvDeployCheckCircleStep1.setTextColor(mActivity.getResources().getColor(R.color.white));
+                tvDeployCheckTitleStep1.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+                tvDeployCheckCircleStep2.setBackgroundResource(R.drawable.shape_deploy_check_un_select);
+                tvDeployCheckCircleStep2.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+                tvDeployCheckTitleStep2.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+                tvDeployCheckCircleStep3.setBackgroundResource(R.drawable.shape_deploy_check_un_select);
+                tvDeployCheckCircleStep3.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+                tvDeployCheckTitleStep3.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
                 showDeployMonitorLocalCheckFragment();
                 break;
-            case R.id.tv_deploy_monitor_upload_check:
+            case 2:
+                //完善信息
+                tvDeployCheckCircleStep1.setBackgroundResource(R.drawable.shape_deploy_check_select);
+                tvDeployCheckCircleStep1.setTextColor(mActivity.getResources().getColor(R.color.white));
+                tvDeployCheckTitleStep1.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+                tvDeployCheckCircleStep2.setBackgroundResource(R.drawable.shape_deploy_check_select);
+                tvDeployCheckCircleStep2.setTextColor(mActivity.getResources().getColor(R.color.white));
+                tvDeployCheckTitleStep2.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+                tvDeployCheckCircleStep3.setBackgroundResource(R.drawable.shape_deploy_check_un_select);
+                tvDeployCheckCircleStep3.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+                tvDeployCheckTitleStep3.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
                 showDeployMonitorUploadCheckFragment();
+                break;
+            case 3:
+                //部署结果
+                tvDeployCheckCircleStep1.setBackgroundResource(R.drawable.shape_deploy_check_select);
+                tvDeployCheckCircleStep1.setTextColor(mActivity.getResources().getColor(R.color.white));
+                tvDeployCheckTitleStep1.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+                tvDeployCheckCircleStep2.setBackgroundResource(R.drawable.shape_deploy_check_select);
+                tvDeployCheckCircleStep2.setTextColor(mActivity.getResources().getColor(R.color.white));
+                tvDeployCheckTitleStep2.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+                tvDeployCheckCircleStep3.setBackgroundResource(R.drawable.shape_deploy_check_select);
+                tvDeployCheckCircleStep3.setTextColor(mActivity.getResources().getColor(R.color.white));
+                tvDeployCheckTitleStep3.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+                break;
+        }
+    }
+
+    private int i = 1;
+
+    @OnClick({R.id.tv_include_title_left_text})
+    public void onViewClicked(View view) {
+
+        switch (view.getId()) {
+            case R.id.tv_include_title_left_text:
+                setDeployMonitorStep(i);
+                if (i < 3) {
+                    i++;
+                } else {
+                    i = 1;
+                }
                 break;
         }
     }

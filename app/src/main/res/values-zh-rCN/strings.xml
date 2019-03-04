@@ -858,5 +858,6 @@
     <string name="monitor_top_demo_mode_tips">演示模式下按设备自检按钮将发送预警信息</string>
     <string name="relation_mini_program_account">关联微信小程序账号</string>
     <string name="after_relation_owner_can_look_device">失联后业主可在微信小程序内查看该设备</string>
+    <string name="previous_step">上一步</string>
 
 </resources>

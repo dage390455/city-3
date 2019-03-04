@@ -48,8 +48,8 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
 //        }
         mContext = (Activity) context;
         permissionDialogUtils = new PermissionDialogUtils(mContext);
-        getView().startAC(new Intent(mContext, DeployMonitorCheckActivity.class));
-        getView().finishAc();
+//        getView().startAC(new Intent(mContext, DeployMonitorCheckActivity.class));
+//        getView().finishAc();
     }
 
     private void checkLoginState() {
@@ -216,7 +216,7 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
 
     @Override
     public void onStart() {
-//        requestPermissions(requestPermissions);
+        requestPermissions(requestPermissions);
     }
 
     @Override

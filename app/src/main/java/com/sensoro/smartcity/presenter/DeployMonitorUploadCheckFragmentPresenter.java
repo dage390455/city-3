@@ -5,39 +5,827 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
+import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
+import com.sensoro.smartcity.activity.DeployMonitorDeployPicActivity;
 import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
+import com.sensoro.smartcity.activity.DeployMonitorWeChatRelationActivity;
+import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorUploadCheckFragmentView;
+import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.smartcity.iwidget.IOnDestroy;
+import com.sensoro.smartcity.model.DeployAnalyzerModel;
+import com.sensoro.smartcity.model.DeployContactModel;
+import com.sensoro.smartcity.model.DeployResultModel;
+import com.sensoro.smartcity.model.EventData;
+import com.sensoro.smartcity.server.CityObserver;
+import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.DeployControlSettingData;
+import com.sensoro.smartcity.server.bean.DeployStationInfo;
+import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
+import com.sensoro.smartcity.server.response.DeviceDeployRsp;
+import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.PreferencesHelper;
+import com.sensoro.smartcity.util.RegexUtils;
+import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.smartcity.widget.popup.UpLoadPhotosUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
+import static com.sensoro.smartcity.constant.Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED;
+import static com.sensoro.smartcity.constant.Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
+import static com.sensoro.smartcity.constant.Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
+import static com.sensoro.smartcity.constant.Constants.DEVICE_CONTROL_DEVICE_TYPES;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_DEPLOY_ORIGIN_NAME_ADDRESS;
+import static com.sensoro.smartcity.constant.Constants.EXTRA_DEPLOY_RESULT_MODEL;
+import static com.sensoro.smartcity.constant.Constants.EXTRA_DEPLOY_TO_PHOTO;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_DEPLOY_TO_SN;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_DEPLOY_TYPE;
+import static com.sensoro.smartcity.constant.Constants.EXTRA_SETTING_DEPLOY_CONTACT;
+import static com.sensoro.smartcity.constant.Constants.EXTRA_SETTING_DEPLOY_DEVICE_TYPE;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_SETTING_NAME_ADDRESS;
+import static com.sensoro.smartcity.constant.Constants.EXTRA_SETTING_TAG_LIST;
+import static com.sensoro.smartcity.constant.Constants.EXTRA_SETTING_WE_CHAT_RELATION;
+import static com.sensoro.smartcity.constant.Constants.TYPE_SCAN_DEPLOY_DEVICE;
+import static com.sensoro.smartcity.constant.Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE;
+import static com.sensoro.smartcity.constant.Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE;
+import static com.sensoro.smartcity.constant.Constants.TYPE_SCAN_DEPLOY_STATION;
+import static com.sensoro.smartcity.constant.Constants.TYPE_SCAN_INSPECTION;
+import static com.sensoro.smartcity.constant.Constants.materialValueMap;
+import static com.sensoro.smartcity.presenter.DeployMonitorCheckActivityPresenter.deployAnalyzerModel;
 
-public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDeployMonitorUploadCheckFragmentView> {
+public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDeployMonitorUploadCheckFragmentView> implements IOnCreate,IOnDestroy
+{
     private Activity mActivity;
+    private CharSequence originName;
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
+        originName = DeployMonitorCheckActivityPresenter.deployAnalyzerModel.nameAndAddress;
+        onCreate();
+        init();
+
+
+    }
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
+    }
+    private void init() {
+            switch (deployAnalyzerModel.deployType) {
+                case TYPE_SCAN_DEPLOY_STATION:
+                    //基站部署
+                    getView().setDeployContactRelativeLayoutVisible(false);
+                    getView().setDeployPhotoVisible(false);
+                    getView().setDeviceSn(mActivity.getString(R.string.device_number) + deployAnalyzerModel.sn);
+                    if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
+                        getView().setNameAddressText(deployAnalyzerModel.nameAndAddress);
+                    }
+                    break;
+                case TYPE_SCAN_DEPLOY_DEVICE:
+                    //设备部署
+                    getView().setDeployContactRelativeLayoutVisible(true);
+                    getView().setDeployPhotoVisible(true);
+                    echoDeviceInfo();
+                    break;
+                case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+                case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+                    //巡检设备更换
+                    getView().setDeployContactRelativeLayoutVisible(true);
+                    getView().setDeployPhotoVisible(true);
+                    getView().updateUploadTvText(mActivity.getString(R.string.replacement_equipment));
+                    echoDeviceInfo();
+                    getView().setDeployDetailArrowWeChatVisible(false);
+                    break;
+                case TYPE_SCAN_INSPECTION:
+                    //扫描巡检设备
+                    break;
+                default:
+                    break;
+            }
+//        getView().updateUploadState(true);
+            String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType);
+            getView().setDeployDeviceType(mActivity.getString(R.string.deploy_device_type) + ":" + deviceTypeName);
+            //TODO 暂时只针对ancre的电器火灾并且排除掉泛海三江电气火灾
+            boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+            if (!AppUtils.isChineseLanguage()) {
+                //TODO 英文版控制不显示小程序账号
+                deployAnalyzerModel.weChatAccount = null;
+            }
+    }
+
+    private void echoDeviceInfo() {
+        getView().setDeviceSn(mActivity.getString(R.string.device_number) + deployAnalyzerModel.sn);
+        if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
+            getView().setNameAddressText(deployAnalyzerModel.nameAndAddress);
+        }
+        getView().updateContactData(deployAnalyzerModel.deployContactModelList);
+        getView().updateTagsData(deployAnalyzerModel.tagList);
+        getView().setUploadBtnStatus(checkCanUpload());
+        getView().setDeployWeChatText(deployAnalyzerModel.weChatAccount);
+        try {
+            LogUtils.loge("channelMask--->> " + deployAnalyzerModel.channelMask.size());
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+    }
+
+    private boolean checkCanUpload() {
+        String name_default = mActivity.getString(R.string.tips_hint_name_address);
+        if (TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress) || deployAnalyzerModel.nameAndAddress.equals(name_default)) {
+            return false;
+        } else {
+            byte[] bytes = new byte[0];
+            try {
+                bytes = deployAnalyzerModel.nameAndAddress.getBytes("UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            if (bytes.length > 48) {
+                return false;
+            }
+        }
+        switch (deployAnalyzerModel.deployType) {
+            case TYPE_SCAN_DEPLOY_STATION:
+                if (getRealImageSize(deployAnalyzerModel.images) == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+                    return false;
+                }
+                //经纬度校验
+                if (deployAnalyzerModel.latLng.size() != 2) {
+                    return false;
+                }
+                break;
+            case TYPE_SCAN_DEPLOY_DEVICE:
+            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+                //联系人校验
+                if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+                    DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+                    if (TextUtils.isEmpty(deployContactModel.name) || TextUtils.isEmpty(deployContactModel.phone)) {
+                        return false;
+                    }
+                    if (!RegexUtils.checkPhone(deployContactModel.phone)) {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+                //照片校验
+                if (getRealImageSize(deployAnalyzerModel.images) == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+                    return false;
+                }
+                //经纬度校验
+                if (deployAnalyzerModel.latLng.size() != 2) {
+                    return false;
+                }
+                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+                if (isFire) {
+                    if (deployAnalyzerModel.settingData == null) {
+                        return false;
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        int code = eventData.code;
+        Object data = eventData.data;
+        switch (code) {
+            case Constants.EVENT_DATA_DEPLOY_RESULT_FINISH:
+            case Constants.EVENT_DATA_DEPLOY_CHANGE_RESULT_CONTINUE:
+            case Constants.EVENT_DATA_DEPLOY_RESULT_CONTINUE:
+                getView().finishAc();
+                break;
+            case Constants.EVENT_DATA_DEPLOY_SETTING_NAME_ADDRESS:
+                if (data instanceof String) {
+                    deployAnalyzerModel.nameAndAddress = (String) data;
+                    getView().setNameAddressText(deployAnalyzerModel.nameAndAddress);
+                }
+                getView().setUploadBtnStatus(checkCanUpload());
+                break;
+            case Constants.EVENT_DATA_DEPLOY_SETTING_TAG:
+                if (data instanceof List) {
+                    deployAnalyzerModel.tagList.clear();
+                    deployAnalyzerModel.tagList.addAll((List<String>) data);
+                    getView().updateTagsData(deployAnalyzerModel.tagList);
+                }
+                break;
+            case Constants.EVENT_DATA_DEPLOY_SETTING_CONTACT:
+                if (data instanceof List) {
+                    //TODO 联系人
+                    deployAnalyzerModel.deployContactModelList.clear();
+                    deployAnalyzerModel.deployContactModelList.addAll((List<DeployContactModel>) data);
+                    getView().updateContactData(deployAnalyzerModel.deployContactModelList);
+                }
+                getView().setUploadBtnStatus(checkCanUpload());
+                break;
+            case Constants.EVENT_DATA_DEPLOY_SETTING_PHOTO:
+                if (data instanceof List) {
+                    deployAnalyzerModel.images.clear();
+
+                    deployAnalyzerModel.images.addAll((ArrayList<ImageItem>) data);
+
+                    if (getRealImageSize(deployAnalyzerModel.images) > 0) {
+                        getView().setDeployPhotoText(mActivity.getString(R.string.added) + getRealImageSize(deployAnalyzerModel.images) + mActivity.getString(R.string.images));
+                    } else {
+                        getView().setDeployPhotoText(mActivity.getString(R.string.not_added));
+                    }
+                    getView().setUploadBtnStatus(checkCanUpload());
+                }
+                break;
+//            case Constants.EVENT_DATA_DEPLOY_MAP:
+//                if (data instanceof DeployAnalyzerModel) {
+//                    this.deployAnalyzerModel = (DeployAnalyzerModel) data;
+//                    freshSignalInfo();
+//                }
+//                getView().setUploadBtnStatus(checkCanUpload());
+//                break;
+//            case Constants.EVENT_DATA_SOCKET_DATA_INFO:
+//                if (data instanceof DeviceInfo) {
+//                    DeviceInfo deviceInfo = (DeviceInfo) data;
+//                    String sn = deviceInfo.getSn();
+//                    try {
+//                        if (deployAnalyzerModel.sn.equalsIgnoreCase(sn)) {
+//                            deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
+//                            deployAnalyzerModel.signal = deviceInfo.getSignal();
+//                            freshSignalInfo();
+////                            getView().toastLong("信号-->>time = " + deployAnalyzerModel.updatedTime + ",signal = " + deployAnalyzerModel.signal);
+//                            try {
+//                                LogUtils.loge(this, "部署页刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + deployAnalyzerModel.signal);
+//                            } catch (Throwable throwable) {
+//                                throwable.printStackTrace();
+//                            }
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                break;
+            case Constants.EVENT_DATA_DEPLOY_SETTING_WE_CHAT_RELATION:
+                if (data instanceof String) {
+                    deployAnalyzerModel.weChatAccount = (String) data;
+                    getView().setDeployWeChatText(deployAnalyzerModel.weChatAccount);
+                }
+                break;
+//            case Constants.EVENT_DATA_DEPLOY_INIT_CONFIG_CODE:
+//                if (data instanceof DeployControlSettingData) {
+//                    deployAnalyzerModel.settingData = (DeployControlSettingData) data;
+//                    Integer initValue = deployAnalyzerModel.settingData.getSwitchSpec();
+//                    if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+//                        if (initValue != null) {
+//                            getView().setDeployDeviceDetailDeploySetting(mContext.getString(R.string.actual_overcurrent_threshold) + ":" + initValue + "A");
+//                        }
+//                    }
+//                } else {
+//                    getView().setDeployDeviceDetailDeploySetting(null);
+//                }
+//                getView().setUploadBtnStatus(checkCanUpload());
+//                break;
+            default:
+                break;
+        }
     }
 
     @Override
     public void onDestroy() {
-
+        EventBus.getDefault().unregister(this);
     }
 
     public void doNameAddress() {
         Intent intent = new Intent(mActivity, DeployMonitorNameAddressActivity.class);
-        if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
-            intent.putExtra(EXTRA_SETTING_NAME_ADDRESS, deployAnalyzerModel.nameAndAddress);
+        if (!TextUtils.isEmpty(DeployMonitorCheckActivityPresenter.deployAnalyzerModel.nameAndAddress)) {
+            intent.putExtra(EXTRA_SETTING_NAME_ADDRESS, DeployMonitorCheckActivityPresenter.deployAnalyzerModel.nameAndAddress);
         }
-        intent.putExtra(EXTRA_DEPLOY_TO_SN, deployAnalyzerModel.sn);
-        intent.putExtra(EXTRA_DEPLOY_TYPE, deployAnalyzerModel.deployType);
+        intent.putExtra(EXTRA_DEPLOY_TO_SN, DeployMonitorCheckActivityPresenter.deployAnalyzerModel.sn);
+        intent.putExtra(EXTRA_DEPLOY_TYPE, DeployMonitorCheckActivityPresenter.deployAnalyzerModel.deployType);
         if (!TextUtils.isEmpty(originName)) {
             intent.putExtra(EXTRA_DEPLOY_ORIGIN_NAME_ADDRESS, originName);
         }
-        intent.putExtra(EXTRA_DEPLOY_TYPE, deployAnalyzerModel.deployType);
+        intent.putExtra(EXTRA_DEPLOY_TYPE, DeployMonitorCheckActivityPresenter.deployAnalyzerModel.deployType);
         getView().startAC(intent);
+    }
+
+    public void doTag() {
+        Intent intent = new Intent(mActivity, DeployDeviceTagActivity.class);
+        if (deployAnalyzerModel.tagList.size() > 0) {
+            intent.putStringArrayListExtra(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
+        }
+        getView().startAC(intent);
+    }
+
+    public void doSettingPhoto() {
+        Intent intent = new Intent(mActivity, DeployMonitorDeployPicActivity.class);
+        if (getRealImageSize(deployAnalyzerModel.images) > 0) {
+            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
+        }
+        intent.putExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
+        getView().startAC(intent);
+    }
+
+    private int getRealImageSize(ArrayList<ImageItem> images) {
+        int count = 0;
+        for (ImageItem image : deployAnalyzerModel.images) {
+            if (image != null) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public void doAlarmContact() {
+        Intent intent = new Intent(mActivity, DeployMonitorAlarmContactActivity.class);
+        if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+            intent.putExtra(EXTRA_SETTING_DEPLOY_CONTACT, (ArrayList<DeployContactModel>) deployAnalyzerModel.deployContactModelList);
+        }
+        getView().startAC(intent);
+    }
+
+    public void doWeChatRelation() {
+        if (deployAnalyzerModel.deployType == TYPE_SCAN_DEPLOY_DEVICE) {
+            Intent intent = new Intent(mActivity, DeployMonitorWeChatRelationActivity.class);
+            if (!TextUtils.isEmpty(deployAnalyzerModel.weChatAccount)) {
+                intent.putExtra(EXTRA_SETTING_WE_CHAT_RELATION, deployAnalyzerModel.weChatAccount);
+            }
+            intent.putExtra(EXTRA_DEPLOY_TO_SN, deployAnalyzerModel.sn);
+            getView().startAC(intent);
+            getView().startACForResult(intent, Constants.REQUEST_CODE_INIT_CONFIG);
+        }
+    }
+
+    public void doConfirm() {
+        //姓名地址校验
+        switch (deployAnalyzerModel.deployType) {
+            case TYPE_SCAN_DEPLOY_STATION:
+                if (checkHasPhoto()) return;
+                //经纬度校验
+                if (checkHasNoLatLng()) return;
+                requestUpload();
+                break;
+            case TYPE_SCAN_DEPLOY_DEVICE:
+            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+                //联系人校验
+                if (checkHasContact()) return;
+                if (checkHasPhoto()) return;
+                //经纬度校验
+                if (checkHasNoLatLng()) return;
+                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+                if (isFire) {
+                    if (deployAnalyzerModel.settingData == null) {
+                        getView().toastShort(mActivity.getString(R.string.deploy_has_no_configuration_tip));
+                        return;
+                    }
+                }
+//                if (checkNeedSignal()) {
+//                    checkHasForceUploadPermission();
+//                } else {
+                    requestUpload();
+//                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 检查是否能强制上传
+     */
+    private void checkHasForceUploadPermission() {
+//        String mergeType = WidgetUtil.handleMergeType(deployAnalyzerModel.deviceType);
+//        if (TextUtils.isEmpty(mergeType)) {
+////            getView().showWarnDialog(true);
+//        } else {
+//            if (Constants.DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST.contains(mergeType)) {
+//                if (PreferencesHelper.getInstance().getUserData().hasBadSignalUpload) {
+//                    getView().showWarnDialog(true);
+//                } else {
+//                    getView().showWarnDialog(false);
+//                }
+//            } else {
+//                getView().showWarnDialog(true);
+//            }
+//        }
+    }
+
+    /**
+     * 检查信号状态
+     *
+     * @return
+     */
+    private boolean checkNeedSignal() {
+        long time_diff = System.currentTimeMillis() - deployAnalyzerModel.updatedTime;
+        if (deployAnalyzerModel.signal != null && (time_diff < 2 * 60 * 1000)) {
+            switch (deployAnalyzerModel.signal) {
+                case "good":
+                case "normal":
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 检测是否填写过联系人
+     *
+     * @return
+     */
+    private boolean checkHasContact() {
+        if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+            if (TextUtils.isEmpty(deployContactModel.name) || TextUtils.isEmpty(deployContactModel.phone)) {
+                getView().toastShort(mActivity.getString(R.string.please_enter_contact_phone));
+                getView().setUploadBtnStatus(true);
+                return true;
+            }
+            if (!RegexUtils.checkPhone(deployContactModel.phone)) {
+                getView().toastShort(mActivity.getResources().getString(R.string.tips_phone_empty));
+                getView().setUploadBtnStatus(true);
+                return true;
+            }
+        } else {
+            getView().toastShort(mActivity.getString(R.string.please_enter_contact_phone));
+            getView().setUploadBtnStatus(true);
+            return true;
+        }
+        return false;
+    }
+
+    public void requestUpload() {
+        final double lon = deployAnalyzerModel.latLng.get(0);
+        final double lan = deployAnalyzerModel.latLng.get(1);
+        switch (deployAnalyzerModel.deployType) {
+            case TYPE_SCAN_DEPLOY_STATION:
+                //基站部署
+                getView().showProgressDialog();
+                RetrofitServiceHelper.INSTANCE.doStationDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new CityObserver<DeployStationInfoRsp>(this) {
+
+                            @Override
+                            public void onErrorMsg(int errorCode, String errorMsg) {
+                                getView().dismissProgressDialog();
+                                getView().setUploadBtnStatus(true);
+                                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                                    getView().toastShort(errorMsg);
+                                } else if (errorCode == 4013101 || errorCode == 4000013) {
+                                    freshError(deployAnalyzerModel.sn, null, DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
+                                } else {
+                                    freshError(deployAnalyzerModel.sn, errorMsg, DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
+                                }
+                            }
+
+                            @Override
+                            public void onCompleted(DeployStationInfoRsp deployStationInfoRsp) {
+                                freshStation(deployStationInfoRsp);
+                                getView().dismissProgressDialog();
+                                getView().finishAc();
+                            }
+                        });
+                break;
+            case TYPE_SCAN_DEPLOY_DEVICE:
+                //设备部署
+            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+                //巡检设备更换
+                //TODO 暂时对电气火灾设备直接上传
+//                if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+//                    doUploadImages(lon, lan);
+//                } else {
+
+//                if (PreferencesHelper.getInstance().getUserData().hasSignalConfig || Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+//                    changeDevice(lon, lan);
+//                } else {
+//                    doUploadImages(lon, lan);
+//                }
+//                }
+                handleBleSetting(lon, lan);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void handleBleSetting(double lon, double lan) {
+//        if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
+//            if (!TextUtils.isEmpty(deployAnalyzerModel.blePassword) && deployAnalyzerModel.channelMask.size() > 0) {
+//                //需要配置频点信息
+//                if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
+//                    if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+//                        if (deployAnalyzerModel.settingData != null) {
+//                            //配置频点信息和初始配置
+//                            getView().showBleConfigDialog();
+//                            connectDevice();
+//                        } else {
+//                            getView().toastShort(mContext.getString(R.string.please_set_initial_configuration));
+//                        }
+//                    } else {
+//                        //直接配置频点信息
+//                        connectDevice();
+//                    }
+//
+//                } else {
+//                    getView().toastShort(mContext.getString(R.string.device_not_found_activate_Bluetooth));
+//                }
+//
+//            } else {
+//                getView().toastShort(mContext.getString(R.string.channel_mask_error_tip));
+//            }
+//            return;
+//        } else {
+//            if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+//                //单独配置初始配置
+//                if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
+//                    connectDevice();
+//                } else {
+//                    getView().toastShort(mContext.getString(R.string.device_not_found_activate_Bluetooth));
+//                }
+//                return;
+//            }
+//        }
+        doUploadImages(lon, lan);
+    }
+
+    private void doUploadImages(final double lon, final double lan) {
+        if (getRealImageSize(deployAnalyzerModel.images) > 0) {
+            //TODO 图片提交
+            final UpLoadPhotosUtils.UpLoadPhotoListener upLoadPhotoListener = new UpLoadPhotosUtils
+                    .UpLoadPhotoListener() {
+
+                @Override
+                public void onStart() {
+                    if (isAttachedView()) {
+                        getView().showStartUploadProgressDialog();
+                    }
+
+                }
+
+                @Override
+                public void onComplete(List<ScenesData> scenesDataList) {
+                    ArrayList<String> strings = new ArrayList<>();
+                    for (ScenesData scenesData : scenesDataList) {
+                        scenesData.type = "image";
+                        strings.add(scenesData.url);
+                    }
+                    try {
+                        LogUtils.loge(this, "上传成功--- size = " + strings.size());
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                    if (isAttachedView()) {
+                        getView().dismissUploadProgressDialog();
+                        // 上传结果
+                        doDeployResult(lon, lan, strings);
+                    }
+
+
+                }
+
+                @Override
+                public void onError(String errMsg) {
+                    if (isAttachedView()) {
+                        getView().setUploadBtnStatus(true);
+                        getView().dismissUploadProgressDialog();
+                        getView().toastShort(errMsg);
+                    }
+
+                }
+
+                @Override
+                public void onProgress(String content, double percent) {
+                    if (isAttachedView()) {
+                        getView().showUploadProgressDialog(content, percent);
+                    }
+
+                }
+            };
+            UpLoadPhotosUtils upLoadPhotosUtils = new UpLoadPhotosUtils(mActivity, upLoadPhotoListener);
+            ArrayList<ImageItem> list = new ArrayList<>();
+            for (ImageItem image : deployAnalyzerModel.images) {
+                if (image != null) {
+                    list.add(image);
+                }
+            }
+            upLoadPhotosUtils.doUploadPhoto(list);
+        } else {
+            doDeployResult(lon, lan, null);
+        }
+    }
+
+    private void doDeployResult(double lon, double lan, List<String> imgUrls) {
+        DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+        switch (deployAnalyzerModel.deployType) {
+            case TYPE_SCAN_DEPLOY_DEVICE:
+                //设备部署
+                getView().showProgressDialog();
+                //TODO 暂时不支持添加wx电话
+                //TODO 添加电气火灾配置支持
+//                deployAnalyzerModel.weChatAccount = null;
+                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+                //暂时添加 后续可以删除
+                DeployControlSettingData settingData = null;
+                if (isFire) {
+                    settingData = deployAnalyzerModel.settingData;
+                }
+                final long currentTimeMillis = System.currentTimeMillis();
+                RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
+                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, settingData).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new CityObserver<DeviceDeployRsp>(this) {
+                            @Override
+                            public void onErrorMsg(int errorCode, String errorMsg) {
+                                try {
+                                    LogUtils.loge("接口速度--->>>doDevicePointDeploy: " + (System.currentTimeMillis() - currentTimeMillis));
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
+                                getView().dismissProgressDialog();
+                                getView().setUploadBtnStatus(true);
+                                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                                    getView().toastShort(errorMsg);
+                                } else if (errorCode == 4013101 || errorCode == 4000013) {
+                                    freshError(deployAnalyzerModel.sn, null, DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
+                                } else {
+                                    freshError(deployAnalyzerModel.sn, errorMsg, DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
+                                }
+                            }
+
+                            @Override
+                            public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
+                                try {
+                                    LogUtils.loge("接口速度--->>>doDevicePointDeploy: " + (System.currentTimeMillis() - currentTimeMillis));
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
+                                freshPoint(deviceDeployRsp);
+                                getView().dismissProgressDialog();
+                                getView().finishAc();
+                            }
+                        });
+                break;
+            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+                getView().showProgressDialog();
+                RetrofitServiceHelper.INSTANCE.doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
+                        deployAnalyzerModel.mDeviceDetail.getTaskId(), 1, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
+                        deployContactModel.name, deployContactModel.phone, imgUrls, null).
+                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
+                    @Override
+                    public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
+                        freshPoint(deviceDeployRsp);
+                        getView().dismissProgressDialog();
+                        getView().finishAc();
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        getView().dismissProgressDialog();
+                        getView().setUploadBtnStatus(true);
+                        if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                            getView().toastShort(errorMsg);
+                        } else if (errorCode == 4013101 || errorCode == 4000013) {
+                            freshError(deployAnalyzerModel.sn, null, DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
+                        } else {
+                            freshError(deployAnalyzerModel.sn, errorMsg, DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
+                        }
+                    }
+                });
+                break;
+            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+                getView().showProgressDialog();
+                RetrofitServiceHelper.INSTANCE.doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
+                        null, 2, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress, deployContactModel.name,
+                        deployContactModel.phone, imgUrls, null).
+                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
+                    @Override
+                    public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
+                        //
+                        freshPoint(deviceDeployRsp);
+                        getView().dismissProgressDialog();
+                        getView().finishAc();
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        getView().dismissProgressDialog();
+                        getView().setUploadBtnStatus(true);
+                        if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                            getView().toastShort(errorMsg);
+                        } else if (errorCode == 4013101 || errorCode == 4000013) {
+                            freshError(deployAnalyzerModel.sn, null, DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
+                        } else {
+                            freshError(deployAnalyzerModel.sn, errorMsg, DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
+                        }
+                    }
+                });
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    private void freshPoint(DeviceDeployRsp deviceDeployRsp) {
+        DeployResultModel deployResultModel = new DeployResultModel();
+        DeviceInfo deviceInfo = deviceDeployRsp.getData();
+        deployResultModel.deviceInfo = deviceInfo;
+        Intent intent = new Intent(mActivity, DeployResultActivity.class);
+        //
+        deployResultModel.sn = deviceInfo.getSn();
+        deployResultModel.deviceType = deployAnalyzerModel.deviceType;
+        deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
+        deployResultModel.scanType = deployAnalyzerModel.deployType;
+        deployResultModel.wxPhone = deployAnalyzerModel.weChatAccount;
+        deployResultModel.settingData = deployAnalyzerModel.settingData;
+        //TODO 新版联系人
+        if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+            deployResultModel.contact = deployContactModel.name;
+            deployResultModel.phone = deployContactModel.phone;
+        }
+        deployResultModel.address = deployAnalyzerModel.address;
+        deployResultModel.updateTime = deviceInfo.getUpdatedTime();
+        deployResultModel.deviceStatus = deviceInfo.getStatus();
+        deployResultModel.signal = deviceInfo.getSignal();
+        deployResultModel.name = deployAnalyzerModel.nameAndAddress;
+        intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+        getView().startAC(intent);
+    }
+
+    private void freshStation(DeployStationInfoRsp deployStationInfoRsp) {
+        DeployResultModel deployResultModel = new DeployResultModel();
+        //
+        Intent intent = new Intent(mActivity, DeployResultActivity.class);
+        DeployStationInfo deployStationInfo = deployStationInfoRsp.getData();
+        deployResultModel.name = deployStationInfo.getName();
+        deployResultModel.sn = deployStationInfo.getSn();
+        deployResultModel.deviceType = deployAnalyzerModel.deviceType;
+        deployResultModel.stationStatus = deployStationInfo.getNormalStatus();
+        deployResultModel.updateTime = deployStationInfo.getUpdatedTime();
+        deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
+        deployResultModel.scanType = deployAnalyzerModel.deployType;
+        deployResultModel.address = deployAnalyzerModel.address;
+        deployResultModel.signal = deployAnalyzerModel.signal;
+        intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+        getView().startAC(intent);
+    }
+
+    private void freshError(String scanSN, String errorInfo, int resultCode) {
+        //
+        Intent intent = new Intent();
+        intent.setClass(mActivity, DeployResultActivity.class);
+        DeployResultModel deployResultModel = new DeployResultModel();
+        deployResultModel.sn = scanSN;
+        deployResultModel.deviceType = deployAnalyzerModel.deviceType;
+        deployResultModel.resultCode = resultCode;
+        deployResultModel.scanType = deployAnalyzerModel.deployType;
+        deployResultModel.errorMsg = errorInfo;
+        deployResultModel.wxPhone = deployAnalyzerModel.weChatAccount;
+        deployResultModel.settingData = deployAnalyzerModel.settingData;
+        if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+            deployResultModel.contact = deployContactModel.name;
+            deployResultModel.phone = deployContactModel.phone;
+        }
+        deployResultModel.address = deployAnalyzerModel.address;
+        deployResultModel.updateTime = deployAnalyzerModel.updatedTime;
+        deployResultModel.deviceStatus = deployAnalyzerModel.status;
+        deployResultModel.signal = deployAnalyzerModel.signal;
+        deployResultModel.name = deployAnalyzerModel.nameAndAddress;
+        intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+        getView().startAC(intent);
+    }
+
+    private boolean checkHasNoLatLng() {
+        if (deployAnalyzerModel.latLng.size() != 2) {
+            getView().toastShort(mActivity.getString(R.string.please_specify_the_deployment_location));
+            getView().setUploadBtnStatus(true);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkHasPhoto() {
+        if (getRealImageSize(deployAnalyzerModel.images) == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+            getView().toastShort(mActivity.getString(R.string.please_add_at_least_one_image));
+            getView().setUploadBtnStatus(true);
+            return true;
+        }
+        return false;
     }
 }
