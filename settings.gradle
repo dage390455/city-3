@@ -1,1 +1,1 @@
-include ':app', ':ocr_ui', ':bottomnavigation','sensor-kit',':calendarview',':pickerview', ':wheelview'
+include ':app', ':ocr_ui', ':bottomnavigation','sensor-kit',':calendarview',':pickerview', ':wheelview',"core",  "zbar", "zbar-sample"
