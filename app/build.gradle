@@ -8,10 +8,6 @@ android {
     def versionPropsFile = file('version.properties')
 
 
-    packagingOptions {
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
-    }
     signingConfigs {
         release {
             keyAlias 'sensoro'
@@ -27,8 +23,7 @@ android {
         }
     }
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
-//    useLibrary 'org.apache.http.legacy'
+    //    useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.sensoro.smartcity"
         minSdkVersion 20
@@ -38,6 +33,8 @@ android {
         versionName verName + connector + buildCode
 //         Enabling multidex support.
         multiDexEnabled true
+        flavorDimensions "default"
+        vectorDrawables.useSupportLibrary = true
         manifestPlaceholders = [
                 GETUI_APP_ID    : "2VjnktTwteAnEZ1aMZCB53",
                 GETUI_APP_KEY   : "zrfWS690Dh7r9bPUUfh1o2",
@@ -183,84 +180,87 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     //
-    compile 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
     //    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
     //
     //    compile 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     //    compile project(':cosmocalendar')
-    compile files('libs/Baidu_Mtj_3.8.2.1.jar')
-    compile 'com.jakewharton:butterknife:8.7.0'
+    implementation files('libs/Baidu_Mtj_3.8.2.1.jar')
+    implementation 'com.jakewharton:butterknife:8.7.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
-    compile('io.socket:socket.io-client:1.0.0') {
+    implementation('io.socket:socket.io-client:1.0.0') {
         exclude group: 'org.json', module: 'json'
     }
-    compile 'de.hdodenhof:circleimageview:2.1.0'
-    compile 'com.android.support:multidex:1.0.3'
+    implementation 'de.hdodenhof:circleimageview:2.1.0'
+    implementation 'com.android.support:multidex:1.0.3'
     //    compile 'com.squareup.okio:okio:1.5.0'
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
     //    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.1.2'
     //    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
-    compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
     //
-    compile files('libs/GetuiSDK2.12.4.0.jar')
+    implementation files('libs/GetuiSDK2.12.4.0.jar')
     //  更改扫描二维码为maven库
-    compile 'cn.bingoogolapple:bga-qrcode-zxing:1.3.6'
-    compile 'cn.bingoogolapple:bga-qrcode-zbar:1.3.6'
+    implementation 'cn.bingoogolapple:bga-qrcode-zxing:1.3.6'
+//    implementation 'cn.bingoogolapple:bga-qrcode-zbar:1.3.6'
     //
     //    compile project(':imagepicker')
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.qiniu:qiniu-android-sdk:7.3.+'
-    compile files('libs/ocr-sdk.jar')
-    compile project(':ocr_ui')
-    compile 'me.jessyan:autosize:1.1.2'
-    compile 'com.tencent.bugly:nativecrashreport:latest.release'
-    compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.qiniu:qiniu-android-sdk:7.3.+'
+    implementation files('libs/ocr-sdk.jar')
+    implementation project(':ocr_ui')
+    implementation 'me.jessyan:autosize:1.1.2'
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
+    implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
     //网络组件
-    compile 'com.squareup.retrofit2:retrofit:2.4.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.4.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.4.0'
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.4.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.10.0'
-    compile 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava:2.4.0'
+    implementation 'io.reactivex:rxandroid:1.2.1'
+    implementation 'com.squareup.retrofit2:adapter-rxjava:2.4.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     //消息组件
-    compile 'org.greenrobot:eventbus:3.1.1'
-    compile 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
-    compile 'com.android.support:cardview-v7:27.1.1'
-    compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
-    compile files('libs/AMap3DMap_6.4.1_AMapSearch_6.1.0_AMapLocation_4.2.0_20180906.jar')
-    compile project(':sensor-kit')
-    compile 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'org.greenrobot:eventbus:3.1.1'
+    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
+    implementation 'com.android.support:cardview-v7:27.1.1'
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
+    implementation files('libs/AMap3DMap_6.4.1_AMapSearch_6.1.0_AMapLocation_4.2.0_20180906.jar')
+    implementation project(':sensor-kit')
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     //    compile 'com.gyf.immersionbar:immersionbar:2.3.2-beta01'
     //protobuf
-    compile 'com.google.protobuf:protobuf-java:2.5.0'
-    compile 'no.nordicsemi.android:dfu:1.0.0'
-    compile 'com.googlecode.protobuf-java-format:protobuf-java-format:1.4'
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:27.1.1'
-    compile 'com.android.support:recyclerview-v7:27.1.1'
-    compile 'com.github.chrisbanes.photoview:library:1.2.4'
-    compile('com.gyf.immersionbar:immersionbar:2.3.2-beta01') {
+    implementation 'com.google.protobuf:protobuf-java:2.5.0'
+    implementation 'no.nordicsemi.android:dfu:1.0.0'
+    implementation 'com.googlecode.protobuf-java-format:protobuf-java-format:1.4'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.github.chrisbanes.photoview:library:1.2.4'
+    implementation('com.gyf.immersionbar:immersionbar:2.3.2-beta01') {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
     //bottom bar
-    compile project(':bottomnavigation')
+    implementation project(':bottomnavigation')
     //Calendar view
-    compile project(':calendarview')
-    compile('com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.3') {
+    implementation project(':calendarview')
+    implementation('com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.3') {
         transitive = true
     }
-    compile project(path: ':pickerview')
-    compile 'com.yanzhenjie:permission:2.0.0-rc12'
+    implementation project(path: ':pickerview')
+    implementation 'com.yanzhenjie:permission:2.0.0-rc12'
     //    compile 'com.hjq:toast:5.2'
-    debugCompile 'com.github.markzhai:blockcanary-android:1.5.0'
-    releaseCompile 'com.github.markzhai:blockcanary-no-op:1.5.0'
-    compile project(':zbar')
+    debugImplementation 'com.github.markzhai:blockcanary-android:1.5.0'
+    releaseImplementation 'com.github.markzhai:blockcanary-no-op:1.5.0'
+    api(project(":zbar")) {
+        exclude group: "com.amap.api"
+    }
+
 }
