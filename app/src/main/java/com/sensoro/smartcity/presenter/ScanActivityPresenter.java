@@ -10,6 +10,7 @@ import android.os.Vibrator;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployManualActivity;
+import com.sensoro.smartcity.analyzer.DeployAnalyzerUtils;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IScanActivityView;
@@ -132,27 +133,27 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
 
     public void processResult(String result) {
         playVoice();
-        getView().toastShort(result);
-        getView().finishAc();
-//        getView().showProgressDialog();
-//        DeployAnalyzerUtils.INSTANCE.handlerDeployAnalyzerResult(this, scanType, result, mContext, mTaskInfo, mDeviceDetail, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
-//            @Override
-//            public void onSuccess(Intent intent) {
-//                getView().dismissProgressDialog();
-//                getView().startAC(intent);
-//            }
-//
-//            @Override
-//            public void onError(int errType, Intent intent, String errMsg) {
-//                getView().dismissProgressDialog();
-//                if (intent != null) {
-//                    getView().startAC(intent);
-//                } else {
-//                    getView().toastShort(errMsg);
-//                    getView().startScan();
-//                }
-//            }
-//        });
+//        getView().toastShort(result);
+//        getView().finishAc();
+        getView().showProgressDialog();
+        DeployAnalyzerUtils.INSTANCE.handlerDeployAnalyzerResult(this, scanType, result, mContext, mTaskInfo, mDeviceDetail, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
+            @Override
+            public void onSuccess(Intent intent) {
+                getView().dismissProgressDialog();
+                getView().startAC(intent);
+            }
+
+            @Override
+            public void onError(int errType, Intent intent, String errMsg) {
+                getView().dismissProgressDialog();
+                if (intent != null) {
+                    getView().startAC(intent);
+                } else {
+                    getView().toastShort(errMsg);
+                    getView().startScan();
+                }
+            }
+        });
     }
 
     private MediaPlayer buildMediaPlayer(Context activity) {

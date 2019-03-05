@@ -26,29 +26,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    android {
-        lintOptions {
-            abortOnError false
-            disable 'InvalidPackage'
-        }
-
-        packagingOptions {
-            exclude 'META-INF/DEPENDENCIES'
-            exclude 'META-INF/LICENSE'
-            exclude 'META-INF/LICENSE.txt'
-            exclude 'META-INF/license.txt'
-            exclude 'META-INF/NOTICE'
-            exclude 'META-INF/NOTICE.txt'
-            exclude 'META-INF/notice.txt'
-            exclude 'META-INF/ASL2.0'
-            exclude ''
-            doNotStrip '*/mips/*.so'
-            doNotStrip '*/mips64/*.so'
-            doNotStrip '*/x86/*.so'
-            doNotStrip '*/x86_64/*.so'
-        }
-    }
-
 }
 
 dependencies {

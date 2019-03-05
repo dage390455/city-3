@@ -40,11 +40,11 @@ android {
                 GETUI_APP_KEY   : "zrfWS690Dh7r9bPUUfh1o2",
                 GETUI_APP_SECRET: "fN5extdlmHA5NDbdKPkP6A",
                 //TODO 测试版/正式版 使用其中一个
-//                APP_ICON        : "@mipmap/ic_launcher_beta",
-//                APP_ROUND_ICON  : "@mipmap/ic_launcher_beta_round"
+                APP_ICON        : "@mipmap/ic_launcher_beta",
+                APP_ROUND_ICON  : "@mipmap/ic_launcher_beta_round"
                 //
-                APP_ICON        : "@mipmap/ic_launcher",
-                APP_ROUND_ICON  : "@mipmap/ic_launcher_round"
+//                APP_ICON        : "@mipmap/ic_launcher",
+//                APP_ROUND_ICON  : "@mipmap/ic_launcher_round"
 
         ]
 
@@ -162,11 +162,22 @@ android {
         if ('build' in runTasks) {
             verCode++
             buildCode++
-
             android.applicationVariants.all { variant ->
-                def file = variant.outputs[0].outputFile
-                variant.outputs[0].outputFile = new File(file.parent, file.name.replace(".apk", "-" + defaultConfig.versionName + ".apk"))
+
+                // 更新至Android Studio 3.3 gradle 4.10.1
+                variant.outputs.all {
+                    outputFileName = "SensorCity${variant.versionCode}-${variant.versionName}-${releaseTime()}.apk"
+                }
+
+                //更新前
+                /*
+                android.applicationVariants.all { variant ->
+//                def file = variant.outputs[0].outputFile
+//                variant.outputs[0].outputFile = new File(file.parent, file.name.replace(".apk", "-" + defaultConfig.versionName + ".apk"))
+//            }
+                */
             }
+//
         }
 
         versionProps['BUILD_CODE'] = buildCode.toString()
@@ -191,8 +202,8 @@ dependencies {
     //    compile 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     //    compile project(':cosmocalendar')
     implementation files('libs/Baidu_Mtj_3.8.2.1.jar')
-    implementation 'com.jakewharton:butterknife:8.7.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation('io.socket:socket.io-client:1.0.0') {
         exclude group: 'org.json', module: 'json'
     }
@@ -225,8 +236,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:adapter-rxjava:2.4.0'
     implementation 'io.reactivex:rxandroid:1.2.1'
     implementation 'com.squareup.retrofit2:adapter-rxjava:2.4.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     //消息组件
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
@@ -262,5 +273,8 @@ dependencies {
     api(project(":zbar")) {
         exclude group: "com.amap.api"
     }
-
+}
+//获取编译时间
+static def releaseTime() {
+    return new Date().format("MM-dd hh:mm:ss", TimeZone.getTimeZone("UTC"))
 }

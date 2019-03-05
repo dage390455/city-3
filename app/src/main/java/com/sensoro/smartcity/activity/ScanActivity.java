@@ -67,6 +67,7 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
         includeTextTitleTvTitle.setTextColor(Color.WHITE);
         includeTextTitleTvSubTitle.setVisibility(View.GONE);
         includeTextTitleClRoot.setBackgroundColor(Color.TRANSPARENT);
+        acScanQrView.setAutoFocus(true);
         ArrayList<BarcodeFormat> formats = new ArrayList<>(1);
         formats.add(BarcodeFormat.QRCODE);
         acScanQrView.setFormats(formats);
@@ -92,7 +93,7 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
         acScanQrView.setResultHandler(this);
 //        acScanQrView.startCamera(); // 打开后置摄像头开始预览，但是并未开始识别
 //        mZBarView.startCamera(Camera.CameraInfo.CAMERA_FACING_FRONT); // 打开前置摄像头开始预览，但是并未开始识别
-        startScan();
+        acScanQrView.startCamera();
     }
 
 
@@ -177,11 +178,12 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     @Override
     public void startScan() {
 //        acScanQrView.startSpotAndShowRect();
+        acScanQrView.resumeCameraPreview(ScanActivity.this);
     }
 
     @Override
     public void stopScan() {
-//        acScanQrView.stopCamera();
+        acScanQrView.stopCamera();
     }
 
     @Override
@@ -202,9 +204,9 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
 
     @Override
     public void handleResult(Result rawResult) {
-//        mPresenter.processResult(result);
-        toastShort("Contents = " + rawResult.getContents() +
-                ", Format = " + rawResult.getBarcodeFormat().getName());
+        String contents = rawResult.getContents();
+        mPresenter.processResult(contents);
+//        toastShort("Contents = " + contents + ", Format = " + rawResult.getBarcodeFormat().getName());
 //        // Note:
 //        // * Wait 2 seconds to resume the preview.
 //        // * On older devices continuously stopping and resuming camera preview can result in freezing the app.
@@ -216,19 +218,19 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
 //                acScanQrView.resumeCameraPreview(ScanActivity.this);
 //            }
 //        }, 2000);
-        finishAc();
+//        finishAc();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        acScanQrView.startCamera();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        acScanQrView.stopCamera();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        acScanQrView.startCamera();
+//    }
+//
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        acScanQrView.stopCamera();
+//    }
 
 }

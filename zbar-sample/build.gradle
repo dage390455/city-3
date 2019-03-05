@@ -34,6 +34,5 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.google.protobuf:protobuf-java:2.5.0'
-    implementation project(':zbar')
+    api project(':zbar')
 }
