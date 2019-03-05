@@ -153,32 +153,40 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
                         } catch (Throwable throwable) {
                             throwable.printStackTrace();
                         }
-                        permissionDialogUtils.setTipMessageText(mContext.getString(R.string.permission_descript)).setTipConfirmText(mContext.getString(R.string.reauthorization), mContext.getResources().getColor(R.color.colorAccent)).show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
-                            @Override
-                            public void onCancelClick() {
-                                executor.cancel();
-                                permissionDialogUtils.dismiss();
-                                MyPermissionManager.restart(mContext);
-                            }
+                        if (isAttachedView()) {
+                            permissionDialogUtils.setTipMessageText(mContext.getString(R.string.permission_descript)).setTipConfirmText(mContext.getString(R.string.reauthorization), mContext.getResources().getColor(R.color.colorAccent)).show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
+                                @Override
+                                public void onCancelClick() {
+                                    if (isAttachedView()) {
+                                        executor.cancel();
+                                        permissionDialogUtils.dismiss();
+                                        MyPermissionManager.restart(mContext);
+                                    }
+                                }
 
-                            @Override
-                            public void onConfirmClick() {
-                                executor.execute();
-                                permissionDialogUtils.dismiss();
-                            }
-                        });
+                                @Override
+                                public void onConfirmClick() {
+                                    if (isAttachedView()) {
+                                        executor.execute();
+                                        permissionDialogUtils.dismiss();
+                                    }
+                                }
+                            });
+                        }
                     }
                 })
                 .onGranted(new Action<List<String>>() {
                     @Override
                     public void onAction(List<String> data) {
                         // 用户同意授权
-                        initPushSDK();
-                        checkLoginState();
-                        try {
-                            LogUtils.loge("SplashActivityPresenter 进入界面 ");
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
+                        if (isAttachedView()) {
+                            initPushSDK();
+                            checkLoginState();
+                            try {
+                                LogUtils.loge("SplashActivityPresenter 进入界面 ");
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                         }
                     }
                 })
@@ -186,26 +194,32 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
                     @Override
                     public void onAction(List<String> data) {
                         // 用户拒绝权限，提示用户授权
-                        if (AndPermission.hasAlwaysDeniedPermission(mContext, permissions)) {
-                            // 如果用户勾选了禁止重复提醒，需要提示用户去到APP权限设置页面开启权限
-                            String permissionTips = MyPermissionManager.getPermissionTips(data);
-                            permissionDialogUtils.setTipConfirmText(mContext.getString(R.string.go_setting), mContext.getResources().getColor(R.color.c_f34a4a)).setTipMessageText(permissionTips + mContext.getString(R.string.permission_check)).show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
-                                @Override
-                                public void onCancelClick() {
-                                    permissionDialogUtils.dismiss();
-                                    MyPermissionManager.restart(mContext);
+                        if (isAttachedView()) {
+                            if (AndPermission.hasAlwaysDeniedPermission(mContext, permissions)) {
+                                // 如果用户勾选了禁止重复提醒，需要提示用户去到APP权限设置页面开启权限
+                                String permissionTips = MyPermissionManager.getPermissionTips(data);
+                                permissionDialogUtils.setTipConfirmText(mContext.getString(R.string.go_setting), mContext.getResources().getColor(R.color.c_f34a4a)).setTipMessageText(permissionTips + mContext.getString(R.string.permission_check)).show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
+                                    @Override
+                                    public void onCancelClick() {
+                                        if (isAttachedView()) {
+                                            permissionDialogUtils.dismiss();
+                                            MyPermissionManager.restart(mContext);
+                                        }
+                                    }
 
-                                }
-
-                                @Override
-                                public void onConfirmClick() {
-                                    permissionDialogUtils.dismiss();
-                                    MyPermissionManager.startAppSetting(mContext);
-                                }
-                            });
-                        } else {
-                            requestPermissions(data.toArray(new String[data.size()]));
+                                    @Override
+                                    public void onConfirmClick() {
+                                        if (isAttachedView()) {
+                                            permissionDialogUtils.dismiss();
+                                            MyPermissionManager.startAppSetting(mContext);
+                                        }
+                                    }
+                                });
+                            } else {
+                                requestPermissions(data.toArray(new String[data.size()]));
+                            }
                         }
+
 
                     }
                 })
