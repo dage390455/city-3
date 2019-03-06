@@ -39,10 +39,9 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
     TextView acNamAddressTvHistory;
     @BindView(R.id.ac_nam_address_rc_history)
     RecyclerView acNamAddressRcHistory;
-    @BindView(R.id.ac_nam_address_tv_save)
-    TextView acNamAddressTvSave;
-    @BindView(R.id.include_text_title_imv_arrows_left)
-    ImageView includeTextTitleImvArrowsLeft;
+
+    @BindView(R.id.include_text_title_tv_cancel)
+    TextView includeTextTitleTvCancel;
     @BindView(R.id.include_text_title_tv_title)
     TextView includeTextTitleTvTitle;
     @BindView(R.id.include_text_title_tv_subtitle)
@@ -60,9 +59,18 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
 
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        includeTextTitleTvTitle.setText(R.string.name_address);
-        includeTextTitleTvSubtitle.setVisibility(View.GONE);
+        initTitle();
         initRcHistory();
+    }
+
+    private void initTitle() {
+        includeTextTitleTvTitle.setText(R.string.name_address);
+        includeTextTitleTvCancel.setVisibility(View.VISIBLE);
+        includeTextTitleTvCancel.setTextColor(getResources().getColor(R.color.c_b6b6b6));
+        includeTextTitleTvCancel.setText(R.string.cancel);
+        includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
+        includeTextTitleTvSubtitle.setText(getString(R.string.save));
+        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_29c093));
     }
 
     private void initRcHistory() {
@@ -123,14 +131,14 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
     }
 
 
-    @OnClick({R.id.ac_nam_address_tv_save, R.id.include_text_title_imv_arrows_left})
+    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.ac_nam_address_tv_save:
+            case R.id.include_text_title_tv_subtitle:
                 String text = acNameAddressEt.getText().toString();
                 mPresenter.doChoose(text);
                 break;
-            case R.id.include_text_title_imv_arrows_left:
+            case R.id.include_text_title_tv_cancel:
                 finishAc();
                 break;
         }

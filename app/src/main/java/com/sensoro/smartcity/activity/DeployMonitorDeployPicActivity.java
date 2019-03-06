@@ -34,8 +34,8 @@ import butterknife.OnClick;
 
 public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorDeployPicView, DeployMonitorDeployPicPresenter>
         implements IDeployMonitorDeployPicView {
-    @BindView(R.id.include_text_title_imv_arrows_left)
-    ImageView includeTextTitleImvArrowsLeft;
+    @BindView(R.id.include_text_title_tv_cancel)
+    TextView includeTextTitleTvCancel;
     @BindView(R.id.include_text_title_tv_title)
     TextView includeTextTitleTvTitle;
     @BindView(R.id.include_text_title_tv_subtitle)
@@ -76,8 +76,6 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     ImageView acDeployPicImvShopPicDelete;
     @BindView(R.id.ac_deploy_pic_rl_shop_pic)
     RelativeLayout acDeployPicRlShopPic;
-    @BindView(R.id.ac_deploy_pic_tv_save)
-    TextView acDeployPicTvSave;
     @BindView(R.id.ac_deploy_pic_tv_installation_site_tip)
     TextView acDeployPicTvInstallationSiteTip;
     @BindView(R.id.ac_deploy_pic_rc)
@@ -94,11 +92,20 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     }
 
     private void initView() {
-        includeTextTitleTvTitle.setText(mActivity.getString(R.string.deploy_photo));
-        includeTextTitleTvSubtitle.setVisibility(View.GONE);
         mPicExampleDialogUtils = new DeployPicExampleDialogUtils(mActivity);
         mPicExampleDialogUtils.setDeployPicExampleClickListener(mPresenter);
+        initTitle();
         initRC();
+    }
+
+    private void initTitle() {
+        includeTextTitleTvTitle.setText(R.string.deploy_photo);
+        includeTextTitleTvCancel.setVisibility(View.VISIBLE);
+        includeTextTitleTvCancel.setTextColor(getResources().getColor(R.color.c_b6b6b6));
+        includeTextTitleTvCancel.setText(R.string.cancel);
+        includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
+        includeTextTitleTvSubtitle.setText(getString(R.string.save));
+        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_29c093));
     }
 
     private void initRC() {
@@ -179,13 +186,13 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     }
 
 
-    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_deploy_pic_ll_add_device_pic,
+    @OnClick({R.id.include_text_title_tv_cancel, R.id.ac_deploy_pic_ll_add_device_pic,
             R.id.ac_deploy_pic_imv_device_pic, R.id.ac_deploy_pic_imv_device_pic_delete, R.id.ac_deploy_pic_ll_installation_site,
             R.id.ac_deploy_pic_imv_installation_site_pic, R.id.ac_deploy_pic_imv_installation_site_pic_delete, R.id.ac_deploy_pic_ll_shop_pic,
-            R.id.ac_deploy_pic_imv_shop_pic, R.id.ac_deploy_pic_imv_shop_pic_delete, R.id.ac_deploy_pic_tv_save})
+            R.id.ac_deploy_pic_imv_shop_pic, R.id.ac_deploy_pic_imv_shop_pic_delete, R.id.include_text_title_tv_subtitle})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.include_text_title_imv_arrows_left:
+            case R.id.include_text_title_tv_cancel:
                 finishAc();
                 break;
             case R.id.ac_deploy_pic_ll_add_device_pic:
@@ -224,7 +231,7 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
                 acDeployPicImvShopPic.setImageDrawable(null);
                 acDeployPicLlShopPic.setVisibility(View.VISIBLE);
                 break;
-            case R.id.ac_deploy_pic_tv_save:
+            case R.id.include_text_title_tv_subtitle:
                 mPresenter.doSave();
                 break;
         }
@@ -280,8 +287,8 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
 
     @Override
     public void setSaveBtnStatus(boolean isEnable) {
-        acDeployPicTvSave.setEnabled(isEnable);
-        acDeployPicTvSave.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_solid_df_corner);
+//        acDeployPicTvSave.setEnabled(isEnable);
+//        acDeployPicTvSave.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_solid_df_corner);
     }
 
     @Override

@@ -6,7 +6,7 @@
 
     <include
         android:id="@+id/ac_chat_relation_root"
-        layout="@layout/item_include_text_title" />
+        layout="@layout/item_include_text_text_title" />
 
     <LinearLayout
         android:id="@+id/ac_chat_relation_ll"
@@ -81,21 +81,6 @@
 
     </android.support.v7.widget.RecyclerView>
 
-    <TextView
-        android:id="@+id/ac_chat_relation_tv_save"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/shape_bg_corner_29c_shadow"
-        android:gravity="center"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:text="@string/name_address_save"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
 
 
 </RelativeLayout>

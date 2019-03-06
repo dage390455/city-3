@@ -13,6 +13,7 @@ ext.junitVersion = '4.12'
 allprojects {
     buildscript {
         repositories {
+            google()
             jcenter()
             maven { url "https://jitpack.io" }
             google()
@@ -20,16 +21,16 @@ allprojects {
         }
     }
     repositories {
+        google()
         jcenter()
         maven { url "https://jitpack.io" }
-        google()
         mavenCentral()
     }
 }
 buildscript {
     repositories {
-        jcenter()
         google()
+        jcenter()
         mavenCentral()
         maven { url "https://jitpack.io" }
     }

@@ -5,7 +5,7 @@
     android:background="@color/c_f4f4f4"
     android:orientation="vertical">
 
-    <include layout="@layout/item_include_text_title" />
+    <include layout="@layout/item_include_text_text_title" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -309,15 +309,4 @@
 
     </android.support.v7.widget.RecyclerView>
 
-    <TextView
-        android:id="@+id/ac_deploy_pic_tv_save"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="10dp"
-        android:background="@drawable/shape_bg_solid_df_corner"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="@string/deploy_setting_photo_save"
-        android:textColor="@color/white" />
 </LinearLayout>

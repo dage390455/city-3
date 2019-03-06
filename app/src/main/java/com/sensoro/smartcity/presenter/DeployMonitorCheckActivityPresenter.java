@@ -10,14 +10,13 @@ import com.sensoro.smartcity.model.DeployAnalyzerModel;
 
 public class DeployMonitorCheckActivityPresenter extends BasePresenter<IDeployMonitorCheckActivityView> implements Constants {
     private Activity mActivity;
-    public volatile static DeployAnalyzerModel deployAnalyzerModel;
+    public static volatile DeployAnalyzerModel deployAnalyzerModel;
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
         deployAnalyzerModel = (DeployAnalyzerModel) mActivity.getIntent().getSerializableExtra(EXTRA_DEPLOY_ANALYZER_MODEL);
-        getView().setDeployMonitorStep(1);
-        deployAnalyzerModel =new DeployAnalyzerModel();
+        getView().setDeployMonitorStep(2);
     }
 
     @Override

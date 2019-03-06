@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.DeployMonitorCheckActivity;
 import com.sensoro.smartcity.activity.DeployMonitorDetailActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.activity.InspectionActivity;
@@ -346,7 +347,7 @@ public enum DeployAnalyzerUtils implements Constants {
                             }
                             deployAnalyzerModel.updatedTime = deployStationInfo.getUpdatedTime();
                             Intent intent = new Intent();
-                            intent.setClass(activity, DeployMonitorDetailActivity.class);
+                            intent.setClass(activity, DeployMonitorCheckActivity.class);
                             intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                             listener.onSuccess(intent);
                         } catch (Exception e) {
@@ -408,7 +409,7 @@ public enum DeployAnalyzerUtils implements Constants {
                                 }
                             }
                             Intent intent = new Intent();
-                            intent.setClass(activity, DeployMonitorDetailActivity.class);
+                            intent.setClass(activity, DeployMonitorCheckActivity.class);
                             intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                             listener.onSuccess(intent);
                         }
@@ -460,7 +461,7 @@ public enum DeployAnalyzerUtils implements Constants {
                             }
                         }
                         Intent intent = new Intent();
-                        intent.setClass(activity, DeployMonitorDetailActivity.class);
+                        intent.setClass(activity, DeployMonitorCheckActivity.class);
                         intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                         listener.onSuccess(intent);
                     }
@@ -618,7 +619,7 @@ public enum DeployAnalyzerUtils implements Constants {
                                     deployAnalyzerModel.channelMask.addAll(channelMask);
                                 }
                                 Intent intent = new Intent();
-                                intent.setClass(activity, DeployMonitorDetailActivity.class);
+                                intent.setClass(activity, DeployMonitorCheckActivity.class);
                                 intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                                 listener.onSuccess(intent);
                             }
