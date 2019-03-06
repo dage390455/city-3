@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -49,6 +52,8 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
     TextView includeTextTitleTvTitle;
     @BindView(R.id.include_text_title_tv_subtitle)
     TextView includeTextTitleTvSubtitle;
+    @BindView(R.id.tv_ac_chat_relation_qr_code_desc)
+    TextView tvAcChatRelationQrCodeDesc;
     private NameAddressHistoryAdapter mHistoryAdapter;
 
     @Override
@@ -61,8 +66,24 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
 
     private void initView() {
         initTitle();
+        initMiniProgramDesc();
         initRcHistory();
 //        initEtWatcher();
+    }
+
+    private void initMiniProgramDesc() {
+        String desc = getString(R.string.mini_program_description);
+        String temp = "SensoroCity";
+        int start = desc.indexOf(temp);
+        if (start == -1) {
+            tvAcChatRelationQrCodeDesc.setText(desc);
+            return;
+        }
+        SpannableString spannableString = new SpannableString(desc);
+        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.c_252525));
+        spannableString.setSpan(foregroundColorSpan,start,start+temp.length(),Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        tvAcChatRelationQrCodeDesc.setText(spannableString);
+
     }
 
     private void initEtWatcher() {

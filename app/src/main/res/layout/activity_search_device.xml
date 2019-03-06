@@ -146,7 +146,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/recent"
-                    android:textColor="@color/c_030303"
+                    android:textColor="@color/c_252525"
                     android:textSize="14sp" />
 
                 <ImageView
