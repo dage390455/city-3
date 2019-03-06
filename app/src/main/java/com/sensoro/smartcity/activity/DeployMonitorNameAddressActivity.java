@@ -24,6 +24,7 @@ import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
@@ -33,7 +34,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonitorNameAddressActivityView, DeployMonitorNameAddressActivityPresenter>
-        implements IDeployMonitorNameAddressActivityView, RecycleViewItemClickListener {
+        implements IDeployMonitorNameAddressActivityView, RecycleViewItemClickListener,TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.ac_name_address_et)
     EditText acNameAddressEt;
     @BindView(R.id.ac_nam_address_ll)
@@ -52,6 +53,7 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
     TextView includeTextTitleTvSubtitle;
     private NameAddressHistoryAdapter mHistoryAdapter;
     private ProgressUtils mProgressUtils;
+    private TipOperationDialogUtils historyClearDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -65,7 +67,17 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         initTitle();
         initRcHistory();
+        initClearHistoryDialog();
 //        initEtWatcher();
+    }
+
+    private void initClearHistoryDialog() {
+        historyClearDialog = new TipOperationDialogUtils(mActivity, true);
+        historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
     private void initEtWatcher() {
@@ -92,6 +104,13 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
         includeTextTitleTvSubtitle.setEnabled(isEnable);
         includeTextTitleTvSubtitle.setTextColor(isEnable ? getResources().getColor(R.color.c_29c093) : getResources().getColor(R.color.c_dfdfdf));
 
+    }
+
+    @Override
+    public void showHistoryClearDialog() {
+        if (historyClearDialog != null) {
+            historyClearDialog.show();
+        }
     }
 
     private void initTitle() {
@@ -175,7 +194,7 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
                 finishAc();
                 break;
             case R.id.iv_ac_nam_address_delete_history:
-                mPresenter.clearHistory();
+                showHistoryClearDialog();
                 break;
         }
 
@@ -219,7 +238,32 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
 
     @Override
     protected void onDestroy() {
-        mProgressUtils.destroyProgress();
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
+            mProgressUtils = null;
+        }
+
+        if (historyClearDialog != null) {
+            historyClearDialog.destroy();
+            historyClearDialog = null;
+        }
         super.onDestroy();
+    }
+
+    @Override
+    public void onCancelClick() {
+        if (historyClearDialog != null) {
+            historyClearDialog.dismiss();
+
+        }
+    }
+
+    @Override
+    public void onConfirmClick(String content, String diameter) {
+        mPresenter.clearHistory();
+        if (historyClearDialog != null) {
+            historyClearDialog.dismiss();
+
+        }
     }
 }

@@ -42,6 +42,7 @@ import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
+import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.popup.InspectionTaskStatePopUtils;
 import com.sensoro.smartcity.widget.popup.SelectDeviceTypePopUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
@@ -53,7 +54,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivityView, InspectionTaskActivityPresenter>
-        implements IInspectionTaskActivityView, Constants {
+        implements IInspectionTaskActivityView, Constants,TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.ac_inspection_task_imv_arrows_left)
     ImageView acInspectionTaskImvArrowsLeft;
     @BindView(R.id.ac_inspection_task_ll_search)
@@ -104,6 +105,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     private Drawable blackTriangle;
     private Drawable grayTriangle;
     private SearchHistoryAdapter mSearchHistoryAdapter;
+    private TipOperationDialogUtils historyClearDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -175,11 +177,28 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
 
         initSelectStatusPop();
         acInspectionTaskEtSearch.setCursorVisible(false);
+        initClearHistoryDialog();
+    }
+
+    private void initClearHistoryDialog() {
+        historyClearDialog = new TipOperationDialogUtils(mActivity, true);
+        historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
     @Override
     public void setSearchClearImvVisible(boolean isVisible) {
         acInspectionTaskImvSearchClear.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void showHistoryClearDialog() {
+        if (historyClearDialog != null) {
+            historyClearDialog.show();
+        }
     }
 
     private void initRcSearchHistory() {
@@ -228,7 +247,15 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
 
     @Override
     protected void onDestroy() {
-        mProgressUtils.destroyProgress();
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
+            mProgressUtils = null;
+        }
+
+        if (historyClearDialog != null) {
+            historyClearDialog.destroy();
+            historyClearDialog = null;
+        }
         super.onDestroy();
     }
 
@@ -485,7 +512,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
 
                 break;
             case R.id.btn_search_clear:
-                mPresenter.clearSearchHistory();
+               showHistoryClearDialog();
                 break;
             case R.id.fg_main_top_search_imv_clear:
                 acInspectionTaskEtSearch.getText().clear();
@@ -616,4 +643,20 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     }
 
 
+    @Override
+    public void onCancelClick() {
+        if (historyClearDialog != null) {
+            historyClearDialog.dismiss();
+
+        }
+    }
+
+    @Override
+    public void onConfirmClick(String content, String diameter) {
+        mPresenter.clearSearchHistory();
+        if (historyClearDialog != null) {
+            historyClearDialog.dismiss();
+
+        }
+    }
 }

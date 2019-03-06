@@ -38,6 +38,7 @@ import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
+import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
@@ -50,7 +51,7 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, MalfunctionFragmentPresenter>
-        implements IMalfunctionFragmentView {
+        implements IMalfunctionFragmentView,TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.fg_main_top_search_et_search)
     EditText fgMainTopSearchEtSearch;
     @BindView(R.id.fg_main_top_search_frame_search)
@@ -92,6 +93,7 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
     private boolean isShowDialog = true;
     private MainMalfunctionFragRcContentAdapter mRcContentAdapter;
     private SearchHistoryAdapter mSearchHistoryAdapter;
+    private TipOperationDialogUtils historyClearDialog;
 
     @Override
     protected void initData(Context activity) {
@@ -149,7 +151,7 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
 
         initRcContent();
         initRcSearchHistory();
-
+        initClearHistoryDialog();
 
         AppUtils.getInputSoftStatus(mRootView, new AppUtils.InputSoftStatusListener() {
             @Override
@@ -162,6 +164,15 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
                 fgMainTopSearchEtSearch.setCursorVisible(true);
             }
         });
+    }
+
+    private void initClearHistoryDialog() {
+        historyClearDialog = new TipOperationDialogUtils(mRootFragment.getActivity(), true);
+        historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
     private void initRcSearchHistory() {
@@ -201,6 +212,13 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
     @Override
     public void setSearchClearImvVisible(boolean isVisible) {
         fgMainWarnFragmentImvClear.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void showHistoryClearDialog() {
+        if (historyClearDialog != null) {
+            historyClearDialog.show();
+        }
     }
 
     private void initRcContent() {
@@ -372,7 +390,6 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         if (returnTopAnimation != null) {
             returnTopAnimation.cancel();
             returnTopAnimation = null;
@@ -386,6 +403,11 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
         }
+        if (historyClearDialog != null) {
+            historyClearDialog.destroy();
+            historyClearDialog = null;
+        }
+        super.onDestroyView();
     }
 
     @Override
@@ -478,5 +500,16 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
     private void setNoContentVisible(boolean b) {
         fgMainMalfunctionRcContent.setVisibility(b ? View.GONE : View.VISIBLE);
         icNoContent.setVisibility(b ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onCancelClick() {
+        historyClearDialog.dismiss();
+    }
+
+    @Override
+    public void onConfirmClick(String content, String diameter) {
+        mPresenter.clearSearchHistory();
+        historyClearDialog.dismiss();
     }
 }

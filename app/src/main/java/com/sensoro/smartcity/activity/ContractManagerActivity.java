@@ -41,6 +41,7 @@ import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
+import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.popup.InspectionTaskStatePopUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
@@ -53,7 +54,7 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class ContractManagerActivity extends BaseActivity<IContractManagerActivityView, ContractManagerActivityPresenter> implements IContractManagerActivityView,
-        AdapterView.OnItemClickListener, View.OnClickListener, AbsListView.OnScrollListener {
+        AdapterView.OnItemClickListener, View.OnClickListener, AbsListView.OnScrollListener,TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.contract_iv_menu_list)
     ImageView contractIvMenuList;
     @BindView(R.id.contract_manger_root)
@@ -109,10 +110,11 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     private Drawable grayTriangle;
     private InspectionTaskStatePopUtils mSelectTypePop;
     private SearchHistoryAdapter mSearchHistoryAdapter;
+    private TipOperationDialogUtils historyClearDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
-        setContentView(R.layout.fragment_contract_list);
+        setContentView(R.layout.activity_contract_manager);
         ButterKnife.bind(mActivity);
         initView();
         mPresenter.initData(mActivity);
@@ -210,6 +212,16 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
 
         //搜索历史的recyclerview
         initRcSearchHistory();
+        initClearHistoryDialog();
+    }
+
+    private void initClearHistoryDialog() {
+        historyClearDialog = new TipOperationDialogUtils(mActivity, true);
+        historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
     private void initRcSearchHistory() {
@@ -459,6 +471,9 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
                 AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
                 mPresenter.doSelectTypePop();
                 break;
+            case R.id.btn_search_clear:
+                showHistoryClearDialog();
+                break;
             case R.id.contract_tv_select_status:
                 AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
                 mPresenter.doSelectStatusPop();
@@ -524,6 +539,13 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
         fgMainWarnTvDateEdit.setText(content);
     }
 
+    @Override
+    public void showHistoryClearDialog() {
+        if (historyClearDialog !=  null) {
+            historyClearDialog.show();
+        }
+    }
+
     private void doCancelSearch() {
         if (getSearchTextVisible()) {
             fgMainWarnEtSearch.getText().clear();
@@ -570,6 +592,11 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
         }
+
+        if (historyClearDialog != null) {
+            historyClearDialog.destroy();
+            historyClearDialog = null;
+        }
         super.onDestroy();
     }
 
@@ -577,5 +604,20 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     @Override
     protected ContractManagerActivityPresenter createPresenter() {
         return new ContractManagerActivityPresenter();
+    }
+
+    @Override
+    public void onCancelClick() {
+        if (historyClearDialog != null) {
+            historyClearDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onConfirmClick(String content, String diameter) {
+        mPresenter.clearSearchHistory();
+        if (historyClearDialog != null) {
+            historyClearDialog.dismiss();
+        }
     }
 }

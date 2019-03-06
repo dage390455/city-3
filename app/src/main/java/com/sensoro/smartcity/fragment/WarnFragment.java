@@ -41,6 +41,7 @@ import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
+import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
@@ -54,7 +55,7 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPresenter> implements
-        IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener {
+        IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener,TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.fg_main_top_search_title_root)
     LinearLayout fgMainWarnTitleRoot;
     @BindView(R.id.fg_main_top_search_frame_search)
@@ -95,6 +96,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     private AlarmPopUtils mAlarmPopUtils;
     private Animation returnTopAnimation;
     private SearchHistoryAdapter mSearchHistoryAdapter;
+    private TipOperationDialogUtils historyClearDialog;
 
     @Override
     protected void initData(Context activity) {
@@ -166,6 +168,17 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
                 fgMainWarnEtSearch.setCursorVisible(true);
             }
         });
+
+        initClearHistoryDialog();
+    }
+
+    private void initClearHistoryDialog() {
+        historyClearDialog = new TipOperationDialogUtils(mRootFragment.getActivity(), true);
+        historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
     @Override
@@ -173,6 +186,13 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         llSearchHistory.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         refreshLayout.setVisibility(isVisible ? View.GONE : View.VISIBLE);
         setSearchButtonTextVisible(isVisible);
+    }
+
+    @Override
+    public void showHistoryClearDialog() {
+        if (historyClearDialog != null) {
+            historyClearDialog.show();
+        }
     }
 
     private void initRcSearchHistory() {
@@ -386,6 +406,11 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         if (mAlarmPopUtils != null) {
             mAlarmPopUtils.onDestroyPop();
         }
+
+        if (historyClearDialog != null) {
+            historyClearDialog.destroy();
+            historyClearDialog = null;
+        }
 //        if (mAlarmPopupView != null) {
 //            mAlarmPopupView.onDestroyPop();
 //        }
@@ -417,7 +442,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
                 setSearchHistoryVisible(true);
                 break;
             case R.id.btn_search_clear:
-                mPresenter.clearSearchHistory();
+                showHistoryClearDialog();
                 break;
             case R.id.fg_main_top_search_imv_calendar:
                 mPresenter.doCalendar(fgMainWarnTitleRoot);
@@ -561,5 +586,16 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void onCancelClick() {
+        historyClearDialog.dismiss();
+    }
+
+    @Override
+    public void onConfirmClick(String content, String diameter) {
+        mPresenter.clearSearchHistory();
+        historyClearDialog.dismiss();
     }
 }

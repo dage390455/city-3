@@ -39,4 +39,6 @@ public interface IWarnFragmentView extends IToast, IActivityIntent, IProgressDia
     void updateSearchHistoryList(List<String> data);
 
     void setSearchHistoryVisible(boolean isVisible);
+
+    void showHistoryClearDialog();
 }

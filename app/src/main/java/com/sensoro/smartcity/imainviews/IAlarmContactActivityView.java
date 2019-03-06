@@ -11,4 +11,6 @@ public interface IAlarmContactActivityView extends IToast, IActivityIntent {
     void updateHistoryData(ArrayList<String> mHistoryKeywords);
 
     void updateSaveStatus(boolean isEnable);
+
+    void showHistoryClearDialog();
 }

@@ -864,5 +864,7 @@
     <string name="please_deploy_upload_all_pic">请上传所有必须上传的图片</string>
     <string name="contact_name_length_to_long">联系人名字过长</string>
     <string name="mini_program_description">如遗忘，可邀请业主微信扫码或搜索SensoroCity进入微信查看</string>
+    <string name="history_clear_all">清空</string>
+    <string name="confirm_clear_history_record">确定清空输入记录</string>
 
 </resources>

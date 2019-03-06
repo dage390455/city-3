@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amap.api.services.help.Tip;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -37,6 +38,7 @@ import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
+import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
@@ -49,7 +51,7 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivityView, MerchantSwitchActivityPresenter> implements IMerchantSwitchActivityView
-        , View.OnClickListener, AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
+        , View.OnClickListener, AbsListView.OnScrollListener, AdapterView.OnItemClickListener,TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.ll_main_merchant)
     LinearLayout llMainMerchant;
     @BindView(R.id.tv_back_to_main_merchant)
@@ -96,6 +98,7 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     private boolean isShowDialog = true;
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private MerchantAdapter mMerchantAdapter;
+    private TipOperationDialogUtils historyClearDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -115,6 +118,11 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
         if (mProgressUtils != null) {
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
+        }
+
+        if (historyClearDialog != null) {
+            historyClearDialog.destroy();
+            historyClearDialog = null;
         }
         super.onDestroy();
     }
@@ -203,7 +211,17 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
             }
         });
 
+        initClearHistoryDialog();
 
+    }
+
+    private void initClearHistoryDialog() {
+        historyClearDialog = new TipOperationDialogUtils(mActivity, true);
+        historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
     private void setTvCancelVisible(boolean isVisible) {
@@ -277,7 +295,7 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
                 setTvCancelVisible(true);
                 break;
             case R.id.btn_search_clear:
-                mPresenter.clearSearchHistory();
+                showHistoryClearDialog();
                 break;
             case R.id.merchant_imv_clear:
                 mMerchantEtSearch.getText().clear();
@@ -424,6 +442,13 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
         tvBackToMainMerchant.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
+    @Override
+    public void showHistoryClearDialog() {
+        if (historyClearDialog != null) {
+            historyClearDialog.show();
+        }
+    }
+
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -442,4 +467,20 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
         }
     }
 
+    @Override
+    public void onCancelClick() {
+        if (historyClearDialog != null) {
+            historyClearDialog.dismiss();
+        }
+
+    }
+
+    @Override
+    public void onConfirmClick(String content, String diameter) {
+        mPresenter.clearSearchHistory();
+        if (historyClearDialog != null) {
+            historyClearDialog.dismiss();
+        }
+
+    }
 }

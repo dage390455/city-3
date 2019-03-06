@@ -27,4 +27,6 @@ public interface IMalfunctionFragmentView extends IToast,IProgressDialog,IActivi
     void setSearchHistoryVisible(boolean isVisible);
 
     void setSearchClearImvVisible(boolean isVisible);
+
+    void showHistoryClearDialog();
 }

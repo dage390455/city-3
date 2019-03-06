@@ -40,4 +40,6 @@ public interface IInspectionTaskActivityView extends IToast, IProgressDialog, IA
     void setSearchHistoryVisible(boolean isVisible);
 
     void setSearchClearImvVisible(boolean isVisible);
+
+    void showHistoryClearDialog();
 }

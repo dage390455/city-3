@@ -42,6 +42,7 @@ import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
+import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.Collections;
@@ -59,7 +60,8 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 
 public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityView, SearchMonitorActivityPresenter>
         implements ISearchMonitorActivityView, View.OnClickListener, TextView
-        .OnEditorActionListener, TextWatcher, MainHomeFragRcContentAdapter.OnContentItemClickListener {
+        .OnEditorActionListener, TextWatcher, MainHomeFragRcContentAdapter.OnContentItemClickListener ,
+TipOperationDialogUtils.TipDialogUtilsClickListener{
     @BindView(R.id.search_device_et)
     EditText mKeywordEt;
     @BindView(R.id.search_device_cancel_tv)
@@ -103,6 +105,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     private MainHomeFragRcContentAdapter mSearchRcContentAdapter;
     private SensoroXLinearLayoutManager xLinearLayoutManager;
     private boolean isKeyBoardOpen = false;
+    private TipOperationDialogUtils historyClearDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -136,10 +139,19 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
         initSearchHistory();
         initRelation();
         initIndex();
+        initClearHistoryDialog();
 
         tvNoContentTip.setText(R.string.cant_find_related_content);
     }
 
+    private void initClearHistoryDialog() {
+        historyClearDialog = new TipOperationDialogUtils(mActivity, true);
+        historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipDialogUtilsClickListener(this);
+    }
 
     @Override
     protected SearchMonitorActivityPresenter createPresenter() {
@@ -248,6 +260,13 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     @Override
     public void setHistoryClearBtnVisible(boolean isVisible) {
         mClearBtn.setVisibility(isVisible ? VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void showHistoryClearDialog() {
+        if (historyClearDialog != null) {
+            historyClearDialog.show();
+        }
     }
 
     @Override
@@ -389,6 +408,11 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
         }
+
+        if (historyClearDialog != null) {
+            historyClearDialog.destroy();
+            historyClearDialog = null;
+        }
         super.onDestroy();
     }
 
@@ -396,7 +420,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.search_device_clear_btn:
-                mPresenter.cleanHistory();
+                historyClearDialog.show();
                 break;
             case R.id.search_device_cancel_tv:
                 mKeywordEt.clearFocus();
@@ -536,5 +560,21 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mPresenter.handlerActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onCancelClick() {
+        if (historyClearDialog != null) {
+            historyClearDialog.dismiss();
+
+        }
+    }
+
+    @Override
+    public void onConfirmClick(String content, String diameter) {
+        mPresenter.cleanHistory();
+        if (historyClearDialog != null) {
+            historyClearDialog.dismiss();
+        }
     }
 }

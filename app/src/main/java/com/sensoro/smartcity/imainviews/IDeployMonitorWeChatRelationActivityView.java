@@ -13,4 +13,6 @@ public interface IDeployMonitorWeChatRelationActivityView extends IToast, IActiv
     void updateTvTitle(String sn);
 
     void updateSaveStatus(boolean isEnable);
+
+    void showHistoryClearDialog();
 }
