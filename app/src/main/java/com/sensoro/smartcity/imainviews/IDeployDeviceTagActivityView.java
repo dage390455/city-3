@@ -13,4 +13,6 @@ public interface IDeployDeviceTagActivityView extends IToast, IActivityIntent {
     void showDialogWithEdit(String text,int position);
 
     void dismissDialog();
+
+    void updateSaveStatus(boolean isEnable);
 }

@@ -663,7 +663,7 @@
 
     <string name="channel_mask_error_tip">在需要配置频点的情况下，未能获取频点信息</string>
     <string name="please_enter_a_valid_mobile_number">请输入有效手机号</string>
-    <string name="enter_the_phone_number_used_for_applet_login">输入用于小程序登录的手机号</string>
+    <string name="enter_the_phone_number_used_to_look_device">填写后业主可在小程序查看该设备</string>
     <string name="please_enter_the_mobile_phone_number_and_the_contracted_mobile_phone_number">输入的手机号请与小程序登录账号保持一致</string>
     <string name="title_edit">编辑</string>
     <string name="identification_number_failed">身份证识别失败：</string>
@@ -859,5 +859,9 @@
     <string name="relation_mini_program_account">关联微信小程序账号</string>
     <string name="after_relation_owner_can_look_device">失联后业主可在微信小程序内查看该设备</string>
     <string name="previous_step">上一步</string>
+    <string name="name_address_history_record">历史记录</string>
+    <string name="name_address_no_contain_brackets">名称中不能包含中括号</string>
+    <string name="please_deploy_upload_all_pic">请上传所有必须上传的图片</string>
+    <string name="contact_name_length_to_long">联系人名字过长</string>
 
 </resources>

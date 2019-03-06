@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -18,6 +20,7 @@ import com.sensoro.smartcity.adapter.NameAddressHistoryAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorWeChatRelationActivityView;
 import com.sensoro.smartcity.presenter.DeployMonitorWeChatRelationActivityPresenter;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
@@ -38,7 +41,8 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
     TextView acWeChatRelationTvHistory;
     @BindView(R.id.ac_chat_relation_rc_history)
     RecyclerView acWeChatRelationRcHistory;
-
+    @BindView(R.id.iv_ac_chat_relation_delete_history)
+    ImageView ivAcWeChatRelationDeleteHistory;
     @BindView(R.id.include_text_title_tv_cancel)
     TextView includeTextTitleTvCancel;
     @BindView(R.id.include_text_title_tv_title)
@@ -58,6 +62,26 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
     private void initView() {
         initTitle();
         initRcHistory();
+//        initEtWatcher();
+    }
+
+    private void initEtWatcher() {
+        acWeChatRelationEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mPresenter.checkCanSave(s.toString());
+            }
+        });
     }
 
     private void initTitle() {
@@ -67,7 +91,14 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
         includeTextTitleTvCancel.setText(R.string.cancel);
         includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
         includeTextTitleTvSubtitle.setText(getString(R.string.save));
-        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_29c093));
+        updateSaveStatus(true);
+    }
+
+    @Override
+    public void updateSaveStatus(boolean isEnable) {
+        includeTextTitleTvSubtitle.setEnabled(isEnable);
+        includeTextTitleTvSubtitle.setTextColor(isEnable ? getResources().getColor(R.color.c_29c093) : getResources().getColor(R.color.c_dfdfdf));
+
     }
 
     private void initRcHistory() {
@@ -127,16 +158,20 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
 
     }
 
-
-    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel})
+    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel,R.id.iv_ac_chat_relation_delete_history})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
+                AppUtils.dismissInputMethodManager(mActivity,acWeChatRelationEt);
                 String text = acWeChatRelationEt.getText().toString();
                 mPresenter.doChoose(text);
                 break;
             case R.id.include_text_title_tv_cancel:
+                AppUtils.dismissInputMethodManager(mActivity,acWeChatRelationEt);
                 finishAc();
+                break;
+            case R.id.iv_ac_chat_relation_delete_history:
+                mPresenter.clearHistory();
                 break;
         }
 
@@ -151,6 +186,7 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
     @Override
     public void updateSearchHistoryData(List<String> searchStr) {
         mHistoryAdapter.updateSearchHistoryAdapter(searchStr);
+        ivAcWeChatRelationDeleteHistory.setVisibility(searchStr.size() > 0 ? View.VISIBLE : View.GONE);
     }
 
     @Override

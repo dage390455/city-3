@@ -11,4 +11,6 @@ public interface IDeployMonitorWeChatRelationActivityView extends IToast, IActiv
     void updateSearchHistoryData(List<String> searchStr);
 
     void updateTvTitle(String sn);
+
+    void updateSaveStatus(boolean isEnable);
 }

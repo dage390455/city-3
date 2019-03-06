@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.util.AppUtils;
 
 public class TagDialogUtils implements View.OnClickListener {
     private CustomCornerDialog mAddTagDialog;
@@ -21,7 +22,7 @@ public class TagDialogUtils implements View.OnClickListener {
     private int mType = -1;
     private int currentPosition = -1;
 
-    public TagDialogUtils(Activity activity) {
+    public TagDialogUtils(final Activity activity) {
         View view = View.inflate(activity, R.layout.dialog_frag_deploy_device_add_tag, null);
         mDialogEtInput = view.findViewById(R.id.dialog_add_tag_et_input);
         mDialogImvClear = view.findViewById(R.id.dialog_add_tag_imv_clear);
@@ -45,6 +46,7 @@ public class TagDialogUtils implements View.OnClickListener {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 currentPosition = -1;
+                AppUtils.dismissInputMethodManager(activity,mDialogEtInput);
                 mDialogEtInput.getText().clear();
             }
         });

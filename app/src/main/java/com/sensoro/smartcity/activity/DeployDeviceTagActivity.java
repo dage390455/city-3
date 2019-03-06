@@ -15,6 +15,7 @@ import com.sensoro.smartcity.adapter.DeployDeviceTagHistoryTagAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployDeviceTagActivityView;
 import com.sensoro.smartcity.presenter.DeployDeviceTagActivityPresenter;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
@@ -38,6 +39,8 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
     @BindView(R.id.include_text_title_tv_subtitle)
     TextView includeTextTitleTvSubtitle;
 
+    @BindView(R.id.iv_ac_deploy_device_tag_delete_history)
+    ImageView ivAcDeployDeviceTagDeleteHistoryTag;
     @BindView(R.id.ac_deploy_device_tag_rc_add_tag)
     RecyclerView acDeployDeviceTagRcAddTag;
     @BindView(R.id.ac_deploy_device_tag_rc_history_tag)
@@ -71,7 +74,14 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
         includeTextTitleTvCancel.setText(R.string.cancel);
         includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
         includeTextTitleTvSubtitle.setText(getString(R.string.save));
-        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_29c093));
+        updateSaveStatus(true);
+    }
+
+    @Override
+    public void updateSaveStatus(boolean isEnable) {
+        includeTextTitleTvSubtitle.setEnabled(isEnable);
+        includeTextTitleTvSubtitle.setTextColor(isEnable ? getResources().getColor(R.color.c_29c093) : getResources().getColor(R.color.c_dfdfdf));
+
     }
 
 
@@ -140,7 +150,7 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
         super.onDestroy();
     }
 
-    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel})
+    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel,R.id.iv_ac_deploy_device_tag_delete_history})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
@@ -148,6 +158,9 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
                 break;
             case R.id.include_text_title_tv_cancel:
                 finishAc();
+                break;
+            case R.id.iv_ac_deploy_device_tag_delete_history:
+               mPresenter.clearHistoryTag();
                 break;
         }
     }
@@ -170,7 +183,9 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
     @Override
     public void updateTags(List<String> tags) {
         mAddTagAdapter.setTags(tags);
+//        updateSaveStatus(tags.size() > 0);
         mAddTagAdapter.notifyDataSetChanged();
+        ivAcDeployDeviceTagDeleteHistoryTag.setVisibility(tags.size() > 0 ? View.VISIBLE : View.GONE);
     }
 
     @Override

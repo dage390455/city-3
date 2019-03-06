@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/c_f4f4f4"
+    android:orientation="vertical"
     >
 
     <include
@@ -17,7 +18,6 @@
         android:orientation="vertical"
         android:layout_marginTop="12dp"
         android:background="@color/white"
-        android:layout_below="@id/ac_alarm_contact_title"
         >
         <LinearLayout
             android:layout_width="match_parent"
@@ -90,191 +90,45 @@
         </LinearLayout>
 
     </LinearLayout>
-</RelativeLayout>
 
-
-
-    <!--支持扩展的联系人页面-->
-    <!--
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/c_fafafa">
-
-        <include
-            android:id="@+id/ac_alarm_contact_title"
-            layout="@layout/item_include_text_title" />
-
+        android:layout_height="wrap_content">
         <TextView
-            android:id="@+id/ac_alarm_contact_tv_save"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp"
-            android:layout_marginEnd="20dp"
+            android:text="@string/name_address_history_record"
+            android:textSize="14sp"
+            android:textColor="@color/c_030303"
+            android:layout_marginTop="20dp"
             android:layout_marginStart="20dp"
-            android:background="@drawable/shape_bg_corner_29c_shadow"
-            android:gravity="center"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:text="保存"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            />
 
-        <ScrollView
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/iv_ac_name_address_delete_tag"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@id/ac_alarm_contact_tv_save"
-            android:layout_below="@id/ac_alarm_contact_title"
-            android:scrollbars="none">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/ac_alarm_contact_rc_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    >
-
-                </android.support.v7.widget.RecyclerView>
-
-                <RelativeLayout
-                    android:id="@+id/ac_name_address"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="220dp"
-                    android:layout_above="@id/ac_alarm_contact_tv_save">
-                    <LinearLayout
-                        android:id="@+id/ac_name_address_ll_add_name_phone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="联系人2"
-                            android:textSize="12sp"
-                            android:textColor="@color/c_a6a6a6"
-                            android:layout_marginStart="20dp"
-                            android:layout_marginTop="20dp"
-                            />
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:background="@color/white"
-                            android:orientation="horizontal">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="预警联系人"
-                                android:textSize="14sp"
-                                android:layout_gravity="center_vertical"
-                                android:textColor="@color/c_a6a6a6"
-                                android:layout_marginStart="20dp"
-                                android:layout_marginTop="16dp"
-                                android:layout_marginBottom="16dp"/>
-                            <EditText
-                                android:id="@+id/ac_name_address_et_alarm_contact_name"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="wrap_content"
-                                android:background="@null"
-                                android:hint="例：18600000000"
-                                android:textSize="14sp"
-                                android:layout_gravity="center_vertical"
-                                android:gravity="end"
-                                android:layout_marginEnd="20dp"
-                                android:layout_marginStart="8dp"
-                                />
-                        </LinearLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/view_divider_height"
-                            android:layout_marginStart="20dp"
-                            android:layout_marginEnd="20dp"
-                            android:background="@color/c_dfdfdf"/>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/white"
-                            android:orientation="horizontal">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="预警联系人"
-                                android:textSize="14sp"
-                                android:layout_gravity="center_vertical"
-                                android:textColor="@color/c_a6a6a6"
-                                android:layout_marginStart="20dp"
-                                android:layout_marginTop="16dp"
-                                android:layout_marginBottom="16dp"/>
-                            <EditText
-                                android:id="@+id/ac_name_address_et_alarm_contact_phone"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="wrap_content"
-                                android:background="@null"
-                                android:hint="例：18600000000"
-                                android:textSize="14sp"
-                                android:layout_gravity="center_vertical"
-                                android:gravity="end"
-                                android:layout_marginEnd="20dp"
-                                android:layout_marginStart="8dp"
-                                />
-                        </LinearLayout>
-
-                    </LinearLayout>
-                    <TextView
-                        android:id="@+id/ac_name_address_tv_add_contact"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="新增联系人"
-                        android:drawableTop="@drawable/add_alarm_contact"
-                        android:layout_below="@id/ac_name_address_ll_add_name_phone"
-                        android:drawablePadding="12dp"
-                        android:textSize="14sp"
-                        android:textColor="@color/c_252525"
-                        android:layout_centerHorizontal="true"
-                        android:visibility="visible"
-                        />
-                    <LinearLayout
-                        android:id="@+id/ac_name_address_ll_history_tag"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="20dp"
-                            android:layout_marginEnd="20dp"
-                            android:text="历史标签"
-                            android:textColor="@color/c_252525"
-                            android:textSize="14sp"
-                            />
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/ac_name_address_rc_history_tag"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="20dp"
-                            android:layout_marginEnd="20dp">
-
-                        </android.support.v7.widget.RecyclerView>
-
-                    </LinearLayout>
-                </RelativeLayout>
-
-            </LinearLayout>
-
-        </ScrollView>
+            android:src="@drawable/tag_delete"
+            android:layout_gravity="bottom"
+            android:paddingTop="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:contentDescription="@null"
+            android:layout_marginEnd="12dp"/>
+    </LinearLayout>
 
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rc_ac_deploy_alarm_contact_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="20dp"
+        >
+
+    </android.support.v7.widget.RecyclerView>
 
 
-    </RelativeLayout>-->
+</LinearLayout>
+

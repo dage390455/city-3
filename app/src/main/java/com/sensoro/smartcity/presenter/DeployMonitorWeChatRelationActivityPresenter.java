@@ -5,6 +5,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorWeChatRelationActivityView;
@@ -26,10 +27,10 @@ public class DeployMonitorWeChatRelationActivityPresenter extends BasePresenter<
     public void initData(Context context) {
         mContext = (Activity) context;
 
-        String sn = mContext.getIntent().getStringExtra(EXTRA_DEPLOY_TO_SN);
-        if (!TextUtils.isEmpty(sn)) {
-            getView().updateTvTitle(sn);
-        }
+//        String sn = mContext.getIntent().getStringExtra(EXTRA_DEPLOY_TO_SN);
+//        if (!TextUtils.isEmpty(sn)) {
+//            getView().updateTvTitle(sn);
+//        }
         String account = mContext.getIntent().getStringExtra(EXTRA_SETTING_WE_CHAT_RELATION);
         String history = PreferencesHelper.getInstance().getDeployWeChatRelationHistory();
         if (!TextUtils.isEmpty(history)) {
@@ -51,36 +52,39 @@ public class DeployMonitorWeChatRelationActivityPresenter extends BasePresenter<
     }
 
     private void save(String text) {
-        String oldText = PreferencesHelper.getInstance().getDeployWeChatRelationHistory();
-        if (!TextUtils.isEmpty(text)) {
-            if (mHistoryKeywords.contains(text)) {
-                List<String> list = new ArrayList<>();
-                for (String o : oldText.split(",")) {
-                    if (!o.equalsIgnoreCase(text)) {
-                        list.add(o);
-                    }
-                }
-                list.add(0, text);
-                mHistoryKeywords.clear();
-                mHistoryKeywords.addAll(list);
-                StringBuilder stringBuilder = new StringBuilder();
-                for (int i = 0; i < list.size(); i++) {
-                    if (i == (list.size() - 1)) {
-                        stringBuilder.append(list.get(i));
-                    } else {
-                        stringBuilder.append(list.get(i)).append(",");
-                    }
-                }
-                PreferencesHelper.getInstance().saveDeployWeChatRelationHistory(stringBuilder.toString());
-            } else {
-                if (TextUtils.isEmpty(oldText)) {
-                    PreferencesHelper.getInstance().saveDeployWeChatRelationHistory(text);
-                } else {
-                    PreferencesHelper.getInstance().saveDeployWeChatRelationHistory(text + "," + oldText);
-                }
-                mHistoryKeywords.add(0, text);
-            }
-        }
+        List<String> list = PreferencesSaveAnalyzer.handleDeployRecord(2, text);
+        mHistoryKeywords.clear();
+        mHistoryKeywords.addAll(list);
+//        String oldText = PreferencesHelper.getInstance().getDeployWeChatRelationHistory();
+//        if (!TextUtils.isEmpty(text)) {
+//            if (mHistoryKeywords.contains(text)) {
+//                List<String> list = new ArrayList<>();
+//                for (String o : oldText.split(",")) {
+//                    if (!o.equalsIgnoreCase(text)) {
+//                        list.add(o);
+//                    }
+//                }
+//                list.add(0, text);
+//                mHistoryKeywords.clear();
+//                mHistoryKeywords.addAll(list);
+//                StringBuilder stringBuilder = new StringBuilder();
+//                for (int i = 0; i < list.size(); i++) {
+//                    if (i == (list.size() - 1)) {
+//                        stringBuilder.append(list.get(i));
+//                    } else {
+//                        stringBuilder.append(list.get(i)).append(",");
+//                    }
+//                }
+//                PreferencesHelper.getInstance().saveDeployWeChatRelationHistory(stringBuilder.toString());
+//            } else {
+//                if (TextUtils.isEmpty(oldText)) {
+//                    PreferencesHelper.getInstance().saveDeployWeChatRelationHistory(text);
+//                } else {
+//                    PreferencesHelper.getInstance().saveDeployWeChatRelationHistory(text + "," + oldText);
+//                }
+//                mHistoryKeywords.add(0, text);
+//            }
+//        }
     }
 
     public void doChoose(String text) {
@@ -89,6 +93,9 @@ public class DeployMonitorWeChatRelationActivityPresenter extends BasePresenter<
                 getView().toastShort(mContext.getString(R.string.please_enter_a_valid_mobile_number));
                 return;
             }
+        }else{
+            getView().toastShort(mContext.getString(R.string.please_enter_a_valid_mobile_number));
+            return;
         }
         save(text);
         EventData eventData = new EventData();
@@ -96,5 +103,20 @@ public class DeployMonitorWeChatRelationActivityPresenter extends BasePresenter<
         eventData.data = text;
         EventBus.getDefault().post(eventData);
         getView().finishAc();
+    }
+
+    public void checkCanSave(String phone) {
+        boolean isEnable = !TextUtils.isEmpty(phone) && RegexUtils.checkPhone(phone);
+        getView().updateSaveStatus(isEnable);
+
+    }
+
+    public void clearHistory() {
+        PreferencesSaveAnalyzer.clearAllData(2);
+        mHistoryKeywords.clear();
+        if (isAttachedView()) {
+            getView().updateSearchHistoryData(mHistoryKeywords);
+        }
+
     }
 }

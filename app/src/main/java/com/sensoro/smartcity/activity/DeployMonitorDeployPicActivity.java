@@ -21,6 +21,7 @@ import com.sensoro.smartcity.server.bean.DeployPicInfo;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDeployPicView;
 import com.sensoro.smartcity.presenter.DeployMonitorDeployPicPresenter;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.dialog.DeployPicExampleDialogUtils;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
@@ -105,7 +106,14 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
         includeTextTitleTvCancel.setText(R.string.cancel);
         includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
         includeTextTitleTvSubtitle.setText(getString(R.string.save));
-        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_29c093));
+        updateSaveStatus(true);
+    }
+
+    @Override
+    public void updateSaveStatus(boolean isEnable) {
+        includeTextTitleTvSubtitle.setEnabled(isEnable);
+        includeTextTitleTvSubtitle.setTextColor(isEnable ? getResources().getColor(R.color.c_29c093) : getResources().getColor(R.color.c_dfdfdf));
+
     }
 
     private void initRC() {
@@ -285,11 +293,6 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
 
     }
 
-    @Override
-    public void setSaveBtnStatus(boolean isEnable) {
-//        acDeployPicTvSave.setEnabled(isEnable);
-//        acDeployPicTvSave.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_solid_df_corner);
-    }
 
     @Override
     public void setDeployPicTvInstallationSiteTipVisible(boolean isVisible) {
