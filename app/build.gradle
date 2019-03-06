@@ -166,7 +166,7 @@ android {
 
                 // 更新至Android Studio 3.3 gradle 4.10.1
                 variant.outputs.all {
-                    outputFileName = "SensorCity${variant.versionCode}-${variant.versionName}-${releaseTime()}.apk"
+                    outputFileName = "SensorCity-${variant.versionName}-${releaseTime()}.apk"
                 }
 
                 //更新前
@@ -276,5 +276,5 @@ dependencies {
 }
 //获取编译时间
 static def releaseTime() {
-    return new Date().format("MM-dd hh:mm:ss", TimeZone.getTimeZone("UTC"))
+    return new Date().format("MM/dd hh:mm:ss", TimeZone.getTimeZone("UTC"))
 }

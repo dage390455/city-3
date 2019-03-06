@@ -24,6 +24,8 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZBarSc
         mScannerView.setBorderColor(getResources().getColor(R.color.white));
         mScannerView.setBorderStrokeWidth(30);
         mScannerView.setSquareViewFinder(true);
+        mScannerView.setAutoFocus(true);
+//        mScannerView.setAspectTolerance(0.5f);
     }
 
     @Override

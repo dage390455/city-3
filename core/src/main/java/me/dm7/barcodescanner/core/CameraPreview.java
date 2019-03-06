@@ -307,6 +307,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     };
 
     private void scheduleAutoFocus() {
-        mAutoFocusHandler.postDelayed(doAutoFocus, 1000);
+        mAutoFocusHandler.postDelayed(doAutoFocus, 800);
     }
 }
