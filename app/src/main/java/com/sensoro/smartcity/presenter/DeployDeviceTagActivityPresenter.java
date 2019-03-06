@@ -5,6 +5,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployDeviceTagActivityView;
@@ -124,10 +125,11 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
             oldHistoryList.addAll(Arrays.asList(oldText.split(",")));
         }
         if (mTagList.size() > 0) {
-            for (String tag : mTagList) {
-                if (!oldHistoryList.contains(tag)) {
-                    oldHistoryList.add(0, tag);
+            for (int i = mTagList.size()-1; i >= 0; i--) {
+                if (oldHistoryList.contains(mTagList.get(i))) {
+                    oldHistoryList.remove(mTagList.get(i));
                 }
+                oldHistoryList.add(0,mTagList.get(i));
             }
         }
         ArrayList<String> tempList = new ArrayList<>();
@@ -171,5 +173,13 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
         }
         getView().updateTags(mTagList);
         getView().dismissDialog();
+    }
+
+    public void clearHistoryTag() {
+        PreferencesSaveAnalyzer.clearAllData(3);
+        mHistoryKeywords.clear();
+        if (isAttachedView()) {
+            getView().updateSearchHistory(mHistoryKeywords);
+        }
     }
 }

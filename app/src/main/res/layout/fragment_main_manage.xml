@@ -18,7 +18,7 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:text="@string/manager_fragment_manager"
-            android:textColor="@color/c_030303"
+            android:textColor="@color/c_252525"
             android:textSize="18sp" />
 
         <LinearLayout

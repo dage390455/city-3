@@ -621,4 +621,15 @@ public final class PreferencesHelper implements Constants {
         sp.edit().putInt(PREFERENCE_KEY_VERSION_CODE, code).apply();
     }
 
+    public String getDeployAlarmContactHistory() {
+        return SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_DEPLOY_ALARM_CONTACT, null);
+    }
+
+    public boolean saveDeployAlarmContactHistory(String history) {
+        if (TextUtils.isEmpty(history)) {
+            return false;
+        }
+        SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_ALARM_CONTACT, history).apply();
+        return true;
+    }
 }

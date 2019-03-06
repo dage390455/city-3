@@ -6,14 +6,13 @@
     android:layout_height="match_parent"
     android:background="@color/c_f4f4f4"
     android:orientation="vertical"
-    android:paddingStart="20dp"
-    android:paddingEnd="20dp"
     android:visibility="gone"
     >
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
         >
 
         <TextView
@@ -27,21 +26,21 @@
 
         <ImageView
             android:id="@+id/btn_search_clear"
-            android:layout_width="@dimen/x142"
-            android:layout_height="@dimen/y60"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginTop="@dimen/y20"
             android:contentDescription="@null"
-            android:src="@drawable/clear_cache"
-            android:text="@string/clear"
-            android:textSize="12sp"
-            android:visibility="gone" />
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/tag_delete"
+            android:visibility="visible" />
     </RelativeLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_search_history"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="16dp"
         android:layout_width="match_parent"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
         android:layout_height="match_parent"
         />
 </LinearLayout>

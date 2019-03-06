@@ -2,6 +2,10 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -10,18 +14,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.AlarmContactHistoryAdapter;
 import com.sensoro.smartcity.adapter.AlarmContactRcContentAdapter;
+import com.sensoro.smartcity.adapter.DeployDeviceTagHistoryTagAdapter;
+import com.sensoro.smartcity.adapter.ImagePickerAdapter;
+import com.sensoro.smartcity.adapter.NameAddressHistoryAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IAlarmContactActivityView;
 import com.sensoro.smartcity.presenter.AlarmContactActivityPresenter;
+import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
+import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContactActivityView, AlarmContactActivityPresenter>
-        implements IAlarmContactActivityView {
+        implements IAlarmContactActivityView ,RecycleViewItemClickListener,TipOperationDialogUtils.TipDialogUtilsClickListener {
 
 
     @BindView(R.id.include_text_title_tv_cancel)
@@ -30,13 +44,18 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
     TextView includeTextTitleTvTitle;
     @BindView(R.id.include_text_title_tv_subtitle)
     TextView includeTextTitleTvSubtitle;
-
+    @BindView(R.id.rc_ac_deploy_alarm_contact_history)
+    RecyclerView rcAcDeployAlarmContactHistory;
     @BindView(R.id.ac_name_address_et_alarm_contact_name)
     EditText acNameAddressEtAlarmContactName;
     @BindView(R.id.ac_name_address_et_alarm_contact_phone)
     EditText acNameAddressEtAlarmContactPhone;
+    @BindView(R.id.iv_ac_name_address_delete_tag)
+    ImageView ivAcDeployAlarmContactDeleteHistory;
     @BindView(R.id.ac_name_address_ll_add_name_phone)
     LinearLayout acNameAddressLlAddNamePhone;
+    private AlarmContactHistoryAdapter mHistoryAdapter;
+    private TipOperationDialogUtils historyClearDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -53,7 +72,64 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
         includeTextTitleTvTitle.setText(R.string.alert_contact);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         initTitle();
+        initRcHistory();
+        initClearHistoryDialog();
+//        initEtWatcher();
 
+    }
+
+    private void initClearHistoryDialog() {
+        historyClearDialog = new TipOperationDialogUtils(mActivity, true);
+        historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
+        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipDialogUtilsClickListener(this);
+    }
+
+    private void initEtWatcher() {
+        acNameAddressEtAlarmContactName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mPresenter.checkCanSave(s.toString(),acNameAddressEtAlarmContactPhone.getText().toString());
+            }
+        });
+
+        acNameAddressEtAlarmContactPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mPresenter.checkCanSave(acNameAddressEtAlarmContactName.getText().toString(),s.toString());
+            }
+        });
+    }
+
+    private void initRcHistory() {
+        mHistoryAdapter = new AlarmContactHistoryAdapter(mActivity);
+        mHistoryAdapter.setRecycleViewItemClickListener(this);
+        SensoroLinearLayoutManager manager = new SensoroLinearLayoutManager(mActivity);
+        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rcAcDeployAlarmContactHistory.setLayoutManager(manager);
+        rcAcDeployAlarmContactHistory.setAdapter(mHistoryAdapter);
     }
 
     private void initTitle() {
@@ -63,7 +139,21 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
         includeTextTitleTvCancel.setText(R.string.cancel);
         includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
         includeTextTitleTvSubtitle.setText(getString(R.string.save));
-        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_29c093));
+        updateSaveStatus(true);
+    }
+
+    @Override
+    public void updateSaveStatus(boolean isEnable) {
+        includeTextTitleTvSubtitle.setEnabled(isEnable);
+        includeTextTitleTvSubtitle.setTextColor(isEnable ? getResources().getColor(R.color.c_29c093) : getResources().getColor(R.color.c_dfdfdf));
+
+    }
+
+    @Override
+    public void showHistoryClearDialog() {
+        if (historyClearDialog != null) {
+            historyClearDialog.show();
+        }
     }
 
     private void initRcContent() {
@@ -111,8 +201,9 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
     }
 
 
-    @OnClick({R.id.include_text_title_tv_cancel, R.id.include_text_title_tv_subtitle})
+    @OnClick({R.id.include_text_title_tv_cancel, R.id.include_text_title_tv_subtitle,R.id.iv_ac_name_address_delete_tag})
     public void onViewClicked(View view) {
+        AppUtils.dismissInputMethodManager(mActivity,acNameAddressEtAlarmContactName);
         switch (view.getId()) {
             case R.id.include_text_title_tv_cancel:
                 finishAc();
@@ -122,8 +213,13 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
                 String phone = acNameAddressEtAlarmContactPhone.getText().toString();
                 mPresenter.doFinish(name,phone);
                 break;
+            case R.id.iv_ac_name_address_delete_tag:
+                showHistoryClearDialog();
+                break;
         }
     }
+
+
 
     @Override
     public void setNameAndPhone(String name, String phone) {
@@ -131,5 +227,44 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
         acNameAddressEtAlarmContactName.setSelection(name.length());
         acNameAddressEtAlarmContactPhone.setText(phone);
         acNameAddressEtAlarmContactPhone.setSelection(phone.length());
+    }
+
+    @Override
+    public void updateHistoryData(ArrayList<String> mHistoryKeywords) {
+        mHistoryAdapter.updateSearchHistoryAdapter(mHistoryKeywords);
+        ivAcDeployAlarmContactDeleteHistory.setVisibility(mHistoryKeywords.size() > 0 ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        String s = mHistoryAdapter.getSearchHistoryList().get(position);
+        String[] split = s.split("#");
+        setNameAndPhone(split[0],split[1]);
+    }
+
+    @Override
+    public void onCancelClick() {
+        if (historyClearDialog != null) {
+            historyClearDialog.dismiss();
+
+        }
+
+    }
+
+    @Override
+    public void onConfirmClick(String content, String diameter) {
+        mPresenter.clearTag();
+        if (historyClearDialog != null) {
+            historyClearDialog.dismiss();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (historyClearDialog != null) {
+            historyClearDialog.destroy();
+            historyClearDialog = null;
+        }
+        super.onDestroy();
     }
 }

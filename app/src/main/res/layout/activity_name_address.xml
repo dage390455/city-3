@@ -46,22 +46,47 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/ac_nam_address_tv_history"
-        android:layout_width="wrap_content"
+
+
+    <LinearLayout
+        android:id="@+id/ll_ac_nam_address_history"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ac_nam_address_ll"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/name_address_history_tag"
-        android:textColor="@color/c_252525"
-        android:textSize="14sp" />
+        android:orientation="horizontal"
+        android:layout_below="@id/ac_nam_address_ll">
+
+        <TextView
+            android:id="@+id/ac_nam_address_tv_history"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/name_address_history_record"
+            android:textColor="@color/c_252525"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/iv_ac_nam_address_delete_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="8dp"
+            android:layout_gravity="bottom"
+            android:layout_marginEnd="12dp"
+            android:src="@drawable/tag_delete"
+            android:contentDescription="@null"
+            />
+    </LinearLayout>
+
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/ac_nam_address_rc_history"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ac_nam_address_tv_history"
+        android:layout_below="@id/ll_ac_nam_address_history"
         android:layout_marginStart="20dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="20dp">

@@ -151,16 +151,13 @@
 
                 <ImageView
                     android:id="@+id/search_device_clear_btn"
-                    android:layout_width="@dimen/x142"
-                    android:layout_height="@dimen/y60"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginTop="@dimen/y20"
                     android:contentDescription="@null"
-                    android:src="@drawable/clear_cache"
-                    android:text="@string/clear"
-                    android:textSize="12sp"
-                    android:visibility="gone" />
+                    android:src="@drawable/tag_delete"
+                    android:visibility="visible" />
             </RelativeLayout>
 
             <android.support.v7.widget.RecyclerView

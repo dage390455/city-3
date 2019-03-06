@@ -15,8 +15,10 @@ import com.sensoro.smartcity.adapter.DeployDeviceTagHistoryTagAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployDeviceTagActivityView;
 import com.sensoro.smartcity.presenter.DeployDeviceTagActivityPresenter;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.dialog.TagDialogUtils;
 
@@ -30,7 +32,8 @@ import static com.sensoro.smartcity.widget.dialog.TagDialogUtils.DIALOG_TAG_ADD;
 import static com.sensoro.smartcity.widget.dialog.TagDialogUtils.DIALOG_TAG_EDIT;
 
 public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivityView, DeployDeviceTagActivityPresenter>
-        implements IDeployDeviceTagActivityView, DeployDeviceTagAddTagAdapter.DeployDeviceTagAddTagItemClickListener, RecycleViewItemClickListener, TagDialogUtils.OnTagDialogListener {
+        implements IDeployDeviceTagActivityView, DeployDeviceTagAddTagAdapter.DeployDeviceTagAddTagItemClickListener, RecycleViewItemClickListener,
+        TagDialogUtils.OnTagDialogListener,TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.include_text_title_tv_cancel)
     TextView includeTextTitleTvCancel;
     @BindView(R.id.include_text_title_tv_title)
@@ -38,6 +41,8 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
     @BindView(R.id.include_text_title_tv_subtitle)
     TextView includeTextTitleTvSubtitle;
 
+    @BindView(R.id.iv_ac_deploy_device_tag_delete_history)
+    ImageView ivAcDeployDeviceTagDeleteHistoryTag;
     @BindView(R.id.ac_deploy_device_tag_rc_add_tag)
     RecyclerView acDeployDeviceTagRcAddTag;
     @BindView(R.id.ac_deploy_device_tag_rc_history_tag)
@@ -45,6 +50,7 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
     private DeployDeviceTagAddTagAdapter mAddTagAdapter;
     private DeployDeviceTagHistoryTagAdapter mHistoryTagAdapter;
     private TagDialogUtils tagDialogUtils;
+    private TipOperationDialogUtils historyClearDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -59,8 +65,8 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
         tagDialogUtils.registerListener(this);
         initTitle();
         initRcAddTag();
-
         initRcHistoryTag();
+        initClearHistoryDialog();
 
     }
 
@@ -71,7 +77,30 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
         includeTextTitleTvCancel.setText(R.string.cancel);
         includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
         includeTextTitleTvSubtitle.setText(getString(R.string.save));
-        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_29c093));
+        updateSaveStatus(true);
+    }
+
+    private void initClearHistoryDialog() {
+        historyClearDialog = new TipOperationDialogUtils(mActivity, true);
+        historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
+        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipDialogUtilsClickListener(this);
+    }
+
+    @Override
+    public void updateSaveStatus(boolean isEnable) {
+        includeTextTitleTvSubtitle.setEnabled(isEnable);
+        includeTextTitleTvSubtitle.setTextColor(isEnable ? getResources().getColor(R.color.c_29c093) : getResources().getColor(R.color.c_dfdfdf));
+
+    }
+
+    @Override
+    public void showHistoryClearDialog() {
+        if (historyClearDialog != null) {
+            historyClearDialog.show();
+        }
     }
 
 
@@ -136,11 +165,20 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
 
     @Override
     protected void onDestroy() {
-        tagDialogUtils.unregisterListener();
+        if (tagDialogUtils != null) {
+            tagDialogUtils.unregisterListener();
+            tagDialogUtils = null;
+        }
+
+        if (historyClearDialog != null) {
+            historyClearDialog.destroy();
+            historyClearDialog = null;
+        }
+
         super.onDestroy();
     }
 
-    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel})
+    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel,R.id.iv_ac_deploy_device_tag_delete_history})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
@@ -148,6 +186,9 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
                 break;
             case R.id.include_text_title_tv_cancel:
                 finishAc();
+                break;
+            case R.id.iv_ac_deploy_device_tag_delete_history:
+               historyClearDialog.show();
                 break;
         }
     }
@@ -170,7 +211,9 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
     @Override
     public void updateTags(List<String> tags) {
         mAddTagAdapter.setTags(tags);
+//        updateSaveStatus(tags.size() > 0);
         mAddTagAdapter.notifyDataSetChanged();
+        ivAcDeployDeviceTagDeleteHistoryTag.setVisibility(tags.size() > 0 ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -206,4 +249,22 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
                 break;
         }
     }
+
+    @Override
+    public void onCancelClick() {
+        if (historyClearDialog !=  null) {
+            historyClearDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onConfirmClick(String content, String diameter) {
+        mPresenter.clearHistoryTag();
+        if (historyClearDialog != null) {
+            historyClearDialog.dismiss();
+        }
+
+    }
+
+
 }

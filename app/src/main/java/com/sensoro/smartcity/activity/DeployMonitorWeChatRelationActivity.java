@@ -5,6 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -18,8 +23,10 @@ import com.sensoro.smartcity.adapter.NameAddressHistoryAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorWeChatRelationActivityView;
 import com.sensoro.smartcity.presenter.DeployMonitorWeChatRelationActivityPresenter;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
@@ -29,7 +36,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMonitorWeChatRelationActivityView, DeployMonitorWeChatRelationActivityPresenter>
-        implements IDeployMonitorWeChatRelationActivityView, RecycleViewItemClickListener {
+        implements IDeployMonitorWeChatRelationActivityView, RecycleViewItemClickListener,TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.ac_we_chat_relation_et)
     EditText acWeChatRelationEt;
     @BindView(R.id.ac_chat_relation_ll)
@@ -38,14 +45,18 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
     TextView acWeChatRelationTvHistory;
     @BindView(R.id.ac_chat_relation_rc_history)
     RecyclerView acWeChatRelationRcHistory;
-
+    @BindView(R.id.iv_ac_chat_relation_delete_history)
+    ImageView ivAcWeChatRelationDeleteHistory;
     @BindView(R.id.include_text_title_tv_cancel)
     TextView includeTextTitleTvCancel;
     @BindView(R.id.include_text_title_tv_title)
     TextView includeTextTitleTvTitle;
     @BindView(R.id.include_text_title_tv_subtitle)
     TextView includeTextTitleTvSubtitle;
+    @BindView(R.id.tv_ac_chat_relation_qr_code_desc)
+    TextView tvAcChatRelationQrCodeDesc;
     private NameAddressHistoryAdapter mHistoryAdapter;
+    private TipOperationDialogUtils historyClearDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -57,7 +68,53 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
 
     private void initView() {
         initTitle();
+        initMiniProgramDesc();
         initRcHistory();
+        initClearHistoryDialog();
+//        initEtWatcher();
+    }
+
+    private void initClearHistoryDialog() {
+        historyClearDialog = new TipOperationDialogUtils(mActivity, true);
+        historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
+        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipDialogUtilsClickListener(this);
+    }
+
+    private void initMiniProgramDesc() {
+        String desc = getString(R.string.mini_program_description);
+        String temp = "SensoroCity";
+        int start = desc.indexOf(temp);
+        if (start == -1) {
+            tvAcChatRelationQrCodeDesc.setText(desc);
+            return;
+        }
+        SpannableString spannableString = new SpannableString(desc);
+        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.c_252525));
+        spannableString.setSpan(foregroundColorSpan,start,start+temp.length(),Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        tvAcChatRelationQrCodeDesc.setText(spannableString);
+
+    }
+
+    private void initEtWatcher() {
+        acWeChatRelationEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mPresenter.checkCanSave(s.toString());
+            }
+        });
     }
 
     private void initTitle() {
@@ -67,7 +124,21 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
         includeTextTitleTvCancel.setText(R.string.cancel);
         includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
         includeTextTitleTvSubtitle.setText(getString(R.string.save));
-        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_29c093));
+        updateSaveStatus(true);
+    }
+
+    @Override
+    public void updateSaveStatus(boolean isEnable) {
+        includeTextTitleTvSubtitle.setEnabled(isEnable);
+        includeTextTitleTvSubtitle.setTextColor(isEnable ? getResources().getColor(R.color.c_29c093) : getResources().getColor(R.color.c_dfdfdf));
+
+    }
+
+    @Override
+    public void showHistoryClearDialog() {
+        if (historyClearDialog != null) {
+            historyClearDialog.show();
+        }
     }
 
     private void initRcHistory() {
@@ -127,16 +198,20 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
 
     }
 
-
-    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel})
+    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel,R.id.iv_ac_chat_relation_delete_history})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
+                AppUtils.dismissInputMethodManager(mActivity,acWeChatRelationEt);
                 String text = acWeChatRelationEt.getText().toString();
                 mPresenter.doChoose(text);
                 break;
             case R.id.include_text_title_tv_cancel:
+                AppUtils.dismissInputMethodManager(mActivity,acWeChatRelationEt);
                 finishAc();
+                break;
+            case R.id.iv_ac_chat_relation_delete_history:
+               showHistoryClearDialog();
                 break;
         }
 
@@ -151,6 +226,7 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
     @Override
     public void updateSearchHistoryData(List<String> searchStr) {
         mHistoryAdapter.updateSearchHistoryAdapter(searchStr);
+        ivAcWeChatRelationDeleteHistory.setVisibility(searchStr.size() > 0 ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -164,5 +240,31 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
         setEditText(text);
         acWeChatRelationEt.clearFocus();
         dismissInputMethodManager(view);
+    }
+
+    @Override
+    public void onCancelClick() {
+        if (historyClearDialog !=  null) {
+            historyClearDialog.dismiss();
+
+        }
+    }
+
+    @Override
+    public void onConfirmClick(String content, String diameter) {
+        mPresenter.clearHistory();
+        if (historyClearDialog != null) {
+            historyClearDialog.dismiss();
+
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (historyClearDialog != null) {
+            historyClearDialog.destroy();
+            historyClearDialog = null;
+        }
+        super.onDestroy();
     }
 }

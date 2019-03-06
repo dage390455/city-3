@@ -8,8 +8,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.util.AppUtils;
 
 public class TagDialogUtils implements View.OnClickListener {
+    private final Activity mActivity;
     private CustomCornerDialog mAddTagDialog;
     private EditText mDialogEtInput;
     private ImageView mDialogImvClear;
@@ -21,7 +23,7 @@ public class TagDialogUtils implements View.OnClickListener {
     private int mType = -1;
     private int currentPosition = -1;
 
-    public TagDialogUtils(Activity activity) {
+    public TagDialogUtils(final Activity activity) {
         View view = View.inflate(activity, R.layout.dialog_frag_deploy_device_add_tag, null);
         mDialogEtInput = view.findViewById(R.id.dialog_add_tag_et_input);
         mDialogImvClear = view.findViewById(R.id.dialog_add_tag_imv_clear);
@@ -34,6 +36,7 @@ public class TagDialogUtils implements View.OnClickListener {
 //        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 //        builder.setView(view);
 //        builder.setCancelable(false);
+        mActivity = activity;
         mAddTagDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
@@ -69,10 +72,12 @@ public class TagDialogUtils implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.dialog_add_tag_tv_cancel:
+                AppUtils.dismissInputMethodManager(mActivity,mDialogEtInput);
                 dismissDialog();
                 break;
             case R.id.dialog_add_tag_tv_confirm:
                 if (mDialogEtInput != null) {
+                    AppUtils.dismissInputMethodManager(mActivity,mDialogEtInput);
                     String tag = mDialogEtInput.getText().toString();
                     if (onTagDialogListener != null) {
                         onTagDialogListener.onConfirm(mType, tag, currentPosition);

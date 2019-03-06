@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -18,9 +20,11 @@ import com.sensoro.smartcity.adapter.NameAddressHistoryAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorNameAddressActivityView;
 import com.sensoro.smartcity.presenter.DeployMonitorNameAddressActivityPresenter;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
@@ -30,7 +34,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonitorNameAddressActivityView, DeployMonitorNameAddressActivityPresenter>
-        implements IDeployMonitorNameAddressActivityView, RecycleViewItemClickListener {
+        implements IDeployMonitorNameAddressActivityView, RecycleViewItemClickListener,TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.ac_name_address_et)
     EditText acNameAddressEt;
     @BindView(R.id.ac_nam_address_ll)
@@ -39,7 +43,8 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
     TextView acNamAddressTvHistory;
     @BindView(R.id.ac_nam_address_rc_history)
     RecyclerView acNamAddressRcHistory;
-
+    @BindView(R.id.iv_ac_nam_address_delete_history)
+    ImageView ivAcNamAddressDeleteHistory;
     @BindView(R.id.include_text_title_tv_cancel)
     TextView includeTextTitleTvCancel;
     @BindView(R.id.include_text_title_tv_title)
@@ -48,6 +53,7 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
     TextView includeTextTitleTvSubtitle;
     private NameAddressHistoryAdapter mHistoryAdapter;
     private ProgressUtils mProgressUtils;
+    private TipOperationDialogUtils historyClearDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -61,6 +67,50 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         initTitle();
         initRcHistory();
+        initClearHistoryDialog();
+//        initEtWatcher();
+    }
+
+    private void initClearHistoryDialog() {
+        historyClearDialog = new TipOperationDialogUtils(mActivity, true);
+        historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
+        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipDialogUtilsClickListener(this);
+    }
+
+    private void initEtWatcher() {
+        acNameAddressEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+//                mPresenter.checkCanSave(s.toString());
+            }
+        });
+    }
+
+    @Override
+    public void updateSaveStatus(boolean isEnable) {
+        includeTextTitleTvSubtitle.setEnabled(isEnable);
+        includeTextTitleTvSubtitle.setTextColor(isEnable ? getResources().getColor(R.color.c_29c093) : getResources().getColor(R.color.c_dfdfdf));
+
+    }
+
+    @Override
+    public void showHistoryClearDialog() {
+        if (historyClearDialog != null) {
+            historyClearDialog.show();
+        }
     }
 
     private void initTitle() {
@@ -70,7 +120,7 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
         includeTextTitleTvCancel.setText(R.string.cancel);
         includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
         includeTextTitleTvSubtitle.setText(getString(R.string.save));
-        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_29c093));
+        updateSaveStatus(true);
     }
 
     private void initRcHistory() {
@@ -131,19 +181,25 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
     }
 
 
-    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel})
+    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel,R.id.iv_ac_nam_address_delete_history})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
+                AppUtils.dismissInputMethodManager(mActivity, acNameAddressEt);
                 String text = acNameAddressEt.getText().toString();
                 mPresenter.doChoose(text);
                 break;
             case R.id.include_text_title_tv_cancel:
+                AppUtils.dismissInputMethodManager(mActivity, acNameAddressEt);
                 finishAc();
+                break;
+            case R.id.iv_ac_nam_address_delete_history:
+                showHistoryClearDialog();
                 break;
         }
 
     }
+
 
     @Override
     public void setEditText(String text) {
@@ -154,6 +210,7 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
     @Override
     public void updateSearchHistoryData(List<String> searchStr) {
         mHistoryAdapter.updateSearchHistoryAdapter(searchStr);
+        ivAcNamAddressDeleteHistory.setVisibility(searchStr.size() > 0 ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -181,7 +238,32 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
 
     @Override
     protected void onDestroy() {
-        mProgressUtils.destroyProgress();
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
+            mProgressUtils = null;
+        }
+
+        if (historyClearDialog != null) {
+            historyClearDialog.destroy();
+            historyClearDialog = null;
+        }
         super.onDestroy();
+    }
+
+    @Override
+    public void onCancelClick() {
+        if (historyClearDialog != null) {
+            historyClearDialog.dismiss();
+
+        }
+    }
+
+    @Override
+    public void onConfirmClick(String content, String diameter) {
+        mPresenter.clearHistory();
+        if (historyClearDialog != null) {
+            historyClearDialog.dismiss();
+
+        }
     }
 }

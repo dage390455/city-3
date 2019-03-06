@@ -37,6 +37,7 @@ import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
+import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.divider.BottomNoDividerItemDecoration;
 import com.sensoro.smartcity.widget.divider.CustomDivider;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
@@ -51,7 +52,7 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView, DeployRecordActivityPresenter> implements
-        IDeployRecordActivityView {
+        IDeployRecordActivityView ,TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.rl_root_deploy_record)
     RelativeLayout rlRootDeployRecord;
     @BindView(R.id.ac_deploy_record_imv_finish)
@@ -100,6 +101,7 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
     private ProgressUtils mProgressDialog;
     private boolean isShowDialog = true;
     private SearchHistoryAdapter mSearchHistoryAdapter;
+    private TipOperationDialogUtils historyClearDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -160,6 +162,17 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
         initRcSearchHistory();
 
         initRefreshLayout();
+
+        initClearHistoryDialog();
+    }
+
+    private void initClearHistoryDialog() {
+        historyClearDialog = new TipOperationDialogUtils(mActivity, true);
+        historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
+        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
     private void initRcSearchHistory() {
@@ -272,10 +285,15 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if (mProgressDialog != null) {
             mProgressDialog.destroyProgress();
         }
+
+        if (historyClearDialog != null) {
+            historyClearDialog.destroy();
+            historyClearDialog = null;
+        }
+        super.onDestroy();
     }
 
     @Override
@@ -376,7 +394,7 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
                 setSearchHistoryVisible(true);
                 break;
             case R.id.btn_search_clear:
-                mPresenter.clearSearchHistory();
+                showHistoryClearDialog();
                 break;
         }
     }
@@ -386,6 +404,13 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
         llSearchHistory.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         refreshLayout.setVisibility(isVisible ? View.GONE : View.VISIBLE);
         setSearchButtonTextVisible(isVisible);
+    }
+
+    @Override
+    public void showHistoryClearDialog() {
+        if (historyClearDialog != null) {
+            historyClearDialog.show();
+        }
     }
 
     private void doCancelSearch() {
@@ -458,5 +483,22 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
     public void updateSearchHistoryList(List<String> data) {
         btnSearchClear.setVisibility(data.size() > 0 ? View.VISIBLE : View.GONE);
         mSearchHistoryAdapter.updateSearchHistoryAdapter(data);
+    }
+
+    @Override
+    public void onCancelClick() {
+        if (historyClearDialog != null) {
+            historyClearDialog.dismiss();
+
+        }
+    }
+
+    @Override
+    public void onConfirmClick(String content, String diameter) {
+        mPresenter.clearSearchHistory();
+        if (historyClearDialog != null) {
+            historyClearDialog.dismiss();
+
+        }
     }
 }

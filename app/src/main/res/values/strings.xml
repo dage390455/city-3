@@ -666,7 +666,7 @@
     <string name="december">December</string>
     <string name="channel_mask_error_tip">Failed to get frequency information when frequency point needs to be configured</string>
     <string name="please_enter_a_valid_mobile_number">Please enter a valid mobile number</string>
-    <string name="enter_the_phone_number_used_for_applet_login">Enter the phone number to login mini program</string>
+    <string name="enter_the_phone_number_used_to_look_device">填写后业主可在小程序查看该设备</string>
     <string name="please_enter_the_mobile_phone_number_and_the_contracted_mobile_phone_number">Please keep the phone number consistent with mini program account</string>
     <string name="title_edit">Edit</string>
     <string name="identification_number_failed">ID card is not identified</string>
@@ -867,4 +867,12 @@
     <string name="relation_mini_program_account">关联微信小程序账号</string>
     <string name="after_relation_owner_can_look_device">失联后业主可在微信小程序内查看该设备</string>
     <string name="previous_step">Previous</string>
+    <string name="name_address_history_record">历史记录</string>
+    <string name="name_address_no_contain_brackets">名称中不能包含中括号</string>
+    <string name="please_deploy_upload_all_pic">请上传所有必须上传的图片</string>
+    <string name="contact_name_length_to_long">联系人名字过长</string>
+    <string name="mini_program_description">如遗忘，可邀请业主微信扫码或搜索SensoroCity进入微信查看</string>
+    <string name="history_clear_all">清空</string>
+    <string name="confirm_clear_history_record">确定清空输入记录</string>
+
 </resources>

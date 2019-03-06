@@ -3,13 +3,16 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorNameAddressActivityView;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.util.PreferencesHelper;
+import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -17,6 +20,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDeployMonitorNameAddressActivityView> implements Constants {
     private Activity mContext;
@@ -30,9 +34,9 @@ public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDe
         String sn = mContext.getIntent().getStringExtra(EXTRA_DEPLOY_TO_SN);
         originName = mContext.getIntent().getStringExtra(EXTRA_DEPLOY_ORIGIN_NAME_ADDRESS);
         deployType = mContext.getIntent().getIntExtra(EXTRA_DEPLOY_TYPE, -1);
-        if (!TextUtils.isEmpty(sn)) {
-            getView().updateTvTitle(sn);
-        }
+//        if (!TextUtils.isEmpty(sn)) {
+////            getView().updateTvTitle(sn);
+//        }
         String name = mContext.getIntent().getStringExtra(EXTRA_SETTING_NAME_ADDRESS);
         String history = PreferencesHelper.getInstance().getDeployNameAddressHistory();
         if (!TextUtils.isEmpty(history)) {
@@ -54,40 +58,79 @@ public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDe
     }
 
     private void save(String text) {
-        String oldText = PreferencesHelper.getInstance().getDeployNameAddressHistory();
-        if (!TextUtils.isEmpty(text)) {
-            if (mHistoryKeywords.contains(text)) {
-                List<String> list = new ArrayList<>();
-                for (String o : oldText.split(",")) {
-                    if (!o.equalsIgnoreCase(text)) {
-                        list.add(o);
-                    }
-                }
-                list.add(0, text);
-                mHistoryKeywords.clear();
-                mHistoryKeywords.addAll(list);
-                StringBuilder stringBuilder = new StringBuilder();
-                for (int i = 0; i < list.size(); i++) {
-                    if (i == (list.size() - 1)) {
-                        stringBuilder.append(list.get(i));
-                    } else {
-                        stringBuilder.append(list.get(i)).append(",");
-                    }
-                }
-                PreferencesHelper.getInstance().saveDeployNameAddressHistory(stringBuilder.toString());
-            } else {
-                if (TextUtils.isEmpty(oldText)) {
-                    PreferencesHelper.getInstance().saveDeployNameAddressHistory(text);
-                } else {
-                    PreferencesHelper.getInstance().saveDeployNameAddressHistory(text + "," + oldText);
-                }
-                mHistoryKeywords.add(0, text);
-            }
-        }
+        List<String> list = PreferencesSaveAnalyzer.handleDeployRecord(0, text);
+        mHistoryKeywords.clear();
+        mHistoryKeywords.addAll(list);
+//        String oldText = PreferencesHelper.getInstance().getDeployNameAddressHistory();
+//        if (!TextUtils.isEmpty(text)) {
+//            if (mHistoryKeywords.contains(text)) {
+//                ArrayList<String> list = new ArrayList<>();
+//                for (String o : oldText.split(",")) {
+//                    if (!o.equalsIgnoreCase(text)) {
+//                        list.add(o);
+//                    }
+//                }
+//                list.add(0, text);
+//                mHistoryKeywords.clear();
+//                mHistoryKeywords.addAll(list);
+//                StringBuilder stringBuilder = new StringBuilder();
+//                int size;
+//                if (list.size() > 20) {
+//                    size = 20;
+//                } else {
+//                    size = list.size();
+//                }
+//                for (int i = 0; i < size; i++) {
+//                    if (i == (size - 1)) {
+//                        stringBuilder.append(list.get(i));
+//                    } else {
+//                        stringBuilder.append(list.get(i)).append(",");
+//                    }
+//                }
+//                PreferencesHelper.getInstance().saveDeployNameAddressHistory(stringBuilder.toString());
+//                return list;
+//            } else {
+//                if (TextUtils.isEmpty(oldText)) {
+//                    PreferencesHelper.getInstance().saveDeployNameAddressHistory(text);
+//                } else {
+//                    String format = String.format(Locale.ROOT, "%s,%s", text, oldText);
+//                    String[] split = format.split(",");
+//                    StringBuilder sb = new StringBuilder();
+//                    int total;
+//                    if (split.length > 20) {
+//                        total = 20;
+//                    } else {
+//                        total = split.length;
+//                    }
+//                    for (int i = 0; i < total; i++) {
+//                        if(i == total -1){
+//                            sb.append(split[i]);
+//                        }else{
+//                            sb.append(split[i]).append(",");
+//                        }
+//
+//                    }
+//                    PreferencesHelper.getInstance().saveDeployNameAddressHistory(sb.toString());
+//                }
+//                String[] split = PreferencesHelper.getInstance().getDeployNameAddressHistory().split(",");
+//                return Arrays.asList(split);
+////                mHistoryKeywords.add(0, text);
+////                if (mHistoryKeywords.size() > 20) {
+////                    for (int i = 20; i < mHistoryKeywords.size(); i++) {
+////                        mHistoryKeywords.remove(i);
+////                    }
+////                }
+//            }
+//        }
+//        return new ArrayList<String>();
     }
 
     public void doChoose(final String text) {
         if (!TextUtils.isEmpty(text)) {
+            if (text.contains("[")||text.contains("【")) {
+                getView().toastShort(mContext.getString(R.string.name_address_no_contain_brackets));
+                return;
+            }
             byte[] bytes = new byte[0];
             try {
                 bytes = text.getBytes("UTF-8");
@@ -149,5 +192,14 @@ public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDe
         eventData.data = text;
         EventBus.getDefault().post(eventData);
         getView().finishAc();
+    }
+
+    public void clearHistory() {
+        PreferencesSaveAnalyzer.clearAllData(0);
+        mHistoryKeywords.clear();
+        if (isAttachedView()) {
+            getView().updateSearchHistoryData(mHistoryKeywords);
+        }
+
     }
 }

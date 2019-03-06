@@ -514,4 +514,10 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
         refreshData(DIRECTION_DOWN);
 
     }
+
+    public void clearSearchHistory() {
+        PreferencesHelper.getInstance().clearSearchHistory(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_CONTRACT);
+        mSearchHistoryList.clear();
+        getView().UpdateSearchHistoryList(mSearchHistoryList);
+    }
 }

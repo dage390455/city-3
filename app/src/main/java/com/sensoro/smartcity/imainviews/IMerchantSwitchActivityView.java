@@ -17,4 +17,6 @@ public interface IMerchantSwitchActivityView extends IProgressDialog, IActivityI
     void updateSearchHistoryList(List<String> data);
 
     void setTvBackToMainMerchantVisible(boolean isVisible);
+
+    void showHistoryClearDialog();
 }
