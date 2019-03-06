@@ -3,6 +3,7 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.ImageView;
@@ -211,13 +212,13 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
 //        // * Wait 2 seconds to resume the preview.
 //        // * On older devices continuously stopping and resuming camera preview can result in freezing the app.
 //        // * I don't know why this is the case but I don't have the time to figure out.
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                acScanQrView.resumeCameraPreview(ScanActivity.this);
-//            }
-//        }, 2000);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                acScanQrView.resumeCameraPreview(ScanActivity.this);
+            }
+        }, 2000);
 //        finishAc();
     }
 
