@@ -169,7 +169,7 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
     private void initClearHistoryDialog() {
         historyClearDialog = new TipOperationDialogUtils(mRootFragment.getActivity(), true);
         historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
-        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
         historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
         historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
         historyClearDialog.setTipDialogUtilsClickListener(this);
@@ -329,7 +329,7 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
                 alarmReturnTop.setVisibility(View.GONE);
                 break;
             case R.id.btn_search_clear:
-                mPresenter.clearSearchHistory();
+                showHistoryClearDialog();
 //                setSearchButtonTextVisible(true);
                 break;
             case R.id.fg_main_top_search_imv_clear:
@@ -504,12 +504,18 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
 
     @Override
     public void onCancelClick() {
-        historyClearDialog.dismiss();
+        if (historyClearDialog != null) {
+            historyClearDialog.dismiss();
+        }
+
     }
 
     @Override
     public void onConfirmClick(String content, String diameter) {
         mPresenter.clearSearchHistory();
-        historyClearDialog.dismiss();
+        if (historyClearDialog != null) {
+            historyClearDialog.dismiss();
+        }
+
     }
 }
