@@ -241,7 +241,9 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
         Object data = eventData.data;
         switch (code) {
             case EVENT_DATA_SEARCH_MERCHANT:
-                requestSearchData(DIRECTION_DOWN, null);
+                if (isAttachedView()) {
+                    getView().cancelSearchState();
+                }
                 break;
         }
     }

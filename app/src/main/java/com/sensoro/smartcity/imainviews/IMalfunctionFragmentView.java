@@ -8,6 +8,8 @@ import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
 import java.util.List;
 
 public interface IMalfunctionFragmentView extends IToast,IProgressDialog,IActivityIntent {
+    void cancelSearchState();
+
     boolean isSelectedDateLayoutVisible();
 
     void setSelectedDateLayoutVisible(boolean isVisible);

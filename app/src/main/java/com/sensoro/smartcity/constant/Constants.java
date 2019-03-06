@@ -42,6 +42,7 @@ public interface Constants {
     String PREFERENCE_KEY_DEVICE_NAME = "preference_key_device_name";
     String PREFERENCE_KEY_DEVICE_NUM = "preference_key_device_num";
     String PREFERENCE_KEY_DEVICE_PHONE = "preference_key_device_phone";
+    String PREFERENCE_KEY_VERSION_CODE = "preference_key_version_code";
     String INPUT = "INPUT";
     //    int LEFT_MENU_ICON_UNSELECT[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm, R.mipmap.ic_menu_switch,
 //            R.mipmap.ic_menu_location, R.mipmap.ic_menu_location};

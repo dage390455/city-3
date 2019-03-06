@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -15,7 +14,6 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ISplashActivityView;
 import com.sensoro.smartcity.presenter.SplashActivityPresenter;
-import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
 
 import java.util.Locale;
@@ -26,9 +24,8 @@ public class SplashActivity extends BaseActivity<ISplashActivityView, SplashActi
         checkActivity();
         super.setContentView(R.layout.activity_splash);
         TextView tvBottom = findViewById(R.id.ac_splash_tv_bottom);
-        tvBottom.setText(String.format(Locale.ROOT,"Copyright \u00a9 %s SENSORO",DateUtil.getStrTime_yy(System.currentTimeMillis())));
+        tvBottom.setText(String.format(Locale.ROOT, "Copyright \u00a9 %s SENSORO", DateUtil.getStrTime_yy(System.currentTimeMillis())));
         mPresenter.initData(mActivity);
-
     }
 
     @Override

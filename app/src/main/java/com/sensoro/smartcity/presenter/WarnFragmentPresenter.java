@@ -377,7 +377,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                     @Override
                     public void run() {
                         if (isAttachedView()) {
-                            requestSearchData(DIRECTION_DOWN, null);
+                            getView().cancelSearchData();
                         }
                     }
                 });

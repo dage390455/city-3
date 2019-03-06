@@ -19,6 +19,7 @@ import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.push.SensoroPushIntentService;
 import com.sensoro.smartcity.push.SensoroPushService;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.MyPermissionManager;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -60,6 +61,18 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
             }
+            //检验版本信息
+            int saveVersionCode = PreferencesHelper.getInstance().getSaveVersionCode();
+            if (saveVersionCode == -1) {
+                openLogin();
+                return;
+            }
+            int currentVersionCode = AppUtils.getVersionCode(mContext);
+            if (currentVersionCode > saveVersionCode) {
+                openLogin();
+                return;
+            }
+            //TODO 做版本校验
             if (TextUtils.isEmpty(sessionID)) {
                 openLogin();
                 return;

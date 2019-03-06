@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface IWarnFragmentView extends IToast, IActivityIntent, IProgressDialog {
+    void cancelSearchData();
+
     void updateAlarmListAdapter(List<DeviceAlarmLogInfo> deviceAlarmLogInfoList);
 
     void showAlarmPopupView();

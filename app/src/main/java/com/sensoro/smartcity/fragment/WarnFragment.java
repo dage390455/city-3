@@ -431,15 +431,19 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
                 mPresenter.requestSearchData(DIRECTION_DOWN, text);
                 break;
             case R.id.tv_top_search_alarm_search_cancel:
-                doCancelSearch();
-                setSearchHistoryVisible(false);
-                AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), fgMainWarnEtSearch);
+                cancelSearchData();
                 break;
             case R.id.alarm_return_top:
                 fgMainWarnRcContent.smoothScrollToPosition(0);
                 mReturnTopImageView.setVisibility(View.GONE);
                 break;
         }
+    }
+    @Override
+    public void cancelSearchData() {
+        doCancelSearch();
+        setSearchHistoryVisible(false);
+        AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), fgMainWarnEtSearch);
     }
 
 

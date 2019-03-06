@@ -211,6 +211,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             openLogin();
             return;
         }
+        //保存一遍当前的版本信息
+        PreferencesHelper.getInstance().saveCurrentVersionCode(AppUtils.getVersionCode(mContext));
         initViewPager();
         mHandler.postDelayed(new Runnable() {
             @Override

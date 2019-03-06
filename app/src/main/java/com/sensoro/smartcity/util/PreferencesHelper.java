@@ -594,4 +594,31 @@ public final class PreferencesHelper implements Constants {
         }
     }
 
+    /**
+     * 获取存储的版本号
+     *
+     * @return
+     */
+    public int getSaveVersionCode() {
+        try {
+            SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_KEY_VERSION_CODE, Context
+                    .MODE_PRIVATE);
+            return sp.getInt(PREFERENCE_KEY_VERSION_CODE, -1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    /**
+     * 保存当前的版本号
+     *
+     * @param code
+     */
+    public void saveCurrentVersionCode(int code) {
+        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_KEY_VERSION_CODE, Context
+                .MODE_PRIVATE);
+        sp.edit().putInt(PREFERENCE_KEY_VERSION_CODE, code).apply();
+    }
+
 }

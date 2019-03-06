@@ -301,10 +301,7 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
                 mPresenter.requestSearchData(DIRECTION_DOWN, text);
                 break;
             case R.id.tv_top_search_alarm_search_cancel:
-                doCancelSearch();
-                setSearchHistoryVisible(false);
-//                setSearchButtonTextVisible(false);
-                AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), fgMainTopSearchEtSearch);
+                cancelSearchState();
                 break;
             case R.id.alarm_return_top:
                 fgMainMalfunctionRcContent.smoothScrollToPosition(0);
@@ -322,6 +319,14 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
                 break;
 
         }
+    }
+
+    @Override
+    public void cancelSearchState() {
+        doCancelSearch();
+        setSearchHistoryVisible(false);
+//                setSearchButtonTextVisible(false);
+        AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), fgMainTopSearchEtSearch);
     }
 
     private void doCancelSearch() {
@@ -362,7 +367,8 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
 
     @Override
     public void onFragmentStart() {
-        mPresenter.requestSearchData(DIRECTION_DOWN, null);
+        String text = fgMainTopSearchEtSearch.getText().toString();
+        mPresenter.requestSearchData(DIRECTION_DOWN, text);
     }
 
     @Override
