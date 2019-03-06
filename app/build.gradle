@@ -276,5 +276,5 @@ dependencies {
 }
 //获取编译时间
 static def releaseTime() {
-    return new Date().format("MM/dd hh:mm:ss", TimeZone.getTimeZone("UTC"))
+    return new Date().format("MM-dd hh:mm:ss", TimeZone.getTimeZone("UTC"))
 }
