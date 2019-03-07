@@ -35,7 +35,8 @@ public interface Constants {
     String PREFERENCE_KEY_DEPLOY_NAME_ADDRESS = "preference_key_deploy_name_address";
     String PREFERENCE_KEY_DEPLOY_WE_CHAT_RELATION = "preference_key_deploy_we_chat_relation";
     String PREFERENCE_KEY_DEPLOY_TAG = "preference_key_deploy_tag";
-    String PREFERENCE_KEY_DEPLOY_ALARM_CONTACT = "preference_key_deploy_alarm_contact";
+    String PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_NAME = "preference_key_deploy_alarm_contact_name";
+    String PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_PHONE = "preference_key_deploy_alarm_contact_phone";
     String PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES = "preference_key_local_devices_mergetypes";
     //
     String PREFERENCE_KEY_DEPLOY_PHONE = "preference_key_deploy_phone";

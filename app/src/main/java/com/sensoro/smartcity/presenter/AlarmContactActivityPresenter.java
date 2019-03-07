@@ -3,10 +3,8 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
-import android.view.View;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.DeployManualActivity;
 import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -15,7 +13,6 @@ import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.RegexUtils;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -28,6 +25,7 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
     private Activity mContext;
     private final List<DeployContactModel> deployContactModelList = new ArrayList<>();
     private ArrayList<String> mHistoryKeywords = new ArrayList<>();
+    private int mStatus = -1;
 
     @Override
     public void initData(Context context) {
@@ -41,11 +39,6 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
                 getView().setNameAndPhone(deployContactModel.name, deployContactModel.phone);
             }
 
-        }
-        String history = PreferencesHelper.getInstance().getDeployAlarmContactHistory();
-        if (!TextUtils.isEmpty(history)) {
-            mHistoryKeywords.clear();
-            mHistoryKeywords.addAll(Arrays.asList(history.split(",")));
         }
         getView().updateHistoryData(mHistoryKeywords);
         //TODO 目前只支持一个联系人
@@ -151,7 +144,7 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
 //            getView().updateAdapter(mNameHistoryKeywords, mPhoneHistoryKeywords);
             deployContactModelList.clear();
             //保存标签
-            save(String.format(Locale.ROOT, "%s#%s", name, phone));
+            save(name,phone);
             DeployContactModel deployContactModel = new DeployContactModel();
             deployContactModel.name = name;
             deployContactModel.phone = phone;
@@ -172,10 +165,22 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
     }
 
 
-    private void save(String text) {
-        List<String> list = PreferencesSaveAnalyzer.handleDeployRecord(1, text);
-        mHistoryKeywords.clear();
-        mHistoryKeywords.addAll(list);
+    private void save(String name, String phone) {
+        List<String> nameList = PreferencesSaveAnalyzer.handleDeployRecord(1, name);
+        List<String> phoneList = PreferencesSaveAnalyzer.handleDeployRecord(4, phone);
+//        mHistoryKeywords.clear();
+//        if (mStatus != -1) {
+//            switch (mStatus){
+//                case 1:
+//                    mHistoryKeywords.addAll(list);
+//                    break;
+//                case 2:
+//                    mHistoryKeywords.addAll(list);
+//                    break;
+//            }
+//        }
+
+
 //        String oldText = PreferencesHelper.getInstance().getDeployAlarmContactHistory();
 //        if (!TextUtils.isEmpty(text)) {
 //            if (mHistoryKeywords.contains(text)) {
@@ -217,10 +222,63 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
     }
 
     public void clearTag() {
-        PreferencesSaveAnalyzer.clearAllData(1);
+        if (mStatus != -1) {
+            switch (mStatus) {
+                case 0:
+                    PreferencesSaveAnalyzer.clearAllData(1);
+                    break;
+                case 1:
+                    PreferencesSaveAnalyzer.clearAllData(4);
+                    break;
+            }
+        }
+
         mHistoryKeywords.clear();
         if (isAttachedView()) {
             getView().updateHistoryData(mHistoryKeywords);
+        }
+    }
+
+    /**
+     * 判断应该展示姓名还是电话的历史记录
+     * @param status 0 姓名 1 电话
+     */
+    public void updateStatus(int status) {
+        mStatus = status;
+        mHistoryKeywords.clear();
+        switch (status){
+            case 0:
+                String name = PreferencesHelper.getInstance().getDeployAlarmContactNameHistory();
+                if (!TextUtils.isEmpty(name)) {
+                    mHistoryKeywords.addAll(Arrays.asList(name.split(",")));
+                }
+                getView().updateHistoryData(mHistoryKeywords);
+                break;
+            case 1:
+                String phone = PreferencesHelper.getInstance().getDeployAlarmContactPhoneHistory();
+                if (!TextUtils.isEmpty(phone)) {
+                    mHistoryKeywords.addAll(Arrays.asList(phone.split(",")));
+                }
+                getView().updateHistoryData(mHistoryKeywords);
+                break;
+        }
+    }
+
+    public void updateText(String content) {
+        if (mStatus != -1) {
+            switch (mStatus) {
+                case 0:
+                    if (isAttachedView()) {
+                        getView().setName(content);
+                    }
+
+                    break;
+                case 1:
+                    if (isAttachedView()) {
+                        getView().setPhone(content);
+                    }
+                    break;
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -74,7 +75,7 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
         initTitle();
         initRcHistory();
         initClearHistoryDialog();
-//        initEtWatcher();
+        initEtWatcher();
 
     }
 
@@ -88,37 +89,20 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
     }
 
     private void initEtWatcher() {
-        acNameAddressEtAlarmContactName.addTextChangedListener(new TextWatcher() {
+        acNameAddressEtAlarmContactName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                mPresenter.checkCanSave(s.toString(),acNameAddressEtAlarmContactPhone.getText().toString());
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    mPresenter.updateStatus(0);
+                }
             }
         });
-
-        acNameAddressEtAlarmContactPhone.addTextChangedListener(new TextWatcher() {
+        acNameAddressEtAlarmContactPhone.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                mPresenter.checkCanSave(acNameAddressEtAlarmContactName.getText().toString(),s.toString());
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    mPresenter.updateStatus(1);
+                }
             }
         });
     }
@@ -154,6 +138,16 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
         if (historyClearDialog != null) {
             historyClearDialog.show();
         }
+    }
+
+    @Override
+    public void setName(String name) {
+        acNameAddressEtAlarmContactName.setText(name);
+    }
+
+    @Override
+    public void setPhone(String phone) {
+        acNameAddressEtAlarmContactPhone.setText(phone);
     }
 
     private void initRcContent() {
@@ -238,8 +232,7 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
     @Override
     public void onItemClick(View view, int position) {
         String s = mHistoryAdapter.getSearchHistoryList().get(position);
-        String[] split = s.split("#");
-        setNameAndPhone(split[0],split[1]);
+        mPresenter.updateText(s);
     }
 
     @Override

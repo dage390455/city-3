@@ -20,8 +20,9 @@ public class PreferencesSaveAnalyzer {
 
     /**
      * 存储标签
+     * ps:因为这里没用到3，所以就没写3，
      *
-     * @param status 0 部署名称地址 1 部署预警联系人 2 部署小程序账号
+     * @param status 0 部署名称地址 1 部署预警联系人姓名 2 部署小程序账号 4 部署预警联系人电话
      * @param text
      * @return
      */
@@ -91,10 +92,13 @@ public class PreferencesSaveAnalyzer {
                 PreferencesHelper.getInstance().saveDeployNameAddressHistory(content);
                 break;
             case 1:
-                PreferencesHelper.getInstance().saveDeployAlarmContactHistory(content);
+                PreferencesHelper.getInstance().saveDeployAlarmContactNameHistory(content);
                 break;
             case 2:
                 PreferencesHelper.getInstance().saveDeployWeChatRelationHistory(content);
+                break;
+            case 4:
+                PreferencesHelper.getInstance().saveDeployAlarmContactPhoneHistory(content);
                 break;
 
         }
@@ -107,10 +111,13 @@ public class PreferencesSaveAnalyzer {
                 oldText = PreferencesHelper.getInstance().getDeployNameAddressHistory();
                 break;
             case 1:
-                oldText = PreferencesHelper.getInstance().getDeployAlarmContactHistory();
+                oldText = PreferencesHelper.getInstance().getDeployAlarmContactNameHistory();
                 break;
             case 2:
                 oldText = PreferencesHelper.getInstance().getDeployWeChatRelationHistory();
+                break;
+            case 4:
+                oldText = PreferencesHelper.getInstance().getDeployAlarmContactPhoneHistory();
                 break;
 
         }
@@ -119,7 +126,7 @@ public class PreferencesSaveAnalyzer {
 
     /**
      * 清空历史记录
-     * @param status 0 部署名称地址 1 部署预警联系人 2 部署小程序账号 3 部署标签
+     * @param status 0 部署名称地址 1 部署预警联系人姓名 2 部署小程序账号 3 部署标签 4 部署预警联系人电话
      */
     public static void clearAllData(int status) {
         SharedPreferences sharedPreferences = SensoroCityApplication.getInstance().getSharedPreferences(Constants.PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE);
@@ -128,13 +135,15 @@ public class PreferencesSaveAnalyzer {
                 sharedPreferences.edit().putString(Constants.PREFERENCE_KEY_DEPLOY_NAME_ADDRESS, "").apply();
                 break;
             case 1:
-                sharedPreferences.edit().putString(Constants.PREFERENCE_KEY_DEPLOY_ALARM_CONTACT, "").apply();
+                sharedPreferences.edit().putString(Constants.PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_NAME, "").apply();
                 break;
             case 2:
                 sharedPreferences.edit().putString(Constants.PREFERENCE_KEY_DEPLOY_WE_CHAT_RELATION, "").apply();
                 break;
             case 3:
                 sharedPreferences.edit().putString(Constants.PREFERENCE_KEY_DEPLOY_TAG, "").apply();
+            case 4:
+                sharedPreferences.edit().putString(Constants.PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_PHONE, "").apply();
                 break;
         }
     }

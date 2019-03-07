@@ -13,4 +13,8 @@ public interface IAlarmContactActivityView extends IToast, IActivityIntent {
     void updateSaveStatus(boolean isEnable);
 
     void showHistoryClearDialog();
+
+    void setName(String name);
+
+    void setPhone(String phone);
 }

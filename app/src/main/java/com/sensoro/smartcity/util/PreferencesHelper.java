@@ -621,15 +621,27 @@ public final class PreferencesHelper implements Constants {
         sp.edit().putInt(PREFERENCE_KEY_VERSION_CODE, code).apply();
     }
 
-    public String getDeployAlarmContactHistory() {
-        return SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_DEPLOY_ALARM_CONTACT, null);
+    public String getDeployAlarmContactNameHistory() {
+        return SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_NAME, null);
     }
 
-    public boolean saveDeployAlarmContactHistory(String history) {
+    public boolean saveDeployAlarmContactNameHistory(String history) {
         if (TextUtils.isEmpty(history)) {
             return false;
         }
-        SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_ALARM_CONTACT, history).apply();
+        SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_NAME, history).apply();
+        return true;
+    }
+
+    public String getDeployAlarmContactPhoneHistory() {
+        return SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_PHONE, null);
+    }
+
+    public boolean saveDeployAlarmContactPhoneHistory(String history) {
+        if (TextUtils.isEmpty(history)) {
+            return false;
+        }
+        SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_PHONE, history).apply();
         return true;
     }
 }
