@@ -55,7 +55,6 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     private ZBarScannerView zBarScannerView;
     private ViewFinderView viewFinderView;
 
-
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_scan);
@@ -89,9 +88,7 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     @Override
     public boolean isActivityOverrideStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
-        immersionBar
-                .transparentStatusBar()
-                .init();
+        immersionBar.transparentStatusBar().init();
         return true;
     }
 
