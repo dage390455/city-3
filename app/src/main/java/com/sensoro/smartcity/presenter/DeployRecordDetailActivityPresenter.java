@@ -15,10 +15,13 @@ import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.server.bean.DeployRecordInfo;
+import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +59,17 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
             getView().setDeviceName(mDeployRecordInfo.getDeviceName());
             getView().updateTagList(mDeployRecordInfo.getTags());
             getView().setDeployTime(DateUtil.getStrTime_ymd_hm_ss(mDeployRecordInfo.getCreatedTime()));
-            getView().setPicCount(mActivity.getString(R.string.added) + mDeployRecordInfo.getDeployPics().size() + mActivity.getString(R.string.images));
+            getView().setForceDeployReason("测试强制部署原因");
+            List<String> deployPics = mDeployRecordInfo.getDeployPics();
+            if (deployPics != null && deployPics.size() > 0) {
+                ArrayList<ScenesData> list = new ArrayList<>();
+                for (String url : deployPics) {
+                    ScenesData scenesData = new ScenesData();
+                    scenesData.url = url;
+                    list.add(scenesData);
+                }
+                getView().updateDeployPic(list);
+            }
             ArrayList<DeployRecordInfo.NotificationBean> contacts = new ArrayList<>();
             if (mDeployRecordInfo.getNotification() != null) {
                 contacts.add(mDeployRecordInfo.getNotification());
@@ -74,7 +87,7 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
             }
             String deviceType = mDeployRecordInfo.getDeviceType();
             String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deviceType);
-            getView().setDeployDeviceRecordDeviceType(mActivity.getString(R.string.deploy_device_type) + ":" + deviceTypeName);
+            getView().setDeployDeviceRecordDeviceType(deviceTypeName);
             boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType);
             getView().setDeployDetailDeploySettingVisible(isFire);
             if (isFire) {
@@ -93,8 +106,27 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
 //                        }
                         Integer switchSpec = deployControlSettingData.getSwitchSpec();
                         if (switchSpec != null) {
-                            getView().setDeployDeviceDetailDeploySetting(String.format(Locale.CHINA, mActivity.getString(R.string.actual_overcurrent_threshold_format), switchSpec));
+                            getView().setDeployDeviceDetailDeploySetting(String.format(Locale.CHINA,"%sA", switchSpec));
                             return;
+                        }
+
+                        //线材
+                        Integer material = deployControlSettingData.getWireMaterial();
+                        if (material != null) {
+                            switch (material) {
+                                case 0:
+                                    getView().setDeployDeviceRecordMaterial(mActivity.getString(R.string.cu));
+                                    break;
+                                case 1:
+                                    getView().setDeployDeviceRecordMaterial(mActivity.getString(R.string.al));
+                                    break;
+                            }
+                        }
+
+                        //线径
+                        Double diameter = deployControlSettingData.getWireDiameter();
+                        if (diameter != null) {
+                            getView().setDeployDeviceRecordDiameter(diameter+"mm");
                         }
                     }
                 }
@@ -141,5 +173,26 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
         }
         intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
         getView().startAC(intent);
+    }
+
+    public void toPhotoDetail(int position, List<ScenesData> images) {
+        if (images.size() > 0) {
+            ArrayList<ImageItem> items = new ArrayList<>();
+            for (ScenesData scenesData : images) {
+                ImageItem imageItem = new ImageItem();
+                imageItem.isRecord = false;
+                imageItem.fromUrl = true;
+                imageItem.path = scenesData.url;
+                items.add(imageItem);
+            }
+            Intent intentPreview = new Intent(mActivity, ImagePreviewDelActivity.class);
+            intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, items);
+            intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
+            intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
+            intentPreview.putExtra(EXTRA_JUST_DISPLAY_PIC, true);
+            getView().startACForResult(intentPreview, REQUEST_CODE_PREVIEW);
+        } else {
+            getView().toastShort(mActivity.getString(R.string.no_photos_added));
+        }
     }
 }
