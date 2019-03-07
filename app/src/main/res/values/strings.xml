@@ -874,5 +874,8 @@
     <string name="mini_program_description">如遗忘，可邀请业主微信扫码或搜索SensoroCity进入微信查看</string>
     <string name="history_clear_all">清空</string>
     <string name="confirm_clear_history_record">确定清空输入记录</string>
+    <string name="deploy_result_device_number_sn">设备号</string>
+    <string name="reason">Reason</string>
+    <string name="modify_deploy_info">修改信息</string>
 
 </resources>

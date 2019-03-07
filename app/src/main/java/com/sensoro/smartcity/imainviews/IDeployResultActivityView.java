@@ -1,5 +1,7 @@
 package com.sensoro.smartcity.imainviews;
 
+import android.graphics.drawable.Drawable;
+
 import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IToast;
 
@@ -42,11 +44,13 @@ public interface IDeployResultActivityView extends IToast, IActivityIntent {
 
     void setResultSettingVisible(boolean isVisible);
 
-    void setArrowsLeftVisible(boolean isVisible);
-
     void setTitleText(String text);
 
     void setDeployResultHasSetting(String setting);
 
     void setDeployResultTvStateTextColor(int resColor);
+
+    void setDeployResultDividerVisible(boolean isVisible);
+
+    void setDeployResultContinueTextBackground(Drawable drawable);
 }

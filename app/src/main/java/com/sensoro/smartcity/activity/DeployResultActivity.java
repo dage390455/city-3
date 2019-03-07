@@ -1,10 +1,12 @@
 package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,54 +37,52 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     TextView acDeployResultTvStateMsg;
     @BindView(R.id.ac_deploy_result_tv_sn)
     TextView acDeployResultTvSn;
-    @BindView(R.id.ac_deploy_result_ll_sn)
-    LinearLayout acDeployResultLlSn;
+    @BindView(R.id.rl_ac_deploy_resul_sn)
+    RelativeLayout acDeployResultRlSn;
     @BindView(R.id.ac_deploy_result_tv_name)
     TextView acDeployResultTvName;
-    @BindView(R.id.ac_deploy_result_ll_name)
-    LinearLayout acDeployResultLlName;
+    @BindView(R.id.rl_ac_deploy_result_name)
+    RelativeLayout acDeployResultRlName;
     @BindView(R.id.ac_deploy_result_tv_address)
     TextView acDeployResultTvAddress;
-    @BindView(R.id.ac_deploy_result_ll_address)
-    LinearLayout acDeployResultLlAddress;
+    @BindView(R.id.rl_ac_deploy_result_address)
+    RelativeLayout acDeployResultRlAddress;
     @BindView(R.id.ac_deploy_result_ll_content)
     LinearLayout acDeployResultLlContent;
     @BindView(R.id.ac_deploy_result_tv_back_home)
     TextView acDeployResultTvBackHome;
     @BindView(R.id.ac_deploy_result_tv_continue)
     TextView acDeployResultTvContinue;
-    @BindView(R.id.ac_deploy_result_ll_contact)
-    LinearLayout acDeployResultTvLlContact;
+    @BindView(R.id.rl_ac_deploy_result_contact)
+    RelativeLayout acDeployResultTvRlContact;
     @BindView(R.id.ac_deploy_result_tv_contact)
     TextView acDeployResultTvContact;
-    @BindView(R.id.ac_deploy_result_ll_we_chat)
-    LinearLayout acDeployResultLlWeChat;
+    @BindView(R.id.rl_ac_deploy_result_we_chat)
+    RelativeLayout acDeployResultRlWeChat;
     @BindView(R.id.ac_deploy_result_tv_we_chat)
     TextView acDeployResultTvWeChat;
     @BindView(R.id.ac_deploy_result_tv_signal)
     TextView acDeployResultTvSignal;
-    @BindView(R.id.ac_deploy_result_ll_status)
-    LinearLayout acDeployResultLlStatus;
+    @BindView(R.id.rl_ac_deploy_result_status)
+    RelativeLayout acDeployResultRlStatus;
     @BindView(R.id.ac_deploy_result_tv_status)
     TextView acDeployResultTvStatus;
-    @BindView(R.id.ac_deploy_result_ll_recent_upload_time)
-    LinearLayout acDeployResultLlRecentUploadTime;
+    @BindView(R.id.rl_ac_deploy_result_recent_upload_time)
+    RelativeLayout acDeployResultRlRecentUploadTime;
     @BindView(R.id.ac_deploy_result_tv_recent_upload_time)
     TextView acDeployResultTvRecentUploadTime;
-    @BindView(R.id.ac_deploy_result_imv_arrows_left)
-    ImageView acDeployResultImvArrowsLeft;
     @BindView(R.id.ac_deploy_result_title)
     TextView acDeployResultTitle;
-    @BindView(R.id.ac_deploy_result_ll_title)
-    LinearLayout acDeployResultLlTitle;
     @BindView(R.id.ac_deploy_result_line)
     View acDeployResultLine;
+    @BindView(R.id.view_ac_deploy_result_divider)
+    View viewAcDeployResultDivider;
     @BindView(R.id.ac_deploy_result_bottom)
     LinearLayout acDeployResultBottom;
     @BindView(R.id.ac_deploy_result_tv_error_msg)
     TextView acDeployResultTvErrorMsg;
-    @BindView(R.id.ac_deploy_result_ll_setting)
-    LinearLayout acDeployResultLlSetting;
+    @BindView(R.id.rl_ac_deploy_result_setting)
+    RelativeLayout acDeployResultRlSetting;
     @BindView(R.id.ac_deploy_result_tv_setting)
     TextView acDeployResultTvSetting;
 
@@ -96,7 +96,7 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
 
     private void initView() {
         if (!AppUtils.isChineseLanguage()) {
-            acDeployResultLlWeChat.setVisibility(View.GONE);
+            acDeployResultRlWeChat.setVisibility(View.GONE);
         }
     }
 
@@ -109,27 +109,35 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     @Override
     public void refreshSignal(long updateTime, String signal) {
         String signal_text = null;
+        Drawable drawable = null;
         long time_diff = System.currentTimeMillis() - updateTime;
         if (signal != null && (time_diff < 2 * 60 * 1000)) {
             switch (signal) {
                 case "good":
-                    signal_text = mActivity.getString(R.string.signal_excellent);
-                    acDeployResultTvSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_good));
+                    signal_text = mActivity.getString(R.string.s_good);
+                    drawable = mActivity.getResources().getDrawable(R.drawable.signal_good);
                     break;
                 case "normal":
-                    signal_text = mActivity.getString(R.string.signal_good);
-                    acDeployResultTvSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_normal));
+                    signal_text = mActivity.getString(R.string.s_normal);
+                    drawable = mActivity.getResources().getDrawable(R.drawable.signal_normal);
                     break;
                 case "bad":
-                    signal_text = mActivity.getString(R.string.signal_weak);
-                    acDeployResultTvSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_bad));
+                    signal_text = mActivity.getString(R.string.s_bad);
+                    drawable = mActivity.getResources().getDrawable(R.drawable.signal_bad);
+                    break;
+                default:
+                    signal_text = mActivity.getString(R.string.s_bad);
+                    drawable = mActivity.getResources().getDrawable(R.drawable.signal_bad);
                     break;
             }
         } else {
-            signal_text = mActivity.getString(R.string.no_signal);
-            acDeployResultTvSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_none));
+            signal_text = mActivity.getString(R.string.s_none);
+            drawable = mActivity.getResources().getDrawable(R.drawable.signal_none);
         }
+
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
         acDeployResultTvSignal.setText(signal_text);
+        acDeployResultTvSignal.setCompoundDrawables(drawable,null,null,null);
     }
 
     @Override
@@ -149,21 +157,21 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
 
     @Override
     public void setNameTextView(String name) {
-        acDeployResultLlName.setVisibility(View.VISIBLE);
+        acDeployResultRlName.setVisibility(View.VISIBLE);
         acDeployResultTvName.setText(name);
     }
 
 
     @Override
     public void setContactTextView(String content) {
-        acDeployResultTvLlContact.setVisibility(View.VISIBLE);
+        acDeployResultTvRlContact.setVisibility(View.VISIBLE);
         acDeployResultTvContact.setText(content);
     }
 
     @Override
     public void setWeChatTextView(String content) {
         if (AppUtils.isChineseLanguage()) {
-            acDeployResultLlWeChat.setVisibility(View.VISIBLE);
+            acDeployResultRlWeChat.setVisibility(View.VISIBLE);
             acDeployResultTvWeChat.setText(content);
         }
 
@@ -171,19 +179,19 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
 
     @Override
     public void setStatusTextView(String status) {
-        acDeployResultLlStatus.setVisibility(View.VISIBLE);
+        acDeployResultRlStatus.setVisibility(View.VISIBLE);
         acDeployResultTvStatus.setText(status);
     }
 
     @Override
     public void setUpdateTextView(String update) {
-        acDeployResultLlRecentUploadTime.setVisibility(View.VISIBLE);
+        acDeployResultRlRecentUploadTime.setVisibility(View.VISIBLE);
         acDeployResultTvRecentUploadTime.setText(update);
     }
 
     @Override
     public void setAddressTextView(String address) {
-        acDeployResultLlAddress.setVisibility(View.VISIBLE);
+        acDeployResultRlAddress.setVisibility(View.VISIBLE);
         acDeployResultTvAddress.setText(address);
     }
 
@@ -195,13 +203,13 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
 
     @Override
     public void setUpdateTextViewVisible(boolean isVisible) {
-        acDeployResultLlRecentUploadTime.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        acDeployResultRlRecentUploadTime.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void setContactAndSignalVisible(boolean isVisible) {
 //        contactTextView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        acDeployResultTvLlContact.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        acDeployResultTvRlContact.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         acDeployResultTvSignal.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
@@ -232,13 +240,9 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
 
     @Override
     public void setResultSettingVisible(boolean isVisible) {
-        acDeployResultLlSetting.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        acDeployResultRlSetting.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
-    @Override
-    public void setArrowsLeftVisible(boolean isVisible) {
-        acDeployResultImvArrowsLeft.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-    }
 
     @Override
     public void setTitleText(String text) {
@@ -253,6 +257,16 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     @Override
     public void setDeployResultTvStateTextColor(int resColor) {
         acDeployResultTvState.setTextColor(mActivity.getResources().getColor(resColor));
+    }
+
+    @Override
+    public void setDeployResultDividerVisible(boolean isVisible) {
+        viewAcDeployResultDivider.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setDeployResultContinueTextBackground(Drawable drawable) {
+        acDeployResultTvContinue.setBackground(drawable);
     }
 
 
@@ -291,7 +305,7 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     }
 
 
-    @OnClick({R.id.ac_deploy_result_tv_back_home, R.id.ac_deploy_result_tv_continue, R.id.ac_deploy_result_imv_arrows_left})
+    @OnClick({R.id.ac_deploy_result_tv_back_home, R.id.ac_deploy_result_tv_continue})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_deploy_result_tv_back_home:
@@ -299,9 +313,6 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
                 break;
             case R.id.ac_deploy_result_tv_continue:
                 mPresenter.gotoContinue();
-                break;
-            case R.id.ac_deploy_result_imv_arrows_left:
-                finishAc();
                 break;
         }
     }
