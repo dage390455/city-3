@@ -1,12 +1,13 @@
 package com.sensoro.smartcity.imainviews;
 
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
+import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IToast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public interface IDeployMonitorLocalCheckFragmentView extends IToast {
+public interface IDeployMonitorLocalCheckFragmentView extends IToast, IActivityIntent {
     void updatePvCustomOptions(List<String> list);
 
     void setDeviceSn(String sn);
@@ -30,4 +31,12 @@ public interface IDeployMonitorLocalCheckFragmentView extends IToast {
     void updateBtnStatus(boolean canConfig);
 
     void showOverCurrentDialog(ArrayList<EarlyWarningthresholdDialogUtilsAdapterModel> overCurrentDataList);
+
+    void setNotOwnVisible(boolean notOwn);
+
+    void showDeployMonitorCheckDialogUtils(int state, boolean hasForce);
+
+    void updateDeployMonitorCheckDialogUtils(int state, String text);
+
+    void dismissDeployMonitorCheckDialogUtils();
 }

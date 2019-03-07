@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -26,6 +27,7 @@ import com.sensoro.smartcity.imainviews.IDeployMonitorLocalCheckFragmentView;
 import com.sensoro.smartcity.model.MaterialValueModel;
 import com.sensoro.smartcity.presenter.DeployMonitorLocalCheckFragmentPresenter;
 import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.smartcity.widget.dialog.DeployMonitorCheckDialogUtils;
 import com.sensoro.smartcity.widget.dialog.EarlyWarningThresholdDialogUtils;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
@@ -33,11 +35,12 @@ import com.sensoro.smartcity.widget.toast.SensoroToast;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitorLocalCheckFragmentView, DeployMonitorLocalCheckFragmentPresenter> implements IDeployMonitorLocalCheckFragmentView {
+public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitorLocalCheckFragmentView, DeployMonitorLocalCheckFragmentPresenter> implements IDeployMonitorLocalCheckFragmentView, DeployMonitorCheckDialogUtils.OnDeployCheckDialogListener {
 
     @BindView(R.id.tv_fg_deploy_local_button)
     TextView tvFgDeployLocalButton;
@@ -81,6 +84,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
     FrameLayout flDeployLocalCheckNotOwn;
     private EarlyWarningThresholdDialogUtils overCurrentDialog;
     private OptionsPickerView pvCustomOptions;
+    private DeployMonitorCheckDialogUtils deployMonitorCheckDialogUtils;
     private final List<String> materials = new ArrayList<>();
 
     @Override
@@ -92,6 +96,8 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
     private void initView() {
         materials.add(getString(R.string.cu));
         materials.add(getString(R.string.al));
+        deployMonitorCheckDialogUtils = new DeployMonitorCheckDialogUtils(mRootFragment.getActivity());
+        deployMonitorCheckDialogUtils.setOnDeployCheckDialogListener(this);
         overCurrentDialog = new EarlyWarningThresholdDialogUtils(mRootFragment.getActivity(), mRootFragment.getString(R.string.over_current));
         initCustomOptionPicker();
         etFgDeployLocalCheckSwitchSpec.addTextChangedListener(new TextWatcher() {
@@ -288,24 +294,22 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
                     }
                     int min = Math.min(integer, in);
                     tvDeployLocalCheckCurrentValue.setText(String.format(Locale.CHINESE, "%dA", min));
-                    updateBtnStatus(true);
                 }
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 toastShort(getString(R.string.enter_the_correct_number_format));
-                updateBtnStatus(false);
             }
         } else {
             tvDeployLocalCheckCurrentValue.setText("");
-            updateBtnStatus(false);
         }
+        updateBtnStatus(mPresenter.canDoOneNextTest());
     }
 
     @Override
     public void updateBtnStatus(boolean canConfig) {
         tvFgDeployLocalButton.setEnabled(canConfig);
+        tvFgDeployLocalButton.setClickable(canConfig);
         tvFgDeployLocalButton.setBackgroundResource(canConfig ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_solid_df_corner);
-
     }
 
     @Override
@@ -325,14 +329,38 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
         }
     }
 
+    @Override
+    public void setNotOwnVisible(boolean notOwn) {
+        flDeployLocalCheckNotOwn.setVisibility(notOwn ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void showDeployMonitorCheckDialogUtils(int state, boolean hasForce) {
+        deployMonitorCheckDialogUtils.show();
+    }
+
+    @Override
+    public void updateDeployMonitorCheckDialogUtils(int state, String text) {
+        //TODO 更新状态 方法需要扩展
+        deployMonitorCheckDialogUtils.show();
+    }
+
+    @Override
+    public void dismissDeployMonitorCheckDialogUtils() {
+        deployMonitorCheckDialogUtils.dismiss();
+    }
+
     @OnClick({R.id.tv_fg_deploy_local_button, R.id.ll_fg_deploy_local_check_location, R.id.ll_fg_deploy_local_check_switch_spec, R.id.ll_fg_deploy_local_check_wire_material, R.id.ll_fg_deploy_local_check_wire_diameter, R.id.iv_deploy_local_check_current_info})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_fg_deploy_local_button:
+                mPresenter.doCheckDeployNext();
                 break;
             case R.id.ll_fg_deploy_local_check_location:
+                mPresenter.doDeployMap();
                 break;
             case R.id.ll_fg_deploy_local_check_switch_spec:
+                etFgDeployLocalCheckSwitchSpec.requestFocus();
                 break;
             case R.id.ll_fg_deploy_local_check_wire_material:
                 AppUtils.showDialog(mRootFragment.getActivity(), new SelectDialog.SelectDialogListener() {
@@ -357,6 +385,9 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
         if (overCurrentDialog != null) {
             overCurrentDialog.destory();
         }
+        if (deployMonitorCheckDialogUtils != null) {
+            deployMonitorCheckDialogUtils.destroy();
+        }
         super.onDestroyView();
     }
 
@@ -367,6 +398,46 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
 
     @Override
     public void toastLong(String msg) {
+
+    }
+
+    @Override
+    public void startAC(Intent intent) {
+        Objects.requireNonNull(mRootFragment.getActivity()).startActivity(intent);
+    }
+
+    @Override
+    public void finishAc() {
+        Objects.requireNonNull(mRootFragment.getActivity()).finish();
+    }
+
+    @Override
+    public void startACForResult(Intent intent, int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int resultCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int resultCode, Intent data) {
+
+    }
+
+    @Override
+    public void onClickTest() {
+        mPresenter.doCheckDeployTest();
+    }
+
+    @Override
+    public void onClickForceUpload() {
+        mPresenter.doForceUpload();
+    }
+
+    @Override
+    public void onClickDeviceDetailInfo() {
 
     }
 }

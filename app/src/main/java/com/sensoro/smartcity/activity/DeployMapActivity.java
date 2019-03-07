@@ -52,7 +52,10 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
     private void iniView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeTextTitleTvTitle.setText(R.string.deploy_location);
-        includeTextTitleTvSubtitle.setVisibility(View.GONE);
+        includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
+        includeTextTitleTvSubtitle.setText(mActivity.getString(R.string.save));
+        includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_29c093));
+
         mActivity.getWindow().getDecorView().postInvalidate();
     }
 
@@ -205,7 +208,7 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
 
     }
 
-    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.bt_deploy_map_signal, R.id.tv_deploy_map_save, R.id.iv_deploy_map_location})
+    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.bt_deploy_map_signal, R.id.tv_deploy_map_save, R.id.iv_deploy_map_location,R.id.include_text_title_tv_subtitle})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
@@ -214,6 +217,7 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
             case R.id.bt_deploy_map_signal:
                 mPresenter.refreshSignal();
                 break;
+            case R.id.include_text_title_tv_subtitle:
             case R.id.tv_deploy_map_save:
                 mPresenter.doSaveLocation();
                 break;
