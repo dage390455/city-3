@@ -38,7 +38,6 @@ import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
-import com.sensoro.smartcity.widget.divider.BottomNoDividerItemDecoration;
 import com.sensoro.smartcity.widget.divider.CustomDivider;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
@@ -247,7 +246,7 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
         mContentAdapter.setOnClickListener(new RecycleViewItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                mPresenter.doRecorDetail(mContentAdapter.getItem(position));
+                mPresenter.doRecordDetail(mContentAdapter.getItem(position));
             }
         });
         acDeployRecordRcContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
