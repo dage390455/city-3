@@ -10,6 +10,7 @@
       <module fileurl="file://$PROJECT_DIR$/ocr_ui/ocr_ui.iml" filepath="$PROJECT_DIR$/ocr_ui/ocr_ui.iml" />
       <module fileurl="file://$PROJECT_DIR$/pickerview/pickerview.iml" filepath="$PROJECT_DIR$/pickerview/pickerview.iml" />
       <module fileurl="file://$PROJECT_DIR$/sensor-kit/sensor-kit.iml" filepath="$PROJECT_DIR$/sensor-kit/sensor-kit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smartcity_P.iml" filepath="$PROJECT_DIR$/smartcity_P.iml" />
       <module fileurl="file://$PROJECT_DIR$/wheelview/wheelview.iml" filepath="$PROJECT_DIR$/wheelview/wheelview.iml" />
       <module fileurl="file://$PROJECT_DIR$/zbar/zbar.iml" filepath="$PROJECT_DIR$/zbar/zbar.iml" />
       <module fileurl="file://$PROJECT_DIR$/zbar-sample/zbar-sample.iml" filepath="$PROJECT_DIR$/zbar-sample/zbar-sample.iml" />
