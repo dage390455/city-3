@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,24 +14,25 @@ import android.widget.Toast;
 import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IScanActivityView;
 import com.sensoro.smartcity.presenter.ScanActivityPresenter;
-import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.ViewFinderView;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.bingoogolapple.qrcode.core.BarcodeType;
-import cn.bingoogolapple.qrcode.core.QRCodeView;
-import cn.bingoogolapple.qrcode.zbar.ZBarView;
+import cn.szx.simplescanner.zbar.BarcodeFormat;
+import cn.szx.simplescanner.zbar.Result;
+import cn.szx.simplescanner.zbar.ZBarScannerView;
 
 public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPresenter> implements
-        IScanActivityView, QRCodeView.Delegate {
+        IScanActivityView, ZBarScannerView.ResultHandler {
     @BindView(R.id.ac_scan_qr_view)
-    ZBarView acScanQrView;
+    FrameLayout scanQrViewRoot;
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
     @BindView(R.id.include_text_title_tv_title)
@@ -50,7 +52,8 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     private boolean isFlashOn;
     private ProgressUtils mProgressUtils;
     private ImmersionBar immersionBar;
-
+    private ZBarScannerView zBarScannerView;
+    private ViewFinderView viewFinderView;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -67,12 +70,13 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
         includeTextTitleTvTitle.setTextColor(Color.WHITE);
         includeTextTitleTvSubTitle.setVisibility(View.GONE);
         includeTextTitleClRoot.setBackgroundColor(Color.TRANSPARENT);
-        acScanQrView.setDelegate(this);
-        acScanQrView.getScanBoxView().setOnlyDecodeScanBoxArea(false);
-        acScanQrView.getScanBoxView().setShowLocationPoint(false);
-        acScanQrView.getScanBoxView().setAutoZoom(true);
-        acScanQrView.changeToScanQRCodeStyle(); // 切换成扫描二维码样式
-        acScanQrView.setType(BarcodeType.ONLY_QR_CODE, null); // 只识别 QR_CODE
+        //
+        viewFinderView = new ViewFinderView(mActivity);
+        zBarScannerView = new ZBarScannerView(mActivity, viewFinderView, this);
+        scanQrViewRoot.addView(zBarScannerView);
+        ArrayList<BarcodeFormat> formats = new ArrayList<>(1);
+        formats.add(BarcodeFormat.QRCODE);
+        zBarScannerView.setFormats(formats);
 
     }
 
@@ -84,31 +88,24 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     @Override
     public boolean isActivityOverrideStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
-        immersionBar
-                .transparentStatusBar()
-                .init();
+        immersionBar.transparentStatusBar().init();
         return true;
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        acScanQrView.startCamera(); // 打开后置摄像头开始预览，但是并未开始识别
-//        mZBarView.startCamera(Camera.CameraInfo.CAMERA_FACING_FRONT); // 打开前置摄像头开始预览，但是并未开始识别
-        startScan();
     }
 
 
     @Override
     protected void onStop() {
         super.onStop();
-        stopScan();
     }
 
     @Override
     protected void onDestroy() {
         mProgressUtils.destroyProgress();
-        acScanQrView.onDestroy();
 
         if (immersionBar != null) {
             immersionBar.destroy();
@@ -172,63 +169,20 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
                 mPresenter.openSNTextAc();
                 break;
             case R.id.ac_scan_tv_open_flashlight:
-                acScanQrView.getCameraPreview().surfaceCreated(null);
-                if (isFlashOn) {
-                    acScanQrView.closeFlashlight();
-                } else {
-                    acScanQrView.openFlashlight();
-                }
                 isFlashOn = !isFlashOn;
+                zBarScannerView.setFlash(isFlashOn);
                 break;
         }
     }
 
     @Override
-    public void onScanQRCodeSuccess(String result) {
-        mPresenter.processResult(result);
-    }
-
-    @Override
-    public void onCameraAmbientBrightnessChanged(boolean isDark) {
-        if (mPresenter.scanType != Constants.TYPE_SCAN_LOGIN) {
-            try {
-                // 这里是通过修改提示文案来展示环境是否过暗的状态，接入方也可以根据 isDark 的值来实现其他交互效果
-                String tipText = acScanQrView.getScanBoxView().getTipText();
-                String ambientBrightnessTip = "\n" + mActivity.getString(R.string.the_environment_is_too_dark_please_turn_on_the_flash);
-                if (isDark) {
-                    if (!tipText.contains(ambientBrightnessTip)) {
-                        acScanQrView.getScanBoxView().setTipText(tipText + ambientBrightnessTip);
-                    }
-                } else {
-                    if (tipText.contains(ambientBrightnessTip)) {
-                        int endIndex = tipText.indexOf(ambientBrightnessTip);
-                        tipText = tipText.substring(0, endIndex);
-                        acScanQrView.getScanBoxView().setTipText(tipText);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    public void onScanQRCodeOpenCameraError() {
-        try {
-            LogUtils.loge(this, "扫描出错！！！！！！！");
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
-    }
-
-    @Override
     public void startScan() {
-        acScanQrView.startSpotAndShowRect();
+        zBarScannerView.getOneMoreFrame();
     }
 
     @Override
     public void stopScan() {
-        acScanQrView.stopCamera();
+        zBarScannerView.stopCamera();
     }
 
     @Override
@@ -243,8 +197,36 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
 
     @Override
     public void updateQrTipText(String tip) {
-        //源码没有提供修改的接口，xml中直接修改成了对准二维码，扫描
-        acScanQrView.getScanBoxView().setQRCodeTipText(tip);
+        viewFinderView.setTipText(tip);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        zBarScannerView.startCamera();//打开系统相机，并进行基本的初始化
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        zBarScannerView.stopCamera();//释放相机资源等各种资源
+    }
+
+    @Override
+    public void handleResult(Result rawResult) {
+        String contents = rawResult.getContents();
+        mPresenter.processResult(contents);
+//        toastShort("Contents = " + contents + ", Format = " + rawResult.getBarcodeFormat().getName());
+//        // Note:
+//        // * Wait 2 seconds to resume the preview.
+//        // * On older devices continuously stopping and resuming camera preview can result in freezing the app.
+//        // * I don't know why this is the case but I don't have the time to figure out.
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                startScan();
+//            }
+//        }, 2000);
+    }
 }

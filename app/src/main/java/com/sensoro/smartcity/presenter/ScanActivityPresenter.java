@@ -133,8 +133,6 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
 
     public void processResult(String result) {
         playVoice();
-//        getView().toastShort(result);
-//        getView().finishAc();
         getView().showProgressDialog();
         DeployAnalyzerUtils.INSTANCE.handlerDeployAnalyzerResult(this, scanType, result, mContext, mTaskInfo, mDeviceDetail, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
             @Override
