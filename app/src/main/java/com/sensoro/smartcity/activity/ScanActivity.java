@@ -3,9 +3,9 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,6 +17,7 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IScanActivityView;
 import com.sensoro.smartcity.presenter.ScanActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.ViewFinderView;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.ArrayList;
@@ -24,14 +25,14 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import me.dm7.barcodescanner.zbar.BarcodeFormat;
-import me.dm7.barcodescanner.zbar.Result;
-import me.dm7.barcodescanner.zbar.ZBarScannerView;
+import cn.szx.simplescanner.zbar.BarcodeFormat;
+import cn.szx.simplescanner.zbar.Result;
+import cn.szx.simplescanner.zbar.ZBarScannerView;
 
 public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPresenter> implements
         IScanActivityView, ZBarScannerView.ResultHandler {
     @BindView(R.id.ac_scan_qr_view)
-    ZBarScannerView acScanQrView;
+    FrameLayout scanQrViewRoot;
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
     @BindView(R.id.include_text_title_tv_title)
@@ -51,6 +52,8 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     private boolean isFlashOn;
     private ProgressUtils mProgressUtils;
     private ImmersionBar immersionBar;
+    private ZBarScannerView zBarScannerView;
+    private ViewFinderView viewFinderView;
 
 
     @Override
@@ -68,10 +71,14 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
         includeTextTitleTvTitle.setTextColor(Color.WHITE);
         includeTextTitleTvSubTitle.setVisibility(View.GONE);
         includeTextTitleClRoot.setBackgroundColor(Color.TRANSPARENT);
-        acScanQrView.setAutoFocus(true);
+        //
+        viewFinderView = new ViewFinderView(mActivity);
+        zBarScannerView = new ZBarScannerView(mActivity, viewFinderView, this);
+        scanQrViewRoot.addView(zBarScannerView);
         ArrayList<BarcodeFormat> formats = new ArrayList<>(1);
         formats.add(BarcodeFormat.QRCODE);
-        acScanQrView.setFormats(formats);
+        zBarScannerView.setFormats(formats);
+
     }
 
     @Override
@@ -91,17 +98,12 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     @Override
     protected void onStart() {
         super.onStart();
-        acScanQrView.setResultHandler(this);
-//        acScanQrView.startCamera(); // 打开后置摄像头开始预览，但是并未开始识别
-//        mZBarView.startCamera(Camera.CameraInfo.CAMERA_FACING_FRONT); // 打开前置摄像头开始预览，但是并未开始识别
-        acScanQrView.startCamera();
     }
 
 
     @Override
     protected void onStop() {
         super.onStop();
-        stopScan();
     }
 
     @Override
@@ -171,20 +173,19 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
                 break;
             case R.id.ac_scan_tv_open_flashlight:
                 isFlashOn = !isFlashOn;
-                acScanQrView.setFlash(isFlashOn);
+                zBarScannerView.setFlash(isFlashOn);
                 break;
         }
     }
 
     @Override
     public void startScan() {
-//        acScanQrView.startSpotAndShowRect();
-        acScanQrView.resumeCameraPreview(ScanActivity.this);
+        zBarScannerView.getOneMoreFrame();
     }
 
     @Override
     public void stopScan() {
-        acScanQrView.stopCamera();
+        zBarScannerView.stopCamera();
     }
 
     @Override
@@ -199,8 +200,19 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
 
     @Override
     public void updateQrTipText(String tip) {
-        //源码没有提供修改的接口，xml中直接修改成了对准二维码，扫描
-//        acScanQrView.getScanBoxView().setQRCodeTipText(tip);
+        viewFinderView.setTipText(tip);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        zBarScannerView.startCamera();//打开系统相机，并进行基本的初始化
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        zBarScannerView.stopCamera();//释放相机资源等各种资源
     }
 
     @Override
@@ -212,26 +224,13 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
 //        // * Wait 2 seconds to resume the preview.
 //        // * On older devices continuously stopping and resuming camera preview can result in freezing the app.
 //        // * I don't know why this is the case but I don't have the time to figure out.
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                acScanQrView.resumeCameraPreview(ScanActivity.this);
-            }
-        }, 2000);
-//        finishAc();
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                startScan();
+//            }
+//        }, 2000);
     }
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        acScanQrView.startCamera();
-//    }
-//
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        acScanQrView.stopCamera();
-//    }
 
 }

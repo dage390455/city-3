@@ -33,15 +33,10 @@
     <!--app:qrcv_toolbarHeight="56dp"-->
     <!--app:qrcv_topOffset="@dimen/y500"-->
     <!--app:qrcv_verticalBias="-1" />-->
-    <me.dm7.barcodescanner.zbar.ZBarScannerView
+    <FrameLayout
         android:id="@+id/ac_scan_qr_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:borderColor="@color/white"
-        app:borderWidth="3dp"
-        app:cornerRadius="0dp"
-        app:maskColor="#7e000000"
-        app:squaredFinder="true" />
+        android:layout_height="match_parent" />
 
     <View
         android:id="@+id/view"

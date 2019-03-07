@@ -270,7 +270,7 @@ dependencies {
     //    compile 'com.hjq:toast:5.2'
     debugImplementation 'com.github.markzhai:blockcanary-android:1.5.0'
     releaseImplementation 'com.github.markzhai:blockcanary-no-op:1.5.0'
-    api(project(":zbar")) {
+    api(project(':simplescanner')) {
         exclude group: "com.amap.api"
     }
 }
