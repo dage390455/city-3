@@ -40,4 +40,8 @@ public interface IDeployMonitorLocalCheckFragmentView extends IToast, IActivityI
     void updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum deployCheckStateEnum, String tipText,boolean hasForce);
 
     void dismissDeployMonitorCheckDialogUtils();
+
+    void showBleTips();
+
+    void hideBleTips();
 }
