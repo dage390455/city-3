@@ -32,6 +32,7 @@ import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.MyTimer;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
 
@@ -54,7 +55,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     private final Runnable signalTask = new Runnable() {
         @Override
         public void run() {
-//            freshSignalInfo();
+            freshSignalInfo();
             //信号刷新
             mHandler.postDelayed(signalTask, 2000);
         }
@@ -74,6 +75,31 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         }
         BleObserver.getInstance().registerBleObserver(this);
         mHandler.post(signalTask);
+        MyTimer myTimer = new MyTimer(1000, 10 * 1000, new MyTimer.OnMyTimer() {
+            @Override
+            public void onNext() {
+                try {
+                    LogUtils.loge("myTimer-->>onNext");
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                try {
+                    LogUtils.loge("myTimer-->>onFinish");
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        });
+        myTimer.start();
     }
 
     private void initPickerData() {
@@ -180,7 +206,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                         if (deployAnalyzerModel.sn.equalsIgnoreCase(sn)) {
                             deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
                             deployAnalyzerModel.signal = deviceInfo.getSignal();
-//                            freshSignalInfo();
+                            freshSignalInfo();
 //                            getView().toastLong("信号-->>time = " + deployAnalyzerModel.updatedTime + ",signal = " + deployAnalyzerModel.signal);
                             try {
                                 LogUtils.loge(this, "部署页刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + deployAnalyzerModel.signal);
@@ -459,6 +485,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
 
     private void freshSignalInfo() {
+        //刷新信号状态
         String signal_text = null;
         long time_diff = System.currentTimeMillis() - deployAnalyzerModel.updatedTime;
         int resId = 0;
@@ -481,29 +508,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             signal_text = mActivity.getString(R.string.no_signal);
             resId = R.drawable.shape_signal_none;
         }
-        switch (deployAnalyzerModel.deployType) {
-            case TYPE_SCAN_DEPLOY_STATION:
-                if (deployAnalyzerModel.latLng.size() != 2) {
-//                    getView().refreshSignal(true, signal_text, resId, mActivity.getString(R.string.not_positioned));
-                } else {
-//                    getView().refreshSignal(true, signal_text, resId, mActivity.getString(R.string.positioned));
-                }
-                break;
-            case TYPE_SCAN_DEPLOY_DEVICE:
-            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
-            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
-                if (deployAnalyzerModel.latLng.size() != 2) {
-//                    getView().refreshSignal(false, signal_text, resId, mActivity.getString(R.string.required));
-                } else {
-//                    getView().refreshSignal(false, signal_text, resId, mActivity.getString(R.string.positioned));
-                }
-                break;
-            case TYPE_SCAN_INSPECTION:
-                //扫描巡检设备
-                break;
-            default:
-                break;
-        }
+
     }
 
     /**
@@ -537,11 +542,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
      * 重新测试
      */
     public void doCheckDeployTest() {
-        DeployMonitorCheckActivityPresenter.deployAnalyzerModel.address = "1234";
-        if (mActivity instanceof DeployMonitorCheckActivity) {
-            ((DeployMonitorCheckActivity) mActivity).setDeployMonitorStep(2);
-        }
-        getView().dismissDeployMonitorCheckDialogUtils();
+        doCheckDeployNext();
     }
 
     /**
@@ -593,6 +594,66 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         }
 
     }
+
+    private final Runnable bleNearbyTaskOverTime = new Runnable() {
+        @Override
+        public void run() {
+            mHandler.removeCallbacks(bleNearbyTaskOverTime);
+            //TODO 蓝牙附近检查超时
+        }
+    };
+    private final Runnable bleNearbyCheckTask = new Runnable() {
+        @Override
+        public void run() {
+            if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
+                mHandler.removeCallbacks(bleNearbyCheckTask);
+                //TODO 蓝牙设备在附近
+            } else {
+                mHandler.postDelayed(bleNearbyCheckTask, 1000);
+            }
+        }
+    };
+
+    private void checkDeviceIsNearBy() {
+        mHandler.postDelayed(bleNearbyCheckTask, 1000);
+        mHandler.postDelayed(bleNearbyTaskOverTime, 10 * 1000);
+    }
+
+    //频点信息和初始配置信息写入
+    private final Runnable bleConfigTaskOverTime = new Runnable() {
+        @Override
+        public void run() {
+            mHandler.removeCallbacks(bleConfigTask);
+            mHandler.removeCallbacks(bleConfigTaskOverTime);
+            //TODO 蓝牙附近检查超时
+        }
+    };
+    private final Runnable bleConfigTask = new Runnable() {
+        @Override
+        public void run() {
+            if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
+                mHandler.removeCallbacks(bleConfigTaskOverTime);
+                //TODO 蓝牙设备在附近
+            } else {
+                mHandler.postDelayed(bleNearbyCheckTask, 1000);
+            }
+        }
+    };
+
+    /**
+     * 检查配置信息和信号刷新状态
+     */
+    private void checkDoConfig() {
+        mHandler.postDelayed(bleConfigTask, 1000);
+        mHandler.postDelayed(bleConfigTaskOverTime, 10 * 1000);
+        //由于以1秒间隔不准，所以取其一半来做间隔
+        int countTemp = 2;
+//此处写的是500的间隔，实际通过countTemp达到1秒间隔的效果
+    }
+
+
+//开始倒计时
+
 
     /**
      * 检查按钮是否可以点击
