@@ -11,14 +11,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="安装检测"
+            android:text="@string/deploy_install_test"
             android:textColor="@color/c_252525"
             android:textSize="18sp" />
 
@@ -27,21 +26,76 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:layout_marginEnd="16dp"
-            android:src="@mipmap/ic_close" />
+            android:contentDescription="@null"
+            android:src="@drawable/deploy_install_test_close" />
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/rl_deploy_check_dialog_device_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp">
+        android:layout_marginEnd="20dp"
+        >
 
         <TextView
+            android:id="@+id/tv_deploy_check_dialog_device_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="检测设备位置"
+            android:text="@string/test_intall_location"
+            android:textColor="@color/c_252525"
+            android:textSize="14sp" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true">
+
+
+            <ImageView
+                android:id="@+id/iv_deploy_check_dialog_device_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@null"
+                android:src="@drawable/deploy_check_loading_imv"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/tv_deploy_check_dialog_device_location_error_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="@string/no_near"
+                android:drawablePadding="2dp"
+                android:drawableStart="@drawable/deploy_check_failed_red"
+                android:textColor="@color/c_f34a4a"
+                android:textSize="14sp"
+                android:visibility="gone"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_deploy_check_dialog_init_config"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        >
+
+        <TextView
+            android:id="@+id/tv_deploy_check_dialog_init_config"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/initial_configuration"
             android:textColor="@color/c_252525"
             android:textSize="14sp" />
 
@@ -52,102 +106,51 @@
             android:layout_centerVertical="true">
 
             <ImageView
+                android:id="@+id/iv_deploy_check_dialog_init_config"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:src="@mipmap/ic_menu_drop" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/ic_menu_drop" />
+                android:src="@drawable/deploy_check_loading_imv"
+                android:contentDescription="@null"
+                android:visibility="gone"
+                />
 
             <TextView
+                android:id="@+id/tv_deploy_check_dialog_init_config_error_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:text="不在附近"
+                android:drawablePadding="2dp"
+                android:drawableStart="@drawable/deploy_check_failed_red"
+                android:text="@string/failed"
                 android:textColor="@color/c_f34a4a"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:visibility="gone"/>
         </RelativeLayout>
 
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/rl_deploy_check_dialog_signal_strength"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="20dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="初始配置"
-            android:textColor="@color/c_252525"
-            android:textSize="14sp" />
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/ic_menu_drop" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/ic_menu_drop" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:text="失败"
-                android:textColor="@color/c_f34a4a"
-                android:textSize="14sp" />
-        </RelativeLayout>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="12dp"
         android:layout_marginEnd="20dp">
 
         <TextView
             android:id="@+id/tv_deploy_check_dialog_signal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="信号强度"
+            android:text="@string/signal_strength"
             android:textColor="@color/c_252525"
-            android:textSize="14sp" />
+            android:gravity="center_vertical"
+            android:drawablePadding="4dp"
+            android:layout_marginTop="12dp"
+            android:textSize="14sp"
+            />
 
-        <ImageView
-            android:id="@+id/iv_deploy_check_dialog_signal_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
-            android:layout_toEndOf="@id/tv_deploy_check_dialog_signal"
-            android:src="@drawable/signal_none" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -156,45 +159,45 @@
             android:layout_centerVertical="true">
 
             <ImageView
+                android:id="@+id/iv_deploy_check_dialog_signal_strength"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:src="@mipmap/ic_menu_drop" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/ic_menu_drop" />
+                android:src="@drawable/deploy_check_loading_imv"
+                android:contentDescription="@null"
+                android:visibility="gone"
+                />
 
             <TextView
+                android:id="@+id/tv_deploy_check_dialog_signal_strength_error_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:text="无信号"
+                android:drawablePadding="2dp"
                 android:textColor="@color/c_f34a4a"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:visibility="gone"/>
         </RelativeLayout>
 
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/rl_deploy_check_dialog_device_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="12dp"
         android:layout_marginEnd="20dp">
 
         <TextView
+            android:id="@+id/tv_deploy_check_dialog_device_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="设备状态"
+            android:text="@string/device_status"
             android:textColor="@color/c_252525"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:layout_marginTop="12dp"/>
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -203,40 +206,41 @@
             android:layout_centerVertical="true">
 
             <ImageView
+                android:id="@+id/iv_deploy_check_dialog_device_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:src="@mipmap/ic_menu_drop" />
+                android:src="@drawable/deploy_check_loading_imv"
+                android:contentDescription="@null"
+                android:visibility="gone"
+                />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/ic_menu_drop" />
 
             <TextView
+                android:id="@+id/tv_deploy_check_dialog_device_status_error_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:text="预警中"
+                android:drawablePadding="2dp"
                 android:textColor="@color/c_f34a4a"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:visibility="gone"/>
         </RelativeLayout>
 
     </RelativeLayout>
 
     <TextView
+        android:id="@+id/tv_deploy_check_dialog_repair_suggest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="20dp"
-        android:text="信号质量差，修复建议XXXXXXXXXXXXXXXXXXXXXXXXXX"
         android:textColor="@color/c_a6a6a6"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/tv_deploy_check_dialog_test"
@@ -249,7 +253,7 @@
         android:gravity="center"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:text="重新测试"
+        android:text="@string/retest"
         android:textColor="@color/white"
         android:textSize="14sp" />
 
@@ -263,7 +267,7 @@
         android:gravity="center"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:text="强制上传"
+        android:text="@string/deploy_result_force_upload"
         android:textColor="@color/c_a6a6a6"
         android:textSize="14sp" />
 

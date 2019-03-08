@@ -4,40 +4,43 @@ import android.os.Handler;
 import android.os.Looper;
 
 public class MyTimer {
-    private final int p;
-    private final int ll;
+    private final int interval;
+    private final int duration;
     private final OnMyTimer listener;
     private Handler handler;
     private Runnable task = new Runnable() {
         @Override
         public void run() {
             listener.onNext();
-            handler.postDelayed(this,p);
+            handler.postDelayed(task, interval);
+        }
+    };
+    private Runnable timeOverTime = new Runnable() {
+        @Override
+        public void run() {
+            handler.removeCallbacks(task);
+            handler.removeCallbacks(timeOverTime);
+            listener.onFinish();
         }
     };
 
-    public MyTimer(int p, int ll, OnMyTimer onMyTimer) {
-        this.p = p;
-        this.ll = ll;
+    public MyTimer(int interval, int duration, OnMyTimer onMyTimer) {
+        this.interval = interval;
+        this.duration = duration;
         this.listener = onMyTimer;
         handler = new Handler(Looper.getMainLooper());
     }
 
     public void start() {
-        handler.postDelayed(task, p);
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                handler.removeCallbacks(task);
-                handler.removeCallbacks(this);
-                listener.onFinish();
-            }
-        }, ll);
-
+        handler.removeCallbacks(task);
+        handler.removeCallbacks(timeOverTime);
+        handler.postDelayed(task, interval);
+        handler.postDelayed(timeOverTime, duration);
     }
 
-    public void cancle() {
-        handler.removeCallbacksAndMessages(null);
+    public void cancel() {
+        handler.removeCallbacks(task);
+        handler.removeCallbacks(timeOverTime);
         listener.onCancel();
     }
 

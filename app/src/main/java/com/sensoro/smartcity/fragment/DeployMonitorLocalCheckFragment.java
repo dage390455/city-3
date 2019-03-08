@@ -2,9 +2,15 @@ package com.sensoro.smartcity.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -23,6 +29,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.constant.DeployCheckStateEnum;
 import com.sensoro.smartcity.imainviews.IDeployMonitorLocalCheckFragmentView;
 import com.sensoro.smartcity.model.MaterialValueModel;
 import com.sensoro.smartcity.presenter.DeployMonitorLocalCheckFragmentPresenter;
@@ -86,6 +93,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
     private OptionsPickerView pvCustomOptions;
     private DeployMonitorCheckDialogUtils deployMonitorCheckDialogUtils;
     private final List<String> materials = new ArrayList<>();
+    private Handler handler;
 
     @Override
     protected void initData(Context activity) {
@@ -336,13 +344,214 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
 
     @Override
     public void showDeployMonitorCheckDialogUtils(int state, boolean hasForce) {
-        deployMonitorCheckDialogUtils.show();
+        deployMonitorCheckDialogUtils.show(state);
+        deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
+    }
+
+    @NonNull
+    private SpannableString getClickableSpannable(String suggest, String instruction) {
+        StringBuilder stringBuilder = new StringBuilder(suggest);
+        stringBuilder.append(instruction);
+        SpannableString sb = new SpannableString(stringBuilder);
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+//                                super.updateDrawState(ds);
+                ds.setColor(ds.linkColor);
+                ds.setUnderlineText(false);
+            }
+
+            @Override
+            public void onClick(@NonNull View widget) {
+                mPresenter.doInstruction();
+            }
+        };
+        sb.setSpan(clickableSpan, stringBuilder.length() - instruction.length(), stringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        return sb;
     }
 
     @Override
-    public void updateDeployMonitorCheckDialogUtils(int state, String text) {
+    public void updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum deployCheckStateEnum, String tipText, boolean hasForce) {
         //TODO 更新状态 方法需要扩展
-        deployMonitorCheckDialogUtils.show();
+        switch (deployCheckStateEnum) {
+            case DEVICE_CHECK_NEARBY_START:
+                deployMonitorCheckDialogUtils.startDeviceLocationLoading();
+                break;
+            case DEVICE_CHECK_NEARBY_SUC:
+                deployMonitorCheckDialogUtils.setDeviceLocationSuccess();
+                break;
+            case DEVICE_CHECK_NEARBY_FAIL:
+                deployMonitorCheckDialogUtils.setDeviceLocationFailed();
+                deployMonitorCheckDialogUtils.setInitConfigVisible(false);
+                deployMonitorCheckDialogUtils.setSignalStrengthVisible(false);
+                deployMonitorCheckDialogUtils.setDeviceStatusVisible(false);
+                deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
+                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText,""));
+                deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
+                deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
+                break;
+            case DEVICE_CHECK_CONFIG_START:
+                deployMonitorCheckDialogUtils.startInitConfigLoading();
+                break;
+            case DEVICE_CHECK_CONFIG_SUC:
+                deployMonitorCheckDialogUtils.setInitConfigSuccess();
+                break;
+            case DEVICE_CHECK_CONFIG_FAIL:
+                deployMonitorCheckDialogUtils.setInitConfigFailed();
+                deployMonitorCheckDialogUtils.setSignalStrengthVisible(false);
+                deployMonitorCheckDialogUtils.setDeviceStatusVisible(false);
+                deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
+                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText,getString(R.string.deploy_check_suggest_config_instruction)));
+                deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
+                deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
+                break;
+            case DEVICE_CHECK_SIGNAL_START:
+                deployMonitorCheckDialogUtils.startSignalStrengthLoading();
+                break;
+            case DEVICE_CHECK_SIGNAL_SUC_GOOD:
+                deployMonitorCheckDialogUtils.setSignalStrengthSuccess(1);
+                break;
+            case DEVICE_CHECK_SIGNAL_SUC_NORMAL:
+                deployMonitorCheckDialogUtils.setSignalStrengthSuccess(2);
+                break;
+            case DEVICE_CHECK_SIGNAL_FAIL_BAD:
+                deployMonitorCheckDialogUtils.setSignalStrengthFailed(1);
+                deployMonitorCheckDialogUtils.setDeviceStatusVisible(false);
+                deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
+                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText,getString(R.string.deploy_check_suggest_particular_instruction)));
+                deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
+                deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
+                break;
+            case DEVICE_CHECK_SIGNAL_FAIL_NONE:
+                deployMonitorCheckDialogUtils.setSignalStrengthFailed(2);
+                deployMonitorCheckDialogUtils.setDeviceStatusVisible(false);
+                deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
+                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText,getString(R.string.deploy_check_suggest_particular_instruction)));
+                deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
+                deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
+                break;
+            case DEVICE_CHECK_STATUS_START:
+                deployMonitorCheckDialogUtils.startDeviceStatusLoading();
+                break;
+            case DEVICE_CHECK_STATUS_SUC:
+                deployMonitorCheckDialogUtils.setDeviceStatusSuccess();
+                break;
+            case DEVICE_CHECK_STATUS_FAIL_ALARM:
+                deployMonitorCheckDialogUtils.setDeviceStatusFailed(2);
+                deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
+                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText,getString(R.string.deploy_check_suggest_particular_instruction)));
+                deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
+                deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
+                break;
+            case DEVICE_CHECK_STATUS_FAIL_MALFUNCTION:
+                deployMonitorCheckDialogUtils.setDeviceStatusFailed(1);
+                deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
+                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText,getString(R.string.deploy_check_suggest_particular_instruction)));
+                deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
+                deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
+                break;
+            case DEVICE_CHECK_ALL_SUC:
+                if (handler == null) {
+                    handler = new Handler();
+                }
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        deployMonitorCheckDialogUtils.dismiss();
+                        //TODO 直接成功
+                        mPresenter.goToNextStep();
+//                        mPresenter.doCheckDeployTest();
+                    }
+                }, 500);
+                break;
+        }
+        //        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        deployMonitorCheckDialogUtils.startDeviceLocationLoading();
+//                    }
+//                });
+//                try {
+//                    Thread.sleep(2000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        deployMonitorCheckDialogUtils.setDeviceLocationSuccess();
+////                        deployMonitorCheckDialogUtils.setInitConfigVisible(false);
+////                        deployMonitorCheckDialogUtils.setSignalStrengthVisible(false);
+////                        deployMonitorCheckDialogUtils.setDeviceStatusVisible(false);
+////                        deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
+////                        deployMonitorCheckDialogUtils.setRepairSuggest("我就建议你卸载");
+////                        deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
+//
+//                        deployMonitorCheckDialogUtils.startInitConfigLoading();
+//
+//                    }
+//                });
+//                try {
+//                    Thread.sleep(2000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        deployMonitorCheckDialogUtils.setInitConfigSuccess();
+////                        deployMonitorCheckDialogUtils.setInitConfigVisible(false);
+////                        deployMonitorCheckDialogUtils.setSignalStrengthVisible(false);
+////                        deployMonitorCheckDialogUtils.setDeviceStatusVisible(false);
+////                        deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
+////                        deployMonitorCheckDialogUtils.setRepairSuggest("我就建议你卸载");
+////                        deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
+////                        deployMonitorCheckDialogUtils.setForceUploadButtonVisible(true);
+//                        deployMonitorCheckDialogUtils.startSignalStrengthLoading();
+//                    }
+//                });
+//                try {
+//                    Thread.sleep(2000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        deployMonitorCheckDialogUtils.setSignalStrengthSuccess(2);
+////                        deployMonitorCheckDialogUtils.setInitConfigVisible(false);
+////                        deployMonitorCheckDialogUtils.setSignalStrengthVisible(false);
+////                        deployMonitorCheckDialogUtils.setDeviceStatusVisible(false);
+////                        deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
+////                        deployMonitorCheckDialogUtils.setRepairSuggest("我就建议你卸载");
+////                        deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
+////                        deployMonitorCheckDialogUtils.setForceUploadButtonVisible(true);
+//                        deployMonitorCheckDialogUtils.startDeviceStatusLoading();
+//
+//                    }
+//                });
+//                try {
+//                    Thread.sleep(2000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        deployMonitorCheckDialogUtils.setDeviceStatusFailed(2);
+//                        deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
+////                        deployMonitorCheckDialogUtils.setRepairSuggest("我就建议你卸载");
+//                        deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
+////                        getString(R.string.deploy_check_suggest_particular_instruction);//文本详细说明
+//                        SpannableString sb = getClickableSpannable("我就建议你卸载我就建议你卸载我就建议你卸载",getString(R.string.deploy_check_suggest_config_instruction));
+//                        deployMonitorCheckDialogUtils.setRepairSuggest(sb);
+//                    }
+//                });
+//            }
+//        }).start();
     }
 
     @Override
@@ -433,7 +642,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
 
     @Override
     public void onClickForceUpload() {
-        mPresenter.doForceUpload();
+        mPresenter.goToNextStep();
     }
 
     @Override

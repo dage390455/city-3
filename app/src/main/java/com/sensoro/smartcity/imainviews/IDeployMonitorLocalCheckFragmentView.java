@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.imainviews;
 
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
+import com.sensoro.smartcity.constant.DeployCheckStateEnum;
 import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IToast;
 
@@ -36,7 +37,7 @@ public interface IDeployMonitorLocalCheckFragmentView extends IToast, IActivityI
 
     void showDeployMonitorCheckDialogUtils(int state, boolean hasForce);
 
-    void updateDeployMonitorCheckDialogUtils(int state, String text);
+    void updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum deployCheckStateEnum, String tipText,boolean hasForce);
 
     void dismissDeployMonitorCheckDialogUtils();
 }
