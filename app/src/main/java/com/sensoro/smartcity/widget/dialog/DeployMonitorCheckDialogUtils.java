@@ -409,6 +409,9 @@ public class DeployMonitorCheckDialogUtils {
                 if (mDialog != null) {
                     mDialog.dismiss();
                 }
+                if (listener != null) {
+                    listener.onCancelCheckTest();
+                }
                 break;
         }
     }
@@ -419,6 +422,6 @@ public class DeployMonitorCheckDialogUtils {
 
         void onClickForceUpload();
 
-        void onClickDeviceDetailInfo();
+        void onCancelCheckTest();
     }
 }

@@ -108,6 +108,8 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
         materials.add(getString(R.string.al));
         deployMonitorCheckDialogUtils = new DeployMonitorCheckDialogUtils(mRootFragment.getActivity());
         deployMonitorCheckDialogUtils.setOnDeployCheckDialogListener(this);
+        deployMonitorCheckDialogUtils.setCancelable(false);
+        deployMonitorCheckDialogUtils.setCanceledOnTouchOutside(false);
         overCurrentDialog = new EarlyWarningThresholdDialogUtils(mRootFragment.getActivity(), mRootFragment.getString(R.string.over_current));
         tipBleDialogUtils = new TipBleDialogUtils(mRootFragment.getActivity());
         initCustomOptionPicker();
@@ -289,23 +291,28 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
     }
 
     private void getCurrentValue() {
-        String diameter = tvFgDeployLocalCheckWireDiameter.getText().toString();
-        String material = tvFgDeployLocalCheckWireMaterial.getText().toString();
-        String enterValue = etFgDeployLocalCheckSwitchSpec.getText().toString();
-        if (!TextUtils.isEmpty(diameter) && !TextUtils.isEmpty(material) && !TextUtils.isEmpty(enterValue)) {
+        String diameterStr = tvFgDeployLocalCheckWireDiameter.getText().toString();
+        String materialStr = tvFgDeployLocalCheckWireMaterial.getText().toString();
+        String enterValueStr = etFgDeployLocalCheckSwitchSpec.getText().toString();
+        if (!TextUtils.isEmpty(diameterStr) && !mRootFragment.getString(R.string.deploy_check_please_select).equals(diameterStr) && !TextUtils.isEmpty(materialStr) && !TextUtils.isEmpty(enterValueStr)) {
             try {
-                Integer integer = Integer.valueOf(enterValue);
-                int in = integer;
-                MaterialValueModel materialValueModel = Constants.materialValueMap.get(diameter);
+                Integer inputValue = Integer.valueOf(enterValueStr);
+                int material = 0;
+                int min = inputValue;
+                double diameter = Double.parseDouble(diameterStr);
+                MaterialValueModel materialValueModel = Constants.materialValueMap.get(diameterStr);
                 if (materialValueModel != null) {
-                    if (getString(R.string.cu).equals(material)) {
-                        in = materialValueModel.cuValue;
-                    } else if (getString(R.string.al).equals(material)) {
-                        in = materialValueModel.alValue;
+                    if (getString(R.string.cu).equals(materialStr)) {
+                        material = 0;
+                        min = materialValueModel.cuValue;
+                    } else if (getString(R.string.al).equals(materialStr)) {
+                        min = materialValueModel.alValue;
+                        material = 1;
                     }
-                    int min = Math.min(integer, in);
+                    min = Math.min(inputValue, min);
                     tvDeployLocalCheckCurrentValue.setText(String.format(Locale.CHINESE, "%dA", min));
                 }
+                mPresenter.updateConfigSettingData(inputValue, material, diameter, min);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 toastShort(getString(R.string.enter_the_correct_number_format));
@@ -321,6 +328,11 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
         tvFgDeployLocalButton.setEnabled(canConfig);
         tvFgDeployLocalButton.setClickable(canConfig);
         tvFgDeployLocalButton.setBackgroundResource(canConfig ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_solid_df_corner);
+        if (canConfig) {
+            mPresenter.updateCheckTipText();
+        } else {
+            setDeployLocalCheckTipText(mRootFragment.getString(R.string.deploy_device_detail_add_all_required));
+        }
     }
 
     @Override
@@ -468,93 +480,6 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
                 }, 500);
                 break;
         }
-        //        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                getActivity().runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        deployMonitorCheckDialogUtils.startDeviceLocationLoading();
-//                    }
-//                });
-//                try {
-//                    Thread.sleep(2000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                getActivity().runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        deployMonitorCheckDialogUtils.setDeviceLocationSuccess();
-////                        deployMonitorCheckDialogUtils.setInitConfigVisible(false);
-////                        deployMonitorCheckDialogUtils.setSignalStrengthVisible(false);
-////                        deployMonitorCheckDialogUtils.setDeviceStatusVisible(false);
-////                        deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
-////                        deployMonitorCheckDialogUtils.setRepairSuggest("我就建议你卸载");
-////                        deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
-//
-//                        deployMonitorCheckDialogUtils.startInitConfigLoading();
-//
-//                    }
-//                });
-//                try {
-//                    Thread.sleep(2000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                getActivity().runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        deployMonitorCheckDialogUtils.setInitConfigSuccess();
-////                        deployMonitorCheckDialogUtils.setInitConfigVisible(false);
-////                        deployMonitorCheckDialogUtils.setSignalStrengthVisible(false);
-////                        deployMonitorCheckDialogUtils.setDeviceStatusVisible(false);
-////                        deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
-////                        deployMonitorCheckDialogUtils.setRepairSuggest("我就建议你卸载");
-////                        deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
-////                        deployMonitorCheckDialogUtils.setForceUploadButtonVisible(true);
-//                        deployMonitorCheckDialogUtils.startSignalStrengthLoading();
-//                    }
-//                });
-//                try {
-//                    Thread.sleep(2000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                getActivity().runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        deployMonitorCheckDialogUtils.setSignalStrengthSuccess(2);
-////                        deployMonitorCheckDialogUtils.setInitConfigVisible(false);
-////                        deployMonitorCheckDialogUtils.setSignalStrengthVisible(false);
-////                        deployMonitorCheckDialogUtils.setDeviceStatusVisible(false);
-////                        deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
-////                        deployMonitorCheckDialogUtils.setRepairSuggest("我就建议你卸载");
-////                        deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
-////                        deployMonitorCheckDialogUtils.setForceUploadButtonVisible(true);
-//                        deployMonitorCheckDialogUtils.startDeviceStatusLoading();
-//
-//                    }
-//                });
-//                try {
-//                    Thread.sleep(2000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                getActivity().runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        deployMonitorCheckDialogUtils.setDeviceStatusFailed(2);
-//                        deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
-////                        deployMonitorCheckDialogUtils.setRepairSuggest("我就建议你卸载");
-//                        deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
-////                        getString(R.string.deploy_check_suggest_particular_instruction);//文本详细说明
-//                        SpannableString sb = getClickableSpannable("我就建议你卸载我就建议你卸载我就建议你卸载",getString(R.string.deploy_check_suggest_config_instruction));
-//                        deployMonitorCheckDialogUtils.setRepairSuggest(sb);
-//                    }
-//                });
-//            }
-//        }).start();
     }
 
     @Override
@@ -652,8 +577,8 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
     }
 
     @Override
-    public void onClickDeviceDetailInfo() {
-
+    public void onCancelCheckTest() {
+        mPresenter.cancelCheckTest();
     }
 
     @Override
@@ -668,6 +593,11 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
         if (tipBleDialogUtils != null && tipBleDialogUtils.isShowing()) {
             tipBleDialogUtils.dismiss();
         }
+    }
+
+    @Override
+    public void setDeployLocalCheckTipText(String text) {
+        tvFgDeployLocalCheckTip.setText(text);
     }
 
     @Override
