@@ -867,11 +867,11 @@
     <string name="relation_mini_program_account">关联微信小程序账号</string>
     <string name="after_relation_owner_can_look_device">After you set this account, you will view the device under this account</string>
     <string name="previous_step">Previous</string>
-    <string name="name_address_history_record">历史记录</string>
+    <string name="name_address_history_record">History Record</string>
     <string name="name_address_no_contain_brackets">The name cannot contain square brackets</string>
     <string name="please_deploy_upload_all_pic">Please select the required picture</string>
     <string name="contact_name_length_to_long">Contact name is too long</string>
-    <string name="mini_program_description">如遗忘，可邀请业主微信扫码或搜索SensoroCity进入微信查看</string>
+    <string name="mini_program_description">If forgotten, you could enter Wechat by inviting owner to scan QR code or searching for "SensoroCity"  to check</string>
     <string name="history_clear_all">clear</string>
     <string name="confirm_clear_history_record">Make sure to clear the input record</string>
     <string name="deploy_result_device_number_sn">SN</string>

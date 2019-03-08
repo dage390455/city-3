@@ -90,6 +90,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                 //回显地图数据
                 getView().setSaveVisible(false);
                 getView().refreshSignal(deployAnalyzerModel.signal);
+                getView().setSubtitleVisible(false);
                 break;
             default:
                 break;

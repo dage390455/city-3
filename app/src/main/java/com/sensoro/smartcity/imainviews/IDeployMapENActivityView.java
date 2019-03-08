@@ -12,4 +12,6 @@ public interface IDeployMapENActivityView extends IActivityIntent, IToast, IProg
     void setSaveVisible(boolean isVisible);
 
     void refreshSignal(String signal);
+
+    void setSubtitleVisible(boolean isVisible);
 }

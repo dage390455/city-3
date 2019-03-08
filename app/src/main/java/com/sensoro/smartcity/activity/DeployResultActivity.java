@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -110,29 +111,30 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     public void refreshSignal(long updateTime, String signal) {
         String signal_text = null;
         Drawable drawable = null;
+        Resources resources = mActivity.getResources();
         long time_diff = System.currentTimeMillis() - updateTime;
         if (signal != null && (time_diff < 2 * 60 * 1000)) {
             switch (signal) {
                 case "good":
                     signal_text = mActivity.getString(R.string.s_good);
-                    drawable = mActivity.getResources().getDrawable(R.drawable.signal_good);
+                    drawable = resources.getDrawable(R.drawable.signal_good);
                     break;
                 case "normal":
                     signal_text = mActivity.getString(R.string.s_normal);
-                    drawable = mActivity.getResources().getDrawable(R.drawable.signal_normal);
+                    drawable = resources.getDrawable(R.drawable.signal_normal);
                     break;
                 case "bad":
                     signal_text = mActivity.getString(R.string.s_bad);
-                    drawable = mActivity.getResources().getDrawable(R.drawable.signal_bad);
+                    drawable = resources.getDrawable(R.drawable.signal_bad);
                     break;
                 default:
                     signal_text = mActivity.getString(R.string.s_bad);
-                    drawable = mActivity.getResources().getDrawable(R.drawable.signal_bad);
+                    drawable = resources.getDrawable(R.drawable.signal_bad);
                     break;
             }
         } else {
             signal_text = mActivity.getString(R.string.s_none);
-            drawable = mActivity.getResources().getDrawable(R.drawable.signal_none);
+            drawable = resources.getDrawable(R.drawable.signal_none);
         }
 
         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
@@ -178,9 +180,10 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     }
 
     @Override
-    public void setStatusTextView(String status) {
+    public void setStatusTextView(String status, int color) {
         acDeployResultRlStatus.setVisibility(View.VISIBLE);
         acDeployResultTvStatus.setText(status);
+        acDeployResultTvStatus.setTextColor(color);
     }
 
     @Override

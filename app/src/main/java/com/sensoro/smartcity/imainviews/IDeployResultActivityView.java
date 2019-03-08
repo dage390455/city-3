@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.imainviews;
 
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorInt;
 
 import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IToast;
@@ -20,7 +21,7 @@ public interface IDeployResultActivityView extends IToast, IActivityIntent {
 
     void setWeChatTextView(String content);
 
-    void setStatusTextView(String status);
+    void setStatusTextView(String status, @ColorInt int color);
 
     void setUpdateTextView(String update);
 

@@ -119,7 +119,7 @@
     <string name="status_lost">失联</string>
     <string name="status_inactive">未激活</string>
     <string name="status_malfunction">故障</string>
-    <string name="status_alarm_true">报警</string>
+    <string name="status_alarm_true">预警</string>
     <string name="status_emergency_alarm">紧急报警</string>
     <string name="status_timeout_not_reported">超时未上报</string>
     <string name="status_offline">离线</string>
