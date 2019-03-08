@@ -93,7 +93,7 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     @BindView(R.id.ac_deploy_record_detail_ll_rated_current)
     LinearLayout acDeployRecordDetailLlRatedCurrent;
     @BindView(R.id.tv_ac_deploy_device_record_detail_force_deploy_reson)
-    TextView tvAcDeployDeviceRecordDetailForceDeployReson;
+    TextView tvAcDeployDeviceRecordDetailForceDeployReason;
     private TagAdapter mTagAdapter;
     private ContactAdapter mContactAdapter;
     private MonitorDeployDetailPhotoAdapter mDeployPicAdapter;
@@ -108,7 +108,6 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     }
 
     private void initView() {
-//        includeTextTitleTvSubtitle.setText("历史记录");
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         includeTextTitleTvTitle.setVisibility(View.VISIBLE);
         includeTextTitleTvTitle.setText(R.string.deploy_detail);
@@ -343,7 +342,7 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
 
     @Override
     public void setForceDeployReason(String reason) {
-        tvAcDeployDeviceRecordDetailForceDeployReson.setText(reason);
+        tvAcDeployDeviceRecordDetailForceDeployReason.setText(reason);
     }
 
 

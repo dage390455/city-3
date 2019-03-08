@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMapENActivity;
-import com.sensoro.smartcity.activity.DeployMonitorSettingPhotoActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
@@ -106,7 +105,7 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
 //                        }
                         Integer switchSpec = deployControlSettingData.getSwitchSpec();
                         if (switchSpec != null) {
-                            getView().setDeployDeviceDetailDeploySetting(String.format(Locale.CHINA,"%sA", switchSpec));
+                            getView().setDeployDeviceDetailDeploySetting(String.format(Locale.CHINA, "%sA", switchSpec));
                             return;
                         }
 
@@ -126,7 +125,7 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
                         //线径
                         Double diameter = deployControlSettingData.getWireDiameter();
                         if (diameter != null) {
-                            getView().setDeployDeviceRecordDiameter(diameter+"mm");
+                            getView().setDeployDeviceRecordDiameter(diameter + "mm");
                         }
                     }
                 }
@@ -141,26 +140,6 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
     @Override
     public void onDestroy() {
 
-    }
-
-    public void doDeployPic() {
-        List<String> deployPics = mDeployRecordInfo.getDeployPics();
-        if (deployPics.size() > 0) {
-            ArrayList<ImageItem> items = new ArrayList<>();
-            for (String deployPic : deployPics) {
-                ImageItem imageItem = new ImageItem();
-                imageItem.isRecord = false;
-                imageItem.fromUrl = true;
-                imageItem.path = deployPic;
-                items.add(imageItem);
-            }
-            Intent intent = new Intent(mActivity, DeployMonitorSettingPhotoActivity.class);
-            intent.putExtra(EXTRA_JUST_DISPLAY_PIC, true);
-            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, items);
-            getView().startAC(intent);
-        } else {
-            getView().toastShort(mActivity.getString(R.string.no_photos_added));
-        }
     }
 
     public void doFixedPoint() {

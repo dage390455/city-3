@@ -152,7 +152,7 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
         }
     }
 
-    public void doRecorDetail(DeployRecordInfo deployRecordInfo) {
+    public void doRecordDetail(DeployRecordInfo deployRecordInfo) {
         Intent intent = new Intent(mActivity, DeployRecordDetailActivity.class);
         intent.putExtra(EXTRA_DEPLOY_RECORD_DETAIL, deployRecordInfo);
         getView().startAC(intent);
@@ -171,7 +171,6 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
             temp_startTime = startTime;
             temp_endTime = endTime;
         }
-
         mCalendarPopUtils.show(acDeployRecordTitleRoot, temp_startTime, temp_endTime);
     }
 
