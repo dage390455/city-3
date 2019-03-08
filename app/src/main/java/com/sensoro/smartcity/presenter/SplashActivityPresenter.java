@@ -9,9 +9,8 @@ import android.text.TextUtils;
 import com.igexin.sdk.PushManager;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.activity.DeployMonitorCheckActivity;
 import com.sensoro.smartcity.activity.LoginActivity;
-import com.sensoro.smartcity.activity.MainActivity;
+import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISplashActivityView;
@@ -116,9 +115,14 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+//                Intent mainIntent = new Intent();
+////                mainIntent.setClass(mContext, MainActivity.class);
+////                mainIntent.putExtra(EXTRA_EVENT_LOGIN_DATA, eventLoginData);
+////                getView().startAC(mainIntent);
+////                getView().finishAc();
                 Intent mainIntent = new Intent();
-                mainIntent.setClass(mContext, MainActivity.class);
-                mainIntent.putExtra(EXTRA_EVENT_LOGIN_DATA, eventLoginData);
+                mainIntent.setClass(mContext, ScanActivity.class);
+                mainIntent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
                 getView().startAC(mainIntent);
                 getView().finishAc();
             }

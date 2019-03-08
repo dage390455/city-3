@@ -1,11 +1,11 @@
 package com.sensoro.smartcity.widget.dialog;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -81,7 +81,14 @@ public class DeployMonitorCheckDialogUtils {
         yellowColor = mActivity.getResources().getColor(R.color.c_fdc83b);
         redColor = mActivity.getResources().getColor(R.color.c_f34a4a);
         init();
-
+        mDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if (rotateAnimation != null) {
+                    rotateAnimation.cancel();
+                }
+            }
+        });
     }
 
     private void init() {
@@ -169,7 +176,7 @@ public class DeployMonitorCheckDialogUtils {
         tvDeployCheckDialogDeviceLocation.setTextColor(grayColor);
         tvDeployCheckDialogInitConfig.setTextColor(grayColor);
         tvDeployCheckDialogSignal.setTextColor(grayColor);
-        tvDeployCheckDialogSignal.setCompoundDrawables(null,null,null,null);
+        tvDeployCheckDialogSignal.setCompoundDrawables(null, null, null, null);
         tvDeployCheckDialogDeviceStatus.setTextColor(grayColor);
 
         tvDeployCheckDialogRepairSuggest.setVisibility(View.GONE);
@@ -334,7 +341,7 @@ public class DeployMonitorCheckDialogUtils {
         }
         tvDeployCheckDialogDeviceStatusErrorDesc.setVisibility(View.VISIBLE);
         tvDeployCheckDialogDeviceStatusErrorDesc.setText(text);
-        tvDeployCheckDialogDeviceStatusErrorDesc.setCompoundDrawables(drawable,null,null,null);
+        tvDeployCheckDialogDeviceStatusErrorDesc.setCompoundDrawables(drawable, null, null, null);
     }
 
     public void setRetestButtonVisible(boolean isVisible) {
@@ -373,13 +380,16 @@ public class DeployMonitorCheckDialogUtils {
     }
 
 
-
     public void destroy() {
+        if (rotateAnimation != null) {
+            rotateAnimation.cancel();
+        }
         if (mDialog != null) {
             bind.unbind();
             mDialog.cancel();
             mDialog = null;
         }
+
     }
 
     @OnClick({R.id.tv_deploy_check_dialog_test, R.id.tv_deploy_check_dialog_force_upload, R.id.iv_deploy_check_cancel})
@@ -402,7 +412,6 @@ public class DeployMonitorCheckDialogUtils {
                 break;
         }
     }
-
 
 
     public interface OnDeployCheckDialogListener {
