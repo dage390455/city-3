@@ -622,4 +622,11 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         }
         return false;
     }
+
+    /**
+     * 跳转配置说明界面
+     */
+    public void doInstruction() {
+        getView().toastShort("span 点击了");
+    }
 }
