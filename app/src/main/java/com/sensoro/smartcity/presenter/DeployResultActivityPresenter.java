@@ -136,7 +136,8 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 }
 
                 getView().setContactAndSignalVisible(false);
-                getView().setStatusTextView(mContext.getString(Constants.STATION_STATUS_ARRAY[deployResultModel.stationStatus + 1]));
+                getView().setStatusTextView(mContext.getString(Constants.STATION_STATUS_ARRAY[deployResultModel.stationStatus + 1]),
+                        mContext.getResources().getColor(Constants.STATION_STATUS_COLOR_ARRAY[deployResultModel.stationStatus + 1]));
                 if (deployResultModel.updateTime == -1 || deployResultModel.updateTime == 0) {
                     getView().setUpdateTextViewVisible(false);
                 } else {
@@ -171,7 +172,8 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                         mContext.getString(R.string.not_added) : deployResultModel.wxPhone));
                 getView().refreshSignal(deployResultModel.updateTime, deployResultModel.signal);
 
-                getView().setStatusTextView(mContext.getString(Constants.DEVICE_STATUS_ARRAY[deployResultModel.deviceStatus]));
+                getView().setStatusTextView(mContext.getString(Constants.DEVICE_STATUS_ARRAY[deployResultModel.deviceStatus]),
+                        mContext.getResources().getColor(Constants.DEVICE_STATUS_COLOR_ARRAY[deployResultModel.deviceStatus]));
                 if (deployResultModel.updateTime == -1 || deployResultModel.updateTime == 0) {
                     getView().setUpdateTextViewVisible(false);
                 } else {
@@ -216,7 +218,8 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                     getView().setAddressTextView(deployResultModel.address);
                 }
                 getView().setContactAndSignalVisible(false);
-                getView().setStatusTextView(mContext.getString(Constants.STATION_STATUS_ARRAY[deployResultModel.stationStatus + 1]));
+                getView().setStatusTextView(mContext.getString(Constants.STATION_STATUS_ARRAY[deployResultModel.stationStatus + 1]),
+                        mContext.getResources().getColor(Constants.STATION_STATUS_COLOR_ARRAY[deployResultModel.stationStatus + 1]));
                 if (deployResultModel.updateTime == -1 || deployResultModel.updateTime == 0) {
                     getView().setUpdateTextViewVisible(false);
                 } else {
@@ -251,7 +254,8 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                         mContext.getString(R.string.no) : deployResultModel.phone) + ")");
                 getView().setWeChatTextView((TextUtils.isEmpty(deployResultModel.wxPhone) ?
                         mContext.getString(R.string.not_added) : deployResultModel.wxPhone));
-                getView().setStatusTextView(mContext.getString(Constants.DEVICE_STATUS_ARRAY[deployResultModel.deviceStatus]));
+                getView().setStatusTextView(mContext.getString(Constants.DEVICE_STATUS_ARRAY[deployResultModel.deviceStatus]),
+                        mContext.getResources().getColor(Constants.DEVICE_STATUS_COLOR_ARRAY[deployResultModel.deviceStatus]));
                 getView().refreshSignal(deployResultModel.updateTime, deployResultModel.signal);
                 if (deployResultModel.updateTime == -1 || deployResultModel.updateTime == 0) {
                     getView().setUpdateTextViewVisible(false);

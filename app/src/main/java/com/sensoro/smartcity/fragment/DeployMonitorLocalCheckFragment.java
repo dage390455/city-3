@@ -348,7 +348,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
     @Override
     public void showDeployMonitorCheckDialogUtils(int state, boolean hasForce) {
         deployMonitorCheckDialogUtils.show(state);
-        deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
+//        deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
     }
 
     @NonNull

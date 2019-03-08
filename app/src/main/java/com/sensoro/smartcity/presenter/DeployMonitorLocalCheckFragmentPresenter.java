@@ -32,8 +32,8 @@ import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.BleObserver;
+import com.sensoro.smartcity.util.HandlerDeployCheck;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.MyTimer;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
 
@@ -76,31 +76,6 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         }
         BleObserver.getInstance().registerBleObserver(this);
         mHandler.post(signalTask);
-        MyTimer myTimer = new MyTimer(1000, 10 * 1000, new MyTimer.OnMyTimer() {
-            @Override
-            public void onNext() {
-                try {
-                    LogUtils.loge("myTimer-->>onNext");
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFinish() {
-                try {
-                    LogUtils.loge("myTimer-->>onFinish");
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onCancel() {
-
-            }
-        });
-        myTimer.start();
     }
 
     private void initPickerData() {
@@ -627,146 +602,145 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             }
         }
     };
-    private MyTimer myTimer;
+    private HandlerDeployCheck checkHandler = new HandlerDeployCheck(Looper.getMainLooper());
 
     private void checkDeviceIsNearBy(int state) {
         getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_START, "", false);
         switch (state) {
             //一项
             case 1:
-                MyTimer.OnMyTimer onSingleMyTimer = new MyTimer.OnMyTimer() {
-                    @Override
-                    public void onNext() {
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_SUC, "", false);
-                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_ALL_SUC, "", false);
-                    }
-
-                    @Override
-                    public void onCancel() {
-
-                    }
-                };
-                myTimer = new MyTimer(1000, 1000, onSingleMyTimer);
-                myTimer.start();
+                //一项的时候，检查是否在附近
+                checkNearByOne();
                 break;
             //三项
             case 2:
-                MyTimer.OnMyTimer onThreeMyTimer = new MyTimer.OnMyTimer() {
-                    @Override
-                    public void onNext() {
-                        if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
-                            myTimer.cancel();
-                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_SUC, "", false);
-                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_START, "", false);
-                            MyTimer.OnMyTimer signalMyTimer = new MyTimer.OnMyTimer() {
+                //三项的时候，检查是否在附近
+                checkNearbyThree();
+                break;
+            //四项
+            case 3:
+                //四项的时候，检查是否在附近
+                checkNearbyFour();
+                break;
+        }
+    }
+
+    private void checkNearbyFour() {
+
+        HandlerDeployCheck.OnMessageDeal fourMsgDeal = new HandlerDeployCheck.OnMessageDeal() {
+            @Override
+            public void onNext() {
+                if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
+                    checkHandler.removeAllMessage();
+                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_SUC, "", false);
+
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_FAIL, "chaoshi", false);
+            }
+        };
+
+        checkHandler.init(1000,10);
+        checkHandler.removeAllMessage();
+        checkHandler.dealMessage(5,fourMsgDeal);
+    }
+    private void checkNearbyThree() {
+        HandlerDeployCheck.OnMessageDeal threeMsgDeal = new HandlerDeployCheck.OnMessageDeal() {
+            @Override
+            public void onNext() {
+                if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
+                    checkHandler.removeAllMessage();
+                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_SUC, "", false);
+                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_START, "", false);
+                    HandlerDeployCheck.OnMessageDeal signalMsgDeal = new HandlerDeployCheck.OnMessageDeal() {
+                        @Override
+                        public void onNext() {
+                            HandlerDeployCheck.OnMessageDeal statusMsgDel = new HandlerDeployCheck.OnMessageDeal() {
                                 @Override
                                 public void onNext() {
-                                    int signalState = checkSignalState();
-                                    MyTimer.OnMyTimer onStatusMyTimer = new MyTimer.OnMyTimer() {
-                                        @Override
-                                        public void onNext() {
-
-                                        }
-
-                                        @Override
-                                        public void onFinish() {
-                                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_SUC, "", false);
-                                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_ALL_SUC, "", false);
-                                        }
-
-                                        @Override
-                                        public void onCancel() {
-
-                                        }
-                                    };
-                                    switch (signalState) {
-                                        case 1:
-                                            myTimer.cancel();
-                                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_SUC_GOOD, "", false);
-                                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_START, "", false);
-                                            myTimer = new MyTimer(1000, 1000, onStatusMyTimer);
-                                            myTimer.start();
-                                            break;
-                                        case 2:
-                                            myTimer.cancel();
-                                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_SUC_NORMAL, "", false);
-                                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_START, "", false);
-                                            myTimer = new MyTimer(1000, 1000, onStatusMyTimer);
-                                            myTimer.start();
-                                            break;
-
-                                    }
+                                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_SUC, "", false);
+                                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_ALL_SUC, "", false);
                                 }
 
                                 @Override
                                 public void onFinish() {
-                                    switch (checkSignalState()) {
-                                        case -1:
-                                            myTimer.cancel();
-                                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, "无信号", false);
-                                            break;
-                                        case 3:
-                                            myTimer.cancel();
-                                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_BAD, "信号差", false);
-                                            break;
-                                    }
-                                }
-
-                                @Override
-                                public void onCancel() {
 
                                 }
                             };
-                            myTimer = new MyTimer(1000, 10 * 1000, signalMyTimer);
-                            myTimer.start();
-                        }
 
-
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_FAIL, "chaoshi", false);
-                    }
-
-                    @Override
-                    public void onCancel() {
-
-                    }
-                };
-                myTimer = new MyTimer(1000, 10 * 1000, onThreeMyTimer);
-                myTimer.start();
-                break;
-            //四项
-            case 3:
-                MyTimer.OnMyTimer onFourMyTime = new MyTimer.OnMyTimer() {
-                    @Override
-                    public void onNext() {
-                        if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
-                            myTimer.cancel();
-                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_SUC, "", false);
+                            int signalState = checkSignalState();
+                            switch (signalState) {
+                                case 1:
+                                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_SUC_GOOD, "", false);
+                                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_START, "", false);
+                                    checkHandler.init(1000,1);
+                                    checkHandler.removeAllMessage();
+                                    checkHandler.dealMessage(4,statusMsgDel);
+                                    break;
+                                case 2:
+                                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_SUC_NORMAL, "", false);
+                                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_START, "", false);
+                                    checkHandler.init(1000,1);
+                                    checkHandler.removeAllMessage();
+                                    checkHandler.dealMessage(4,statusMsgDel);
+                                    break;
+                            }
 
                         }
-                    }
 
-                    @Override
-                    public void onFinish() {
-                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_FAIL, "chaoshi", false);
-                    }
+                        @Override
+                        public void onFinish() {
+                            switch (checkSignalState()) {
+                                case -1:
+                                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, "无信号", false);
+                                    break;
+                                case 3:
+                                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_BAD, "信号差", false);
+                                    break;
+                            }
 
-                    @Override
-                    public void onCancel() {
+                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_SUC_NORMAL, "", false);
+                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_START, "", false);
+                        }
+                    };
 
-                    }
-                };
-                myTimer = new MyTimer(1000, 10 * 1000, onFourMyTime);
-                myTimer.start();
-                break;
-        }
+                    checkHandler.init(1000,10);
+                    checkHandler.removeAllMessage();
+                    checkHandler.dealMessage(3,signalMsgDeal);
+
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_FAIL, "chaoshi", false);
+            }
+        };
+        checkHandler.init(1000,10);
+        checkHandler.removeAllMessage();
+        checkHandler.dealMessage(2,threeMsgDeal);
+
+    }
+
+    private void checkNearByOne() {
+        checkHandler.init(1000,1);
+        checkHandler.dealMessage(1,new HandlerDeployCheck.OnMessageDeal(){
+
+            @Override
+            public void onNext() {
+                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_SUC, "", false);
+                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_ALL_SUC, "", false);
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+        });
     }
 
     //频点信息和初始配置信息写入

@@ -59,7 +59,9 @@ public interface Constants {
 //    //
 //    int LEFT_MENU_ICON_UNSELECT_SUPPER = R.mipmap.ic_menu_switch;
     int[] DEVICE_STATUS_ARRAY = {R.string.main_page_warn, R.string.normal, R.string.status_lost, R.string.status_inactive, R.string.status_malfunction};
+    int[] DEVICE_STATUS_COLOR_ARRAY = {R.color.c_f34a4a, R.color.c_29c093, R.color.c_5d5d5d, R.color.c_b6b6b6, R.color.c_fdc83b};
     int[] STATION_STATUS_ARRAY = {R.string.status_inactive, R.string.normal, R.string.status_alarm_true, R.string.status_emergency_alarm, R.string.status_timeout_not_reported, R.string.status_offline, R.string.status_malfunction};
+    int[] STATION_STATUS_COLOR_ARRAY = {R.color.c_b6b6b6, R.color.c_29c093, R.color.c_f34a4a, R.color.c_f34a4a, R.color.c_5d5d5d,R.color.c_5d5d5d,R.color.c_fdc83b};
     String[] INDEX_STATUS_ARRAY = {"全部状态", "预警", "正常", "失联", "未激活"};
     int[] INDEX_STATUS_VALUES = {0, 1, 2, 3};
     //    String[] INDEX_TYPE_ARRAY = {

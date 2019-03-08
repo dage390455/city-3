@@ -159,6 +159,11 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
     }
 
     @Override
+    public void setSubtitleVisible(boolean isVisible) {
+        includeTextTitleTvSubtitle.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
     public void setSignalVisible(boolean isVisible) {
         btDeployMapSignal.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
