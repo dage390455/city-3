@@ -261,6 +261,7 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
                         mMerchantEtClear.setVisibility(View.VISIBLE);
                         mMerchantEtSearch.clearFocus();
                         AppUtils.dismissInputMethodManager(mActivity, mMerchantEtSearch);
+                        mPresenter.save(text);
                         setSearchHistoryVisible(false);
                     }
                 });
@@ -423,6 +424,11 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
         return llMainMerchant.getVisibility() == View.VISIBLE;
     }
 
+    @Override
+    protected void onPause() {
+        AppUtils.dismissInputMethodManager(mActivity,mMerchantEtSearch);
+        super.onPause();
+    }
 
     @Override
     public void onPullRefreshComplete() {

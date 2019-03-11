@@ -5,6 +5,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
@@ -220,9 +221,12 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
         if (TextUtils.isEmpty(text)) {
             return;
         }
-        mSearchHistoryList.remove(text);
-        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MERCHANT);
-        mSearchHistoryList.add(0, text);
+//        mSearchHistoryList.remove(text);
+//        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MERCHANT);
+//        mSearchHistoryList.add(0, text);
+        List<String> merchantList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MERCHANT, text);
+        mSearchHistoryList.clear();
+        mSearchHistoryList.addAll(merchantList);
         getView().updateSearchHistoryList(mSearchHistoryList);
     }
 
@@ -231,7 +235,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
     }
 
     public void clearSearchHistory() {
-        PreferencesHelper.getInstance().clearSearchHistory(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MERCHANT);
+        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MERCHANT);
         mSearchHistoryList.clear();
         getView().updateSearchHistoryList(mSearchHistoryList);
     }

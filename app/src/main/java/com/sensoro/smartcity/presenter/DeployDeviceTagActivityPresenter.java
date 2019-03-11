@@ -8,6 +8,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IDeployDeviceTagActivityView;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -176,7 +177,7 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
     }
 
     public void clearHistoryTag() {
-        PreferencesSaveAnalyzer.clearAllData(3);
+        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_TAG);
         mHistoryKeywords.clear();
         if (isAttachedView()) {
             getView().updateSearchHistory(mHistoryKeywords);

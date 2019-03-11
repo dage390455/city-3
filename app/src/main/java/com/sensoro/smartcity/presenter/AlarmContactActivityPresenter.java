@@ -8,6 +8,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IAlarmContactActivityView;
 import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.model.EventData;
@@ -166,8 +167,8 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
 
 
     private void save(String name, String phone) {
-        List<String> nameList = PreferencesSaveAnalyzer.handleDeployRecord(1, name);
-        List<String> phoneList = PreferencesSaveAnalyzer.handleDeployRecord(4, phone);
+        List<String> nameList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_ALARM_CONTRACT_NAME, name);
+        List<String> phoneList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_ALARM_CONTRACT_PHONE, phone);
 //        mHistoryKeywords.clear();
 //        if (mStatus != -1) {
 //            switch (mStatus){
@@ -225,10 +226,10 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
         if (mStatus != -1) {
             switch (mStatus) {
                 case 0:
-                    PreferencesSaveAnalyzer.clearAllData(1);
+                    PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_ALARM_CONTRACT_NAME);
                     break;
                 case 1:
-                    PreferencesSaveAnalyzer.clearAllData(4);
+                    PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_ALARM_CONTRACT_PHONE);
                     break;
             }
         }

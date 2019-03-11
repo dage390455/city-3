@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmDetailLogActivity;
+import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
@@ -442,11 +443,12 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         requestDataByDate(calendarDateModel.startDate, calendarDateModel.endDate);
         getView().setSearchHistoryVisible(false);
         if (!TextUtils.isEmpty(tempSearch)) {
-            PreferencesHelper.getInstance().saveSearchHistoryText(tempSearch, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
-            //为了调整 搜索顺序，所以先删除，再添加
-            mSearchHistoryList.remove(tempSearch);
-            mSearchHistoryList.add(0, tempSearch);
-            getView().updateSearchHistoryList(mSearchHistoryList);
+//            PreferencesHelper.getInstance().saveSearchHistoryText(tempSearch, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
+//            //为了调整 搜索顺序，所以先删除，再添加
+//            mSearchHistoryList.remove(tempSearch);
+//            mSearchHistoryList.add(0, tempSearch);
+//            getView().updateSearchHistoryList(mSearchHistoryList);
+            save(tempSearch);
 
         }
 
@@ -504,14 +506,18 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         if (TextUtils.isEmpty(text)) {
             return;
         }
-        mSearchHistoryList.remove(text);
-        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
-        mSearchHistoryList.add(0, text);
+//        mSearchHistoryList.remove(text);
+//        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
+        List<String> warnList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN, text);
+//        mSearchHistoryList.add(0, text);
+        mSearchHistoryList.clear();
+        mSearchHistoryList.addAll(warnList);
         getView().updateSearchHistoryList(mSearchHistoryList);
+
     }
 
     public void clearSearchHistory() {
-        PreferencesHelper.getInstance().clearSearchHistory(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
+        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
         mSearchHistoryList.clear();
         getView().updateSearchHistoryList(mSearchHistoryList);
     }

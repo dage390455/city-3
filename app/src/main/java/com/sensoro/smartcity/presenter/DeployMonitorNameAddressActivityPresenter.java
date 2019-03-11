@@ -9,6 +9,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorNameAddressActivityView;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -58,7 +59,7 @@ public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDe
     }
 
     private void save(String text) {
-        List<String> list = PreferencesSaveAnalyzer.handleDeployRecord(0, text);
+        List<String> list = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_NAME_ADDRESS, text);
         mHistoryKeywords.clear();
         mHistoryKeywords.addAll(list);
 //        String oldText = PreferencesHelper.getInstance().getDeployNameAddressHistory();
@@ -195,7 +196,7 @@ public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDe
     }
 
     public void clearHistory() {
-        PreferencesSaveAnalyzer.clearAllData(0);
+        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_NAME_ADDRESS);
         mHistoryKeywords.clear();
         if (isAttachedView()) {
             getView().updateSearchHistoryData(mHistoryKeywords);

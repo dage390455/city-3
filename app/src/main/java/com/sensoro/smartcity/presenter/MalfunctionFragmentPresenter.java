@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.widget.LinearLayout;
 
 import com.sensoro.smartcity.activity.MalfunctionDetailActivity;
+import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
@@ -152,10 +153,11 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
         requestDataByDate(calendarDateModel.startDate, calendarDateModel.endDate);
         getView().setSearchHistoryVisible(false);
         if (!TextUtils.isEmpty(tempSearch)) {
-            PreferencesHelper.getInstance().saveSearchHistoryText(tempSearch, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION);
-            mSearchHistoryList.remove(tempSearch);
-            mSearchHistoryList.add(0, tempSearch);
-            getView().UpdateSearchHistoryList(mSearchHistoryList);
+//            PreferencesHelper.getInstance().saveSearchHistoryText(tempSearch, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION);
+//            mSearchHistoryList.remove(tempSearch);
+//            mSearchHistoryList.add(0, tempSearch);
+//            getView().UpdateSearchHistoryList(mSearchHistoryList);
+            save(tempSearch);
 
         }
     }
@@ -249,7 +251,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
     }
 
     public void clearSearchHistory() {
-        PreferencesHelper.getInstance().clearSearchHistory(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION);
+        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION);
         mSearchHistoryList.clear();
         getView().UpdateSearchHistoryList(mSearchHistoryList);
     }
@@ -258,9 +260,10 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
         if (TextUtils.isEmpty(text)) {
             return;
         }
-        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION);
-        mSearchHistoryList.remove(text);
-        mSearchHistoryList.add(0, text);
+//        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION);
+        List<String> malfunctionList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION, text);
+        mSearchHistoryList.clear();
+        mSearchHistoryList.addAll(malfunctionList);
         getView().UpdateSearchHistoryList(mSearchHistoryList);
     }
 }

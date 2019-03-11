@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployRecordDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
+import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
@@ -183,11 +184,12 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
                 .getCalendarYearMothDayFormatDate(endTime));
         getView().setSearchHistoryVisible(false);
         if (!TextUtils.isEmpty(tempSearch)) {
-            PreferencesHelper.getInstance().saveSearchHistoryText(tempSearch, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
-            //为了调整 搜索顺序，所以先删除，再添加
-            mSearchHistoryList.remove(tempSearch);
-            mSearchHistoryList.add(0, tempSearch);
-            getView().updateSearchHistoryList(mSearchHistoryList);
+//            PreferencesHelper.getInstance().saveSearchHistoryText(tempSearch, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
+//            //为了调整 搜索顺序，所以先删除，再添加
+//            mSearchHistoryList.remove(tempSearch);
+//            mSearchHistoryList.add(0, tempSearch);
+//            getView().updateSearchHistoryList(mSearchHistoryList);
+            save(tempSearch);
 
         }
         requestSearchData(DIRECTION_DOWN, getView().getSearchText());
@@ -222,14 +224,17 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
         if (TextUtils.isEmpty(text)) {
             return;
         }
-        mSearchHistoryList.remove(text);
-        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_RECORD);
-        mSearchHistoryList.add(0, text);
+//        mSearchHistoryList.remove(text);
+//        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_RECORD);
+//        mSearchHistoryList.add(0, text);
+        List<String> deployRecordList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_RECORD, text);
+        mSearchHistoryList.clear();
+        mSearchHistoryList.addAll(deployRecordList);
         getView().updateSearchHistoryList(mSearchHistoryList);
     }
 
     public void clearSearchHistory() {
-        PreferencesHelper.getInstance().clearSearchHistory(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_RECORD);
+        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_RECORD);
         mSearchHistoryList.clear();
         getView().updateSearchHistoryList(mSearchHistoryList);
     }

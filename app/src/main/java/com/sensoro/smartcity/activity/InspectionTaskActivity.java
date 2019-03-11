@@ -230,6 +230,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
                         acInspectionTaskEtSearch.clearFocus();
                         AppUtils.dismissInputMethodManager(mActivity, acInspectionTaskEtSearch);
                         setSearchHistoryVisible(false);
+                        mPresenter.save(text);
                         mPresenter.requestSearchData(DIRECTION_DOWN, text);
                     }
                 });
@@ -438,6 +439,12 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     @Override
     public void setIntentResult(int resultCode, Intent data) {
 
+    }
+
+    @Override
+    protected void onPause() {
+        AppUtils.dismissInputMethodManager(mActivity,acInspectionTaskEtSearch);
+        super.onPause();
     }
 
     @Override

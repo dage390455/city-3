@@ -60,8 +60,8 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 
 public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityView, SearchMonitorActivityPresenter>
         implements ISearchMonitorActivityView, View.OnClickListener, TextView
-        .OnEditorActionListener, TextWatcher, MainHomeFragRcContentAdapter.OnContentItemClickListener ,
-TipOperationDialogUtils.TipDialogUtilsClickListener{
+        .OnEditorActionListener, TextWatcher, MainHomeFragRcContentAdapter.OnContentItemClickListener,
+        TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.search_device_et)
     EditText mKeywordEt;
     @BindView(R.id.search_device_cancel_tv)
@@ -122,6 +122,7 @@ TipOperationDialogUtils.TipDialogUtilsClickListener{
         mKeywordEt.addTextChangedListener(this);
         mCancelTv.setOnClickListener(this);
         mClearBtn.setOnClickListener(this);
+        mKeywordEt.setOnClickListener(this);
         AppUtils.getInputSoftStatus(searchDeviceLlRoot, new AppUtils.InputSoftStatusListener() {
             @Override
             public void onKeyBoardClose() {
@@ -147,9 +148,9 @@ TipOperationDialogUtils.TipDialogUtilsClickListener{
     private void initClearHistoryDialog() {
         historyClearDialog = new TipOperationDialogUtils(mActivity, true);
         historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
-        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
-        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
-        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record), R.color.c_a6a6a6);
+        historyClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear), getResources().getColor(R.color.c_a6a6a6));
         historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
@@ -197,7 +198,7 @@ TipOperationDialogUtils.TipDialogUtilsClickListener{
                 if (xLinearLayoutManager.findFirstVisibleItemPosition() > 4) {
                     if (newState == 0) {
                         mReturnTopImageView.setVisibility(VISIBLE);
-                        if (returnTopAnimation!=null&&returnTopAnimation.hasEnded()) {
+                        if (returnTopAnimation != null && returnTopAnimation.hasEnded()) {
                             mReturnTopImageView.startAnimation(returnTopAnimation);
                         }
                     } else {
@@ -318,7 +319,7 @@ TipOperationDialogUtils.TipDialogUtilsClickListener{
         SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mSearchHistoryRv.setLayoutManager(layoutManager);
-        mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(AppUtils.dp2px(mActivity, 6),false,false));
+        mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(AppUtils.dp2px(mActivity, 6), false, false));
         mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, new
                 RecycleViewItemClickListener() {
                     @Override
@@ -434,6 +435,11 @@ TipOperationDialogUtils.TipDialogUtilsClickListener{
             case R.id.index_return_top:
                 returnTop();
                 break;
+            case R.id.search_device_et:
+                setSearchHistoryLayoutVisible(true);
+                setIndexListLayoutVisible(false);
+                break;
+
             default:
                 break;
         }
@@ -456,14 +462,14 @@ TipOperationDialogUtils.TipDialogUtilsClickListener{
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (!TextUtils.isEmpty(s.toString())) {
-            setSearchHistoryLayoutVisible(false);
-            mClearKeywordIv.setVisibility(View.VISIBLE);
-//            mPresenter.filterDeviceInfo(s.toString());
-        } else {
-            setSearchHistoryLayoutVisible(true);
-            setIndexListLayoutVisible(false);
-        }
+//        if (!TextUtils.isEmpty(s.toString())) {
+//            setSearchHistoryLayoutVisible(false);
+//            mClearKeywordIv.setVisibility(View.VISIBLE);
+////            mPresenter.filterDeviceInfo(s.toString());
+//        } else {
+//            setSearchHistoryLayoutVisible(true);
+//            setIndexListLayoutVisible(false);
+//        }
     }
 
     @Override

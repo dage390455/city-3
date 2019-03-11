@@ -253,6 +253,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
                         fgMainWarnEtSearch.clearFocus();
                         AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
                         setSearchHistoryVisible(false);
+                        mPresenter.save(text);
                         mPresenter.requestSearchData(DIRECTION_DOWN, text);
                     }
                 });
@@ -322,6 +323,12 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
             super.onBackPressed();
         }
 
+    }
+
+    @Override
+    protected void onPause() {
+        AppUtils.dismissInputMethodManager(mActivity,fgMainWarnEtSearch);
+        super.onPause();
     }
 
     @Override

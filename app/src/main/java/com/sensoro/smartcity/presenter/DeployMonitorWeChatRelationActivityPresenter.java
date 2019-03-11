@@ -8,6 +8,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorWeChatRelationActivityView;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -52,7 +53,7 @@ public class DeployMonitorWeChatRelationActivityPresenter extends BasePresenter<
     }
 
     private void save(String text) {
-        List<String> list = PreferencesSaveAnalyzer.handleDeployRecord(2, text);
+        List<String> list = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_MINI_PROGRAM, text);
         mHistoryKeywords.clear();
         mHistoryKeywords.addAll(list);
 //        String oldText = PreferencesHelper.getInstance().getDeployWeChatRelationHistory();
@@ -112,7 +113,7 @@ public class DeployMonitorWeChatRelationActivityPresenter extends BasePresenter<
     }
 
     public void clearHistory() {
-        PreferencesSaveAnalyzer.clearAllData(2);
+        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_MINI_PROGRAM);
         mHistoryKeywords.clear();
         if (isAttachedView()) {
             getView().updateSearchHistoryData(mHistoryKeywords);
