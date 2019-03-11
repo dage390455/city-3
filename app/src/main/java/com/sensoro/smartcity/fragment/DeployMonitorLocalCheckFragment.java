@@ -318,7 +318,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
                 toastShort(getString(R.string.enter_the_correct_number_format));
             }
         } else {
-            tvDeployLocalCheckCurrentValue.setText("");
+            tvDeployLocalCheckCurrentValue.setText("-");
         }
         updateBtnStatus(mPresenter.canDoOneNextTest());
     }
