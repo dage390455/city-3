@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.constant.DeoloyCheckPointConstants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -129,22 +130,21 @@ public class DeployMonitorCheckDialogUtils {
         }
     }
 
-
     private void initDialogStatus(int status) {
         switch (status) {
-            case 1:
+            case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE:
                 rlDeployCheckDialogDeviceLocation.setVisibility(View.VISIBLE);
                 rlDeployCheckDialogInitConfig.setVisibility(View.GONE);
                 rlDeployCheckDialogDeviceStatus.setVisibility(View.GONE);
                 rlDeployCheckDialogSignalStrength.setVisibility(View.GONE);
                 break;
-            case 2:
+            case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_THREE:
                 rlDeployCheckDialogDeviceLocation.setVisibility(View.VISIBLE);
                 rlDeployCheckDialogInitConfig.setVisibility(View.GONE);
                 rlDeployCheckDialogDeviceStatus.setVisibility(View.VISIBLE);
                 rlDeployCheckDialogSignalStrength.setVisibility(View.VISIBLE);
                 break;
-            case 3:
+            case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_FOUR:
                 rlDeployCheckDialogDeviceLocation.setVisibility(View.VISIBLE);
                 rlDeployCheckDialogInitConfig.setVisibility(View.VISIBLE);
                 rlDeployCheckDialogDeviceStatus.setVisibility(View.VISIBLE);
@@ -240,13 +240,12 @@ public class DeployMonitorCheckDialogUtils {
         ivDeployCheckDialogSignalStrength.clearAnimation();
         ivDeployCheckDialogSignalStrength.setImageResource(R.drawable.deploy_test_success);
         Drawable drawable;
-        String text;
         switch (status) {
-            case 1:
+            case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD:
                 drawable = mActivity.getResources().getDrawable(R.drawable.signal_good);
                 drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                 break;
-            case 2:
+            case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NORMAL:
                 drawable = mActivity.getResources().getDrawable(R.drawable.signal_normal);
                 drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                 break;
@@ -269,7 +268,7 @@ public class DeployMonitorCheckDialogUtils {
         Drawable signalDrawable;
         String text;
         switch (status) {
-            case 1:
+            case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD:
                 drawable = mActivity.getResources().getDrawable(R.drawable.deploy_check_yellow);
                 drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                 signalDrawable = mActivity.getResources().getDrawable(R.drawable.signal_bad);
@@ -277,7 +276,7 @@ public class DeployMonitorCheckDialogUtils {
                 text = mActivity.getString(R.string.deploy_check_signal_bad);
                 tvDeployCheckDialogSignalStrengthErrorDesc.setTextColor(yellowColor);
                 break;
-            case 2:
+            case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NONE:
                 drawable = mActivity.getResources().getDrawable(R.drawable.deploy_check_failed_red);
                 drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                 signalDrawable = mActivity.getResources().getDrawable(R.drawable.signal_none);
@@ -320,13 +319,13 @@ public class DeployMonitorCheckDialogUtils {
         Drawable drawable;
         String text;
         switch (status) {
-            case 1:
+            case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_STATUS_MALFUNCTION:
                 drawable = mActivity.getResources().getDrawable(R.drawable.deploy_check_yellow);
                 drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                 text = mActivity.getString(R.string.malfunctioning);
                 tvDeployCheckDialogDeviceStatusErrorDesc.setTextColor(yellowColor);
                 break;
-            case 2:
+            case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_STATUS_ALARM:
                 drawable = mActivity.getResources().getDrawable(R.drawable.deploy_check_failed_red);
                 drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
                 text = mActivity.getString(R.string.alarming);

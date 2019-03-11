@@ -118,15 +118,12 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
             default:
                 break;
         }
-//        getView().updateUploadState(true);
-            String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType);
-            getView().setDeployDeviceType(deviceTypeName);
-            //TODO 暂时只针对ancre的电器火灾并且排除掉泛海三江电气火灾
-            boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
-            if (!AppUtils.isChineseLanguage()) {
-                //TODO 英文版控制不显示小程序账号
-                deployAnalyzerModel.weChatAccount = null;
-            }
+        String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType);
+        getView().setDeployDeviceType(deviceTypeName);
+        if (!AppUtils.isChineseLanguage()) {
+            //TODO 英文版控制不显示小程序账号
+            deployAnalyzerModel.weChatAccount = null;
+        }
     }
 
     private void echoDeviceInfo() {
@@ -162,13 +159,6 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
         }
         switch (deployAnalyzerModel.deployType) {
             case TYPE_SCAN_DEPLOY_STATION:
-//                if (getRealImageSize(deployAnalyzerModel.images) == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
-//                    return false;
-//                }
-//                //经纬度校验
-//                if (deployAnalyzerModel.latLng.size() != 2) {
-//                    return false;
-//                }
                 break;
             case TYPE_SCAN_DEPLOY_DEVICE:
             case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
@@ -186,19 +176,9 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                     return false;
                 }
                 //照片校验
-                if (getRealImageSize(deployAnalyzerModel.images) == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+                if (getRealImageSize() == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
                     return false;
                 }
-                //经纬度校验
-//                if (deployAnalyzerModel.latLng.size() != 2) {
-//                    return false;
-//                }
-//                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
-//                if (isFire) {
-//                    if (deployAnalyzerModel.settingData == null) {
-//                        return false;
-//                    }
-//                }
                 break;
             default:
                 break;
@@ -245,62 +225,20 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
 
                     deployAnalyzerModel.images.addAll((ArrayList<ImageItem>) data);
 
-                    if (getRealImageSize(deployAnalyzerModel.images) > 0) {
-                        getView().setDeployPhotoText(mActivity.getString(R.string.added) + getRealImageSize(deployAnalyzerModel.images) + mActivity.getString(R.string.images));
+                    if (getRealImageSize() > 0) {
+                        getView().setDeployPhotoText(mActivity.getString(R.string.added) + getRealImageSize() + mActivity.getString(R.string.images));
                     } else {
                         getView().setDeployPhotoText(mActivity.getString(R.string.not_added));
                     }
                     getView().setUploadBtnStatus(checkCanUpload());
                 }
                 break;
-//            case Constants.EVENT_DATA_DEPLOY_MAP:
-//                if (data instanceof DeployAnalyzerModel) {
-//                    this.deployAnalyzerModel = (DeployAnalyzerModel) data;
-//                    freshSignalInfo();
-//                }
-//                getView().setUploadBtnStatus(checkCanUpload());
-//                break;
-//            case Constants.EVENT_DATA_SOCKET_DATA_INFO:
-//                if (data instanceof DeviceInfo) {
-//                    DeviceInfo deviceInfo = (DeviceInfo) data;
-//                    String sn = deviceInfo.getSn();
-//                    try {
-//                        if (deployAnalyzerModel.sn.equalsIgnoreCase(sn)) {
-//                            deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
-//                            deployAnalyzerModel.signal = deviceInfo.getSignal();
-//                            freshSignalInfo();
-////                            getView().toastLong("信号-->>time = " + deployAnalyzerModel.updatedTime + ",signal = " + deployAnalyzerModel.signal);
-//                            try {
-//                                LogUtils.loge(this, "部署页刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + deployAnalyzerModel.signal);
-//                            } catch (Throwable throwable) {
-//                                throwable.printStackTrace();
-//                            }
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                break;
             case Constants.EVENT_DATA_DEPLOY_SETTING_WE_CHAT_RELATION:
                 if (data instanceof String) {
                     deployAnalyzerModel.weChatAccount = (String) data;
                     getView().setDeployWeChatText(deployAnalyzerModel.weChatAccount);
                 }
                 break;
-//            case Constants.EVENT_DATA_DEPLOY_INIT_CONFIG_CODE:
-//                if (data instanceof DeployControlSettingData) {
-//                    deployAnalyzerModel.settingData = (DeployControlSettingData) data;
-//                    Integer initValue = deployAnalyzerModel.settingData.getSwitchSpec();
-//                    if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
-//                        if (initValue != null) {
-//                            getView().setDeployDeviceDetailDeploySetting(mContext.getString(R.string.actual_overcurrent_threshold) + ":" + initValue + "A");
-//                        }
-//                    }
-//                } else {
-//                    getView().setDeployDeviceDetailDeploySetting(null);
-//                }
-//                getView().setUploadBtnStatus(checkCanUpload());
-//                break;
             default:
                 break;
         }
@@ -335,14 +273,14 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
 
     public void doSettingPhoto() {
         Intent intent = new Intent(mActivity, DeployMonitorDeployPicActivity.class);
-        if (getRealImageSize(deployAnalyzerModel.images) > 0) {
+        if (getRealImageSize() > 0) {
             intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
         }
         intent.putExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
         getView().startAC(intent);
     }
 
-    private int getRealImageSize(ArrayList<ImageItem> images) {
+    private int getRealImageSize() {
         int count = 0;
         for (ImageItem image : deployAnalyzerModel.images) {
             if (image != null) {
@@ -368,7 +306,6 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
             }
             intent.putExtra(EXTRA_DEPLOY_TO_SN, deployAnalyzerModel.sn);
             getView().startAC(intent);
-//            getView().startACForResult(intent, Constants.REQUEST_CODE_INIT_CONFIG);
         }
     }
 
@@ -387,64 +324,12 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                 //联系人校验
                 if (checkHasContact()) return;
                 if (checkHasPhoto()) return;
-                //经纬度校验
-//                if (checkHasNoLatLng()) return;
-//                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
-//                if (isFire) {
-//                    if (deployAnalyzerModel.settingData == null) {
-//                        getView().toastShort(mActivity.getString(R.string.deploy_has_no_configuration_tip));
-//                        return;
-//                    }
-//                }
-//                if (checkNeedSignal()) {
-//                    checkHasForceUploadPermission();
-//                } else {
                 requestUpload();
-//                }
                 break;
             default:
                 break;
         }
     }
-
-    /**
-     * 检查是否能强制上传
-     */
-    private void checkHasForceUploadPermission() {
-//        String mergeType = WidgetUtil.handleMergeType(deployAnalyzerModel.deviceType);
-//        if (TextUtils.isEmpty(mergeType)) {
-////            getView().showWarnDialog(true);
-//        } else {
-//            if (Constants.DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST.contains(mergeType)) {
-//                if (PreferencesHelper.getInstance().getUserData().hasBadSignalUpload) {
-//                    getView().showWarnDialog(true);
-//                } else {
-//                    getView().showWarnDialog(false);
-//                }
-//            } else {
-//                getView().showWarnDialog(true);
-//            }
-//        }
-    }
-
-    /**
-     * 检查信号状态
-     *
-     * @return
-     */
-    private boolean checkNeedSignal() {
-        long time_diff = System.currentTimeMillis() - deployAnalyzerModel.updatedTime;
-        if (deployAnalyzerModel.signal != null && (time_diff < 2 * 60 * 1000)) {
-            switch (deployAnalyzerModel.signal) {
-                case "good":
-                case "normal":
-                    return false;
-            }
-        }
-        return true;
-    }
-
-
 
     /**
      * 检测是否填写过联系人
@@ -472,7 +357,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
         return false;
     }
 
-    public void requestUpload() {
+    private void requestUpload() {
         final double lon = deployAnalyzerModel.latLng.get(0);
         final double lan = deployAnalyzerModel.latLng.get(1);
         switch (deployAnalyzerModel.deployType) {
@@ -508,67 +393,16 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                 //设备部署
             case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
             case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
-                //巡检设备更换
-                //TODO 暂时对电气火灾设备直接上传
-//                if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
-//                    doUploadImages(lon, lan);
-//                } else {
-
-//                if (PreferencesHelper.getInstance().getUserData().hasSignalConfig || Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
-//                    changeDevice(lon, lan);
-//                } else {
-//                    doUploadImages(lon, lan);
-//                }
-//                }
-                handleBleSetting(lon, lan);
+                doUploadImages(lon, lan);
                 break;
             default:
                 break;
         }
     }
 
-    private void handleBleSetting(double lon, double lan) {
-//        if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
-//            if (!TextUtils.isEmpty(deployAnalyzerModel.blePassword) && deployAnalyzerModel.channelMask.size() > 0) {
-//                //需要配置频点信息
-//                if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
-//                    if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
-//                        if (deployAnalyzerModel.settingData != null) {
-//                            //配置频点信息和初始配置
-//                            getView().showBleConfigDialog();
-//                            connectDevice();
-//                        } else {
-//                            getView().toastShort(mContext.getString(R.string.please_set_initial_configuration));
-//                        }
-//                    } else {
-//                        //直接配置频点信息
-//                        connectDevice();
-//                    }
-//
-//                } else {
-//                    getView().toastShort(mContext.getString(R.string.device_not_found_activate_Bluetooth));
-//                }
-//
-//            } else {
-//                getView().toastShort(mContext.getString(R.string.channel_mask_error_tip));
-//            }
-//            return;
-//        } else {
-//            if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
-//                //单独配置初始配置
-//                if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
-//                    connectDevice();
-//                } else {
-//                    getView().toastShort(mContext.getString(R.string.device_not_found_activate_Bluetooth));
-//                }
-//                return;
-//            }
-//        }
-        doUploadImages(lon, lan);
-    }
 
     private void doUploadImages(final double lon, final double lan) {
-        if (getRealImageSize(deployAnalyzerModel.images) > 0) {
+        if (getRealImageSize() > 0) {
             //TODO 图片提交
             final UpLoadPhotosUtils.UpLoadPhotoListener upLoadPhotoListener = new UpLoadPhotosUtils
                     .UpLoadPhotoListener() {
@@ -639,9 +473,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
             case TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
                 getView().showProgressDialog();
-                //TODO 暂时不支持添加wx电话
                 //TODO 添加电气火灾配置支持
-//                deployAnalyzerModel.weChatAccount = null;
                 boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                 //暂时添加 后续可以删除
                 DeployControlSettingData settingData = null;
@@ -815,17 +647,8 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
         getView().startAC(intent);
     }
 
-    private boolean checkHasNoLatLng() {
-        if (deployAnalyzerModel.latLng.size() != 2) {
-            getView().toastShort(mActivity.getString(R.string.please_specify_the_deployment_location));
-            getView().setUploadBtnStatus(true);
-            return true;
-        }
-        return false;
-    }
-
     private boolean checkHasPhoto() {
-        if (getRealImageSize(deployAnalyzerModel.images) == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+        if (getRealImageSize() == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
             getView().toastShort(mActivity.getString(R.string.please_add_at_least_one_image));
             getView().setUploadBtnStatus(true);
             return true;

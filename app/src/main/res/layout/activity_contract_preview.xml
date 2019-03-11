@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <include layout="@layout/item_include_text_title"/>
+
     <WebView
         android:id="@+id/wv_preview"
         android:layout_width="match_parent"
