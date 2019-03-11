@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.activity;
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -48,10 +49,11 @@ public class DeployMonitorCheckActivity extends BaseActivity<IDeployMonitorCheck
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
+        //放在最近前面
+        mPresenter.initData(mActivity);
         setContentView(R.layout.activity_deploy_monitor_check);
         ButterKnife.bind(this);
         initView();
-        mPresenter.initData(mActivity);
     }
 
     private void initView() {
@@ -60,6 +62,7 @@ public class DeployMonitorCheckActivity extends BaseActivity<IDeployMonitorCheck
         includeLineDivider.setVisibility(View.GONE);
         mDeployMonitorLocalCheckFragment = new DeployMonitorLocalCheckFragment();
         mDeployMonitorUploadCheckFragment = new DeployMonitorUploadCheckFragment();
+        setDeployMonitorStep(1);
 
     }
 
@@ -72,9 +75,9 @@ public class DeployMonitorCheckActivity extends BaseActivity<IDeployMonitorCheck
     public void showDeployMonitorLocalCheckFragment() {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (mDeployMonitorLocalCheckFragment.isAdded()) {
-            fragmentTransaction.hide(mDeployMonitorUploadCheckFragment).show(mDeployMonitorLocalCheckFragment).commit();
+            fragmentTransaction.hide(mDeployMonitorUploadCheckFragment).show(mDeployMonitorLocalCheckFragment).commitAllowingStateLoss();
         } else {
-            fragmentTransaction.add(R.id.fl_deploy_check_root, mDeployMonitorLocalCheckFragment).hide(mDeployMonitorUploadCheckFragment).show(mDeployMonitorLocalCheckFragment).commit();
+            fragmentTransaction.add(R.id.fl_deploy_check_root, mDeployMonitorLocalCheckFragment).hide(mDeployMonitorUploadCheckFragment).show(mDeployMonitorLocalCheckFragment).commitAllowingStateLoss();
         }
     }
 
@@ -82,9 +85,9 @@ public class DeployMonitorCheckActivity extends BaseActivity<IDeployMonitorCheck
     public void showDeployMonitorUploadCheckFragment() {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (mDeployMonitorUploadCheckFragment.isAdded()) {
-            fragmentTransaction.hide(mDeployMonitorLocalCheckFragment).show(mDeployMonitorUploadCheckFragment).commit();
+            fragmentTransaction.hide(mDeployMonitorLocalCheckFragment).show(mDeployMonitorUploadCheckFragment).commitAllowingStateLoss();
         } else {
-            fragmentTransaction.add(R.id.fl_deploy_check_root, mDeployMonitorUploadCheckFragment).hide(mDeployMonitorLocalCheckFragment).show(mDeployMonitorUploadCheckFragment).commit();
+            fragmentTransaction.add(R.id.fl_deploy_check_root, mDeployMonitorUploadCheckFragment).hide(mDeployMonitorLocalCheckFragment).show(mDeployMonitorUploadCheckFragment).commitAllowingStateLoss();
         }
     }
 
@@ -176,5 +179,22 @@ public class DeployMonitorCheckActivity extends BaseActivity<IDeployMonitorCheck
     @Override
     public void onBackPressed() {
         doPreStep();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        mPresenter.onRestoreInstanceState(savedInstanceState);
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        mPresenter.onSaveInstanceState(outState);
+        super.onSaveInstanceState(outState);
     }
 }

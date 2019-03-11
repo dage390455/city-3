@@ -203,6 +203,7 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
                         fgMainTopSearchEtSearch.clearFocus();
                         AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), fgMainTopSearchEtSearch);
                         setSearchHistoryVisible(false);
+                        mPresenter.save(text);
                         mPresenter.requestSearchData(DIRECTION_DOWN, text);
                     }
                 });

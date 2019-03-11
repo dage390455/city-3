@@ -1,11 +1,13 @@
 package com.sensoro.smartcity.analyzer;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.util.PreferencesHelper;
 
 import java.util.ArrayList;
@@ -20,7 +22,6 @@ public class PreferencesSaveAnalyzer {
 
     /**
      * 存储标签
-     * ps:因为这里没用到3，所以就没写3，
      *
      * @param status 0 部署名称地址 1 部署预警联系人姓名 2 部署小程序账号 4 部署预警联系人电话
      * @param text
@@ -79,7 +80,7 @@ public class PreferencesSaveAnalyzer {
                     list.add(split[i]);
 
                 }
-                savePreferences(status,sb.toString());
+                savePreferences(status, sb.toString());
                 return list;
             }
         }
@@ -88,16 +89,40 @@ public class PreferencesSaveAnalyzer {
 
     private static void savePreferences(int status, String content) {
         switch (status) {
-            case 0:
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN:
+                SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_WARN, Context
+                        .MODE_PRIVATE).edit().putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, content).apply();
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION:
+                SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_MALFUNCTION, Context
+                        .MODE_PRIVATE).edit().putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, content).apply();
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_INSPECTION:
+                SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_INSPECTION, Context
+                        .MODE_PRIVATE).edit().putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, content).apply();
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_CONTRACT:
+                SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_CONTRACT, Context
+                        .MODE_PRIVATE).edit().putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, content).apply();
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MERCHANT:
+                SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_MERCHANT, Context
+                        .MODE_PRIVATE).edit().putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, content).apply();
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_RECORD:
+                SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_DEPLOY_RECORD, Context
+                        .MODE_PRIVATE).edit().putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, content).apply();
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_NAME_ADDRESS:
                 PreferencesHelper.getInstance().saveDeployNameAddressHistory(content);
                 break;
-            case 1:
-                PreferencesHelper.getInstance().saveDeployAlarmContactNameHistory(content);
-                break;
-            case 2:
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_MINI_PROGRAM:
                 PreferencesHelper.getInstance().saveDeployWeChatRelationHistory(content);
                 break;
-            case 4:
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_ALARM_CONTRACT_NAME:
+                PreferencesHelper.getInstance().saveDeployAlarmContactNameHistory(content);
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_ALARM_CONTRACT_PHONE:
                 PreferencesHelper.getInstance().saveDeployAlarmContactPhoneHistory(content);
                 break;
 
@@ -107,18 +132,43 @@ public class PreferencesSaveAnalyzer {
     private static String obtainOldText(int status) {
         String oldText = null;
         switch (status) {
-            case 0:
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN:
+                oldText = SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_WARN, Context
+                        .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION:
+                oldText = SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_MALFUNCTION, Context
+                        .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_INSPECTION:
+                oldText = SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_INSPECTION, Context
+                        .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_CONTRACT:
+                oldText = SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_CONTRACT, Context
+                        .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MERCHANT:
+                oldText = SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_MERCHANT, Context
+                        .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_RECORD:
+                oldText = SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_DEPLOY_RECORD, Context
+                        .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_NAME_ADDRESS:
                 oldText = PreferencesHelper.getInstance().getDeployNameAddressHistory();
                 break;
-            case 1:
-                oldText = PreferencesHelper.getInstance().getDeployAlarmContactNameHistory();
-                break;
-            case 2:
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_MINI_PROGRAM:
                 oldText = PreferencesHelper.getInstance().getDeployWeChatRelationHistory();
                 break;
-            case 4:
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_ALARM_CONTRACT_NAME:
+                oldText = PreferencesHelper.getInstance().getDeployAlarmContactNameHistory();
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_ALARM_CONTRACT_PHONE:
                 oldText = PreferencesHelper.getInstance().getDeployAlarmContactPhoneHistory();
                 break;
+
 
         }
         return oldText;
@@ -126,25 +176,55 @@ public class PreferencesSaveAnalyzer {
 
     /**
      * 清空历史记录
-     * @param status 0 部署名称地址 1 部署预警联系人姓名 2 部署小程序账号 3 部署标签 4 部署预警联系人电话
+     *
+     * @param status
      */
     public static void clearAllData(int status) {
-        SharedPreferences sharedPreferences = SensoroCityApplication.getInstance().getSharedPreferences(Constants.PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE);
         switch (status) {
-            case 0:
-                sharedPreferences.edit().putString(Constants.PREFERENCE_KEY_DEPLOY_NAME_ADDRESS, "").apply();
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN:
+                SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_WARN, Activity.MODE_PRIVATE)
+                        .edit().clear().apply();
                 break;
-            case 1:
-                sharedPreferences.edit().putString(Constants.PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_NAME, "").apply();
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION:
+                SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_MALFUNCTION, Activity.MODE_PRIVATE)
+                        .edit().clear().apply();
                 break;
-            case 2:
-                sharedPreferences.edit().putString(Constants.PREFERENCE_KEY_DEPLOY_WE_CHAT_RELATION, "").apply();
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_INSPECTION:
+                SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_INSPECTION, Activity.MODE_PRIVATE)
+                        .edit().clear().apply();
                 break;
-            case 3:
-                sharedPreferences.edit().putString(Constants.PREFERENCE_KEY_DEPLOY_TAG, "").apply();
-            case 4:
-                sharedPreferences.edit().putString(Constants.PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_PHONE, "").apply();
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_CONTRACT:
+                SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_CONTRACT, Activity.MODE_PRIVATE)
+                        .edit().clear().apply();
                 break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MERCHANT:
+                SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_MERCHANT, Activity.MODE_PRIVATE)
+                        .edit().clear().apply();
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_RECORD:
+                SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_DEPLOY_RECORD, Activity.MODE_PRIVATE)
+                        .edit().clear().apply();
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_NAME_ADDRESS:
+                SensoroCityApplication.getInstance().getSharedPreferences(Constants.PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE)
+                        .edit().putString(Constants.PREFERENCE_KEY_DEPLOY_NAME_ADDRESS, "").apply();
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_ALARM_CONTRACT_NAME:
+                SensoroCityApplication.getInstance().getSharedPreferences(Constants.PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE)
+                        .edit().putString(Constants.PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_NAME, "").apply();
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_MINI_PROGRAM:
+                SensoroCityApplication.getInstance().getSharedPreferences(Constants.PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE)
+                        .edit().putString(Constants.PREFERENCE_KEY_DEPLOY_WE_CHAT_RELATION, "").apply();
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_TAG:
+                SensoroCityApplication.getInstance().getSharedPreferences(Constants.PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE)
+                        .edit().putString(Constants.PREFERENCE_KEY_DEPLOY_TAG, "").apply();
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_ALARM_CONTRACT_PHONE:
+                SensoroCityApplication.getInstance().getSharedPreferences(Constants.PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE)
+                        .edit().putString(Constants.PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_PHONE, "").apply();
+                break;
+
         }
     }
 }

@@ -16,6 +16,7 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.InspectionActivity;
 import com.sensoro.smartcity.activity.InspectionExceptionDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
+import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
@@ -519,7 +520,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     }
 
     public void clearSearchHistory() {
-        PreferencesHelper.getInstance().clearSearchHistory(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_INSPECTION);
+        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_INSPECTION);
         mSearchHistoryList.clear();
         getView().UpdateSearchHistoryList(mSearchHistoryList);
     }
@@ -528,9 +529,12 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         if (TextUtils.isEmpty(text)) {
             return;
         }
-        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_INSPECTION);
-        mSearchHistoryList.remove(text);
-        mSearchHistoryList.add(0, text);
+//        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_INSPECTION);
+//        mSearchHistoryList.remove(text);
+//        mSearchHistoryList.add(0, text);
+        List<String> inspectionList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_INSPECTION, text);
+        mSearchHistoryList.clear();
+        mSearchHistoryList.addAll(inspectionList);
         getView().UpdateSearchHistoryList(mSearchHistoryList);
     }
 }

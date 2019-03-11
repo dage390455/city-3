@@ -224,6 +224,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
                         fgMainWarnEtSearch.clearFocus();
                         AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), fgMainWarnEtSearch);
                         setSearchHistoryVisible(false);
+                        mPresenter.save(text);
                         mPresenter.requestSearchData(DIRECTION_DOWN, text);
                     }
                 });

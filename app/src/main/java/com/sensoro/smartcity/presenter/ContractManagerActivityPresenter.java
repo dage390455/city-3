@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 
 import com.sensoro.smartcity.activity.ContractDetailActivity;
 import com.sensoro.smartcity.activity.ContractEditorActivity;
+import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
@@ -474,9 +475,12 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
         if (TextUtils.isEmpty(text)) {
             return;
         }
-        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_CONTRACT);
-        mSearchHistoryList.remove(text);
-        mSearchHistoryList.add(0, text);
+//        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_CONTRACT);
+//        mSearchHistoryList.remove(text);
+//        mSearchHistoryList.add(0, text);
+        List<String> contractList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_CONTRACT, text);
+        mSearchHistoryList.clear();
+        mSearchHistoryList.addAll(contractList);
         getView().UpdateSearchHistoryList(mSearchHistoryList);
     }
 
@@ -496,10 +500,11 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
         requestDataByDate(calendarDateModel.startDate, calendarDateModel.endDate);
         getView().setSearchHistoryVisible(false);
         if (!TextUtils.isEmpty(tempSearch)) {
-            PreferencesHelper.getInstance().saveSearchHistoryText(tempSearch, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_CONTRACT);
-            mSearchHistoryList.remove(tempSearch);
-            mSearchHistoryList.add(0, tempSearch);
-            getView().UpdateSearchHistoryList(mSearchHistoryList);
+//            PreferencesHelper.getInstance().saveSearchHistoryText(tempSearch, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_CONTRACT);
+//            mSearchHistoryList.remove(tempSearch);
+//            mSearchHistoryList.add(0, tempSearch);
+//            getView().UpdateSearchHistoryList(mSearchHistoryList);
+            save(tempSearch);
 
         }
     }
@@ -516,7 +521,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
     }
 
     public void clearSearchHistory() {
-        PreferencesHelper.getInstance().clearSearchHistory(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_CONTRACT);
+        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_CONTRACT);
         mSearchHistoryList.clear();
         getView().UpdateSearchHistoryList(mSearchHistoryList);
     }

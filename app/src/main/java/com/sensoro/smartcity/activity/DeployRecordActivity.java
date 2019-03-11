@@ -203,6 +203,7 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
                         acDeployRecordEtSearch.clearFocus();
                         AppUtils.dismissInputMethodManager(mActivity, acDeployRecordEtSearch);
                         setSearchHistoryVisible(false);
+                        mPresenter.save(text);
                         mPresenter.requestSearchData(DIRECTION_DOWN, text);
                     }
                 });
@@ -437,6 +438,12 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
     public void onPullRefreshComplete() {
         refreshLayout.finishRefresh();
         refreshLayout.finishLoadMore();
+    }
+
+    @Override
+    protected void onPause() {
+        AppUtils.dismissInputMethodManager(mActivity,acDeployRecordEtSearch);
+        super.onPause();
     }
 
     @Override
