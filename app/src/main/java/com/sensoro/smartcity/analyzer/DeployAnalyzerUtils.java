@@ -167,7 +167,7 @@ public enum DeployAnalyzerUtils implements Constants {
                     Intent intent = new Intent();
                     intent.setClass(activity, DeployResultActivity.class);
                     DeployResultModel deployResultModel = new DeployResultModel();
-                    deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED;
+                    deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED;
                     deployResultModel.sn = signalCheckNum;
                     deployResultModel.scanType = TYPE_SCAN_SIGNAL_CHECK;
                     deployResultModel.errorMsg = errorMsg;
@@ -286,7 +286,7 @@ public enum DeployAnalyzerUtils implements Constants {
                     Intent intent = new Intent();
                     intent.setClass(activity, DeployResultActivity.class);
                     DeployResultModel deployResultModel = new DeployResultModel();
-                    deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED;
+                    deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED;
                     deployResultModel.sn = scanSerialNumber;
                     deployResultModel.scanType = TYPE_SCAN_DEPLOY_DEVICE;
                     deployResultModel.errorMsg = errorMsg;
@@ -316,7 +316,7 @@ public enum DeployAnalyzerUtils implements Constants {
                             intent.setClass(activity, DeployResultActivity.class);
                             DeployResultModel deployResultModel = new DeployResultModel();
                             deployResultModel.scanType = TYPE_SCAN_DEPLOY_DEVICE;
-                            deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED;
+                            deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED;
                             deployResultModel.sn = scanSerialNumber;
                             deployResultModel.errorMsg = errorMsg;
                             intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
@@ -478,7 +478,7 @@ public enum DeployAnalyzerUtils implements Constants {
                             Intent intent = new Intent();
                             intent.setClass(activity, DeployResultActivity.class);
                             DeployResultModel deployResultModel = new DeployResultModel();
-                            deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED;
+                            deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED;
                             deployResultModel.sn = scanSerialNumber;
                             deployResultModel.scanType = TYPE_SCAN_DEPLOY_DEVICE;
                             deployResultModel.errorMsg = errorMsg;
@@ -570,7 +570,7 @@ public enum DeployAnalyzerUtils implements Constants {
                             intent.setClass(activity, DeployResultActivity.class);
                             DeployResultModel deployResultModel = new DeployResultModel();
                             deployResultModel.scanType = scanType;
-                            deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED;
+                            deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED;
                             deployResultModel.sn = scanSerialNumber;
                             deployResultModel.errorMsg = errorMsg;
                             intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
