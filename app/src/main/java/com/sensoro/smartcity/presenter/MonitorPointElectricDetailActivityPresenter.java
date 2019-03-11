@@ -95,6 +95,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -546,22 +547,35 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     if (mDeviceInfo.getStatus() == SENSOR_STATUS_MALFUNCTION) {
                         Map<String, MalfunctionDataBean> malfunctionData = mDeviceInfo.getMalfunctionData();
                         //TODO 添加故障字段数组
+
                         if (malfunctionData != null) {
-                            Set<String> keySet = malfunctionData.keySet();
-                            ArrayList<String> keyList = new ArrayList<>();
-                            for (String key : keySet) {
-                                if (!keyList.contains(key)) {
-                                    keyList.add(key);
+                            LinkedHashSet<String> linkedHashSet = new LinkedHashSet<>();
+                            Set<Map.Entry<String, MalfunctionDataBean>> entrySet = malfunctionData.entrySet();
+                            if (entrySet != null) {
+                                for (Map.Entry<String, MalfunctionDataBean> entry : entrySet) {
+                                    MalfunctionDataBean entryValue = entry.getValue();
+                                    if (entryValue != null) {
+                                        Map<String, MalfunctionDataBean> details = entryValue.getDetails();
+                                        if (details != null) {
+                                            Set<String> keySet = details.keySet();
+                                            if (keySet != null) {
+                                                linkedHashSet.addAll(keySet);
+                                            }
+                                        }
+
+                                    }
+
                                 }
                             }
+                            ArrayList<String> keyList = new ArrayList<>(linkedHashSet);
                             Collections.sort(keyList);
                             for (String key : keyList) {
                                 MonitoringPointRcContentAdapterModel monitoringPointRcContentAdapterModel = new MonitoringPointRcContentAdapterModel();
                                 monitoringPointRcContentAdapterModel.name = mContext.getString(R.string.malfunction_cause_detail);
                                 monitoringPointRcContentAdapterModel.statusColorId = R.color.c_fdc83b;
-                                MalfunctionTypeStyles configMalfunctionMainTypes = PreferencesHelper.getInstance().getConfigMalfunctionMainTypes(key);
-                                if (configMalfunctionMainTypes != null) {
-                                    monitoringPointRcContentAdapterModel.content = configMalfunctionMainTypes.getName();
+                                MalfunctionTypeStyles configMalfunctionSubTypes = PreferencesHelper.getInstance().getConfigMalfunctionSubTypes(key);
+                                if (configMalfunctionSubTypes != null) {
+                                    monitoringPointRcContentAdapterModel.content = configMalfunctionSubTypes.getName();
                                     malfunctionBeanData.add(monitoringPointRcContentAdapterModel);
                                     try {
                                         LogUtils.loge("故障成因：key = " + key + "value = " + monitoringPointRcContentAdapterModel.content);
