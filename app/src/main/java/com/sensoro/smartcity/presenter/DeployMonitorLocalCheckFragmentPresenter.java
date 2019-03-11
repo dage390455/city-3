@@ -67,8 +67,8 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         //基站或白名单不开启蓝牙
         if (deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION || deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_WHITE_LIST) {
             mHandler.post(this);
+            BleObserver.getInstance().registerBleObserver(this);
         }
-        BleObserver.getInstance().registerBleObserver(this);
         try {
             LogUtils.loge(this, "部署页刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + deployAnalyzerModel.signal);
         } catch (Throwable throwable) {
@@ -124,11 +124,6 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                 //不论更换还是部署都需要安装检测
                 getView().setDeployDeviceType(deviceTypeName);
                 boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
-                if (isFire) {
-                    //需要安装检测的
-                } else {
-                    //不需要安装检测
-                }
                 getView().setDeployDeviceConfigVisible(isFire);
                 break;
             default:
@@ -140,6 +135,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
         BleObserver.getInstance().unregisterBleObserver(this);
+        checkHandler.removeAllMessage();
         mHandler.removeCallbacksAndMessages(null);
         SensoroCityApplication.getInstance().bleDeviceManager.stopService();
         BLE_DEVICE_SET.clear();
@@ -474,10 +470,8 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     }
 
     public void cancelCheckTest() {
-        if (checkHandler != null) {
-            checkHandler.removeAllMessage();
+        checkHandler.removeAllMessage();
 
-        }
     }
 
     public void updateConfigSettingData(Integer inputValue, int material, double diameter, int min) {
@@ -718,12 +712,17 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
                         @Override
                         public void onFailed() {
-                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_FAIL, "", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                            if (isAttachedView()) {
+                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_FAIL, "", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                            }
+
                         }
 
                         @Override
                         public void onOverTime() {
-                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_FAIL, "", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                            if (isAttachedView()) {
+                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_FAIL, "", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                            }
                         }
                     });
 

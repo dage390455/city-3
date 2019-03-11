@@ -7,10 +7,10 @@ import android.util.SparseArray;
 
 public class HandlerDeployCheck extends Handler {
 
-    private int count;
+    private volatile int count;
     private int mInterval;
     private int mMaxCount;
-    SparseArray<OnMessageDeal> listenerMap = new SparseArray<>();
+    private final SparseArray<OnMessageDeal> listenerMap = new SparseArray<>();
 
     public HandlerDeployCheck(Looper mainLooper) {
         super(mainLooper);
