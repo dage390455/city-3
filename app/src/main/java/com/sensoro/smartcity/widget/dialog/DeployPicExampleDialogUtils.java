@@ -82,7 +82,7 @@ public class DeployPicExampleDialogUtils {
                     .load(exampleUrl)
 //                    .thumbnail(0.01f)//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
                     .error(R.drawable.deploy_pic_placeholder)           //设置错误图片
-                    .placeholder(R.drawable.deploy_pic_placeholder)    //设置占位图片
+                    .placeholder(R.drawable.ic_default_image)    //设置占位图片
                     .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
                     .into(imvExample);
             mDialog.show();
