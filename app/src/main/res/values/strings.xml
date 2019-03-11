@@ -890,7 +890,7 @@
     <string name="deploy_check_signal_none">no signal</string>
     <string name="deploy_check_suggest_config_instruction">&#160;&#160;Configuration instructions</string>
     <string name="deploy_check_suggest_particular_instruction">&#160;&#160;Detailed description</string>
-    <string name="range">range</string>
+    <string name="range">range：</string>
     <string name="station">Station</string>
     <string name="deploy_check_button_tip_is_powered_on">Please make sure the device is powered on and start the installation test</string>
     <string name="deploy_check_button_tip_press_the_sensor">Please press the sensor self-test button and start the installation test</string>

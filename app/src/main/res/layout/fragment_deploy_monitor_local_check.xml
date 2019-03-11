@@ -147,7 +147,6 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
                         android:layout_weight="1"
                         android:background="@null"
                         android:gravity="end"
@@ -191,14 +190,6 @@
                         android:text="@string/deploy_check_please_select"
                         android:textColor="@color/c_a6a6a6" />
 
-                    <ImageView
-                        android:id="@+id/iv_fg_deploy_local_check_wire_material"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="8dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/arrows_right" />
                 </LinearLayout>
 
                 <View
@@ -235,14 +226,6 @@
                         android:text="@string/deploy_check_please_select"
                         android:textColor="@color/c_a6a6a6" />
 
-                    <ImageView
-                        android:id="@+id/iv_fg_deploy_local_check_wire_diameter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="8dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/arrows_right" />
                 </LinearLayout>
 
                 <LinearLayout
