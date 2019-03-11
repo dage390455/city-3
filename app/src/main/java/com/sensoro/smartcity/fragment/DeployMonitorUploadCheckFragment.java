@@ -19,9 +19,7 @@ import com.sensoro.smartcity.adapter.TagAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IDeployMonitorUploadCheckFragmentView;
 import com.sensoro.smartcity.model.DeployContactModel;
-import com.sensoro.smartcity.presenter.DeployMonitorCheckActivityPresenter;
 import com.sensoro.smartcity.presenter.DeployMonitorUploadCheckFragmentPresenter;
-import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
@@ -123,7 +121,7 @@ public class DeployMonitorUploadCheckFragment extends BaseFragment<IDeployMonito
 
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
-        rcFgDeployUploadCheckTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels,false,false));
+        rcFgDeployUploadCheckTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels, false, false));
         rcFgDeployUploadCheckTag.setLayoutManager(layoutManager);
         rcFgDeployUploadCheckTag.setAdapter(mTagAdapter);
     }
@@ -149,12 +147,6 @@ public class DeployMonitorUploadCheckFragment extends BaseFragment<IDeployMonito
 
     @Override
     public void onFragmentStart() {
-
-        try {
-            LogUtils.loge("---->>>" + DeployMonitorCheckActivityPresenter.deployAnalyzerModel.address);
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
     }
 
     @Override
