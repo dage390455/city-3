@@ -151,9 +151,9 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (mPersonalContractFragment.isAdded()) {
-            fragmentTransaction.hide(mBusinessContractFragment).show(mPersonalContractFragment).commit();
+            fragmentTransaction.hide(mBusinessContractFragment).show(mPersonalContractFragment).commitAllowingStateLoss();
         } else {
-            fragmentTransaction.add(R.id.ac_contract_editor_fl, mPersonalContractFragment).hide(mBusinessContractFragment).show(mPersonalContractFragment).commit();
+            fragmentTransaction.add(R.id.ac_contract_editor_fl, mPersonalContractFragment).hide(mBusinessContractFragment).show(mPersonalContractFragment).commitAllowingStateLoss();
         }
     }
 
@@ -166,9 +166,9 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (mBusinessContractFragment.isAdded()) {
-            fragmentTransaction.hide(mPersonalContractFragment).show(mBusinessContractFragment).commit();
+            fragmentTransaction.hide(mPersonalContractFragment).show(mBusinessContractFragment).commitAllowingStateLoss();
         } else {
-            fragmentTransaction.add(R.id.ac_contract_editor_fl, mBusinessContractFragment).hide(mPersonalContractFragment).show(mBusinessContractFragment).commit();
+            fragmentTransaction.add(R.id.ac_contract_editor_fl, mBusinessContractFragment).hide(mPersonalContractFragment).show(mBusinessContractFragment).commitAllowingStateLoss();
         }
     }
 

@@ -2,11 +2,14 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorCheckActivityView;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
+
+import java.io.Serializable;
 
 public class DeployMonitorCheckActivityPresenter extends BasePresenter<IDeployMonitorCheckActivityView> implements Constants {
     private Activity mActivity;
@@ -16,7 +19,6 @@ public class DeployMonitorCheckActivityPresenter extends BasePresenter<IDeployMo
     public void initData(Context context) {
         mActivity = (Activity) context;
         deployAnalyzerModel = (DeployAnalyzerModel) mActivity.getIntent().getSerializableExtra(EXTRA_DEPLOY_ANALYZER_MODEL);
-        getView().setDeployMonitorStep(1);
     }
 
     @Override
@@ -24,4 +26,18 @@ public class DeployMonitorCheckActivityPresenter extends BasePresenter<IDeployMo
         deployAnalyzerModel = null;
     }
 
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            Serializable savedInstanceStateSerializable = savedInstanceState.getSerializable(EXTRA_DEPLOY_ANALYZER_MODEL);
+            if (savedInstanceStateSerializable instanceof DeployAnalyzerModel) {
+                deployAnalyzerModel = (DeployAnalyzerModel) savedInstanceStateSerializable;
+            }
+        }
+    }
+
+    public void onSaveInstanceState(Bundle outState) {
+        if (deployAnalyzerModel != null) {
+            outState.putSerializable(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+        }
+    }
 }
