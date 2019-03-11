@@ -29,6 +29,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.constant.DeoloyCheckPointConstants;
 import com.sensoro.smartcity.constant.DeployCheckStateEnum;
 import com.sensoro.smartcity.imainviews.IDeployMonitorLocalCheckFragmentView;
 import com.sensoro.smartcity.model.MaterialValueModel;
@@ -424,13 +425,13 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
                 deployMonitorCheckDialogUtils.startSignalStrengthLoading();
                 break;
             case DEVICE_CHECK_SIGNAL_SUC_GOOD:
-                deployMonitorCheckDialogUtils.setSignalStrengthSuccess(1);
+                deployMonitorCheckDialogUtils.setSignalStrengthSuccess(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD);
                 break;
             case DEVICE_CHECK_SIGNAL_SUC_NORMAL:
-                deployMonitorCheckDialogUtils.setSignalStrengthSuccess(2);
+                deployMonitorCheckDialogUtils.setSignalStrengthSuccess(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NORMAL);
                 break;
             case DEVICE_CHECK_SIGNAL_FAIL_BAD:
-                deployMonitorCheckDialogUtils.setSignalStrengthFailed(1);
+                deployMonitorCheckDialogUtils.setSignalStrengthFailed(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD);
                 deployMonitorCheckDialogUtils.setDeviceStatusVisible(false);
                 deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
                 deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText, getString(R.string.deploy_check_suggest_particular_instruction)));
@@ -438,7 +439,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
                 deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
                 break;
             case DEVICE_CHECK_SIGNAL_FAIL_NONE:
-                deployMonitorCheckDialogUtils.setSignalStrengthFailed(2);
+                deployMonitorCheckDialogUtils.setSignalStrengthFailed(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NONE);
                 deployMonitorCheckDialogUtils.setDeviceStatusVisible(false);
                 deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
                 deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText, getString(R.string.deploy_check_suggest_particular_instruction)));
@@ -452,14 +453,14 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
                 deployMonitorCheckDialogUtils.setDeviceStatusSuccess();
                 break;
             case DEVICE_CHECK_STATUS_FAIL_ALARM:
-                deployMonitorCheckDialogUtils.setDeviceStatusFailed(2);
+                deployMonitorCheckDialogUtils.setDeviceStatusFailed(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_STATUS_ALARM);
                 deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
                 deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText, getString(R.string.deploy_check_suggest_particular_instruction)));
                 deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
                 deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
                 break;
             case DEVICE_CHECK_STATUS_FAIL_MALFUNCTION:
-                deployMonitorCheckDialogUtils.setDeviceStatusFailed(1);
+                deployMonitorCheckDialogUtils.setDeviceStatusFailed(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_STATUS_MALFUNCTION);
                 deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
                 deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText, getString(R.string.deploy_check_suggest_particular_instruction)));
                 deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
@@ -475,7 +476,6 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
                         deployMonitorCheckDialogUtils.dismiss();
                         //TODO 直接成功
                         mPresenter.goToNextStep();
-//                        mPresenter.doCheckDeployTest();
                     }
                 }, 500);
                 break;

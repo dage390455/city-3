@@ -882,5 +882,11 @@
     <string name="deploy_check_signal_none">无信号</string>
     <string name="deploy_check_suggest_config_instruction">&#160;&#160;配置说明</string>
     <string name="deploy_check_suggest_particular_instruction">&#160;&#160;详细说明</string>
+    <string name="range">范围</string>
+    <string name="station">基站</string>
+    <string name="deploy_check_button_tip_is_powered_on">请确保设备通电，在开始安装测试</string>
+    <string name="deploy_check_button_tip_press_the_sensor">请按下传感器自检按钮，并开始安装测试</string>
+    <string name="deploy_check_dialog_no_signal">无信号</string>
+    <string name="deploy_check_dialog_bad_signal">信号差</string>
 
 </resources>

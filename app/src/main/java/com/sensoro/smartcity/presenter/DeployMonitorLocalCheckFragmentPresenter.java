@@ -22,6 +22,7 @@ import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapt
 import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.constant.DeoloyCheckPointConstants;
 import com.sensoro.smartcity.constant.DeployCheckStateEnum;
 import com.sensoro.smartcity.imainviews.IDeployMonitorLocalCheckFragmentView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
@@ -69,16 +70,11 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             mHandler.post(this);
             BleObserver.getInstance().registerBleObserver(this);
         }
-        try {
-            LogUtils.loge(this, "部署页刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + deployAnalyzerModel.signal);
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
         int[] minMaxValue = DeployConfigurationAnalyzer.analyzeDeviceType(deployAnalyzerModel.deviceType);
         if (minMaxValue == null) {
             getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_failed));
         } else {
-            getView().setSwitchSpecHintText("范围：" + minMaxValue[0] + "-" + minMaxValue[1]);
+            getView().setSwitchSpecHintText(mActivity.getString(R.string.range) + minMaxValue[0] + "-" + minMaxValue[1]);
         }
     }
 
@@ -115,7 +111,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                 break;
             //基站
             case TYPE_SCAN_DEPLOY_STATION:
-                getView().setDeployDeviceType("基站");
+                getView().setDeployDeviceType(mActivity.getString(R.string.station));
                 getView().setDeployDeviceConfigVisible(false);
                 break;
             case TYPE_SCAN_DEPLOY_DEVICE:
@@ -183,7 +179,6 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                             deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
                             deployAnalyzerModel.signal = deviceInfo.getSignal();
                             deployAnalyzerModel.status = deviceInfo.getStatus();
-//                            getView().toastLong("信号-->>time = " + deployAnalyzerModel.updatedTime + ",signal = " + deployAnalyzerModel.signal);
                             try {
                                 LogUtils.loge(this, "部署页刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + deployAnalyzerModel.signal);
                             } catch (Throwable throwable) {
@@ -300,11 +295,6 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                                         @Override
                                                         public void onWriteSuccess(Object o, int cmd) {
                                                             if (isAttachedView()) {
-                                                                try {
-                                                                    LogUtils.loge("onConnectedSuccess--->>hasSignalConfig writeData05Configuration suc");
-                                                                } catch (Throwable throwable) {
-                                                                    throwable.printStackTrace();
-                                                                }
                                                                 sensoroDeviceConnection.disconnect();
                                                                 mHandler.removeCallbacks(configOvertime);
                                                                 onConfigInfoObserver.onSuccess();
@@ -314,11 +304,6 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                                         @Override
                                                         public void onWriteFailure(int errorCode, int cmd) {
                                                             if (isAttachedView()) {
-                                                                try {
-                                                                    LogUtils.loge("onConnectedSuccess--->>hasSignalConfig writeData05Configuration suc");
-                                                                } catch (Throwable throwable) {
-                                                                    throwable.printStackTrace();
-                                                                }
                                                                 sensoroDeviceConnection.disconnect();
                                                                 mHandler.removeCallbacks(configOvertime);
                                                                 onConfigInfoObserver.onFailed();
@@ -350,11 +335,6 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                 @Override
                                 public void onWriteFailure(int errorCode, int cmd) {
                                     if (isAttachedView()) {
-                                        try {
-                                            LogUtils.loge("onConnectedSuccess--->>hasSignalConfig writeData05ChannelMask fal");
-                                        } catch (Throwable throwable) {
-                                            throwable.printStackTrace();
-                                        }
                                         sensoroDeviceConnection.disconnect();
                                         mHandler.removeCallbacks(configOvertime);
                                         onConfigInfoObserver.onFailed();
@@ -367,11 +347,6 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                         } else {
                             if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                                 //需要写入配置信息
-                                try {
-                                    LogUtils.loge("onConnectedSuccess--->>contains(deployAnalyzerModel.deviceType)");
-                                } catch (Throwable throwable) {
-                                    throwable.printStackTrace();
-                                }
                                 if (deployAnalyzerModel.settingData != null) {
                                     SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec());
                                     if (sensoroDevice != null) {
@@ -380,11 +355,6 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                             @Override
                                             public void onWriteSuccess(Object o, int cmd) {
                                                 if (isAttachedView()) {
-                                                    try {
-                                                        LogUtils.loge("onConnectedSuccess--->>contains(deployAnalyzerModel.deviceType)  writeData05Configuration suc");
-                                                    } catch (Throwable throwable) {
-                                                        throwable.printStackTrace();
-                                                    }
                                                     sensoroDeviceConnection.disconnect();
                                                     mHandler.removeCallbacks(configOvertime);
                                                     onConfigInfoObserver.onSuccess();
@@ -394,11 +364,6 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                             @Override
                                             public void onWriteFailure(int errorCode, int cmd) {
                                                 if (isAttachedView()) {
-                                                    try {
-                                                        LogUtils.loge("onConnectedSuccess--->>contains(deployAnalyzerModel.deviceType)  writeData05Configuration fail");
-                                                    } catch (Throwable throwable) {
-                                                        throwable.printStackTrace();
-                                                    }
                                                     sensoroDeviceConnection.disconnect();
                                                     mHandler.removeCallbacks(configOvertime);
                                                     onConfigInfoObserver.onFailed();
@@ -453,13 +418,13 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             getView().setDeployLocalCheckTipText("");
         } else {
             if (DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType) || "mantun_fires".equals(deployAnalyzerModel.deviceType)) {
-                getView().setDeployLocalCheckTipText("请确保设备通电，在开始安装测试");
+                getView().setDeployLocalCheckTipText(mActivity.getString(R.string.deploy_check_button_tip_is_powered_on));
             } else {
                 DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deployAnalyzerModel.deviceType);
                 if (configDeviceType != null) {
                     String mergeType = configDeviceType.getMergeType();
                     if ("smoke".equals(mergeType)) {
-                        getView().setDeployLocalCheckTipText("请按下传感器自检按钮，并开始安装测试");
+                        getView().setDeployLocalCheckTipText(mActivity.getString(R.string.deploy_check_button_tip_press_the_sensor));
                         return;
                     }
                 }
@@ -520,14 +485,14 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         if (deployAnalyzerModel.signal != null && (time_diff < 2 * 60 * 1000)) {
             switch (deployAnalyzerModel.signal) {
                 case "good":
-                    return 1;
+                    return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD;
                 case "normal":
-                    return 2;
+                    return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NORMAL;
                 case "bad":
-                    return 3;
+                    return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD;
             }
         }
-        return -1;
+        return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NONE;
     }
 
     @Override
@@ -566,14 +531,14 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             //白名单设备
             case TYPE_SCAN_DEPLOY_WHITE_LIST:
                 //TODO 开始检查操作并更新UI
-                getView().showDeployMonitorCheckDialogUtils(1, false);
-                checkDeviceIsNearBy(1);
+                getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE, false);
+                checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE);
                 break;
             //基站
             case TYPE_SCAN_DEPLOY_STATION:
                 //TODO 开始检查操作并更新UI
-                getView().showDeployMonitorCheckDialogUtils(1, false);
-                checkDeviceIsNearBy(1);
+                getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE, false);
+                checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE);
                 break;
             case TYPE_SCAN_DEPLOY_DEVICE:
             case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
@@ -585,19 +550,19 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                 if (isFire) {
                     //做初始配置检查
                     //TODO 开始检查操作并更新UI
-                    getView().showDeployMonitorCheckDialogUtils(3, false);
-                    checkDeviceIsNearBy(3);
+                    getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_FOUR, false);
+                    checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_FOUR);
                 } else {
                     if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
                         //不做初始配置检查
                         //TODO 开始检查操作并更新UI
-                        getView().showDeployMonitorCheckDialogUtils(3, false);
-                        checkDeviceIsNearBy(3);
+                        getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_FOUR, false);
+                        checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_FOUR);
                     } else {
                         //不做初始配置检查
                         //TODO 开始检查操作并更新UI
-                        getView().showDeployMonitorCheckDialogUtils(2, false);
-                        checkDeviceIsNearBy(2);
+                        getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_THREE, false);
+                        checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_THREE);
                     }
 
                 }
@@ -612,17 +577,17 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_START, "", false);
         switch (state) {
             //一项
-            case 1:
+            case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE:
                 //一项的时候，检查是否在附近
                 checkNearByOne();
                 break;
             //三项
-            case 2:
+            case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_THREE:
                 //三项的时候，检查是否在附近
                 checkNearbyThree();
                 break;
             //四项
-            case 3:
+            case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_FOUR:
                 //四项的时候，检查是否在附近
                 checkNearbyFour();
                 break;
@@ -670,14 +635,14 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
                                         int signalState = checkSignalState();
                                         switch (signalState) {
-                                            case 1:
+                                            case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD:
                                                 getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_SUC_GOOD, "", false);
                                                 getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_START, "", false);
                                                 checkHandler.removeAllMessage();
                                                 checkHandler.init(1000, 1);
                                                 checkHandler.dealMessage(4, statusMsgDel);
                                                 break;
-                                            case 2:
+                                            case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NORMAL:
                                                 getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_SUC_NORMAL, "", false);
                                                 getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_START, "", false);
                                                 checkHandler.removeAllMessage();
@@ -692,14 +657,14 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                     public void onFinish() {
                                         int state = checkSignalState();
                                         switch (state) {
-                                            case -1:
-                                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, "无信号", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                                            case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NONE:
+                                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, mActivity.getString(R.string.deploy_check_dialog_no_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
                                                 return;
-                                            case 3:
-                                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_BAD, "信号差", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                                            case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD:
+                                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_BAD, mActivity.getString(R.string.deploy_check_dialog_bad_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
                                                 return;
                                         }
-                                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, "无信号", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, mActivity.getString(R.string.deploy_check_dialog_no_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
 
                                     }
                                 };
@@ -732,7 +697,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
             @Override
             public void onFinish() {
-                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_FAIL, "chaoshi", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_FAIL, "测试lfjaljflasjflasfjasl", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
             }
         };
         checkHandler.removeAllMessage();
@@ -777,14 +742,14 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
                             int signalState = checkSignalState();
                             switch (signalState) {
-                                case 1:
+                                case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD:
                                     getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_SUC_GOOD, "", false);
                                     getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_START, "", false);
                                     checkHandler.removeAllMessage();
                                     checkHandler.init(1000, 1);
                                     checkHandler.dealMessage(4, statusMsgDel);
                                     break;
-                                case 2:
+                                case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NORMAL:
                                     getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_SUC_NORMAL, "", false);
                                     getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_START, "", false);
                                     checkHandler.removeAllMessage();
@@ -799,14 +764,14 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                         public void onFinish() {
                             int state = checkSignalState();
                             switch (state) {
-                                case -1:
-                                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, "无信号", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                                case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NONE:
+                                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, mActivity.getString(R.string.deploy_check_dialog_no_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
                                     return;
-                                case 3:
-                                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_BAD, "信号差", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                                case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD:
+                                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_BAD, mActivity.getString(R.string.deploy_check_dialog_bad_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
                                     return;
                             }
-                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, "无信号", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, mActivity.getString(R.string.deploy_check_dialog_no_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
 
                         }
                     };
@@ -818,7 +783,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
             @Override
             public void onFinish() {
-                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_FAIL, "chaoshi", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_FAIL, "测试lkaalfjalkfjalf", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
             }
         };
         checkHandler.removeAllMessage();
