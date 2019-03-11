@@ -69,14 +69,10 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
     LinearLayout llFgDeployLocalCheckSwitchSpec;
     @BindView(R.id.tv_fg_deploy_local_check_wire_material)
     TextView tvFgDeployLocalCheckWireMaterial;
-    @BindView(R.id.iv_fg_deploy_local_check_wire_material)
-    ImageView ivFgDeployLocalCheckWireMaterial;
     @BindView(R.id.ll_fg_deploy_local_check_wire_material)
     LinearLayout llFgDeployLocalCheckWireMaterial;
     @BindView(R.id.tv_fg_deploy_local_check_wire_diameter)
     TextView tvFgDeployLocalCheckWireDiameter;
-    @BindView(R.id.iv_fg_deploy_local_check_wire_diameter)
-    ImageView ivFgDeployLocalCheckWireDiameter;
     @BindView(R.id.ll_fg_deploy_local_check_wire_diameter)
     LinearLayout llFgDeployLocalCheckWireDiameter;
     @BindView(R.id.tv_deploy_local_check_current_info)
