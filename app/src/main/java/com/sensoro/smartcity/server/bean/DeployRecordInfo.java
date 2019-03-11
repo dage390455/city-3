@@ -25,7 +25,24 @@ public class DeployRecordInfo implements Serializable {
     private List<Double> lonlat;
     private List<String> deployPics;
     private DeployControlSettingData config;
+    private String forceReason;
+    private Integer status;
 
+    public String getForceReason() {
+        return forceReason;
+    }
+
+    public void setForceReason(String forceReason) {
+        this.forceReason = forceReason;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public DeployControlSettingData getConfig() {
         return config;

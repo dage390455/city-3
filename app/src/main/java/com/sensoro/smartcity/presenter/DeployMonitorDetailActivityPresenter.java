@@ -379,17 +379,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 if (isFire) {
                     settingData = deployAnalyzerModel.settingData;
                 }
-                final long currentTimeMillis = System.currentTimeMillis();
                 RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, settingData).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, settingData, deployAnalyzerModel.forceReason).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new CityObserver<DeviceDeployRsp>(this) {
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
-                                try {
-                                    LogUtils.loge("接口速度--->>>doDevicePointDeploy: " + (System.currentTimeMillis() - currentTimeMillis));
-                                } catch (Throwable throwable) {
-                                    throwable.printStackTrace();
-                                }
                                 getView().dismissProgressDialog();
                                 getView().updateUploadState(true);
                                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
@@ -403,11 +397,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
                             @Override
                             public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
-                                try {
-                                    LogUtils.loge("接口速度--->>>doDevicePointDeploy: " + (System.currentTimeMillis() - currentTimeMillis));
-                                } catch (Throwable throwable) {
-                                    throwable.printStackTrace();
-                                }
                                 freshPoint(deviceDeployRsp);
                                 getView().dismissProgressDialog();
                                 getView().finishAc();
