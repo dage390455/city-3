@@ -34,4 +34,6 @@ public class DeployAnalyzerModel implements Serializable {
     public InspectionTaskDeviceDetail mDeviceDetail;
     //
     public final List<Integer> channelMask = new ArrayList<>();
+    //强制部署原因
+    public String forceReason;
 }

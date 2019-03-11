@@ -67,11 +67,6 @@ public final class UpLoadPhotosUtils {
 
             @Override
             public void onCompleted(QiNiuToken qiNiuToken) {
-                try {
-                    LogUtils.loge("接口速度--->>>getQiNiuToken: " + (System.currentTimeMillis() - currentTimeMillis));
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
-                }
                 String upToken = qiNiuToken.getUptoken();
                 baseUrl = qiNiuToken.getDomain();
                 doUpLoadImages(upToken);

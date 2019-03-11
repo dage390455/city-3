@@ -508,7 +508,7 @@ public enum RetrofitServiceHelper {
      * @return
      */
     public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, List<String> tags, String
-            name, String contact, String content, String wxPhone, List<String> imgUrls, DeployControlSettingData deployControlSettingData) {
+            name, String contact, String content, String wxPhone, List<String> imgUrls, DeployControlSettingData deployControlSettingData, String forceReason) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("lon", lon);
@@ -538,6 +538,9 @@ public enum RetrofitServiceHelper {
             }
             if (!TextUtils.isEmpty(wxPhone)) {
                 jsonObject.put("wxPhone", wxPhone);
+            }
+            if (!TextUtils.isEmpty(forceReason)) {
+                jsonObject.put("forceReason", forceReason);
             }
 //            if (settingMap != null) {
 //                JSONObject jsonObjectOut = new JSONObject();

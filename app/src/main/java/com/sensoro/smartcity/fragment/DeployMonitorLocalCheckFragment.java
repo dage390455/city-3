@@ -294,19 +294,20 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
         if (!TextUtils.isEmpty(diameterStr) && !mRootFragment.getString(R.string.deploy_check_please_select).equals(diameterStr) && !TextUtils.isEmpty(materialStr) && !TextUtils.isEmpty(enterValueStr)) {
             try {
                 Integer inputValue = Integer.valueOf(enterValueStr);
-                int material = 0;
                 int min = inputValue;
+                int material = 0;
+                int mapValue = inputValue;
                 double diameter = Double.parseDouble(diameterStr);
                 MaterialValueModel materialValueModel = Constants.materialValueMap.get(diameterStr);
                 if (materialValueModel != null) {
                     if (getString(R.string.cu).equals(materialStr)) {
                         material = 0;
-                        min = materialValueModel.cuValue;
+                        mapValue = materialValueModel.cuValue;
                     } else if (getString(R.string.al).equals(materialStr)) {
-                        min = materialValueModel.alValue;
                         material = 1;
+                        mapValue = materialValueModel.alValue;
                     }
-                    min = Math.min(inputValue, min);
+                    min = Math.min(inputValue, mapValue);
                     tvDeployLocalCheckCurrentValue.setText(String.format(Locale.CHINESE, "%dA", min));
                 }
                 mPresenter.updateConfigSettingData(inputValue, material, diameter, min);
@@ -569,7 +570,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
 
     @Override
     public void onClickForceUpload() {
-        mPresenter.goToNextStep();
+        mPresenter.doForceUpload();
     }
 
     @Override

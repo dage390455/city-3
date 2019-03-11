@@ -58,81 +58,107 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
             getView().setDeviceName(mDeployRecordInfo.getDeviceName());
             getView().updateTagList(mDeployRecordInfo.getTags());
             getView().setDeployTime(DateUtil.getStrTime_ymd_hm_ss(mDeployRecordInfo.getCreatedTime()));
-            getView().setForceDeployReason("测试强制部署原因");
-            List<String> deployPics = mDeployRecordInfo.getDeployPics();
-            if (deployPics != null && deployPics.size() > 0) {
-                ArrayList<ScenesData> list = new ArrayList<>();
-                for (String url : deployPics) {
-                    ScenesData scenesData = new ScenesData();
-                    scenesData.url = url;
-                    list.add(scenesData);
-                }
-                getView().updateDeployPic(list);
-            }
-            ArrayList<DeployRecordInfo.NotificationBean> contacts = new ArrayList<>();
-            if (mDeployRecordInfo.getNotification() != null) {
-                contacts.add(mDeployRecordInfo.getNotification());
-            }
-            getView().updateContactList(contacts);
-            if (mDeployRecordInfo.getLonlat() != null) {
-                getView().setPositionStatus(1);
+            String forceReason = mDeployRecordInfo.getForceReason();
+            if (TextUtils.isEmpty(forceReason)) {
+                getView().setForceDeployReason(null);
             } else {
-                getView().setPositionStatus(0);
-            }
-            getView().refreshSingle(mDeployRecordInfo.getSignalQuality());
-            String wxPhone = mDeployRecordInfo.getWxPhone();
-            if (!TextUtils.isEmpty(wxPhone)) {
-                getView().seDeployWeChat(wxPhone);
-            }
-            String deviceType = mDeployRecordInfo.getDeviceType();
-            String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deviceType);
-            getView().setDeployDeviceRecordDeviceType(deviceTypeName);
-            boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType);
-            getView().setDeployDetailDeploySettingVisible(isFire);
-            if (isFire) {
-                //TODO 是否配置过电器火灾字段字段
-                if (mDeployRecordInfo.getConfig() != null) {
-                    DeployControlSettingData deployControlSettingData = mDeployRecordInfo.getConfig();
-                    if (deployControlSettingData != null) {
-                        //线径的判断，暂时不需要了
-//                        if (deployControlSettingData.getWireDiameter() != null) {
-//                            String formatDouble = WidgetUtil.getFormatDouble(deployControlSettingData.getWireDiameter(), 2);
-////                            getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getSwitchSpec() + "A" + " " + mActivity.getString(R.string.diameter) + ":" + formatDouble + "m㎡");
-//
-//
-//                        } else {
-//                            getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getSwitchSpec() + "A");
-//                        }
-                        Integer switchSpec = deployControlSettingData.getSwitchSpec();
-                        if (switchSpec != null) {
-                            getView().setDeployDeviceDetailDeploySetting(String.format(Locale.CHINA, "%sA", switchSpec));
-                            return;
-                        }
-
-                        //线材
-                        Integer material = deployControlSettingData.getWireMaterial();
-                        if (material != null) {
-                            switch (material) {
-                                case 0:
-                                    getView().setDeployDeviceRecordMaterial(mActivity.getString(R.string.cu));
+                String forceReasonStr = null;
+                switch (forceReason) {
+                    case "lonlat":
+                        forceReasonStr = "设备" + mActivity.getString(R.string.no_near) + "，本次部署为强制上传";
+                        break;
+                    case "config":
+                        forceReasonStr = "设备初始配置失败" + "，本次部署为强制上传";
+                        break;
+                    case "signalQuality":
+                        forceReasonStr = "设备信号问题" + "，本次部署为强制上传";
+                        break;
+                    case "status":
+                        Integer status = mDeployRecordInfo.getStatus();
+                        if (status != null) {
+                            switch (status) {
+                                case SENSOR_STATUS_ALARM:
+                                    forceReasonStr = "设备预警" + "，本次部署为强制上传";
                                     break;
-                                case 1:
-                                    getView().setDeployDeviceRecordMaterial(mActivity.getString(R.string.al));
+                                case SENSOR_STATUS_MALFUNCTION:
+                                    forceReasonStr = "设备故障" + "，本次部署为强制上传";
+                                    break;
+                                case SENSOR_STATUS_NORMAL:
+                                case SENSOR_STATUS_LOST:
+                                case SENSOR_STATUS_INACTIVE:
+                                    break;
+                                default:
                                     break;
                             }
                         }
-
-                        //线径
-                        Double diameter = deployControlSettingData.getWireDiameter();
-                        if (diameter != null) {
-                            getView().setDeployDeviceRecordDiameter(diameter + " mm²");
+                        break;
+                }
+                getView().setForceDeployReason(forceReasonStr);
+            }
+        }
+        List<String> deployPics = mDeployRecordInfo.getDeployPics();
+        if (deployPics != null && deployPics.size() > 0) {
+            ArrayList<ScenesData> list = new ArrayList<>();
+            for (String url : deployPics) {
+                ScenesData scenesData = new ScenesData();
+                scenesData.url = url;
+                list.add(scenesData);
+            }
+            getView().updateDeployPic(list);
+        }
+        ArrayList<DeployRecordInfo.NotificationBean> contacts = new ArrayList<>();
+        if (mDeployRecordInfo.getNotification() != null) {
+            contacts.add(mDeployRecordInfo.getNotification());
+        }
+        getView().updateContactList(contacts);
+        if (mDeployRecordInfo.getLonlat() != null) {
+            getView().setPositionStatus(1);
+        } else {
+            getView().setPositionStatus(0);
+        }
+        getView().refreshSingle(mDeployRecordInfo.getSignalQuality());
+        String wxPhone = mDeployRecordInfo.getWxPhone();
+        if (!TextUtils.isEmpty(wxPhone)) {
+            getView().seDeployWeChat(wxPhone);
+        }
+        String deviceType = mDeployRecordInfo.getDeviceType();
+        String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deviceType);
+        getView().setDeployDeviceRecordDeviceType(deviceTypeName);
+        boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType);
+        getView().setDeployDetailDeploySettingVisible(isFire);
+        if (isFire) {
+            //TODO 是否配置过电器火灾字段字段
+            if (mDeployRecordInfo.getConfig() != null) {
+                DeployControlSettingData deployControlSettingData = mDeployRecordInfo.getConfig();
+                if (deployControlSettingData != null) {
+                    Integer switchSpec = deployControlSettingData.getSwitchSpec();
+                    if (switchSpec != null) {
+                        getView().setDeployDeviceDetailDeploySetting(String.format(Locale.CHINA, "%sA", switchSpec));
+                    }
+                    //线材
+                    Integer material = deployControlSettingData.getWireMaterial();
+                    if (material != null) {
+                        switch (material) {
+                            case 0:
+                                getView().setDeployDeviceRecordMaterial(mActivity.getString(R.string.cu));
+                                break;
+                            case 1:
+                                getView().setDeployDeviceRecordMaterial(mActivity.getString(R.string.al));
+                                break;
                         }
+                    }
+                    //线径
+                    Double diameter = deployControlSettingData.getWireDiameter();
+                    if (diameter != null) {
+                        getView().setDeployDeviceRecordDiameter(diameter + "mm");
                     }
                 }
             }
-            getView().setDeployDeviceDetailDeploySetting(null);
-
+            getView().setDeployDetailDeploySettingVisible(true);
+        } else {
+            getView().setDeployDetailDeploySettingVisible(false);
         }
+
 
     }
 
