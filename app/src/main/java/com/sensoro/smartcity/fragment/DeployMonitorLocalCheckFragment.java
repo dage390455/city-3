@@ -399,7 +399,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
                 deployMonitorCheckDialogUtils.setSignalStrengthVisible(false);
                 deployMonitorCheckDialogUtils.setDeviceStatusVisible(false);
                 deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
-                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText, ""));
+                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText,""));
                 deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
                 deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
                 break;
@@ -414,7 +414,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
                 deployMonitorCheckDialogUtils.setSignalStrengthVisible(false);
                 deployMonitorCheckDialogUtils.setDeviceStatusVisible(false);
                 deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
-                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText, getString(R.string.deploy_check_suggest_config_instruction)));
+                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText, getString(R.string.deploy_check_suggest_repair_instruction)));
                 deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
                 deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
                 break;
@@ -431,7 +431,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
                 deployMonitorCheckDialogUtils.setSignalStrengthFailed(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD);
                 deployMonitorCheckDialogUtils.setDeviceStatusVisible(false);
                 deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
-                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText, getString(R.string.deploy_check_suggest_particular_instruction)));
+                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText, getString(R.string.deploy_check_suggest_repair_instruction)));
                 deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
                 deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
                 break;
@@ -439,7 +439,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
                 deployMonitorCheckDialogUtils.setSignalStrengthFailed(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NONE);
                 deployMonitorCheckDialogUtils.setDeviceStatusVisible(false);
                 deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
-                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText, getString(R.string.deploy_check_suggest_particular_instruction)));
+                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText, getString(R.string.deploy_check_suggest_repair_instruction)));
                 deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
                 deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
                 break;
@@ -452,14 +452,14 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
             case DEVICE_CHECK_STATUS_FAIL_ALARM:
                 deployMonitorCheckDialogUtils.setDeviceStatusFailed(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_STATUS_ALARM);
                 deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
-                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText, getString(R.string.deploy_check_suggest_particular_instruction)));
+                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText, getString(R.string.deploy_check_suggest_repair_instruction)));
                 deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
                 deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
                 break;
             case DEVICE_CHECK_STATUS_FAIL_MALFUNCTION:
                 deployMonitorCheckDialogUtils.setDeviceStatusFailed(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_STATUS_MALFUNCTION);
                 deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
-                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText, getString(R.string.deploy_check_suggest_particular_instruction)));
+                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText, getString(R.string.deploy_check_suggest_repair_instruction)));
                 deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
                 deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
                 break;
