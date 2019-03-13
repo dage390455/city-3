@@ -275,7 +275,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                         sensoroDeviceConnection.disconnect();
                                     }
                                     if (onConfigInfoObserver != null) {
-                                        onConfigInfoObserver.onOverTime();
+                                        onConfigInfoObserver.onOverTime(mActivity.getString(R.string.init_config_over_time));
                                     }
                                 }
                             }
@@ -293,7 +293,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                                 SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec());
                                                 if (sensoroDevice != null) {
                                                     //频点信息写入状态回调
-                                                    final SensoroWriteCallback signalAndConfigWriteCallback = new SensoroWriteCallback() {
+                                                    final SensoroWriteCallback configWriteCallback = new SensoroWriteCallback() {
                                                         @Override
                                                         public void onWriteSuccess(Object o, int cmd) {
                                                             if (isAttachedView()) {
@@ -308,21 +308,21 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                                             if (isAttachedView()) {
                                                                 sensoroDeviceConnection.disconnect();
                                                                 mHandler.removeCallbacks(configOvertime);
-                                                                onConfigInfoObserver.onFailed();
+                                                                onConfigInfoObserver.onFailed(mActivity.getString(R.string.ble_init_config_write_failure));
                                                             }
                                                         }
                                                     };
-                                                    sensoroDeviceConnection.writeData05Configuration(sensoroDevice, signalAndConfigWriteCallback);
+                                                    sensoroDeviceConnection.writeData05Configuration(sensoroDevice, configWriteCallback);
                                                 } else {
                                                     sensoroDeviceConnection.disconnect();
                                                     mHandler.removeCallbacks(configOvertime);
-                                                    onConfigInfoObserver.onFailed();
+                                                    onConfigInfoObserver.onFailed(mActivity.getString(R.string.init_config_not_support_device));
                                                 }
 
                                             } else {
                                                 sensoroDeviceConnection.disconnect();
                                                 mHandler.removeCallbacks(configOvertime);
-                                                onConfigInfoObserver.onFailed();
+                                                onConfigInfoObserver.onFailed(mActivity.getString(R.string.init_config_info_error));
                                             }
                                         } else {
                                             //不需要写入信息直接成功
@@ -339,7 +339,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                     if (isAttachedView()) {
                                         sensoroDeviceConnection.disconnect();
                                         mHandler.removeCallbacks(configOvertime);
-                                        onConfigInfoObserver.onFailed();
+                                        onConfigInfoObserver.onFailed(mActivity.getString(R.string.frequency_config_write_failure));
                                     }
 
                                 }
@@ -368,7 +368,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                                 if (isAttachedView()) {
                                                     sensoroDeviceConnection.disconnect();
                                                     mHandler.removeCallbacks(configOvertime);
-                                                    onConfigInfoObserver.onFailed();
+                                                    onConfigInfoObserver.onFailed(mActivity.getString(R.string.ble_init_config_write_failure));
                                                 }
 
                                             }
@@ -377,13 +377,13 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                     } else {
                                         sensoroDeviceConnection.disconnect();
                                         mHandler.removeCallbacks(configOvertime);
-                                        onConfigInfoObserver.onFailed();
+                                        onConfigInfoObserver.onFailed(mActivity.getString(R.string.init_config_not_support_device));
                                     }
                                 } else {
                                     getView().toastShort(mActivity.getString(R.string.please_set_initial_configuration));
                                     sensoroDeviceConnection.disconnect();
                                     mHandler.removeCallbacks(configOvertime);
-                                    onConfigInfoObserver.onFailed();
+                                    onConfigInfoObserver.onFailed(mActivity.getString(R.string.init_config_info_error));
                                 }
                             } else {
                                 //不需要直接成功
@@ -399,7 +399,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                 @Override
                 public void onConnectedFailure(int errorCode) {
                     if (isAttachedView()) {
-                        onConfigInfoObserver.onFailed();
+                        onConfigInfoObserver.onFailed(mActivity.getString(R.string.deploy_check_ble_connect_error));
                     }
                 }
 
@@ -411,7 +411,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             sensoroDeviceConnection.connect(deployAnalyzerModel.blePassword, sensoroConnectionCallback);
         } catch (Exception e) {
             e.printStackTrace();
-            onConfigInfoObserver.onFailed();
+            onConfigInfoObserver.onFailed(mActivity.getString(R.string.unknown_error));
         }
     }
 
@@ -456,9 +456,9 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     public interface OnConfigInfoObserver {
         void onSuccess();
 
-        void onFailed();
+        void onFailed(String errorMsg);
 
-        void onOverTime();
+        void onOverTime(String overTimeMsg);
     }
 
 
@@ -627,11 +627,11 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                                 switch (deployAnalyzerModel.status) {
                                                     case SENSOR_STATUS_ALARM:
                                                         tempForceReason = "status";
-                                                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_ALARM, "", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                                                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_ALARM, mActivity.getString(R.string.device_is_alarm), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
                                                         break;
                                                     case SENSOR_STATUS_MALFUNCTION:
                                                         tempForceReason = "status";
-                                                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_MALFUNCTION, "", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                                                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_MALFUNCTION, mActivity.getString(R.string.device_is_malfunction), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
                                                         break;
                                                     default:
                                                         tempForceReason = null;
@@ -673,7 +673,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                                 return;
                                             case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD:
                                                 tempForceReason = "signalQuality";
-                                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_BAD, mActivity.getString(R.string.deploy_check_dialog_bad_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_BAD, mActivity.getString(R.string.deploy_check_dialog_quality_bad_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
                                                 return;
                                         }
                                         tempForceReason = "signalQuality";
@@ -689,19 +689,19 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                         }
 
                         @Override
-                        public void onFailed() {
+                        public void onFailed(String errorMsg) {
                             if (isAttachedView()) {
                                 tempForceReason = "config";
-                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_FAIL, "", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_FAIL, mActivity.getString(R.string.installation_config_failed)+errorMsg, PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
                             }
 
                         }
 
                         @Override
-                        public void onOverTime() {
+                        public void onOverTime(String overTimeMsg) {
                             if (isAttachedView()) {
                                 tempForceReason = "config";
-                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_FAIL, "", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_FAIL, mActivity.getString(R.string.installation_config_failed)+overTimeMsg, PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
                             }
                         }
                     });
@@ -713,7 +713,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             @Override
             public void onFinish() {
                 tempForceReason = "lonlat";
-                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_FAIL, "测试不在附近", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_FAIL, mActivity.getString(R.string.installation_test_not_nearby), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
             }
         };
         checkHandler.removeAllMessage();
@@ -743,11 +743,11 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                     switch (deployAnalyzerModel.status) {
                                         case SENSOR_STATUS_ALARM:
                                             tempForceReason = "status";
-                                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_ALARM, "", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_ALARM, mActivity.getString(R.string.device_is_alarm), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
                                             break;
                                         case SENSOR_STATUS_MALFUNCTION:
                                             tempForceReason = "status";
-                                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_MALFUNCTION, "", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_MALFUNCTION, mActivity.getString(R.string.device_is_malfunction), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
                                             break;
                                         default:
                                             tempForceReason = null;
@@ -789,7 +789,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                     return;
                                 case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD:
                                     tempForceReason = "signalQuality";
-                                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_BAD, mActivity.getString(R.string.deploy_check_dialog_bad_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_BAD, mActivity.getString(R.string.deploy_check_dialog_quality_bad_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
                                     return;
                             }
                             tempForceReason = "signalQuality";
@@ -806,7 +806,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             @Override
             public void onFinish() {
                 tempForceReason = "lonlat";
-                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_FAIL, "测试不在附近", PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_FAIL, mActivity.getString(R.string.installation_test_not_nearby), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
             }
         };
         checkHandler.removeAllMessage();

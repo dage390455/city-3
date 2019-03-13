@@ -888,5 +888,17 @@
     <string name="deploy_check_button_tip_press_the_sensor">请按下传感器自检按钮，并开始安装测试</string>
     <string name="deploy_check_dialog_no_signal">无信号</string>
     <string name="deploy_check_dialog_bad_signal">信号差</string>
+    <string name="installation_test_not_nearby">请确保在设备旁，且已开启手机蓝牙</string>
+    <string name="installation_config_failed">初始配置失败，原因：</string>
+    <string name="deploy_check_dialog_quality_bad_signal">信号质量差</string>
+    <string name="device_is_malfunction">设备正在故障中</string>
+    <string name="device_is_alarm">设备正在预警中</string>
+    <string name="deploy_check_suggest_repair_instruction">&#160;&#160;修复说明</string>
+    <string name="ble_init_config_write_failure">初始配置写入失败</string>
+    <string name="init_config_not_support_device">此设备不支持初始配置</string>
+    <string name="init_config_info_error">初始配置信息错误</string>
+    <string name="frequency_config_write_failure">频点信息写入失败</string>
+    <string name="deploy_check_ble_connect_error">连接失败</string>
+    <string name="init_config_over_time">写入超时</string>
 
 </resources>
