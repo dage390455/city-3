@@ -547,7 +547,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     if (mDeviceInfo.getStatus() == SENSOR_STATUS_MALFUNCTION) {
                         Map<String, MalfunctionDataBean> malfunctionData = mDeviceInfo.getMalfunctionData();
                         //TODO 添加故障字段数组
-
                         if (malfunctionData != null) {
                             LinkedHashSet<String> linkedHashSet = new LinkedHashSet<>();
                             Set<Map.Entry<String, MalfunctionDataBean>> entrySet = malfunctionData.entrySet();
@@ -562,9 +561,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                                 linkedHashSet.addAll(keySet);
                                             }
                                         }
-
                                     }
-
                                 }
                             }
                             ArrayList<String> keyList = new ArrayList<>(linkedHashSet);
@@ -576,15 +573,10 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                 MalfunctionTypeStyles configMalfunctionSubTypes = PreferencesHelper.getInstance().getConfigMalfunctionSubTypes(key);
                                 if (configMalfunctionSubTypes != null) {
                                     monitoringPointRcContentAdapterModel.content = configMalfunctionSubTypes.getName();
-                                    malfunctionBeanData.add(monitoringPointRcContentAdapterModel);
-                                    try {
-                                        LogUtils.loge("故障成因：key = " + key + "value = " + monitoringPointRcContentAdapterModel.content);
-                                    } catch (Throwable throwable) {
-                                        throwable.printStackTrace();
-                                    }
-                                    break;
                                 }
-                                monitoringPointRcContentAdapterModel.content = mContext.getString(R.string.unknown);
+                                if (TextUtils.isEmpty(monitoringPointRcContentAdapterModel.content)) {
+                                    monitoringPointRcContentAdapterModel.content = mContext.getString(R.string.unknown);
+                                }
                                 malfunctionBeanData.add(monitoringPointRcContentAdapterModel);
                             }
                         }
