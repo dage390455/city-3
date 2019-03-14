@@ -119,16 +119,16 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                     }
                     getView().setTipsTextView(text);
                     break;
-//                case DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED:
-//                    getView().setResultImageView(R.drawable.deploy_fail);
-//                    getView().setStateTextView(mContext.getString(R.string.failed));
-//                    getView().setDeployResultTvStateTextColor(R.color.c_f34a4a);
-//                    getView().setDeployResultDividerVisible(false);
-//                    if (!TextUtils.isEmpty(deployResultModel.sn)) {
-//                        getView().setSnTextView(deployResultModel.sn);
-//                    }
-//                    getView().setTipsTextView(deployResultModel.errorMsg);
-//                    break;
+                case DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED:
+                    getView().setResultImageView(R.drawable.deploy_fail);
+                    getView().setStateTextView(mContext.getString(R.string.failed));
+                    getView().setDeployResultTvStateTextColor(R.color.c_f34a4a);
+                    getView().setDeployResultDividerVisible(false);
+                    if (!TextUtils.isEmpty(deployResultModel.sn)) {
+                        getView().setSnTextView(deployResultModel.sn);
+                    }
+                    getView().setTipsTextView(deployResultModel.errorMsg);
+                    break;
                 case DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS:
                     //成功
                     setDeployResultSuccessDetail();

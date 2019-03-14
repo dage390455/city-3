@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
 import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
@@ -656,7 +657,6 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                         }
                                         tempForceReason = "signalQuality";
                                         getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, mActivity.getString(R.string.deploy_check_dialog_no_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
-
                                     }
                                 };
                                 checkHandler.init(1000, 10);
@@ -728,8 +728,8 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     }
 
     private void updateDeviceStatusDialog(DeviceStatusRsp data) {
-        if (data != null && data.getStatus() != null) {
-            switch (data.getStatus()) {
+        if (data != null && data.getData()!=null && data.getData().getStatus()!=null) {
+            switch (data.getData().getStatus()) {
                 case 0:
                     tempForceReason = "status";
                     getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_ALARM,
