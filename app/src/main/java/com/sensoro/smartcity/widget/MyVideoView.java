@@ -146,13 +146,13 @@ public class MyVideoView extends TextureView implements TextureView.SurfaceTextu
 	}
 
 	public void start() {
-		mTargetState = STATE_PLAYING;
 		//可用状态{Prepared, Started, Paused, PlaybackCompleted}
 		if (mMediaPlayer != null && (mCurrentState == STATE_PREPARED || mCurrentState == STATE_PAUSED || mCurrentState == STATE_PLAYING || mCurrentState == STATE_PLAYBACK_COMPLETED)) {
 			try {
 				if (!isPlaying())
 					mMediaPlayer.start();
 				mCurrentState = STATE_PLAYING;
+				mTargetState = STATE_PLAYING;
 				if (mOnPlayStateListener != null)
 					mOnPlayStateListener.onStateChanged(true);
 			} catch (IllegalStateException e) {

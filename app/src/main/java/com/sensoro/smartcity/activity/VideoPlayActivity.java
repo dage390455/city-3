@@ -204,13 +204,13 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     protected void onDestroy() {
+        mainHandler.removeCallbacksAndMessages(null);
         mProgressUtils.destroyProgress();
         vv_play.release();
 
         if (immersionBar != null) {
             immersionBar.destroy();
         }
-        mainHandler.removeCallbacksAndMessages(null);
         super.onDestroy();
     }
 
