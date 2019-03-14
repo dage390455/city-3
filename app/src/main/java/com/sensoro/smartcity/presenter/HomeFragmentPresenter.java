@@ -364,27 +364,32 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         });
     }
 
-    private void handleDevicePush(DeviceInfo deviceInfo) {
+    /**
+     * 是否处理socke事件中的推送设备
+     *
+     * @param deviceInfo
+     * @return
+     */
+    private boolean needHandleDevicePush(DeviceInfo deviceInfo) {
         //TODO 添加过滤未部署的逻辑
         boolean deployFlag = deviceInfo.isDeployFlag();
-        if (!deployFlag) {
-            return;
-        }
-        String mergeType = deviceInfo.getMergeType();
-        if (TextUtils.isEmpty(mergeType)) {
-            String deviceType = deviceInfo.getDeviceType();
-            mergeType = WidgetUtil.handleMergeType(deviceType);
-        }
-        if (TextUtils.isEmpty(mTypeSelectedType)) {
-            organizeJsonData(deviceInfo);
-            addSocketData(deviceInfo);
-        } else {
-            if (mTypeSelectedType.equalsIgnoreCase(mergeType)) {
+        if (deployFlag) {
+            String mergeType = deviceInfo.getMergeType();
+            if (TextUtils.isEmpty(mergeType)) {
+                String deviceType = deviceInfo.getDeviceType();
+                mergeType = WidgetUtil.handleMergeType(deviceType);
+            }
+            if (TextUtils.isEmpty(mTypeSelectedType)) {
                 organizeJsonData(deviceInfo);
                 addSocketData(deviceInfo);
+            } else {
+                if (mTypeSelectedType.equalsIgnoreCase(mergeType)) {
+                    organizeJsonData(deviceInfo);
+                    addSocketData(deviceInfo);
+                }
             }
         }
-
+        return deployFlag;
     }
 
 
@@ -438,8 +443,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 break;
             case EVENT_DATA_SOCKET_DATA_INFO:
                 if (data instanceof DeviceInfo) {
-                    handleDevicePush((DeviceInfo) data);
-                    needRefreshContent = true;
+                    needRefreshContent = needHandleDevicePush((DeviceInfo) data);
                 }
                 break;
             case EVENT_DATA_SOCKET_DATA_COUNT:
