@@ -463,6 +463,13 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
                 deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
                 deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
                 break;
+            case DEVICE_CHECK_STATUS_FAIL_INTERNET:
+                deployMonitorCheckDialogUtils.setDeviceStatusFailed(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_STATUS_INTERNET_FAILED);
+                deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
+                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText,""));
+                deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
+                deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
+                break;
             case DEVICE_CHECK_ALL_SUC:
                 if (handler == null) {
                     handler = new Handler();

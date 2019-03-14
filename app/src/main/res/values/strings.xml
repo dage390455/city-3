@@ -680,7 +680,7 @@
     <string name="deploy_pic_device_pic_tip">SN should be recognised</string>
     <string name="deploy_pic_take_photo">Photo</string>
     <string name="deploy_pic_installation_site">Installation environment</string>
-    <string name="deploy_pic_shop_pic">Store Picture（Optional）</string>
+    <string name="deploy_pic_shop_pic">Store Picture</string>
     <string name="please_select_device_pic">Please select a device picture</string>
     <string name="please_select_installation_site">Please select a site photo</string>
     <string name="rated_current">RC/A</string>
@@ -908,4 +908,6 @@
     <string name="frequency_config_write_failure">frequency information write failed</string>
     <string name="deploy_check_ble_connect_error">connection failed</string>
     <string name="init_config_over_time">write timeout</string>
+    <string name="get_device_status_failed">Failed to get devices status</string>
+    <string name="deoloy_check_get_device_status_failed">Acquisition failed</string>
 </resources>

@@ -32,6 +32,7 @@ import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
+import com.sensoro.smartcity.server.response.DeviceStatusRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 import com.sensoro.smartcity.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
@@ -121,6 +122,7 @@ public enum RetrofitServiceHelper {
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create());
         retrofitService = builder.build().create(RetrofitService.class);
     }
+
 
     /**
      * 获取当前的sessionID（为空时从文件中获取）
@@ -493,6 +495,12 @@ public enum RetrofitServiceHelper {
         Observable<DeployRecordRsp> deployRecordList = retrofitService.getDeployRecordList(sn, searchText, beginTime, endTime, owners, signalQuality, limit, offset, group);
         RxApiManager.getInstance().add("getDeployRecordList", deployRecordList.subscribe());
         return deployRecordList;
+    }
+
+    public Observable<DeviceStatusRsp> getDeviceRealStatus(String sn) {
+        Observable<DeviceStatusRsp> realStatus = retrofitService.getRealStatus(sn);
+        RxApiManager.getInstance().add("getDeviceRealStatus", realStatus.subscribe());
+        return realStatus;
     }
 
     /**

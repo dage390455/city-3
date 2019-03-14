@@ -79,7 +79,7 @@
                 android:layout_height="160dp"
                 android:layout_gravity="center_horizontal"
                 android:contentDescription="@null"
-                android:src="@drawable/deploy_succeed" />
+                />
 
             <TextView
                 android:id="@+id/ac_deploy_result_tv_state"
@@ -87,7 +87,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="12dp"
-                android:text="成功"
                 android:textColor="@color/c_29c093"
                 android:textSize="24sp" />
 
@@ -100,7 +99,6 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:gravity="center"
-                android:text="@string/deploy_result_successed"
                 android:textColor="@color/c_a6a6a6"
                 android:textSize="14sp" />
 
@@ -234,7 +232,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/view_divider_height"
                     android:layout_marginTop="8dp"
-                    android:background="@color/c_dfdfdf"/>
+                    android:background="@color/c_dfdfdf"
+                    android:visibility="gone"/>
 
                 <RelativeLayout
                     android:id="@+id/rl_ac_deploy_result_address"
@@ -314,7 +313,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
