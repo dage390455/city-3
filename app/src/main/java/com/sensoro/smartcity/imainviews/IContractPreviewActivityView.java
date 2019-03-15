@@ -1,5 +1,7 @@
 package com.sensoro.smartcity.imainviews;
 
-public interface IContractPreviewActivityView {
+import com.sensoro.smartcity.iwidget.IToast;
+
+public interface IContractPreviewActivityView extends IToast {
     void loadUrl(String url);
 }
