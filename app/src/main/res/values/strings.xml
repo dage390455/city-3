@@ -680,7 +680,7 @@
     <string name="deploy_pic_device_pic_tip">SN should be recognised</string>
     <string name="deploy_pic_take_photo">Photo</string>
     <string name="deploy_pic_installation_site">Installation environment</string>
-    <string name="deploy_pic_shop_pic">Store Picture（Optional）</string>
+    <string name="deploy_pic_shop_pic">Store Picture</string>
     <string name="please_select_device_pic">Please select a device picture</string>
     <string name="please_select_installation_site">Please select a site photo</string>
     <string name="rated_current">RC/A</string>

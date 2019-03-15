@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.base;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
@@ -59,6 +60,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mPresenter = createPresenter();
         mPresenter.attachView((V) this);
         V view = mPresenter.getView();
