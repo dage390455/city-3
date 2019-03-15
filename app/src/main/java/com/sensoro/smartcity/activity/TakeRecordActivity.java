@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -53,9 +54,6 @@ public class TakeRecordActivity extends BaseActivity<ITakeRecordActivityView, Ta
     private Point displayPoint;
     private ValueAnimator va;
     public ImmersionBar immersionBar;
-
-
-
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
