@@ -14,4 +14,5 @@ public interface DeoloyCheckPointConstants {
     //
     int DEPLOY_CHECK_DIALOG_STATUS_ALARM = -0x01;
     int DEPLOY_CHECK_DIALOG_STATUS_MALFUNCTION = -0x02;
+    int DEPLOY_CHECK_DIALOG_STATUS_INTERNET_FAILED = -0x03;
 }

@@ -331,6 +331,12 @@ public class DeployMonitorCheckDialogUtils {
                 text = mActivity.getString(R.string.alarming);
                 tvDeployCheckDialogDeviceStatusErrorDesc.setTextColor(redColor);
                 break;
+            case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_STATUS_INTERNET_FAILED:
+                drawable = mActivity.getResources().getDrawable(R.drawable.deploy_check_failed_red);
+                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                text = mActivity.getString(R.string.deoloy_check_get_device_status_failed);
+                tvDeployCheckDialogDeviceStatusErrorDesc.setTextColor(redColor);
+                break;
             default:
                 drawable = mActivity.getResources().getDrawable(R.drawable.deploy_check_failed_red);
                 drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());

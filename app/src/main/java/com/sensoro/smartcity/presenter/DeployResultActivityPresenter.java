@@ -50,7 +50,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                         getView().setTitleText(mContext.getString(R.string.scan_code_failed));
                         break;
                 }
-               break;
+                break;
             case DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT:
                 //失败
                 switch (deployResultModel.scanType) {
@@ -119,16 +119,43 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                     }
                     getView().setTipsTextView(text);
                     break;
+                case DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED:
+                    getView().setResultImageView(R.drawable.deploy_fail);
+                    getView().setStateTextView(mContext.getString(R.string.failed));
+                    getView().setDeployResultTvStateTextColor(R.color.c_f34a4a);
+                    getView().setDeployResultDividerVisible(false);
+                    if (!TextUtils.isEmpty(deployResultModel.sn)) {
+                        getView().setSnTextView(deployResultModel.sn);
+                    }
+                    getView().setTipsTextView(deployResultModel.errorMsg);
+                    break;
                 case DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS:
                     //成功
                     setDeployResultSuccessDetail();
+                    break;
+                default:
+                    getView().setResultImageView(R.drawable.deploy_fail);
+                    getView().setStateTextView(mContext.getString(R.string.failed));
+                    getView().setDeployResultTvStateTextColor(R.color.c_f34a4a);
+                    getView().setDeployResultDividerVisible(false);
+                    if (!TextUtils.isEmpty(deployResultModel.sn)) {
+                        getView().setSnTextView(deployResultModel.sn);
+                    }
+                    getView().setTipsTextView(mContext.getResources().getString(R.string.unknown_error));
                     break;
             }
 
 
         } catch (Exception e) {
             e.printStackTrace();
-            getView().toastShort(mContext.getResources().getString(R.string.tips_data_error));
+            getView().setResultImageView(R.drawable.deploy_fail);
+            getView().setStateTextView(mContext.getString(R.string.failed));
+            getView().setDeployResultTvStateTextColor(R.color.c_f34a4a);
+            getView().setDeployResultDividerVisible(false);
+            if (!TextUtils.isEmpty(deployResultModel.sn)) {
+                getView().setSnTextView(deployResultModel.sn);
+            }
+            getView().setTipsTextView(mContext.getResources().getString(R.string.tips_data_error));
         }
 
     }
@@ -193,7 +220,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 if (deployResultModel.deviceStatus == 0 || deployResultModel.deviceStatus == 4) {
                     getView().setStatusTextView(mContext.getString(Constants.DEVICE_STATUS_ARRAY[deployResultModel.deviceStatus]),
                             mContext.getResources().getColor(Constants.DEVICE_STATUS_COLOR_ARRAY[deployResultModel.deviceStatus]));
-                }else{
+                } else {
                     getView().setStatusTextView(mContext.getString(R.string.normal),
                             mContext.getResources().getColor(R.color.c_29c093));
                 }
@@ -282,7 +309,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 if (deployResultModel.deviceStatus == 0 || deployResultModel.deviceStatus == 4) {
                     getView().setStatusTextView(mContext.getString(Constants.DEVICE_STATUS_ARRAY[deployResultModel.deviceStatus]),
                             mContext.getResources().getColor(Constants.DEVICE_STATUS_COLOR_ARRAY[deployResultModel.deviceStatus]));
-                }else{
+                } else {
                     getView().setStatusTextView(mContext.getString(R.string.normal),
                             mContext.getResources().getColor(R.color.c_29c093));
                 }
@@ -342,7 +369,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
             case DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT:
                 if ((deployResultModel.scanType == TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE || deployResultModel.scanType == TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE)) {
                     eventData.code = EVENT_DATA_DEPLOY_CHANGE_RESULT_CONTINUE;
-                }else if (deployResultModel.scanType == TYPE_SCAN_DEPLOY_DEVICE){
+                } else if (deployResultModel.scanType == TYPE_SCAN_DEPLOY_DEVICE) {
                     //直接返回上一个界面
                     getView().finishAc();
                     return;

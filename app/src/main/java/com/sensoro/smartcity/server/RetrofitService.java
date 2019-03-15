@@ -18,6 +18,7 @@ import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
+import com.sensoro.smartcity.server.response.DeviceStatusRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 import com.sensoro.smartcity.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
@@ -162,6 +163,10 @@ public interface RetrofitService {
 
     @POST("prov2/devices/app/{sn}")
     Observable<DeviceDeployRsp> doDevicePointDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
+
+    @GET("devices/realStatus/{sn}")
+    Observable<DeviceStatusRsp> getRealStatus(@Path("sn") String sn);
+
 
     @GET(DEPLOY_DEVICE_DETAIL)
     Observable<DeployDeviceDetailRsp> getDeployDeviceDetail(@Query("sn") String sn, @Query("longitude") Double longitude, @Query("latitude") Double latitude);

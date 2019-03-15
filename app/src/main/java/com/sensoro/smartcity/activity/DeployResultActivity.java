@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewStructure;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -182,6 +183,9 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     @Override
     public void setStatusTextView(String status, int color) {
         acDeployResultRlStatus.setVisibility(View.VISIBLE);
+        if (viewAcDeployResultDivider.getVisibility() != View.VISIBLE) {
+            viewAcDeployResultDivider.setVisibility(View.VISIBLE);
+        }
         acDeployResultTvStatus.setText(status);
         acDeployResultTvStatus.setTextColor(color);
     }
@@ -189,12 +193,18 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     @Override
     public void setUpdateTextView(String update) {
         acDeployResultRlRecentUploadTime.setVisibility(View.VISIBLE);
+        if (viewAcDeployResultDivider.getVisibility() != View.VISIBLE) {
+            viewAcDeployResultDivider.setVisibility(View.VISIBLE);
+        }
         acDeployResultTvRecentUploadTime.setText(update);
     }
 
     @Override
     public void setAddressTextView(String address) {
         acDeployResultRlAddress.setVisibility(View.VISIBLE);
+        if (viewAcDeployResultDivider.getVisibility() != View.VISIBLE) {
+            viewAcDeployResultDivider.setVisibility(View.VISIBLE);
+        }
         acDeployResultTvAddress.setText(address);
     }
 
@@ -207,6 +217,9 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     @Override
     public void setUpdateTextViewVisible(boolean isVisible) {
         acDeployResultRlRecentUploadTime.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        if (isVisible && viewAcDeployResultDivider.getVisibility() != View.VISIBLE) {
+            viewAcDeployResultDivider.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -244,6 +257,9 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     @Override
     public void setResultSettingVisible(boolean isVisible) {
         acDeployResultRlSetting.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        if (viewAcDeployResultDivider.getVisibility() != View.VISIBLE) {
+            viewAcDeployResultDivider.setVisibility(View.VISIBLE);
+        }
     }
 
 

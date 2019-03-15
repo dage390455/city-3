@@ -908,4 +908,6 @@
     <string name="frequency_config_write_failure">frequency information write failed</string>
     <string name="deploy_check_ble_connect_error">connection failed</string>
     <string name="init_config_over_time">write timeout</string>
+    <string name="get_device_status_failed">Failed to get devices status</string>
+    <string name="deoloy_check_get_device_status_failed">Acquisition failed</string>
 </resources>
