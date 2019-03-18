@@ -2,54 +2,44 @@ package com.sensoro.smartcity.activity;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.text.TextUtils;
+import android.view.SurfaceHolder;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.smartcity.imainviews.ITakeRecordActivityView;
+import com.sensoro.smartcity.presenter.TakeRecordActivityPresenter;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.FocusSurfaceView;
 import com.sensoro.smartcity.widget.MyVideoView;
 import com.sensoro.smartcity.widget.RecordedButton;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
-import com.yixia.camera.MediaRecorderBase;
 import com.yixia.camera.MediaRecorderNative;
-import com.yixia.camera.VCamera;
 import com.yixia.camera.model.MediaObject;
-import com.yixia.videoeditor.adapter.UtilityAdapter;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Locale;
 
 import static com.sensoro.smartcity.constant.Constants.RESULT_CODE_RECORD;
 
-public class TakeRecordActivity extends Activity implements MediaRecorderBase.OnEncodeListener, RecordedButton.OnGestureListener, View.OnClickListener, MediaPlayer.OnPreparedListener {
+public class TakeRecordActivity extends BaseActivity<ITakeRecordActivityView, TakeRecordActivityPresenter> implements ITakeRecordActivityView, View.OnClickListener {
 
     private static final int REQUEST_KEY = 100;
-    private MediaRecorderNative mMediaRecorder;
-    private MediaObject mMediaObject;
     private FocusSurfaceView sv_ffmpeg;
     private RecordedButton rb_start;
     private int maxDuration = 15 * 1000;
-    private boolean recordedOver = true;
     private MyVideoView vv_play;
     private ImageView iv_finish;
     private ImageView iv_back;
@@ -61,51 +51,26 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
     private TextView tv_record_time;
     private ImageView imv_back;
     private TextView tv_retake;
-    private final Handler myHandler = new Handler(Looper.getMainLooper()) {
-        @Override
-        public void handleMessage(Message msg) {
-            if (!recordedOver) {
-                int duration = mMediaObject.getDuration();
-                if (duration > 15 * 1000) {
-                    recordFinish();
-                    return;
-                }
-                rb_start.setProgress(duration);
-                myHandler.sendEmptyMessageDelayed(0, 50);
-                tv_hint.setVisibility(duration > 5000 ? View.GONE : View.VISIBLE);
-                tv_record_time.setText(String.format(Locale.ROOT, "00:%02d", duration / 1000));
-
-            }
-        }
-    };
     private Point displayPoint;
-    private boolean isEncodingFinish = true;
     private ValueAnimator va;
-
-    private void recordFinish() {
-        recordedOver = true;
-        rb_start.closeButton();
-        rb_start.setIsRecording(false);
-        tv_record_time.setVisibility(View.GONE);
-        tv_retake.setVisibility(View.GONE);
-        videoFinish();
-    }
-
+    public ImmersionBar immersionBar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_take_record);
         //
-        sv_ffmpeg = (FocusSurfaceView) findViewById(R.id.sv_ffmpeg);
-        rb_start = (RecordedButton) findViewById(R.id.rb_start);
-        vv_play = (MyVideoView) findViewById(R.id.vv_play);
-        iv_finish = (ImageView) findViewById(R.id.iv_finish);
-        iv_back = (ImageView) findViewById(R.id.iv_back);
-        tv_hint = (TextView) findViewById(R.id.tv_hint);
-        tv_record_time = (TextView) findViewById(R.id.tv_record_time);
+        initView();
+        mPresenter.initData(mActivity);
+    }
+
+    private void initView() {
+        sv_ffmpeg =  findViewById(R.id.sv_ffmpeg);
+        rb_start =  findViewById(R.id.rb_start);
+        vv_play =  findViewById(R.id.vv_play);
+        iv_finish =  findViewById(R.id.iv_finish);
+        iv_back =  findViewById(R.id.iv_back);
+        tv_hint =  findViewById(R.id.tv_hint);
+        tv_record_time =  findViewById(R.id.tv_record_time);
         imv_back = findViewById(R.id.imv_back);
         tv_retake = findViewById(R.id.tv_retake);
 
@@ -114,13 +79,10 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
         // 返回 确认按钮设置为距离两个边为58dp,view大小是70dp，所以应该减掉是58+35
         dp100 = displayPoint.x / 2 - AppUtils.dp2px(this, 93);
 
-        initMediaRecorder();
         initProgressDialog();
 
-        sv_ffmpeg.setTouchFocus(mMediaRecorder);
-
         rb_start.setMax(maxDuration);
-        rb_start.setOnGestureListener(this);
+        rb_start.setOnGestureListener(mPresenter);
 
         rb_start.setOnClickListener(this);
         iv_back.setOnClickListener(this);
@@ -154,16 +116,10 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
         lastValue = 0;
     }
 
-    private void videoFinish() {
-        dismissProgress();
-        mMediaRecorder.stopRecord();
-        //开始合成视频, 异步
-        mMediaRecorder.startEncoding();
-        isEncodingFinish = false;
-    }
 
-    private void startAnim() {
 
+    @Override
+    public void startAnim() {
         rb_start.setVisibility(View.GONE);
         iv_finish.setVisibility(View.VISIBLE);
         iv_back.setVisibility(View.VISIBLE);
@@ -188,7 +144,7 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                isEncodingFinish = true;
+                mPresenter.setEncodingStatus(true);
             }
 
             @Override
@@ -204,52 +160,99 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
         va.start();
     }
 
-    /**
-     * 初始化录制对象
-     */
-    private void initMediaRecorder() {
+    @Override
+    public void pausePlayVideo() {
+        if (vv_play != null) {
+            vv_play.pause();
+        }
+    }
 
-        mMediaRecorder = new MediaRecorderNative();
-        mMediaRecorder.setOnEncodeListener(this);
-        String key = String.valueOf(System.currentTimeMillis());
-        //设置缓存文件夹
-        mMediaObject = mMediaRecorder.setOutputDirectory(key, VCamera.getVideoCachePath());
-        //设置视频预览源
-        mMediaRecorder.setSurfaceHolder(sv_ffmpeg.getHolder());
-        //准备
-        mMediaRecorder.prepare();
-        //滤波器相关
-        UtilityAdapter.freeFilterParser();
-        UtilityAdapter.initFilterParser();
+    @Override
+    public void setFinishResult(int resultCodeRecord, Intent intent) {
+        mActivity.setResult(resultCodeRecord,intent);
+    }
+
+    @Override
+    public void recordFinish() {
+        rb_start.closeButton();
+        rb_start.setIsRecording(false);
+        tv_record_time.setVisibility(View.GONE);
+        tv_retake.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void updateStatusProgress(int duration) {
+        rb_start.setProgress(duration);
+        tv_hint.setVisibility(duration > 5000 ? View.GONE : View.VISIBLE);
+        tv_record_time.setText(String.format(Locale.ROOT, "00:%02d", duration / 1000));
+    }
+
+    @Override
+    public void setFfmpegTouchFocus(MediaRecorderNative mMediaRecorder) {
+        sv_ffmpeg.setTouchFocus(mMediaRecorder);
+    }
+
+    @Override
+    public void rbStartCloseButton() {
+        rb_start.closeButton();
+    }
+
+    @Override
+    public void setPlayLooping(boolean isLooping) {
+        vv_play.setLooping(isLooping);
+    }
+
+    @Override
+    public void startPlay() {
+        vv_play.start();
+    }
+
+    @Override
+    public void setStartRecordStatus() {
+        rb_start.setIsRecording(true);
+        tv_record_time.setVisibility(View.VISIBLE);
+        tv_retake.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setRetakeStatus() {
+        rb_start.retake();
+        tv_retake.setVisibility(View.GONE);
+        tv_record_time.setVisibility(View.GONE);
+        tv_hint.setVisibility(View.GONE);
+    }
+
+    @Override
+    public boolean isActivityOverrideStatusBar() {
+        immersionBar = ImmersionBar.with(mActivity);
+        immersionBar.transparentStatusBar().init();
+        return true;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mMediaRecorder.startPreview();
+        mPresenter.doMediaRecorderStartPreview();
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mMediaRecorder.stopPreview();
+        mPresenter.doMediaRecorderStopPreview();
+
+    }
+
+    @Override
+    protected TakeRecordActivityPresenter createPresenter() {
+        return new TakeRecordActivityPresenter();
     }
 
     @Override
     public void onBackPressed() {
         if (rb_start.getVisibility() != View.VISIBLE) {
             initMediaRecorderState();
-            LinkedList<MediaObject.MediaPart> medaParts = mMediaObject.getMedaParts();
-//            Iterator<MediaObject.MediaPart> iterator = medaParts.iterator();
-//            while (iterator.hasNext()){
-//                MediaObject.MediaPart next = iterator.next();
-//                mMediaObject.removePart(next,true);
-//                iterator.remove();
-//            }
-            for (MediaObject.MediaPart part : medaParts) {
-                mMediaObject.removePart(part, true);
-            }
-            mMediaRecorder.startPreview();
+            mPresenter.reVideo();
         } else {
             super.onBackPressed();
         }
@@ -266,10 +269,7 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_CODE_RECORD) {
-            LinkedList<MediaObject.MediaPart> medaParts = mMediaObject.getMedaParts();
-            for (MediaObject.MediaPart part : medaParts) {
-                mMediaObject.removePart(part, true);
-            }
+            mPresenter.clearMediaObject();
 //            deleteDir(SensoroCityApplication.VIDEO_PATH);
         }
     }
@@ -309,24 +309,9 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
         }
     }
 
-    @Override
-    public void onEncodeStart() {
-        try {
-            LogUtils.logd("Log.i", "onEncodeStart");
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
-    }
 
     @Override
-    public void onEncodeProgress(int progress) {
-//        if (textView != null) {
-//            textView.setText("视频编译中 " + progress + "%");
-//        }
-        showProgressDialog(progress);
-    }
-
-    private void showProgressDialog(int progress) {
+    public void showProgressDialog(int progress) {
         if (progressDialog != null) {
             String title = getString(R.string.video_compilation);
             progressDialog.setTitle(title);
@@ -335,46 +320,26 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
         }
     }
 
-    private void dismissProgress() {
+    @Override
+    public void dismissProgress() {
         if (progressDialog != null) {
             progressDialog.dismiss();
         }
     }
 
-    /**
-     * 视频编辑完成
-     */
     @Override
-    public void onEncodeComplete() {
-        //TODO
-        dismissProgress();
-        final String videoPath = mMediaObject.getOutputTempVideoPath();
-        if (!TextUtils.isEmpty(videoPath)) {
-            vv_play.setVisibility(View.VISIBLE);
-            vv_play.setVideoPath(videoPath);
-            vv_play.setOnPreparedListener(this);
-            vv_play.start();
-
-            recordedOver = true;
-            startAnim();
-        } else {
-            SensoroToast.INSTANCE.makeText(getString(R.string.video_recording_failed_please_try_again), Toast.LENGTH_SHORT).show();
-            finish();
-        }
+    public void previewVideo(String videoPath) {
+        vv_play.setVisibility(View.VISIBLE);
+        vv_play.setVideoPath(videoPath);
+        vv_play.setOnPreparedListener(mPresenter);
+        vv_play.start();
     }
 
-
     @Override
-    public void onEncodeError() {
-        try {
-            LogUtils.logd("Log.i", "onEncodeError");
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
-
-        SensoroToast.INSTANCE.makeText(getString(R.string.video_recording_failed_please_try_again), Toast.LENGTH_SHORT).show();
-        finish();
+    public SurfaceHolder getFfmpegHolder() {
+        return sv_ffmpeg.getHolder();
     }
+
 
     @Override
     protected void onDestroy() {
@@ -390,128 +355,85 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
         if (vv_play != null) {
             vv_play.release();
         }
-        if (mMediaRecorder != null) {
-            mMediaRecorder.stopRecord();
-            mMediaRecorder.release();
+
+        if (immersionBar != null) {
+            immersionBar.destroy();
         }
-        myHandler.removeCallbacksAndMessages(null);
+        mPresenter.onDestroy();
         super.onDestroy();
     }
 
-    @Override
-    public void onLongClick() {
-//        mMediaRecorder.startRecord();
-//        myHandler.sendEmptyMessageDelayed(0, 50);
-    }
-
-    @Override
-    public void onClick() {
-        //点击按钮
-    }
-
-    @Override
-    public void onLift() {
-        recordedOver = true;
-        videoFinish();
-    }
-
-    @Override
-    public void onOver() {
-        recordedOver = true;
-        rb_start.closeButton();
-        videoFinish();
-    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
-                if (isEncodingFinish) {
+                if (mPresenter.isEncodingFinish) {
                     onBackPressed();
                 }
 
                 break;
             case R.id.iv_finish:
-                if (isEncodingFinish) {
-                    final String videoPath = mMediaObject.getOutputTempVideoPath();
-                    final String videoThumbPath = WidgetUtil.bitmap2File(WidgetUtil.getVideoThumbnail(videoPath), videoPath);
-                    final long endTime = mMediaObject.getCurrentPart().endTime;
-                    try {
-                        LogUtils.loge("videoThumbPath = " + videoThumbPath);
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                    //                    initMediaRecorderState();
-                    if (vv_play != null) {
-                        vv_play.pause();
-                    }
-                    Intent intent = new Intent();
-                    final ImageItem imageItem = new ImageItem();
-                    imageItem.isRecord = true;
-                    imageItem.addTime = endTime;
-                    imageItem.path = videoPath;
-                    imageItem.thumbPath = videoThumbPath;
-                    imageItem.name = videoPath.substring(videoPath.lastIndexOf("/") + 1);
-                    intent.putExtra("path_record", (Serializable) imageItem);
-                    setResult(RESULT_CODE_RECORD, intent);
-                    finish();
-                }
-
+                mPresenter.doFinish();
                 break;
 
             case R.id.rb_start:
-                if (isEncodingFinish) {
-                    if (recordedOver) {
-                        recordStart();
-                    } else {
-                        if (mMediaObject.getDuration() > 5000) {
-                            recordFinish();
-                        }
-
-                    }
-                }
+                mPresenter.doRbStart();
 
                 break;
             case R.id.imv_back:
-                finish();
+                finishAc();
                 break;
             case R.id.tv_retake:
-                mMediaRecorder.stopRecord();
-//                initMediaRecorderState();
-                rb_start.retake();
-                myHandler.removeCallbacksAndMessages(null);
-                recordedOver = true;
-                tv_retake.setVisibility(View.GONE);
-                tv_record_time.setVisibility(View.GONE);
-                tv_hint.setVisibility(View.GONE);
-                LinkedList<MediaObject.MediaPart> medaParts = mMediaObject.getMedaParts();
-                for (MediaObject.MediaPart part : medaParts) {
-                    mMediaObject.removePart(part, true);
-                }
-                mMediaRecorder.startPreview();
-
+                mPresenter.doRetake();
                 break;
         }
     }
 
-    private void recordStart() {
-        mMediaRecorder.startRecord();
-        myHandler.sendEmptyMessageDelayed(0, 50);
-        rb_start.setIsRecording(true);
-        tv_record_time.setVisibility(View.VISIBLE);
-        recordedOver = false;
-        tv_retake.setVisibility(View.VISIBLE);
+
+    @Override
+    public void startAC(Intent intent) {
+        mActivity.startActivity(intent);
     }
 
     @Override
-    public void onPrepared(MediaPlayer mp) {
-        vv_play.setLooping(true);
-        myHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                vv_play.start();
-            }
-        }, 50);
+    public void finishAc() {
+        finish();
     }
 
+    @Override
+    public void startACForResult(Intent intent, int requestCode) {
+        mActivity.startActivityForResult(intent,requestCode);
+    }
+
+    @Override
+    public void setIntentResult(int resultCode) {
+
+    }
+
+
+    @Override
+    public void setIntentResult(int resultCode, Intent data) {
+
+    }
+
+    @Override
+    public void showProgressDialog() {
+
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+
+    }
+
+    @Override
+    public void toastShort(String msg) {
+        SensoroToast.INSTANCE.makeText(msg,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void toastLong(String msg) {
+
+    }
 }
