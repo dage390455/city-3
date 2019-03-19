@@ -1,9 +1,13 @@
 package com.sensoro.smartcity.server.bean;
 
+import com.google.gson.annotations.Expose;
+
 import java.io.Serializable;
 
 public class DeployControlSettingData implements Serializable {
-
+    //此字段不进行序列化
+    @Expose(serialize = false, deserialize = false)
+    private Integer inputValue;
     //部署特殊处理
     private Integer switchSpec;
     // 线径
@@ -34,5 +38,13 @@ public class DeployControlSettingData implements Serializable {
 
     public void setWireMaterial(Integer wireMaterial) {
         this.wireMaterial = wireMaterial;
+    }
+
+    public Integer getInputValue() {
+        return inputValue;
+    }
+
+    public void setInputValue(Integer inputValue) {
+        this.inputValue = inputValue;
     }
 }
