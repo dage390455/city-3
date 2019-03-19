@@ -356,6 +356,7 @@
         <activity android:name=".activity.ContractPreviewActivity" />
         <activity android:name=".temp.TestUpdateActivity" />
         <activity android:name=".activity.DeployMonitorCheckActivity" />
+        <activity android:name=".activity.DeployRepairInstructionActivity" />
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"

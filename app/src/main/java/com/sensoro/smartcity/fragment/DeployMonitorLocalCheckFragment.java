@@ -35,6 +35,8 @@ import com.sensoro.smartcity.imainviews.IDeployMonitorLocalCheckFragmentView;
 import com.sensoro.smartcity.model.MaterialValueModel;
 import com.sensoro.smartcity.presenter.DeployMonitorLocalCheckFragmentPresenter;
 import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.smartcity.util.PreferencesHelper;
+import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.dialog.DeployMonitorCheckDialogUtils;
 import com.sensoro.smartcity.widget.dialog.EarlyWarningThresholdDialogUtils;
 import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
@@ -362,7 +364,14 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
     }
 
     @NonNull
-    private SpannableString getClickableSpannable(String suggest, String instruction) {
+    private CharSequence getClickableSpannable(String suggest, String instruction) {
+        if (TextUtils.isEmpty(instruction)) {
+            return suggest;
+        }
+        final String repairInstructionUrl = mPresenter.getRepairInstructionUrl();
+        if (repairInstructionUrl == null) {
+            return suggest;
+        }
         StringBuilder stringBuilder = new StringBuilder(suggest);
         stringBuilder.append(instruction);
         SpannableString sb = new SpannableString(stringBuilder);
@@ -376,7 +385,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
 
             @Override
             public void onClick(@NonNull View widget) {
-                mPresenter.doInstruction();
+                mPresenter.doInstruction(repairInstructionUrl);
             }
         };
         sb.setSpan(clickableSpan, stringBuilder.length() - instruction.length(), stringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);

@@ -138,6 +138,12 @@ public class DeployMonitorCheckDialogUtils {
                 rlDeployCheckDialogDeviceStatus.setVisibility(View.GONE);
                 rlDeployCheckDialogSignalStrength.setVisibility(View.GONE);
                 break;
+            case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_TWO:
+                rlDeployCheckDialogDeviceLocation.setVisibility(View.VISIBLE);
+                rlDeployCheckDialogInitConfig.setVisibility(View.VISIBLE);
+                rlDeployCheckDialogDeviceStatus.setVisibility(View.GONE);
+                rlDeployCheckDialogSignalStrength.setVisibility(View.GONE);
+                break;
             case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_THREE:
                 rlDeployCheckDialogDeviceLocation.setVisibility(View.VISIBLE);
                 rlDeployCheckDialogInitConfig.setVisibility(View.GONE);

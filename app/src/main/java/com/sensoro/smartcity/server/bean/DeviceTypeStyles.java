@@ -43,6 +43,8 @@ public class DeviceTypeStyles {
      */
     private List<String> taskOptions;
     private List<DeployPicInfo> deployPicConfig;
+    //安装监测是否忽略蓝牙检测
+    private boolean ignoreSignal;
 
     public boolean isDemoSupported() {
         return demoSupported;
@@ -67,6 +69,7 @@ public class DeviceTypeStyles {
                 ", alarmReceive=" + alarmReceive +
                 ", category=" + category +
                 ", isOwn=" + isOwn +
+                ", ignoreSignal=" + ignoreSignal +
                 '}';
     }
 
@@ -172,5 +175,13 @@ public class DeviceTypeStyles {
 
     public void setDeployPicConfig(List<DeployPicInfo> deployPicConfig) {
         this.deployPicConfig = deployPicConfig;
+    }
+
+    public boolean isIgnoreSignal() {
+        return ignoreSignal;
+    }
+
+    public void setIgnoreSignal(boolean ignoreSignal) {
+        this.ignoreSignal = ignoreSignal;
     }
 }

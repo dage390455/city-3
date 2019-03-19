@@ -20,6 +20,10 @@ public class MergeTypeStyles {
 
     private int resId;
 
+
+    //部署安装监测时的修复说明
+    private String fixSpecificationUrl;
+
     @Override
     public String toString() {
         return "MergeTypeStyles{" +
@@ -30,6 +34,7 @@ public class MergeTypeStyles {
                 ", deviceTypes=" + deviceTypes +
                 ", resId=" + resId +
                 ", isOwn=" + isOwn +
+                ", fixSpecificationUrl=" + fixSpecificationUrl +
                 '}';
     }
 
@@ -79,6 +84,14 @@ public class MergeTypeStyles {
 
     public void setDeviceTypes(List<String> deviceTypes) {
         this.deviceTypes = deviceTypes;
+    }
+
+    public String getFixSpecificationUrl() {
+        return fixSpecificationUrl;
+    }
+
+    public void setFixSpecificationUrl(String fixSpecificationUrl) {
+        this.fixSpecificationUrl = fixSpecificationUrl;
     }
 
 
