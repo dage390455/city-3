@@ -36,6 +36,7 @@ import com.sensoro.smartcity.server.RetryWithDelay;
 import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
+import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.server.response.DeviceStatusRsp;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.BleObserver;
@@ -116,6 +117,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         switch (deployAnalyzerModel.deployType) {
             //白名单设备
             case TYPE_SCAN_DEPLOY_WHITE_LIST:
+            case TYPE_SCAN_DEPLOY_WHITE_LIST_HAS_SIGNAL_CONFIG:
                 getView().setDeployDeviceConfigVisible(false);
                 getView().setDeployDeviceType(deviceTypeName);
                 break;
@@ -461,6 +463,18 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         goToNextStep();
     }
 
+    public String getRepairInstructionUrl() {
+        String mergeType = WidgetUtil.handleMergeType(deployAnalyzerModel.deviceType);
+        if (TextUtils.isEmpty(mergeType)) {
+            return null;
+        }
+        MergeTypeStyles configMergeType = PreferencesHelper.getInstance().getConfigMergeType(mergeType);
+        if (configMergeType == null) {
+            return null;
+        }
+        return configMergeType.getFixSpecificationUrl();
+    }
+
     public interface OnConfigInfoObserver {
         void onSuccess();
 
@@ -549,6 +563,12 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                 getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE, false);
                 checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE);
                 break;
+            //白名单内，并且支持频点配置
+            case TYPE_SCAN_DEPLOY_WHITE_LIST_HAS_SIGNAL_CONFIG:
+                //TODO 开始检查操作并更新UI
+                getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_TWO, false);
+                checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_TWO);
+                break;
             //基站
             case TYPE_SCAN_DEPLOY_STATION:
                 //TODO 开始检查操作并更新UI
@@ -596,6 +616,10 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                 //一项的时候，检查是否在附近
                 checkNearByOne();
                 break;
+            case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_TWO:
+                //二项的时候，检查是否在附近，频点配置
+                checkNearByTwo();
+                break;
             //三项
             case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_THREE:
                 //三项的时候，检查是否在附近
@@ -617,6 +641,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                     checkHandler.removeAllMessage();
                     getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_SUC, "", false);
                     getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_START, "", false);
+
                     connectDevice(new OnConfigInfoObserver() {
                         @Override
                         public void onSuccess() {
@@ -699,6 +724,9 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         checkHandler.dealMessage(2, threeMsgDeal);
     }
 
+    /**
+     *第四步，检测设备状态
+     */
     private void getDeviceRealStatus() {
         final long requestTime = System.currentTimeMillis();
         RetrofitServiceHelper.INSTANCE.getDeviceRealStatus(deployAnalyzerModel.sn).subscribeOn(Schedulers.io())
@@ -817,6 +845,56 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
     }
 
+    private void checkNearByTwo() {
+        HandlerDeployCheck.OnMessageDeal twoMsgDeal = new HandlerDeployCheck.OnMessageDeal() {
+            @Override
+            public void onNext() {
+                if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
+                    checkHandler.removeAllMessage();
+                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_SUC, "", false);
+                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_START, "", false);
+                    connectDevice(new OnConfigInfoObserver() {
+                        @Override
+                        public void onSuccess() {
+                            if (isAttachedView()) {
+                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_SUC, "", false);
+                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_ALL_SUC, "", false);
+                            }
+                        }
+
+                        @Override
+                        public void onFailed(String errorMsg) {
+                            if (isAttachedView()) {
+                                tempForceReason = "config";
+                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_FAIL, mActivity.getString(R.string.installation_config_failed) + errorMsg, PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                            }
+
+                        }
+
+                        @Override
+                        public void onOverTime(String overTimeMsg) {
+                            if (isAttachedView()) {
+                                tempForceReason = "config";
+                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_FAIL, mActivity.getString(R.string.installation_config_failed) + overTimeMsg, PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                            }
+                        }
+                    });
+
+
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                tempForceReason = "lonlat";
+                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_FAIL, mActivity.getString(R.string.installation_test_not_nearby), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+            }
+        };
+        checkHandler.removeAllMessage();
+        checkHandler.init(1000, 10);
+        checkHandler.dealMessage(2, twoMsgDeal);
+    }
+
     private void checkNearByOne() {
         checkHandler.init(1000, 1);
         checkHandler.dealMessage(1, new HandlerDeployCheck.OnMessageDeal() {
@@ -845,6 +923,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         switch (deployAnalyzerModel.deployType) {
             //白名单设备
             case TYPE_SCAN_DEPLOY_WHITE_LIST:
+            case TYPE_SCAN_DEPLOY_WHITE_LIST_HAS_SIGNAL_CONFIG:
                 return checkHasLatLng();
             //基站
             case TYPE_SCAN_DEPLOY_STATION:
@@ -867,8 +946,9 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
     /**
      * 跳转配置说明界面
+     * @param repairInstructionUrl
      */
-    public void doInstruction() {
-        getView().toastShort("span 点击了");
+    public void doInstruction(String repairInstructionUrl) {
+
     }
 }

@@ -22,6 +22,7 @@ import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeployDeviceInfo;
 import com.sensoro.smartcity.server.bean.DeployStationInfo;
+import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
 import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetailModel;
@@ -375,7 +376,17 @@ public enum DeployAnalyzerUtils implements Constants {
                             deployAnalyzerModel.latLng.addAll(lonlat);
                             getAllDeviceInfo(deployAnalyzerModel);
                         } else {
-                            deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_DEVICE;
+                            DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(data.getDeviceType());
+                            if (configDeviceType != null && configDeviceType.isIgnoreSignal()) {
+                                //白名单设备
+                                if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
+                                    deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_WHITE_LIST_HAS_SIGNAL_CONFIG;
+                                }else{
+                                    deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_WHITE_LIST;
+                                }
+                            }else{
+                                deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_DEVICE;
+                            }
                             deployAnalyzerModel.sn = sn;
                             deployAnalyzerModel.deviceType = data.getDeviceType();
                             deployAnalyzerModel.nameAndAddress = data.getName();
@@ -424,7 +435,19 @@ public enum DeployAnalyzerUtils implements Constants {
                     @Override
                     public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
                         DeployDeviceInfo data = deployDeviceDetailRsp.getData();
-                        deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_DEVICE;
+                        DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(data.getDeviceType());
+                        if (configDeviceType != null && configDeviceType.isIgnoreSignal()) {
+                            //白名单设备
+                            if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
+                                deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_WHITE_LIST_HAS_SIGNAL_CONFIG;
+                            }else{
+                                deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_WHITE_LIST;
+                            }
+
+                        }else{
+                            deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_DEVICE;
+                        }
+
                         deployAnalyzerModel.sn = data.getSn();
                         deployAnalyzerModel.deviceType = data.getDeviceType();
                         deployAnalyzerModel.nameAndAddress = data.getName();
