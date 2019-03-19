@@ -150,7 +150,7 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
                     //线径
                     Double diameter = deployControlSettingData.getWireDiameter();
                     if (diameter != null) {
-                        getView().setDeployDeviceRecordDiameter(diameter + "mm");
+                        getView().setDeployDeviceRecordDiameter(diameter + "mm²");
                     }
                 }
             }
