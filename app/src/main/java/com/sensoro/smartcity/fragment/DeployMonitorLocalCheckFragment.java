@@ -35,8 +35,6 @@ import com.sensoro.smartcity.imainviews.IDeployMonitorLocalCheckFragmentView;
 import com.sensoro.smartcity.model.MaterialValueModel;
 import com.sensoro.smartcity.presenter.DeployMonitorLocalCheckFragmentPresenter;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.smartcity.util.PreferencesHelper;
-import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.dialog.DeployMonitorCheckDialogUtils;
 import com.sensoro.smartcity.widget.dialog.EarlyWarningThresholdDialogUtils;
 import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
@@ -369,7 +367,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
             return suggest;
         }
         final String repairInstructionUrl = mPresenter.getRepairInstructionUrl();
-        if (repairInstructionUrl == null) {
+        if (TextUtils.isEmpty(repairInstructionUrl)) {
             return suggest;
         }
         StringBuilder stringBuilder = new StringBuilder(suggest);
@@ -408,7 +406,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
                 deployMonitorCheckDialogUtils.setSignalStrengthVisible(false);
                 deployMonitorCheckDialogUtils.setDeviceStatusVisible(false);
                 deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
-                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText,""));
+                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText, ""));
                 deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
                 deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
                 break;
@@ -475,7 +473,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
             case DEVICE_CHECK_STATUS_FAIL_INTERNET:
                 deployMonitorCheckDialogUtils.setDeviceStatusFailed(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_STATUS_INTERNET_FAILED);
                 deployMonitorCheckDialogUtils.setDeployCancelVisible(true);
-                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText,""));
+                deployMonitorCheckDialogUtils.setRepairSuggest(getClickableSpannable(tipText, ""));
                 deployMonitorCheckDialogUtils.setRetestButtonVisible(true);
                 deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
                 break;

@@ -269,6 +269,7 @@ public interface Constants {
     String EXTRA_CONTRACT_ID = "extra_contract_id";
     String EXTRA_CONTRACT_ID_QRCODE = "extra_contract_id_qrcode";
     String EXTRA_CONTRACT_PREVIEW_URL = "extra_contract_preview_url";
+    String EXTRA_DEPLOY_CHECK_REPAIR_INSTRUCTION_URL = "extra_deploy_check_repair_instruction_url";
     String EXTRA_CONTRACT_ORIGIN_TYPE = "extra_contract_origin_type";
     String EXTRA_CONTRACT_INFO = "extra_contract_info";
 

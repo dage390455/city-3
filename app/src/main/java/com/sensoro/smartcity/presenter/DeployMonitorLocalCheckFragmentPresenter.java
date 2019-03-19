@@ -18,6 +18,7 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMapENActivity;
 import com.sensoro.smartcity.activity.DeployMonitorCheckActivity;
+import com.sensoro.smartcity.activity.DeployRepairInstructionActivity;
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -76,7 +77,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         initPickerData();
         initOverCurrentData();
         //基站或白名单不开启蓝牙
-        if (deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION || deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_WHITE_LIST) {
+        if (deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION || deployAnalyzerModel.whiteListDeployType != TYPE_SCAN_DEPLOY_WHITE_LIST) {
             mHandler.post(this);
             BleObserver.getInstance().registerBleObserver(this);
         }
@@ -87,6 +88,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             getView().setSwitchSpecHintText(mActivity.getString(R.string.range) + minMaxValue[0] + "-" + minMaxValue[1]);
         }
     }
+
 
     private void initPickerData() {
         pickerStrings.addAll(Constants.materialValueMap.keySet());
@@ -114,12 +116,6 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType);
         //控制界面显示逻辑
         switch (deployAnalyzerModel.deployType) {
-            //白名单设备
-            case TYPE_SCAN_DEPLOY_WHITE_LIST:
-            case TYPE_SCAN_DEPLOY_WHITE_LIST_HAS_SIGNAL_CONFIG:
-                getView().setDeployDeviceConfigVisible(false);
-                getView().setDeployDeviceType(deviceTypeName);
-                break;
             //基站
             case TYPE_SCAN_DEPLOY_STATION:
                 getView().setDeployDeviceType(mActivity.getString(R.string.station));
@@ -130,8 +126,17 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 //不论更换还是部署都需要安装检测
                 getView().setDeployDeviceType(deviceTypeName);
-                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
-                getView().setDeployDeviceConfigVisible(isFire);
+                switch (deployAnalyzerModel.whiteListDeployType) {
+                    //白名单设备
+                    case TYPE_SCAN_DEPLOY_WHITE_LIST:
+                    case TYPE_SCAN_DEPLOY_WHITE_LIST_HAS_SIGNAL_CONFIG:
+                        getView().setDeployDeviceConfigVisible(false);
+                        break;
+                    default:
+                        boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+                        getView().setDeployDeviceConfigVisible(isFire);
+                        break;
+                }
                 break;
             default:
                 break;
@@ -556,50 +561,52 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     public void doCheckDeployNext() {
         //是否有强制部署权限
         switch (deployAnalyzerModel.deployType) {
-            //白名单设备
-            case TYPE_SCAN_DEPLOY_WHITE_LIST:
-                //TODO 开始检查操作并更新UI
-                getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE, false);
-                checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE);
-                break;
-            //白名单内，并且支持频点配置
-            case TYPE_SCAN_DEPLOY_WHITE_LIST_HAS_SIGNAL_CONFIG:
-                //TODO 开始检查操作并更新UI
-                getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_TWO, false);
-                checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_TWO);
-                break;
             //基站
             case TYPE_SCAN_DEPLOY_STATION:
-                //TODO 开始检查操作并更新UI
+                // 开始检查操作并更新UI
                 getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE, false);
                 checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE);
                 break;
             case TYPE_SCAN_DEPLOY_DEVICE:
             case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
             case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
-                //不论更换还是部署都需要安装检测
-                String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType);
-                getView().setDeployDeviceType(deviceTypeName);
-                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
-                if (isFire) {
-                    //做初始配置检查
-                    //TODO 开始检查操作并更新UI
-                    getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_FOUR, false);
-                    checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_FOUR);
-                } else {
-                    if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
-                        //不做初始配置检查
-                        //TODO 开始检查操作并更新UI
-                        getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_FOUR, false);
-                        checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_FOUR);
-                    } else {
-                        //不做初始配置检查
-                        //TODO 开始检查操作并更新UI
-                        getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_THREE, false);
-                        checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_THREE);
-                    }
+                switch (deployAnalyzerModel.whiteListDeployType) {
+                    //白名单设备
+                    case TYPE_SCAN_DEPLOY_WHITE_LIST:
+                        // 开始检查操作并更新UI
+                        getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE, false);
+                        checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE);
+                        break;
+                    case TYPE_SCAN_DEPLOY_WHITE_LIST_HAS_SIGNAL_CONFIG:
+                        // 开始检查操作并更新UI
+                        getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_TWO, false);
+                        checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_TWO);
+                        break;
+                    default:
+                        //不论更换还是部署都需要安装检测
+                        String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType);
+                        getView().setDeployDeviceType(deviceTypeName);
+                        boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+                        if (isFire) {
+                            //做初始配置检查
+                            //开始检查操作并更新UI
+                            getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_FOUR, false);
+                            checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_FOUR);
+                        } else {
+                            if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
+                                //不做初始配置检查
+                                getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_FOUR, false);
+                                checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_FOUR);
+                            } else {
+                                //不做初始配置检查
+                                getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_THREE, false);
+                                checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_THREE);
+                            }
 
+                        }
+                        break;
                 }
+
                 break;
             default:
                 break;
@@ -757,12 +764,12 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     private void updateDeviceStatusDialog(DeviceStatusRsp data) {
         if (data != null && data.getData() != null && data.getData().getStatus() != null) {
             switch (data.getData().getStatus()) {
-                case 0:
+                case SENSOR_STATUS_ALARM:
                     tempForceReason = "status";
                     getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_ALARM,
                             mActivity.getString(R.string.device_is_alarm), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
                     break;
-                case 4:
+                case SENSOR_STATUS_MALFUNCTION:
                     tempForceReason = "status";
                     getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_MALFUNCTION, mActivity.getString(R.string.device_is_malfunction), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
                     break;
@@ -920,25 +927,29 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
      */
     public boolean canDoOneNextTest() {
         switch (deployAnalyzerModel.deployType) {
-            //白名单设备
-            case TYPE_SCAN_DEPLOY_WHITE_LIST:
-            case TYPE_SCAN_DEPLOY_WHITE_LIST_HAS_SIGNAL_CONFIG:
-                return checkHasLatLng();
             //基站
             case TYPE_SCAN_DEPLOY_STATION:
                 return checkHasLatLng();
             case TYPE_SCAN_DEPLOY_DEVICE:
             case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
             case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
-                //不论更换还是部署都需要安装检测
-                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
-                if (isFire) {
-                    //需要安装检测的
-                    return checkHasLatLng() && checkHasConfig();
-                } else {
-                    //不需要安装检测
-                    return checkHasLatLng();
+                switch (deployAnalyzerModel.whiteListDeployType) {
+                    //白名单设备
+                    case TYPE_SCAN_DEPLOY_WHITE_LIST:
+                    case TYPE_SCAN_DEPLOY_WHITE_LIST_HAS_SIGNAL_CONFIG:
+                        return checkHasLatLng();
+                    default:
+                        //不论更换还是部署都需要安装检测
+                        boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+                        if (isFire) {
+                            //需要安装检测的
+                            return checkHasLatLng() && checkHasConfig();
+                        } else {
+                            //不需要安装检测
+                            return checkHasLatLng();
+                        }
                 }
+
         }
         return false;
     }
@@ -949,6 +960,9 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
      * @param repairInstructionUrl
      */
     public void doInstruction(String repairInstructionUrl) {
-
+        Intent intent = new Intent(mActivity, DeployRepairInstructionActivity.class);
+//        "https://resource-city.sensoro.com/fix-specification/smoke.html";
+        intent.putExtra(Constants.EXTRA_DEPLOY_CHECK_REPAIR_INSTRUCTION_URL, repairInstructionUrl);
+        getView().startAC(intent);
     }
 }

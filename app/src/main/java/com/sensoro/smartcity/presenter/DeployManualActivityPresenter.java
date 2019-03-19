@@ -45,7 +45,7 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
 
     private void requestData(final String scanSerialNumber) {
         getView().showProgressDialog();
-        DeployAnalyzerUtils.INSTANCE.handlerDeployAnalyzerResult(this, scanType, scanSerialNumber, mContext, mTaskInfo, mDeviceDetail, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
+        DeployAnalyzerUtils.getInstance().handlerDeployAnalyzerResult(this, scanType, scanSerialNumber, mContext, mTaskInfo, mDeviceDetail, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
             @Override
             public void onSuccess(Intent intent) {
                 getView().dismissProgressDialog();

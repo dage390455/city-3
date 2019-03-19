@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.model;
 
+import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
@@ -36,4 +37,6 @@ public class DeployAnalyzerModel implements Serializable {
     public final List<Integer> channelMask = new ArrayList<>();
     //强制部署原因
     public String forceReason;
+    //白名单类型（默认没有白名单限制）
+    public int whiteListDeployType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
 }

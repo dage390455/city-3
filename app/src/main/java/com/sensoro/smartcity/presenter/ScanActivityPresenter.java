@@ -134,7 +134,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
     public void processResult(String result) {
         playVoice();
         getView().showProgressDialog();
-        DeployAnalyzerUtils.INSTANCE.handlerDeployAnalyzerResult(this, scanType, result, mContext, mTaskInfo, mDeviceDetail, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
+        DeployAnalyzerUtils.getInstance().handlerDeployAnalyzerResult(this, scanType, result, mContext, mTaskInfo, mDeviceDetail, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
             @Override
             public void onSuccess(Intent intent) {
                 getView().dismissProgressDialog();
