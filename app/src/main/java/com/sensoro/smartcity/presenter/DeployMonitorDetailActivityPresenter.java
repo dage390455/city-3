@@ -1000,7 +1000,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             }
                             if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                                 if (deployAnalyzerModel.settingData != null) {
-                                    SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec());
+                                    SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec(), deployAnalyzerModel.settingData.getInputValue());
                                     if (sensoroDevice != null) {
                                         sensoroDeviceConnection.writeData05Configuration(sensoroDevice, new SensoroWriteCallback() {
                                             @Override
@@ -1076,7 +1076,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         throwable.printStackTrace();
                     }
                     if (deployAnalyzerModel.settingData != null) {
-                        SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec());
+                        SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec(),deployAnalyzerModel.settingData.getInputValue());
                         if (sensoroDevice != null) {
                             sensoroDeviceConnection.writeData05Configuration(sensoroDevice, new SensoroWriteCallback() {
                                 @Override

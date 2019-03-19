@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
 import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
@@ -265,7 +264,6 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     }
 
     private void connectDevice(final OnConfigInfoObserver onConfigInfoObserver) {
-        //TODO 写电器火灾类初始配置时ct比
         if (sensoroDeviceConnection != null) {
             sensoroDeviceConnection.disconnect();
         }
@@ -300,7 +298,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                         //需要写频点信息
                                         if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                                             if (deployAnalyzerModel.settingData != null) {
-                                                SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec());
+                                                SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec(), deployAnalyzerModel.settingData.getInputValue());
                                                 if (sensoroDevice != null) {
                                                     //频点信息写入状态回调
                                                     final SensoroWriteCallback configWriteCallback = new SensoroWriteCallback() {
@@ -360,7 +358,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                             if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                                 //需要写入配置信息
                                 if (deployAnalyzerModel.settingData != null) {
-                                    SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec());
+                                    SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec(), deployAnalyzerModel.settingData.getInputValue());
                                     if (sensoroDevice != null) {
                                         //配置信息写入回调
                                         SensoroWriteCallback configWriteCallback = new SensoroWriteCallback() {
@@ -456,6 +454,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         deployAnalyzerModel.settingData.setSwitchSpec(min);
         deployAnalyzerModel.settingData.setWireDiameter(diameter);
         deployAnalyzerModel.settingData.setWireMaterial(material);
+        deployAnalyzerModel.settingData.setInputValue(inputValue);
     }
 
     public void doForceUpload() {
@@ -500,7 +499,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
      */
     private boolean checkHasConfig() {
         DeployControlSettingData settingData = deployAnalyzerModel.settingData;
-        return settingData != null && settingData.getSwitchSpec() != null && settingData.getWireDiameter() != null && settingData.getWireMaterial() != null;
+        return settingData != null && settingData.getSwitchSpec() != null && settingData.getWireDiameter() != null && settingData.getWireMaterial() != null && settingData.getInputValue() != null;
     }
 
 
@@ -725,7 +724,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     }
 
     /**
-     *第四步，检测设备状态
+     * 第四步，检测设备状态
      */
     private void getDeviceRealStatus() {
         final long requestTime = System.currentTimeMillis();
@@ -737,13 +736,13 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                 long diff = System.currentTimeMillis() - requestTime;
                 if (diff > 1000) {
                     updateDeviceStatusDialog(data);
-                }else{
+                } else {
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             updateDeviceStatusDialog(data);
                         }
-                    },diff);
+                    }, diff);
                 }
             }
 
@@ -756,7 +755,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     }
 
     private void updateDeviceStatusDialog(DeviceStatusRsp data) {
-        if (data != null && data.getData()!=null && data.getData().getStatus()!=null) {
+        if (data != null && data.getData() != null && data.getData().getStatus() != null) {
             switch (data.getData().getStatus()) {
                 case 0:
                     tempForceReason = "status";
@@ -773,7 +772,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                     getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_ALL_SUC, "", false);
                     break;
             }
-        }else{
+        } else {
             tempForceReason = "status";
             getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_INTERNET, mActivity.getString(R.string.get_device_status_failed), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
 
@@ -946,6 +945,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
     /**
      * 跳转配置说明界面
+     *
      * @param repairInstructionUrl
      */
     public void doInstruction(String repairInstructionUrl) {
