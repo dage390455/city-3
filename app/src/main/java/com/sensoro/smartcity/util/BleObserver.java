@@ -8,21 +8,17 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class BleObserver implements BLEDeviceListener<BLEDevice> {
-    private static BleObserver instance;
     private final HashSet<BLEDeviceListener<BLEDevice>> hashSet = new HashSet<>();
 
     private BleObserver() {
     }
 
     public static BleObserver getInstance() {
-        if (instance == null) {
-            synchronized (BleObserver.class) {
-                if (instance == null) {
-                    instance = new BleObserver();
-                }
-            }
-        }
-        return instance;
+        return BleObserverHolder.instance;
+    }
+
+    private static class BleObserverHolder {
+        private static final BleObserver instance = new BleObserver();
     }
 
     public void registerBleObserver(BLEDeviceListener<BLEDevice> listener) {

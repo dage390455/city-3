@@ -29,23 +29,18 @@ import java.util.Map;
 
 public final class PreferencesHelper implements Constants {
 
-    private volatile static PreferencesHelper instance;
     private volatile EventLoginData mEventLoginData;
     private volatile DeviceMergeTypesInfo mDeviceMergeTypesInfo;
 
-    //    private SharedPreferences splashLoginData;
     private PreferencesHelper() {
     }
 
     public static PreferencesHelper getInstance() {
-        if (instance == null) {
-            synchronized (PreferencesHelper.class) {
-                if (instance == null) {
-                    instance = new PreferencesHelper();
-                }
-            }
-        }
-        return instance;
+        return PreferencesHelperHolder.instance;
+    }
+
+    private static class PreferencesHelperHolder {
+        private static final PreferencesHelper instance = new PreferencesHelper();
     }
 
 
