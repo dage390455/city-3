@@ -19,6 +19,7 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMapENActivity;
 import com.sensoro.smartcity.activity.DeployMonitorCheckActivity;
+import com.sensoro.smartcity.activity.DeployRepairInstructionActivity;
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -949,6 +950,9 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
      * @param repairInstructionUrl
      */
     public void doInstruction(String repairInstructionUrl) {
-
+        Intent intent = new Intent(mActivity, DeployRepairInstructionActivity.class);
+//        "https://resource-city.sensoro.com/fix-specification/smoke.html";
+        intent.putExtra(Constants.EXTRA_CONTRACT_PREVIEW_URL, repairInstructionUrl);
+        getView().startAC(intent);
     }
 }

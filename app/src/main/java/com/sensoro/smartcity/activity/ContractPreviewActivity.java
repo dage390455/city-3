@@ -1,9 +1,12 @@
 package com.sensoro.smartcity.activity;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.ClipDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -84,7 +87,9 @@ public class ContractPreviewActivity extends BaseActivity<IContractPreviewActivi
         webSettings.setBuiltInZoomControls(true);
 
         //不显示webview缩放按钮
-//        webSettings.setDisplayZoomControls(false);
+        webSettings.setDisplayZoomControls(false);
+        ClipDrawable clipDrawable = new ClipDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_29c093)), Gravity.LEFT, ClipDrawable.HORIZONTAL);
+        pbPreview.setProgressDrawable(clipDrawable);
     }
 
     //WebViewClient主要帮助WebView处理各种通知、请求事件
