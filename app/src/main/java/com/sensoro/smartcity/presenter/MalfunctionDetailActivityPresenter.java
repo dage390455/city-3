@@ -60,6 +60,15 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
         }
         getView().setDeviceNameText(deviceName);
 
+        String deviceSN = mMalfunctionInfo.getDeviceSN();
+        if (TextUtils.isEmpty(deviceSN)) {
+            deviceSN = mActivity.getString(R.string.device_number) + mActivity.getString(R.string.unknown);
+        }else{
+            deviceSN = mActivity.getString(R.string.device_number) + deviceSN;
+        }
+
+        getView().setDeviceSn(deviceSN);
+
         long createdTime = mMalfunctionInfo.getCreatedTime();
         getView().setMalfunctionStatus(mMalfunctionInfo.getMalfunctionStatus(), DateUtil.getStrTimeToday(mActivity, createdTime, 1));
         List<MalfunctionListInfo.RecordsBean> records = mMalfunctionInfo.getRecords();

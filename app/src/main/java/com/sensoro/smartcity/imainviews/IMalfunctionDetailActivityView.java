@@ -17,4 +17,6 @@ public interface IMalfunctionDetailActivityView extends IToast, IActivityIntent,
     void setMalfunctionCount(String count);
 
     void setMalfunctionDetailConfirmVisible(boolean isVisible);
+
+    void setDeviceSn(String deviceSN);
 }

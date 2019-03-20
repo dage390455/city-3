@@ -52,8 +52,8 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
     private final Activity mActivity;
     @BindView(R.id.ac_alert_log_tv_name)
     TextView acAlertLogTvName;
-    @BindView(R.id.ac_alert_tv_time)
-    TextView acAlertTvTime;
+    @BindView(R.id.ac_alert_tv_sn)
+    TextView acAlertTvSn;
     @BindView(R.id.ac_alert_imv_alert_icon)
     ImageView acAlertImvAlertIcon;
     @BindView(R.id.ac_alert_tv_alert_time)
@@ -146,6 +146,15 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
 
         String name = mDeviceAlarmLogInfo.getDeviceName();
         acAlertLogTvName.setText(TextUtils.isEmpty(name) ? mDeviceAlarmLogInfo.getDeviceSN() : name);
+
+        String deviceSN = deviceAlarmLogInfo.getDeviceSN();
+        if (TextUtils.isEmpty(deviceSN)) {
+            deviceSN = mActivity.getString(R.string.device_number) + mActivity.getString(R.string.unknown);
+        }else{
+            deviceSN = mActivity.getString(R.string.device_number) + deviceSN;
+        }
+        acAlertTvSn.setText(deviceSN);
+
 
         acAlertTvAlertTime.setText(DateUtil.getStrTimeToday(mActivity,mDeviceAlarmLogInfo.getCreatedTime(), 1));
 
