@@ -38,8 +38,8 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     TextView includeTextTitleTvSubtitle;
     @BindView(R.id.ac_alert_log_tv_name)
     TextView acAlertLogTvName;
-    @BindView(R.id.ac_alert_tv_time)
-    TextView acAlertTvTime;
+    @BindView(R.id.ac_alert_tv_sn)
+    TextView acAlertTvSn;
     @BindView(R.id.ac_alert_imv_alert_icon)
     ImageView acAlertImvAlertIcon;
     @BindView(R.id.ac_alert_tv_alert_time)
@@ -240,6 +240,11 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     @Override
     public void setConfirmColor(int resId) {
         acAlertTvAlertConfirm.setTextColor(resId);
+    }
+
+    @Override
+    public void setDeviceSn(String deviceSN) {
+        acAlertTvSn.setText(deviceSN);
     }
 
     @Override

@@ -36,6 +36,8 @@ public class MalfunctionDetailActivity extends BaseActivity<IMalfunctionDetailAc
     TextView includeTextTitleTvSubtitle;
     @BindView(R.id.ac_malfunction_detail_tv_name)
     TextView acMalfunctionDetailTvName;
+    @BindView(R.id.ac_malfunction_detail_tv_sn)
+    TextView acMalfunctionDetailTvSn;
     @BindView(R.id.ac_malfunction_detail_imv_icon)
     ImageView acMalfunctionDetailImvIcon;
     @BindView(R.id.ac_malfunction_detail_tv_time)
@@ -208,6 +210,11 @@ public class MalfunctionDetailActivity extends BaseActivity<IMalfunctionDetailAc
     @Override
     public void setMalfunctionDetailConfirmVisible(boolean isVisible) {
         acMalfunctionDetailTvConfirm.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setDeviceSn(String deviceSN) {
+        acMalfunctionDetailTvSn.setText(deviceSN);
     }
 
     @Override

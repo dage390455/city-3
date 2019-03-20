@@ -115,6 +115,15 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         if (isAttachedView()) {
             getView().setDeviceNameTextView(TextUtils.isEmpty(deviceName) ? deviceAlarmLogInfo.getDeviceSN() : deviceName);
         }
+        String deviceSN = deviceAlarmLogInfo.getDeviceSN();
+        if (TextUtils.isEmpty(deviceSN)) {
+            deviceSN = mContext.getString(R.string.device_number) + mContext.getString(R.string.unknown);
+        }else{
+            deviceSN = mContext.getString(R.string.device_number) + deviceSN;
+        }
+        if (isAttachedView()) {
+            getView().setDeviceSn(deviceSN);
+        }
         long createdTime = deviceAlarmLogInfo.getCreatedTime();
         String alarmTime = DateUtil.getStrTimeToday(mContext, createdTime, 1);
         long current = System.currentTimeMillis();

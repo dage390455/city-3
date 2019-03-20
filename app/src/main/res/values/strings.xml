@@ -775,7 +775,7 @@
     <string name="enter_wire_diameter_in_the_open_circuit_of_the_installation_site">Enter the wire diameter in the open circuit of the installation site</string>
     <string name="enter_wire_diameter_tip">Please enter diameter</string>
     <string name="diameter">Diameter</string>
-    <string name="device_number">SN: </string>
+    <string name="device_number">SN:&#160;</string>
     <string name="command_elec_disconnect_title">Do you want power off</string>
     <string name="command_elec_disconnect_desc">Please ensure this operator does not impact the product before you power off this device</string>
     <string name="command_elec_disconnect_btn_title">Power off</string>
