@@ -9,12 +9,15 @@ import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -32,8 +35,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ContractPreviewActivity extends BaseActivity<IContractPreviewActivityView, ContractPreviewActivityPresenter> implements IContractPreviewActivityView {
-    @BindView(R.id.wv_preview)
-    WebView wvPreview;
+    @BindView(R.id.fl_container)
+    FrameLayout flContainer;
     @BindView(R.id.pb_preview)
     ProgressBar pbPreview;
     @BindView(R.id.include_text_title_imv_arrows_left)
@@ -46,6 +49,7 @@ public class ContractPreviewActivity extends BaseActivity<IContractPreviewActivi
     View includeTextTitleDivider;
     @BindView(R.id.include_text_title_cl_root)
     ConstraintLayout includeTextTitleClRoot;
+    private WebView wvPreview;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -66,7 +70,7 @@ public class ContractPreviewActivity extends BaseActivity<IContractPreviewActivi
         //使用webview显示html代码
 //        webView.loadDataWithBaseURL(null,"<html><head><title> 欢迎您 </title></head>" +
 //                "<body><h2>使用webview显示 html代码</h2></body></html>", "text/html" , "utf-8", null);
-
+        wvPreview = new WebView(mActivity);
         wvPreview.addJavascriptInterface(this, "android");//添加js监听 这样html就能调用客户端
         wvPreview.setWebChromeClient(webChromeClient);
         wvPreview.setWebViewClient(webViewClient);
@@ -90,6 +94,8 @@ public class ContractPreviewActivity extends BaseActivity<IContractPreviewActivi
         webSettings.setDisplayZoomControls(false);
         ClipDrawable clipDrawable = new ClipDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_29c093)), Gravity.LEFT, ClipDrawable.HORIZONTAL);
         pbPreview.setProgressDrawable(clipDrawable);
+        //添加进来
+        flContainer.addView(wvPreview);
     }
 
     //WebViewClient主要帮助WebView处理各种通知、请求事件
@@ -162,9 +168,11 @@ public class ContractPreviewActivity extends BaseActivity<IContractPreviewActivi
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
-        if (wvPreview.canGoBack() && keyCode == KeyEvent.KEYCODE_BACK) {//点击返回按钮的时候判断有没有上一页
-            wvPreview.goBack(); // goBack()表示返回webView的上一页面
-            return true;
+        if (wvPreview != null) {
+            if (wvPreview.canGoBack() && keyCode == KeyEvent.KEYCODE_BACK) {//点击返回按钮的时候判断有没有上一页
+                wvPreview.goBack(); // goBack()表示返回webView的上一页面
+                return true;
+            }
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -186,10 +194,28 @@ public class ContractPreviewActivity extends BaseActivity<IContractPreviewActivi
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         //释放资源
-        wvPreview.destroy();
-        wvPreview = null;
+        if (wvPreview != null) {
+            // 如果先调用destroy()方法，则会命中if (isDestroyed()) return;这一行代码，需要先onDetachedFromWindow()，再
+            // destory()
+            ViewParent parent = wvPreview.getParent();
+            if (parent != null) {
+                ((ViewGroup) parent).removeView(wvPreview);
+            }
+
+            wvPreview.stopLoading();
+            // 退出时调用此方法，移除绑定的服务，否则某些特定系统会报错
+            wvPreview.getSettings().setJavaScriptEnabled(false);
+            wvPreview.clearHistory();
+            wvPreview.clearView();
+            wvPreview.removeAllViews();
+            try {
+                wvPreview.destroy();
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        }
+        super.onDestroy();
     }
 
     @Override
@@ -212,11 +238,11 @@ public class ContractPreviewActivity extends BaseActivity<IContractPreviewActivi
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.getInstance().makeText(msg,Toast.LENGTH_SHORT).show();
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void toastLong(String msg) {
-        SensoroToast.getInstance().makeText(msg,Toast.LENGTH_LONG).show();
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_LONG).show();
     }
 }
