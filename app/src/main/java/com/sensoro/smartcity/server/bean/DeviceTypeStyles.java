@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.server.bean;
 
 import java.util.List;
+import java.util.Map;
 
 public class DeviceTypeStyles {
     private String id;
@@ -42,6 +43,8 @@ public class DeviceTypeStyles {
      * @return
      */
     private List<String> taskOptions;
+    //限定设备操作的版本，"config" : "1.1.1~1.3" //从1.1.1开始支持，包括1.1.1版本。从1.3开始不支持，包括1.3及以后版本不进行支持，前闭后开
+    private Map<String,String> taskFirmwareVersion;
     private List<DeployPicInfo> deployPicConfig;
     //安装监测是否忽略蓝牙检测
     private boolean ignoreSignal;
@@ -183,5 +186,13 @@ public class DeviceTypeStyles {
 
     public void setIgnoreSignal(boolean ignoreSignal) {
         this.ignoreSignal = ignoreSignal;
+    }
+
+    public Map<String, String> getTaskFirmwareVersion() {
+        return taskFirmwareVersion;
+    }
+
+    public void setTaskFirmwareVersion(Map<String, String> taskFirmwareVersion) {
+        this.taskFirmwareVersion = taskFirmwareVersion;
     }
 }

@@ -77,6 +77,7 @@ import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.ImageFactory;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
@@ -322,6 +323,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(mDeviceInfo.getDeviceType());
         if (configDeviceType != null) {
             List<String> taskOptions = configDeviceType.getTaskOptions();
+            Map<String, String> taskFirmwareVersion = configDeviceType.getTaskFirmwareVersion();
+
+            getOptionModelList(taskOptions,taskFirmwareVersion,taskOptionModelMap);
             if (taskOptions != null && taskOptions.size() > 0) {
                 ArrayList<TaskOptionModel> taskOptionModelList = new ArrayList<>();
                 for (String string : taskOptions) {
@@ -339,6 +343,40 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         if (status == Constants.SENSOR_STATUS_ALARM || status == Constants.SENSOR_STATUS_MALFUNCTION || PreferencesHelper.getInstance().getUserData().hasDeviceFirmwareUpdate || PreferencesHelper.getInstance().getUserData().hasDeviceDemoMode) {
             mHandler.removeCallbacks(bleRunnable);
             mHandler.post(bleRunnable);
+        }
+    }
+
+    private ArrayList<TaskOptionModel> getOptionModelList(List<String> taskOptions, Map<String, String> taskFirmwareVersion, HashMap<String, TaskOptionModel> taskOptionModelMap) {
+        if (taskOptions != null && taskOptions.size() > 0) {
+            if(taskFirmwareVersion != null){
+                ArrayList<TaskOptionModel> taskOptionModelList = new ArrayList<>();
+                for (String string : taskOptions) {
+                    TaskOptionModel taskOptionModel = taskOptionModelMap.get(string);
+                    if (taskOptionModel != null) {
+                        if (taskFirmwareVersion.containsKey(taskOptionModel.id)) {
+                            String version = taskFirmwareVersion.get(taskOptionModel.id);
+                            if (TextUtils.isEmpty(version)) {
+                                taskOptionModelList.add(taskOptionModel);
+                            }else{
+                                String[] split = version.trim().split("~");
+                                if(split.length == 1){
+                                    mDeviceInfo.split[0];
+
+                                }
+
+                            }
+                        }else{
+                            taskOptionModelList.add(taskOptionModel);
+                        }
+
+                    }
+                }
+            }
+
+            getView().setDeviceOperationVisible(true);
+            getView().updateTaskOptionModelAdapter(taskOptionModelList);
+        } else {
+            return null;
         }
     }
 
