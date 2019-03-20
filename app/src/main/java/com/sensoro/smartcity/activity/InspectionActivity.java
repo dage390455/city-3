@@ -143,7 +143,7 @@ public class InspectionActivity extends BaseActivity<IInspectionActivityView, In
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

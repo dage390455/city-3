@@ -102,7 +102,7 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
                                 String 社会信用代码 = "无";
                                 String 证件编号 = "无";
                                 try {
-                                    BusinessLicenseData businessLicenseData = RetrofitServiceHelper.INSTANCE
+                                    BusinessLicenseData businessLicenseData = RetrofitServiceHelper.getInstance()
                                             .getGson()
                                             .fromJson(result, BusinessLicenseData.class);
                                     BusinessLicenseData.WordsResultBean words_result = businessLicenseData

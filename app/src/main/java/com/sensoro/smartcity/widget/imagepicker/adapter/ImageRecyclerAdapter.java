@@ -161,7 +161,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
                     cbCheck.setChecked(!cbCheck.isChecked());
                     int selectLimit = imagePicker.getSelectLimit();
                     if (cbCheck.isChecked() && mSelectedImages.size() >= selectLimit) {
-                        SensoroToast.INSTANCE.makeText(mActivity.getString(R.string
+                        SensoroToast.getInstance().makeText(mActivity.getString(R.string
                                 .ip_select_limit, selectLimit), Toast.LENGTH_SHORT).show();
                         cbCheck.setChecked(false);
 //                        mask.setVisibility(View.GONE);
@@ -181,7 +181,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
                     cbCheck.setChecked(!cbCheck.isChecked());
                     int selectLimit = imagePicker.getSelectLimit();
                     if (cbCheck.isChecked() && mSelectedImages.size() >= selectLimit) {
-                        SensoroToast.INSTANCE.makeText(mActivity.getApplicationContext(), mActivity.getString(R.string
+                        SensoroToast.getInstance().makeText(mActivity.getApplicationContext(), mActivity.getString(R.string
                                 .ip_select_limit, selectLimit), Toast.LENGTH_SHORT).show();
                         cbCheck.setChecked(false);
 //                        mask.setVisibility(View.GONE);

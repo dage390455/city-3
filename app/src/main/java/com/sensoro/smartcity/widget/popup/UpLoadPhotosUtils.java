@@ -58,7 +58,7 @@ public final class UpLoadPhotosUtils {
 
     private void getToken() {
         final long currentTimeMillis = System.currentTimeMillis();
-        RetrofitServiceHelper.INSTANCE.getQiNiuToken().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
+        RetrofitServiceHelper.getInstance().getQiNiuToken().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
                 .mainThread()).subscribe(new CityObserver<QiNiuToken>(null) {
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {

@@ -45,7 +45,7 @@ public class InspectionTaskListActivityPresenter extends BasePresenter<IInspecti
         getView().showProgressDialog();
         if (direction == DIRECTION_DOWN) {
             cur_page = 0;
-            RetrofitServiceHelper.INSTANCE.getInspectTaskList(null, tempFinish, 0, 20, tempStartTime, tempFinishTime).subscribeOn(Schedulers
+            RetrofitServiceHelper.getInstance().getInspectTaskList(null, tempFinish, 0, 20, tempStartTime, tempFinishTime).subscribeOn(Schedulers
                     .io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskModelRsp>(this) {
                 @Override
                 public void onCompleted(InspectionTaskModelRsp inspectionTaskModel) {
@@ -70,7 +70,7 @@ public class InspectionTaskListActivityPresenter extends BasePresenter<IInspecti
             });
         } else {
             cur_page++;
-            RetrofitServiceHelper.INSTANCE.getInspectTaskList(null, tempFinish, cur_page * 20, 20, tempStartTime, tempFinishTime).subscribeOn(Schedulers
+            RetrofitServiceHelper.getInstance().getInspectTaskList(null, tempFinish, cur_page * 20, 20, tempStartTime, tempFinishTime).subscribeOn(Schedulers
                     .io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskModelRsp>(this) {
                 @Override
                 public void onCompleted(InspectionTaskModelRsp inspectionTaskModel) {

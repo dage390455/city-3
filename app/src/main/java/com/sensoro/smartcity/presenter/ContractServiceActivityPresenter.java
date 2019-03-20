@@ -124,7 +124,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
 
     private void getContractTemplateInfos() {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getContractstemplate().subscribeOn(Schedulers.io()).observeOn
+        RetrofitServiceHelper.getInstance().getContractstemplate().subscribeOn(Schedulers.io()).observeOn
                 (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsTemplateRsp>(this) {
 
             @Override
@@ -603,7 +603,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                                 line5 = "无";
                                 line6 = "无";
                                 try {
-                                    BusinessLicenseData businessLicenseData = RetrofitServiceHelper.INSTANCE
+                                    BusinessLicenseData businessLicenseData = RetrofitServiceHelper.getInstance()
                                             .getGson()
                                             .fromJson(result, BusinessLicenseData.class);
                                     BusinessLicenseData.WordsResultBean words_result = businessLicenseData

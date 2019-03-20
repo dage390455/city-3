@@ -92,7 +92,7 @@ public abstract class CityObserver<T> implements Observer<T> {
                             eventData.code = EVENT_DATA_SESSION_ID_OVERTIME;
                             EventBus.getDefault().post(eventData);
                             String errinfo = jsonObject.getString("errinfo");
-                            SensoroToast.INSTANCE.makeText(errinfo, Toast.LENGTH_SHORT).show();
+                            SensoroToast.getInstance().makeText(errinfo, Toast.LENGTH_SHORT).show();
                             return;
                         }
                         String errinfo = jsonObject.getString("errinfo");
@@ -141,7 +141,7 @@ public abstract class CityObserver<T> implements Observer<T> {
                             eventData.code = EVENT_DATA_SESSION_ID_OVERTIME;
                             EventBus.getDefault().post(eventData);
                             String errmsg = jsonObject.getString("errmsg");
-                            SensoroToast.INSTANCE.makeText(errmsg, Toast.LENGTH_SHORT).show();
+                            SensoroToast.getInstance().makeText(errmsg, Toast.LENGTH_SHORT).show();
                             return;
                         }
                         String errmsg = jsonObject.getString("errmsg");

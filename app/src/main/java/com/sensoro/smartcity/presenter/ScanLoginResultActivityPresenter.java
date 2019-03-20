@@ -31,7 +31,7 @@ public class ScanLoginResultActivityPresenter extends BasePresenter<IScanLoginRe
     public void doLogin() {
         if (!TextUtils.isEmpty(qrcodeId)) {
             getView().showProgressDialog();
-            RetrofitServiceHelper.INSTANCE.scanLoginIn(qrcodeId).subscribeOn(Schedulers.io()).observeOn
+            RetrofitServiceHelper.getInstance().scanLoginIn(qrcodeId).subscribeOn(Schedulers.io()).observeOn
                     (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
                 @Override
                 public void onCompleted(ResponseBase responseBase) {
@@ -59,7 +59,7 @@ public class ScanLoginResultActivityPresenter extends BasePresenter<IScanLoginRe
     public void doCancel() {
         if (!TextUtils.isEmpty(qrcodeId)) {
             getView().showProgressDialog();
-            RetrofitServiceHelper.INSTANCE.scanLoginCancel(qrcodeId).subscribeOn(Schedulers.io()).observeOn
+            RetrofitServiceHelper.getInstance().scanLoginCancel(qrcodeId).subscribeOn(Schedulers.io()).observeOn
                     (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
 
                 @Override

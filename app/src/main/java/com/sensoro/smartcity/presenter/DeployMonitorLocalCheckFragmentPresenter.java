@@ -735,7 +735,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
      */
     private void getDeviceRealStatus() {
         final long requestTime = System.currentTimeMillis();
-        RetrofitServiceHelper.INSTANCE.getDeviceRealStatus(deployAnalyzerModel.sn).subscribeOn(Schedulers.io())
+        RetrofitServiceHelper.getInstance().getDeviceRealStatus(deployAnalyzerModel.sn).subscribeOn(Schedulers.io())
                 .retryWhen(new RetryWithDelay(2, 100))
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceStatusRsp>(this) {
             @Override

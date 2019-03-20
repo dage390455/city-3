@@ -4,9 +4,7 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.graphics.Point;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -26,10 +24,8 @@ import com.sensoro.smartcity.widget.MyVideoView;
 import com.sensoro.smartcity.widget.RecordedButton;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.yixia.camera.MediaRecorderNative;
-import com.yixia.camera.model.MediaObject;
 
 import java.io.File;
-import java.util.LinkedList;
 import java.util.Locale;
 
 import static com.sensoro.smartcity.constant.Constants.RESULT_CODE_RECORD;
@@ -429,7 +425,7 @@ public class TakeRecordActivity extends BaseActivity<ITakeRecordActivityView, Ta
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(msg,Toast.LENGTH_SHORT).show();
+        SensoroToast.getInstance().makeText(msg,Toast.LENGTH_SHORT).show();
     }
 
     @Override

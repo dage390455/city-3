@@ -86,7 +86,7 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
             case DIRECTION_DOWN:
                 cur_page = 0;
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeployRecordList(null, searchText, temp_startTime, temp_endTime, null, null, 20, cur_page * 20, null)
+                RetrofitServiceHelper.getInstance().getDeployRecordList(null, searchText, temp_startTime, temp_endTime, null, null, 20, cur_page * 20, null)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployRecordRsp>(this) {
                     @Override
@@ -119,7 +119,7 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
             case DIRECTION_UP:
                 cur_page++;
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeployRecordList(null, searchText, temp_startTime, temp_endTime, null, null, 20, 20 * cur_page, null).subscribeOn(Schedulers.io())
+                RetrofitServiceHelper.getInstance().getDeployRecordList(null, searchText, temp_startTime, temp_endTime, null, null, 20, 20 * cur_page, null).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployRecordRsp>(this) {
                     @Override
                     public void onCompleted(DeployRecordRsp recordRsp) {

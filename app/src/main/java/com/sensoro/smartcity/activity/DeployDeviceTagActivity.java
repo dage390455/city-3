@@ -15,12 +15,11 @@ import com.sensoro.smartcity.adapter.DeployDeviceTagHistoryTagAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployDeviceTagActivityView;
 import com.sensoro.smartcity.presenter.DeployDeviceTagActivityPresenter;
-import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.smartcity.widget.dialog.TagDialogUtils;
 import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
-import com.sensoro.smartcity.widget.dialog.TagDialogUtils;
 
 import java.util.List;
 
@@ -155,7 +154,7 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

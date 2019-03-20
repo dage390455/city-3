@@ -116,7 +116,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements Im
                 ImageItem imageItem = mImageItems.get(mCurrentPosition);
                 int selectLimit = imagePicker.getSelectLimit();
                 if (mCbCheck.isChecked() && selectedImages.size() >= selectLimit) {
-                    SensoroToast.INSTANCE.makeText(ImagePreviewActivity.this, getString(R.string.ip_select_limit, selectLimit), Toast
+                    SensoroToast.getInstance().makeText(ImagePreviewActivity.this, getString(R.string.ip_select_limit, selectLimit), Toast
                             .LENGTH_SHORT).show();
                     mCbCheck.setChecked(false);
                 } else {

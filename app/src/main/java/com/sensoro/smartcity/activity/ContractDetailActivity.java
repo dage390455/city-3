@@ -167,12 +167,12 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void toastLong(String msg) {
-        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_LONG).show();
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_LONG).show();
     }
 
 

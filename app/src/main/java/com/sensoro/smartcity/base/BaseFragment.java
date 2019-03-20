@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.base;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,7 +10,6 @@ import android.view.ViewGroup;
 
 import com.baidu.mobstat.StatService;
 import com.gyf.barlibrary.ImmersionBar;
-import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.iwidget.IOnFragmentStart;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
@@ -168,7 +166,7 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
         if(immersionBar != null){
             immersionBar.destroy();
         }
-        SensoroToast.INSTANCE.cancelToast();
+        SensoroToast.getInstance().cancelToast();
         super.onDestroyView();
     }
 

@@ -189,7 +189,7 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         }
         long current = System.currentTimeMillis();
         mProgressUtils.showProgress();
-        RetrofitServiceHelper.INSTANCE.getAlarmCount(current - 3600 * 24 * 180 * 1000L, current, null, mDeviceAlarmLogInfo.getDeviceSN()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>(null) {
+        RetrofitServiceHelper.getInstance().getAlarmCount(current - 3600 * 24 * 180 * 1000L, current, null, mDeviceAlarmLogInfo.getDeviceSN()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>(null) {
             @Override
             public void onCompleted(AlarmCountRsp alarmCountRsp) {
                 int count = alarmCountRsp.getCount();
@@ -199,7 +199,7 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                SensoroToast.INSTANCE.makeText(errorMsg, Toast.LENGTH_SHORT).show();
+                SensoroToast.getInstance().makeText(errorMsg, Toast.LENGTH_SHORT).show();
                 mProgressUtils.dismissProgress();
             }
         });
@@ -273,7 +273,7 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
             }
         }
         if (TextUtils.isEmpty(tempNumber)) {
-            SensoroToast.INSTANCE.makeText(mActivity.getString(R.string.no_find_contact_phone_number), Toast.LENGTH_SHORT).show();
+            SensoroToast.getInstance().makeText(mActivity.getString(R.string.no_find_contact_phone_number), Toast.LENGTH_SHORT).show();
         } else {
             AppUtils.diallPhone(tempNumber, mActivity);
         }
@@ -287,7 +287,7 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
                 return;
             }
         }
-        SensoroToast.INSTANCE.makeText(mActivity.getString(R.string.not_obtain_location_infomation), Toast.LENGTH_SHORT).show();
+        SensoroToast.getInstance().makeText(mActivity.getString(R.string.not_obtain_location_infomation), Toast.LENGTH_SHORT).show();
     }
 
     private void doConfirm() {
@@ -300,7 +300,7 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
     public void onPopupCallback(int statusResult, int statusType, int statusPlace, List<ScenesData> scenesDataList, String remark) {
         mAlarmPopUtils.setUpdateButtonClickable(false);
         mProgressUtils.showProgress();
-        RetrofitServiceHelper.INSTANCE.doUpdatePhotosUrl(mDeviceAlarmLogInfo.get_id(), statusResult, statusType,
+        RetrofitServiceHelper.getInstance().doUpdatePhotosUrl(mDeviceAlarmLogInfo.get_id(), statusResult, statusType,
                 statusPlace,
                 remark, isReConfirm, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe
@@ -310,12 +310,12 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
                             @Override
                             public void onCompleted(DeviceAlarmItemRsp deviceAlarmItemRsp) {
                                 if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                                    SensoroToast.INSTANCE.makeText(mActivity.getResources().
+                                    SensoroToast.getInstance().makeText(mActivity.getResources().
                                             getString(R.string.tips_commit_success), Toast.LENGTH_SHORT).show();
                                     mDeviceAlarmLogInfo = deviceAlarmItemRsp.getData();
                                     refreshData(mDeviceAlarmLogInfo);
                                 } else {
-                                    SensoroToast.INSTANCE.makeText(mActivity.getResources().
+                                    SensoroToast.getInstance().makeText(mActivity.getResources().
                                             getString(R.string.tips_commit_failed), Toast.LENGTH_SHORT).show();
                                 }
                                 mProgressUtils.dismissProgress();

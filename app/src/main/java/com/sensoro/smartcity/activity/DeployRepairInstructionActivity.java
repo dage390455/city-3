@@ -112,7 +112,7 @@ public class DeployRepairInstructionActivity extends BaseActivity<IDeployRepairI
                 throwable.printStackTrace();
             }
             if (url.equals("http://www.google.com/")) {
-                SensoroToast.INSTANCE.makeText("国内不能访问google,拦截该url", Toast.LENGTH_LONG).show();
+                SensoroToast.getInstance().makeText("国内不能访问google,拦截该url", Toast.LENGTH_LONG).show();
                 return true;//表示我已经处理过了
             }
             return super.shouldOverrideUrlLoading(view, url);
@@ -212,11 +212,11 @@ public class DeployRepairInstructionActivity extends BaseActivity<IDeployRepairI
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(msg,Toast.LENGTH_SHORT).show();
+        SensoroToast.getInstance().makeText(msg,Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void toastLong(String msg) {
-        SensoroToast.INSTANCE.makeText(msg,Toast.LENGTH_LONG).show();
+        SensoroToast.getInstance().makeText(msg,Toast.LENGTH_LONG).show();
     }
 }

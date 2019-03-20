@@ -177,7 +177,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
             case DIRECTION_DOWN:
                 cur_page = 1;
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, null, null, tempSearch, temp_startTime,
+                RetrofitServiceHelper.getInstance().getDeviceAlarmLogList(cur_page, null, null, null, tempSearch, temp_startTime,
                         temp_endTime,
                         null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
@@ -200,7 +200,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
             case DIRECTION_UP:
                 cur_page++;
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, null, null, tempSearch, temp_startTime,
+                RetrofitServiceHelper.getInstance().getDeviceAlarmLogList(cur_page, null, null, null, tempSearch, temp_startTime,
                         temp_endTime,
                         null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
@@ -247,7 +247,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 .getCalendarYearMothDayFormatDate(endTime));
         endTime += 1000 * 60 * 60 * 24;
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, null, null, null, tempSearch, startTime, endTime,
+        RetrofitServiceHelper.getInstance().getDeviceAlarmLogList(1, null, null, null, tempSearch, startTime, endTime,
                 null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
 
@@ -330,7 +330,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
     public void onPopupCallback(int statusResult, int statusType, int statusPlace, List<ScenesData> scenesDataList, String remark) {
         getView().showProgressDialog();
         getView().setUpdateButtonClickable(false);
-        RetrofitServiceHelper.INSTANCE.doUpdatePhotosUrl(mCurrentDeviceAlarmLogInfo.get_id(), statusResult,
+        RetrofitServiceHelper.getInstance().doUpdatePhotosUrl(mCurrentDeviceAlarmLogInfo.get_id(), statusResult,
                 statusType, statusPlace,
                 remark, isReConfirm, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe

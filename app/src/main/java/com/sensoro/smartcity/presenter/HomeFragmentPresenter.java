@@ -151,7 +151,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
-        RetrofitServiceHelper.INSTANCE.getDeviceTypeCount().subscribeOn(Schedulers
+        RetrofitServiceHelper.getInstance().getDeviceTypeCount().subscribeOn(Schedulers
                 .io()).flatMap(new Func1<DeviceTypeCountRsp, Observable<DeviceInfoListRsp>>() {
             @Override
             public Observable<DeviceInfoListRsp> call(DeviceTypeCountRsp deviceTypeCountRsp) {
@@ -248,7 +248,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     @NonNull
     private Observable<DeviceInfoListRsp> getAllDeviceInfoListRspObservable(final boolean needClear) {
-        return RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, null, mTypeSelectedType, 0, null).subscribeOn(Schedulers.io()).flatMap(new Func1<DeviceInfoListRsp, Observable<DeviceInfoListRsp>>() {
+        return RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, 0, null).subscribeOn(Schedulers.io()).flatMap(new Func1<DeviceInfoListRsp, Observable<DeviceInfoListRsp>>() {
             @Override
             public Observable<DeviceInfoListRsp> call(DeviceInfoListRsp deviceInfoListRsp) {
 
@@ -260,7 +260,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     alarmModel.mDeviceList.clear();
                     alarmModel.mDeviceList.addAll(data);
                 }
-                return RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, null, mTypeSelectedType, 4, null);
+                return RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, 4, null);
             }
         }).flatMap(new Func1<DeviceInfoListRsp, Observable<DeviceInfoListRsp>>() {
             @Override
@@ -273,7 +273,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     malfunctionModel.mDeviceList.clear();
                     malfunctionModel.mDeviceList.addAll(data);
                 }
-                return RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, null, mTypeSelectedType, 1, null);
+                return RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, 1, null);
             }
         }).flatMap(new Func1<DeviceInfoListRsp, Observable<DeviceInfoListRsp>>() {
             @Override
@@ -286,7 +286,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     normalModel.mDeviceList.clear();
                     normalModel.mDeviceList.addAll(data);
                 }
-                return RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, null, mTypeSelectedType, 2, null);
+                return RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, 2, null);
             }
         }).flatMap(new Func1<DeviceInfoListRsp, Observable<DeviceInfoListRsp>>() {
             @Override
@@ -299,7 +299,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     lostModel.mDeviceList.clear();
                     lostModel.mDeviceList.addAll(data);
                 }
-                return RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, null, mTypeSelectedType, 3, null);
+                return RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, 3, null);
             }
         }).doOnNext(new Action1<DeviceInfoListRsp>() {
             @Override
@@ -575,7 +575,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             switch (direction) {
                 case DIRECTION_DOWN:
                     page = 1;
-                    RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, null, mTypeSelectedType, homeTopModel.type, null).subscribeOn(Schedulers
+                    RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, homeTopModel.type, null).subscribeOn(Schedulers
                             .io()).doOnNext(new Action1<DeviceInfoListRsp>() {
                         @Override
                         public void call(DeviceInfoListRsp deviceInfoListRsp) {
@@ -600,7 +600,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     break;
                 case DIRECTION_UP:
                     page++;
-                    RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, null, mTypeSelectedType, homeTopModel.type, null).subscribeOn(Schedulers
+                    RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, homeTopModel.type, null).subscribeOn(Schedulers
                             .io()).doOnNext(new Action1<DeviceInfoListRsp>() {
                         @Override
                         public void call(DeviceInfoListRsp deviceInfoListRsp) {
@@ -861,7 +861,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     private void requestAlarmInfo(DeviceInfo deviceInfo) {
         //
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, deviceInfo.getSn(), null, null, null, null, null, null)
+        RetrofitServiceHelper.getInstance().getDeviceAlarmLogList(1, deviceInfo.getSn(), null, null, null, null, null, null)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
             @Override

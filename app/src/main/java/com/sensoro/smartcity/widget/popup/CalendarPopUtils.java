@@ -2,7 +2,6 @@ package com.sensoro.smartcity.widget.popup;
 
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -243,7 +241,7 @@ public class CalendarPopUtils implements
 //            mPopupWindow.dismiss();
             calendarViewLl.startAnimation(dismissTranslateAnimation);
         } else {
-            SensoroToast.INSTANCE.makeText(mActivity.getString(R.string.tips_date_not_null), Toast.LENGTH_SHORT).show();
+            SensoroToast.getInstance().makeText(mActivity.getString(R.string.tips_date_not_null), Toast.LENGTH_SHORT).show();
         }
 
 

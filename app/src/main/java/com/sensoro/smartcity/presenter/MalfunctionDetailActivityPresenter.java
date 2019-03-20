@@ -79,12 +79,12 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
         getView().updateRcContent(records, mMalfunctionInfo.getMalfunctionData().get(mMalfunctionInfo.getMalfunctionType()).getDescription());
         long current = System.currentTimeMillis();
         final StringBuffer stringBuffer = new StringBuffer();
-        RetrofitServiceHelper.INSTANCE.getMalfunctionCount(current - 3600 * 24 * 180 * 1000L, current, null, mMalfunctionInfo.getDeviceSN()).subscribeOn(Schedulers.io())
+        RetrofitServiceHelper.getInstance().getMalfunctionCount(current - 3600 * 24 * 180 * 1000L, current, null, mMalfunctionInfo.getDeviceSN()).subscribeOn(Schedulers.io())
                 .flatMap(new Func1<MalfunctionCountRsp, Observable<DeviceInfoListRsp>>() {
                     @Override
                     public Observable<DeviceInfoListRsp> call(MalfunctionCountRsp malfunctionCountRsp) {
                         stringBuffer.append(malfunctionCountRsp.getCount());
-                        return RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(mMalfunctionInfo.getDeviceSN(), null, 1);
+                        return RetrofitServiceHelper.getInstance().getDeviceDetailInfoList(mMalfunctionInfo.getDeviceSN(), null, 1);
                     }
                 }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
 

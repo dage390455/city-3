@@ -89,8 +89,7 @@ import static com.sensoro.smartcity.server.RetrofitService.SCOPE_MASTER;
 import static com.sensoro.smartcity.server.RetrofitService.SCOPE_MOCHA;
 import static com.sensoro.smartcity.server.RetrofitService.SCOPE_TEST;
 
-public enum RetrofitServiceHelper {
-    INSTANCE;
+public class RetrofitServiceHelper {
     private static final long DEFAULT_TIMEOUT = 8 * 1000;
     private final String HEADER_SESSION_ID = "x-session-id";
     private final String HEADER_USER_AGENT = "User-Agent";
@@ -104,7 +103,15 @@ public enum RetrofitServiceHelper {
     private final Retrofit.Builder builder;
     private final Gson gson;
 
-    RetrofitServiceHelper() {
+    public static RetrofitServiceHelper getInstance() {
+        return RetrofitServiceHelperHolder.instance;
+    }
+
+    private static class RetrofitServiceHelperHolder {
+        private static final RetrofitServiceHelper instance = new RetrofitServiceHelper();
+    }
+
+    private RetrofitServiceHelper() {
         final GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(double.class, new NumberDeserializer())
                 .registerTypeAdapter(int.class, new NumberDeserializer())

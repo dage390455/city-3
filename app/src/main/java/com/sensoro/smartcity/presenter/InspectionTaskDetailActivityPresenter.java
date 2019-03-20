@@ -141,7 +141,7 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
 
     private void changeTaskState() {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.doChangeInspectionTaskState(mTaskInfo.getId(), null, 1).
+        RetrofitServiceHelper.getInstance().doChangeInspectionTaskState(mTaskInfo.getId(), null, 1).
                 subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ChangeInspectionTaskStateRsp>(this) {
             @Override
             public void onCompleted(ChangeInspectionTaskStateRsp changeInspectionTaskStateRsp) {
@@ -167,7 +167,7 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
     }
 
     private void refreshTaskState() {
-        RetrofitServiceHelper.INSTANCE.getInspectTaskExecution(mTaskInfo.getId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskExecutionRsp>(this) {
+        RetrofitServiceHelper.getInstance().getInspectTaskExecution(mTaskInfo.getId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskExecutionRsp>(this) {
             @Override
             public void onCompleted(InspectionTaskExecutionRsp inspectionTaskExecutionRsp) {
                 InspectionTaskExecutionModel data = inspectionTaskExecutionRsp.getData();

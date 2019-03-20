@@ -123,7 +123,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                 getView().showProgressDialog();
             }
         }
-        RetrofitServiceHelper.INSTANCE.getAlarmCount(current - 3600 * 24 * 180 * 1000L, current, null, deviceAlarmLogInfo.getDeviceSN()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>(this) {
+        RetrofitServiceHelper.getInstance().getAlarmCount(current - 3600 * 24 * 180 * 1000L, current, null, deviceAlarmLogInfo.getDeviceSN()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>(this) {
             @Override
             public void onCompleted(AlarmCountRsp alarmCountRsp) {
                 int count = alarmCountRsp.getCount();
@@ -274,7 +274,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
             getView().setUpdateButtonClickable(false);
             getView().showProgressDialog();
         }
-        RetrofitServiceHelper.INSTANCE.doUpdatePhotosUrl(deviceAlarmLogInfo.get_id(), statusResult, statusType,
+        RetrofitServiceHelper.getInstance().doUpdatePhotosUrl(deviceAlarmLogInfo.get_id(), statusResult, statusType,
                 statusPlace, remark, isReConfirm, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CityObserver<DeviceAlarmItemRsp>(this) {
 

@@ -156,7 +156,7 @@ public class DeployAnalyzerUtils {
     }
 
     private void handleScanSignalCheck(BasePresenter presenter, final String signalCheckNum, final Activity activity, final OnDeployAnalyzerListener listener) {
-        RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(signalCheckNum, null, null).subscribeOn
+        RetrofitServiceHelper.getInstance().getDeployDeviceDetail(signalCheckNum, null, null).subscribeOn
                 (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(presenter) {
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
@@ -240,7 +240,7 @@ public class DeployAnalyzerUtils {
     }
 
     private void handleScanInspectionDevice(BasePresenter presenter, String scanInspectionDevice, String inspectionId, final Activity activity, final OnDeployAnalyzerListener listener) {
-        RetrofitServiceHelper.INSTANCE.getInspectionDeviceList(inspectionId, null, scanInspectionDevice.toUpperCase(), null, null, null, null).
+        RetrofitServiceHelper.getInstance().getInspectionDeviceList(inspectionId, null, scanInspectionDevice.toUpperCase(), null, null, null, null).
                 subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskDeviceDetailRsp>(presenter) {
             @Override
             public void onCompleted(InspectionTaskDeviceDetailRsp inspectionTaskDeviceDetailRsp) {
@@ -282,7 +282,7 @@ public class DeployAnalyzerUtils {
     }
 
     private void handleDeployDeviceStation(final BasePresenter presenter, final String scanSerialNumber, final Activity activity, final OnDeployAnalyzerListener listener) {
-        RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(scanSerialNumber, null, null).subscribeOn
+        RetrofitServiceHelper.getInstance().getDeployDeviceDetail(scanSerialNumber, null, null).subscribeOn
                 (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(presenter) {
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
@@ -306,7 +306,7 @@ public class DeployAnalyzerUtils {
             }
 
             private void doStation() {
-                RetrofitServiceHelper.INSTANCE.getStationDetail(scanSerialNumber.toUpperCase()).subscribeOn
+                RetrofitServiceHelper.getInstance().getStationDetail(scanSerialNumber.toUpperCase()).subscribeOn
                         (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployStationInfoRsp>(presenter) {
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
@@ -431,7 +431,7 @@ public class DeployAnalyzerUtils {
             }
 
             private void getAllDeviceInfo(final DeployAnalyzerModel deployAnalyzerModel) {
-                RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(scanSerialNumber, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1)).subscribeOn
+                RetrofitServiceHelper.getInstance().getDeployDeviceDetail(scanSerialNumber, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1)).subscribeOn
                         (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(presenter) {
                     @Override
                     public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
@@ -507,7 +507,7 @@ public class DeployAnalyzerUtils {
     }
 
     private void handleScanLogin(BasePresenter presenter, final String result, final Activity activity, final OnDeployAnalyzerListener listener) {
-        RetrofitServiceHelper.INSTANCE.getLoginScanResult(result).subscribeOn
+        RetrofitServiceHelper.getInstance().getLoginScanResult(result).subscribeOn
                 (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(presenter) {
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
@@ -540,7 +540,7 @@ public class DeployAnalyzerUtils {
     private void handleDeviceDeployChange(final int scanType, final BasePresenter presenter, final InspectionTaskDeviceDetail oldDeviceDetail, final String scanSerialNumber, final Activity activity, final OnDeployAnalyzerListener listener) {
         //todo 信息替换
         final DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
-        RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(oldDeviceDetail.getSn(), null, null).subscribeOn
+        RetrofitServiceHelper.getInstance().getDeployDeviceDetail(oldDeviceDetail.getSn(), null, null).subscribeOn
                 (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(presenter) {
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
@@ -562,7 +562,7 @@ public class DeployAnalyzerUtils {
                     lon = deployAnalyzerModel.latLng.get(0);
                     lat = deployAnalyzerModel.latLng.get(1);
                 }
-                RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(scanSerialNumber, lon, lat).subscribeOn
+                RetrofitServiceHelper.getInstance().getDeployDeviceDetail(scanSerialNumber, lon, lat).subscribeOn
                         (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(presenter) {
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {

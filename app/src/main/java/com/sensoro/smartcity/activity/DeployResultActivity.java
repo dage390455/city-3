@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewStructure;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -291,7 +290,7 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.getInstance().makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -217,7 +217,7 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -360,17 +360,17 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
 
     @Override
     public void showSaveSuccessToast() {
-        SensoroSuccessToast.INSTANCE.showToast(mRootFragment.getActivity(),Toast.LENGTH_SHORT,mRootFragment.getString(R.string.save_success));
+        SensoroSuccessToast.getInstance().showToast(mRootFragment.getActivity(),Toast.LENGTH_SHORT,mRootFragment.getString(R.string.save_success));
     }
 
     @Override
     public void cancelSuccessToast() {
-        SensoroSuccessToast.INSTANCE.cancelToast();
+        SensoroSuccessToast.getInstance().cancelToast();
     }
 
     @Override
     public void onDestroy() {
-        SensoroSuccessToast.INSTANCE.cancelToast();
+        SensoroSuccessToast.getInstance().cancelToast();
         super.onDestroy();
     }
 

@@ -219,7 +219,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     private void switchApi() {
         final String[] urlArr = new String[]{"正式版", "Demo版", "测试版", "摩卡环境"};
         //
-        scope_selectedIndex = RetrofitServiceHelper.INSTANCE.getBaseUrlType();
+        scope_selectedIndex = RetrofitServiceHelper.getInstance().getBaseUrlType();
         Dialog alertDialog = new AlertDialog.Builder(mActivity).
                 setTitle("环境切换")
                 .setSingleChoiceItems(urlArr, scope_selectedIndex, new DialogInterface.OnClickListener() {
@@ -265,7 +265,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

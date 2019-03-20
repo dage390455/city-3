@@ -365,7 +365,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         String sn = mDeviceInfo.getSn();
         getView().showProgressDialog();
         //合并请求
-        RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(sn, null, 1).subscribeOn(Schedulers.io()).observeOn
+        RetrofitServiceHelper.getInstance().getDeviceDetailInfoList(sn, null, 1).subscribeOn(Schedulers.io()).observeOn
                 (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
             @Override
             public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
@@ -477,7 +477,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     private void requestBlePassword() {
         // 获取固件版本和下载固件的地址信息
-        RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(mDeviceInfo.getSn(), null, null).subscribeOn
+        RetrofitServiceHelper.getInstance().getDeployDeviceDetail(mDeviceInfo.getSn(), null, null).subscribeOn
                 (Schedulers.io()).flatMap(new Func1<DeployDeviceDetailRsp, Observable<DeviceUpdateFirmwareDataRsp>>() {
             @Override
             public Observable<DeviceUpdateFirmwareDataRsp> call(DeployDeviceDetailRsp deployDeviceDetailRsp) {
@@ -493,7 +493,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         throwable.printStackTrace();
                     }
                 }
-                return RetrofitServiceHelper.INSTANCE.getDeviceUpdateVision(bleUpdateModel.sn, bleUpdateModel.deviceType, bleUpdateModel.band, bleUpdateModel.currentFirmVersion, bleUpdateModel.hardwareVersion, 1, 100);
+                return RetrofitServiceHelper.getInstance().getDeviceUpdateVision(bleUpdateModel.sn, bleUpdateModel.deviceType, bleUpdateModel.band, bleUpdateModel.currentFirmVersion, bleUpdateModel.hardwareVersion, 1, 100);
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceUpdateFirmwareDataRsp>(this) {
 
@@ -1332,7 +1332,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         getView().dismissTipDialog();
         getView().showOperationTipLoadingDialog();
         mScheduleNo = null;
-        RetrofitServiceHelper.INSTANCE.doMonitorPointOperation(sns, mOperationType, null, null, null, null, null)
+        RetrofitServiceHelper.getInstance().doMonitorPointOperation(sns, mOperationType, null, null, null, null, null)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>(this) {
             @Override
             public void onCompleted(MonitorPointOperationRequestRsp response) {
@@ -1493,7 +1493,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         if (isAttachedView()) {
             getView().updateDialogProgress(mContext.getString(R.string.firmware_update_in_preparation), -1, 0);
         }
-        RetrofitServiceHelper.INSTANCE.downloadDeviceFirmwareFile(bleUpdateModel.firmUrl, bleUpdateModel.filePath, new CityObserver<Boolean>(this) {
+        RetrofitServiceHelper.getInstance().downloadDeviceFirmwareFile(bleUpdateModel.firmUrl, bleUpdateModel.filePath, new CityObserver<Boolean>(this) {
             @Override
             public void onCompleted(Boolean aBoolean) {
                 if (aBoolean) {
@@ -1600,7 +1600,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             //升级成功
                             if (isAttachedView()) {
                                 getView().updateDialogProgress(mContext.getString(R.string.sending_upgrade_version), -1, 2);
-                                RetrofitServiceHelper.INSTANCE.upLoadDeviceUpdateVision(bleUpdateModel.sn, bleUpdateModel.serverFirmVersion)
+                                RetrofitServiceHelper.getInstance().upLoadDeviceUpdateVision(bleUpdateModel.sn, bleUpdateModel.serverFirmVersion)
                                         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).
                                         subscribe(new CityObserver<ResponseBase>(MonitorPointElectricDetailActivityPresenter.this) {
                                             @Override

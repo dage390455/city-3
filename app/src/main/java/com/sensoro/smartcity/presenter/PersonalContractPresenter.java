@@ -104,7 +104,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
 
     private void getContractTemplateInfos() {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getContractstemplate().subscribeOn(Schedulers.io()).observeOn
+        RetrofitServiceHelper.getInstance().getContractstemplate().subscribeOn(Schedulers.io()).observeOn
                 (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsTemplateRsp>(this) {
 
             @Override
@@ -406,7 +406,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
 
     private void doModifyContract() {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.modifyContract(mContractInfo.getUid(), mContractInfo.getId(), mContractInfo.getContract_type(), mContractInfo.getCard_id(), null,
+        RetrofitServiceHelper.getInstance().modifyContract(mContractInfo.getUid(), mContractInfo.getId(), mContractInfo.getContract_type(), mContractInfo.getCard_id(), null,
                 mContractInfo.getEnterprise_card_id(), null,
                 mContractInfo.getCustomer_name(), mContractInfo.getCustomer_enterprise_name(), null, mContractInfo.getCustomer_address(),
                 mContractInfo.getCustomer_phone(), mContractInfo.getPlace_type(), mContractInfo.getDevices(), mContractInfo.getPayTimes(), null, mContractInfo.getServiceTime(), mContractInfo.getFirstPayTimes()).subscribeOn
@@ -446,7 +446,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
 
     public void doCreateContract() {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getNewContract(mContractInfo.getContract_type(), mContractInfo.getCard_id(), null,
+        RetrofitServiceHelper.getInstance().getNewContract(mContractInfo.getContract_type(), mContractInfo.getCard_id(), null,
                 mContractInfo.getEnterprise_card_id(), null, mContractInfo.getCustomer_name(), mContractInfo.getCustomer_enterprise_name(),
                 null, mContractInfo.getCustomer_address(), mContractInfo.getCustomer_phone(), mContractInfo.getPlace_type(),
                 mContractInfo.getDevices(), mContractInfo.getPayTimes(), null, mContractInfo.getServiceTime(),

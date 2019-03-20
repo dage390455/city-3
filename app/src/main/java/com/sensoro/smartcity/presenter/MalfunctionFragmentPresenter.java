@@ -77,7 +77,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
             case DIRECTION_DOWN:
                 cur_page = 1;
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeviceMalfunctionLogList(cur_page, null, null, tempSearch, temp_startTime,
+                RetrofitServiceHelper.getInstance().getDeviceMalfunctionLogList(cur_page, null, null, tempSearch, temp_startTime,
                         temp_endTime).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MalfunctionListRsp>(this) {
 
 
@@ -100,7 +100,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
             case DIRECTION_UP:
                 cur_page++;
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeviceMalfunctionLogList(cur_page, null, null, tempSearch, temp_startTime,
+                RetrofitServiceHelper.getInstance().getDeviceMalfunctionLogList(cur_page, null, null, tempSearch, temp_startTime,
                         temp_endTime).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MalfunctionListRsp>(this) {
 
 
@@ -176,7 +176,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
                 .getCalendarYearMothDayFormatDate(endTime));
         endTime += 1000 * 60 * 60 * 24;
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getDeviceMalfunctionLogList(1, null, null, tempSearch, startTime, endTime
+        RetrofitServiceHelper.getInstance().getDeviceMalfunctionLogList(1, null, null, tempSearch, startTime, endTime
         ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MalfunctionListRsp>(this) {
 
 

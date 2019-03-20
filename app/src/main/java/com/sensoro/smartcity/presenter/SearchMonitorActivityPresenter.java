@@ -261,7 +261,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         getView().showProgressDialog();
         if (direction == DIRECTION_DOWN) {
             page = 1;
-            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, null, null, null, searchText).subscribeOn
+            RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, null, null, searchText).subscribeOn
                     (Schedulers.io()).doOnNext(new Action1<DeviceInfoListRsp>() {
                 @Override
                 public void call(DeviceInfoListRsp deviceInfoListRsp) {
@@ -296,7 +296,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
             });
         } else {
             page++;
-            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, null, null, null, searchText).subscribeOn
+            RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, null, null, searchText).subscribeOn
                     (Schedulers.io()).doOnNext(new Action1<DeviceInfoListRsp>() {
                 @Override
                 public void call(DeviceInfoListRsp deviceInfoListRsp) {
@@ -371,7 +371,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
     private void requestAlarmInfo(DeviceInfo deviceInfo) {
         //
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, deviceInfo.getSn(), null, null, null, null, null, null)
+        RetrofitServiceHelper.getInstance().getDeviceAlarmLogList(1, deviceInfo.getSn(), null, null, null, null, null, null)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
             @Override

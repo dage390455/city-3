@@ -280,7 +280,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -444,7 +444,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
 
     @Override
     public void showOperationSuccessToast() {
-        SensoroSuccessToast.INSTANCE.showToast(mActivity, Toast.LENGTH_SHORT);
+        SensoroSuccessToast.getInstance().showToast(mActivity, Toast.LENGTH_SHORT);
     }
 
     @Override

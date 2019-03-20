@@ -107,7 +107,7 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
                 case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
                     if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
                         getView().showProgressDialog();
-                        RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1))
+                        RetrofitServiceHelper.getInstance().getDeployDeviceDetail(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1))
                                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(this) {
                             @Override
                             public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
@@ -136,7 +136,7 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
                     break;
                 case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
                     getView().showProgressDialog();
-                    RetrofitServiceHelper.INSTANCE.doDevicePositionCalibration(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
+                    RetrofitServiceHelper.getInstance().doDevicePositionCalibration(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
                         @Override
                         public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
                             getView().dismissProgressDialog();
@@ -171,7 +171,7 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
         switch (deployAnalyzerModel.mapSourceType) {
             case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(deployAnalyzerModel.sn, null, 1).subscribeOn(Schedulers.io()).observeOn
+                RetrofitServiceHelper.getInstance().getDeviceDetailInfoList(deployAnalyzerModel.sn, null, 1).subscribeOn(Schedulers.io()).observeOn
                         (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
 
 

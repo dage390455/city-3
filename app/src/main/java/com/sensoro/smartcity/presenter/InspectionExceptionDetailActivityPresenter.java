@@ -41,7 +41,7 @@ public class InspectionExceptionDetailActivityPresenter extends BasePresenter<II
 
     private void requestExceptionDetail() {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getInspectionDeviceDetail(mDeviceDetail.getId(), null, null, 1)
+        RetrofitServiceHelper.getInstance().getInspectionDeviceDetail(mDeviceDetail.getId(), null, null, 1)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskExceptionDeviceRsp>(this) {
             @Override
             public void onCompleted(InspectionTaskExceptionDeviceRsp response) {

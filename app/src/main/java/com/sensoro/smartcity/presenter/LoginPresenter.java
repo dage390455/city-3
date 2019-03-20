@@ -90,7 +90,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
 //        } catch (PackageManager.NameNotFoundException e) {
 //            e.printStackTrace();
 //        }
-        getView().setLogButtonState(RetrofitServiceHelper.INSTANCE.getBaseUrlType());
+        getView().setLogButtonState(RetrofitServiceHelper.getInstance().getBaseUrlType());
 //        SharedPreferences sp = mContext.getSharedPreferences(PREFERENCE_SCOPE, Context
 //                .MODE_PRIVATE);
 //        int urlType = 0;
@@ -106,7 +106,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     }
 
     public void saveScopeData(int which) {
-        RetrofitServiceHelper.INSTANCE.saveBaseUrlType(which);
+        RetrofitServiceHelper.getInstance().saveBaseUrlType(which);
         getView().setLogButtonState(which);
 
     }
@@ -125,12 +125,12 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
             }
             getView().showProgressDialog();
             //
-            RetrofitServiceHelper.INSTANCE.login(account, pwd, phoneId).subscribeOn
+            RetrofitServiceHelper.getInstance().login(account, pwd, phoneId).subscribeOn
                     (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<LoginRsp>(this) {
                 @Override
                 public void onCompleted(LoginRsp loginRsp) {
                     String sessionID = loginRsp.getData().getSessionID();
-                    RetrofitServiceHelper.INSTANCE.saveSessionId(sessionID);
+                    RetrofitServiceHelper.getInstance().saveSessionId(sessionID);
                     PreferencesHelper.getInstance().saveLoginNamePwd(account, pwd);
                     //
                     UserInfo userInfo = loginRsp.getData();
@@ -153,7 +153,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     }
 
     private void getMergeType(final EventLoginData eventLoginData) {
-        RetrofitServiceHelper.INSTANCE.getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Action1<DevicesMergeTypesRsp>() {
+        RetrofitServiceHelper.getInstance().getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Action1<DevicesMergeTypesRsp>() {
             @Override
             public void call(DevicesMergeTypesRsp devicesMergeTypesRsp) {
                 DeviceMergeTypesInfo data = devicesMergeTypesRsp.getData();

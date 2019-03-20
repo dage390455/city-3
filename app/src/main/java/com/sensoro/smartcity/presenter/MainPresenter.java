@@ -191,8 +191,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
      * 检测到语言变化重新登录
      */
     private void reLogin() {
-        RetrofitServiceHelper.INSTANCE.cancelAllRsp();
-        RetrofitServiceHelper.INSTANCE.clearLoginDataSessionId();
+        RetrofitServiceHelper.getInstance().cancelAllRsp();
+        RetrofitServiceHelper.getInstance().clearLoginDataSessionId();
         Intent intent = new Intent(mContext, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         mContext.startActivity(intent);
@@ -305,7 +305,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                             }
                             if (hasDeviceBriefControl()) {
                                 try {
-                                    DeviceInfo data = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json,
+                                    DeviceInfo data = RetrofitServiceHelper.getInstance().getGson().fromJson(json,
                                             DeviceInfo.class);
                                     final EventData eventData = new EventData();
                                     eventData.code = EVENT_DATA_SOCKET_DATA_INFO;
@@ -344,7 +344,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                             }
                             if (hasDeviceBriefControl()) {
                                 try {
-                                    DeviceAlarmCount deviceAlarmCount = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, DeviceAlarmCount.class);
+                                    DeviceAlarmCount deviceAlarmCount = RetrofitServiceHelper.getInstance().getGson().fromJson(json, DeviceAlarmCount.class);
                                     List<DeviceAlarmCount.AllBean> all = deviceAlarmCount.getAll();
                                     DeviceAlarmCount.AllBean allBean = all.get(0);
                                     AlarmDeviceCountsBean counts = allBean.getCounts();
@@ -384,7 +384,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                             }
                             if (hasAlarmInfoControl()) {
                                 try {
-                                    DeviceAlarmLogInfo deviceAlarmLogInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, DeviceAlarmLogInfo.class);
+                                    DeviceAlarmLogInfo deviceAlarmLogInfo = RetrofitServiceHelper.getInstance().getGson().fromJson(json, DeviceAlarmLogInfo.class);
                                     String event = deviceAlarmLogInfo.getEvent();
                                     EventAlarmStatusModel eventAlarmStatusModel = new EventAlarmStatusModel();
                                     eventAlarmStatusModel.deviceAlarmLogInfo = deviceAlarmLogInfo;
@@ -461,7 +461,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                             } catch (Throwable throwable) {
                                 throwable.printStackTrace();
                             }
-                            MonitorPointOperationTaskResultInfo monitorPointOperationTaskResultInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, MonitorPointOperationTaskResultInfo.class);
+                            MonitorPointOperationTaskResultInfo monitorPointOperationTaskResultInfo = RetrofitServiceHelper.getInstance().getGson().fromJson(json, MonitorPointOperationTaskResultInfo.class);
                             EventData eventData = new EventData();
                             eventData.code = EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT;
                             eventData.data = monitorPointOperationTaskResultInfo;
@@ -525,12 +525,12 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
     private void createSocket() {
         try {
-            String sessionId = RetrofitServiceHelper.INSTANCE.getSessionId();
+            String sessionId = RetrofitServiceHelper.getInstance().getSessionId();
             IO.Options options = new IO.Options();
             options.query = "session=" + sessionId;
             options.forceNew = true;
             options.path = "/city";
-            mSocket = IO.socket(RetrofitServiceHelper.INSTANCE.BASE_URL + "app", options);
+            mSocket = IO.socket(RetrofitServiceHelper.getInstance().BASE_URL + "app", options);
             if (hasDeviceBriefControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
@@ -620,13 +620,13 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
                 mSocket = null;
             }
-            String sessionId = RetrofitServiceHelper.INSTANCE.getSessionId();
+            String sessionId = RetrofitServiceHelper.getInstance().getSessionId();
             IO.Options options = new IO.Options();
             //
             options.query = "session=" + sessionId;
             options.forceNew = true;
             options.path = "/city";
-            mSocket = IO.socket(RetrofitServiceHelper.INSTANCE.BASE_URL + "app", options);
+            mSocket = IO.socket(RetrofitServiceHelper.getInstance().BASE_URL + "app", options);
             if (hasDeviceBriefControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
@@ -682,7 +682,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         Object data = eventData.data;
         switch (code) {
             case EVENT_DATA_SESSION_ID_OVERTIME:
-                RetrofitServiceHelper.INSTANCE.cancelAllRsp();
+                RetrofitServiceHelper.getInstance().cancelAllRsp();
                 reLogin();
                 break;
             case EVENT_DATA_DEPLOY_RESULT_FINISH:
@@ -709,7 +709,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 break;
             case EVENT_DATA_CHECK_MERGE_TYPE_CONFIG_DATA:
                 //mergeTypeConfig配置参数需要更新
-                RetrofitServiceHelper.INSTANCE.getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Action1<DevicesMergeTypesRsp>() {
+                RetrofitServiceHelper.getInstance().getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Action1<DevicesMergeTypesRsp>() {
                     @Override
                     public void call(DevicesMergeTypesRsp devicesMergeTypesRsp) {
                         DeviceMergeTypesInfo data = devicesMergeTypesRsp.getData();
@@ -743,7 +743,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             return;
         }
         String[] str = {"0"};
-        RetrofitServiceHelper.INSTANCE.getAlarmCount(null, null, str, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>(this) {
+        RetrofitServiceHelper.getInstance().getAlarmCount(null, null, str, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>(this) {
             @Override
             public void onCompleted(AlarmCountRsp alarmCountRsp) {
                 int count = alarmCountRsp.getCount();

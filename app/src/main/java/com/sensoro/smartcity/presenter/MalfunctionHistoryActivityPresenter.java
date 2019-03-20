@@ -59,7 +59,7 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
             case DIRECTION_DOWN:
                 cur_page = 1;
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeviceMalfunctionLogList(cur_page, mSn, null, null, startTime,
+                RetrofitServiceHelper.getInstance().getDeviceMalfunctionLogList(cur_page, mSn, null, null, startTime,
                         endTime).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MalfunctionListRsp>(this) {
 
                     @Override
@@ -80,7 +80,7 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
             case DIRECTION_UP:
                 cur_page++;
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeviceMalfunctionLogList(cur_page, mSn, null, null, startTime,
+                RetrofitServiceHelper.getInstance().getDeviceMalfunctionLogList(cur_page, mSn, null, null, startTime,
                         endTime).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MalfunctionListRsp>(this) {
 
 

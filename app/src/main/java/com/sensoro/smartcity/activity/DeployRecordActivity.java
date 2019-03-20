@@ -342,12 +342,12 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void toastLong(String msg) {
-        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_LONG).show();
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_LONG).show();
     }
 
     @OnClick({R.id.ac_deploy_record_imv_finish, R.id.ac_deploy_record_imv_calendar, R.id.ac_deploy_record_deploy_rl_new_device

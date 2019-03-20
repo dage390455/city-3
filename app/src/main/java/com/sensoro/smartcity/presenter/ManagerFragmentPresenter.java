@@ -70,7 +70,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     public void doExitAccount() {
         if (PreferencesHelper.getInstance().getUserData() != null) {
             getView().showProgressDialog();
-            RetrofitServiceHelper.INSTANCE.logout(PreferencesHelper.getInstance().getUserData().phoneId, PreferencesHelper.getInstance().getUserData().userId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
+            RetrofitServiceHelper.getInstance().logout(PreferencesHelper.getInstance().getUserData().phoneId, PreferencesHelper.getInstance().getUserData().userId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
                     .mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
                 @Override
                 public void onErrorMsg(int errorCode, String errorMsg) {
@@ -79,7 +79,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
                     if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                         getView().toastShort(errorMsg);
                     } else {
-                        RetrofitServiceHelper.INSTANCE.clearLoginDataSessionId();
+                        RetrofitServiceHelper.getInstance().clearLoginDataSessionId();
                         Intent intent = new Intent(mContext, LoginActivity.class);
                         getView().startAC(intent);
                         getView().finishAc();
@@ -90,7 +90,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
                 @Override
                 public void onCompleted(ResponseBase responseBase) {
                     if (responseBase.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                        RetrofitServiceHelper.INSTANCE.clearLoginDataSessionId();
+                        RetrofitServiceHelper.getInstance().clearLoginDataSessionId();
                         Intent intent = new Intent(mContext, LoginActivity.class);
                         getView().startAC(intent);
                     }

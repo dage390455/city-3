@@ -171,7 +171,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
             return;
         }
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.doUploadInspectionResult(mDeviceDetail.getId(), null, null, 2, 0, startTime, finishTime, remarkMessage,
+        RetrofitServiceHelper.getInstance().doUploadInspectionResult(mDeviceDetail.getId(), null, null, 2, 0, startTime, finishTime, remarkMessage,
                 scenesDataList, selectTags).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CityObserver<ResponseBase>(this) {
                     @Override

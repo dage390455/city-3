@@ -54,8 +54,8 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
 
     private void checkLoginState() {
         try {
-            RetrofitServiceHelper.INSTANCE.getBaseUrlType();
-            String sessionID = RetrofitServiceHelper.INSTANCE.getSessionId();
+            RetrofitServiceHelper.getInstance().getBaseUrlType();
+            String sessionID = RetrofitServiceHelper.getInstance().getSessionId();
             try {
                 LogUtils.loge("sessionID = " + sessionID);
             } catch (Throwable throwable) {

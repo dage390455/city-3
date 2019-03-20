@@ -133,7 +133,7 @@ public class AuthActivity extends BaseActivity<IAuthActivityView, AuthActivityPr
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.getInstance().makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

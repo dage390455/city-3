@@ -21,7 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amap.api.services.help.Tip;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -375,7 +374,7 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.getInstance().makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

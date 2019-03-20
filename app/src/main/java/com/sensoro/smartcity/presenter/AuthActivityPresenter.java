@@ -55,7 +55,7 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
         if (isAttachedView()) {
             getView().showProgressDialog();
         }
-        RetrofitServiceHelper.INSTANCE.doubleCheck(code).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AuthRsp>(this) {
+        RetrofitServiceHelper.getInstance().doubleCheck(code).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AuthRsp>(this) {
 
             @Override
             public void onCompleted(AuthRsp authRsp) {
@@ -82,7 +82,7 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
     }
 
     private void getMergeType() {
-        RetrofitServiceHelper.INSTANCE.getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Action1<DevicesMergeTypesRsp>() {
+        RetrofitServiceHelper.getInstance().getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Action1<DevicesMergeTypesRsp>() {
             @Override
             public void call(DevicesMergeTypesRsp devicesMergeTypesRsp) {
                 DeviceMergeTypesInfo data = devicesMergeTypesRsp.getData();

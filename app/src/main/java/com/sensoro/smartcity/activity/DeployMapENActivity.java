@@ -216,7 +216,7 @@ public class DeployMapENActivity extends BaseActivity<IDeployMapENActivityView, 
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

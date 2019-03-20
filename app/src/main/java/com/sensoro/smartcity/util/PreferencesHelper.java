@@ -273,7 +273,7 @@ public final class PreferencesHelper implements Constants {
                 String json = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, null);
                 LogUtils.loge("DeviceMergeTypesInfo json : " + json);
                 if (!TextUtils.isEmpty(json)) {
-                    mDeviceMergeTypesInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, DeviceMergeTypesInfo.class);
+                    mDeviceMergeTypesInfo = RetrofitServiceHelper.getInstance().getGson().fromJson(json, DeviceMergeTypesInfo.class);
                 }
             }
 //        if (mDeviceMergeTypesInfo != null) {
@@ -308,7 +308,7 @@ public final class PreferencesHelper implements Constants {
             return false;
         }
         mDeviceMergeTypesInfo = deviceMergeTypesInfo;
-        String json = RetrofitServiceHelper.INSTANCE.getGson().toJson(mDeviceMergeTypesInfo);
+        String json = RetrofitServiceHelper.getInstance().getGson().toJson(mDeviceMergeTypesInfo);
         if (!TextUtils.isEmpty(json)) {
             try {
                 LogUtils.loge("saveLocalDevicesMergeTypes length = " + json.length());
@@ -565,7 +565,7 @@ public final class PreferencesHelper implements Constants {
                 .MODE_PRIVATE);
         String json = sp.getString(PREFERENCE_DEMO_MODE_JSON, null);
         if (!TextUtils.isEmpty(json)) {
-            HashMap map = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, HashMap.class);
+            HashMap map = RetrofitServiceHelper.getInstance().getGson().fromJson(json, HashMap.class);
             Object value = map.get(sn);
             if (value instanceof Integer) {
                 return (int) value;
@@ -578,7 +578,7 @@ public final class PreferencesHelper implements Constants {
         final HashMap<String, Integer> localDemoModeMap = new HashMap<>();
         localDemoModeMap.put(sn, mode);
         try {
-            String json = RetrofitServiceHelper.INSTANCE.getGson().toJson(localDemoModeMap);
+            String json = RetrofitServiceHelper.getInstance().getGson().toJson(localDemoModeMap);
             SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEMO_MODE_JSON, Context
                     .MODE_PRIVATE);
             SharedPreferences.Editor editor = sp.edit();

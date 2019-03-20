@@ -133,7 +133,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
             case DIRECTION_DOWN:
                 cur_page = 0;
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.searchContract(requestDataType, tempSearch, requestDataConfirmed, temp_startTime, temp_endTime, null, null).subscribeOn
+                RetrofitServiceHelper.getInstance().searchContract(requestDataType, tempSearch, requestDataConfirmed, temp_startTime, temp_endTime, null, null).subscribeOn
                         (Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsListRsp>(this) {
 
@@ -168,7 +168,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
                 cur_page++;
                 getView().showProgressDialog();
                 int offset = cur_page * 20;
-                RetrofitServiceHelper.INSTANCE.searchContract(requestDataType, tempSearch, requestDataConfirmed, temp_startTime, temp_endTime, null, offset).subscribeOn
+                RetrofitServiceHelper.getInstance().searchContract(requestDataType, tempSearch, requestDataConfirmed, temp_startTime, temp_endTime, null, offset).subscribeOn
                         (Schedulers
                                 .io())
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsListRsp>(this) {

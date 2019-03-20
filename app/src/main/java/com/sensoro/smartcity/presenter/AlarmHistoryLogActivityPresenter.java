@@ -250,7 +250,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
                 if (isAttachedView()){
                     getView().showProgressDialog();
                 }
-                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, mSn, null, null, null, startTime,
+                RetrofitServiceHelper.getInstance().getDeviceAlarmLogList(cur_page, mSn, null, null, null, startTime,
                         endTime,
                         null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
@@ -278,7 +278,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
                 if (isAttachedView()){
                     getView().showProgressDialog();
                 }
-                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, mSn, null, null, null, startTime,
+                RetrofitServiceHelper.getInstance().getDeviceAlarmLogList(cur_page, mSn, null, null, null, startTime,
                         endTime,
                         null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
@@ -422,7 +422,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
         if (isAttachedView()){
             getView().showProgressDialog();
         }
-        RetrofitServiceHelper.INSTANCE.doUpdatePhotosUrl(mCurrentDeviceAlarmLogInfo.get_id(), statusResult,
+        RetrofitServiceHelper.getInstance().doUpdatePhotosUrl(mCurrentDeviceAlarmLogInfo.get_id(), statusResult,
                 statusType, statusPlace,
                 remark, false, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe

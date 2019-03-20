@@ -413,7 +413,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.getInstance().makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -527,7 +527,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         if (mCloseDemoDialogUtils != null) {
             mCloseDemoDialogUtils.destroy();
         }
-        SensoroSuccessToast.INSTANCE.cancelToast();
+        SensoroSuccessToast.getInstance().cancelToast();
         super.onDestroy();
     }
 
@@ -609,12 +609,12 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
 
     @Override
     public void showOperationSuccessToast() {
-        SensoroSuccessToast.INSTANCE.showToast(mActivity, Toast.LENGTH_SHORT);
+        SensoroSuccessToast.getInstance().showToast(mActivity, Toast.LENGTH_SHORT);
     }
 
     @Override
     public void showOperationSuccessToast(String text) {
-        SensoroSuccessToast.INSTANCE.showToast(mActivity, Toast.LENGTH_LONG, text);
+        SensoroSuccessToast.getInstance().showToast(mActivity, Toast.LENGTH_LONG, text);
     }
 
     @Override

@@ -125,7 +125,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         }
         mPresenter.onDestroy();
         mPresenter.detachView();
-        SensoroToast.INSTANCE.cancelToast();
+        SensoroToast.getInstance().cancelToast();
         if (immersionBar != null) {
             immersionBar.destroy();
         }

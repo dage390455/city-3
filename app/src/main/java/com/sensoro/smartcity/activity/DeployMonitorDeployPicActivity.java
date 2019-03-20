@@ -17,11 +17,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeployPicAdapter;
-import com.sensoro.smartcity.server.bean.DeployPicInfo;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDeployPicView;
 import com.sensoro.smartcity.presenter.DeployMonitorDeployPicPresenter;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.smartcity.server.bean.DeployPicInfo;
 import com.sensoro.smartcity.widget.dialog.DeployPicExampleDialogUtils;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
@@ -185,7 +184,7 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

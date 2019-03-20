@@ -92,7 +92,7 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
     public void doUploadNormal() {
         getView().showProgressDialog();
         long finishTime = System.currentTimeMillis();
-        RetrofitServiceHelper.INSTANCE.doUploadInspectionResult(mDeviceDetail.getId(), null, null, 1, null, startTime, finishTime, null,
+        RetrofitServiceHelper.getInstance().doUploadInspectionResult(mDeviceDetail.getId(), null, null, 1, null, startTime, finishTime, null,
                 null, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CityObserver<ResponseBase>(this) {
                     @Override

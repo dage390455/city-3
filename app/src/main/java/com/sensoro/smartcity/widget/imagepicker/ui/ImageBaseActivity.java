@@ -66,7 +66,7 @@ public class ImageBaseActivity extends AppCompatActivity {
     }
 
     public void showToast(String toastText) {
-        SensoroToast.INSTANCE.makeText(getApplicationContext(), toastText, Toast.LENGTH_SHORT).show();
+        SensoroToast.getInstance().makeText(getApplicationContext(), toastText, Toast.LENGTH_SHORT).show();
     }
 
     @Override

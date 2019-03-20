@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.baidu.ocr.ui.camera.CameraActivity;
 import com.sensoro.smartcity.R;
@@ -110,7 +109,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
 
     private void getContractTemplateInfos() {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getContractstemplate().subscribeOn(Schedulers.io()).observeOn
+        RetrofitServiceHelper.getInstance().getContractstemplate().subscribeOn(Schedulers.io()).observeOn
                 (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsTemplateRsp>(this) {
 
             @Override
@@ -179,7 +178,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
                             String enterpriseCardId = "";
 //                                String 证件编号 = "";
                             try {
-                                BusinessLicenseData businessLicenseData = RetrofitServiceHelper.INSTANCE
+                                BusinessLicenseData businessLicenseData = RetrofitServiceHelper.getInstance()
                                         .getGson()
                                         .fromJson(result, BusinessLicenseData.class);
                                 BusinessLicenseData.WordsResultBean words_result = businessLicenseData
@@ -249,7 +248,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
     public void doCreateContract() {
         getView().showProgressDialog();
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getNewContract(mContractInfo.getContract_type(), mContractInfo.getCard_id(), null,
+        RetrofitServiceHelper.getInstance().getNewContract(mContractInfo.getContract_type(), mContractInfo.getCard_id(), null,
                 mContractInfo.getEnterprise_card_id(), null, mContractInfo.getCustomer_name(), mContractInfo.getCustomer_enterprise_name(),
                 null, mContractInfo.getCustomer_address(), mContractInfo.getCustomer_phone(), mContractInfo.getPlace_type(),
                 mContractInfo.getDevices(), mContractInfo.getPayTimes(), null, mContractInfo.getServiceTime(),
@@ -448,7 +447,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
 
     private void doModifyContract() {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.modifyContract(mContractInfo.getUid(), mContractInfo.getId(), mContractInfo.getContract_type(), mContractInfo.getCard_id(), null,
+        RetrofitServiceHelper.getInstance().modifyContract(mContractInfo.getUid(), mContractInfo.getId(), mContractInfo.getContract_type(), mContractInfo.getCard_id(), null,
                 mContractInfo.getEnterprise_card_id(), null,
                 mContractInfo.getCustomer_name(), mContractInfo.getCustomer_enterprise_name(), null, mContractInfo.getCustomer_address(),
                 mContractInfo.getCustomer_phone(), mContractInfo.getPlace_type(), mContractInfo.getDevices(), mContractInfo.getPayTimes(), null, mContractInfo.getServiceTime(), mContractInfo.getFirstPayTimes()).subscribeOn

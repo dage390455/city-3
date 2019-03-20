@@ -335,7 +335,7 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
     }
 
     private void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     private void dismissInputMethodManager(View view) {

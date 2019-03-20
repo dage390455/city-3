@@ -128,7 +128,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
 
     private void requestData(int contractId) {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getContractInfo(contractId + "").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        RetrofitServiceHelper.getInstance().getContractInfo(contractId + "").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CityObserver<ContractInfoRsp>(this) {
                     @Override
                     public void onCompleted(ContractInfoRsp responseBase) {

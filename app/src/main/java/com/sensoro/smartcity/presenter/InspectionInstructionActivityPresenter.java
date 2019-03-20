@@ -40,7 +40,7 @@ implements Constants{
 
     private void requestContentData(String type) {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getInspectionTemplate(type).subscribeOn(Schedulers.io())
+        RetrofitServiceHelper.getInstance().getInspectionTemplate(type).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskInstructionRsp>(this) {
             @Override
             public void onCompleted(InspectionTaskInstructionRsp instructionRsp) {
