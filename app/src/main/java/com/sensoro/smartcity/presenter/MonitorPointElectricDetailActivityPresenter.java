@@ -360,7 +360,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         if (taskOptionModel != null) {
                             if (taskFirmwareVersion.containsKey(taskOptionModel.id)) {
                                 String version = taskFirmwareVersion.get(taskOptionModel.id);
-                                if (TextUtils.isEmpty(version) && !TextUtils.isEmpty(version.trim())) {
+                                if (TextUtils.isEmpty(version) || TextUtils.isEmpty(version.trim())) {
                                     taskOptionModelList.add(taskOptionModel);
                                 }else{
                                     String[] split = version.trim().split("~");
