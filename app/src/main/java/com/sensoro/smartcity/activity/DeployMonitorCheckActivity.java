@@ -13,6 +13,7 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.fragment.DeployMonitorLocalCheckFragment;
 import com.sensoro.smartcity.fragment.DeployMonitorUploadCheckFragment;
 import com.sensoro.smartcity.imainviews.IDeployMonitorCheckActivityView;
+import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.presenter.DeployMonitorCheckActivityPresenter;
 
 import butterknife.BindView;
@@ -196,5 +197,14 @@ public class DeployMonitorCheckActivity extends BaseActivity<IDeployMonitorCheck
     protected void onSaveInstanceState(Bundle outState) {
         mPresenter.onSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
+    }
+
+    public DeployAnalyzerModel getDeployAnalyzerModel(){
+        return mPresenter.deployAnalyzerModel;
+
+    }
+    public void setDeployAnalyzerModel(DeployAnalyzerModel deployAnalyzerModel){
+        mPresenter.deployAnalyzerModel = deployAnalyzerModel;
+
     }
 }

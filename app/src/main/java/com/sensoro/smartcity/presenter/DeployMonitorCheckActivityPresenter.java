@@ -3,6 +3,7 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -13,7 +14,7 @@ import java.io.Serializable;
 
 public class DeployMonitorCheckActivityPresenter extends BasePresenter<IDeployMonitorCheckActivityView> implements Constants {
     private Activity mActivity;
-    public static volatile DeployAnalyzerModel deployAnalyzerModel;
+    public volatile DeployAnalyzerModel deployAnalyzerModel;
 
     @Override
     public void initData(Context context) {

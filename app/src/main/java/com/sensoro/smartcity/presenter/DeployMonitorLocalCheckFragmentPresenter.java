@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
 import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
@@ -44,6 +46,7 @@ import com.sensoro.smartcity.util.HandlerDeployCheck;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -55,10 +58,9 @@ import java.util.HashMap;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static com.sensoro.smartcity.presenter.DeployMonitorCheckActivityPresenter.deployAnalyzerModel;
 
 public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDeployMonitorLocalCheckFragmentView> implements IOnCreate, Constants, Runnable, BLEDeviceListener<BLEDevice>, IOnStart {
-    private Activity mActivity;
+    private DeployMonitorCheckActivity mActivity;
     private final ArrayList<String> pickerStrings = new ArrayList<>();
     private ArrayList<EarlyWarningthresholdDialogUtilsAdapterModel> overCurrentDataList;
     private SensoroDeviceConnection sensoroDeviceConnection;
@@ -67,10 +69,17 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     private final HandlerDeployCheck checkHandler = new HandlerDeployCheck(Looper.getMainLooper());
     //forceReason: enum ["lonlat", "config", "signalQuality", "status"]
     private String tempForceReason;
+    private DeployAnalyzerModel deployAnalyzerModel;
 
     @Override
     public void initData(Context context) {
-        mActivity = (Activity) context;
+        mActivity = (DeployMonitorCheckActivity) context;
+        DeployAnalyzerModel deployAnalyzer = mActivity.getDeployAnalyzerModel();
+        if (deployAnalyzer == null) {
+            getView().toastLong(mActivity.getString(R.string.unknown));
+            return;
+        }
+        deployAnalyzerModel = deployAnalyzer;
         mHandler = new Handler(Looper.getMainLooper());
         onCreate();
         init();
@@ -550,6 +559,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
      */
     public void goToNextStep() {
         if (mActivity instanceof DeployMonitorCheckActivity) {
+            mActivity.setDeployAnalyzerModel(deployAnalyzerModel);
             ((DeployMonitorCheckActivity) mActivity).setDeployMonitorStep(2);
         }
         getView().dismissDeployMonitorCheckDialogUtils();
