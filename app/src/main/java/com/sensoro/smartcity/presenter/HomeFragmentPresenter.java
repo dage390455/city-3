@@ -47,6 +47,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -410,7 +411,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
             intent.putExtra(EXTRA_SENSOR_STATUS, deviceInfo.getStatus());
             intent.putExtra(EXTRA_SENSOR_TIME, deviceInfo.getUpdatedTime());
-            intent.putExtra(EXTRA_SENSOR_LOCATION, deviceInfo.getLonlat());
+//            Double[] lonlat = (Double[]) ;
+
+            intent.putExtra(EXTRA_SENSOR_LOCATION, deviceInfo.getLonlat().toArray());
             getView().startAC(intent);
         } catch (Exception e) {
             e.printStackTrace();
