@@ -60,7 +60,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/view_tag_ac_security_risks"
-            app:layout_constraintEnd_toStartOf="@+id/tv_manger"
+            app:layout_constraintEnd_toStartOf="@+id/tv_manger_ac_security_risks"
             app:layout_constraintHorizontal_bias="0"
             />
         <View
@@ -85,7 +85,7 @@
             android:padding="8dp"
             />
         <TextView
-            android:id="@+id/tv_manger"
+            android:id="@+id/tv_manger_ac_security_risks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/main_page_manage"
@@ -98,7 +98,7 @@
             />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_tag"
+            android:id="@+id/rv_tag_ac_security_risks"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
