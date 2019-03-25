@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tv_add_adapter_security_risks"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:drawablePadding="10dp"
+    android:gravity="center"
+    android:drawableStart="@drawable/add_tag"
+    android:text="@string/added_security_risks"
+    android:textColor="@color/c_252525"
+    android:textSize="16sp"
+    android:layout_marginTop="20dp"
+    >
+
+
+
+</TextView>

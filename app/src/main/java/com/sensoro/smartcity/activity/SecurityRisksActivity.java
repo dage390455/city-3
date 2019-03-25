@@ -64,7 +64,7 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
     }
 
     private void initContentAdapter() {
-        SecurityRisksContentAdapter securityRisksContentAdapter = new SecurityRisksContentAdapter();
+        SecurityRisksContentAdapter securityRisksContentAdapter = new SecurityRisksContentAdapter(mActivity);
     }
 
     @Override
