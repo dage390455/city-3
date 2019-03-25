@@ -1,10 +1,8 @@
 package com.sensoro.smartcity.presenter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
@@ -104,6 +102,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                 getView().setDeviceSn(mActivity.getString(R.string.device_number) + deployAnalyzerModel.sn);
                 if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
                     getView().setNameAddressText(deployAnalyzerModel.nameAndAddress);
+                    getView().setUploadBtnStatus(true);
                 }
                 break;
             case TYPE_SCAN_DEPLOY_DEVICE:
@@ -490,7 +489,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                     settingData = deployAnalyzerModel.settingData;
                 }
                 RetrofitServiceHelper.getInstance().doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, settingData, deployAnalyzerModel.forceReason).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, settingData, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new CityObserver<DeviceDeployRsp>(this) {
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
@@ -517,7 +516,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
                         deployAnalyzerModel.mDeviceDetail.getTaskId(), 1, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                        deployContactModel.name, deployContactModel.phone, imgUrls, null).
+                        deployContactModel.name, deployContactModel.phone, imgUrls, null, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).
                         subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
                     @Override
                     public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
@@ -544,7 +543,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
                         null, 2, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress, deployContactModel.name,
-                        deployContactModel.phone, imgUrls, null).
+                        deployContactModel.phone, imgUrls, null, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).
                         subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
                     @Override
                     public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
@@ -594,6 +593,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
         }
         deployResultModel.address = deployAnalyzerModel.address;
         deployResultModel.updateTime = deviceInfo.getUpdatedTime();
+        deployResultModel.deployTime = deviceInfo.getDeployTime();
         deployResultModel.deviceStatus = deviceInfo.getStatus();
         deployResultModel.signal = deviceInfo.getSignal();
         deployResultModel.name = deployAnalyzerModel.nameAndAddress;

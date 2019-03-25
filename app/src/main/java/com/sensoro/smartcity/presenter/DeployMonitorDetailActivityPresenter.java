@@ -380,7 +380,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     settingData = deployAnalyzerModel.settingData;
                 }
                 RetrofitServiceHelper.getInstance().doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, settingData, deployAnalyzerModel.forceReason).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, settingData, deployAnalyzerModel.forceReason,deployAnalyzerModel.status,deployAnalyzerModel.currentSignalQuality).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new CityObserver<DeviceDeployRsp>(this) {
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
@@ -407,7 +407,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
                         deployAnalyzerModel.mDeviceDetail.getTaskId(), 1, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                        deployContactModel.name, deployContactModel.phone, imgUrls, null).
+                        deployContactModel.name, deployContactModel.phone, imgUrls, null,deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).
                         subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
                     @Override
                     public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
@@ -434,7 +434,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
                         null, 2, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress, deployContactModel.name,
-                        deployContactModel.phone, imgUrls, null).
+                        deployContactModel.phone, imgUrls, null,deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).
                         subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
                     @Override
                     public void onCompleted(DeviceDeployRsp deviceDeployRsp) {

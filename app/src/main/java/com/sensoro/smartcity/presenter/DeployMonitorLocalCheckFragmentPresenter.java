@@ -6,6 +6,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.geocoder.GeocodeResult;
+import com.amap.api.services.geocoder.GeocodeSearch;
+import com.amap.api.services.geocoder.RegeocodeAddress;
+import com.amap.api.services.geocoder.RegeocodeQuery;
+import com.amap.api.services.geocoder.RegeocodeResult;
+import com.amap.api.services.geocoder.RegeocodeRoad;
+import com.amap.api.services.geocoder.StreetNumber;
 import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
 import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
 import com.sensoro.libbleserver.ble.connection.SensoroDeviceConnection;
@@ -51,6 +59,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -67,6 +76,8 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     private final HandlerDeployCheck checkHandler = new HandlerDeployCheck(Looper.getMainLooper());
     //forceReason: enum ["lonlat", "config", "signalQuality", "status"]
     private String tempForceReason;
+    private Integer tempStatus;
+    private String tempSignalQuality;
     private DeployAnalyzerModel deployAnalyzerModel;
 
     @Override
@@ -93,6 +104,62 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_failed));
         } else {
             getView().setSwitchSpecHintText(mActivity.getString(R.string.range) + minMaxValue[0] + "-" + minMaxValue[1]);
+        }
+        //获取一次临时的位置信息
+        GeocodeSearch geocoderSearch = new GeocodeSearch(mActivity);
+        geocoderSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
+            @Override
+            public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
+                try {
+                    RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
+                    StringBuilder stringBuilder = new StringBuilder();
+//        String subLoc = regeocodeAddress.getDistrict();// 区或县或县级市
+                    String ts = regeocodeAddress.getTownship();// 乡镇
+                    String thf = null;// 道路
+                    List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
+                    if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
+                        RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
+                        if (regeocodeRoad != null) {
+                            thf = regeocodeRoad.getName();
+                        }
+                    }
+                    String subthf = null;// 门牌号
+                    StreetNumber streetNumber = regeocodeAddress.getStreetNumber();
+                    if (streetNumber != null) {
+                        subthf = streetNumber.getNumber();
+                    }
+//        String fn = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
+//        if (subLoc != null) {
+//            stringBuffer.append(subLoc);
+//        }
+//        if (ts != null) {
+//            stringBuffer.append(ts);
+//        }
+                    if (thf != null) {
+                        stringBuilder.append(thf);
+                    }
+                    if (subthf != null) {
+                        stringBuilder.append(subthf);
+                    }
+                    String address = stringBuilder.toString();
+                    if (TextUtils.isEmpty(address)) {
+                        address = ts;
+                    }
+                    deployAnalyzerModel.address = address;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
+
+            }
+        });
+        if (deployAnalyzerModel.latLng.size() == 2) {
+            LatLonPoint lp = new LatLonPoint(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
+            RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
+            geocoderSearch.getFromLocationAsyn(query);
         }
     }
 
@@ -188,7 +255,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                 //地图信息
                 if (data instanceof DeployAnalyzerModel) {
                     deployAnalyzerModel = (DeployAnalyzerModel) data;
-                    getView().setDeployPosition(deployAnalyzerModel.latLng != null && deployAnalyzerModel.latLng.size() == 2);
+                    getView().setDeployPosition(deployAnalyzerModel.latLng.size() == 2);
                 }
                 getView().updateBtnStatus(canDoOneNextTest());
                 break;
@@ -279,6 +346,19 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         if (sensoroDeviceConnection != null) {
             sensoroDeviceConnection.disconnect();
         }
+        final Runnable configOvertime = new Runnable() {
+            @Override
+            public void run() {
+                if (isAttachedView()) {
+                    if (sensoroDeviceConnection != null) {
+                        sensoroDeviceConnection.disconnect();
+                    }
+                    if (onConfigInfoObserver != null) {
+                        onConfigInfoObserver.onOverTime(mActivity.getString(R.string.init_config_over_time));
+                    }
+                }
+            }
+        };
         try {
             sensoroDeviceConnection = new SensoroDeviceConnection(mActivity, BLE_DEVICE_SET.get(deployAnalyzerModel.sn).getMacAddress());
             //蓝牙连接回调
@@ -287,20 +367,6 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                 public void onConnectedSuccess(final BLEDevice bleDevice, int cmd) {
                     if (isAttachedView()) {
                         //连接成功后写命令超时
-                        final Runnable configOvertime = new Runnable() {
-                            @Override
-                            public void run() {
-                                if (isAttachedView()) {
-                                    if (sensoroDeviceConnection != null) {
-                                        sensoroDeviceConnection.disconnect();
-                                    }
-                                    if (onConfigInfoObserver != null) {
-                                        onConfigInfoObserver.onOverTime(mActivity.getString(R.string.init_config_over_time));
-                                    }
-                                }
-                            }
-                        };
-                        mHandler.postDelayed(configOvertime, 7 * 1000);
                         if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
                             //如果需要写频点信息 写入频点信息回调
                             final SensoroWriteCallback SignalWriteCallback = new SensoroWriteCallback() {
@@ -419,6 +485,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                 @Override
                 public void onConnectedFailure(int errorCode) {
                     if (isAttachedView()) {
+                        mHandler.removeCallbacks(configOvertime);
                         onConfigInfoObserver.onFailed(mActivity.getString(R.string.deploy_check_ble_connect_error));
                     }
                 }
@@ -429,8 +496,10 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                 }
             };
             sensoroDeviceConnection.connect(deployAnalyzerModel.blePassword, sensoroConnectionCallback);
+            mHandler.postDelayed(configOvertime, 15 * 1000);
         } catch (Exception e) {
             e.printStackTrace();
+            mHandler.removeCallbacks(configOvertime);
             onConfigInfoObserver.onFailed(mActivity.getString(R.string.unknown_error));
         }
     }
@@ -471,6 +540,8 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
     public void doForceUpload() {
         deployAnalyzerModel.forceReason = tempForceReason;
+        deployAnalyzerModel.currentSignalQuality = tempSignalQuality;
+        deployAnalyzerModel.currentStatus = tempStatus;
         goToNextStep();
     }
 
@@ -618,7 +689,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
      */
     public void goToNextStep() {
         if (mActivity instanceof DeployMonitorCheckActivity) {
-            mActivity.setDeployAnalyzerModel(deployAnalyzerModel);
+            ((DeployMonitorCheckActivity) mActivity).setDeployAnalyzerModel(deployAnalyzerModel);
             ((DeployMonitorCheckActivity) mActivity).setDeployMonitorStep(2);
         }
         getView().dismissDeployMonitorCheckDialogUtils();
@@ -632,9 +703,12 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         switch (deployAnalyzerModel.deployType) {
             //基站
             case TYPE_SCAN_DEPLOY_STATION:
-                // 开始检查操作并更新UI
-                getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE, false);
-                checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE);
+                // 基站
+                //改为直接跳过
+                goToNextStep();
+
+//                getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE, false);
+//                checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE);
                 break;
             case TYPE_SCAN_DEPLOY_DEVICE:
             case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
@@ -643,8 +717,10 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                     //白名单设备
                     case TYPE_SCAN_DEPLOY_WHITE_LIST:
                         // 开始检查操作并更新UI
-                        getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE, false);
-                        checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE);
+//                        getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE, false);
+//                        checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE);
+                        //改为直接跳过
+                        goToNextStep();
                         break;
                     case TYPE_SCAN_DEPLOY_WHITE_LIST_HAS_SIGNAL_CONFIG:
                         // 开始检查操作并更新UI
@@ -750,14 +826,17 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                         switch (state) {
                                             case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NONE:
                                                 tempForceReason = "signalQuality";
+                                                tempSignalQuality = "none";
                                                 getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, mActivity.getString(R.string.deploy_check_dialog_no_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
                                                 return;
                                             case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD:
                                                 tempForceReason = "signalQuality";
+                                                tempSignalQuality = "bad";
                                                 getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_BAD, mActivity.getString(R.string.deploy_check_dialog_quality_bad_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
                                                 return;
                                         }
                                         tempForceReason = "signalQuality";
+                                        tempSignalQuality = "none";
                                         getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, mActivity.getString(R.string.deploy_check_dialog_no_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
                                     }
                                 };
@@ -826,8 +905,11 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                tempForceReason = "status";
-                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_INTERNET, mActivity.getString(R.string.get_device_status_failed), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                tempForceReason = null;
+                // 获取不到当前状态是否强制上传
+                getView().toastShort(errorMsg);
+                getView().dismissDeployMonitorCheckDialogUtils();
+//                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_INTERNET, mActivity.getString(R.string.get_device_status_failed), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
             }
         });
     }
@@ -837,11 +919,13 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             switch (data.getData().getStatus()) {
                 case SENSOR_STATUS_ALARM:
                     tempForceReason = "status";
+                    tempStatus = data.getData().getStatus();
                     getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_ALARM,
                             mActivity.getString(R.string.device_is_alarm), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
                     break;
                 case SENSOR_STATUS_MALFUNCTION:
                     tempForceReason = "status";
+                    tempStatus = data.getData().getStatus();
                     getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_MALFUNCTION, mActivity.getString(R.string.device_is_malfunction), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
                     break;
                 default:
@@ -851,74 +935,88 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                     break;
             }
         } else {
-            tempForceReason = "status";
-            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_INTERNET, mActivity.getString(R.string.get_device_status_failed), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+            //状态错误
+            tempForceReason = null;
+            String errMsg;
+            if (AppUtils.isChineseLanguage()) {
+                errMsg = "似乎已断开与互联网的连接。";
+            } else {
+                errMsg = "It seems to have disconnected from the internet.";
+            }
+            getView().toastShort(errMsg);
+            getView().dismissDeployMonitorCheckDialogUtils();
+//            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_INTERNET, mActivity.getString(R.string.get_device_status_failed), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
 
         }
     }
 
     private void checkNearbyThree() {
-        HandlerDeployCheck.OnMessageDeal threeMsgDeal = new HandlerDeployCheck.OnMessageDeal() {
+//        HandlerDeployCheck.OnMessageDeal threeMsgDeal = new HandlerDeployCheck.OnMessageDeal() {
+//            @Override
+//            public void onNext() {
+//                if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
+//
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//                tempForceReason = "lonlat";
+//                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_FAIL, mActivity.getString(R.string.installation_test_not_nearby), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+//            }
+//        };
+//        checkHandler.removeAllMessage();
+//        checkHandler.init(1000, 10);
+//        checkHandler.dealMessage(2, threeMsgDeal);
+        //
+        checkHandler.removeAllMessage();
+        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_SUC, "", false);
+        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_START, "", false);
+        HandlerDeployCheck.OnMessageDeal signalMsgDeal = new HandlerDeployCheck.OnMessageDeal() {
             @Override
             public void onNext() {
-                if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
-                    checkHandler.removeAllMessage();
-                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_SUC, "", false);
-                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_START, "", false);
-                    HandlerDeployCheck.OnMessageDeal signalMsgDeal = new HandlerDeployCheck.OnMessageDeal() {
-                        @Override
-                        public void onNext() {
-                            int signalState = checkSignalState();
-                            switch (signalState) {
-                                case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD:
-                                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_SUC_GOOD, "", false);
-                                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_START, "", false);
-                                    checkHandler.removeAllMessage();
-                                    getDeviceRealStatus();
-                                    break;
-                                case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NORMAL:
-                                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_SUC_NORMAL, "", false);
-                                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_START, "", false);
-                                    checkHandler.removeAllMessage();
-                                    getDeviceRealStatus();
-                                    break;
-                            }
-
-                        }
-
-                        @Override
-                        public void onFinish() {
-                            int state = checkSignalState();
-                            switch (state) {
-                                case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NONE:
-                                    tempForceReason = "signalQuality";
-                                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, mActivity.getString(R.string.deploy_check_dialog_no_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
-                                    return;
-                                case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD:
-                                    tempForceReason = "signalQuality";
-                                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_BAD, mActivity.getString(R.string.deploy_check_dialog_quality_bad_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
-                                    return;
-                            }
-                            tempForceReason = "signalQuality";
-                            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, mActivity.getString(R.string.deploy_check_dialog_no_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
-
-                        }
-                    };
-                    checkHandler.init(1000, 10);
-                    checkHandler.dealMessage(3, signalMsgDeal);
-
+                int signalState = checkSignalState();
+                switch (signalState) {
+                    case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD:
+                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_SUC_GOOD, "", false);
+                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_START, "", false);
+                        checkHandler.removeAllMessage();
+                        getDeviceRealStatus();
+                        break;
+                    case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NORMAL:
+                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_SUC_NORMAL, "", false);
+                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_START, "", false);
+                        checkHandler.removeAllMessage();
+                        getDeviceRealStatus();
+                        break;
                 }
+
             }
 
             @Override
             public void onFinish() {
-                tempForceReason = "lonlat";
-                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_FAIL, mActivity.getString(R.string.installation_test_not_nearby), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                int state = checkSignalState();
+                switch (state) {
+                    case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NONE:
+                        tempForceReason = "signalQuality";
+                        tempSignalQuality = "none";
+                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, mActivity.getString(R.string.deploy_check_dialog_no_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                        return;
+                    case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD:
+                        tempForceReason = "signalQuality";
+                        tempSignalQuality = "bad";
+                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_BAD, mActivity.getString(R.string.deploy_check_dialog_quality_bad_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                        return;
+                }
+                tempForceReason = "signalQuality";
+                tempSignalQuality = "none";
+                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, mActivity.getString(R.string.deploy_check_dialog_no_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+
             }
         };
-        checkHandler.removeAllMessage();
         checkHandler.init(1000, 10);
-        checkHandler.dealMessage(2, threeMsgDeal);
+        checkHandler.dealMessage(3, signalMsgDeal);
 
     }
 
@@ -996,7 +1094,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
      *
      * @return
      */
-    public boolean canDoOneNextTest() {
+    private boolean canDoOneNextTest() {
         switch (deployAnalyzerModel.deployType) {
             //基站
             case TYPE_SCAN_DEPLOY_STATION:

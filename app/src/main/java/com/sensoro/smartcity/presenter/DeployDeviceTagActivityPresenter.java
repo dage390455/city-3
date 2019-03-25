@@ -67,14 +67,16 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
             getView().toastShort(mContext.getString(R.string.can_only_add_up_to_limit_labels));
         } else {
             if (!TextUtils.isEmpty(tag)) {
-                String trim = tag.trim();
-                if (mTagList.contains(trim)) {
-                    getView().toastShort(mContext.getString(R.string.label_cannot_be_repeated));
-                    return;
-                } else {
-                    mTagList.add(trim);
+                String trim = getTrim(tag);
+                if (!TextUtils.isEmpty(trim)) {
+                    if (mTagList.contains(trim)) {
+                        getView().toastShort(mContext.getString(R.string.label_cannot_be_repeated));
+                        return;
+                    } else {
+                        mTagList.add(trim);
+                    }
+                    getView().updateTags(mTagList);
                 }
-                getView().updateTags(mTagList);
             }
         }
         getView().dismissDialog();
@@ -86,14 +88,17 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
             getView().toastShort(mContext.getString(R.string.can_only_add_up_to_limit_labels));
         } else {
             if (!TextUtils.isEmpty(test)) {
-                String trim = test.trim();
-                if (mTagList.contains(trim)) {
-                    getView().toastShort(mContext.getString(R.string.label_cannot_be_repeated));
-                    return;
-                } else {
-                    mTagList.add(trim);
+                String trim = getTrim(test);
+                if (!TextUtils.isEmpty(trim)) {
+                    if (mTagList.contains(trim)) {
+                        getView().toastShort(mContext.getString(R.string.label_cannot_be_repeated));
+                        return;
+                    } else {
+                        mTagList.add(trim);
+                    }
+                    getView().updateTags(mTagList);
                 }
-                getView().updateTags(mTagList);
+
             }
         }
     }
@@ -126,11 +131,11 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
             oldHistoryList.addAll(Arrays.asList(oldText.split(",")));
         }
         if (mTagList.size() > 0) {
-            for (int i = mTagList.size()-1; i >= 0; i--) {
+            for (int i = mTagList.size() - 1; i >= 0; i--) {
                 if (oldHistoryList.contains(mTagList.get(i))) {
                     oldHistoryList.remove(mTagList.get(i));
                 }
-                oldHistoryList.add(0,mTagList.get(i));
+                oldHistoryList.add(0, mTagList.get(i));
             }
         }
         ArrayList<String> tempList = new ArrayList<>();
@@ -165,12 +170,14 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
             getView().toastShort(mContext.getString(R.string.please_set_the_label));
             return;
         }
-        String trim = text.trim();
-        if (mTagList.contains(trim)) {
-            getView().toastShort(mContext.getString(R.string.label_cannot_be_repeated));
-            return;
-        } else {
-            mTagList.set(position, text);
+        String trim = getTrim(text);
+        if (!TextUtils.isEmpty(trim)) {
+            if (mTagList.contains(trim)) {
+                getView().toastShort(mContext.getString(R.string.label_cannot_be_repeated));
+                return;
+            } else {
+                mTagList.set(position, text);
+            }
         }
         getView().updateTags(mTagList);
         getView().dismissDialog();
@@ -182,5 +189,16 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
         if (isAttachedView()) {
             getView().updateSearchHistory(mHistoryKeywords);
         }
+    }
+
+    private String getTrim(String text) {
+        text = text.trim();
+        while (text.startsWith("　")) {//这里判断是不是全角空格
+            text = text.substring(1, text.length()).trim();
+        }
+        while (text.endsWith("　")) {
+            text = text.substring(0, text.length() - 1).trim();
+        }
+        return text;
     }
 }

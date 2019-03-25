@@ -123,7 +123,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
                 String diameterStr = tvFgDeployLocalCheckWireDiameter.getText().toString();
                 String materialStr = tvFgDeployLocalCheckWireMaterial.getText().toString();
                 String enterValueStr = etFgDeployLocalCheckSwitchSpec.getText().toString();
-                mPresenter.handleCurrentValue(diameterStr,materialStr,enterValueStr);
+                mPresenter.handleCurrentValue(diameterStr, materialStr, enterValueStr);
             }
         });
         tvFgDeployLocalCheckWireMaterial.addTextChangedListener(new TextWatcher() {
@@ -142,7 +142,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
                 String diameterStr = tvFgDeployLocalCheckWireDiameter.getText().toString();
                 String materialStr = tvFgDeployLocalCheckWireMaterial.getText().toString();
                 String enterValueStr = etFgDeployLocalCheckSwitchSpec.getText().toString();
-                mPresenter.handleCurrentValue(diameterStr,materialStr,enterValueStr);
+                mPresenter.handleCurrentValue(diameterStr, materialStr, enterValueStr);
             }
         });
         tvFgDeployLocalCheckWireDiameter.addTextChangedListener(new TextWatcher() {
@@ -161,7 +161,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
                 String diameterStr = tvFgDeployLocalCheckWireDiameter.getText().toString();
                 String materialStr = tvFgDeployLocalCheckWireMaterial.getText().toString();
                 String enterValueStr = etFgDeployLocalCheckSwitchSpec.getText().toString();
-                mPresenter.handleCurrentValue(diameterStr,materialStr,enterValueStr);
+                mPresenter.handleCurrentValue(diameterStr, materialStr, enterValueStr);
             }
         });
     }
@@ -398,6 +398,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
                 deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
                 break;
             case DEVICE_CHECK_SIGNAL_START:
+                //对信号检测
                 deployMonitorCheckDialogUtils.startSignalStrengthLoading();
                 break;
             case DEVICE_CHECK_SIGNAL_SUC_GOOD:
@@ -450,6 +451,19 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
                 deployMonitorCheckDialogUtils.setForceUploadButtonVisible(hasForce);
                 break;
             case DEVICE_CHECK_ALL_SUC:
+                if (handler == null) {
+                    handler = new Handler();
+                }
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        deployMonitorCheckDialogUtils.dismiss();
+                        //TODO 直接成功
+                        mPresenter.goToNextStep();
+                    }
+                }, 500);
+                break;
+            default:
                 if (handler == null) {
                     handler = new Handler();
                 }
