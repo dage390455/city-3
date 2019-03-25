@@ -408,7 +408,7 @@ public class DeployMonitorCheckDialogUtils {
         switch (view.getId()) {
             case R.id.tv_deploy_check_dialog_test:
                 if (listener != null) {
-                    listener.onClickTest();
+                    listener.onClickTryReTest();
                 }
                 break;
             case R.id.tv_deploy_check_dialog_force_upload:
@@ -429,7 +429,7 @@ public class DeployMonitorCheckDialogUtils {
 
 
     public interface OnDeployCheckDialogListener {
-        void onClickTest();
+        void onClickTryReTest();
 
         void onClickForceUpload();
 

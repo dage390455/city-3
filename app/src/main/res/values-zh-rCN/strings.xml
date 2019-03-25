@@ -904,5 +904,6 @@
     <string name="deoloy_check_get_device_status_failed">获取失败</string>
     <string name="deploy_check_title_repair_instruction">修复说明</string>
     <string name="repair_instruction_obtain_failed">修复说明获取失败</string>
+    <string name="out_of_range">超出范围</string>
 
 </resources>

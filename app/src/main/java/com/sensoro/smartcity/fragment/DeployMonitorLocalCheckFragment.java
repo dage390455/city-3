@@ -28,11 +28,9 @@ import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.base.BaseFragment;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.DeoloyCheckPointConstants;
 import com.sensoro.smartcity.constant.DeployCheckStateEnum;
 import com.sensoro.smartcity.imainviews.IDeployMonitorLocalCheckFragmentView;
-import com.sensoro.smartcity.model.MaterialValueModel;
 import com.sensoro.smartcity.presenter.DeployMonitorLocalCheckFragmentPresenter;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.dialog.DeployMonitorCheckDialogUtils;
@@ -43,7 +41,6 @@ import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -123,7 +120,10 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
 
             @Override
             public void afterTextChanged(Editable s) {
-                getCurrentValue();
+                String diameterStr = tvFgDeployLocalCheckWireDiameter.getText().toString();
+                String materialStr = tvFgDeployLocalCheckWireMaterial.getText().toString();
+                String enterValueStr = etFgDeployLocalCheckSwitchSpec.getText().toString();
+                mPresenter.handleCurrentValue(diameterStr,materialStr,enterValueStr);
             }
         });
         tvFgDeployLocalCheckWireMaterial.addTextChangedListener(new TextWatcher() {
@@ -139,7 +139,10 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
 
             @Override
             public void afterTextChanged(Editable s) {
-                getCurrentValue();
+                String diameterStr = tvFgDeployLocalCheckWireDiameter.getText().toString();
+                String materialStr = tvFgDeployLocalCheckWireMaterial.getText().toString();
+                String enterValueStr = etFgDeployLocalCheckSwitchSpec.getText().toString();
+                mPresenter.handleCurrentValue(diameterStr,materialStr,enterValueStr);
             }
         });
         tvFgDeployLocalCheckWireDiameter.addTextChangedListener(new TextWatcher() {
@@ -155,7 +158,10 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
 
             @Override
             public void afterTextChanged(Editable s) {
-                getCurrentValue();
+                String diameterStr = tvFgDeployLocalCheckWireDiameter.getText().toString();
+                String materialStr = tvFgDeployLocalCheckWireMaterial.getText().toString();
+                String enterValueStr = etFgDeployLocalCheckSwitchSpec.getText().toString();
+                mPresenter.handleCurrentValue(diameterStr,materialStr,enterValueStr);
             }
         });
     }
@@ -285,40 +291,6 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
     @Override
     public void setDeployCheckTvConfigurationText(String text) {
         tvDeployLocalCheckCurrentValue.setText(text);
-    }
-
-    private void getCurrentValue() {
-        String diameterStr = tvFgDeployLocalCheckWireDiameter.getText().toString();
-        String materialStr = tvFgDeployLocalCheckWireMaterial.getText().toString();
-        String enterValueStr = etFgDeployLocalCheckSwitchSpec.getText().toString();
-        if (!TextUtils.isEmpty(diameterStr) && !mRootFragment.getString(R.string.deploy_check_please_select).equals(diameterStr) && !TextUtils.isEmpty(materialStr) && !TextUtils.isEmpty(enterValueStr)) {
-            try {
-                Integer inputValue = Integer.valueOf(enterValueStr);
-                int min = inputValue;
-                int material = 0;
-                int mapValue = inputValue;
-                double diameter = Double.parseDouble(diameterStr);
-                MaterialValueModel materialValueModel = Constants.materialValueMap.get(diameterStr);
-                if (materialValueModel != null) {
-                    if (getString(R.string.cu).equals(materialStr)) {
-                        material = 0;
-                        mapValue = materialValueModel.cuValue;
-                    } else if (getString(R.string.al).equals(materialStr)) {
-                        material = 1;
-                        mapValue = materialValueModel.alValue;
-                    }
-                    min = Math.min(inputValue, mapValue);
-                    tvDeployLocalCheckCurrentValue.setText(String.format(Locale.CHINESE, "%dA", min));
-                }
-                mPresenter.updateConfigSettingData(inputValue, material, diameter, min);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-                toastShort(getString(R.string.enter_the_correct_number_format));
-            }
-        } else {
-            tvDeployLocalCheckCurrentValue.setText("-");
-        }
-        updateBtnStatus(mPresenter.canDoOneNextTest());
     }
 
     @Override
@@ -502,6 +474,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_fg_deploy_local_button:
+                //
                 mPresenter.doCheckDeployNext();
                 break;
             case R.id.ll_fg_deploy_local_check_location:
@@ -578,8 +551,8 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
     }
 
     @Override
-    public void onClickTest() {
-        mPresenter.doCheckDeployTest();
+    public void onClickTryReTest() {
+        mPresenter.doCheckDeployNext();
     }
 
     @Override

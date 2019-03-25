@@ -1,13 +1,10 @@
 package com.sensoro.smartcity.presenter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
 import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
@@ -32,6 +29,7 @@ import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.EventData;
+import com.sensoro.smartcity.model.MaterialValueModel;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.RetryWithDelay;
@@ -46,7 +44,6 @@ import com.sensoro.smartcity.util.HandlerDeployCheck;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -54,6 +51,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -463,7 +461,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
     }
 
-    public void updateConfigSettingData(Integer inputValue, int material, double diameter, int min) {
+    private void updateConfigSettingData(Integer inputValue, int material, double diameter, int min) {
         deployAnalyzerModel.settingData = new DeployControlSettingData();
         deployAnalyzerModel.settingData.setSwitchSpec(min);
         deployAnalyzerModel.settingData.setWireDiameter(diameter);
@@ -486,6 +484,39 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             return null;
         }
         return configMergeType.getFixSpecificationUrl();
+    }
+
+    public void handleCurrentValue(String diameterStr, String materialStr, String enterValueStr) {
+
+        if (!TextUtils.isEmpty(diameterStr) && !mActivity.getString(R.string.deploy_check_please_select).equals(diameterStr) && !TextUtils.isEmpty(materialStr) && !TextUtils.isEmpty(enterValueStr)) {
+            try {
+                Integer inputValue = Integer.valueOf(enterValueStr);
+                int min = inputValue;
+                int material = 0;
+                int mapValue = inputValue;
+                double diameter = Double.parseDouble(diameterStr);
+                MaterialValueModel materialValueModel = Constants.materialValueMap.get(diameterStr);
+                if (materialValueModel != null) {
+                    if (mActivity.getString(R.string.cu).equals(materialStr)) {
+                        material = 0;
+                        mapValue = materialValueModel.cuValue;
+                    } else if (mActivity.getString(R.string.al).equals(materialStr)) {
+                        material = 1;
+                        mapValue = materialValueModel.alValue;
+                    }
+                    min = Math.min(inputValue, mapValue);
+
+                    getView().setDeployCheckTvConfigurationText(String.format(Locale.CHINESE, "%dA", min));
+                }
+                updateConfigSettingData(inputValue, material, diameter, min);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                getView().toastShort(mActivity.getString(R.string.enter_the_correct_number_format));
+            }
+        } else {
+            getView().setDeployCheckTvConfigurationText("-");
+        }
+        getView().updateBtnStatus(canDoOneNextTest());
     }
 
     public interface OnConfigInfoObserver {
@@ -513,7 +544,42 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
      */
     private boolean checkHasConfig() {
         DeployControlSettingData settingData = deployAnalyzerModel.settingData;
-        return settingData != null && settingData.getSwitchSpec() != null && settingData.getWireDiameter() != null && settingData.getWireMaterial() != null && settingData.getInputValue() != null;
+        if (settingData != null) {
+            Integer switchSpec = settingData.getSwitchSpec();
+            Integer inputValue = settingData.getInputValue();
+            return switchSpec != null && settingData.getWireDiameter() != null && settingData.getWireMaterial() != null && inputValue != null;
+        }
+        return false;
+    }
+
+    /**
+     * 检查初始配置是否符合逻辑
+     *
+     * @return
+     */
+    private boolean checkConfig() {
+        DeployControlSettingData settingData = deployAnalyzerModel.settingData;
+        if (settingData != null) {
+            Integer switchSpec = settingData.getSwitchSpec();
+            Integer inputValue = settingData.getInputValue();
+            int[] minMaxValue = DeployConfigurationAnalyzer.analyzeDeviceType(deployAnalyzerModel.deviceType);
+            if (minMaxValue != null) {
+                if (inputValue != null) {
+                    if (inputValue >= minMaxValue[0] && inputValue <= minMaxValue[1]) {
+                        if (switchSpec != null) {
+                            if (switchSpec >= minMaxValue[0]) {
+                                return true;
+                            } else {
+                                getView().toastShort(mActivity.getString(R.string.actual_overcurrent_threshold) + mActivity.getString(R.string.out_of_range) + "," + mActivity.getString(R.string.range) + minMaxValue[0] + "-" + minMaxValue[1]);
+                            }
+                        }
+                    } else {
+                        getView().toastShort(mActivity.getString(R.string.empty_open_rated_current_is_out_of_range) + "," + mActivity.getString(R.string.range) + minMaxValue[0] + "-" + minMaxValue[1]);
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 
@@ -545,13 +611,6 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     @Override
     public void onStop() {
         SensoroCityApplication.getInstance().bleDeviceManager.stopScan();
-    }
-
-    /**
-     * 重新测试
-     */
-    public void doCheckDeployTest() {
-        doCheckDeployNext();
     }
 
     /**
@@ -600,8 +659,10 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                         if (isFire) {
                             //做初始配置检查
                             //开始检查操作并更新UI
-                            getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_FOUR, false);
-                            checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_FOUR);
+                            if (checkConfig()) {
+                                getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_FOUR, false);
+                                checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_FOUR);
+                            }
                         } else {
                             if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
                                 //不做初始配置检查

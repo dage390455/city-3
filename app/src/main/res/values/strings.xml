@@ -912,4 +912,5 @@
     <string name="deoloy_check_get_device_status_failed">Acquisition failed</string>
     <string name="deploy_check_title_repair_instruction">Fix Description</string>
     <string name="repair_instruction_obtain_failed">Failed to get repair instructions</string>
+    <string name="out_of_range">out of range</string>
 </resources>
