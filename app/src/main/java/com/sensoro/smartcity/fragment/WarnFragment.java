@@ -32,6 +32,7 @@ import com.sensoro.smartcity.adapter.MainWarnFragRcContentAdapter;
 import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IWarnFragmentView;
+import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.presenter.WarnFragmentPresenter;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.util.AppUtils;
@@ -42,7 +43,7 @@ import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
+import com.sensoro.smartcity.widget.popup.AlarmPopUtilsTest;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
@@ -55,7 +56,7 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPresenter> implements
-        IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener,TipOperationDialogUtils.TipDialogUtilsClickListener {
+        IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.fg_main_top_search_title_root)
     LinearLayout fgMainWarnTitleRoot;
     @BindView(R.id.fg_main_top_search_frame_search)
@@ -93,7 +94,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     private MainWarnFragRcContentAdapter mRcContentAdapter;
     private boolean isShowDialog = true;
     private ProgressUtils mProgressUtils;
-    private AlarmPopUtils mAlarmPopUtils;
+    private AlarmPopUtilsTest mAlarmPopUtils;
     private Animation returnTopAnimation;
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private TipOperationDialogUtils historyClearDialog;
@@ -108,7 +109,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     @SuppressLint("ClickableViewAccessibility")
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
-        mAlarmPopUtils = new AlarmPopUtils(mRootFragment.getActivity());
+        mAlarmPopUtils = new AlarmPopUtilsTest(mRootFragment.getActivity());
         mAlarmPopUtils.setOnPopupCallbackListener(mPresenter);
         returnTopAnimation = AnimationUtils.loadAnimation(mRootFragment.getContext(), R.anim.return_top_in_anim);
         mReturnTopImageView.setAnimation(returnTopAnimation);
@@ -175,9 +176,9 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     private void initClearHistoryDialog() {
         historyClearDialog = new TipOperationDialogUtils(mRootFragment.getActivity(), true);
         historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
-        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
-        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
-        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record), R.color.c_a6a6a6);
+        historyClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear), getResources().getColor(R.color.c_a6a6a6));
         historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
@@ -465,6 +466,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
                 break;
         }
     }
+
     @Override
     public void cancelSearchData() {
         doCancelSearch();
@@ -498,6 +500,11 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     @Override
     public void showAlarmPopupView() {
         mAlarmPopUtils.show();
+    }
+
+    @Override
+    public void showAlarmPopupView(AlarmPopupModel alarmPopupModel) {
+        mAlarmPopUtils.show(alarmPopupModel);
     }
 
     @Override

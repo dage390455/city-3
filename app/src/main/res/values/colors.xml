@@ -100,5 +100,7 @@
     <color name="c_fde4e4">#FDE4E4</color>
     <color name="c_4dffffff">#66FFFFFF</color>
     <color name="c_03ffffff">#33FFFFFF</color>
+    <color name="color_alarm_pup_red">#FFF35A58</color>
+
 
 </resources>

@@ -35,6 +35,7 @@ import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceStatusRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 import com.sensoro.smartcity.server.response.DeviceUpdateFirmwareDataRsp;
+import com.sensoro.smartcity.server.response.DevicesAlarmPopupConfigRsp;
 import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskExceptionDeviceRsp;
@@ -1566,6 +1567,17 @@ public class RetrofitServiceHelper {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    /**
+     * 获取预警确认弹窗的配置文件
+     *
+     * @return
+     */
+    public Observable<DevicesAlarmPopupConfigRsp> getDevicesAlarmPopupConfig() {
+        Observable<DevicesAlarmPopupConfigRsp> devicesAlarmPopupConfig = retrofitService.getDevicesAlarmPopupConfig();
+        RxApiManager.getInstance().add("getDevicesAlarmPopupConfig", devicesAlarmPopupConfig.subscribe());
+        return devicesAlarmPopupConfig;
     }
 
 

@@ -13,25 +13,28 @@ ext.junitVersion = '4.12'
 allprojects {
     buildscript {
         repositories {
+            mavenCentral()
+            maven { url "https://jitpack.io" }
+            maven { url 'https://maven.google.com' }
             google()
             jcenter()
-            maven { url "https://jitpack.io" }
-            mavenCentral()
         }
     }
     repositories {
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+        maven { url 'https://maven.google.com' }
         google()
         jcenter()
-        maven { url "https://jitpack.io" }
-        mavenCentral()
     }
 }
 buildscript {
     repositories {
+        mavenCentral()
+        maven { url 'https://maven.google.com' }
+        maven { url "https://jitpack.io" }
         google()
         jcenter()
-        mavenCentral()
-        maven { url "https://jitpack.io" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.3.2'
