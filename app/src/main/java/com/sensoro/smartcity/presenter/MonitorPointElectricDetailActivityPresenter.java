@@ -69,14 +69,12 @@ import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
-import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.smartcity.server.response.MonitorPointOperationRequestRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.DateUtil;
-import com.sensoro.smartcity.util.ImageFactory;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
@@ -92,7 +90,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -342,19 +339,25 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     private ArrayList<TaskOptionModel> getOptionModelList(List<String> taskOptions, Map<String, String> taskFirmwareVersion,
                                                           HashMap<String, TaskOptionModel> taskOptionModelMap) {
         ArrayList<TaskOptionModel> taskOptionModelList = new ArrayList<>();
-        if (TextUtils.isEmpty(bleUpdateModel.currentFirmVersion)) {
-            for (String string : taskOptions) {
-                TaskOptionModel taskOptionModel = taskOptionModelMap.get(string);
-                if (taskOptionModel != null) {
-                    if (!taskFirmwareVersion.containsKey(taskOptionModel.id)) {
-                        taskOptionModelList.add(taskOptionModel);
+        if (taskOptions != null && taskOptions.size() > 0) {
+            if (TextUtils.isEmpty(bleUpdateModel.currentFirmVersion)) {
+                for (String string : taskOptions) {
+                    TaskOptionModel taskOptionModel = taskOptionModelMap.get(string);
+                    if (taskOptionModel != null) {
+                        if (taskFirmwareVersion != null) {
+                            if (!taskFirmwareVersion.containsKey(taskOptionModel.id)) {
+                                taskOptionModelList.add(taskOptionModel);
+                            }
+                        } else {
+                            taskOptionModelList.add(taskOptionModel);
+                        }
+
                     }
                 }
-            }
-            return taskOptionModelList;
-        }else{
-            if (taskOptions != null && taskOptions.size() > 0) {
-                if(taskFirmwareVersion != null && taskFirmwareVersion.size() > 0){
+                return taskOptionModelList;
+
+            } else {
+                if (taskFirmwareVersion != null && taskFirmwareVersion.size() > 0) {
                     for (String string : taskOptions) {
                         TaskOptionModel taskOptionModel = taskOptionModelMap.get(string);
                         if (taskOptionModel != null) {
@@ -362,37 +365,35 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                 String version = taskFirmwareVersion.get(taskOptionModel.id);
                                 if (TextUtils.isEmpty(version) || TextUtils.isEmpty(version.trim())) {
                                     taskOptionModelList.add(taskOptionModel);
-                                }else{
+                                } else {
                                     String[] split = version.trim().split("~");
-                                    if(split.length == 1 && WidgetUtil.isContainVersion(split[0],bleUpdateModel.currentFirmVersion)){
+                                    if (split.length == 1 && WidgetUtil.isContainVersion(split[0], bleUpdateModel.currentFirmVersion)) {
                                         taskOptionModelList.add(taskOptionModel);
-                                    }else if(split.length > 1 && WidgetUtil.isContainVersion(split[0],bleUpdateModel.currentFirmVersion)
-                                            && WidgetUtil.isNewVersion(bleUpdateModel.currentFirmVersion,split[1])){
+                                    } else if (split.length > 1 && WidgetUtil.isContainVersion(split[0], bleUpdateModel.currentFirmVersion)
+                                            && WidgetUtil.isNewVersion(bleUpdateModel.currentFirmVersion, split[1])) {
                                         taskOptionModelList.add(taskOptionModel);
                                     }
                                 }
-                            }else{
+                            } else {
                                 taskOptionModelList.add(taskOptionModel);
                             }
                         }
                     }
                     return taskOptionModelList;
-                }else{
+                } else {
                     //没有版本限制,所有的都加进去
                     for (String string : taskOptions) {
                         TaskOptionModel taskOptionModel = taskOptionModelMap.get(string);
-                        if(taskOptionModel != null){
+                        if (taskOptionModel != null) {
                             taskOptionModelList.add(taskOptionModel);
                         }
                     }
                     return taskOptionModelList;
                 }
 
-            } else{
-                return null;
             }
         }
-
+        return null;
 
     }
 
