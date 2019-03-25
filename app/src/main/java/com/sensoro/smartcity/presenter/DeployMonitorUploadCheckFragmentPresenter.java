@@ -104,6 +104,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                     getView().setNameAddressText(deployAnalyzerModel.nameAndAddress);
                     getView().setUploadBtnStatus(true);
                 }
+                getView().setDeployDeviceType(mActivity.getString(R.string.station));
                 break;
             case TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
@@ -126,18 +127,18 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
             default:
                 break;
         }
-        String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType);
-        getView().setDeployDeviceType(deviceTypeName);
-        if (!AppUtils.isChineseLanguage()) {
-            //TODO 英文版控制不显示小程序账号
-            deployAnalyzerModel.weChatAccount = null;
-        }
     }
 
     private void echoDeviceInfo() {
         getView().setDeviceSn(mActivity.getString(R.string.device_number) + deployAnalyzerModel.sn);
         if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
             getView().setNameAddressText(deployAnalyzerModel.nameAndAddress);
+        }
+        String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType);
+        getView().setDeployDeviceType(deviceTypeName);
+        if (!AppUtils.isChineseLanguage()) {
+            //TODO 英文版控制不显示小程序账号
+            deployAnalyzerModel.weChatAccount = null;
         }
         getView().updateContactData(deployAnalyzerModel.deployContactModelList);
         getView().updateTagsData(deployAnalyzerModel.tagList);
