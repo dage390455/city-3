@@ -1470,6 +1470,26 @@ public class WidgetUtil {
         }
     }
 
+    public static boolean isContainVersion(String oldVersion, String newVersion) {
+        if (TextUtils.isEmpty(oldVersion) && TextUtils.isEmpty(newVersion)) {
+            return false;
+        } else {
+            if (TextUtils.isEmpty(oldVersion)) {
+                return !TextUtils.isEmpty(newVersion);
+            } else {
+                if (TextUtils.isEmpty(newVersion)) {
+                    return false;
+                } else {
+                    try {
+                        return compareVersion(newVersion, oldVersion) >= 0;
+                    } catch (Exception e) {
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * 版本号比较
      *

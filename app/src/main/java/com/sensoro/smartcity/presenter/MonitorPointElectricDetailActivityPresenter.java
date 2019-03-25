@@ -56,7 +56,6 @@ import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeployControlSettingData;
-import com.sensoro.smartcity.server.bean.DeployDeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
 import com.sensoro.smartcity.server.bean.DeviceUpdateFirmwareData;
@@ -77,6 +76,7 @@ import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.ImageFactory;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
@@ -186,7 +186,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             typeName = mergeTypeStyles.getName();
         }
         getView().setDeviceTypeName(typeName);
-        refreshOperationStatus();
+
         List<String> deployPics = mDeviceInfo.getDeployPics();
         if (deployPics != null && deployPics.size() > 0) {
             ArrayList<ScenesData> list = new ArrayList<>();
@@ -292,10 +292,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         } else {
             getView().setUpdateTime(DateUtil.getStrTimeTodayByDevice(mContext, updatedTime));
         }
-        String tags[] = mDeviceInfo.getTags();
-        if (tags != null && tags.length > 0) {
-            List<String> list = Arrays.asList(tags);
-            getView().updateTags(list);
+        List<String> tags = mDeviceInfo.getTags();
+        if (tags != null && tags.size() > 0) {
+            getView().updateTags(tags);
 
         }
         Map<String, SensorStruct> sensoroDetails = mDeviceInfo.getSensoroDetails();
@@ -322,31 +321,86 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(mDeviceInfo.getDeviceType());
         if (configDeviceType != null) {
             List<String> taskOptions = configDeviceType.getTaskOptions();
-            if (taskOptions != null && taskOptions.size() > 0) {
-                ArrayList<TaskOptionModel> taskOptionModelList = new ArrayList<>();
-                for (String string : taskOptions) {
-                    TaskOptionModel taskOptionModel = taskOptionModelMap.get(string);
-                    if (taskOptionModel != null) {
-                        taskOptionModelList.add(taskOptionModel);
-                    }
-                }
+            Map<String, String> taskFirmwareVersion = configDeviceType.getTaskFirmwareVersion();
+
+            ArrayList<TaskOptionModel> optionModelList = getOptionModelList(taskOptions, taskFirmwareVersion, taskOptionModelMap);
+            if (optionModelList != null) {
                 getView().setDeviceOperationVisible(true);
-                getView().updateTaskOptionModelAdapter(taskOptionModelList);
+                getView().updateTaskOptionModelAdapter(optionModelList);
             } else {
                 getView().setDeviceOperationVisible(false);
             }
         }
-        if (status == Constants.SENSOR_STATUS_ALARM || status == Constants.SENSOR_STATUS_MALFUNCTION || PreferencesHelper.getInstance().getUserData().hasDeviceFirmwareUpdate || PreferencesHelper.getInstance().getUserData().hasDeviceDemoMode) {
+        if (status == Constants.SENSOR_STATUS_ALARM || status == Constants.SENSOR_STATUS_MALFUNCTION
+                || PreferencesHelper.getInstance().getUserData().hasDeviceFirmwareUpdate
+                || PreferencesHelper.getInstance().getUserData().hasDeviceDemoMode) {
             mHandler.removeCallbacks(bleRunnable);
             mHandler.post(bleRunnable);
         }
     }
 
+    private ArrayList<TaskOptionModel> getOptionModelList(List<String> taskOptions, Map<String, String> taskFirmwareVersion,
+                                                          HashMap<String, TaskOptionModel> taskOptionModelMap) {
+        ArrayList<TaskOptionModel> taskOptionModelList = new ArrayList<>();
+        if (TextUtils.isEmpty(bleUpdateModel.currentFirmVersion)) {
+            for (String string : taskOptions) {
+                TaskOptionModel taskOptionModel = taskOptionModelMap.get(string);
+                if (taskOptionModel != null) {
+                    if (!taskFirmwareVersion.containsKey(taskOptionModel.id)) {
+                        taskOptionModelList.add(taskOptionModel);
+                    }
+                }
+            }
+            return taskOptionModelList;
+        }else{
+            if (taskOptions != null && taskOptions.size() > 0) {
+                if(taskFirmwareVersion != null && taskFirmwareVersion.size() > 0){
+                    for (String string : taskOptions) {
+                        TaskOptionModel taskOptionModel = taskOptionModelMap.get(string);
+                        if (taskOptionModel != null) {
+                            if (taskFirmwareVersion.containsKey(taskOptionModel.id)) {
+                                String version = taskFirmwareVersion.get(taskOptionModel.id);
+                                if (TextUtils.isEmpty(version) || TextUtils.isEmpty(version.trim())) {
+                                    taskOptionModelList.add(taskOptionModel);
+                                }else{
+                                    String[] split = version.trim().split("~");
+                                    if(split.length == 1 && WidgetUtil.isContainVersion(split[0],bleUpdateModel.currentFirmVersion)){
+                                        taskOptionModelList.add(taskOptionModel);
+                                    }else if(split.length > 1 && WidgetUtil.isContainVersion(split[0],bleUpdateModel.currentFirmVersion)
+                                            && WidgetUtil.isNewVersion(bleUpdateModel.currentFirmVersion,split[1])){
+                                        taskOptionModelList.add(taskOptionModel);
+                                    }
+                                }
+                            }else{
+                                taskOptionModelList.add(taskOptionModel);
+                            }
+                        }
+                    }
+                    return taskOptionModelList;
+                }else{
+                    //没有版本限制,所有的都加进去
+                    for (String string : taskOptions) {
+                        TaskOptionModel taskOptionModel = taskOptionModelMap.get(string);
+                        if(taskOptionModel != null){
+                            taskOptionModelList.add(taskOptionModel);
+                        }
+                    }
+                    return taskOptionModelList;
+                }
+
+            } else{
+                return null;
+            }
+        }
+
+
+    }
+
     private void freshLocationDeviceInfo() {
-        double[] lonlat = mDeviceInfo.getLonlat();
+        List<Double> lonlat = mDeviceInfo.getLonlat();
         try {
-            double v = lonlat[1];
-            double v1 = lonlat[0];
+            double v = lonlat.get(1);
+            double v1 = lonlat.get(0);
             if (v == 0 || v1 == 0) {
                 getView().setDeviceLocation(mContext.getString(R.string.not_positioned), false);
                 getView().setDeviceLocationTextColor(R.color.c_a6a6a6);
@@ -364,32 +418,33 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     private void requestDeviceRecentLog() {
         String sn = mDeviceInfo.getSn();
         getView().showProgressDialog();
+        requestBlePassword();
         //合并请求
-        RetrofitServiceHelper.getInstance().getDeviceDetailInfoList(sn, null, 1).subscribeOn(Schedulers.io()).observeOn
-                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
-            @Override
-            public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
-                if (deviceInfoListRsp.getData().size() > 0) {
-                    mDeviceInfo = deviceInfoListRsp.getData().get(0);
-                }
-                requestBlePassword();
-                freshLocationDeviceInfo();
-                handleDeployInfo();
-                handleDeviceModeInfo();
-                freshTopData();
-                handleDeviceInfoAdapter();
-                getView().dismissProgressDialog();
-            }
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-                requestBlePassword();
-                handleDeployInfo();
-                handleDeviceModeInfo();
-                getView().dismissProgressDialog();
-                getView().toastShort(errorMsg);
-            }
-        });
+//        RetrofitServiceHelper.getInstance().getDeviceDetailInfoList(sn, null, 1).subscribeOn(Schedulers.io()).observeOn
+//                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
+//            @Override
+//            public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+//                if (deviceInfoListRsp.getData().size() > 0) {
+//                    mDeviceInfo = deviceInfoListRsp.getData().get(0);
+//                }
+//                requestBlePassword();
+//                freshLocationDeviceInfo();
+//                handleDeployInfo();
+//                handleDeviceModeInfo();
+//                freshTopData();
+//                handleDeviceInfoAdapter();
+//                getView().dismissProgressDialog();
+//            }
+//
+//            @Override
+//            public void onErrorMsg(int errorCode, String errorMsg) {
+//                requestBlePassword();
+//                handleDeployInfo();
+//                handleDeviceModeInfo();
+//                getView().dismissProgressDialog();
+//                getView().toastShort(errorMsg);
+//            }
+//        });
     }
 
     private void handleDeviceModeInfo() {
@@ -481,8 +536,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 (Schedulers.io()).flatMap(new Func1<DeployDeviceDetailRsp, Observable<DeviceUpdateFirmwareDataRsp>>() {
             @Override
             public Observable<DeviceUpdateFirmwareDataRsp> call(DeployDeviceDetailRsp deployDeviceDetailRsp) {
-                DeployDeviceInfo data = deployDeviceDetailRsp.getData();
+                DeviceInfo data = deployDeviceDetailRsp.getData();
                 if (data != null) {
+                    mDeviceInfo = data;
                     bleUpdateModel.blePassword = data.getBlePassword();
                     bleUpdateModel.currentFirmVersion = data.getFirmwareVersion();
                     bleUpdateModel.band = data.getBand();
@@ -517,12 +573,31 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
                     }
                 }
+                refreshOperationStatus();
                 freshDeviceUpdateVersionInfo();
+
+                freshLocationDeviceInfo();
+                handleDeployInfo();
+                handleDeviceModeInfo();
+                freshTopData();
+                handleDeviceInfoAdapter();
+                getView().dismissProgressDialog();
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
+                refreshOperationStatus();
                 freshDeviceUpdateVersionInfo();
+
+                if (mDeviceInfo != null) {
+                    freshLocationDeviceInfo();
+                    handleDeployInfo();
+                    handleDeviceModeInfo();
+                    freshTopData();
+                    handleDeviceInfoAdapter();
+                    getView().dismissProgressDialog();
+                }
+
             }
         });
     }
@@ -1172,10 +1247,10 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     }
 
     public void doNavigation() {
-        double[] lonlat = mDeviceInfo.getLonlat();
-        if (lonlat.length == 2) {
-            double v = lonlat[1];
-            double v1 = lonlat[0];
+        List<Double> lonlat = mDeviceInfo.getLonlat();
+        if (lonlat.size() == 2) {
+            double v = lonlat.get(1);
+            double v1 = lonlat.get(0);
             if (v == 0 || v1 == 0) {
                 getView().toastShort(mContext.getString(R.string.location_information_not_set));
                 return;

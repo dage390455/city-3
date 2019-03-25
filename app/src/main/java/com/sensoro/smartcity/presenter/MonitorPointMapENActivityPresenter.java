@@ -42,6 +42,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.List;
+
 public class MonitorPointMapENActivityPresenter extends BasePresenter<IMonitorPointMapENActivityView> implements Constants, IOnCreate, OnMapReadyCallback, MapboxMap.InfoWindowAdapter {
 
     private Activity mContext;
@@ -83,9 +85,10 @@ public class MonitorPointMapENActivityPresenter extends BasePresenter<IMonitorPo
     }
 
     private boolean changeLonLat() {
-        currentLonlat = mDeviceInfo.getLonlat();
-        if (currentLonlat != null && currentLonlat.length == 2) {
-            currentLonlat = GPSUtil.gcj02_To_Gps84(currentLonlat[1], currentLonlat[0]);
+        List<Double> lonlatList = mDeviceInfo.getLonlat();
+
+        if (lonlatList != null && lonlatList.size() == 2) {
+            currentLonlat = GPSUtil.gcj02_To_Gps84(lonlatList.get(1), lonlatList.get(0));
             return true;
         }
         return false;
@@ -158,10 +161,10 @@ public class MonitorPointMapENActivityPresenter extends BasePresenter<IMonitorPo
             deployContactModel.name = contact;
             deployAnalyzerModel.deployContactModelList.add(deployContactModel);
         }
-        double[] lonlat = mDeviceInfo.getLonlat();
-        if (lonlat != null && lonlat.length == 2) {
-            deployAnalyzerModel.latLng.add(lonlat[0]);
-            deployAnalyzerModel.latLng.add(lonlat[1]);
+        List<Double> lonlat = mDeviceInfo.getLonlat();
+        if (lonlat != null && lonlat.size() == 2) {
+            deployAnalyzerModel.latLng.add(lonlat.get(0));
+            deployAnalyzerModel.latLng.add(lonlat.get(1));
         }
         deployAnalyzerModel.updatedTime = mDeviceInfo.getUpdatedTime();
         deployAnalyzerModel.signal = mDeviceInfo.getSignal();

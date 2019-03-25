@@ -23,10 +23,10 @@ public class DeviceInfo implements Serializable, Comparable {
     private String deviceType;
     private long updatedTime;
     private long createTime;
-    private double lonlat[];
+    private List<Double> lonlat;
     private String sensorTypes[];
     private int status;
-    private String tags[];
+    private List<String> tags;
     private SensorInfo sensorData;
     private Integer interval;
     private int alarmStatus;
@@ -49,6 +49,25 @@ public class DeviceInfo implements Serializable, Comparable {
     private DeployControlSettingData config;
     private Integer demoMode;
 
+
+    private String appId;
+    private String hardwareVersion;
+    private String msgId;
+    private boolean entityNameExist;
+    private long relationTime;
+    private OtherBean other;
+    private ErrorBean error;
+    private boolean selfCheckStatus;
+    private Integer malfunctionStatus;
+    private String _updatedTime;
+    private String band;
+    private String blePassword;
+    private List<?> hitsRecords;
+    private List<?> malfunctionRecords;
+    private List<Integer> channelMask;
+    private String wxPhone;
+    private boolean notOwn;
+    private String firmwareVersion;
 
     public boolean isDeployFlag() {
         return deployFlag;
@@ -152,11 +171,11 @@ public class DeviceInfo implements Serializable, Comparable {
         this.createTime = createTime;
     }
 
-    public double[] getLonlat() {
+    public List<Double> getLonlat() {
         return lonlat;
     }
 
-    public void setLonlat(double[] lonlat) {
+    public void setLonlat(List<Double> lonlat) {
         this.lonlat = lonlat;
     }
 
@@ -168,11 +187,11 @@ public class DeviceInfo implements Serializable, Comparable {
         this.sensorTypes = sensorTypes;
     }
 
-    public String[] getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(String[] tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 
@@ -402,8 +421,8 @@ public class DeviceInfo implements Serializable, Comparable {
             if (interval != null) {
                 this.interval = interval;
             }
-            double[] lonlat = deviceInfo.getLonlat();
-            if (lonlat != null && lonlat.length == 2) {
+            List<Double> lonlat = deviceInfo.getLonlat();
+            if (lonlat != null && lonlat.size() == 2) {
                 this.lonlat = lonlat;
             }
             String name = deviceInfo.getName();
@@ -422,7 +441,7 @@ public class DeviceInfo implements Serializable, Comparable {
             if (!TextUtils.isEmpty(signal)) {
                 this.signal = signal;
             }
-            String[] tags = deviceInfo.getTags();
+            List<String> tags = deviceInfo.getTags();
             if (tags != null) {
                 this.tags = tags;
             }
@@ -464,5 +483,182 @@ public class DeviceInfo implements Serializable, Comparable {
 
     public void setDemoMode(Integer demoMode) {
         this.demoMode = demoMode;
+    }
+
+    public String getOwners() {
+        return owners;
+    }
+
+    public void setOwners(String owners) {
+        this.owners = owners;
+    }
+
+    private String owners;
+
+    public void setInterval(Integer interval) {
+        this.interval = interval;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public String getHardwareVersion() {
+        return hardwareVersion;
+    }
+
+    public void setHardwareVersion(String hardwareVersion) {
+        this.hardwareVersion = hardwareVersion;
+    }
+
+    public String getMsgId() {
+        return msgId;
+    }
+
+    public void setMsgId(String msgId) {
+        this.msgId = msgId;
+    }
+
+    public boolean isEntityNameExist() {
+        return entityNameExist;
+    }
+
+    public void setEntityNameExist(boolean entityNameExist) {
+        this.entityNameExist = entityNameExist;
+    }
+
+    public long getRelationTime() {
+        return relationTime;
+    }
+
+    public void setRelationTime(long relationTime) {
+        this.relationTime = relationTime;
+    }
+
+    public OtherBean getOther() {
+        return other;
+    }
+
+    public void setOther(OtherBean other) {
+        this.other = other;
+    }
+
+    public ErrorBean getError() {
+        return error;
+    }
+
+    public void setError(ErrorBean error) {
+        this.error = error;
+    }
+
+    public boolean isSelfCheckStatus() {
+        return selfCheckStatus;
+    }
+
+    public void setSelfCheckStatus(boolean selfCheckStatus) {
+        this.selfCheckStatus = selfCheckStatus;
+    }
+
+    public Integer getMalfunctionStatus() {
+        return malfunctionStatus;
+    }
+
+    public void setMalfunctionStatus(Integer malfunctionStatus) {
+        this.malfunctionStatus = malfunctionStatus;
+    }
+
+    public String get_updatedTime() {
+        return _updatedTime;
+    }
+
+    public void set_updatedTime(String _updatedTime) {
+        this._updatedTime = _updatedTime;
+    }
+
+    public String getBand() {
+        return band;
+    }
+
+    public void setBand(String band) {
+        this.band = band;
+    }
+
+    public String getBlePassword() {
+        return blePassword;
+    }
+
+    public void setBlePassword(String blePassword) {
+        this.blePassword = blePassword;
+    }
+
+    public List<?> getHitsRecords() {
+        return hitsRecords;
+    }
+
+    public void setHitsRecords(List<?> hitsRecords) {
+        this.hitsRecords = hitsRecords;
+    }
+
+    public List<?> getMalfunctionRecords() {
+        return malfunctionRecords;
+    }
+
+    public void setMalfunctionRecords(List<?> malfunctionRecords) {
+        this.malfunctionRecords = malfunctionRecords;
+    }
+
+    public List<Integer> getChannelMask() {
+        return channelMask;
+    }
+
+    public void setChannelMask(List<Integer> channelMask) {
+        this.channelMask = channelMask;
+    }
+
+    public String getWxPhone() {
+        return wxPhone;
+    }
+
+    public void setWxPhone(String wxPhone) {
+        this.wxPhone = wxPhone;
+    }
+
+    public boolean isNotOwn() {
+        return notOwn;
+    }
+
+    public void setNotOwn(boolean notOwn) {
+        this.notOwn = notOwn;
+    }
+
+    public String getFirmwareVersion() {
+        return firmwareVersion;
+    }
+
+    public void setFirmwareVersion(String firmwareVersion) {
+        this.firmwareVersion = firmwareVersion;
+    }
+
+    public static class OtherBean implements Serializable{
+    }
+
+    public static class ErrorBean implements Serializable{
+        /**
+         * status : false
+         */
+
+        private boolean status;
+
+        public boolean isStatus() {
+            return status;
+        }
+
+        public void setStatus(boolean status) {
+            this.status = status;
+        }
     }
 }
