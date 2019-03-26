@@ -346,7 +346,7 @@ public class DeployAnalyzerUtils {
                             deployAnalyzerModel.status = deployStationInfo.getNormalStatus();
                             List<Double> lonlat = deployStationInfo.getLonlat();
                             deployAnalyzerModel.status = deployStationInfo.getNormalStatus();
-                            if (lonlat != null && lonlat.size() > 1 && lonlat.get(0) != 0 && lonlat.get(1) != 0) {
+                            if (lonlat != null && lonlat.size() == 2) {
                                 deployAnalyzerModel.latLng.clear();
                                 deployAnalyzerModel.latLng.addAll(lonlat);
                             }

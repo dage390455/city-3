@@ -145,7 +145,9 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                     if (TextUtils.isEmpty(address)) {
                         address = ts;
                     }
-                    deployAnalyzerModel.address = address;
+                    if(!TextUtils.isEmpty(address)){
+                        deployAnalyzerModel.address = address;
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -156,6 +158,8 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
             }
         });
+        //默认显示已定位
+        deployAnalyzerModel.address = mActivity.getString(R.string.positioned);
         if (deployAnalyzerModel.latLng.size() == 2) {
             LatLonPoint lp = new LatLonPoint(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
             RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);

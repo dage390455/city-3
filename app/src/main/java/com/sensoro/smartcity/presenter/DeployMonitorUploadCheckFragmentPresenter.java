@@ -105,6 +105,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                     getView().setUploadBtnStatus(true);
                 }
                 getView().setDeployDeviceType(mActivity.getString(R.string.station));
+                getView().updateTagsData(deployAnalyzerModel.tagList);
                 break;
             case TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署

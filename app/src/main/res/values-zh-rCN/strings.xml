@@ -692,7 +692,7 @@
     <string name="alarm_pop_misdescription">误报</string>
     <string name="alarm_pop_test_patrol">测试巡检</string>
     <string name="deploy_has_no_configuration_tip">请先配置安装现场空气开关的额定电流</string>
-    <string name="had_setting">已配置</string>
+    <string name="had_setting">配置成功</string>
     <string name="optional">选填</string>
     <string name="required">必填</string>
     <string name="deploy_device_detail_add_all_required">请补充完必填项后上传</string>
@@ -908,5 +908,10 @@
     <string name="deploy_check_title_step_1">安装检测</string>
     <string name="deploy_check_title_step_2">完善信息</string>
     <string name="deploy_check_title_step_3">部署结果</string>
+    <string name="deploy_check_record_force_tip">，本次部署为强制上传</string>
+    <string name="deploy_check_record_reason_nearby">设备不在附近</string>
+    <string name="deploy_check_record_reason_config">设备初始配置失败</string>
+    <string name="deploy_check_record_reason_signal">设备信号：</string>
+    <string name="deploy_check_record_reason_status">设备状态：</string>
 
 </resources>

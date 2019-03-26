@@ -139,7 +139,9 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
         if (TextUtils.isEmpty(address)) {
             address = ts;
         }
-        deployAnalyzerModel.address = address;
+        if (!TextUtils.isEmpty(address)) {
+            deployAnalyzerModel.address = address;
+        }
         try {
             LogUtils.loge("deployMapModel", "----" + deployAnalyzerModel.address);
         } catch (Throwable throwable) {
