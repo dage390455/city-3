@@ -32,7 +32,7 @@ public class TagDialogUtils implements View.OnClickListener {
         mDialogTvConfirm.setOnClickListener(this);
         mDialogTvCancel.setOnClickListener(this);
         mDialogImvClear.setOnClickListener(this);
-        mAddTagDialog = new CustomCornerDialog(activity,R.style.CustomCornerDialogStyle,view);
+        mAddTagDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view);
 //        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 //        builder.setView(view);
 //        builder.setCancelable(false);
@@ -72,12 +72,12 @@ public class TagDialogUtils implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.dialog_add_tag_tv_cancel:
-                AppUtils.dismissInputMethodManager(mActivity,mDialogEtInput);
+                AppUtils.dismissInputMethodManager(mActivity, mDialogEtInput);
                 dismissDialog();
                 break;
             case R.id.dialog_add_tag_tv_confirm:
                 if (mDialogEtInput != null) {
-                    AppUtils.dismissInputMethodManager(mActivity,mDialogEtInput);
+                    AppUtils.dismissInputMethodManager(mActivity, mDialogEtInput);
                     String tag = mDialogEtInput.getText().toString();
                     if (onTagDialogListener != null) {
                         onTagDialogListener.onConfirm(mType, tag, currentPosition);
@@ -106,6 +106,7 @@ public class TagDialogUtils implements View.OnClickListener {
         if (mAddTagDialog != null) {
             mType = DIALOG_TAG_ADD;
             mAddTagDialog.show();
+            mDialogEtInput.setCursorVisible(true);
         }
     }
 
@@ -117,6 +118,7 @@ public class TagDialogUtils implements View.OnClickListener {
             mDialogEtInput.setSelection(string.length());
             currentPosition = position;
             mAddTagDialog.show();
+            mDialogEtInput.setCursorVisible(true);
         }
 
     }

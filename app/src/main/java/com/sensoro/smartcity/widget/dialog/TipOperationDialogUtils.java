@@ -124,6 +124,8 @@ public class TipOperationDialogUtils {
         if (mDialog != null) {
             mEt.getText().clear();
             mDialog.show();
+            mEtDiameter.setCursorVisible(true);
+            mEt.setCursorVisible(true);
 //            WindowManager m = mDialog.getWindow().getWindowManager();
 //            Display d = m.getDefaultDisplay();
 //            WindowManager.LayoutParams p = mDialog.getWindow().getAttributes();
