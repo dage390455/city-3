@@ -664,7 +664,7 @@
     <string name="channel_mask_error_tip">在需要配置频点的情况下，未能获取频点信息</string>
     <string name="please_enter_a_valid_mobile_number">请输入有效手机号</string>
     <string name="enter_the_phone_number_used_to_look_device">填写后业主可在小程序查看该设备</string>
-    <string name="please_enter_the_mobile_phone_number_and_the_contracted_mobile_phone_number">输入的手机号请与小程序登录账号保持一致</string>
+    <string name="please_enter_the_mobile_phone_number_and_the_contracted_mobile_phone_number">填写后业主可在小程序查看该设备，同业主扫码签订合同同时使用的微信小程序的账号</string>
     <string name="title_edit">编辑</string>
     <string name="identification_number_failed">身份证识别失败：</string>
     <string name="contract_modified_success">修改成功</string>
@@ -905,5 +905,8 @@
     <string name="deploy_check_title_repair_instruction">修复说明</string>
     <string name="repair_instruction_obtain_failed">修复说明获取失败</string>
     <string name="out_of_range">超出范围</string>
+    <string name="deploy_check_title_step_1">安装检测</string>
+    <string name="deploy_check_title_step_2">完善信息</string>
+    <string name="deploy_check_title_step_3">部署结果</string>
 
 </resources>

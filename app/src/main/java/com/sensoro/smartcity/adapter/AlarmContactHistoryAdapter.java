@@ -3,7 +3,6 @@ package com.sensoro.smartcity.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +51,7 @@ public class AlarmContactHistoryAdapter extends RecyclerView.Adapter<AlarmContac
     @Override
     public void onBindViewHolder(AlarmContactHistoryHolder holder, final int position) {
         //一定要设置，因为是通用的，所以要设置这个
-        holder.itemAdapterTv.setBackground(mContext.getResources().getDrawable(R.drawable.shape_bg_solid_ee_full_corner));
+        holder.itemAdapterTv.setBackground(mContext.getResources().getDrawable(R.drawable.shape_bg_solid_e7_full_corner));
         String s = mList.get(position);
         if (!TextUtils.isEmpty(s)) {
             String[] split = s.split("#");

@@ -33,6 +33,7 @@
             android:paddingTop="3dp"
             android:paddingBottom="3dp"
             android:paddingRight="10dp"
+            android:visibility="gone"
             android:textColor="@color/white"
             android:textSize="12sp" />
         <ImageView

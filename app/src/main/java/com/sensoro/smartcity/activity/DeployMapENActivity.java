@@ -231,7 +231,7 @@ public class DeployMapENActivity extends BaseActivity<IDeployMapENActivityView, 
                 finishAc();
                 break;
             case R.id.bt_deploy_map_signal:
-                mPresenter.refreshSignal();
+//                mPresenter.refreshSignal();
                 break;
             case R.id.tv_deploy_map_save:
                 mPresenter.doSaveLocation();

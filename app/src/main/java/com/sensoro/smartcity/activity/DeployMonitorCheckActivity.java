@@ -60,7 +60,6 @@ public class DeployMonitorCheckActivity extends BaseActivity<IDeployMonitorCheck
     private void initView() {
         includeTextTitleTvTitle.setText(mActivity.getString(R.string.device_deployment));
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
-        includeLineDivider.setVisibility(View.GONE);
         mDeployMonitorLocalCheckFragment = new DeployMonitorLocalCheckFragment();
         mDeployMonitorUploadCheckFragment = new DeployMonitorUploadCheckFragment();
         setDeployMonitorStep(1);
