@@ -1,50 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    >
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp"
+    android:layout_gravity="center"
+    android:gravity="center_vertical"
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/item_deploy_adapter_ll_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/shape_bg_solid_ff_stroke_df_full_corner">
+        android:background="@drawable/shape_bg_solid_ff_stroke_df_full_corner"
+        android:orientation="horizontal"
+        android:layout_centerVertical="true"
+        android:visibility="gone">
+
         <TextView
             android:id="@+id/item_deploy_adapter_tv_tag_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:textColor="@color/c_252525"
             android:layout_gravity="center_vertical"
-            />
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:textColor="@color/c_252525"
+            android:textSize="12sp" />
+
         <ImageView
             android:id="@+id/item_deploy_adapter_imv_delete_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/delete_tag"
-            android:padding="8dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="12dp"
             android:contentDescription="@null"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="12dp"/>
+            android:padding="8dp"
+            android:src="@drawable/delete_tag" />
 
     </LinearLayout>
 
     <ImageView
         android:id="@+id/item_deploy_adapter_imv_add_tag"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:scaleType="fitXY"
-        android:layout_centerInParent="true"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerVertical="true"
         android:contentDescription="@null"
-        android:src="@drawable/add_tag"
+        android:scaleType="fitXY"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="24dp"
-        android:visibility="visible"/>
+        android:src="@drawable/add_tag"
+        android:visibility="visible" />
 
 </RelativeLayout>

@@ -913,4 +913,12 @@
     <string name="deploy_check_title_repair_instruction">Fix Description</string>
     <string name="repair_instruction_obtain_failed">Failed to get repair instructions</string>
     <string name="out_of_range">out of range</string>
+    <string name="deploy_check_title_step_1">Deploy Check</string>
+    <string name="deploy_check_title_step_2">Improve Info</string>
+    <string name="deploy_check_title_step_3">Deploy Result</string>
+    <string name="deploy_check_record_force_tip">,deploy this device forcibly</string>
+    <string name="deploy_check_record_reason_nearby">Device </string>
+    <string name="deploy_check_record_reason_config">Device is not nearby</string>
+    <string name="deploy_check_record_reason_signal">Device signal:</string>
+    <string name="deploy_check_record_reason_status">Device status:</string>
 </resources>

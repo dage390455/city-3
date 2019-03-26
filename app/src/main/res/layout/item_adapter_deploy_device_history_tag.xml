@@ -7,7 +7,7 @@
         android:id="@+id/item_adapter_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_bg_solid_ee_full_corner"
+        android:background="@drawable/shape_bg_solid_e7_full_corner"
         android:textSize="12sp"
         android:layout_marginStart="12dp"
         android:textColor="@color/c_252525"

@@ -73,7 +73,7 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
                 //巡检设备更换
             case TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
-                getView().setSignalVisible(true);
+                getView().setSignalVisible(false);
                 getView().refreshSignal(deployAnalyzerModel.updatedTime, deployAnalyzerModel.signal);
                 break;
             case TYPE_SCAN_LOGIN:

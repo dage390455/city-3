@@ -42,6 +42,8 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:background="@null"
+                android:cursorVisible="true"
+                android:textCursorDrawable="@drawable/my_cursor"
                 android:cropToPadding="true"
                 android:inputType="number"
                 android:padding="10dp"

@@ -59,29 +59,34 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
             getView().updateTagList(mDeployRecordInfo.getTags());
             getView().setDeployTime(DateUtil.getStrTime_ymd_hm_ss(mDeployRecordInfo.getCreatedTime()));
             String forceReason = mDeployRecordInfo.getForceReason();
+            String signalQuality = mDeployRecordInfo.getSignalQuality();
             if (TextUtils.isEmpty(forceReason)) {
                 getView().setForceDeployReason(null);
             } else {
                 String forceReasonStr = null;
                 switch (forceReason) {
                     case "lonlat":
-                        forceReasonStr = "设备" + mActivity.getString(R.string.no_near) + "，本次部署为强制上传";
+                        forceReasonStr = mActivity.getString(R.string.deploy_check_record_reason_nearby) + mActivity.getString(R.string.deploy_check_record_force_tip);
                         break;
                     case "config":
-                        forceReasonStr = "设备初始配置失败" + "，本次部署为强制部署";
+                        forceReasonStr = mActivity.getString(R.string.deploy_check_record_reason_nearby) + mActivity.getString(R.string.deploy_check_record_force_tip);
                         break;
                     case "signalQuality":
-                        forceReasonStr = "设备信号问题" + "，本次部署为强制部署";
+                        if ("bad".equals(signalQuality)) {
+                            forceReasonStr = mActivity.getString(R.string.deploy_check_record_reason_signal) + mActivity.getString(R.string.s_bad) + mActivity.getString(R.string.deploy_check_record_force_tip);
+                        } else {
+                            forceReasonStr = mActivity.getString(R.string.deploy_check_record_reason_signal) + mActivity.getString(R.string.s_none) + mActivity.getString(R.string.deploy_check_record_force_tip);
+                        }
                         break;
                     case "status":
                         Integer status = mDeployRecordInfo.getStatus();
                         if (status != null) {
                             switch (status) {
                                 case SENSOR_STATUS_ALARM:
-                                    forceReasonStr = "设备预警" + "，本次部署为强制部署";
+                                    forceReasonStr = mActivity.getString(R.string.deploy_check_record_reason_status) + mActivity.getString(R.string.status_alarm_true) + mActivity.getString(R.string.deploy_check_record_force_tip);
                                     break;
                                 case SENSOR_STATUS_MALFUNCTION:
-                                    forceReasonStr = "设备故障" + "，本次部署为强制部署";
+                                    forceReasonStr = mActivity.getString(R.string.deploy_check_record_reason_status) + mActivity.getString(R.string.status_malfunction) + mActivity.getString(R.string.deploy_check_record_force_tip);
                                     break;
                                 case SENSOR_STATUS_NORMAL:
                                 case SENSOR_STATUS_LOST:
@@ -115,7 +120,7 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
             } else {
                 getView().setPositionStatus(0);
             }
-            getView().refreshSingle(mDeployRecordInfo.getSignalQuality());
+            getView().refreshSingle(signalQuality);
             String wxPhone = mDeployRecordInfo.getWxPhone();
             if (!TextUtils.isEmpty(wxPhone)) {
                 getView().seDeployWeChat(wxPhone);

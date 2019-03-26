@@ -169,7 +169,7 @@ public class MonitorPointMapENActivityPresenter extends BasePresenter<IMonitorPo
         deployAnalyzerModel.updatedTime = mDeviceInfo.getUpdatedTime();
         deployAnalyzerModel.signal = mDeviceInfo.getSignal();
         String tempAddress = mDeviceInfo.getAddress();
-        if (TextUtils.isEmpty(tempAddress)) {
+        if (!TextUtils.isEmpty(tempAddress)) {
             deployAnalyzerModel.address = tempAddress;
         }
         deployAnalyzerModel.mapSourceType = DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM;

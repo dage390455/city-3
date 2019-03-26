@@ -20,6 +20,8 @@
         android:layout_height="wrap_content"
         android:hint="@string/dialog_input_tip_detail"
         android:background="@null"
+        android:cursorVisible="true"
+        android:textCursorDrawable="@drawable/my_cursor"
         android:gravity="center"
         android:minLines="2" />
 

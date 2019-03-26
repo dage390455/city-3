@@ -220,7 +220,7 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
                 finishAc();
                 break;
             case R.id.bt_deploy_map_signal:
-                mPresenter.refreshSignal();
+//                mPresenter.refreshSignal();
                 break;
             case R.id.include_text_title_tv_subtitle:
             case R.id.tv_deploy_map_save:
