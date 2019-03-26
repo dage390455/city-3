@@ -47,13 +47,12 @@ public class AlarmPopupSubTagAdapter extends RecyclerView.Adapter<AlarmPopupSubT
         //一定要设置，因为是通用的，所以要设置这个
         //
         final AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel = mList.get(position);
-        setSelectState(holder, alarmPopupTagModel.isChose);
+        setSelectState(holder, alarmPopupTagModel);
         if (TextUtils.isEmpty(alarmPopupTagModel.name)) {
 
         } else {
             holder.tvAlarmPopupTag.setText(alarmPopupTagModel.name);
         }
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,9 +66,9 @@ public class AlarmPopupSubTagAdapter extends RecyclerView.Adapter<AlarmPopupSubT
         });
     }
 
-    private void setSelectState(MyHolder holder, boolean isChose) {
-        if (isChose) {
-            holder.tvAlarmPopupTag.setBackground(mContext.getResources().getDrawable(R.drawable.shape_bg_solid_f3_20dp_corner));
+    private void setSelectState(MyHolder holder, AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel) {
+        if (alarmPopupTagModel.isChose) {
+            holder.tvAlarmPopupTag.setBackground(mContext.getResources().getDrawable(alarmPopupTagModel.resDrawable));
             holder.tvAlarmPopupTag.setTextColor(mContext.getResources().getColor(R.color.white));
         } else {
             holder.tvAlarmPopupTag.setBackground(mContext.getResources().getDrawable(R.drawable.shape_bg_solid_f4_20dp_corner));
@@ -83,7 +82,7 @@ public class AlarmPopupSubTagAdapter extends RecyclerView.Adapter<AlarmPopupSubT
             super.onBindViewHolder(holder, position, payloads);
         } else {
             final AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel = mList.get(position);
-            setSelectState(holder, alarmPopupTagModel.isChose);
+            setSelectState(holder, alarmPopupTagModel);
         }
 
     }

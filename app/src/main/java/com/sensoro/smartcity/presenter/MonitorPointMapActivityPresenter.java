@@ -48,6 +48,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import static com.amap.api.maps.AMap.MAP_TYPE_NORMAL;
 
@@ -169,13 +170,13 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
     }
 
     private void refreshMap() {
-        double[] lonlat = mDeviceInfo.getLonlat();
-        if (aMap != null && mDeviceInfo.getSensorTypes().length > 0) {
+        List<Double> lonlat = mDeviceInfo.getLonlat();
+        if (aMap != null && mDeviceInfo.getSensorTypes().length > 0 && lonlat != null && lonlat.size() > 1) {
             UiSettings uiSettings = aMap.getUiSettings();
             // 通过UISettings.setZoomControlsEnabled(boolean)来设置缩放按钮是否能显示
             uiSettings.setZoomControlsEnabled(false);
-            destPosition = new LatLng(lonlat[1], lonlat[0]);
-            if (lonlat[0] == 0 || lonlat[1] == 0) {
+            destPosition = new LatLng(lonlat.get(1), lonlat.get(0));
+            if (lonlat.get(0) == 0 || lonlat.get(1) == 0) {
 //                getView().setMapLayoutVisible(false);
 //                getView().setNotDeployLayoutVisible(true);
 //                mapLayout.setVisibility(View.GONE);
@@ -282,9 +283,9 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
             name = mDeviceInfo.getSn();
         }
         int status = mDeviceInfo.getStatus();
-        String[] tags = mDeviceInfo.getTags();
+        List<String> tags = mDeviceInfo.getTags();
         String tempTagStr = "";
-        if (tags != null && tags.length > 0) {
+        if (tags != null && tags.size() > 0) {
             for (String tag : tags) {
                 tempTagStr += tag + ",";
             }
@@ -295,9 +296,8 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         if (TextUtils.isEmpty(tempAddress)) {
             tempAddress = mContext.getString(R.string.unknown_street);
         }
-        final String tempData = "/pages/location?lon=" + mDeviceInfo.getLonlat()[0] + "&lat=" + mDeviceInfo.getLonlat()
-                [1] +
-                "&name=" + name + "&address=" + tempAddress + "&status=" + status + "&tags=" + tempTagStr + "&uptime=" +
+        final String tempData = "/pages/location?lon=" + mDeviceInfo.getLonlat().get(0) + "&lat=" + mDeviceInfo.getLonlat().get(1)
+                + "&name=" + name + "&address=" + tempAddress + "&status=" + status + "&tags=" + tempTagStr + "&uptime=" +
                 updatedTime;
         miniProgramObj.path = tempData;            //小程序页面路径
         final WXMediaMessage msg = new WXMediaMessage(miniProgramObj);
@@ -339,11 +339,11 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 
 
     public void backToCurrentLocation() {
-        double[] lonlat = mDeviceInfo.getLonlat();
+        List<Double> lonlat = mDeviceInfo.getLonlat();
 
-        if (lonlat != null && lonlat.length > 1 && lonlat[0] != 0 && lonlat[1] != 0) {
-            double lat = lonlat[1];//获取纬度
-            double lon = lonlat[0];//获取经度
+        if (lonlat != null && lonlat.size() > 2 && lonlat.get(0) != 0 && lonlat.get(1) != 0) {
+            double lat = lonlat.get(1);//获取纬度
+            double lon = lonlat.get(0);//获取经度
             LatLng latLng = new LatLng(lat, lon);
             if (aMap != null) {
                 //可视化区域，将指定位置指定到屏幕中心位置
@@ -368,10 +368,10 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
             deployContactModel.name = contact;
             deployAnalyzerModel.deployContactModelList.add(deployContactModel);
         }
-        double[] lonlat = mDeviceInfo.getLonlat();
-        if (lonlat != null && lonlat.length == 2) {
-            deployAnalyzerModel.latLng.add(lonlat[0]);
-            deployAnalyzerModel.latLng.add(lonlat[1]);
+        List<Double> lonlat = mDeviceInfo.getLonlat();
+        if (lonlat != null && lonlat.size() == 2) {
+            deployAnalyzerModel.latLng.add(lonlat.get(0));
+            deployAnalyzerModel.latLng.add(lonlat.get(1));
         }
         deployAnalyzerModel.updatedTime = mDeviceInfo.getUpdatedTime();
         deployAnalyzerModel.signal = mDeviceInfo.getSignal();

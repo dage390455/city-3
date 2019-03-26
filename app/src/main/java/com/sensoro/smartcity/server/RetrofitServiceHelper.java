@@ -524,7 +524,7 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, List<String> tags, String
-            name, String contact, String content, String wxPhone, List<String> imgUrls, DeployControlSettingData deployControlSettingData, String forceReason) {
+            name, String contact, String content, String wxPhone, List<String> imgUrls, DeployControlSettingData deployControlSettingData, String forceReason, Integer status, String signalQuality) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("lon", lon);
@@ -557,7 +557,14 @@ public class RetrofitServiceHelper {
             }
             if (!TextUtils.isEmpty(forceReason)) {
                 jsonObject.put("forceReason", forceReason);
+                if (status != null) {
+                    jsonObject.put("status", status);
+                }
+                if (!TextUtils.isEmpty(signalQuality)) {
+                    jsonObject.put("signalQuality", signalQuality);
+                }
             }
+
 //            if (settingMap != null) {
 //                JSONObject jsonObjectOut = new JSONObject();
 //                for (Map.Entry<String, DeployControlSettingData> entrySet : settingMap.entrySet()) {
@@ -619,7 +626,7 @@ public class RetrofitServiceHelper {
     }
 
     public Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(String oldSn, String newSn, String taskId, Integer reason, double lon, double lat, List<String> tags, String
-            name, String contact, String content, List<String> imgUrls, String wxPhone) {
+            name, String contact, String content, List<String> imgUrls, String wxPhone,String forceReason, Integer status, String signalQuality) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(newSn)) {
@@ -658,6 +665,15 @@ public class RetrofitServiceHelper {
             }
             if (!TextUtils.isEmpty(wxPhone)) {
                 jsonObject.put("wxPhone", wxPhone);
+            }
+            if (!TextUtils.isEmpty(forceReason)) {
+                jsonObject.put("forceReason", forceReason);
+                if (status != null) {
+                    jsonObject.put("status", status);
+                }
+                if (!TextUtils.isEmpty(signalQuality)) {
+                    jsonObject.put("signalQuality", signalQuality);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();

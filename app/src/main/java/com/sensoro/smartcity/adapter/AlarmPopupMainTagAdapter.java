@@ -45,7 +45,7 @@ public class AlarmPopupMainTagAdapter extends RecyclerView.Adapter<AlarmPopupMai
     @Override
     public void onBindViewHolder(MyHolder holder, final int position) {
         final AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel = mList.get(position);
-        setSelectState(holder, alarmPopupTagModel.isChose);
+        setSelectState(holder, alarmPopupTagModel);
         if (TextUtils.isEmpty(alarmPopupTagModel.name)) {
             holder.tvAlarmPopupTag.setText(mContext.getString(R.string.unknown));
         } else {
@@ -82,7 +82,7 @@ public class AlarmPopupMainTagAdapter extends RecyclerView.Adapter<AlarmPopupMai
             super.onBindViewHolder(holder, position, payloads);
         } else {
             final AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel = mList.get(position);
-            setSelectState(holder, alarmPopupTagModel.isChose);
+            setSelectState(holder, alarmPopupTagModel);
         }
 
     }
@@ -105,9 +105,9 @@ public class AlarmPopupMainTagAdapter extends RecyclerView.Adapter<AlarmPopupMai
         notifyDataSetChanged();
     }
 
-    private void setSelectState(AlarmPopupMainTagAdapter.MyHolder holder, boolean isChose) {
-        if (isChose) {
-            holder.tvAlarmPopupTag.setBackground(mContext.getResources().getDrawable(R.drawable.shape_bg_solid_f3_20dp_corner));
+    private void setSelectState(AlarmPopupMainTagAdapter.MyHolder holder, AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel) {
+        if (alarmPopupTagModel.isChose) {
+            holder.tvAlarmPopupTag.setBackground(mContext.getResources().getDrawable(alarmPopupTagModel.resDrawable));
             holder.tvAlarmPopupTag.setTextColor(mContext.getResources().getColor(R.color.white));
         } else {
             holder.tvAlarmPopupTag.setBackground(mContext.getResources().getDrawable(R.drawable.shape_bg_solid_f4_20dp_corner));

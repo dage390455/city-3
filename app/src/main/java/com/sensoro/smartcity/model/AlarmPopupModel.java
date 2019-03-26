@@ -12,7 +12,7 @@ public class AlarmPopupModel {
     public List<AlarmPopupTagModel> mainTags;
     public String desc;
     public String mRemark;
-    public int buttonColor = R.color.c_29c093;
+    public int resButtonBg = R.drawable.shape_button;
     public String mergeType;
     public String sensorType;
     public AlarmPopupDataBean configAlarmPopupDataBean;
@@ -28,6 +28,6 @@ public class AlarmPopupModel {
         public Integer id;
         public boolean isChose;
         public String name;
-        public int color = R.color.c_29c093;
+        public int resDrawable = R.drawable.shape_bg_solid_29c_20dp_corner;
     }
 }

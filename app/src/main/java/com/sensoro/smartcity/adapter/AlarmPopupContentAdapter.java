@@ -58,7 +58,6 @@ public class AlarmPopupContentAdapter extends RecyclerView.Adapter<AlarmPopupCon
                 holder.tvAlarmPopupAlarmTitle.setText(stringBuilder.toString());
             }
         }
-
         if (TextUtils.isEmpty(alarmPopupSubModel.tips)) {
             holder.tvAlarmPopupAlarmTitleTip.setVisibility(View.GONE);
             holder.rvAlarmPopupAlarmContent.setVisibility(View.VISIBLE);
@@ -91,11 +90,11 @@ public class AlarmPopupContentAdapter extends RecyclerView.Adapter<AlarmPopupCon
             ButterKnife.bind(this, itemView);
             SensoroLinearLayoutManager manager = new SensoroLinearLayoutManager(mContext);
             manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-            manager.setAutoMeasureEnabled(true);
-            manager.setSmoothScrollbarEnabled(true);
+//            manager.setAutoMeasureEnabled(true);
+//            manager.setSmoothScrollbarEnabled(true);
             rvAlarmPopupAlarmContent.setLayoutManager(manager);
-            rvAlarmPopupAlarmContent.setNestedScrollingEnabled(false);
-            rvAlarmPopupAlarmContent.setHasFixedSize(true);
+//            rvAlarmPopupAlarmContent.setNestedScrollingEnabled(false);
+//            rvAlarmPopupAlarmContent.setHasFixedSize(true);
         }
     }
 }

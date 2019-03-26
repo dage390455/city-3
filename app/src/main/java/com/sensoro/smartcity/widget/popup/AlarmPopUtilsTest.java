@@ -240,10 +240,8 @@ public class AlarmPopUtilsTest implements Constants,
         //子类型
         alarmPopupContentAdapter = new AlarmPopupContentAdapter(mActivity);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
-        layoutManager.setSmoothScrollbarEnabled(true);
-        layoutManager.setAutoMeasureEnabled(true);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rvAlarmPopupContent.setLayoutManager(linearLayoutManager);
-        rvAlarmPopupContent.setHasFixedSize(true);
         rvAlarmPopupContent.setAdapter(alarmPopupContentAdapter);
         //设置包裹不允许滑动，套一层父布局解决最后一项可能不显示的问题
         rvAlarmPopupContent.setNestedScrollingEnabled(false);
@@ -292,6 +290,7 @@ public class AlarmPopUtilsTest implements Constants,
         mAlarmPopupModel.mRemark = null;
         alarmPopupMainTagAdapter.updateAdapter(mAlarmPopupModel.mainTags);
         alarmPopupContentAdapter.updateData(mAlarmPopupModel.subAlarmPopupModels);
+        btAlarmPopupCommit.setBackground(mActivity.getResources().getDrawable(mAlarmPopupModel.resButtonBg));
     }
 
 
@@ -542,6 +541,7 @@ public class AlarmPopUtilsTest implements Constants,
                         @Override
                         public void run() {
                             alarmPopupContentAdapter.updateData(mAlarmPopupModel.subAlarmPopupModels);
+                            btAlarmPopupCommit.setBackground(mActivity.getResources().getDrawable(mAlarmPopupModel.resButtonBg));
                         }
                     });
                 }

@@ -183,12 +183,17 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 //基站不展示状态
 //                getView().setStatusTextView(mContext.getString(Constants.STATION_STATUS_ARRAY[deployResultModel.stationStatus + 1]),
 //                        mContext.getResources().getColor(Constants.STATION_STATUS_COLOR_ARRAY[deployResultModel.stationStatus + 1]));
-                if (deployResultModel.updateTime == -1 || deployResultModel.updateTime == 0) {
-                    getView().setUpdateTextViewVisible(false);
+                if (deployResultModel.deployTime == null) {
+                    getView().setUpdateTextView(DateUtil.getStrTimeTodayByDevice(mContext, System.currentTimeMillis()));
                 } else {
-                    getView().setUpdateTextView(DateUtil
-                            .getFullParseDatePoint(mContext, deployResultModel.updateTime));
+                    getView().setUpdateTextView(DateUtil.getStrTimeTodayByDevice(mContext, deployResultModel.deployTime));
                 }
+//                if (deployResultModel.updateTime == -1 || deployResultModel.updateTime == 0) {
+//                    getView().setUpdateTextViewVisible(false);
+//                } else {
+//                    getView().setUpdateTextView(DateUtil
+//                            .getFullParseDatePoint(mContext, deployResultModel.updateTime));
+//                }
                 break;
             //设备部署/更换
             case TYPE_SCAN_DEPLOY_DEVICE:
@@ -224,13 +229,17 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                     getView().setStatusTextView(mContext.getString(R.string.normal),
                             mContext.getResources().getColor(R.color.c_29c093));
                 }
-
-                if (deployResultModel.updateTime == -1 || deployResultModel.updateTime == 0) {
-                    getView().setUpdateTextViewVisible(false);
+                if (deployResultModel.deployTime == null) {
+                    getView().setUpdateTextView(DateUtil.getStrTimeTodayByDevice(mContext, System.currentTimeMillis()));
                 } else {
-                    getView().setUpdateTextView(DateUtil
-                            .getFullParseDatePoint(mContext, deployResultModel.updateTime));
+                    getView().setUpdateTextView(DateUtil.getStrTimeTodayByDevice(mContext, deployResultModel.deployTime));
                 }
+//                if (deployResultModel.updateTime == -1 || deployResultModel.updateTime == 0) {
+//                    getView().setUpdateTextViewVisible(false);
+//                } else {
+//                    getView().setUpdateTextView(DateUtil
+//                            .getFullParseDatePoint(mContext, deployResultModel.updateTime));
+//                }
                 if (DEVICE_CONTROL_DEVICE_TYPES.contains(deployResultModel.deviceType)) {
                     DeployControlSettingData settingData = deployResultModel.settingData;
                     if (settingData != null) {
@@ -272,12 +281,17 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 // 基站不展示状态
 //                getView().setStatusTextView(mContext.getString(Constants.STATION_STATUS_ARRAY[deployResultModel.stationStatus + 1]),
 //                        mContext.getResources().getColor(Constants.STATION_STATUS_COLOR_ARRAY[deployResultModel.stationStatus + 1]));
-                if (deployResultModel.updateTime == -1 || deployResultModel.updateTime == 0) {
-                    getView().setUpdateTextViewVisible(false);
+                if (deployResultModel.deployTime == null) {
+                    getView().setUpdateTextView(DateUtil.getStrTimeTodayByDevice(mContext, System.currentTimeMillis()));
                 } else {
-                    getView().setUpdateTextView(DateUtil
-                            .getFullParseDatePoint(mContext, deployResultModel.updateTime));
+                    getView().setUpdateTextView(DateUtil.getStrTimeTodayByDevice(mContext, deployResultModel.deployTime));
                 }
+//                if (deployResultModel.updateTime == -1 || deployResultModel.updateTime == 0) {
+//                    getView().setUpdateTextViewVisible(false);
+//                } else {
+//                    getView().setUpdateTextView(DateUtil
+//                            .getFullParseDatePoint(mContext, deployResultModel.updateTime));
+//                }
                 break;
             //设备部署/更换
             case TYPE_SCAN_DEPLOY_DEVICE:
@@ -314,12 +328,18 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                             mContext.getResources().getColor(R.color.c_29c093));
                 }
                 getView().refreshSignal(deployResultModel.updateTime, deployResultModel.signal);
-                if (deployResultModel.updateTime == -1 || deployResultModel.updateTime == 0) {
-                    getView().setUpdateTextViewVisible(false);
+                //TODO 当前的部署时间需要更换
+                if (deployResultModel.deployTime == null) {
+                    getView().setUpdateTextView(DateUtil.getStrTimeTodayByDevice(mContext, System.currentTimeMillis()));
                 } else {
-                    getView().setUpdateTextView(DateUtil
-                            .getFullParseDatePoint(mContext, deployResultModel.updateTime));
+                    getView().setUpdateTextView(DateUtil.getStrTimeTodayByDevice(mContext, deployResultModel.deployTime));
                 }
+//                if (deployResultModel.updateTime == -1 || deployResultModel.updateTime == 0) {
+//                    getView().setUpdateTextViewVisible(false);
+//                } else {
+//                    getView().setUpdateTextView(DateUtil
+//                            .getFullParseDatePoint(mContext, deployResultModel.updateTime));
+//                }
                 if (DEVICE_CONTROL_DEVICE_TYPES.contains(deployResultModel.deviceType)) {
                     DeployControlSettingData settingData = deployResultModel.settingData;
                     if (settingData != null) {
