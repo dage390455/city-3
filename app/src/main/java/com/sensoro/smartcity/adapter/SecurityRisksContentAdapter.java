@@ -2,22 +2,27 @@ package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.model.SecurityRisksAdapterModel;
+import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Optional;
 
 public class SecurityRisksContentAdapter extends RecyclerView.Adapter<SecurityRisksContentAdapter.SecurityRisksContentHolder> {
 
@@ -26,7 +31,7 @@ public class SecurityRisksContentAdapter extends RecyclerView.Adapter<SecurityRi
     //添加新条目的item
     private static final int VIEW_TYPE_ADD_ITEM = 2;
     private final Context mContext;
-    private ArrayList<SecurityRisksAdapterModel> list;
+    private ArrayList<SecurityRisksAdapterModel> list = new ArrayList<>();
     private SecurityRisksContentClickListener mListener;
 
     public SecurityRisksContentAdapter(Context context) {
@@ -51,7 +56,7 @@ public class SecurityRisksContentAdapter extends RecyclerView.Adapter<SecurityRi
         } else {
             View viewContent = LayoutInflater.from(mContext).inflate(R.layout.item_adapter_security_risk_content, parent, false);
             securityRisksContentHolder = new SecurityRisksContentHolder(viewContent);
-            securityRisksContentHolder.tvLocationNameAdapterSecurityRisks.setOnClickListener(new View.OnClickListener() {
+            securityRisksContentHolder.llLocationNameAdapterSecurityRisks.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mListener != null) {
@@ -67,6 +72,14 @@ public class SecurityRisksContentAdapter extends RecyclerView.Adapter<SecurityRi
                     }
                 }
             });
+            securityRisksContentHolder.ivDelAdapterSecurityRisksTag.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        mListener.onLocationDel();
+                    }
+                }
+            });
 
         }
 
@@ -75,27 +88,33 @@ public class SecurityRisksContentAdapter extends RecyclerView.Adapter<SecurityRi
 
     @Override
     public void onBindViewHolder(@NonNull SecurityRisksContentHolder holder, int position) {
-        holder.tvLocationNameAdapterSecurityRisks.setTag(position);
+
         if (getItemViewType(position) == VIEW_TYPE_ADD_ITEM) {
-                holder.tvAddAdapterSecurityRisks.setTag(position);
-        }else{
+            holder.tvAddAdapterSecurityRisks.setTag(position);
+        } else {
             holder.tvLocationNameAdapterSecurityRisks.setTag(position);
             holder.rvBehaviorsAdapterSecurityRisks.setTag(position);
+            holder.llLocationNameAdapterSecurityRisks.setTag(position);
 
             SecurityRisksAdapterModel model = list.get(position);
             if (!TextUtils.isEmpty(model.location)) {
+                holder.llLocationNameContentAdapterSecurityRisks.setVisibility(View.VISIBLE);
                 holder.tvLocationNameAdapterSecurityRisks.setText(model.location);
             }
 
-            SecurityRisksTagAdapter securityRisksTagAdapter = new SecurityRisksTagAdapter();
-
+            SecurityRisksTagAdapter securityRisksTagAdapter = new SecurityRisksTagAdapter(mContext);
+            SensoroLinearLayoutManager manager = new SensoroLinearLayoutManager(mContext);
+            manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            holder.rvBehaviorsAdapterSecurityRisks.setLayoutManager(manager);
+            holder.rvBehaviorsAdapterSecurityRisks.setAdapter(securityRisksTagAdapter);
+            securityRisksTagAdapter.updateData(model.behaviors);
 
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (getItemCount() > 19) {
+        if (getItemCount() > 20) {
             return VIEW_TYPE_CONTENT;
         } else {
             if (position == getItemCount() - 1) {
@@ -112,46 +131,61 @@ public class SecurityRisksContentAdapter extends RecyclerView.Adapter<SecurityRi
         notifyDataSetChanged();
     }
 
-    public void setOnSecurityRisksItemClickListener(SecurityRisksContentClickListener listener){
+    public void setOnSecurityRisksItemClickListener(SecurityRisksContentClickListener listener) {
         mListener = listener;
     }
 
 
     @Override
     public int getItemCount() {
-        return list.size();
+        int size = list.size();
+        return size < 20 ? size + 1 : size;
     }
 
     class SecurityRisksContentHolder extends RecyclerView.ViewHolder {
+        @Nullable
         @BindView(R.id.tv_location_adapter_security_risks)
         TextView tvLocationAdapterSecurityRisks;
-        @BindView(R.id.iv_location_oval_adapter_security_risks)
-        ImageView ivLocationOvalAdapterSecurityRisks;
+        @Nullable
         @BindView(R.id.tv_location_name_adapter_security_risks)
         TextView tvLocationNameAdapterSecurityRisks;
+        @Nullable
         @BindView(R.id.view_divider_adapter_security_risks)
         View viewDividerAdapterSecurityRisks;
+        @Nullable
         @BindView(R.id.tv_behavior_adapter_security_risks)
         TextView tvBehaviorAdapterSecurityRisks;
-        @BindView(R.id.iv_behavior_oval_adapter_security_risks)
-        ImageView ivBehaviorOvalAdapterSecurityRisks;
+        @Nullable
         @BindView(R.id.rv_behaviors_adapter_security_risks)
         RecyclerView rvBehaviorsAdapterSecurityRisks;
+        @Nullable
         @BindView(R.id.tv_add_adapter_security_risks)
         TextView tvAddAdapterSecurityRisks;
+        @Nullable
+        @BindView(R.id.iv_del_adapter_security_risks_tag)
+        ImageView ivDelAdapterSecurityRisksTag;
+        @Nullable
+        @BindView(R.id.ll_location_name_content_adapter_security_risks)
+        LinearLayout llLocationNameContentAdapterSecurityRisks;
+        @Nullable
+        @BindView(R.id.ll_location_name_adapter_security_risks)
+        LinearLayout llLocationNameAdapterSecurityRisks;
 
         SecurityRisksContentHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            itemView.findViewById(R.id.tv_location_adapter_security_risks);
+            ButterKnife.bind(this, itemView);
         }
     }
 
-    interface SecurityRisksContentClickListener{
+    public interface SecurityRisksContentClickListener {
         void onLocationClick(int position);
 
         void onBehaviorClick(int position);
 
         void onAddItemClick();
+
+        void onLocationDel();
 
     }
 }

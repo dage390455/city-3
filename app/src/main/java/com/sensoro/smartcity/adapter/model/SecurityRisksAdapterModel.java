@@ -4,5 +4,5 @@ import java.util.ArrayList;
 
 public class SecurityRisksAdapterModel {
     public String location;
-    public ArrayList<String> behaviors;
+    public ArrayList<String> behaviors = new ArrayList<>();
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.Guideline;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,10 +13,16 @@ import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.SecurityRisksContentAdapter;
+import com.sensoro.smartcity.adapter.SecurityRisksReferTagAdapter;
+import com.sensoro.smartcity.adapter.SecurityRisksTagAdapter;
+import com.sensoro.smartcity.adapter.model.SecurityRisksAdapterModel;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ISecurityRisksActivityView;
 import com.sensoro.smartcity.presenter.SecurityRisksPresenter;
+import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,12 +53,15 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
     RecyclerView rvTagAcSecurityRisks;
     @BindView(R.id.cl_tag_ac_security_risks)
     ConstraintLayout clTagAcSecurityRisks;
+    private SecurityRisksContentAdapter securityRisksContentAdapter;
+    private SecurityRisksReferTagAdapter securityRisksReferTagAdapter;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_security_risks);
         ButterKnife.bind(this);
         initView();
+        mPresenter.initData(mActivity);
     }
 
     private void initView() {
@@ -60,11 +70,25 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
         includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_29c093));
 
         initContentAdapter();
+        initTagAdapter();
 
     }
 
+    private void initTagAdapter() {
+        securityRisksReferTagAdapter = new SecurityRisksReferTagAdapter(mActivity);
+        SensoroLinearLayoutManager linearLayoutManager = new SensoroLinearLayoutManager(mActivity);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rvTagAcSecurityRisks.setLayoutManager(linearLayoutManager);
+        rvTagAcSecurityRisks.setAdapter(securityRisksContentAdapter);
+    }
+
     private void initContentAdapter() {
-        SecurityRisksContentAdapter securityRisksContentAdapter = new SecurityRisksContentAdapter(mActivity);
+        securityRisksContentAdapter = new SecurityRisksContentAdapter(mActivity);
+        securityRisksContentAdapter.setOnSecurityRisksItemClickListener(mPresenter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rcContentAcSecurityRisk.setLayoutManager(linearLayoutManager);
+        rcContentAcSecurityRisk.setAdapter(securityRisksContentAdapter);
     }
 
     @Override
@@ -107,20 +131,30 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
         SensoroToast.getInstance().makeText(msg, Toast.LENGTH_LONG).show();
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
 
-    }
-
-    @OnClick({R.id.include_text_title_tv_cancel, R.id.include_text_title_tv_subtitle})
+    @OnClick({R.id.include_text_title_tv_cancel, R.id.include_text_title_tv_subtitle,R.id.iv_close_ac_security_risks,R.id.tv_manger_ac_security_risks})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_cancel:
                 break;
             case R.id.include_text_title_tv_subtitle:
                 break;
+            case R.id.iv_close_ac_security_risks:
+                setConstraintTagVisible(false);
+                break;
+            case R.id.tv_manger_ac_security_risks:
+                break;
         }
     }
+
+    @Override
+    public void setConstraintTagVisible(boolean isVisible) {
+        clTagAcSecurityRisks.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void updateSecurityRisksContent(List<SecurityRisksAdapterModel> data) {
+        securityRisksContentAdapter.updateData(data);
+    }
+
 }

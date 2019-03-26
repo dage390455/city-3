@@ -905,5 +905,8 @@
     <string name="deploy_check_title_repair_instruction">修复说明</string>
     <string name="repair_instruction_obtain_failed">修复说明获取失败</string>
     <string name="added_security_risks">添加安全隐患</string>
+    <string name="security_location">地点</string>
+    <string name="security_behavior">行为</string>
+    <string name="refer_loaction">参考地点（单选）</string>
 
 </resources>

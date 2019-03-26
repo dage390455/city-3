@@ -39,6 +39,7 @@ public final class PreferencesHelper implements Constants {
         return PreferencesHelperHolder.instance;
     }
 
+
     private static class PreferencesHelperHolder {
         private static final PreferencesHelper instance = new PreferencesHelper();
     }
@@ -638,5 +639,16 @@ public final class PreferencesHelper implements Constants {
         }
         SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_PHONE, history).apply();
         return true;
+    }
+
+    /**
+     * 安全隐患，参考地点标签
+     */
+    public void getSecurityRiskLocationTags() {
+        String location = SensoroCityApplication.getInstance().getSharedPreferences(Constants.PREFERENCE_SECURITY_RISK_TAG, Context.MODE_PRIVATE)
+                .getString(Constants.PREFERENCE_KEY_SECURITY_RISK_LOCATION, "");
+        if (TextUtils.isEmpty(location)) {
+
+        }
     }
 }
