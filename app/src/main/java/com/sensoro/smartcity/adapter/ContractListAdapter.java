@@ -1,11 +1,12 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,7 +22,7 @@ import java.util.List;
 /**
  */
 
-public class ContractListAdapter extends BaseAdapter implements Constants {
+public class ContractListAdapter extends RecyclerView.Adapter<ContractListAdapter.ContractViewHolder> implements Constants {
 
     private Context mContext;
     private LayoutInflater mInflater;
@@ -41,50 +42,16 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
         return mList;
     }
 
+
+    @NonNull
     @Override
-    public int getCount() {
-        return mList.size();
+    public ContractViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_contracts_manger, parent, false);
+        return new ContractViewHolder(view);
     }
 
     @Override
-    public Object getItem(int i) {
-        return mList.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return 0;
-    }
-
-    @Override
-    public View getView(final int position, View convertView, ViewGroup viewGroup) {
-        ContractViewHolder holder;
-        if (convertView == null) {
-            holder = new ContractViewHolder();
-            convertView = mInflater.inflate(R.layout.item_contracts_manger, null);
-            holder.tvContractNumber = (TextView) convertView.findViewById(R.id.tv_contract_number);
-            holder.tvContactsMangerType = (TextView) convertView.findViewById(R.id.tv_contacts_manger_type);
-            holder.tvContactsMangerStatus = convertView.findViewById(R.id.tv_contacts_manger_status);
-            holder.ivPayStatus = convertView.findViewById(R.id.iv_pay_status);
-
-
-            holder.tvContactsMangerCustom = (TextView) convertView.findViewById(R.id.tv_contacts_manger_custom);
-            holder.etContactsMangerCustom = (TextView) convertView.findViewById(R.id.et_contacts_manger_custom);
-
-            holder.itemTvContactsEnterprise = convertView.findViewById(R.id.tv_contacts_manger_enterprise);
-            holder.itemEtContactsEnterprise = convertView.findViewById(R.id.et_contacts_manger_enterprise);
-            //
-            holder.tvContactsMangerAddress = (TextView) convertView.findViewById(R.id.tv_contacts_manger_address);
-            holder.etContactsMangerAddress = (TextView) convertView.findViewById(R.id.et_contacts_manger_address);
-
-            holder.tvContactsMangerTime = (TextView) convertView.findViewById(R.id.tv_contacts_manger_time);
-            holder.etContactsMangerTime = (TextView) convertView.findViewById(R.id.et_contacts_manger_time);
-            //
-            convertView.setTag(holder);
-        } else {
-            holder = (ContractViewHolder) convertView.getTag();
-        }
-        //
+    public void onBindViewHolder(@NonNull ContractViewHolder holder, final int position) {
         ContractListInfo contractListInfo = mList.get(position);
         int contract_type = contractListInfo.getContract_type();
         String customer_enterprise_name = contractListInfo.getCustomer_enterprise_name();
@@ -145,7 +112,6 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
         }
         String contract_number = contractListInfo.getContract_number();
         holder.tvContractNumber.setText(contract_number);
-
         ContractListInfo.Order order = contractListInfo.getOrder();
         if (order != null) {
             String tradeState = order.getTrade_state();
@@ -153,11 +119,23 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
         } else {
             holder.ivPayStatus.setVisibility(View.GONE);
         }
-        return convertView;
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onClick(v, position);
+                }
+            }
+        });
     }
 
 
-    static class ContractViewHolder {
+    @Override
+    public int getItemCount() {
+        return mList.size();
+    }
+
+    class ContractViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvContactsMangerCustom;
         TextView etContactsMangerCustom;
@@ -172,8 +150,33 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
         TextView itemTvContactsEnterprise;
         TextView itemEtContactsEnterprise;
 
-        ContractViewHolder() {
+        ContractViewHolder(View itemView) {
+            super(itemView);
+            tvContractNumber = (TextView) itemView.findViewById(R.id.tv_contract_number);
+            tvContactsMangerType = (TextView) itemView.findViewById(R.id.tv_contacts_manger_type);
+            tvContactsMangerStatus = itemView.findViewById(R.id.tv_contacts_manger_status);
+            ivPayStatus = itemView.findViewById(R.id.iv_pay_status);
+            tvContactsMangerCustom = (TextView) itemView.findViewById(R.id.tv_contacts_manger_custom);
+            etContactsMangerCustom = (TextView) itemView.findViewById(R.id.et_contacts_manger_custom);
+            itemTvContactsEnterprise = itemView.findViewById(R.id.tv_contacts_manger_enterprise);
+            itemEtContactsEnterprise = itemView.findViewById(R.id.et_contacts_manger_enterprise);
+            //
+            tvContactsMangerAddress = (TextView) itemView.findViewById(R.id.tv_contacts_manger_address);
+            etContactsMangerAddress = (TextView) itemView.findViewById(R.id.et_contacts_manger_address);
+
+            tvContactsMangerTime = (TextView) itemView.findViewById(R.id.tv_contacts_manger_time);
+            etContactsMangerTime = (TextView) itemView.findViewById(R.id.et_contacts_manger_time);
 
         }
+    }
+
+    private OnClickListener listener;
+
+    public void setOnClickListener(OnClickListener listener) {
+        this.listener = listener;
+    }
+
+    public interface OnClickListener {
+        void onClick(View v, int position);
     }
 }
