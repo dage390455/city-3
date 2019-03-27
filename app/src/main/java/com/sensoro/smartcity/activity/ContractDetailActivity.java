@@ -217,8 +217,6 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
 
     @Override
     public void setSignStatus(boolean isSigned) {
-        includeTextTitleTvSubtitle.setVisibility(isSigned ? View.GONE : View.VISIBLE);
-
         acContractDetailTvContractStatus.setText(isSigned ? R.string.signed : R.string.not_signed);
         acContractDetailTvContractStatus.setTextColor(isSigned ? getResources().getColor(R.color.c_29c093) :
                 getResources().getColor(R.color.c_ff8d34));
@@ -321,6 +319,11 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
         if (!TextUtils.isEmpty(payTime)) {
             acContractDetailTvContractPayTime.setText(payTime);
         }
+    }
+
+    @Override
+    public void setContractEditVisible(boolean isVisible) {
+        includeTextTitleTvSubtitle.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
 }

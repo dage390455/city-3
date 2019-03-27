@@ -31,6 +31,8 @@ public class UserPermissionFactory {
         eventLoginData.isSupperAccount = getIsSupperAccount(isSpecific);
         eventLoginData.hasStation = getHasStationDeploy(grants);
         eventLoginData.hasContract = getHasContract(grants);
+        eventLoginData.hasContractCreate = getHasContractCreate(grants);
+        eventLoginData.hasContractModify = getHasContractModify(grants);
         eventLoginData.hasScanLogin = getHasScanLogin(grants);
         eventLoginData.hasSubMerchant = getHasSubMerchant(grants) && addUserEnable;
         eventLoginData.hasMerchantChange = getHasMerchantChange(grants);
@@ -102,7 +104,7 @@ public class UserPermissionFactory {
     }
 
     /**
-     * 判断合同权限
+     * 判断合同查看权限
      *
      * @param grants
      * @return
@@ -111,7 +113,39 @@ public class UserPermissionFactory {
         if (grants != null) {
             List<String> contract = grants.getContract();
             if (contract != null) {
-                return contract.contains("list") || contract.contains("create");
+                return contract.contains("list");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断合同创建权限
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasContractCreate(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> contract = grants.getContract();
+            if (contract != null) {
+                return contract.contains("create");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断合同修改权限
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasContractModify(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> contract = grants.getContract();
+            if (contract != null) {
+                return contract.contains("modify");
             }
         }
         return false;

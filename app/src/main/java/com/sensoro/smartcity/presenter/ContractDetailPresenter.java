@@ -19,6 +19,7 @@ import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.ContractListInfo;
 import com.sensoro.smartcity.server.response.ContractInfoRsp;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.PreferencesHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -55,7 +56,13 @@ public class ContractDetailPresenter extends BasePresenter<IContractDetailView> 
                         mContractInfo = responseBase.getData();
                         if (mContractInfo != null) {
                             getView().setContractNumber(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.contract_number), mContractInfo.getContract_number()));
-                            getView().setSignStatus(mContractInfo.isConfirmed());
+                            boolean confirmed = mContractInfo.isConfirmed();
+                            getView().setSignStatus(confirmed);
+                            if (confirmed && PreferencesHelper.getInstance().getUserData().hasContractModify) {
+                                getView().setContractEditVisible(true);
+                            } else {
+                                getView().setContractEditVisible(false);
+                            }
                             getView().setCustomerEnterpriseName(mContractInfo.getCustomer_enterprise_name());
                             getView().setCustomerName(mContractInfo.getCustomer_name());
                             getView().setCustomerPhone(mContractInfo.getCustomer_phone());
@@ -74,7 +81,7 @@ public class ContractDetailPresenter extends BasePresenter<IContractDetailView> 
                             }
                             getView().setTipText(mContractInfo.getContract_type());
 
-                            if (mContractInfo.isConfirmed()) {
+                            if (confirmed) {
                                 getView().setContractTime(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.contract_info_contract_sign_time),
                                         DateUtil.getChineseCalendar(mContractInfo.getConfirmTimestamp())));
                                 getView().setContractCreateTime(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.contract_info_contract_created_time),

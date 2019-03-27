@@ -47,7 +47,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -907,7 +906,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     public void doContract() {
         if (PreferencesHelper.getInstance().getUserData() != null) {
-            if (PreferencesHelper.getInstance().getUserData().hasContract) {
+            if (PreferencesHelper.getInstance().getUserData().hasContractCreate) {
                 Intent intent = new Intent(mContext, ContractEditorActivity.class);
                 intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE, 1);
                 getView().startAC(intent);

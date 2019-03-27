@@ -54,7 +54,7 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class ContractManagerActivity extends BaseActivity<IContractManagerActivityView, ContractManagerActivityPresenter> implements IContractManagerActivityView,
-        AdapterView.OnItemClickListener, View.OnClickListener, AbsListView.OnScrollListener,TipOperationDialogUtils.TipDialogUtilsClickListener {
+        AdapterView.OnItemClickListener, View.OnClickListener, AbsListView.OnScrollListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.contract_iv_menu_list)
     ImageView contractIvMenuList;
     @BindView(R.id.contract_manger_root)
@@ -219,9 +219,9 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     private void initClearHistoryDialog() {
         historyClearDialog = new TipOperationDialogUtils(mActivity, true);
         historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
-        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
-        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
-        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record), R.color.c_a6a6a6);
+        historyClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear), getResources().getColor(R.color.c_a6a6a6));
         historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
@@ -327,7 +327,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
 
     @Override
     protected void onPause() {
-        AppUtils.dismissInputMethodManager(mActivity,fgMainWarnEtSearch);
+        AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
         super.onPause();
     }
 
@@ -398,6 +398,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
 
     @Override
     public void smoothScrollToPosition(int position) {
+        contractPtrList.setSmoothScrollbarEnabled(true);
         contractPtrList.smoothScrollToPosition(position);
 
     }
@@ -549,9 +550,14 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
 
     @Override
     public void showHistoryClearDialog() {
-        if (historyClearDialog !=  null) {
+        if (historyClearDialog != null) {
             historyClearDialog.show();
         }
+    }
+
+    @Override
+    public void setContractMangerAddVisible(boolean isVisible) {
+        acContractMangerAdd.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     private void doCancelSearch() {
