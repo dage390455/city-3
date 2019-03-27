@@ -451,25 +451,29 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     private void handleDeviceModeInfo() {
         if (mDeviceInfo != null) {
             if (Objects.requireNonNull(PreferencesHelper.getInstance().getConfigDeviceType(mDeviceInfo.getDeviceType())).isDemoSupported()) {
-                if (PreferencesHelper.getInstance().getUserData().hasDeviceDemoMode) {
-                    Integer demoMode = mDeviceInfo.getDemoMode();
-                    if (demoMode != null) {
-                        switch (demoMode) {
-                            case 0:
-                                //正常模式
-                                deviceDemoMode = DEVICE_DEMO_MODE_CLOSE;
-                                break;
-                            case 1:
-                                //演示模式
-                                deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
-                                break;
-                            default:
-                                break;
+                if ("fhsj_smoke".equals(mDeviceInfo.getDeviceType()) && WidgetUtil.isContainVersion("2.1.1", bleUpdateModel.currentFirmVersion)) {
+                    //只针对泛海三江烟感并且在2.1.1版本及以上
+                    if (PreferencesHelper.getInstance().getUserData().hasDeviceDemoMode) {
+                        Integer demoMode = mDeviceInfo.getDemoMode();
+                        if (demoMode != null) {
+                            switch (demoMode) {
+                                case 0:
+                                    //正常模式
+                                    deviceDemoMode = DEVICE_DEMO_MODE_CLOSE;
+                                    break;
+                                case 1:
+                                    //演示模式
+                                    deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
+                    } else {
+                        deviceDemoMode = DEVICE_DEMO_MODE_NO_PERMISSION;
                     }
-                } else {
-                    deviceDemoMode = DEVICE_DEMO_MODE_NO_PERMISSION;
                 }
+
             }
             //TODO delete
 //            deviceDemoMode = DEVICE_DEMO_MODE_OPEN;

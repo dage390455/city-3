@@ -63,6 +63,7 @@
                     android:paddingStart="8dp"
                     android:paddingTop="8dp"
                     android:paddingEnd="8dp"
+                    android:visibility="gone"
                     android:src="@drawable/tag_delete" />
             </LinearLayout>
 

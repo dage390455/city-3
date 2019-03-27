@@ -888,7 +888,7 @@
     <string name="deploy_check_button_tip_press_the_sensor">请按下传感器自检按钮，并开始安装测试</string>
     <string name="deploy_check_dialog_no_signal">无信号</string>
     <string name="deploy_check_dialog_bad_signal">信号差</string>
-    <string name="installation_test_not_nearby">请确保在设备旁，且已开启手机蓝牙</string>
+    <string name="installation_test_not_nearby">请确保已激活设备蓝牙，且在设备附近</string>
     <string name="installation_config_failed">初始配置失败，原因：</string>
     <string name="deploy_check_dialog_quality_bad_signal">信号质量差</string>
     <string name="device_is_malfunction">设备正在故障中</string>

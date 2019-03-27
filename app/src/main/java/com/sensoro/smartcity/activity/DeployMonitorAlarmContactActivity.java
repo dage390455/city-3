@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -83,6 +84,18 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
     }
 
     private void initEtWatcher() {
+        acNameAddressEtAlarmContactName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                return (event.getKeyCode()==KeyEvent.KEYCODE_ENTER);
+            }
+        });
+        acNameAddressEtAlarmContactPhone.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                return (event.getKeyCode()==KeyEvent.KEYCODE_ENTER);
+            }
+        });
         acNameAddressEtAlarmContactName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {

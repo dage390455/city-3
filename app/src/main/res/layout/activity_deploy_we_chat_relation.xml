@@ -95,6 +95,7 @@
                     android:layout_gravity="bottom"
                     android:layout_marginEnd="12dp"
                     android:src="@drawable/tag_delete"
+                    android:visibility="gone"
                     android:contentDescription="@null"
                     />
             </LinearLayout>

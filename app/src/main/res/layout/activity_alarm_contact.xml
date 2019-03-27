@@ -45,6 +45,7 @@
                 android:cursorVisible="true"
                 android:textCursorDrawable="@drawable/my_cursor"
                 android:hint="@string/alarm_contact_tip_sample"
+                android:imeOptions="actionDone|actionNext"
                 android:textSize="14sp"
                 android:layout_gravity="center_vertical"
                 android:gravity="end"
@@ -81,6 +82,7 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:cursorVisible="true"
+                android:imeOptions="actionDone|actionNext"
                 android:textCursorDrawable="@drawable/my_cursor"
                 android:hint="@string/alarm_contact_tip_phone_sample"
                 android:textSize="14sp"
@@ -116,6 +118,7 @@
             android:paddingTop="8dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
+            android:visibility="gone"
             android:contentDescription="@null"
             android:layout_marginEnd="12dp"/>
     </LinearLayout>

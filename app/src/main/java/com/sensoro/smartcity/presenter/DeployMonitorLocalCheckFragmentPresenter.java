@@ -78,7 +78,9 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     private String tempForceReason;
     private Integer tempStatus;
     private String tempSignalQuality;
+    private String tempSignal = "none";
     private DeployAnalyzerModel deployAnalyzerModel;
+
 
     @Override
     public void initData(Context context) {
@@ -271,10 +273,9 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                     try {
                         if (deployAnalyzerModel.sn.equalsIgnoreCase(sn)) {
                             deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
-                            deployAnalyzerModel.signal = deviceInfo.getSignal();
-                            deployAnalyzerModel.status = deviceInfo.getStatus();
+                            tempSignal = deviceInfo.getSignal();
                             try {
-                                LogUtils.loge(this, "部署页刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + deployAnalyzerModel.signal);
+                                LogUtils.loge(this, "部署页刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + tempSignal);
                             } catch (Throwable throwable) {
                                 throwable.printStackTrace();
                             }
@@ -666,8 +667,8 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
      */
     private int checkSignalState() {
         long time_diff = System.currentTimeMillis() - deployAnalyzerModel.updatedTime;
-        if (deployAnalyzerModel.signal != null && (time_diff < 2 * 60 * 1000)) {
-            switch (deployAnalyzerModel.signal) {
+        if (tempSignal != null && (time_diff < 2 * 60 * 1000)) {
+            switch (tempSignal) {
                 case "good":
                     return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD;
                 case "normal":
@@ -711,7 +712,6 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                 // 基站
                 //改为直接跳过
                 goToNextStep();
-
 //                getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE, false);
 //                checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE);
                 break;
@@ -921,6 +921,9 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
     private void updateDeviceStatusDialog(DeviceStatusRsp data) {
         if (data != null && data.getData() != null && data.getData().getStatus() != null) {
+            //只记录当前的信号和状态
+            deployAnalyzerModel.status = data.getData().getStatus();
+            deployAnalyzerModel.signal = String.copyValueOf(tempSignal.toCharArray());
             switch (data.getData().getStatus()) {
                 case SENSOR_STATUS_ALARM:
                     tempForceReason = "status";
@@ -956,25 +959,6 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     }
 
     private void checkNearbyThree() {
-//        HandlerDeployCheck.OnMessageDeal threeMsgDeal = new HandlerDeployCheck.OnMessageDeal() {
-//            @Override
-//            public void onNext() {
-//                if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
-//
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onFinish() {
-//                tempForceReason = "lonlat";
-//                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_FAIL, mActivity.getString(R.string.installation_test_not_nearby), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
-//            }
-//        };
-//        checkHandler.removeAllMessage();
-//        checkHandler.init(1000, 10);
-//        checkHandler.dealMessage(2, threeMsgDeal);
-        //
         checkHandler.removeAllMessage();
         getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_SUC, "", false);
         getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_START, "", false);
