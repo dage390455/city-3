@@ -95,6 +95,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 changTextColor(confirm_text, temp, spannableString, R.color.c_8058a5);
                 holder.itemAlertContentTvContent.setText(spannableString);
             } else if ("app".equals(source)) {
+                //TODO 状态兼容
                 confirm_text = mContext.getString(R.string.contact) + " [" + recordInfo.getName() + "] " + mContext.getString(R.string.confirm_that_the_alert_type_app_is) + ":\n" +
                         mContext.getString(confirmStatusArray[recordInfo.getDisplayStatus()]);
                 //用span改变字体颜色,换行 用\n
@@ -104,11 +105,13 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 String temp = "[" + recordInfo.getName() + "]";
                 changTextColor(confirm_text, temp, spannableString, R.color.c_131313);
                 //改变安全隐患颜色
+                //TODO 状态兼容
                 temp = mContext.getString(confirmStatusArray[recordInfo.getDisplayStatus()]);
                 changTextColor(confirm_text, temp, spannableString, confirmStatusTextColorArray[recordInfo.getDisplayStatus()]);
 
                 holder.itemAlertContentTvContent.setText(spannableString);
             } else if ("platform".equals(source)) {
+                //TODO 状态兼容
                 confirm_text = mContext.getString(R.string.contact) + " [" + recordInfo.getName() + "]" + mContext.getString(R.string.confirm_that_the_alert_type_web_is) + ":\n" +
                         mContext.getString(confirmStatusArray[recordInfo.getDisplayStatus()]);
                 //用span改变字体颜色,换行 用\n
@@ -119,6 +122,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 changTextColor(confirm_text, temp, spannableString, R.color.c_252525);
                 //改变安全隐患颜色
                 temp = mContext.getString(confirmStatusArray[recordInfo.getDisplayStatus()]);
+                //TODO 状态兼容
                 changTextColor(confirm_text, temp, spannableString, confirmStatusTextColorArray[recordInfo.getDisplayStatus()]);
 
                 holder.itemAlertContentTvContent.setText(spannableString);
@@ -127,7 +131,8 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             //
             holder.llConfirm.setVisibility(View.VISIBLE);
             //预警结果
-            int displayStatus = recordInfo.getDisplayStatus();
+            //TODO 状态问题
+            Integer displayStatus = recordInfo.getDisplayStatus();
             StringBuilder stringBuilder = new StringBuilder();
             holder.itemAlarmDetailChildAlarmResult.setText(stringBuilder.append(mContext.getString(confirmStatusArray[displayStatus])).append("(").append(mContext.getString(confirmAlarmResultInfoArray[displayStatus])).append(")").toString());
             //预警成因

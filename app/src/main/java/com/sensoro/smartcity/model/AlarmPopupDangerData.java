@@ -1,6 +1,8 @@
 package com.sensoro.smartcity.model;
 
+import java.util.List;
+
 public class AlarmPopupDangerData {
     public String place;
-    public String action;
+    public List<String> action;
 }

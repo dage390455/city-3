@@ -145,9 +145,9 @@ public class AlarmInfo implements Serializable {
         private long updatedTime;
         private String source;
         //
-        private int displayStatus;
-        private int place;
-        private int reason;
+        private Integer displayStatus;
+        private Integer place;
+        private Integer reason;
         private String name;
         private String remark;
         private Event[] phoneList;
@@ -165,19 +165,19 @@ public class AlarmInfo implements Serializable {
             this.scenes = scenes;
         }
 
-        public int getPlace() {
+        public Integer getPlace() {
             return place;
         }
 
-        public void setPlace(int place) {
+        public void setPlace(Integer place) {
             this.place = place;
         }
 
-        public int getReason() {
+        public Integer getReason() {
             return reason;
         }
 
-        public void setReason(int reason) {
+        public void setReason(Integer reason) {
             this.reason = reason;
         }
 
@@ -239,11 +239,11 @@ public class AlarmInfo implements Serializable {
             this.source = source;
         }
 
-        public int getDisplayStatus() {
+        public Integer getDisplayStatus() {
             return displayStatus;
         }
 
-        public void setDisplayStatus(int displayStatus) {
+        public void setDisplayStatus(Integer displayStatus) {
             this.displayStatus = displayStatus;
         }
 

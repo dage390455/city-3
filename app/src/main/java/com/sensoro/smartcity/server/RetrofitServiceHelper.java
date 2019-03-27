@@ -884,7 +884,13 @@ public class RetrofitServiceHelper {
                 for (AlarmPopupDangerData alarmPopupDangerData : alarmPopupDangerDataList) {
                     JSONObject jsonObjectDanger = new JSONObject();
                     jsonObjectDanger.put("place", alarmPopupDangerData.place);
-                    jsonObjectDanger.put("action", alarmPopupDangerData.action);
+                    if (alarmPopupDangerData.action != null && alarmPopupDangerData.action.size() > 0) {
+                        JSONArray jsonArray1 = new JSONArray();
+                        for (String str : alarmPopupDangerData.action) {
+                            jsonArray1.put(str);
+                        }
+                        jsonObjectDanger.put("action", jsonArray1);
+                    }
                     jsonArray.put(jsonObjectDanger);
                 }
                 jsonObject.put("danger", jsonArray);

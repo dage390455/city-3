@@ -287,35 +287,6 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
     public void clickItemByConfirmStatus(final DeviceAlarmLogInfo deviceAlarmLogInfo, boolean isReConfirm) {
         this.isReConfirm = isReConfirm;
         mCurrentDeviceAlarmLogInfo = deviceAlarmLogInfo;
-//        final AlarmPopupModel alarmPopupModel = new AlarmPopupModel();
-//        alarmPopupModel.isRequire = true;
-//        alarmPopupModel.title = "预警结果类型";
-//        alarmPopupModel.desc = "描述";
-//        List<AlarmPopupModel.AlarmPopupTagModel> AlarmPopupTagModels = new ArrayList<AlarmPopupModel.AlarmPopupTagModel>();
-//        for (int i = 0; i < 4; i++) {
-//            AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel = new AlarmPopupModel.AlarmPopupTagModel();
-//            alarmPopupTagModel.id = i;
-//            alarmPopupTagModel.name = "我是主标签" + i;
-//            AlarmPopupTagModels.add(alarmPopupTagModel);
-//        }
-//        alarmPopupModel.mainTags = AlarmPopupTagModels;
-//        //
-//        List<AlarmPopupModel.AlarmPopupSubModel> alarmPopupSubModels = new ArrayList<>();
-//        for (int i = 0; i < 5; i++) {
-//            AlarmPopupModel.AlarmPopupSubModel alarmPopupSubModel = new AlarmPopupModel.AlarmPopupSubModel();
-//            alarmPopupSubModel.title = "我是标题 -- " + i;
-//            alarmPopupSubModel.isRequire = i % 2 == 0;
-//            ArrayList<AlarmPopupModel.AlarmPopupTagModel> alarmPopupTagModels = new ArrayList<>();
-//            for (int j = 0; j < i + 6; j++) {
-//                AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel = new AlarmPopupModel.AlarmPopupTagModel();
-//                alarmPopupTagModel.id = j;
-//                alarmPopupTagModel.name = "我是标签" + j;
-//                alarmPopupTagModels.add(alarmPopupTagModel);
-//            }
-//            alarmPopupSubModel.subTags = alarmPopupTagModels;
-//            alarmPopupSubModels.add(alarmPopupSubModel);
-//        }
-//        alarmPopupModel.subAlarmPopupModels = alarmPopupSubModels;
         getView().showProgressDialog();
         RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesAlarmPopupConfigRsp>(this) {
             @Override
@@ -567,7 +538,10 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         for (int i = 0; i < 10; i++) {
             AlarmPopupDangerData alarmPopupDangerData = new AlarmPopupDangerData();
             alarmPopupDangerData.place = "假的地址 " + i;
-            alarmPopupDangerData.action = "假的行为 " + i + 1;
+            alarmPopupDangerData.action = new ArrayList<>();
+            for (int j = 0; j <= i; j++) {
+                alarmPopupDangerData.action.add("假的行为 " + j + i);
+            }
             alarmPopupDangerDatas.add(alarmPopupDangerData);
         }
         RetrofitServiceHelper.getInstance().doUpdatePhotosUrl(mCurrentDeviceAlarmLogInfo.get_id(), map, alarmPopupDangerDatas,
