@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.factory;
+package com.sensoro.smartcity.analyzer;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.model.AlarmPopupModel;
@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class AlarmPopupConfigFactory {
+public class AlarmPopupConfigAnalyzer {
 
-    public static AlarmPopupModel createAlarmPopupModel(Integer displayStatus, AlarmPopupModel alarmPopupModel) {
+    public static void handleAlarmPopupModel(Integer displayStatus, AlarmPopupModel alarmPopupModel) {
         alarmPopupModel.isRequire = true;
         alarmPopupModel.title = "预警结果类型";
         //
@@ -60,6 +60,7 @@ public class AlarmPopupConfigFactory {
             };
             Collections.sort(mainAlarmPopupTagModels, modelComparator);
             alarmPopupModel.mainTags = mainAlarmPopupTagModels;
+
             if (displayStatus == null) {
                 //默认配置
                 //
@@ -67,23 +68,29 @@ public class AlarmPopupConfigFactory {
                 alarmPopupSubModelReason.isRequire = true;
                 alarmPopupSubModelReason.title = "预警成因";
                 alarmPopupSubModelReason.tips = "请先选择预警结果类型";
+                alarmPopupSubModelReason.key = "reason";
                 //
                 AlarmPopupModel.AlarmPopupSubModel alarmPopupSubModelPlace = new AlarmPopupModel.AlarmPopupSubModel();
+                alarmPopupSubModelPlace.key = "place";
+                ArrayList<AlarmPopupModel.AlarmPopupTagModel> subAlarmPopupTagModels = new ArrayList<>();
                 AlarmPopupDataConfigBean place = config.get("place");
                 if (place != null) {
                     alarmPopupSubModelPlace.title = place.getTitle();
-                    ArrayList<AlarmPopupModel.AlarmPopupTagModel> subAlarmPopupTagModels = new ArrayList<>();
                     List<AlarmPopupDataGroupsBean> groups = place.getGroups();
                     if (groups != null && groups.size() > 0) {
                         AlarmPopupDataGroupsBean alarmPopupDataGroupsBean = groups.get(0);
-                        List<AlarmPopupDataLabelsBean> labels = alarmPopupDataGroupsBean.getLabels();
-                        if (labels != null) {
-                            for (AlarmPopupDataLabelsBean alarmPopupDataLabelsBean : labels) {
-                                AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel = new AlarmPopupModel.AlarmPopupTagModel();
-                                alarmPopupTagModel.name = alarmPopupDataLabelsBean.getTitle();
-                                subAlarmPopupTagModels.add(alarmPopupTagModel);
+                        if (alarmPopupDataGroupsBean != null) {
+                            List<AlarmPopupDataLabelsBean> labels = alarmPopupDataGroupsBean.getLabels();
+                            if (labels != null) {
+                                for (AlarmPopupDataLabelsBean alarmPopupDataLabelsBean : labels) {
+                                    AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel = createAlarmPopupTagModel(-1);
+                                    alarmPopupTagModel.name = alarmPopupDataLabelsBean.getTitle();
+                                    alarmPopupTagModel.id = alarmPopupDataLabelsBean.getId();
+                                    subAlarmPopupTagModels.add(alarmPopupTagModel);
+                                }
                             }
                         }
+
                     }
                     alarmPopupSubModelPlace.subTags = subAlarmPopupTagModels;
                 }
@@ -93,6 +100,16 @@ public class AlarmPopupConfigFactory {
             } else {
                 if (1 == displayStatus) {
                     alarmPopupModel.resButtonBg = R.drawable.shape_button_alarm_pup;
+                } else {
+                    alarmPopupModel.resButtonBg = R.drawable.shape_button;
+                }
+                //重新设置主标签的选择标记
+                for (AlarmPopupModel.AlarmPopupTagModel mainTag : alarmPopupModel.mainTags) {
+                    try {
+                        mainTag.isChose = displayStatus.equals(mainTag.id);
+                    } catch (Exception e) {
+                        mainTag.isChose = false;
+                    }
                 }
                 AlarmPopupDataDisplayBean alarmPopupDataDisplayBean = displayShowMap.get(displayStatus);
                 ArrayList<AlarmPopupModel.AlarmPopupSubModel> alarmPopupSubModelArrayList = new ArrayList<>();
@@ -109,6 +126,7 @@ public class AlarmPopupConfigFactory {
                                 AlarmPopupDataConfigBean alarmPopupDataConfigBean = config.get(id);
                                 if (alarmPopupDataConfigBean != null) {
                                     alarmPopupSubModel.title = alarmPopupDataConfigBean.getTitle();
+                                    alarmPopupSubModel.key = alarmPopupDataDisplayItemsBean.getId();
                                     //查找符合条件的
                                     List<AlarmPopupDataGroupsBean> groups = alarmPopupDataConfigBean.getGroups();
                                     if (groups != null) {
@@ -164,13 +182,14 @@ public class AlarmPopupConfigFactory {
             }
 
         }
-        return alarmPopupModel;
     }
 
-    private static AlarmPopupModel.AlarmPopupTagModel createAlarmPopupTagModel(Integer displayStatus) {
+    private static AlarmPopupModel.AlarmPopupTagModel createAlarmPopupTagModel(int displayStatus) {
         AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel = new AlarmPopupModel.AlarmPopupTagModel();
         if (1 == displayStatus) {
             alarmPopupTagModel.resDrawable = R.drawable.shape_bg_solid_f3_20dp_corner;
+        } else {
+            alarmPopupTagModel.resDrawable = R.drawable.shape_bg_solid_29c_20dp_corner;
         }
         return alarmPopupTagModel;
     }

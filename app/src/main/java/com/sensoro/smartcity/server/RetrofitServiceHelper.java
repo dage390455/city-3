@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.model.AlarmPopupDangerData;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.server.bean.ScenesData;
@@ -64,7 +65,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
@@ -626,7 +630,7 @@ public class RetrofitServiceHelper {
     }
 
     public Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(String oldSn, String newSn, String taskId, Integer reason, double lon, double lat, List<String> tags, String
-            name, String contact, String content, List<String> imgUrls, String wxPhone,String forceReason, Integer status, String signalQuality) {
+            name, String contact, String content, List<String> imgUrls, String wxPhone, String forceReason, Integer status, String signalQuality) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(newSn)) {
@@ -812,13 +816,79 @@ public class RetrofitServiceHelper {
      * @param remark
      * @return
      */
-    public Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(String id, int statusResult, int statusType, int
-            statusPlace, String remark, boolean isReconfirm, List<ScenesData> scenesDataList) {
+    public Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(String id, Integer displayStatus, Integer reason, Integer
+            place, String remark, boolean isReconfirm, List<ScenesData> scenesDataList) {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("displayStatus", statusResult);
-            jsonObject.put("reason", statusType);
-            jsonObject.put("place", statusPlace);
+            if (displayStatus != null) {
+                jsonObject.put("displayStatus", displayStatus);
+            }
+            if (reason != null) {
+                jsonObject.put("reason", reason);
+            }
+            if (place != null) {
+                jsonObject.put("place", place);
+            }
+            if (!TextUtils.isEmpty(remark)) {
+                jsonObject.put("remark", remark);
+            }
+            jsonObject.put("source", "app");
+            if (isReconfirm) {
+                jsonObject.put("type", "reconfirm");
+            } else {
+                jsonObject.put("type", "confirm");
+            }
+            //
+            if (scenesDataList != null) {
+                JSONArray jsonArray = new JSONArray();
+                for (ScenesData scenesData : scenesDataList) {
+                    JSONObject jsonObject1 = new JSONObject();
+                    jsonObject1.put("type", scenesData.type);
+                    jsonObject1.put("url", scenesData.url);
+                    if (!TextUtils.isEmpty(scenesData.thumbUrl)) {
+                        jsonObject1.put("thumbUrl", scenesData.thumbUrl);
+                    }
+                    jsonArray.put(jsonObject1);
+                }
+                jsonObject.put("scenes", jsonArray);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        Observable<DeviceAlarmItemRsp> deviceAlarmItemRspObservable = retrofitService.doUpdatePhotosUrl(id, body);
+        RxApiManager.getInstance().add("doUpdatePhotosUrl", deviceAlarmItemRspObservable.subscribe());
+        return deviceAlarmItemRspObservable;
+    }
+
+    /**
+     * 修改提交确认预警信息备注(图片)
+     *
+     * @param id
+     * @param remark
+     * @return
+     */
+    public Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(String id, HashMap<String, Integer> map, List<AlarmPopupDangerData> alarmPopupDangerDataList, String remark, boolean isReconfirm, List<ScenesData> scenesDataList) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (map != null) {
+                Set<Map.Entry<String, Integer>> entries = map.entrySet();
+                for (Map.Entry<String, Integer> entry : entries) {
+                    String key = entry.getKey();
+                    Integer value = entry.getValue();
+                    jsonObject.put(key, value);
+                }
+            }
+            if (alarmPopupDangerDataList != null && alarmPopupDangerDataList.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (AlarmPopupDangerData alarmPopupDangerData : alarmPopupDangerDataList) {
+                    JSONObject jsonObjectDanger = new JSONObject();
+                    jsonObjectDanger.put("place", alarmPopupDangerData.place);
+                    jsonObjectDanger.put("action", alarmPopupDangerData.action);
+                    jsonArray.put(jsonObjectDanger);
+                }
+                jsonObject.put("danger", jsonArray);
+            }
             if (!TextUtils.isEmpty(remark)) {
                 jsonObject.put("remark", remark);
             }

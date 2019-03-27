@@ -14,9 +14,10 @@ import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
-import com.sensoro.smartcity.factory.AlarmPopupConfigFactory;
+import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.imainviews.IWarnFragmentView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.smartcity.model.AlarmPopupDangerData;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
@@ -45,6 +46,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -318,13 +320,12 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesAlarmPopupConfigRsp>(this) {
             @Override
             public void onCompleted(DevicesAlarmPopupConfigRsp devicesAlarmPopupConfigRsp) {
-                AlarmPopupModel alarmPopupModel = new AlarmPopupModel();
-
+                final AlarmPopupModel alarmPopupModel = new AlarmPopupModel();
                 alarmPopupModel.configAlarmPopupDataBean = devicesAlarmPopupConfigRsp.getData();
                 alarmPopupModel.mergeType = WidgetUtil.handleMergeType(mCurrentDeviceAlarmLogInfo.getDeviceType());
                 alarmPopupModel.sensorType = mCurrentDeviceAlarmLogInfo.getSensorType();
                 //
-                alarmPopupModel = AlarmPopupConfigFactory.createAlarmPopupModel(null, alarmPopupModel);
+                AlarmPopupConfigAnalyzer.handleAlarmPopupModel(null, alarmPopupModel);
                 getView().showAlarmPopupView(alarmPopupModel);
                 getView().dismissProgressDialog();
 
@@ -379,39 +380,6 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
     @Override
     public void onCreate() {
         EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onPopupCallback(int statusResult, int statusType, int statusPlace, List<ScenesData> scenesDataList, String remark) {
-        getView().showProgressDialog();
-        getView().setUpdateButtonClickable(false);
-        RetrofitServiceHelper.getInstance().doUpdatePhotosUrl(mCurrentDeviceAlarmLogInfo.get_id(), statusResult,
-                statusType, statusPlace,
-                remark, isReConfirm, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<DeviceAlarmItemRsp>(this) {
-
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().setUpdateButtonClickable(true);
-                        getView().dismissProgressDialog();
-                        getView().toastShort(errorMsg);
-                    }
-
-                    @Override
-                    public void onCompleted(DeviceAlarmItemRsp deviceAlarmItemRsp) {
-                        if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                            DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
-                            getView().toastShort(mContext.getResources().getString(R.string
-                                    .tips_commit_success));
-                            freshDeviceAlarmLogInfo(deviceAlarmLogInfo);
-                        } else {
-                            getView().toastShort(mContext.getResources().getString(R.string
-                                    .tips_commit_failed));
-                        }
-                        getView().dismissProgressDialog();
-                        getView().dismissAlarmPopupView();
-                    }
-                });
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -573,6 +541,61 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
         mSearchHistoryList.clear();
         getView().updateSearchHistoryList(mSearchHistoryList);
+    }
+
+    @Override
+    public void onPopupCallback(AlarmPopupModel alarmPopupModel, List<ScenesData> scenesDataList) {
+        getView().showProgressDialog();
+        getView().setUpdateButtonClickable(false);
+        Integer displayStatus = null;
+        for (AlarmPopupModel.AlarmPopupTagModel mainTag : alarmPopupModel.mainTags) {
+            if (mainTag.isChose) {
+                displayStatus = mainTag.id;
+                break;
+            }
+        }
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("displayStatus", displayStatus);
+        for (AlarmPopupModel.AlarmPopupSubModel subAlarmPopupModel : alarmPopupModel.subAlarmPopupModels) {
+            for (AlarmPopupModel.AlarmPopupTagModel subTag : subAlarmPopupModel.subTags) {
+                if (subTag.isChose) {
+                    map.put(subAlarmPopupModel.key, subTag.id);
+                }
+            }
+        }
+        ArrayList<AlarmPopupDangerData> alarmPopupDangerDatas = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            AlarmPopupDangerData alarmPopupDangerData = new AlarmPopupDangerData();
+            alarmPopupDangerData.place = "假的地址 " + i;
+            alarmPopupDangerData.action = "假的行为 " + i + 1;
+            alarmPopupDangerDatas.add(alarmPopupDangerData);
+        }
+        RetrofitServiceHelper.getInstance().doUpdatePhotosUrl(mCurrentDeviceAlarmLogInfo.get_id(), map, alarmPopupDangerDatas,
+                alarmPopupModel.mRemark, isReConfirm, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CityObserver<DeviceAlarmItemRsp>(this) {
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        getView().setUpdateButtonClickable(true);
+                        getView().dismissProgressDialog();
+                        getView().toastShort(errorMsg);
+                    }
+
+                    @Override
+                    public void onCompleted(DeviceAlarmItemRsp deviceAlarmItemRsp) {
+                        if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
+                            DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
+                            getView().toastShort(mContext.getResources().getString(R.string
+                                    .tips_commit_success));
+                            freshDeviceAlarmLogInfo(deviceAlarmLogInfo);
+                        } else {
+                            getView().toastShort(mContext.getResources().getString(R.string
+                                    .tips_commit_failed));
+                        }
+                        getView().dismissProgressDialog();
+                        getView().dismissAlarmPopupView();
+                    }
+                });
     }
     //-------------------------------------------------------------------------------------------
     //去掉按照确认类型排序排序
