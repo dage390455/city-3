@@ -909,7 +909,7 @@
     <string name="deploy_check_title_step_2">完善信息</string>
     <string name="deploy_check_title_step_3">部署结果</string>
     <string name="deploy_check_record_force_tip">，本次部署为强制上传</string>
-    <string name="deploy_check_record_reason_nearby">设备不在附近</string>
+    <string name="deploy_check_record_reason_nearby">需要配置设备的情况下，设备不在附近</string>
     <string name="deploy_check_record_reason_config">设备初始配置失败</string>
     <string name="deploy_check_record_reason_signal">设备信号：</string>
     <string name="deploy_check_record_reason_status">设备状态：</string>
