@@ -145,7 +145,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                     if (TextUtils.isEmpty(address)) {
                         address = ts;
                     }
-                    if(!TextUtils.isEmpty(address)){
+                    if (!TextUtils.isEmpty(address)) {
                         deployAnalyzerModel.address = address;
                     }
                 } catch (Exception e) {
@@ -186,7 +186,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
     private void init() {
         getView().setNotOwnVisible(deployAnalyzerModel.notOwn);
-        getView().setDeviceSn(deployAnalyzerModel.sn);
+        getView().setDeviceSn(mActivity.getString(R.string.device_number) + deployAnalyzerModel.sn);
         //TODO 这是是否要回显位置信息
         getView().updateBtnStatus(canDoOneNextTest());
         getView().setDeployPosition(checkHasLatLng());
@@ -586,7 +586,8 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                 updateConfigSettingData(inputValue, material, diameter, min);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
-                getView().toastShort(mActivity.getString(R.string.enter_the_correct_number_format));
+                int[] minMaxValue = DeployConfigurationAnalyzer.analyzeDeviceType(deployAnalyzerModel.deviceType);
+                getView().toastShort(mActivity.getString(R.string.enter_the_correct_number_format) + "," + mActivity.getString(R.string.range) + minMaxValue[0] + "-" + minMaxValue[1]);
             }
         } else {
             getView().setDeployCheckTvConfigurationText("-");
