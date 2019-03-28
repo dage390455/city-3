@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContactActivityView, AlarmContactActivityPresenter>
-        implements IAlarmContactActivityView ,RecycleViewItemClickListener,TipOperationDialogUtils.TipDialogUtilsClickListener {
+        implements IAlarmContactActivityView, RecycleViewItemClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
 
 
     @BindView(R.id.include_text_title_tv_cancel)
@@ -77,9 +77,9 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
     private void initClearHistoryDialog() {
         historyClearDialog = new TipOperationDialogUtils(mActivity, true);
         historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
-        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
-        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
-        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record), R.color.c_a6a6a6);
+        historyClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear), getResources().getColor(R.color.c_a6a6a6));
         historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
@@ -87,13 +87,13 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
         acNameAddressEtAlarmContactName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                return (event.getKeyCode()==KeyEvent.KEYCODE_ENTER);
+                return (event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
             }
         });
         acNameAddressEtAlarmContactPhone.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                return (event.getKeyCode()==KeyEvent.KEYCODE_ENTER);
+                return (event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
             }
         });
         acNameAddressEtAlarmContactName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -202,9 +202,9 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
     }
 
 
-    @OnClick({R.id.include_text_title_tv_cancel, R.id.include_text_title_tv_subtitle,R.id.iv_ac_name_address_delete_tag})
+    @OnClick({R.id.include_text_title_tv_cancel, R.id.include_text_title_tv_subtitle, R.id.iv_ac_name_address_delete_tag, R.id.ac_name_address_et_alarm_contact_name, R.id.ac_name_address_et_alarm_contact_phone})
     public void onViewClicked(View view) {
-        AppUtils.dismissInputMethodManager(mActivity,acNameAddressEtAlarmContactName);
+        AppUtils.dismissInputMethodManager(mActivity, acNameAddressEtAlarmContactName);
         switch (view.getId()) {
             case R.id.include_text_title_tv_cancel:
                 finishAc();
@@ -212,14 +212,21 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
             case R.id.include_text_title_tv_subtitle:
                 String name = acNameAddressEtAlarmContactName.getText().toString();
                 String phone = acNameAddressEtAlarmContactPhone.getText().toString();
-                mPresenter.doFinish(name,phone);
+                mPresenter.doFinish(name, phone);
                 break;
             case R.id.iv_ac_name_address_delete_tag:
                 showHistoryClearDialog();
                 break;
+            case R.id.ac_name_address_et_alarm_contact_name:
+                acNameAddressEtAlarmContactName.requestFocus();
+                acNameAddressEtAlarmContactName.setCursorVisible(true);
+                break;
+            case R.id.ac_name_address_et_alarm_contact_phone:
+                acNameAddressEtAlarmContactPhone.requestFocus();
+                acNameAddressEtAlarmContactPhone.setCursorVisible(true);
+                break;
         }
     }
-
 
 
     @Override

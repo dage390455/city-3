@@ -17,7 +17,7 @@ public class SensoroLinearLayoutManager extends LinearLayoutManager {
         super(context);
     }
 
-    public SensoroLinearLayoutManager(Context context,boolean isScrollVertical) {
+    public SensoroLinearLayoutManager(Context context, boolean isScrollVertical) {
         this(context);
         this.isScrollVertical = isScrollVertical;
     }
@@ -39,9 +39,9 @@ public class SensoroLinearLayoutManager extends LinearLayoutManager {
 
     @Override
     public boolean canScrollVertically() {
-        if(isScrollVertical){
+        if (isScrollVertical) {
             return super.canScrollVertically();
-        }else{
+        } else {
             return false;
         }
 
@@ -53,22 +53,21 @@ public class SensoroLinearLayoutManager extends LinearLayoutManager {
         super.onLayoutChildren(recycler, state);
         if (recycler != null) {
             detachAndScrapAttachedViews(recycler);
-
             int sumWidth = getWidth();
 
             int curLineWidth = 0, curLineTop = 0;
             int lastLineMaxHeight = 0;
             int rowIndex = 0;
+            removeAllViews();
             for (int i = 0; i < getItemCount(); i++) {
                 View view = recycler.getViewForPosition(i);
-
-                addView(view);
                 measureChildWithMargins(view, 0, 0);
                 int width = getDecoratedMeasuredWidth(view);
                 int height = getDecoratedMeasuredHeight(view);
 
                 curLineWidth += width;
-                if (curLineWidth <= sumWidth) {//不需要换行
+                if (curLineWidth <= sumWidth) {
+                    //不需要换行
                     if (rowIndex == 0 && i > 0) {
                         layoutDecorated(view, curLineWidth - width, curLineTop, curLineWidth, curLineTop + height);
                         //比较当前行多有item的最大高度
@@ -92,6 +91,7 @@ public class SensoroLinearLayoutManager extends LinearLayoutManager {
                     layoutDecorated(view, 0, curLineTop, width, curLineTop + height);
                     lastLineMaxHeight = height;
                 }
+                addView(view);
             }
         }
     }

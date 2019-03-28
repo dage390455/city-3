@@ -58,7 +58,7 @@ public class ContractDetailPresenter extends BasePresenter<IContractDetailView> 
                             getView().setContractNumber(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.contract_number), mContractInfo.getContract_number()));
                             boolean confirmed = mContractInfo.isConfirmed();
                             getView().setSignStatus(confirmed);
-                            if (confirmed && PreferencesHelper.getInstance().getUserData().hasContractModify) {
+                            if (!confirmed && PreferencesHelper.getInstance().getUserData().hasContractModify) {
                                 getView().setContractEditVisible(true);
                             } else {
                                 getView().setContractEditVisible(false);

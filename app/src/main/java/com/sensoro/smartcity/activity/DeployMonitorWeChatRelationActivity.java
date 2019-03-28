@@ -36,7 +36,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMonitorWeChatRelationActivityView, DeployMonitorWeChatRelationActivityPresenter>
-        implements IDeployMonitorWeChatRelationActivityView, RecycleViewItemClickListener,TipOperationDialogUtils.TipDialogUtilsClickListener {
+        implements IDeployMonitorWeChatRelationActivityView, RecycleViewItemClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.ac_we_chat_relation_et)
     EditText acWeChatRelationEt;
     @BindView(R.id.ac_chat_relation_ll)
@@ -77,9 +77,9 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
     private void initClearHistoryDialog() {
         historyClearDialog = new TipOperationDialogUtils(mActivity, true);
         historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
-        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
-        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
-        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record), R.color.c_a6a6a6);
+        historyClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear), getResources().getColor(R.color.c_a6a6a6));
         historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
@@ -93,7 +93,7 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
         }
         SpannableString spannableString = new SpannableString(desc);
         ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(getResources().getColor(R.color.c_252525));
-        spannableString.setSpan(foregroundColorSpan,start,start+temp.length(),Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        spannableString.setSpan(foregroundColorSpan, start, start + temp.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         tvAcChatRelationQrCodeDesc.setText(spannableString);
 
     }
@@ -198,20 +198,24 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
 
     }
 
-    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel,R.id.iv_ac_chat_relation_delete_history})
+    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel, R.id.iv_ac_chat_relation_delete_history, R.id.ac_we_chat_relation_et})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
-                AppUtils.dismissInputMethodManager(mActivity,acWeChatRelationEt);
+                AppUtils.dismissInputMethodManager(mActivity, acWeChatRelationEt);
                 String text = acWeChatRelationEt.getText().toString();
                 mPresenter.doChoose(text);
                 break;
             case R.id.include_text_title_tv_cancel:
-                AppUtils.dismissInputMethodManager(mActivity,acWeChatRelationEt);
+                AppUtils.dismissInputMethodManager(mActivity, acWeChatRelationEt);
                 finishAc();
                 break;
             case R.id.iv_ac_chat_relation_delete_history:
-               showHistoryClearDialog();
+                showHistoryClearDialog();
+                break;
+            case R.id.ac_we_chat_relation_et:
+                acWeChatRelationEt.requestFocus();
+                acWeChatRelationEt.setCursorVisible(true);
                 break;
         }
 
@@ -244,7 +248,7 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
 
     @Override
     public void onCancelClick() {
-        if (historyClearDialog !=  null) {
+        if (historyClearDialog != null) {
             historyClearDialog.dismiss();
 
         }
