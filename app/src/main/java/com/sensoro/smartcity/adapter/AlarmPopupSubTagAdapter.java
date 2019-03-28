@@ -34,7 +34,20 @@ public class AlarmPopupSubTagAdapter extends RecyclerView.Adapter<AlarmPopupSubT
     @Override
     public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_alarm_popup_tag, parent, false);
-        return new MyHolder(view);
+        MyHolder myHolder = new MyHolder(view);
+        myHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //处理数据
+                Integer position = (Integer) v.getTag();
+                for (int i = 0; i < mList.size(); i++) {
+                    AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel = mList.get(i);
+                    alarmPopupTagModel.isChose = i == position;
+                }
+                notifyDataSetChanged();
+            }
+        });
+        return myHolder;
     }
 
     @Override
@@ -46,24 +59,16 @@ public class AlarmPopupSubTagAdapter extends RecyclerView.Adapter<AlarmPopupSubT
     public void onBindViewHolder(MyHolder holder, final int position) {
         //一定要设置，因为是通用的，所以要设置这个
         //
+        holder.itemView.setTag(position);
         final AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel = mList.get(position);
+        holder.tvAlarmPopupTag.setTag(alarmPopupTagModel);
         setSelectState(holder, alarmPopupTagModel);
         if (TextUtils.isEmpty(alarmPopupTagModel.name)) {
 
         } else {
             holder.tvAlarmPopupTag.setText(alarmPopupTagModel.name);
         }
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //处理数据
-                for (int i = 0; i < mList.size(); i++) {
-                    AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel = mList.get(i);
-                    alarmPopupTagModel.isChose = i == position;
-                }
-                notifyDataSetChanged();
-            }
-        });
+
     }
 
     private void setSelectState(MyHolder holder, AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel) {
