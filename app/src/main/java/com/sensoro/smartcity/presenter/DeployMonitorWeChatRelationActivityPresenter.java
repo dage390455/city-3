@@ -94,11 +94,8 @@ public class DeployMonitorWeChatRelationActivityPresenter extends BasePresenter<
                 getView().toastShort(mContext.getString(R.string.please_enter_a_valid_mobile_number));
                 return;
             }
-        }else{
-            getView().toastShort(mContext.getString(R.string.please_enter_a_valid_mobile_number));
-            return;
+            save(text);
         }
-        save(text);
         EventData eventData = new EventData();
         eventData.code = EVENT_DATA_DEPLOY_SETTING_WE_CHAT_RELATION;
         eventData.data = text;
