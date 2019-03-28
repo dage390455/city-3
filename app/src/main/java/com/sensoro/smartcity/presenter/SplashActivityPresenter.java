@@ -48,10 +48,10 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
 //            throwable.printStackTrace();
 //        }
         mContext = (Activity) context;
-//        permissionDialogUtils = new PermissionDialogUtils(mContext);
+        permissionDialogUtils = new PermissionDialogUtils(mContext);
 
-        getView().startAC(new Intent(mContext, SecurityRisksActivity.class));
-        getView().finishAc();
+//        getView().startAC(new Intent(mContext, SecurityRisksActivity.class));
+//        getView().finishAc();
     }
 
     private void checkLoginState() {
