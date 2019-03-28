@@ -60,6 +60,8 @@
                 android:imeOptions="actionNone|actionSearch"
                 android:paddingLeft="@dimen/x20"
                 android:paddingRight="@dimen/x30"
+                android:cursorVisible="true"
+                android:textCursorDrawable="@drawable/my_cursor"
                 android:singleLine="true"
                 android:textSize="14sp" />
 

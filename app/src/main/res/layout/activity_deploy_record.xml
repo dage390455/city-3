@@ -65,6 +65,8 @@
                     android:layout_marginBottom="8dp"
                     android:layout_toStartOf="@id/ac_deploy_record_search_imv_clear"
                     android:background="@null"
+                    android:cursorVisible="true"
+                    android:textCursorDrawable="@drawable/my_cursor"
                     android:drawableStart="@drawable/main_search"
                     android:drawablePadding="8dp"
                     android:hint="@string/deploy_record_search_tip"

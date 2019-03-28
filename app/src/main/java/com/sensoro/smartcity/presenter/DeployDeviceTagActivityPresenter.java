@@ -69,6 +69,10 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
             if (!TextUtils.isEmpty(tag)) {
                 String trim = getTrim(tag);
                 if (!TextUtils.isEmpty(trim)) {
+                    if (ResourceUtils.getByteFromWords(trim) > 30) {
+                        getView().toastShort(mContext.getString(R.string.the_maximum_length_of_the_label));
+                        return;
+                    }
                     if (mTagList.contains(trim)) {
                         getView().toastShort(mContext.getString(R.string.label_cannot_be_repeated));
                         return;
@@ -90,6 +94,10 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
             if (!TextUtils.isEmpty(test)) {
                 String trim = getTrim(test);
                 if (!TextUtils.isEmpty(trim)) {
+                    if (ResourceUtils.getByteFromWords(trim) > 30) {
+                        getView().toastShort(mContext.getString(R.string.the_maximum_length_of_the_label));
+                        return;
+                    }
                     if (mTagList.contains(trim)) {
                         getView().toastShort(mContext.getString(R.string.label_cannot_be_repeated));
                         return;
@@ -172,12 +180,11 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
         }
         String trim = getTrim(text);
         if (!TextUtils.isEmpty(trim)) {
-            if (mTagList.contains(trim)) {
-                getView().toastShort(mContext.getString(R.string.label_cannot_be_repeated));
+            if (ResourceUtils.getByteFromWords(trim) > 30) {
+                getView().toastShort(mContext.getString(R.string.the_maximum_length_of_the_label));
                 return;
-            } else {
-                mTagList.set(position, text);
             }
+            mTagList.set(position, text);
         }
         getView().updateTags(mTagList);
         getView().dismissDialog();

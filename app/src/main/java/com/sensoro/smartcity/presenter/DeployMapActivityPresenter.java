@@ -78,7 +78,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                 //巡检设备更换
             case TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
-                getView().setSignalVisible(true);
+                getView().setSignalVisible(false);
                 getView().refreshSignal(deployAnalyzerModel.updatedTime, deployAnalyzerModel.signal);
                 break;
             case TYPE_SCAN_LOGIN:
@@ -139,7 +139,9 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
         if (TextUtils.isEmpty(address)) {
             address = ts;
         }
-        deployAnalyzerModel.address = address;
+        if (!TextUtils.isEmpty(address)) {
+            deployAnalyzerModel.address = address;
+        }
         try {
             LogUtils.loge("deployMapModel", "----" + deployAnalyzerModel.address);
         } catch (Throwable throwable) {

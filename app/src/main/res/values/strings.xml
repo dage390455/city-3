@@ -937,4 +937,12 @@
     <string name="refer_behavior_no">参考行为</string>
     <string name="please_input_all_save">请填写完整后保存</string>
     <string name="most_support_ten_tag">最多支持10个行为标签</string>
+    <string name="deploy_check_title_step_1">Deploy Check</string>
+    <string name="deploy_check_title_step_2">Improve Info</string>
+    <string name="deploy_check_title_step_3">Deploy Result</string>
+    <string name="deploy_check_record_force_tip">,deploy this device forcibly</string>
+    <string name="deploy_check_record_reason_nearby">If the device needs to be configured, the device is not nearby</string>
+    <string name="deploy_check_record_reason_config">Device config setting failed</string>
+    <string name="deploy_check_record_reason_signal">Device signal:</string>
+    <string name="deploy_check_record_reason_status">Device status:</string>
 </resources>

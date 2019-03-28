@@ -87,6 +87,8 @@
                         android:layout_marginEnd="16dp"
                         android:scrollbars="vertical"
                         android:background="@null"
+                        android:cursorVisible="true"
+                        android:textCursorDrawable="@drawable/my_cursor"
                         android:hint="@string/inspection_uploade_exception_exception_description"
                         android:inputType="none"
                         android:maxLength="200"

@@ -47,6 +47,8 @@
                     android:layout_marginEnd="20dp"
                     android:layout_weight="1"
                     android:background="@null"
+                    android:cursorVisible="true"
+                    android:textCursorDrawable="@drawable/my_cursor"
                     android:hint="@string/enter_the_phone_number_used_to_look_device"
                     android:gravity="end"
                     android:singleLine="true"
@@ -63,7 +65,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="20dp"
                 android:text="@string/please_enter_the_mobile_phone_number_and_the_contracted_mobile_phone_number"
-                android:textColor="@color/c_252525"
+                android:textColor="@color/c_a6a6a6"
                 android:textSize="12sp" />
 
             <LinearLayout
@@ -102,7 +104,7 @@
                 android:id="@+id/ac_chat_relation_rc_history"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="20dp">
 

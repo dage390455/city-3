@@ -27,7 +27,7 @@ import com.sensoro.smartcity.adapter.AlarmPopupContentAdapter;
 import com.sensoro.smartcity.adapter.AlarmPopupMainTagAdapter;
 import com.sensoro.smartcity.adapter.ImagePickerAdapter;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.factory.AlarmPopupConfigFactory;
+import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.model.AlarmPopModel;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.EventData;
@@ -58,7 +58,7 @@ import butterknife.Unbinder;
 import static com.sensoro.smartcity.widget.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
 
 public class AlarmPopUtilsTest implements Constants,
-        ImagePickerAdapter.OnRecyclerViewItemClickListener, UpLoadPhotosUtils.UpLoadPhotoListener, SelectDialog.SelectDialogListener, DialogInterface.OnDismissListener, DialogInterface.OnCancelListener, AlarmPopupMainTagAdapter.OnAlarmPopupMainTagAdapterItemClickObserver {
+        ImagePickerAdapter.OnRecyclerViewItemClickListener, UpLoadPhotosUtils.UpLoadPhotoListener, SelectDialog.SelectDialogListener, DialogInterface.OnDismissListener, DialogInterface.OnCancelListener {
     @BindView(R.id.iv_alarm_popup_close)
     ImageView ivAlarmPopupClose;
     @BindView(R.id.tv_alarm_popup_name)
@@ -124,10 +124,6 @@ public class AlarmPopUtilsTest implements Constants,
             bind.unbind();
             bind = null;
         }
-//        if (tempImages != null) {
-//            tempImages.clear();
-//            tempImages = null;
-//        }
         selImageList.clear();
     }
 
@@ -144,18 +140,9 @@ public class AlarmPopUtilsTest implements Constants,
 
     private void showProgressDialog(String content, double percent) {
         if (progressDialog != null) {
-//            if (count == -1) {
-//                String title = "正在上传视频";
-//                progressDialog.setProgress((int) (percent * 100));
-//                progressDialog.setTitle(title);
-//                progressDialog.show();
-//            } else {
-//                String title = "正在上传第" + count + "张，总共" + selImageList.size() + "张";
             progressDialog.setProgress((int) (percent * 100));
             progressDialog.setTitle(content);
             progressDialog.show();
-//            }
-
         }
     }
 
@@ -236,7 +223,29 @@ public class AlarmPopUtilsTest implements Constants,
         rvAlarmPopupAlarmReason.setHasFixedSize(true);
         rvAlarmPopupAlarmReason.setNestedScrollingEnabled(false);
         rvAlarmPopupAlarmReason.setLayoutManager(manager);
-        alarmPopupMainTagAdapter.setOnAlarmPopupMainTagAdapterItemClickObserver(this);
+        alarmPopupMainTagAdapter.setOnAlarmPopupMainTagAdapterItemClickObserver(new AlarmPopupMainTagAdapter.OnAlarmPopupMainTagAdapterItemClickObserver() {
+            @Override
+            public void onClick(View v, int position) {
+                if (mAlarmPopupModel != null) {
+                    final AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel = mAlarmPopupModel.mainTags.get(position);
+                    //TODO 处理sub标签类
+                    ThreadPoolManager.getInstance().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlarmPopupConfigAnalyzer.handleAlarmPopupModel(alarmPopupTagModel.id, mAlarmPopupModel);
+                            mActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    alarmPopupContentAdapter.updateData(mAlarmPopupModel.subAlarmPopupModels);
+                                    btAlarmPopupCommit.setBackground(mActivity.getResources().getDrawable(mAlarmPopupModel.resButtonBg));
+                                }
+                            });
+                        }
+                    });
+
+                }
+            }
+        });
         //子类型
         alarmPopupContentAdapter = new AlarmPopupContentAdapter(mActivity);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
@@ -316,21 +325,6 @@ public class AlarmPopUtilsTest implements Constants,
     private void doAlarmConfirm() {
         setUpdateButtonClickable(false);
         mAlarmPopupModel.mRemark = etAlarmPopupRemark.getText().toString();
-//        if (selectResult == -1) {
-//            toastShort(mActivity.getString(R.string.select_alarm_result_type));
-//            setUpdateButtonClickable(true);
-//            return;
-//        }
-//        if (selectType == -1) {
-//            toastShort(mActivity.getString(R.string.select_alarm_cause_type));
-//            setUpdateButtonClickable(true);
-//            return;
-//        }
-//        if (selectPlace == -1) {
-//            toastShort(mActivity.getString(R.string.select_alarm_cause_site));
-//            setUpdateButtonClickable(true);
-//            return;
-//        }
         if (mListener != null) {
             if (selImageList.size() > 0) {
                 setProgressDialog();
@@ -338,7 +332,7 @@ public class AlarmPopUtilsTest implements Constants,
             } else {
                 //
                 dismissProgressDialog();
-//                mListener.onPopupCallback(selectResult, selectType, selectPlace, null, mRemark);
+                mListener.onPopupCallback(mAlarmPopupModel, null);
             }
 //
         }
@@ -426,7 +420,6 @@ public class AlarmPopUtilsTest implements Constants,
             s.append(scenesData.url).append("\n");
         }
         dismissProgressDialog();
-//        toastShort("上传成功---");
         try {
             LogUtils.loge(this, "上传成功---" + s);
         } catch (Throwable throwable) {
@@ -434,7 +427,7 @@ public class AlarmPopUtilsTest implements Constants,
         }
         //TODO 上传结果
         if (mListener != null) {
-//            mListener.onPopupCallback(selectResult, selectType, selectPlace, scenesDataList, mRemark);
+            mListener.onPopupCallback(mAlarmPopupModel, scenesDataList);
         }
     }
 
@@ -527,32 +520,8 @@ public class AlarmPopUtilsTest implements Constants,
         }
     }
 
-    @Override
-    public void onClick(View v, int position) {
-
-        if (mAlarmPopupModel != null) {
-            final AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel = mAlarmPopupModel.mainTags.get(position);
-            //TODO 处理sub标签类
-            ThreadPoolManager.getInstance().execute(new Runnable() {
-                @Override
-                public void run() {
-                    mAlarmPopupModel = AlarmPopupConfigFactory.createAlarmPopupModel(alarmPopupTagModel.id, mAlarmPopupModel);
-                    mActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            alarmPopupContentAdapter.updateData(mAlarmPopupModel.subAlarmPopupModels);
-                            btAlarmPopupCommit.setBackground(mActivity.getResources().getDrawable(mAlarmPopupModel.resButtonBg));
-                        }
-                    });
-                }
-            });
-
-        }
-
-    }
-
     public interface OnPopupCallbackListener {
-        void onPopupCallback(int statusResult, int statusType, int statusPlace, List<ScenesData> scenesDataList, String remark);
+        void onPopupCallback(AlarmPopupModel alarmPopupModel, List<ScenesData> scenesDataList);
     }
 
 

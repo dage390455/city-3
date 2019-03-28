@@ -21,6 +21,7 @@ public class AlarmPopupModel {
         public boolean isRequire;
         public String title;
         public String tips;
+        public String key;
         public List<AlarmPopupTagModel> subTags;
     }
 

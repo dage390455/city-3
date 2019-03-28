@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:text="安装配置"
+                android:text="@string/deploy_check_title_step_1"
                 android:textColor="@color/c_252525"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -76,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:gravity="center_vertical"
-                android:text="完善信息"
+                android:text="@string/deploy_check_title_step_2"
                 android:textColor="@color/c_a6a6a6"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:gravity="center_vertical"
-                android:text="部署成功"
+                android:text="@string/deploy_check_title_step_3"
                 android:textColor="@color/c_a6a6a6"
                 android:textSize="14sp" />
         </LinearLayout>

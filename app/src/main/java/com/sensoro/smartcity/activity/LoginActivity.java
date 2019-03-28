@@ -189,6 +189,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
             //取消或确定按钮监听事件处理
             final AlertDialog dialog = builder.create();
             dialog.setCanceledOnTouchOutside(false);
+            input_edt.setCursorVisible(true);
             dialog.show();
             btn_confirm.setOnClickListener(new View.OnClickListener() {
                 @Override

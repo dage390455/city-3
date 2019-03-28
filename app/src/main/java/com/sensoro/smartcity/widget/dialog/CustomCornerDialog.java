@@ -20,7 +20,7 @@ public class CustomCornerDialog extends Dialog {
     }
 
     public CustomCornerDialog(@NonNull Context context, int themeResId,View view) {
-        this(context,themeResId,view,0.88f);
+        this(context,themeResId,view,0.8f);
     }
 
     public CustomCornerDialog(@NonNull Context context,View view,float percentWidth) {

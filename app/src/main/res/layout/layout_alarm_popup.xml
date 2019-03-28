@@ -131,6 +131,8 @@
                     android:background="@drawable/shape_et_search"
                     android:enabled="true"
                     android:gravity="top"
+                    android:cursorVisible="true"
+                    android:textCursorDrawable="@drawable/my_cursor"
                     android:hint="@string/alarm_descript"
                     android:inputType="textMultiLine"
                     android:padding="10dp"

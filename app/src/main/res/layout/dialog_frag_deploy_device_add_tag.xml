@@ -32,6 +32,8 @@
         android:layout_weight="1"
         android:layout_gravity="center_vertical"
         android:background="@null"
+        android:cursorVisible="true"
+        android:textCursorDrawable="@drawable/my_cursor"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp"
         android:layout_marginStart="16dp"
