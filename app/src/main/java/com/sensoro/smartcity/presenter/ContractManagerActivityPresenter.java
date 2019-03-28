@@ -57,7 +57,9 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
         initSelectData();
         initSearchHistoryData();
         initCalendarPop();
+        getView().setContractMangerAddVisible(PreferencesHelper.getInstance().getUserData().hasContractCreate);
         requestDataByDirection(DIRECTION_DOWN, true);
+
     }
 
     private void initCalendarPop() {

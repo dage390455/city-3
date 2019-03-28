@@ -2,6 +2,7 @@ package com.sensoro.smartcity.widget.dialog;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -32,6 +33,13 @@ public class TagDialogUtils implements View.OnClickListener {
         mDialogTvConfirm.setOnClickListener(this);
         mDialogTvCancel.setOnClickListener(this);
         mDialogImvClear.setOnClickListener(this);
+        mDialogEtInput.setOnClickListener(this);
+        mDialogEtInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                return (event.getKeyCode()==KeyEvent.KEYCODE_ENTER);
+            }
+        });
         mAddTagDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view);
 //        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 //        builder.setView(view);
@@ -83,6 +91,10 @@ public class TagDialogUtils implements View.OnClickListener {
                         onTagDialogListener.onConfirm(mType, tag, currentPosition);
                     }
                 }
+                break;
+            case R.id.dialog_add_tag_et_input:
+                mDialogEtInput.requestFocus();
+                mDialogEtInput.setCursorVisible(true);
                 break;
             case R.id.dialog_add_tag_imv_clear:
                 if (mDialogEtInput != null) {

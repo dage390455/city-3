@@ -32,7 +32,7 @@ import static com.sensoro.smartcity.widget.dialog.TagDialogUtils.DIALOG_TAG_EDIT
 
 public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivityView, DeployDeviceTagActivityPresenter>
         implements IDeployDeviceTagActivityView, DeployDeviceTagAddTagAdapter.DeployDeviceTagAddTagItemClickListener, RecycleViewItemClickListener,
-        TagDialogUtils.OnTagDialogListener,TipOperationDialogUtils.TipDialogUtilsClickListener {
+        TagDialogUtils.OnTagDialogListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.include_text_title_tv_cancel)
     TextView includeTextTitleTvCancel;
     @BindView(R.id.include_text_title_tv_title)
@@ -82,9 +82,9 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
     private void initClearHistoryDialog() {
         historyClearDialog = new TipOperationDialogUtils(mActivity, true);
         historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
-        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
-        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
-        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record), R.color.c_a6a6a6);
+        historyClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear), getResources().getColor(R.color.c_a6a6a6));
         historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
@@ -177,7 +177,7 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
         super.onDestroy();
     }
 
-    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel,R.id.iv_ac_deploy_device_tag_delete_history})
+    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel, R.id.iv_ac_deploy_device_tag_delete_history})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
@@ -187,7 +187,7 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
                 finishAc();
                 break;
             case R.id.iv_ac_deploy_device_tag_delete_history:
-               historyClearDialog.show();
+                historyClearDialog.show();
                 break;
         }
     }
@@ -212,12 +212,12 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
         mAddTagAdapter.setTags(tags);
 //        updateSaveStatus(tags.size() > 0);
         mAddTagAdapter.notifyDataSetChanged();
-        ivAcDeployDeviceTagDeleteHistoryTag.setVisibility(tags.size() > 0 ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void updateSearchHistory(List<String> strHistory) {
         mHistoryTagAdapter.updateSearchHistoryAdapter(strHistory);
+        ivAcDeployDeviceTagDeleteHistoryTag.setVisibility(strHistory.size() > 0 ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -251,7 +251,7 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
 
     @Override
     public void onCancelClick() {
-        if (historyClearDialog !=  null) {
+        if (historyClearDialog != null) {
             historyClearDialog.dismiss();
         }
     }

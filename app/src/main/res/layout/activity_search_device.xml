@@ -159,7 +159,7 @@
                     android:layout_centerVertical="true"
                     android:contentDescription="@null"
                     android:src="@drawable/tag_delete"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <android.support.v7.widget.RecyclerView

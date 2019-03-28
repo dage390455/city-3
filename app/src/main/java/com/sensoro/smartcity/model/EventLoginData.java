@@ -11,6 +11,8 @@ public final class EventLoginData implements Serializable {
     public boolean isSupperAccount;
     public boolean hasStation;
     public boolean hasContract;
+    public boolean hasContractCreate;
+    public boolean hasContractModify;
     public boolean hasScanLogin;
     public boolean hasSubMerchant = true;
     public boolean hasMerchantChange = true;
@@ -43,6 +45,8 @@ public final class EventLoginData implements Serializable {
                 ", isSupperAccount=" + isSupperAccount +
                 ", hasStation=" + hasStation +
                 ", hasContract=" + hasContract +
+                ", hasContractCreate=" + hasContractCreate +
+                ", hasContractModify=" + hasContractModify +
                 ", hasScanLogin=" + hasScanLogin +
                 ", hasSubMerchant=" + hasSubMerchant +
                 ", hasMerchantChange=" + hasMerchantChange +

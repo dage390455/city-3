@@ -51,4 +51,6 @@ public interface IContractManagerActivityView extends IProgressDialog, IToast, I
     void setSelectedDateSearchText(String content);
 
     void showHistoryClearDialog();
+
+    void setContractMangerAddVisible(boolean isVisible);
 }

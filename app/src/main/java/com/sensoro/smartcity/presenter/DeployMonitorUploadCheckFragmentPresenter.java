@@ -245,7 +245,12 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                 break;
             case Constants.EVENT_DATA_DEPLOY_SETTING_WE_CHAT_RELATION:
                 if (data instanceof String) {
-                    deployAnalyzerModel.weChatAccount = (String) data;
+                    String weChatAccount = (String) data;
+                    if (TextUtils.isEmpty(weChatAccount)) {
+                        deployAnalyzerModel.weChatAccount = null;
+                    } else {
+                        deployAnalyzerModel.weChatAccount = weChatAccount;
+                    }
                     getView().setDeployWeChatText(deployAnalyzerModel.weChatAccount);
                 }
                 break;

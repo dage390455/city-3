@@ -187,6 +187,8 @@ public interface Constants {
     String EXTRA_EVENT_LOGIN_DATA = "extra_event_login_data";
     String EXTRA_GRANTS_HAS_STATION = "extra_grants_has_station";
     String EXTRA_GRANTS_HAS_CONTRACT = "extra_grants_has_contract";
+    String EXTRA_GRANTS_HAS_CONTRACT_CREATE = "extra_grants_has_contract_create";
+    String EXTRA_GRANTS_HAS_CONTRACT_MODIFY = "extra_grants_has_contract_modify";
     String EXTRA_GRANTS_HAS_SCAN_LOGIN = "extra_grants_has_scan_login";
     String EXTRA_GRANTS_HAS_SUB_MERCHANT = "extra_grants_has_sub_merchant";
     String EXTRA_GRANTS_HAS_MERCHANT_CHANGE = "extra_grants_has_merchant_change";

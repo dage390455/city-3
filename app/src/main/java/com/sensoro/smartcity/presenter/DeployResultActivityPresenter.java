@@ -184,9 +184,9 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
 //                getView().setStatusTextView(mContext.getString(Constants.STATION_STATUS_ARRAY[deployResultModel.stationStatus + 1]),
 //                        mContext.getResources().getColor(Constants.STATION_STATUS_COLOR_ARRAY[deployResultModel.stationStatus + 1]));
                 if (deployResultModel.deployTime == null) {
-                    getView().setUpdateTextView(DateUtil.getStrTimeTodayByDevice(mContext, System.currentTimeMillis()));
+                    getView().setUpdateTextView(DateUtil.getStrTimeToday(mContext, System.currentTimeMillis(), 0));
                 } else {
-                    getView().setUpdateTextView(DateUtil.getStrTimeTodayByDevice(mContext, deployResultModel.deployTime));
+                    getView().setUpdateTextView(DateUtil.getStrTimeToday(mContext, deployResultModel.deployTime, 0));
                 }
 //                if (deployResultModel.updateTime == -1 || deployResultModel.updateTime == 0) {
 //                    getView().setUpdateTextViewVisible(false);
@@ -230,9 +230,9 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                             mContext.getResources().getColor(R.color.c_29c093));
                 }
                 if (deployResultModel.deployTime == null) {
-                    getView().setUpdateTextView(DateUtil.getStrTimeTodayByDevice(mContext, System.currentTimeMillis()));
+                    getView().setUpdateTextView(DateUtil.getStrTimeToday(mContext, System.currentTimeMillis(), 0));
                 } else {
-                    getView().setUpdateTextView(DateUtil.getStrTimeTodayByDevice(mContext, deployResultModel.deployTime));
+                    getView().setUpdateTextView(DateUtil.getStrTimeToday(mContext, deployResultModel.deployTime, 0));
                 }
 //                if (deployResultModel.updateTime == -1 || deployResultModel.updateTime == 0) {
 //                    getView().setUpdateTextViewVisible(false);
@@ -282,9 +282,9 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
 //                getView().setStatusTextView(mContext.getString(Constants.STATION_STATUS_ARRAY[deployResultModel.stationStatus + 1]),
 //                        mContext.getResources().getColor(Constants.STATION_STATUS_COLOR_ARRAY[deployResultModel.stationStatus + 1]));
                 if (deployResultModel.deployTime == null) {
-                    getView().setUpdateTextView(DateUtil.getStrTimeTodayByDevice(mContext, System.currentTimeMillis()));
+                    getView().setUpdateTextView(DateUtil.getStrTimeToday(mContext, System.currentTimeMillis(), 0));
                 } else {
-                    getView().setUpdateTextView(DateUtil.getStrTimeTodayByDevice(mContext, deployResultModel.deployTime));
+                    getView().setUpdateTextView(DateUtil.getStrTimeToday(mContext, deployResultModel.deployTime, 0));
                 }
 //                if (deployResultModel.updateTime == -1 || deployResultModel.updateTime == 0) {
 //                    getView().setUpdateTextViewVisible(false);
@@ -330,9 +330,9 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 getView().refreshSignal(deployResultModel.updateTime, deployResultModel.signal);
                 //TODO 当前的部署时间需要更换
                 if (deployResultModel.deployTime == null) {
-                    getView().setUpdateTextView(DateUtil.getStrTimeTodayByDevice(mContext, System.currentTimeMillis()));
+                    getView().setUpdateTextView(DateUtil.getStrTimeToday(mContext, System.currentTimeMillis(), 0));
                 } else {
-                    getView().setUpdateTextView(DateUtil.getStrTimeTodayByDevice(mContext, deployResultModel.deployTime));
+                    getView().setUpdateTextView(DateUtil.getStrTimeToday(mContext, deployResultModel.deployTime, 0));
                 }
 //                if (deployResultModel.updateTime == -1 || deployResultModel.updateTime == 0) {
 //                    getView().setUpdateTextViewVisible(false);
