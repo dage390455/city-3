@@ -204,17 +204,20 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
 
     @OnClick({R.id.include_text_title_tv_cancel, R.id.include_text_title_tv_subtitle, R.id.iv_ac_name_address_delete_tag, R.id.ac_name_address_et_alarm_contact_name, R.id.ac_name_address_et_alarm_contact_phone})
     public void onViewClicked(View view) {
-        AppUtils.dismissInputMethodManager(mActivity, acNameAddressEtAlarmContactName);
+
         switch (view.getId()) {
             case R.id.include_text_title_tv_cancel:
+                AppUtils.dismissInputMethodManager(mActivity, acNameAddressEtAlarmContactName);
                 finishAc();
                 break;
             case R.id.include_text_title_tv_subtitle:
+                AppUtils.dismissInputMethodManager(mActivity, acNameAddressEtAlarmContactName);
                 String name = acNameAddressEtAlarmContactName.getText().toString();
                 String phone = acNameAddressEtAlarmContactPhone.getText().toString();
                 mPresenter.doFinish(name, phone);
                 break;
             case R.id.iv_ac_name_address_delete_tag:
+                AppUtils.dismissInputMethodManager(mActivity, acNameAddressEtAlarmContactName);
                 showHistoryClearDialog();
                 break;
             case R.id.ac_name_address_et_alarm_contact_name:
