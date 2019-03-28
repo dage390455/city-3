@@ -948,4 +948,6 @@
     <string name="confirm_exit_security_risk">Would you like to exit security risk mark</string>
     <string name="confirm_exit">Exit</string>
     <string name="use_electric_blanket">Use Electric Blanket</string>
+    <string name="confirm_upload_real_fire">Whether to report the real fire alarm</string>
+    <string name="confirm_upload">Upload</string>
 </resources>

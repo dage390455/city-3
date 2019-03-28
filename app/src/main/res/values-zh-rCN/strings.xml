@@ -940,5 +940,7 @@
     <string name="confirm_exit_security_risk">是否退出安全隐患标记</string>
     <string name="confirm_exit">确认退出</string>
     <string name="use_electric_blanket">使用电热毯</string>
+    <string name="confirm_upload_real_fire">是否上报真实火警</string>
+    <string name="confirm_upload">确认上报</string>
 
 </resources>

@@ -26,7 +26,6 @@ public class SecurityRisksReferTagAdapter extends RecyclerView.Adapter<SecurityR
     private final Drawable drawable;
     private boolean mIsLocation;
     private OnTagClickListener mListener;
-    private int mCheckCount;
 
     public SecurityRisksReferTagAdapter(Context context) {
         mContext = context;
@@ -44,29 +43,31 @@ public class SecurityRisksReferTagAdapter extends RecyclerView.Adapter<SecurityR
             @Override
             public void onClick(View v) {
                 Integer position = (Integer) v.getTag();
-                if (position == getItemCount() - 1 && mListener != null) {
+                int maxCount = mIsLocation ? 20 : 30;
+                if (position == getItemCount() - 1 && mListener != null && list.size() < maxCount) {
                     mListener.onAddTag(mIsLocation);
                 } else {
                     SecurityRisksTagModel model = list.get(position);
                     model.isCheck = !model.isCheck;
                     if (model.isCheck) {
-                        mCheckCount++;
-                        if(mIsLocation){
+                        if (mIsLocation) {
                             for (int i = 0; i < list.size(); i++) {
                                 if (i != position) {
                                     list.get(i).isCheck = false;
                                 }
                             }
+                        }else{
+                            if(mListener !=  null){
+                                if (mListener.isTagCountLarge()) {
+                                    SensoroToast.getInstance().makeText(mContext.getString(R.string.most_support_ten_tag), Toast.LENGTH_SHORT).show();
+                                    model.isCheck = false;
+                                    return;
+                                }
+                            }
                         }
 
-                    }else{
-                        mCheckCount--;
                     }
 
-                    if (mCheckCount > 10) {
-                        SensoroToast.getInstance().makeText(mContext.getString(R.string.most_support_ten_tag), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
                     notifyDataSetChanged();
                     if (mListener != null) {
                         mListener.onTagClick(model, mIsLocation, position);
@@ -137,6 +138,8 @@ public class SecurityRisksReferTagAdapter extends RecyclerView.Adapter<SecurityR
         void onAddTag(boolean mIsLocation);
 
         void onTagClick(SecurityRisksTagModel model, boolean mIsLocation, Integer position);
+
+        boolean isTagCountLarge();
     }
 
     class SecurityRisksReferTagViewHolder extends RecyclerView.ViewHolder {
