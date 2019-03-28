@@ -12,7 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.model.AlarmPopupDangerData;
+import com.sensoro.smartcity.adapter.model.SecurityRisksAdapterModel;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.server.bean.ScenesData;
@@ -868,7 +868,7 @@ public class RetrofitServiceHelper {
      * @param remark
      * @return
      */
-    public Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(String id, HashMap<String, Integer> map, List<AlarmPopupDangerData> alarmPopupDangerDataList, String remark, boolean isReconfirm, List<ScenesData> scenesDataList) {
+    public Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(String id, HashMap<String, Integer> map, List<SecurityRisksAdapterModel> alarmPopupDangerDataList, String remark, boolean isReconfirm, List<ScenesData> scenesDataList) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (map != null) {
@@ -881,10 +881,10 @@ public class RetrofitServiceHelper {
             }
             if (alarmPopupDangerDataList != null && alarmPopupDangerDataList.size() > 0) {
                 JSONArray jsonArray = new JSONArray();
-                for (AlarmPopupDangerData alarmPopupDangerData : alarmPopupDangerDataList) {
+                for (SecurityRisksAdapterModel alarmPopupDangerData : alarmPopupDangerDataList) {
                     JSONObject jsonObjectDanger = new JSONObject();
                     jsonObjectDanger.put("place", alarmPopupDangerData.place);
-                    if (alarmPopupDangerData.action != null && alarmPopupDangerData.action.size() > 0) {
+                    if (alarmPopupDangerData.action.size() > 0) {
                         JSONArray jsonArray1 = new JSONArray();
                         for (String str : alarmPopupDangerData.action) {
                             jsonArray1.put(str);

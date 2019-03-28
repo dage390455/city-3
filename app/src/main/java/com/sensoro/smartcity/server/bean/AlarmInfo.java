@@ -1,5 +1,7 @@
 package com.sensoro.smartcity.server.bean;
 
+import com.sensoro.smartcity.adapter.model.SecurityRisksAdapterModel;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -151,6 +153,29 @@ public class AlarmInfo implements Serializable {
         private String name;
         private String remark;
         private Event[] phoneList;
+        private Integer firePhase;
+        private Integer fireType;
+        private List<SecurityRisksAdapterModel> danger;
+
+        public List<SecurityRisksAdapterModel> getDanger() {
+            return danger;
+        }
+
+        public void setDanger(List<SecurityRisksAdapterModel> danger) {
+            this.danger = danger;
+        }
+
+        public void setFirePhase(Integer firePhase) {
+            this.firePhase = firePhase;
+        }
+
+        public Integer getFireType() {
+            return fireType;
+        }
+
+        public void setFireType(Integer fireType) {
+            this.fireType = fireType;
+        }
 
         //
         private List<String> images;
@@ -269,6 +294,10 @@ public class AlarmInfo implements Serializable {
 
         public void setRemark(String remark) {
             this.remark = remark;
+        }
+
+        public Integer getFirePhase() {
+            return firePhase;
         }
 
         public class Event implements Serializable {

@@ -10,14 +10,13 @@ import android.widget.LinearLayout;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmDetailLogActivity;
+import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
-import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.imainviews.IWarnFragmentView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
-import com.sensoro.smartcity.model.AlarmPopupDangerData;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
@@ -534,17 +533,8 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 }
             }
         }
-        ArrayList<AlarmPopupDangerData> alarmPopupDangerDatas = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            AlarmPopupDangerData alarmPopupDangerData = new AlarmPopupDangerData();
-            alarmPopupDangerData.place = "假的地址 " + i;
-            alarmPopupDangerData.action = new ArrayList<>();
-            for (int j = 0; j <= i; j++) {
-                alarmPopupDangerData.action.add("假的行为 " + j + i);
-            }
-            alarmPopupDangerDatas.add(alarmPopupDangerData);
-        }
-        RetrofitServiceHelper.getInstance().doUpdatePhotosUrl(mCurrentDeviceAlarmLogInfo.get_id(), map, alarmPopupDangerDatas,
+
+        RetrofitServiceHelper.getInstance().doUpdatePhotosUrl(mCurrentDeviceAlarmLogInfo.get_id(), map, alarmPopupModel.securityRisksList,
                 alarmPopupModel.mRemark, isReConfirm, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CityObserver<DeviceAlarmItemRsp>(this) {
 

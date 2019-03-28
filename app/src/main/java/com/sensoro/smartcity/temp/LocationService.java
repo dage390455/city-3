@@ -32,7 +32,7 @@ public class LocationService {
     }
 
     public void init() {
-        Log.d(TAG, "initView location service");
+        Log.d(TAG, "initView place service");
         if (locationManager == null) {
             locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         }
@@ -178,37 +178,37 @@ public class LocationService {
      */
     private boolean isBetterLocation(Location location, Location currentBestLocation) {
         if (currentBestLocation == null) {
-            // A new location is always better than no location
+            // A new place is always better than no place
             return true;
         }
 
-        // Check whether the new location fix is newer or older
+        // Check whether the new place fix is newer or older
         long timeDelta = location.getTime() - currentBestLocation.getTime();
         boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
         boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
         boolean isNewer = timeDelta > 0;
 
-        // If it's been more than two minutes since the current location, use
-        // the new location
+        // If it's been more than two minutes since the current place, use
+        // the new place
         // because the user has likely moved
         if (isSignificantlyNewer) {
             return true;
-            // If the new location is more than two minutes older, it must be
+            // If the new place is more than two minutes older, it must be
             // worse
         } else if (isSignificantlyOlder) {
             return false;
         }
 
-        // Check whether the new location fix is more or less accurate
+        // Check whether the new place fix is more or less accurate
         int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
         boolean isLessAccurate = accuracyDelta > 0;
         boolean isMoreAccurate = accuracyDelta < 0;
         boolean isSignificantlyLessAccurate = accuracyDelta > 200;
 
-        // Check if the old and new location are from the same provider
+        // Check if the old and new place are from the same provider
         boolean isFromSameProvider = isSameProvider(location.getProvider(), currentBestLocation.getProvider());
 
-        // Determine location quality using a combination of timeliness and
+        // Determine place quality using a combination of timeliness and
         // accuracy
         if (isMoreAccurate) {
             return true;
