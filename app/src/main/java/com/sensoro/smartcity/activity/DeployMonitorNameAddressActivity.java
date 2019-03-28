@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonitorNameAddressActivityView, DeployMonitorNameAddressActivityPresenter>
-        implements IDeployMonitorNameAddressActivityView, RecycleViewItemClickListener,TipOperationDialogUtils.TipDialogUtilsClickListener {
+        implements IDeployMonitorNameAddressActivityView, RecycleViewItemClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.ac_name_address_et)
     EditText acNameAddressEt;
     @BindView(R.id.ac_nam_address_ll)
@@ -74,9 +74,9 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
     private void initClearHistoryDialog() {
         historyClearDialog = new TipOperationDialogUtils(mActivity, true);
         historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
-        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
-        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
-        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record), R.color.c_a6a6a6);
+        historyClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear), getResources().getColor(R.color.c_a6a6a6));
         historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
@@ -181,7 +181,7 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
     }
 
 
-    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel,R.id.iv_ac_nam_address_delete_history})
+    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel, R.id.iv_ac_nam_address_delete_history, R.id.ac_name_address_et})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
@@ -195,6 +195,10 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
                 break;
             case R.id.iv_ac_nam_address_delete_history:
                 showHistoryClearDialog();
+                break;
+            case R.id.ac_name_address_et:
+                acNameAddressEt.setCursorVisible(true);
+                acNameAddressEt.requestFocus();
                 break;
         }
 

@@ -285,6 +285,9 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
 
     @Override
     protected void onDestroy() {
+        if (returnTopAnimation != null) {
+            returnTopAnimation.cancel();
+        }
         if (mProgressDialog != null) {
             mProgressDialog.destroyProgress();
         }
@@ -442,7 +445,7 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
 
     @Override
     protected void onPause() {
-        AppUtils.dismissInputMethodManager(mActivity,acDeployRecordEtSearch);
+        AppUtils.dismissInputMethodManager(mActivity, acDeployRecordEtSearch);
         super.onPause();
     }
 

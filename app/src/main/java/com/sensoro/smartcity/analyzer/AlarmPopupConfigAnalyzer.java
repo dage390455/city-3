@@ -19,8 +19,7 @@ import java.util.Set;
 public class AlarmPopupConfigAnalyzer {
 
     public static void handleAlarmPopupModel(Integer displayStatus, AlarmPopupModel alarmPopupModel) {
-        alarmPopupModel.isRequire = true;
-        alarmPopupModel.title = "预警结果类型";
+        alarmPopupModel.title = "预警结果类型 (必填)";
         //
         Map<String, AlarmPopupDataDisplayBean> display = alarmPopupModel.configAlarmPopupDataBean.getDisplay();
         Map<String, AlarmPopupDataConfigBean> config = alarmPopupModel.configAlarmPopupDataBean.getConfig();
@@ -98,9 +97,16 @@ public class AlarmPopupConfigAnalyzer {
                 alarmPopupModel.subAlarmPopupModels.add(alarmPopupSubModelReason);
                 alarmPopupModel.subAlarmPopupModels.add(alarmPopupSubModelPlace);
             } else {
+                if (4 == displayStatus) {
+                    alarmPopupModel.isSecurityRiskRequire = true;
+                } else {
+                    alarmPopupModel.isSecurityRiskRequire = false;
+                }
                 if (1 == displayStatus) {
+                    alarmPopupModel.securityRiskVisible = false;
                     alarmPopupModel.resButtonBg = R.drawable.shape_button_alarm_pup;
                 } else {
+                    alarmPopupModel.securityRiskVisible = true;
                     alarmPopupModel.resButtonBg = R.drawable.shape_button;
                 }
                 //重新设置主标签的选择标记

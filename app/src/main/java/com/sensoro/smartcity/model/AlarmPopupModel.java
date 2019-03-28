@@ -1,12 +1,15 @@
 package com.sensoro.smartcity.model;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.model.SecurityRisksAdapterModel;
 import com.sensoro.smartcity.server.bean.AlarmPopupDataBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AlarmPopupModel {
-    public boolean isRequire;
+    public boolean isSecurityRiskRequire;
+    public boolean securityRiskVisible;
     public String title;
     public List<AlarmPopupSubModel> subAlarmPopupModels;
     public List<AlarmPopupTagModel> mainTags;
@@ -16,6 +19,7 @@ public class AlarmPopupModel {
     public String mergeType;
     public String sensorType;
     public AlarmPopupDataBean configAlarmPopupDataBean;
+    public ArrayList<SecurityRisksAdapterModel> securityRisksList;
 
     public static class AlarmPopupSubModel {
         public boolean isRequire;

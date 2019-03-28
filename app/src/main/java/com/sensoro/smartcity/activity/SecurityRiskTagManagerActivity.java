@@ -69,7 +69,7 @@ public class SecurityRiskTagManagerActivity extends BaseActivity<ISecurityRiskTa
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rvBehaviorAcSecurityRiskTagManager.setLayoutManager(manager);
         rvBehaviorAcSecurityRiskTagManager.setAdapter(mBehaviorAdapter);
-//        securityRisksTagAdapter.updateData(model.behaviors);
+//        securityRisksTagAdapter.updateData(model.action);
     }
 
     private void initLocationAdapter() {

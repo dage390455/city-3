@@ -149,6 +149,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_weight="1"
                         android:background="@null"
+                        android:maxLength="4"
                         android:cursorVisible="true"
                         android:textCursorDrawable="@drawable/my_cursor"
                         android:gravity="end"

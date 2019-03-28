@@ -35,6 +35,7 @@
         android:cursorVisible="true"
         android:textCursorDrawable="@drawable/my_cursor"
         android:layout_marginTop="12dp"
+        android:imeOptions="actionDone|actionNext"
         android:layout_marginBottom="12dp"
         android:layout_marginStart="16dp"
         />

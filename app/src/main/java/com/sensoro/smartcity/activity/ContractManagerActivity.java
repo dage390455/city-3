@@ -13,13 +13,12 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,8 +52,7 @@ import butterknife.ButterKnife;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
-public class ContractManagerActivity extends BaseActivity<IContractManagerActivityView, ContractManagerActivityPresenter> implements IContractManagerActivityView,
-        AdapterView.OnItemClickListener, View.OnClickListener, AbsListView.OnScrollListener,TipOperationDialogUtils.TipDialogUtilsClickListener {
+public class ContractManagerActivity extends BaseActivity<IContractManagerActivityView, ContractManagerActivityPresenter> implements IContractManagerActivityView, View.OnClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.contract_iv_menu_list)
     ImageView contractIvMenuList;
     @BindView(R.id.contract_manger_root)
@@ -62,7 +60,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     @BindView(R.id.ac_contract_manger_add)
     RelativeLayout acContractMangerAdd;
     @BindView(R.id.contract_ptr_list)
-    ListView contractPtrList;
+    RecyclerView contractPtrList;
     @BindView(R.id.contract_return_top)
     ImageView contractReturnTop;
     @BindView(R.id.refreshLayout)
@@ -111,6 +109,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     private InspectionTaskStatePopUtils mSelectTypePop;
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private TipOperationDialogUtils historyClearDialog;
+    private Animation returnTopAnimation;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -144,9 +143,45 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
             }
         });
         mContractListAdapter = new ContractListAdapter(mActivity);
-        contractPtrList.setOnScrollListener(this);
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
+        contractPtrList.setLayoutManager(linearLayoutManager);
         contractPtrList.setAdapter(mContractListAdapter);
-        contractPtrList.setOnItemClickListener(this);
+        mContractListAdapter.setOnClickListener(new ContractListAdapter.OnClickListener() {
+            @Override
+            public void onClick(View v, int position) {
+                mPresenter.clickItem(position);
+            }
+        });
+        returnTopAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.return_top_in_anim);
+        contractPtrList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+//                if (xLinearLayoutManager.findFirstVisibleItemPosition() == 0 && newState == SCROLL_STATE_IDLE &&
+//                        toolbarDirection == DIRECTION_DOWN) {
+////                    mListRecyclerView.setre
+//                }
+                if (linearLayoutManager.findFirstVisibleItemPosition() > 4) {
+                    if (newState == 0) {
+                        contractReturnTop.setVisibility(View.VISIBLE);
+                        contractReturnTop.setAnimation(returnTopAnimation);
+                        if (returnTopAnimation != null && returnTopAnimation.hasEnded()) {
+                            contractReturnTop.startAnimation(returnTopAnimation);
+                        }
+                    } else {
+                        contractReturnTop.setVisibility(View.GONE);
+                    }
+                } else {
+                    contractReturnTop.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+            }
+        });
         contractIvMenuList.setOnClickListener(this);
         contractIvMenuList.setOnClickListener(this);
         acContractMangerAdd.setOnClickListener(this);
@@ -219,9 +254,9 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     private void initClearHistoryDialog() {
         historyClearDialog = new TipOperationDialogUtils(mActivity, true);
         historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
-        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
-        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
-        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record), R.color.c_a6a6a6);
+        historyClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear), getResources().getColor(R.color.c_a6a6a6));
         historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
@@ -327,7 +362,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
 
     @Override
     protected void onPause() {
-        AppUtils.dismissInputMethodManager(mActivity,fgMainWarnEtSearch);
+        AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
         super.onPause();
     }
 
@@ -398,6 +433,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
 
     @Override
     public void smoothScrollToPosition(int position) {
+//        contractPtrList.setSmoothScrollbarEnabled(true);
         contractPtrList.smoothScrollToPosition(position);
 
     }
@@ -452,11 +488,6 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     @Override
     public void toastLong(String msg) {
 
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mPresenter.clickItem(position);
     }
 
     @Override
@@ -549,9 +580,14 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
 
     @Override
     public void showHistoryClearDialog() {
-        if (historyClearDialog !=  null) {
+        if (historyClearDialog != null) {
             historyClearDialog.show();
         }
+    }
+
+    @Override
+    public void setContractMangerAddVisible(boolean isVisible) {
+        acContractMangerAdd.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     private void doCancelSearch() {
@@ -580,22 +616,10 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     }
 
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        int tempPos = contractPtrList.getFirstVisiblePosition();
-        if (tempPos > 0) {
-            contractReturnTop.setVisibility(View.VISIBLE);
-        } else {
-            contractReturnTop.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
     protected void onDestroy() {
+        if (returnTopAnimation != null) {
+            returnTopAnimation.cancel();
+        }
         if (mProgressUtils != null) {
             mProgressUtils.destroyProgress();
             mProgressUtils = null;

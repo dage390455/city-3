@@ -63,13 +63,13 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
             }
 
             for (SecurityRisksAdapterModel model : securityRisksList) {
-                if (!locationTagList.contains(model.location)) {
-                    model.location = "";
+                if (!locationTagList.contains(model.place)) {
+                    model.place = "";
                 }
 
-                for (String behavior : model.behaviors) {
+                for (String behavior : model.action) {
                     if (!behaviorTagList.contains(behavior)) {
-                        model.behaviors.remove(behavior);
+                        model.action.remove(behavior);
                     }
                 }
             }
@@ -92,7 +92,7 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
         getView().rvContentScrollBottom(position);
         SecurityRisksAdapterModel model = securityRisksList.get(mAdapterPosition);
         for (SecurityRisksTagModel securityRisksTagModel : locationTagList) {
-            securityRisksTagModel.isCheck = securityRisksTagModel.tag.equals(model.location);
+            securityRisksTagModel.isCheck = securityRisksTagModel.tag.equals(model.place);
         }
         getView().updateSecurityRisksTag(locationTagList, true);
         getView().setTvName(mActivity.getString(R.string.refer_loaction));
@@ -105,7 +105,7 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
         getView().rvContentScrollBottom(position);
         SecurityRisksAdapterModel model = securityRisksList.get(mAdapterPosition);
         for (SecurityRisksTagModel securityRisksTagModel : behaviorTagList) {
-            securityRisksTagModel.isCheck = model.behaviors.contains(securityRisksTagModel.tag);
+            securityRisksTagModel.isCheck = model.action.contains(securityRisksTagModel.tag);
         }
         getView().updateSecurityRisksTag(behaviorTagList, false);
         getView().setTvName(mActivity.getString(R.string.refer_behavior));
@@ -121,7 +121,7 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
         mAdapterPosition = position;
         getView().changLocationOrBehaviorColor(position, true);
         SecurityRisksAdapterModel model = securityRisksList.get(position);
-        model.location = "";
+        model.place = "";
         for (SecurityRisksTagModel securityRisksTagModel : locationTagList) {
             securityRisksTagModel.isCheck = false;
         }
@@ -136,9 +136,9 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
         mAdapterPosition = position;
         getView().changLocationOrBehaviorColor(position, false);
         SecurityRisksAdapterModel model = securityRisksList.get(position);
-        model.behaviors.remove(tag);
+        model.action.remove(tag);
         for (SecurityRisksTagModel securityRisksTagModel : behaviorTagList) {
-            securityRisksTagModel.isCheck = model.behaviors.contains(securityRisksTagModel.tag);
+            securityRisksTagModel.isCheck = model.action.contains(securityRisksTagModel.tag);
         }
         getView().updateSecurityRisksTag(behaviorTagList, false);
         getView().updateSecurityRisksContent(securityRisksList);
@@ -158,17 +158,17 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
         if (isLocation) {
             SecurityRisksAdapterModel model = securityRisksList.get(mAdapterPosition);
             if (tagModel.isCheck) {
-                model.location = tagModel.tag;
+                model.place = tagModel.tag;
             } else {
-                model.location = "";
+                model.place = "";
             }
             getView().updateSecurityRisksContent(securityRisksList);
         } else {
             SecurityRisksAdapterModel model = securityRisksList.get(mAdapterPosition);
             if (tagModel.isCheck) {
-                model.behaviors.add(tagModel.tag);
+                model.action.add(tagModel.tag);
             } else {
-                model.behaviors.remove(tagModel.tag);
+                model.action.remove(tagModel.tag);
             }
             getView().updateSecurityRisksContent(securityRisksList);
 
@@ -211,7 +211,7 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
 
     public void doSave() {
         for (SecurityRisksAdapterModel model : securityRisksList) {
-            if (TextUtils.isEmpty(model.location) || model.behaviors.size() < 1) {
+            if (TextUtils.isEmpty(model.place) || model.action.size() < 1) {
                 getView().toastShort(mActivity.getString(R.string.please_input_all_save));
                 return;
             }

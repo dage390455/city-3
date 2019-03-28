@@ -191,7 +191,7 @@ public class MenuDialogFragment extends DialogFragment {
         try {
             EventLoginData userData = PreferencesHelper.getInstance().getUserData();
             if (userData != null) {
-                if (userData.hasContract) {
+                if (userData.hasContractCreate) {
                     if (AppUtils.isChineseLanguage()) {
                         rlFastContract.setVisibility(View.VISIBLE);
                     } else {

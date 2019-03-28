@@ -39,4 +39,6 @@ public interface IContractDetailView extends IToast,IActivityIntent,IProgressDia
     void setContractNumber(String contractNumber);
 
     void setContractOrder(boolean isSuccess, String payTime);
+
+    void setContractEditVisible(boolean isVisible);
 }

@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ll_search_history"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/c_f4f4f4"
     android:orientation="vertical"
-    android:visibility="gone"
-    >
+    android:visibility="gone">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
-        >
+        android:layout_marginTop="20dp">
 
         <TextView
             android:id="@+id/tv_search_clear"
@@ -30,17 +28,17 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:contentDescription="@null"
             android:layout_marginEnd="16dp"
+            android:contentDescription="@null"
             android:src="@drawable/tag_delete"
-            android:visibility="visible" />
+            android:visibility="gone" />
     </RelativeLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_search_history"
-        android:layout_marginTop="16dp"
         android:layout_width="match_parent"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
         android:layout_height="match_parent"
-        />
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp" />
 </LinearLayout>

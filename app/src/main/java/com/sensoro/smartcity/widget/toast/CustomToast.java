@@ -77,7 +77,7 @@ public class CustomToast implements IToast {
     }
 
     /**
-     * Set the location at which the notification should appear on the screen.
+     * Set the place at which the notification should appear on the screen.
      *
      * @param gravity
      * @param xOffset

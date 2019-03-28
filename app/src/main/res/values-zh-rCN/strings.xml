@@ -639,7 +639,7 @@
     <string name="is_device_air_switch_config">是否进行初始配置</string>
     <string name="configuring">配置中</string>
     <string name="monitor_point_operation_error_value_range">输入错误，数值范围:</string>
-    <string name="enter_the_correct_number_format">请输入正确的数字格式</string>
+    <string name="enter_the_correct_number_format">请输入正确的数字</string>
     <string name="input_not_null">输入不能为空</string>
     <string name="main_home_menu_scan_login">扫码登录</string>
     <string name="request_success">请求成功</string>
@@ -664,7 +664,7 @@
     <string name="channel_mask_error_tip">在需要配置频点的情况下，未能获取频点信息</string>
     <string name="please_enter_a_valid_mobile_number">请输入有效手机号</string>
     <string name="enter_the_phone_number_used_to_look_device">填写后业主可在小程序查看该设备</string>
-    <string name="please_enter_the_mobile_phone_number_and_the_contracted_mobile_phone_number">填写后业主可在小程序查看该设备，同业主扫码签订合同同时使用的微信小程序的账号</string>
+    <string name="please_enter_the_mobile_phone_number_and_the_contracted_mobile_phone_number">填写后业主可在小程序查看该设备，同业主扫码签订合同时使用的微信小程序的账号</string>
     <string name="title_edit">编辑</string>
     <string name="identification_number_failed">身份证识别失败：</string>
     <string name="contract_modified_success">修改成功</string>
@@ -888,7 +888,7 @@
     <string name="deploy_check_button_tip_press_the_sensor">请按下传感器自检按钮，并开始安装测试</string>
     <string name="deploy_check_dialog_no_signal">无信号</string>
     <string name="deploy_check_dialog_bad_signal">信号差</string>
-    <string name="installation_test_not_nearby">请确保在设备旁，且已开启手机蓝牙</string>
+    <string name="installation_test_not_nearby">请确保已激活设备蓝牙，且在设备附近</string>
     <string name="installation_config_failed">初始配置失败，原因：</string>
     <string name="deploy_check_dialog_quality_bad_signal">信号质量差</string>
     <string name="device_is_malfunction">设备正在故障中</string>

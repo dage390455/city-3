@@ -145,7 +145,7 @@ implements SecurityRiskContentTouchHelper.ItemTouchHelperAdapter {
                 public void onClick(View v) {
                     if (mListener != null) {
                         Integer position = (Integer) v.getTag();
-                        mListener.onLocationDel(list.get(position).location,position);
+                        mListener.onLocationDel(list.get(position).place,position);
                     }
                 }
             });
@@ -170,14 +170,14 @@ implements SecurityRiskContentTouchHelper.ItemTouchHelperAdapter {
             SecurityRisksAdapterModel model = list.get(position);
             holder.tvLocationAdapterSecurityRisks.setTextColor(mContext.getResources().getColor(model.locationColor));
             holder.tvBehaviorAdapterSecurityRisks.setTextColor(mContext.getResources().getColor(model.behaviorColor));
-            if (!TextUtils.isEmpty(model.location)) {
+            if (!TextUtils.isEmpty(model.place)) {
                 holder.llLocationNameContentAdapterSecurityRisks.setVisibility(View.VISIBLE);
-                holder.tvLocationNameAdapterSecurityRisks.setText(model.location);
+                holder.tvLocationNameAdapterSecurityRisks.setText(model.place);
             }else{
                 holder.llLocationNameContentAdapterSecurityRisks.setVisibility(View.GONE);
             }
 
-            if (model.behaviors.size() > 0) {
+            if (model.action.size() > 0) {
                 holder.viewBehaviorsAdapterSecurityRisks.setVisibility(View.GONE);
                 holder.rvBehaviorsAdapterSecurityRisks.setVisibility(View.VISIBLE);
                 SecurityRisksTagAdapter securityRisksTagAdapter = new SecurityRisksTagAdapter(mContext);
@@ -193,7 +193,7 @@ implements SecurityRiskContentTouchHelper.ItemTouchHelperAdapter {
                 manager.setOrientation(LinearLayoutManager.HORIZONTAL);
                 holder.rvBehaviorsAdapterSecurityRisks.setLayoutManager(manager);
                 holder.rvBehaviorsAdapterSecurityRisks.setAdapter(securityRisksTagAdapter);
-                securityRisksTagAdapter.updateData(model.behaviors);
+                securityRisksTagAdapter.updateData(model.action);
             }else{
                 holder.viewBehaviorsAdapterSecurityRisks.setVisibility(View.VISIBLE);
                 holder.rvBehaviorsAdapterSecurityRisks.setVisibility(View.GONE);

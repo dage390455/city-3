@@ -116,7 +116,8 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
             getView().toastShort(mContext.getString(R.string.can_only_add_up_to_limit_labels));
         } else {
             for (String temp : mTagList) {
-                if (ResourceUtils.getByteFromWords(temp) > 30) {
+                String trim = getTrim(temp);
+                if (ResourceUtils.getByteFromWords(trim) > 30) {
                     getView().toastShort(mContext.getString(R.string.the_maximum_length_of_the_label));
                     return;
                 }
@@ -199,12 +200,17 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
     }
 
     private String getTrim(String text) {
-        text = text.trim();
-        while (text.startsWith("　")) {//这里判断是不是全角空格
-            text = text.substring(1, text.length()).trim();
-        }
-        while (text.endsWith("　")) {
-            text = text.substring(0, text.length() - 1).trim();
+        try {
+            text = text.trim();
+            while (text.startsWith("　")) {//这里判断是不是全角空格
+                text = text.substring(1, text.length()).trim();
+            }
+            while (text.endsWith("　")) {
+                text = text.substring(0, text.length() - 1).trim();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return text;
     }

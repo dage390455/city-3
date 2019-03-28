@@ -10,6 +10,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -21,11 +22,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.SecurityRisksActivity;
 import com.sensoro.smartcity.activity.TakeRecordActivity;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.adapter.AlarmPopupContentAdapter;
 import com.sensoro.smartcity.adapter.AlarmPopupMainTagAdapter;
 import com.sensoro.smartcity.adapter.ImagePickerAdapter;
+import com.sensoro.smartcity.adapter.model.SecurityRisksAdapterModel;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.model.AlarmPopModel;
@@ -146,6 +149,18 @@ public class AlarmPopUtilsTest implements Constants,
         }
     }
 
+    public void SetSecurityRiskVisible(boolean isVisible, boolean isRequire) {
+        if (isVisible) {
+            if (isRequire) {
+                tvAlarmPopupAlarmSecurityRisks.setText("安全隐患（必填）");
+            } else {
+                tvAlarmPopupAlarmSecurityRisks.setText("安全隐患");
+            }
+        }
+        llAlarmPopupAlarmSecurityRisks.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        tvAlarmPopupAlarmSecurityRisks.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
     private void dismissProgressDialog() {
         if (progressDialog != null) {
             progressDialog.dismiss();
@@ -236,6 +251,7 @@ public class AlarmPopUtilsTest implements Constants,
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    SetSecurityRiskVisible(mAlarmPopupModel.securityRiskVisible, mAlarmPopupModel.isSecurityRiskRequire);
                                     alarmPopupContentAdapter.updateData(mAlarmPopupModel.subAlarmPopupModels);
                                     btAlarmPopupCommit.setBackground(mActivity.getResources().getDrawable(mAlarmPopupModel.resButtonBg));
                                 }
@@ -297,6 +313,7 @@ public class AlarmPopUtilsTest implements Constants,
         //TODO 作为默认项展示
         this.mAlarmPopupModel = alarmPopupModel;
         mAlarmPopupModel.mRemark = null;
+        SetSecurityRiskVisible(mAlarmPopupModel.securityRiskVisible, mAlarmPopupModel.isSecurityRiskRequire);
         alarmPopupMainTagAdapter.updateAdapter(mAlarmPopupModel.mainTags);
         alarmPopupContentAdapter.updateData(mAlarmPopupModel.subAlarmPopupModels);
         btAlarmPopupCommit.setBackground(mActivity.getResources().getDrawable(mAlarmPopupModel.resButtonBg));
@@ -512,6 +529,9 @@ public class AlarmPopUtilsTest implements Constants,
                 dismiss();
                 break;
             case R.id.ll_alarm_popup_alarm_security_risks:
+                //TODO 安全隐患
+                Intent intent = new Intent(mActivity, SecurityRisksActivity.class);
+                mActivity.startActivity(intent);
                 break;
             case R.id.bt_alarm_popup_commit:
                 dismissInputMethodManager(view);
@@ -571,6 +591,39 @@ public class AlarmPopUtilsTest implements Constants,
                         }
 
                     }
+                }
+                break;
+            case Constants.EVENT_DATA_SECURITY_RISK_TAG:
+                if (data instanceof ArrayList) {
+                    ArrayList<SecurityRisksAdapterModel> securityRisksList = (ArrayList<SecurityRisksAdapterModel>) data;
+                    //分析list
+                    StringBuilder builder = new StringBuilder();
+                    for (SecurityRisksAdapterModel securityRisksAdapterModel : securityRisksList) {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        String location = securityRisksAdapterModel.place;
+                        if (!TextUtils.isEmpty(location)) {
+                            stringBuilder.append(location);
+                        }
+                        for (String behavior : securityRisksAdapterModel.action) {
+                            stringBuilder.append(behavior).append("、");
+                        }
+                        String text = stringBuilder.toString();
+                        if (text.endsWith("、")) {
+                            text = text.substring(0, text.lastIndexOf("、"));
+                        }
+                        builder.append(text).append("\n");
+                    }
+                    String str = builder.toString();
+                    if (str.endsWith("、")) {
+                        str = str.substring(0, str.lastIndexOf("\n"));
+                    }
+                    if (!TextUtils.isEmpty(str)) {
+                        tvAlarmPopupAlarmSecurityRisksContent.setText(str);
+                        mAlarmPopupModel.securityRisksList = securityRisksList;
+                    } else {
+                        tvAlarmPopupAlarmSecurityRisksContent.setText("未填写");
+                    }
+
                 }
                 break;
         }
