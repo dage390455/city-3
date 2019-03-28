@@ -147,7 +147,9 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
 
     @Override
     public void onItemDel(int position) {
-        securityRisksList.remove(position);
+        if (position != securityRisksList.size()) {
+            securityRisksList.remove(position);
+        }
         getView().updateSecurityRisksContent(securityRisksList);
     }
 
@@ -174,6 +176,12 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
 
         }
 
+    }
+
+    @Override
+    public boolean isTagCountLarge() {
+        SecurityRisksAdapterModel model = securityRisksList.get(mAdapterPosition);
+        return model.action.size() > 9;
     }
 
     @Override

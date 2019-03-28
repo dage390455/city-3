@@ -41,6 +41,7 @@ import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.smartcity.widget.dialog.TipDialogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
@@ -112,6 +113,7 @@ public class AlarmPopUtilsTest implements Constants,
     private ProgressDialog progressDialog;
     private UpLoadPhotosUtils upLoadPhotosUtils;
     private AlarmPopupModel mAlarmPopupModel;
+    private TipDialogUtils mRealFireDialog;
 
     public AlarmPopUtilsTest(Activity activity) {
         mActivity = activity;
@@ -125,6 +127,11 @@ public class AlarmPopUtilsTest implements Constants,
         }
         if (progressDialog != null) {
             progressDialog.cancel();
+        }
+
+        if (mRealFireDialog != null) {
+            mRealFireDialog.destory();
+            mRealFireDialog = null;
         }
         if (bind != null) {
             bind.unbind();
@@ -285,6 +292,27 @@ public class AlarmPopUtilsTest implements Constants,
         rvAlarmPopupContent.setNestedScrollingEnabled(false);
 
         //
+        initRealFireDialog();
+    }
+
+    private void initRealFireDialog() {
+        mRealFireDialog = new TipDialogUtils(mActivity);
+        mRealFireDialog.setTipMessageText(mActivity.getString(R.string.confirm_upload_real_fire));
+        mRealFireDialog.setTipCacnleText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_a6a6a6));
+        mRealFireDialog.setTipConfirmText(mActivity.getString(R.string.confirm_upload), mActivity.getResources().getColor(R.color.c_f34a4a));
+        mRealFireDialog.setTipDialogUtilsClickListener(new TipDialogUtils.TipDialogUtilsClickListener(){
+
+            @Override
+            public void onCancelClick() {
+                mRealFireDialog.dismiss();
+            }
+
+            @Override
+            public void onConfirmClick() {
+                mRealFireDialog.dismiss();
+                doCommit();
+            }
+        });
     }
 
 //    public void show() {
@@ -375,8 +403,16 @@ public class AlarmPopUtilsTest implements Constants,
     }
 
     private void doAlarmConfirm() {
+        if (mAlarmPopupModel.resButtonBg == R.drawable.shape_button_alarm_pup) {
+            mRealFireDialog.show();
+            return;
+        }
         setUpdateButtonClickable(false);
         mAlarmPopupModel.mRemark = etAlarmPopupRemark.getText().toString();
+        doCommit();
+    }
+
+    private void doCommit() {
         if (mListener != null) {
             if (selImageList.size() > 0) {
                 setProgressDialog();
