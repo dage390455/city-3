@@ -37,6 +37,8 @@ public class DeployAnalyzerModel implements Serializable {
     public final List<Integer> channelMask = new ArrayList<>();
     //强制部署原因
     public String forceReason;
+    public Integer currentStatus;
+    public String currentSignalQuality;
     //白名单类型（默认没有白名单限制）
     public int whiteListDeployType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
 }

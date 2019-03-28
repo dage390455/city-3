@@ -145,7 +145,8 @@ public class DeployMonitorCheckDialogUtils {
                 rlDeployCheckDialogSignalStrength.setVisibility(View.GONE);
                 break;
             case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_THREE:
-                rlDeployCheckDialogDeviceLocation.setVisibility(View.VISIBLE);
+                //去掉附近的检查，只检测信号和状态
+                rlDeployCheckDialogDeviceLocation.setVisibility(View.GONE);
                 rlDeployCheckDialogInitConfig.setVisibility(View.GONE);
                 rlDeployCheckDialogDeviceStatus.setVisibility(View.VISIBLE);
                 rlDeployCheckDialogSignalStrength.setVisibility(View.VISIBLE);
@@ -408,7 +409,7 @@ public class DeployMonitorCheckDialogUtils {
         switch (view.getId()) {
             case R.id.tv_deploy_check_dialog_test:
                 if (listener != null) {
-                    listener.onClickTest();
+                    listener.onClickTryReTest();
                 }
                 break;
             case R.id.tv_deploy_check_dialog_force_upload:
@@ -429,7 +430,7 @@ public class DeployMonitorCheckDialogUtils {
 
 
     public interface OnDeployCheckDialogListener {
-        void onClickTest();
+        void onClickTryReTest();
 
         void onClickForceUpload();
 

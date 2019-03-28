@@ -119,7 +119,7 @@
                 android:layout_marginTop="12dp"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/ll_fg_deploy_local_check_switch_spec"
@@ -272,7 +272,7 @@
                 android:id="@+id/fl_deploy_local_check_not_own"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="match_parent"

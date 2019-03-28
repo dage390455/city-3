@@ -1,76 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/c_f4f4f4"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/c_f4f4f4">
+
     <include
         android:id="@+id/ac_deploy_device_tag_title"
         layout="@layout/item_include_text_text_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ac_deploy_device_tag_title"
-        app:layout_constraintBottom_toBottomOf="parent">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/ac_deploy_device_tag_rc_add_tag"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="20dp"
-            >
-
-        </android.support.v7.widget.RecyclerView>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ac_deploy_device_tag_title">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/ac_deploy_device_tag_rc_add_tag"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/deploy_device_tag_history_tag"
-                android:textSize="14sp"
-                android:textColor="@color/c_252525"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="20dp"
-                />
-            <ImageView
-                android:id="@+id/iv_ac_deploy_device_tag_delete_history"
-                android:layout_width="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="20dp">
+
+            </android.support.v7.widget.RecyclerView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/tag_delete"
-                android:layout_gravity="bottom"
-                android:paddingTop="8dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:contentDescription="@null"
-                android:layout_marginEnd="12dp"/>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="1"
+                    android:text="@string/deploy_device_tag_history_tag"
+                    android:textColor="@color/c_252525"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:id="@+id/iv_ac_deploy_device_tag_delete_history"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginEnd="12dp"
+                    android:contentDescription="@null"
+                    android:paddingStart="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="8dp"
+                    android:src="@drawable/tag_delete" />
+            </LinearLayout>
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/ac_deploy_device_tag_rc_history_tag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="20dp" />
+
         </LinearLayout>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/ac_deploy_device_tag_rc_history_tag"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="20dp"
-            >
-
-        </android.support.v7.widget.RecyclerView>
-
-    </LinearLayout>
-
+    </android.support.v4.widget.NestedScrollView>
 
 
 </android.support.constraint.ConstraintLayout>

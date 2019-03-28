@@ -17,7 +17,7 @@ public class DeployConfigurationAnalyzer {
      */
     public static int[] analyzeDeviceType(String deviceType) {
         int[] result = new int[2];
-        result[0] = 50;
+        result[0] = 1;
         result[1] = 560;
         if (TextUtils.isEmpty(deviceType)) {
             return result;
@@ -38,6 +38,7 @@ public class DeployConfigurationAnalyzer {
                 break;
             case "mantun_fires":
                 //慢炖空开
+                // 暂时不需要配置
                 result[0] = 0;
                 result[1] = 80;
                 break;
@@ -77,12 +78,6 @@ public class DeployConfigurationAnalyzer {
     private static void configAcrelFires(SensoroSensor sensoroSensor, int actualValue, int enterValue) {
         //在开始配置的时候，已经校验过，mEnterValue的值是50 到560
         //真实额定电流值
-        int actualDev;
-        if (actualValue <= 250) {
-            actualDev = 250;
-        } else {
-            actualDev = 400;
-        }
         //实际输入的电流值
         int enterDev;
         if (enterValue <= 250) {
@@ -97,7 +92,7 @@ public class DeployConfigurationAnalyzer {
         sensoroSensor.acrelFires.t4Th = 60;//箱体温度
         sensoroSensor.acrelFires.valHighSet = 1200;
         sensoroSensor.acrelFires.valLowSet = 800;
-        sensoroSensor.acrelFires.currHighSet = 1000 * actualValue / actualDev;
+        sensoroSensor.acrelFires.currHighSet = 1000 * actualValue / enterDev; //修改为输入的值
         sensoroSensor.acrelFires.passwd = new Random().nextInt(9999) + 1;// 1-9999 4位随机数
         sensoroSensor.acrelFires.currHighType = 1;//打开保护，不关联脱扣
         sensoroSensor.acrelFires.valLowType = 0;//关闭保护，不关联脱扣

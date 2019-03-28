@@ -24,12 +24,13 @@
         android:id="@+id/ll_location_name_adapter_security_risks"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/tv_location_adapter_security_risks"
+        app:layout_constraintBottom_toBottomOf="@+id/view_divider_adapter_security_risks"
         app:layout_constraintStart_toEndOf="@id/tv_location_adapter_security_risks"
-        app:layout_constraintTop_toTopOf="@id/tv_location_adapter_security_risks"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="20dp">
+        android:layout_marginEnd="20dp"
+        >
 
         <LinearLayout
             android:id="@+id/ll_location_name_content_adapter_security_risks"
@@ -38,10 +39,10 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:paddingStart="16dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="8dp"
-            android:layout_marginStart="8dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="12dp"
+            android:layout_gravity="center_vertical"
+            android:paddingBottom="4dp"
             android:background="@drawable/shape_bg_solid_29c_full_corner"
             android:visibility="gone"
             >
@@ -49,7 +50,6 @@
                 android:id="@+id/tv_location_name_adapter_security_risks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:gravity="center_vertical|start"
                 android:textSize="12sp"
                 android:textColor="@color/white"
@@ -58,8 +58,8 @@
                 android:id="@+id/iv_del_adapter_security_risks_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/security_tag_del"
                 android:padding="4dp"
+                android:src="@drawable/security_tag_del"
                 android:contentDescription="@null"
                 />
 
@@ -96,6 +96,7 @@
         android:layout_marginBottom="16dp"/>
 
 
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_behaviors_adapter_security_risks"
         android:layout_width="0dp"
@@ -103,12 +104,24 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginEnd="20dp"
+        android:visibility="gone"
         android:layout_marginBottom="10dp"
+        android:layout_marginTop="-4dp"
         app:layout_constraintStart_toStartOf="@id/ll_location_name_adapter_security_risks"
         app:layout_constraintTop_toTopOf="@id/tv_behavior_adapter_security_risks"
         >
 
     </android.support.v7.widget.RecyclerView>
+
+    <View
+        android:id="@+id/view_behaviors_adapter_security_risks"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/ll_location_name_adapter_security_risks"
+        app:layout_constraintTop_toTopOf="@id/tv_behavior_adapter_security_risks"
+        app:layout_constraintBottom_toBottomOf="@id/tv_behavior_adapter_security_risks"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
 
 </android.support.constraint.ConstraintLayout>

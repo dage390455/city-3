@@ -22,4 +22,5 @@ public class DeployResultModel implements Serializable {
     public DeployControlSettingData settingData;
     public int stationStatus;
     public DeviceInfo deviceInfo;
+    public Long deployTime;
 }

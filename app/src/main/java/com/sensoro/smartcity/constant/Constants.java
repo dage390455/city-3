@@ -390,6 +390,9 @@ public interface Constants {
     int EVENT_DATA__CONTRACT_EDIT_REFRESH_CODE = 0x45;
     int EVENT_DATA_DEPLOY_INIT_CONFIG_CODE = 0x47;
 
+    int EVENT_DATA_SECURITY_RISK_TAG_MANAGER = 0x57;
+    int EVENT_DATA_SECURITY_RISK_TAG = 0x58;
+
 
     int TYPE_SCAN_DEPLOY_DEVICE = 0x29;
     int TYPE_SCAN_DEPLOY_STATION = 0x39;
@@ -476,6 +479,7 @@ public interface Constants {
 
         }
     };
+
 
 
 }

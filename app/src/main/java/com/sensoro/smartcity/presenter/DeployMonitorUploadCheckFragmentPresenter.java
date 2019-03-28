@@ -1,6 +1,5 @@
 package com.sensoro.smartcity.presenter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -8,6 +7,7 @@ import android.text.TextUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
 import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
+import com.sensoro.smartcity.activity.DeployMonitorCheckActivity;
 import com.sensoro.smartcity.activity.DeployMonitorDeployPicActivity;
 import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
 import com.sensoro.smartcity.activity.DeployMonitorWeChatRelationActivity;
@@ -17,6 +17,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorUploadCheckFragmentView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.iwidget.IOnDestroy;
+import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.model.DeployResultModel;
 import com.sensoro.smartcity.model.EventData;
@@ -65,16 +66,22 @@ import static com.sensoro.smartcity.constant.Constants.TYPE_SCAN_DEPLOY_INSPECTI
 import static com.sensoro.smartcity.constant.Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE;
 import static com.sensoro.smartcity.constant.Constants.TYPE_SCAN_DEPLOY_STATION;
 import static com.sensoro.smartcity.constant.Constants.TYPE_SCAN_INSPECTION;
-import static com.sensoro.smartcity.presenter.DeployMonitorCheckActivityPresenter.deployAnalyzerModel;
 
 public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDeployMonitorUploadCheckFragmentView> implements IOnCreate, IOnDestroy {
-    private Activity mActivity;
+    private DeployMonitorCheckActivity mActivity;
     private CharSequence originName;
+    private DeployAnalyzerModel deployAnalyzerModel;
 
     @Override
     public void initData(Context context) {
-        mActivity = (Activity) context;
-        originName = DeployMonitorCheckActivityPresenter.deployAnalyzerModel.nameAndAddress;
+        mActivity = (DeployMonitorCheckActivity) context;
+        DeployAnalyzerModel deployAnalyzer = mActivity.getDeployAnalyzerModel();
+        if (deployAnalyzer == null) {
+            getView().toastLong(mActivity.getString(R.string.unknown));
+            return;
+        }
+        deployAnalyzerModel = deployAnalyzer;
+        originName = deployAnalyzerModel.nameAndAddress;
         onCreate();
         init();
 
@@ -95,7 +102,9 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                 getView().setDeviceSn(mActivity.getString(R.string.device_number) + deployAnalyzerModel.sn);
                 if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
                     getView().setNameAddressText(deployAnalyzerModel.nameAndAddress);
+                    getView().setUploadBtnStatus(true);
                 }
+                getView().setDeployDeviceType(mActivity.getString(R.string.station));
                 break;
             case TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
@@ -118,18 +127,18 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
             default:
                 break;
         }
-        String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType);
-        getView().setDeployDeviceType(deviceTypeName);
-        if (!AppUtils.isChineseLanguage()) {
-            //TODO 英文版控制不显示小程序账号
-            deployAnalyzerModel.weChatAccount = null;
-        }
     }
 
     private void echoDeviceInfo() {
         getView().setDeviceSn(mActivity.getString(R.string.device_number) + deployAnalyzerModel.sn);
         if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
             getView().setNameAddressText(deployAnalyzerModel.nameAndAddress);
+        }
+        String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType);
+        getView().setDeployDeviceType(deviceTypeName);
+        if (!AppUtils.isChineseLanguage()) {
+            //TODO 英文版控制不显示小程序账号
+            deployAnalyzerModel.weChatAccount = null;
         }
         getView().updateContactData(deployAnalyzerModel.deployContactModelList);
         getView().updateTagsData(deployAnalyzerModel.tagList);
@@ -251,15 +260,15 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
 
     public void doNameAddress() {
         Intent intent = new Intent(mActivity, DeployMonitorNameAddressActivity.class);
-        if (!TextUtils.isEmpty(DeployMonitorCheckActivityPresenter.deployAnalyzerModel.nameAndAddress)) {
-            intent.putExtra(EXTRA_SETTING_NAME_ADDRESS, DeployMonitorCheckActivityPresenter.deployAnalyzerModel.nameAndAddress);
+        if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
+            intent.putExtra(EXTRA_SETTING_NAME_ADDRESS, deployAnalyzerModel.nameAndAddress);
         }
-        intent.putExtra(EXTRA_DEPLOY_TO_SN, DeployMonitorCheckActivityPresenter.deployAnalyzerModel.sn);
-        intent.putExtra(EXTRA_DEPLOY_TYPE, DeployMonitorCheckActivityPresenter.deployAnalyzerModel.deployType);
+        intent.putExtra(EXTRA_DEPLOY_TO_SN, deployAnalyzerModel.sn);
+        intent.putExtra(EXTRA_DEPLOY_TYPE, deployAnalyzerModel.deployType);
         if (!TextUtils.isEmpty(originName)) {
             intent.putExtra(EXTRA_DEPLOY_ORIGIN_NAME_ADDRESS, originName);
         }
-        intent.putExtra(EXTRA_DEPLOY_TYPE, DeployMonitorCheckActivityPresenter.deployAnalyzerModel.deployType);
+        intent.putExtra(EXTRA_DEPLOY_TYPE, deployAnalyzerModel.deployType);
         getView().startAC(intent);
     }
 
@@ -481,7 +490,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                     settingData = deployAnalyzerModel.settingData;
                 }
                 RetrofitServiceHelper.getInstance().doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, settingData, deployAnalyzerModel.forceReason).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, settingData, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new CityObserver<DeviceDeployRsp>(this) {
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
@@ -508,7 +517,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
                         deployAnalyzerModel.mDeviceDetail.getTaskId(), 1, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                        deployContactModel.name, deployContactModel.phone, imgUrls, null).
+                        deployContactModel.name, deployContactModel.phone, imgUrls, null, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).
                         subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
                     @Override
                     public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
@@ -535,7 +544,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
                         null, 2, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress, deployContactModel.name,
-                        deployContactModel.phone, imgUrls, null).
+                        deployContactModel.phone, imgUrls, null, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).
                         subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
                     @Override
                     public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
@@ -585,6 +594,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
         }
         deployResultModel.address = deployAnalyzerModel.address;
         deployResultModel.updateTime = deviceInfo.getUpdatedTime();
+        deployResultModel.deployTime = deviceInfo.getDeployTime();
         deployResultModel.deviceStatus = deviceInfo.getStatus();
         deployResultModel.signal = deviceInfo.getSignal();
         deployResultModel.name = deployAnalyzerModel.nameAndAddress;

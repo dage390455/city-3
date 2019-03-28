@@ -4,5 +4,5 @@ import java.util.ArrayList;
 
 public class SecurityRisksTagModel {
     public String tag;
-    public boolean isCheck;
+    public boolean isCheck = false;
 }

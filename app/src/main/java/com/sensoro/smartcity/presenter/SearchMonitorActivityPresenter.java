@@ -347,7 +347,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
             intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
             intent.putExtra(EXTRA_SENSOR_STATUS, deviceInfo.getStatus());
             intent.putExtra(EXTRA_SENSOR_TIME, deviceInfo.getUpdatedTime());
-            intent.putExtra(EXTRA_SENSOR_LOCATION, deviceInfo.getLonlat());
+            intent.putExtra(EXTRA_SENSOR_LOCATION, deviceInfo.getLonlat().toArray());
             getView().startAC(intent);
         }
     }

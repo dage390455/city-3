@@ -14,14 +14,16 @@ import android.widget.Toast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.SecurityRisksContentAdapter;
 import com.sensoro.smartcity.adapter.SecurityRisksReferTagAdapter;
-import com.sensoro.smartcity.adapter.SecurityRisksTagAdapter;
 import com.sensoro.smartcity.adapter.model.SecurityRisksAdapterModel;
+import com.sensoro.smartcity.adapter.model.SecurityRisksTagModel;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ISecurityRisksActivityView;
 import com.sensoro.smartcity.presenter.SecurityRisksPresenter;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.smartcity.widget.dialog.TagDialogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -55,6 +57,7 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
     ConstraintLayout clTagAcSecurityRisks;
     private SecurityRisksContentAdapter securityRisksContentAdapter;
     private SecurityRisksReferTagAdapter securityRisksReferTagAdapter;
+    private TagDialogUtils tagDialogUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -69,6 +72,9 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
         includeTextTitleTvSubtitle.setText(mActivity.getString(R.string.save));
         includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_29c093));
 
+        tagDialogUtils = new TagDialogUtils(mActivity);
+        tagDialogUtils.registerListener(mPresenter);
+
         initContentAdapter();
         initTagAdapter();
 
@@ -76,10 +82,11 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
 
     private void initTagAdapter() {
         securityRisksReferTagAdapter = new SecurityRisksReferTagAdapter(mActivity);
+        securityRisksReferTagAdapter.setOnTagClickListener(mPresenter);
         SensoroLinearLayoutManager linearLayoutManager = new SensoroLinearLayoutManager(mActivity);
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rvTagAcSecurityRisks.setLayoutManager(linearLayoutManager);
-        rvTagAcSecurityRisks.setAdapter(securityRisksContentAdapter);
+        rvTagAcSecurityRisks.setAdapter(securityRisksReferTagAdapter);
     }
 
     private void initContentAdapter() {
@@ -136,13 +143,18 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_cancel:
+                finishAc();
                 break;
             case R.id.include_text_title_tv_subtitle:
+                mPresenter.doSave();
                 break;
             case R.id.iv_close_ac_security_risks:
                 setConstraintTagVisible(false);
+                securityRisksContentAdapter.clearFocus();
                 break;
             case R.id.tv_manger_ac_security_risks:
+                Intent intent = new Intent(mActivity, SecurityRiskTagManagerActivity.class);
+                startAC(intent);
                 break;
         }
     }
@@ -153,8 +165,55 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
     }
 
     @Override
+    public void updateSecurityRisksTag(ArrayList<SecurityRisksTagModel> list, boolean isLocation) {
+        securityRisksReferTagAdapter.updateData(list,isLocation);
+    }
+
+    @Override
+    public void changLocationOrBehaviorColor(int position, boolean isLocation) {
+        securityRisksContentAdapter.changLocationOrBehaviorColor(position,isLocation);
+    }
+
+    @Override
+    public void updateLocationTag(String tag, boolean check, int mAdapterPosition) {
+        securityRisksContentAdapter.updateLocationTag(tag,check);
+    }
+
+    @Override
+    public void setTvName(String name) {
+        tvNameAcSecurityRisks.setText(name);
+    }
+
+    @Override
+    public void showAddTagDialog(boolean mIsLocation) {
+        tagDialogUtils.setTitle(mIsLocation ? mActivity.getString(R.string.add_new_location_tag) : mActivity.getString(R.string.add_new_behavior_tag));
+        tagDialogUtils.show();
+    }
+
+    @Override
+    public void dismissTagDialog() {
+        if (tagDialogUtils != null) {
+            tagDialogUtils.dismissDialog();
+        }
+    }
+
+    @Override
+    public boolean getIsLocation() {
+        return securityRisksReferTagAdapter.getIsLocation();
+    }
+
+    @Override
     public void updateSecurityRisksContent(List<SecurityRisksAdapterModel> data) {
         securityRisksContentAdapter.updateData(data);
     }
 
+    @Override
+    protected void onDestroy() {
+        if (tagDialogUtils != null) {
+            tagDialogUtils.unregisterListener();
+            tagDialogUtils = null;
+        }
+        mPresenter.onDestroy();
+        super.onDestroy();
+    }
 }

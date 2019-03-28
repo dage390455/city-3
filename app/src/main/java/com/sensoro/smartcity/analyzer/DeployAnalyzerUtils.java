@@ -19,8 +19,8 @@ import com.sensoro.smartcity.model.DeployResultModel;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
-import com.sensoro.smartcity.server.bean.DeployDeviceInfo;
 import com.sensoro.smartcity.server.bean.DeployStationInfo;
+import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
 import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
@@ -189,7 +189,7 @@ public class DeployAnalyzerUtils {
 
             @Override
             public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
-                DeployDeviceInfo data = deployDeviceDetailRsp.getData();
+                DeviceInfo data = deployDeviceDetailRsp.getData();
                 if (data == null) {
                     //查找新设备
                     Intent intent = new Intent();
@@ -369,7 +369,7 @@ public class DeployAnalyzerUtils {
 
             @Override
             public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
-                DeployDeviceInfo data = deployDeviceDetailRsp.getData();
+                DeviceInfo data = deployDeviceDetailRsp.getData();
                 if (data == null) {
                     doStation();
                 } else {
@@ -435,7 +435,7 @@ public class DeployAnalyzerUtils {
                         (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(presenter) {
                     @Override
                     public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
-                        DeployDeviceInfo data = deployDeviceDetailRsp.getData();
+                        DeviceInfo data = deployDeviceDetailRsp.getData();
                         deployAnalyzerModel.deployType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
                         deployAnalyzerModel.sn = data.getSn();
                         String deviceType = data.getDeviceType();
@@ -595,7 +595,7 @@ public class DeployAnalyzerUtils {
 
                     @Override
                     public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
-                        DeployDeviceInfo data = deployDeviceDetailRsp.getData();
+                        DeviceInfo data = deployDeviceDetailRsp.getData();
                         if (data == null) {
                             Intent intent = new Intent();
                             intent.setClass(activity, DeployResultActivity.class);
@@ -646,7 +646,7 @@ public class DeployAnalyzerUtils {
 
             @Override
             public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
-                DeployDeviceInfo data = deployDeviceDetailRsp.getData();
+                DeviceInfo data = deployDeviceDetailRsp.getData();
                 if (data == null) {
                     Intent intent = new Intent();
                     intent.setClass(activity, DeployResultActivity.class);

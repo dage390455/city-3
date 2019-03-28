@@ -916,4 +916,25 @@
     <string name="security_location">地点</string>
     <string name="security_behavior">行为</string>
     <string name="refer_loaction">参考地点（单选）</string>
+    <string name="out_of_range">out of range</string>
+    <string name="evacuation_walkway">疏散走道</string>
+    <string name="fire_exits">消防通道</string>
+    <string name="safe_exit">安全出口</string>
+    <string name="indoor">室内</string>
+    <string name="use_high_power_equipment">使用大功率设备</string>
+    <string name="use_little_sun">使用小太阳</string>
+    <string name="use_hot_fast">使用热得快</string>
+    <string name="use_induction_cooker">使用电磁炉</string>
+    <string name="use_coal_stove">使用煤炉</string>
+    <string name="use_lpg">使用瓶装液化气</string>
+    <string name="electric_vehicle_charging">电动车充电</string>
+    <string name="park_electric_car">停放电动车</string>
+    <string name="private_pull_wire">私拉电线</string>
+    <string name="refer_behavior">参考行为（多选）</string>
+    <string name="add_new_location_tag">新增地点标签</string>
+    <string name="add_new_behavior_tag">新增行为标签</string>
+    <string name="refer_location_no">参考地点</string>
+    <string name="refer_behavior_no">参考行为</string>
+    <string name="please_input_all_save">请填写完整后保存</string>
+    <string name="most_support_ten_tag">最多支持10个行为标签</string>
 </resources>

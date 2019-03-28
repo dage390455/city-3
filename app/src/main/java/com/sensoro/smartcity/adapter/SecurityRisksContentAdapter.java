@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,7 +24,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Optional;
 
 public class SecurityRisksContentAdapter extends RecyclerView.Adapter<SecurityRisksContentAdapter.SecurityRisksContentHolder> {
 
@@ -38,6 +39,7 @@ public class SecurityRisksContentAdapter extends RecyclerView.Adapter<SecurityRi
         mContext = context;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @NonNull
     @Override
     public SecurityRisksContentHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -59,24 +61,89 @@ public class SecurityRisksContentAdapter extends RecyclerView.Adapter<SecurityRi
             securityRisksContentHolder.llLocationNameAdapterSecurityRisks.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Integer position = (Integer) v.getTag();
+                    for (int i = 0; i < list.size(); i++) {
+                        if (position == i) {
+                            SecurityRisksAdapterModel model = list.get(position);
+                            model.locationColor = R.color.c_252525;
+                            model.behaviorColor = R.color.c_a6a6a6;
+//                            notifyItemChanged(position);
+                        }else{
+                            SecurityRisksAdapterModel model = list.get(i);
+                            if (model.locationColor == R.color.c_252525 || model.behaviorColor == R.color.c_252525) {
+                                model.locationColor = R.color.c_a6a6a6;
+                                model.behaviorColor = R.color.c_a6a6a6;
+//                                notifyItemChanged(i);
+
+                            }
+                        }
+                    }
+                    notifyDataSetChanged();
+
                     if (mListener != null) {
-                        mListener.onLocationClick((Integer) v.getTag());
+                        mListener.onLocationClick((Integer) position);
                     }
                 }
             });
-            securityRisksContentHolder.rvBehaviorsAdapterSecurityRisks.setOnClickListener(new View.OnClickListener() {
+
+
+            securityRisksContentHolder.viewBehaviorsAdapterSecurityRisks.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mListener != null) {
-                        mListener.onBehaviorClick((Integer) v.getTag());
+                        Integer position = (Integer) v.getTag();
+                        for (int i = 0; i < list.size(); i++) {
+                            if (position == i) {
+                                SecurityRisksAdapterModel model = list.get(position);
+                                model.locationColor = R.color.c_a6a6a6;
+                                model.behaviorColor = R.color.c_252525;
+                            }else{
+                                SecurityRisksAdapterModel model = list.get(i);
+                                if (model.locationColor == R.color.c_252525 || model.behaviorColor == R.color.c_252525) {
+                                    model.locationColor = R.color.c_a6a6a6;
+                                    model.behaviorColor = R.color.c_a6a6a6;
+                                }
+                            }
+                        }
+                        notifyDataSetChanged();
+                        if (mListener != null) {
+                            mListener.onBehaviorClick((Integer) v.getTag());
+                        }
                     }
+
+            });
+            securityRisksContentHolder.rvBehaviorsAdapterSecurityRisks.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_UP) {
+                        Integer position = (Integer) v.getTag();
+                        for (int i = 0; i < list.size(); i++) {
+                            if (position == i) {
+                                SecurityRisksAdapterModel model = list.get(position);
+                                model.locationColor = R.color.c_a6a6a6;
+                                model.behaviorColor = R.color.c_252525;
+                            }else{
+                                SecurityRisksAdapterModel model = list.get(i);
+                                if (model.locationColor == R.color.c_252525 || model.behaviorColor == R.color.c_252525) {
+                                    model.locationColor = R.color.c_a6a6a6;
+                                    model.behaviorColor = R.color.c_a6a6a6;
+                                }
+                            }
+                        }
+                        notifyDataSetChanged();
+                        if (mListener != null) {
+                            mListener.onBehaviorClick((Integer) v.getTag());
+                        }
+                    }
+                    return true;
                 }
             });
+
             securityRisksContentHolder.ivDelAdapterSecurityRisksTag.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mListener != null) {
-                        mListener.onLocationDel();
+                        Integer position = (Integer) v.getTag();
+                        mListener.onLocationDel(list.get(position).location,position);
                     }
                 }
             });
@@ -87,7 +154,7 @@ public class SecurityRisksContentAdapter extends RecyclerView.Adapter<SecurityRi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SecurityRisksContentHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final SecurityRisksContentHolder holder, int position) {
 
         if (getItemViewType(position) == VIEW_TYPE_ADD_ITEM) {
             holder.tvAddAdapterSecurityRisks.setTag(position);
@@ -95,26 +162,59 @@ public class SecurityRisksContentAdapter extends RecyclerView.Adapter<SecurityRi
             holder.tvLocationNameAdapterSecurityRisks.setTag(position);
             holder.rvBehaviorsAdapterSecurityRisks.setTag(position);
             holder.llLocationNameAdapterSecurityRisks.setTag(position);
+            holder.viewBehaviorsAdapterSecurityRisks.setTag(position);
+            holder.ivDelAdapterSecurityRisksTag.setTag(position);
 
             SecurityRisksAdapterModel model = list.get(position);
+            holder.tvLocationAdapterSecurityRisks.setTextColor(mContext.getResources().getColor(model.locationColor));
+            holder.tvBehaviorAdapterSecurityRisks.setTextColor(mContext.getResources().getColor(model.behaviorColor));
             if (!TextUtils.isEmpty(model.location)) {
                 holder.llLocationNameContentAdapterSecurityRisks.setVisibility(View.VISIBLE);
                 holder.tvLocationNameAdapterSecurityRisks.setText(model.location);
+            }else{
+                holder.llLocationNameContentAdapterSecurityRisks.setVisibility(View.GONE);
             }
 
-            SecurityRisksTagAdapter securityRisksTagAdapter = new SecurityRisksTagAdapter(mContext);
-            SensoroLinearLayoutManager manager = new SensoroLinearLayoutManager(mContext);
-            manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-            holder.rvBehaviorsAdapterSecurityRisks.setLayoutManager(manager);
-            holder.rvBehaviorsAdapterSecurityRisks.setAdapter(securityRisksTagAdapter);
-            securityRisksTagAdapter.updateData(model.behaviors);
+            if (model.behaviors.size() > 0) {
+                holder.viewBehaviorsAdapterSecurityRisks.setVisibility(View.GONE);
+                holder.rvBehaviorsAdapterSecurityRisks.setVisibility(View.VISIBLE);
+                SecurityRisksTagAdapter securityRisksTagAdapter = new SecurityRisksTagAdapter(mContext);
+                securityRisksTagAdapter.setOnSecurityRisksTagClickListener(new SecurityRisksTagAdapter.SecurityRisksTagClickListener() {
+                    @Override
+                    public void onDelItemClick(String tag) {
+                        if (mListener != null) {
+                            mListener.onBehaviorDel(tag,holder.getAdapterPosition());
+                        }
+                    }
+                });
+                SensoroLinearLayoutManager manager = new SensoroLinearLayoutManager(mContext);
+                manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                holder.rvBehaviorsAdapterSecurityRisks.setLayoutManager(manager);
+                holder.rvBehaviorsAdapterSecurityRisks.setAdapter(securityRisksTagAdapter);
+                securityRisksTagAdapter.updateData(model.behaviors);
+            }else{
+                holder.viewBehaviorsAdapterSecurityRisks.setVisibility(View.VISIBLE);
+                holder.rvBehaviorsAdapterSecurityRisks.setVisibility(View.GONE);
+            }
+
 
         }
     }
 
     @Override
+    public void onBindViewHolder(@NonNull SecurityRisksContentHolder holder, int position, @NonNull List<Object> payloads) {
+        if (payloads.isEmpty()) {
+            super.onBindViewHolder(holder,position,payloads);
+        }else{
+            SecurityRisksAdapterModel model = list.get(position);
+            holder.tvLocationAdapterSecurityRisks.setTextColor(mContext.getResources().getColor(model.locationColor));
+            holder.tvBehaviorAdapterSecurityRisks.setTextColor(mContext.getResources().getColor(model.behaviorColor));
+        }
+    }
+
+    @Override
     public int getItemViewType(int position) {
-        if (getItemCount() > 20) {
+        if (list.size() > 19) {
             return VIEW_TYPE_CONTENT;
         } else {
             if (position == getItemCount() - 1) {
@@ -140,6 +240,50 @@ public class SecurityRisksContentAdapter extends RecyclerView.Adapter<SecurityRi
     public int getItemCount() {
         int size = list.size();
         return size < 20 ? size + 1 : size;
+    }
+
+    public void changLocationOrBehaviorColor(int position, boolean isLocation) {
+
+        for (int i = 0; i < list.size(); i++) {
+            if (position == i) {
+                if (isLocation) {
+                    SecurityRisksAdapterModel model = list.get(position);
+                    model.locationColor = R.color.c_252525;
+                    model.behaviorColor = R.color.c_a6a6a6;
+                }else{
+                    SecurityRisksAdapterModel model = list.get(position);
+                    model.locationColor = R.color.c_a6a6a6;
+                    model.behaviorColor = R.color.c_252525;
+                }
+
+//                            notifyItemChanged(position);
+            }else{
+                SecurityRisksAdapterModel model = list.get(i);
+                if (model.locationColor == R.color.c_252525 || model.behaviorColor == R.color.c_252525) {
+                    model.locationColor = R.color.c_a6a6a6;
+                    model.behaviorColor = R.color.c_a6a6a6;
+//                                notifyItemChanged(i);
+
+                }
+            }
+        }
+        notifyDataSetChanged();
+
+    }
+
+    public void clearFocus() {
+        for (int i = 0; i < list.size(); i++) {
+            SecurityRisksAdapterModel model = list.get(i);
+            if (model.locationColor == R.color.c_252525 || model.behaviorColor == R.color.c_252525) {
+                model.locationColor = R.color.c_a6a6a6;
+                model.behaviorColor = R.color.c_a6a6a6;
+                notifyItemChanged(i);
+            }
+        }
+    }
+
+    public void updateLocationTag(String tag, boolean check) {
+
     }
 
     class SecurityRisksContentHolder extends RecyclerView.ViewHolder {
@@ -170,6 +314,9 @@ public class SecurityRisksContentAdapter extends RecyclerView.Adapter<SecurityRi
         @Nullable
         @BindView(R.id.ll_location_name_adapter_security_risks)
         LinearLayout llLocationNameAdapterSecurityRisks;
+        @Nullable
+        @BindView(R.id.view_behaviors_adapter_security_risks)
+        View viewBehaviorsAdapterSecurityRisks;
 
         SecurityRisksContentHolder(View itemView) {
             super(itemView);
@@ -185,7 +332,8 @@ public class SecurityRisksContentAdapter extends RecyclerView.Adapter<SecurityRi
 
         void onAddItemClick();
 
-        void onLocationDel();
+        void onLocationDel(String tag, Integer position);
 
+        void onBehaviorDel(String tag, int position);
     }
 }
