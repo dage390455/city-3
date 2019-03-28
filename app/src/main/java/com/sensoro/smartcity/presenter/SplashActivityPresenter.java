@@ -11,7 +11,6 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.MainActivity;
-import com.sensoro.smartcity.activity.SecurityRisksActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISplashActivityView;
@@ -49,7 +48,6 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
 //        }
         mContext = (Activity) context;
         permissionDialogUtils = new PermissionDialogUtils(mContext);
-
 //        getView().startAC(new Intent(mContext, SecurityRisksActivity.class));
 //        getView().finishAc();
     }

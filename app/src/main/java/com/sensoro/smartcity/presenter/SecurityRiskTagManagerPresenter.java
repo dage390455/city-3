@@ -69,14 +69,16 @@ public class SecurityRiskTagManagerPresenter extends BasePresenter<ISecurityRisk
         }
 
         PreferencesHelper.getInstance().saveSecurityRiskLocationTag(mLocationTagList);
+
         Iterator<SecurityRisksTagModel> iterator1 = mBehaviorTagList.iterator();
-        while (iterator.hasNext()) {
-            SecurityRisksTagModel next = iterator.next();
-            if (!mBehaviorTagList.contains(next.tag)) {
+        while (iterator1.hasNext()) {
+            SecurityRisksTagModel next = iterator1.next();
+            if (!mBehaviorData.contains(next.tag)) {
                 iterator1.remove();
             }
         }
         PreferencesHelper.getInstance().saveSecurityRiskBehaviorTag(mBehaviorTagList);
+
         EventData eventData = new EventData();
         eventData.code = Constants.EVENT_DATA_SECURITY_RISK_TAG_MANAGER;
         EventBus.getDefault().post(eventData);

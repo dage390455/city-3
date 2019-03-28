@@ -89,6 +89,7 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
         mAdapterPosition = position;
         getView().setConstraintTagVisible(true);
 //        getView().changLocationOrBehaviorColor(position, true);
+        getView().rvContentScrollBottom(position);
         SecurityRisksAdapterModel model = securityRisksList.get(mAdapterPosition);
         for (SecurityRisksTagModel securityRisksTagModel : locationTagList) {
             securityRisksTagModel.isCheck = securityRisksTagModel.tag.equals(model.place);
@@ -101,6 +102,7 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
     public void onBehaviorClick(int position) {
         mAdapterPosition = position;
         getView().setConstraintTagVisible(true);
+        getView().rvContentScrollBottom(position);
         SecurityRisksAdapterModel model = securityRisksList.get(mAdapterPosition);
         for (SecurityRisksTagModel securityRisksTagModel : behaviorTagList) {
             securityRisksTagModel.isCheck = model.action.contains(securityRisksTagModel.tag);
@@ -141,6 +143,12 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
         getView().updateSecurityRisksTag(behaviorTagList, false);
         getView().updateSecurityRisksContent(securityRisksList);
         getView().setTvName(mActivity.getString(R.string.refer_behavior));
+    }
+
+    @Override
+    public void onItemDel(int position) {
+        securityRisksList.remove(position);
+        getView().updateSecurityRisksContent(securityRisksList);
     }
 
 

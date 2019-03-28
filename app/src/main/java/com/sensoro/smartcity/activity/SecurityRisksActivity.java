@@ -6,6 +6,8 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.Guideline;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,11 +18,13 @@ import com.sensoro.smartcity.adapter.SecurityRisksContentAdapter;
 import com.sensoro.smartcity.adapter.SecurityRisksReferTagAdapter;
 import com.sensoro.smartcity.adapter.model.SecurityRisksAdapterModel;
 import com.sensoro.smartcity.adapter.model.SecurityRisksTagModel;
+import com.sensoro.smartcity.adapter.touchHelper.SecurityRiskContentTouchHelper;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ISecurityRisksActivityView;
 import com.sensoro.smartcity.presenter.SecurityRisksPresenter;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.dialog.TagDialogUtils;
+import com.sensoro.smartcity.widget.dialog.TipDialogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.ArrayList;
@@ -30,7 +34,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityView, SecurityRisksPresenter> implements ISecurityRisksActivityView {
+public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityView, SecurityRisksPresenter> implements ISecurityRisksActivityView
+, TipDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.include_text_title_tv_cancel)
     TextView includeTextTitleTvCancel;
     @BindView(R.id.include_text_title_tv_title)
@@ -58,6 +63,7 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
     private SecurityRisksContentAdapter securityRisksContentAdapter;
     private SecurityRisksReferTagAdapter securityRisksReferTagAdapter;
     private TagDialogUtils tagDialogUtils;
+    private TipDialogUtils mCancelDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -75,9 +81,18 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
         tagDialogUtils = new TagDialogUtils(mActivity);
         tagDialogUtils.registerListener(mPresenter);
 
+        initCancelDialog();
         initContentAdapter();
         initTagAdapter();
 
+    }
+
+    private void initCancelDialog() {
+        mCancelDialog = new TipDialogUtils(mActivity);
+        mCancelDialog.setTipMessageText(mActivity.getString(R.string.confirm_exit_security_risk));
+        mCancelDialog.setTipCacnleText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_a6a6a6));
+        mCancelDialog.setTipConfirmText(mActivity.getString(R.string.confirm_exit), mActivity.getResources().getColor(R.color.c_f34a4a));
+        mCancelDialog.setTipDialogUtilsClickListener(this);
     }
 
     private void initTagAdapter() {
@@ -96,6 +111,10 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rcContentAcSecurityRisk.setLayoutManager(linearLayoutManager);
         rcContentAcSecurityRisk.setAdapter(securityRisksContentAdapter);
+
+        SecurityRiskContentTouchHelper callback = new SecurityRiskContentTouchHelper(securityRisksContentAdapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(rcContentAcSecurityRisk);
     }
 
     @Override
@@ -143,7 +162,9 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_cancel:
-                finishAc();
+                if (mCancelDialog != null) {
+                    mCancelDialog.show();
+                }
                 break;
             case R.id.include_text_title_tv_subtitle:
                 mPresenter.doSave();
@@ -203,6 +224,17 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
     }
 
     @Override
+    public void rvContentScrollBottom(final int position) {
+            rcContentAcSecurityRisk.post(new Runnable() {
+                @Override
+                public void run() {
+                    rcContentAcSecurityRisk.smoothScrollToPosition(position);
+                }
+            });
+
+    }
+
+    @Override
     public void updateSecurityRisksContent(List<SecurityRisksAdapterModel> data) {
         securityRisksContentAdapter.updateData(data);
     }
@@ -213,7 +245,22 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
             tagDialogUtils.unregisterListener();
             tagDialogUtils = null;
         }
+
+        if(mCancelDialog != null){
+            mCancelDialog.destory();
+            mCancelDialog = null;
+        }
         mPresenter.onDestroy();
         super.onDestroy();
+    }
+
+    @Override
+    public void onCancelClick() {
+        mCancelDialog.dismiss();
+    }
+
+    @Override
+    public void onConfirmClick() {
+        finishAc();
     }
 }

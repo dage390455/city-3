@@ -262,6 +262,8 @@ dependencies {
     implementation project(':bottomnavigation')
     //Calendar view
     implementation project(':calendarview')
+
+
     implementation('com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.3') {
         transitive = true
     }

@@ -937,5 +937,8 @@
     <string name="deploy_check_record_reason_config">设备初始配置失败</string>
     <string name="deploy_check_record_reason_signal">设备信号：</string>
     <string name="deploy_check_record_reason_status">设备状态：</string>
+    <string name="confirm_exit_security_risk">是否退出安全隐患标记</string>
+    <string name="confirm_exit">确认退出</string>
+    <string name="use_electric_blanket">使用电热毯</string>
 
 </resources>

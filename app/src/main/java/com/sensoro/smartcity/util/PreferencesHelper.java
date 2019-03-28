@@ -712,6 +712,10 @@ public final class PreferencesHelper implements Constants {
             SecurityRisksTagModel model2 = new SecurityRisksTagModel();
             model2.tag = context.getString(R.string.use_little_sun);
             list.add(model2);
+            SecurityRisksTagModel model10 = new SecurityRisksTagModel();
+            model10.tag = context.getString(R.string.use_electric_blanket);
+            list.add(model10);
+
             SecurityRisksTagModel model3 = new SecurityRisksTagModel();
             model3.tag = context.getString(R.string.use_hot_fast);
             list.add(model3);
