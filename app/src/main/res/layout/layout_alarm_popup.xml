@@ -26,8 +26,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:paddingRight="20dp"
                     android:paddingTop="20dp"
+                    android:paddingRight="20dp"
                     android:src="@mipmap/ic_close" />
             </RelativeLayout>
 
@@ -45,8 +45,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp"
                 android:layout_marginTop="12dp"
+                android:layout_marginEnd="24dp"
                 android:animationCache="true"
                 android:overlapAnchor="false"
                 android:padding="8dp"
@@ -57,11 +57,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginEnd="24dp"
                 android:gravity="start"
-                android:layout_marginTop="12dp"
-                android:visibility="gone"
-                android:textColor="#F34A4A" />
+                android:textColor="#F34A4A"
+                android:visibility="gone" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -78,8 +78,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
                 android:layout_marginTop="12dp"
+                android:layout_marginRight="24dp"
                 android:animationCache="true"
                 android:overlapAnchor="false"
                 android:padding="8dp"
@@ -100,8 +100,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
                 android:layout_marginTop="12dp"
+                android:layout_marginRight="24dp"
                 android:animationCache="true"
                 android:overlapAnchor="false"
 
@@ -112,8 +112,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
                 android:layout_marginTop="12dp"
+                android:layout_marginRight="24dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -129,15 +129,16 @@
                     android:layout_height="82dp"
                     android:layout_marginTop="12dp"
                     android:background="@drawable/shape_et_search"
+                    android:cursorVisible="true"
                     android:enabled="true"
                     android:gravity="top"
-                    android:cursorVisible="true"
-                    android:textCursorDrawable="@drawable/my_cursor"
                     android:hint="@string/alarm_descript"
                     android:inputType="textMultiLine"
+                    android:maxLength="100"
                     android:padding="10dp"
                     android:scrollbars="vertical"
                     android:textColor="@color/c_626262"
+                    android:textCursorDrawable="@drawable/my_cursor"
                     android:textSize="14sp" />
 
                 <RelativeLayout
@@ -166,10 +167,10 @@
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
         android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
         android:layout_marginTop="12dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="12dp"
         android:background="@drawable/shape_button_normal"
         android:clickable="true"
         android:gravity="center"
