@@ -262,6 +262,9 @@ dependencies {
     implementation project(':bottomnavigation')
     //Calendar view
     implementation project(':calendarview')
+    //侧滑删除recyclerview
+    implementation 'com.yanzhenjie.recyclerview:support:1.3.2'
+
     implementation('com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.3') {
         transitive = true
     }

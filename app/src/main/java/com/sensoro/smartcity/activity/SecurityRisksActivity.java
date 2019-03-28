@@ -6,6 +6,8 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.Guideline;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,6 +18,7 @@ import com.sensoro.smartcity.adapter.SecurityRisksContentAdapter;
 import com.sensoro.smartcity.adapter.SecurityRisksReferTagAdapter;
 import com.sensoro.smartcity.adapter.model.SecurityRisksAdapterModel;
 import com.sensoro.smartcity.adapter.model.SecurityRisksTagModel;
+import com.sensoro.smartcity.adapter.touchHelper.SecurityRiskContentTouchHelper;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ISecurityRisksActivityView;
 import com.sensoro.smartcity.presenter.SecurityRisksPresenter;
@@ -96,6 +99,10 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rcContentAcSecurityRisk.setLayoutManager(linearLayoutManager);
         rcContentAcSecurityRisk.setAdapter(securityRisksContentAdapter);
+
+        SecurityRiskContentTouchHelper callback = new SecurityRiskContentTouchHelper(securityRisksContentAdapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(rcContentAcSecurityRisk);
     }
 
     @Override
@@ -200,6 +207,17 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
     @Override
     public boolean getIsLocation() {
         return securityRisksReferTagAdapter.getIsLocation();
+    }
+
+    @Override
+    public void rvContentScrollBottom(final int position) {
+            rcContentAcSecurityRisk.post(new Runnable() {
+                @Override
+                public void run() {
+                    rcContentAcSecurityRisk.smoothScrollToPosition(position);
+                }
+            });
+
     }
 
     @Override

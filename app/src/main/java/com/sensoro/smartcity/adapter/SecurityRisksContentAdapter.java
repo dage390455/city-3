@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.model.SecurityRisksAdapterModel;
+import com.sensoro.smartcity.adapter.touchHelper.SecurityRiskContentTouchHelper;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 
 import java.util.ArrayList;
@@ -25,7 +26,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SecurityRisksContentAdapter extends RecyclerView.Adapter<SecurityRisksContentAdapter.SecurityRisksContentHolder> {
+public class SecurityRisksContentAdapter extends RecyclerView.Adapter<SecurityRisksContentAdapter.SecurityRisksContentHolder>
+implements SecurityRiskContentTouchHelper.ItemTouchHelperAdapter {
 
     //普通类型的item
     private static final int VIEW_TYPE_CONTENT = 1;
@@ -286,6 +288,25 @@ public class SecurityRisksContentAdapter extends RecyclerView.Adapter<SecurityRi
 
     }
 
+    /**
+     * 删除
+     * @param position
+     */
+    @Override
+    public void onItemDismiss(int position) {
+        if (mListener != null) {
+            mListener.onItemDel(position);
+        }
+    }
+
+    /*
+    * 移动
+     */
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+
+    }
+
     class SecurityRisksContentHolder extends RecyclerView.ViewHolder {
         @Nullable
         @BindView(R.id.tv_location_adapter_security_risks)
@@ -335,5 +356,7 @@ public class SecurityRisksContentAdapter extends RecyclerView.Adapter<SecurityRi
         void onLocationDel(String tag, Integer position);
 
         void onBehaviorDel(String tag, int position);
+
+        void onItemDel(int position);
     }
 }

@@ -27,4 +27,6 @@ public interface ISecurityRisksActivityView extends IToast, IActivityIntent {
 
     boolean getIsLocation();
 
+    void rvContentScrollBottom(int position);
+
 }
