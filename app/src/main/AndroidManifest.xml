@@ -357,6 +357,8 @@
         <activity android:name=".temp.TestUpdateActivity" />
         <activity android:name=".activity.DeployMonitorCheckActivity" />
         <activity android:name=".activity.DeployRepairInstructionActivity" />
+        <activity android:name=".activity.SecurityRisksActivity" />
+        <activity android:name=".activity.SecurityRiskTagManagerActivity" />
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"

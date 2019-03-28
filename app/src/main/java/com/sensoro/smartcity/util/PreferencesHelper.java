@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.adapter.model.SecurityRisksTagModel;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.model.EventLoginData;
@@ -38,6 +40,8 @@ public final class PreferencesHelper implements Constants {
     public static PreferencesHelper getInstance() {
         return PreferencesHelperHolder.instance;
     }
+
+
 
     private static class PreferencesHelperHolder {
         private static final PreferencesHelper instance = new PreferencesHelper();
@@ -644,5 +648,112 @@ public final class PreferencesHelper implements Constants {
         }
         SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_PHONE, history).apply();
         return true;
+    }
+
+    /**
+     * 安全隐患，参考地点标签
+     */
+    public ArrayList<SecurityRisksTagModel> getSecurityRiskLocationTags(Context context) {
+        String location = SensoroCityApplication.getInstance().getSharedPreferences(Constants.PREFERENCE_SECURITY_RISK_TAG, Context.MODE_PRIVATE)
+                .getString(Constants.PREFERENCE_KEY_SECURITY_RISK_LOCATION, "");
+
+        if (TextUtils.isEmpty(location)) {
+            ArrayList<SecurityRisksTagModel> list = new ArrayList<>(4);
+            SecurityRisksTagModel model1 = new SecurityRisksTagModel();
+            model1.tag = context.getString(R.string.evacuation_walkway);
+            list.add(model1);
+            SecurityRisksTagModel model2 = new SecurityRisksTagModel();
+            model2.tag = context.getString(R.string.fire_exits);
+            list.add(model2);
+            SecurityRisksTagModel model3 = new SecurityRisksTagModel();
+            model3.tag = context.getString(R.string.safe_exit);
+            list.add(model3);
+            SecurityRisksTagModel model4 = new SecurityRisksTagModel();
+            model4.tag = context.getString(R.string.indoor);
+            list.add(model4);
+            saveSecurityRiskLocationTag(list);
+            return list;
+        }else{
+            ArrayList<SecurityRisksTagModel> list = new ArrayList<>();
+            String[] split = location.split("#");
+            for (int i = 0; i < split.length; i++) {
+                SecurityRisksTagModel model = new SecurityRisksTagModel();
+                model.tag = split[i];
+                list.add(model);
+            }
+            return list;
+        }
+    }
+
+    public void saveSecurityRiskLocationTag(ArrayList<SecurityRisksTagModel> list){
+        StringBuilder sb = new StringBuilder();
+        for (SecurityRisksTagModel model : list) {
+            sb.append(model.tag);
+            sb.append("#");
+        }
+        SensoroCityApplication.getInstance().getSharedPreferences(Constants.PREFERENCE_SECURITY_RISK_TAG, Context.MODE_PRIVATE)
+                .edit().putString(Constants.PREFERENCE_KEY_SECURITY_RISK_LOCATION,sb.toString()).apply();
+    }
+
+    /**
+     * 安全隐患，参考行为标签
+     * @param context
+     * @return
+     */
+    public ArrayList<SecurityRisksTagModel> getSecurityRiskBehaviorTags(Context context) {
+        String location = SensoroCityApplication.getInstance().getSharedPreferences(Constants.PREFERENCE_SECURITY_RISK_TAG, Context.MODE_PRIVATE)
+                .getString(Constants.PREFERENCE_KEY_SECURITY_RISK_BEHAVIOR, "");
+
+        if (TextUtils.isEmpty(location)) {
+            ArrayList<SecurityRisksTagModel> list = new ArrayList<>(4);
+            SecurityRisksTagModel model1 = new SecurityRisksTagModel();
+            model1.tag = context.getString(R.string.use_high_power_equipment);
+            list.add(model1);
+            SecurityRisksTagModel model2 = new SecurityRisksTagModel();
+            model2.tag = context.getString(R.string.use_little_sun);
+            list.add(model2);
+            SecurityRisksTagModel model3 = new SecurityRisksTagModel();
+            model3.tag = context.getString(R.string.use_hot_fast);
+            list.add(model3);
+            SecurityRisksTagModel model4 = new SecurityRisksTagModel();
+            model4.tag = context.getString(R.string.use_induction_cooker);
+            list.add(model4);
+            SecurityRisksTagModel model5 = new SecurityRisksTagModel();
+            model5.tag = context.getString(R.string.use_coal_stove);
+            list.add(model5);
+            SecurityRisksTagModel model6 = new SecurityRisksTagModel();
+            model6.tag = context.getString(R.string.use_lpg);
+            list.add(model6);
+            SecurityRisksTagModel model7 = new SecurityRisksTagModel();
+            model7.tag = context.getString(R.string.electric_vehicle_charging);
+            list.add(model7);
+            SecurityRisksTagModel model8 = new SecurityRisksTagModel();
+            model8.tag = context.getString(R.string.park_electric_car);
+            list.add(model8);
+            SecurityRisksTagModel model9 = new SecurityRisksTagModel();
+            model9.tag = context.getString(R.string.private_pull_wire);
+            list.add(model9);
+            saveSecurityRiskBehaviorTag(list);
+            return list;
+        }else{
+            ArrayList<SecurityRisksTagModel> list = new ArrayList<>();
+            String[] split = location.split("#");
+            for (int i = 0; i < split.length; i++) {
+                SecurityRisksTagModel model = new SecurityRisksTagModel();
+                model.tag = split[i];
+                list.add(model);
+            }
+            return list;
+        }
+    }
+
+    public void saveSecurityRiskBehaviorTag(ArrayList<SecurityRisksTagModel> list){
+        StringBuilder sb = new StringBuilder();
+        for (SecurityRisksTagModel model : list) {
+            sb.append(model.tag);
+            sb.append("#");
+        }
+        SensoroCityApplication.getInstance().getSharedPreferences(Constants.PREFERENCE_SECURITY_RISK_TAG, Context.MODE_PRIVATE)
+                .edit().putString(Constants.PREFERENCE_KEY_SECURITY_RISK_BEHAVIOR,sb.toString()).apply();
     }
 }

@@ -30,6 +30,10 @@ public interface Constants {
     String PREFERENCE_DEPLOY_CONTACT_HISTORY = "city_deploy_contact_history";
     String PREFERENCE_DEPLOY_CONTENT_HISTORY = "city_deploy_content_history";
     String PREFERENCE_KEY_DEVICE = "key_search_history_keyword";
+    //安全隐患，标签
+    String PREFERENCE_SECURITY_RISK_TAG = "preference_security_risk_tag";
+    String PREFERENCE_KEY_SECURITY_RISK_LOCATION = "preference_key_security_risk_location";
+    String PREFERENCE_KEY_SECURITY_RISK_BEHAVIOR = "preference_key_security_risk_behavior";
     //
     String PREFERENCE_KEY_DEPLOY_NAME = "preference_key_deploy_name";
     String PREFERENCE_KEY_DEPLOY_NAME_ADDRESS = "preference_key_deploy_name_address";
@@ -388,6 +392,9 @@ public interface Constants {
     int EVENT_DATA__CONTRACT_EDIT_REFRESH_CODE = 0x45;
     int EVENT_DATA_DEPLOY_INIT_CONFIG_CODE = 0x47;
 
+    int EVENT_DATA_SECURITY_RISK_TAG_MANAGER = 0x57;
+    int EVENT_DATA_SECURITY_RISK_TAG = 0x58;
+
 
     int TYPE_SCAN_DEPLOY_DEVICE = 0x29;
     int TYPE_SCAN_DEPLOY_STATION = 0x39;
@@ -474,4 +481,7 @@ public interface Constants {
 
         }
     };
+
+
+
 }

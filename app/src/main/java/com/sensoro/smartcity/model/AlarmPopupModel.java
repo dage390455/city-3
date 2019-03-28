@@ -31,4 +31,5 @@ public class AlarmPopupModel {
         public String name;
         public int resDrawable = R.drawable.shape_bg_solid_29c_20dp_corner;
     }
+
 }

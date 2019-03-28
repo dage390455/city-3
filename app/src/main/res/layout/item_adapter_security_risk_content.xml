@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="12dp"
+    android:background="@color/white"
+
+    >
+
+    <TextView
+        android:id="@+id/tv_location_adapter_security_risks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="14sp"
+        android:text="@string/security_location"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/ll_location_name_adapter_security_risks"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/view_divider_adapter_security_risks"
+        app:layout_constraintStart_toEndOf="@id/tv_location_adapter_security_risks"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="20dp"
+        >
+
+        <LinearLayout
+            android:id="@+id/ll_location_name_content_adapter_security_risks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="12dp"
+            android:layout_gravity="center_vertical"
+            android:paddingBottom="4dp"
+            android:background="@drawable/shape_bg_solid_29c_full_corner"
+            android:visibility="gone"
+            >
+            <TextView
+                android:id="@+id/tv_location_name_adapter_security_risks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|start"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                />
+            <ImageView
+                android:id="@+id/iv_del_adapter_security_risks_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:src="@drawable/security_tag_del"
+                android:contentDescription="@null"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <View
+        android:id="@+id/view_divider_adapter_security_risks"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/view_divider_height"
+        android:layout_marginTop="18dp"
+        android:background="@color/c_dfdfdf"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_location_adapter_security_risks" />
+
+    <TextView
+        android:id="@+id/tv_behavior_adapter_security_risks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="14sp"
+        android:text="@string/security_behavior"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/tv_location_adapter_security_risks"
+        app:layout_constraintStart_toStartOf="@id/tv_location_adapter_security_risks"
+        app:layout_constraintTop_toBottomOf="@id/view_divider_adapter_security_risks"
+        app:layout_constraintVertical_bias="0"
+        android:layout_marginBottom="16dp"/>
+
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_behaviors_adapter_security_risks"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="20dp"
+        android:visibility="gone"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="-4dp"
+        app:layout_constraintStart_toStartOf="@id/ll_location_name_adapter_security_risks"
+        app:layout_constraintTop_toTopOf="@id/tv_behavior_adapter_security_risks"
+        >
+
+    </android.support.v7.widget.RecyclerView>
+
+    <View
+        android:id="@+id/view_behaviors_adapter_security_risks"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/ll_location_name_adapter_security_risks"
+        app:layout_constraintTop_toTopOf="@id/tv_behavior_adapter_security_risks"
+        app:layout_constraintBottom_toBottomOf="@id/tv_behavior_adapter_security_risks"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+
+</android.support.constraint.ConstraintLayout>
