@@ -2,6 +2,7 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Parcelable;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
@@ -36,9 +37,16 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
     public void initData(Context context) {
         mActivity = (Activity) context;
         EventBus.getDefault().register(this);
-        SecurityRisksAdapterModel model = new SecurityRisksAdapterModel();
-        securityRisksList.add(model);
-        getView().updateSecurityRisksContent(securityRisksList);
+        ArrayList<SecurityRisksAdapterModel> list = mActivity.getIntent().getParcelableArrayListExtra(Constants.EXTRA_SECURITY_RISK);
+        if (list == null) {
+            SecurityRisksAdapterModel model = new SecurityRisksAdapterModel();
+            securityRisksList.add(model);
+            getView().updateSecurityRisksContent(securityRisksList);
+        }else{
+            securityRisksList = list;
+            getView().updateSecurityRisksContent(securityRisksList);
+        }
+
 
         locationTagList = PreferencesHelper.getInstance().getSecurityRiskLocationTags(mActivity);
         behaviorTagList = PreferencesHelper.getInstance().getSecurityRiskBehaviorTags(mActivity);

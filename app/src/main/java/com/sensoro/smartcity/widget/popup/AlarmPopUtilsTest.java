@@ -602,6 +602,9 @@ public class AlarmPopUtilsTest implements Constants,
             case R.id.ll_alarm_popup_alarm_security_risks:
                 //TODO 安全隐患
                 Intent intent = new Intent(mActivity, SecurityRisksActivity.class);
+                if (mAlarmPopupModel.securityRisksList != null && mAlarmPopupModel.securityRisksList.size() > 0) {
+                    intent.putParcelableArrayListExtra(Constants.EXTRA_SECURITY_RISK,mAlarmPopupModel.securityRisksList);
+                }
                 mActivity.startActivity(intent);
                 break;
             case R.id.bt_alarm_popup_commit:

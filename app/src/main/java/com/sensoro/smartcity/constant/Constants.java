@@ -270,6 +270,8 @@ public interface Constants {
     String EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE = "extra_inspection_instruction_device_type";
     int CONTRACT_ORIGIN_TYPE_EDIT = 0x200;
 
+    String EXTRA_SECURITY_RISK = "extra_security_risk";
+
     //合同相关
     String EXTRA_CONTRACT_TYPE = "extra_contract_type";
     String EXTRA_CONTRACT_ID = "extra_contract_id";
