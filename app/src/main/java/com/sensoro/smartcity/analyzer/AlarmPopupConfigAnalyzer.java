@@ -19,7 +19,6 @@ import java.util.Set;
 public class AlarmPopupConfigAnalyzer {
 
     public static void handleAlarmPopupModel(Integer displayStatus, AlarmPopupModel alarmPopupModel) {
-        alarmPopupModel.title = "预警结果类型 (必填)";
         //
         Map<String, AlarmPopupDataDisplayBean> display = alarmPopupModel.configAlarmPopupDataBean.getDisplay();
         Map<String, AlarmPopupDataConfigBean> config = alarmPopupModel.configAlarmPopupDataBean.getConfig();

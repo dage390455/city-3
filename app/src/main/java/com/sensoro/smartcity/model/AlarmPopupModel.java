@@ -20,6 +20,8 @@ public class AlarmPopupModel {
     public String sensorType;
     public AlarmPopupDataBean configAlarmPopupDataBean;
     public ArrayList<SecurityRisksAdapterModel> securityRisksList;
+    public int alarmStatus;
+    public Long updateTime;
 
     public static class AlarmPopupSubModel {
         public boolean isRequire;

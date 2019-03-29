@@ -29,14 +29,17 @@ import com.sensoro.smartcity.adapter.AlarmPopupContentAdapter;
 import com.sensoro.smartcity.adapter.AlarmPopupMainTagAdapter;
 import com.sensoro.smartcity.adapter.ImagePickerAdapter;
 import com.sensoro.smartcity.adapter.model.SecurityRisksAdapterModel;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
+import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.AlarmPopModel;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.push.ThreadPoolManager;
+import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.dialog.TipDialogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
@@ -137,6 +140,15 @@ public class AlarmPopUtilsTest implements Constants,
         selImageList.clear();
     }
 
+    public void setDescText(String text) {
+        if (TextUtils.isEmpty(text)) {
+            tvAlarmPopupResultReasonTip.setVisibility(View.GONE);
+        } else {
+            tvAlarmPopupResultReasonTip.setVisibility(View.VISIBLE);
+            tvAlarmPopupResultReasonTip.setText(text);
+        }
+
+    }
 
     private SelectDialog showDialog(SelectDialog.SelectDialogListener listener, List<String> names) {
         SelectDialog dialog = new SelectDialog(mActivity, R.style
@@ -258,6 +270,7 @@ public class AlarmPopUtilsTest implements Constants,
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    setDescText(mAlarmPopupModel.desc);
                                     SetSecurityRiskVisible(mAlarmPopupModel.securityRiskVisible, mAlarmPopupModel.isSecurityRiskRequire);
                                     alarmPopupContentAdapter.updateData(mAlarmPopupModel.subAlarmPopupModels);
                                     btAlarmPopupCommit.setBackground(mActivity.getResources().getDrawable(mAlarmPopupModel.resButtonBg));
@@ -302,26 +315,26 @@ public class AlarmPopUtilsTest implements Constants,
         });
     }
 
-    public void show() {
-        //
-        this.etAlarmPopupRemark.getText().clear();
-//        mButton.setBackground(getResources().getDrawable(R.drawable.shape_button_normal));
-        btAlarmPopupCommit.setBackground(mActivity.getResources().getDrawable(R.drawable.shape_button));
-        setUpdateButtonClickable(true);
-        if (progressDialog != null) {
-            progressDialog.setProgress(0);
-        }
-        if (bottomSheetDialog != null) {
-            bottomSheetDialog.show();
-        }
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
-        if (mAlarmPopupModel != null) {
-            mAlarmPopupModel.mRemark = null;
-        }
-
-    }
+//    public void show() {
+//        //
+//        this.etAlarmPopupRemark.getText().clear();
+////        mButton.setBackground(getResources().getDrawable(R.drawable.shape_button_normal));
+//        btAlarmPopupCommit.setBackground(mActivity.getResources().getDrawable(R.drawable.shape_button));
+//        setUpdateButtonClickable(true);
+//        if (progressDialog != null) {
+//            progressDialog.setProgress(0);
+//        }
+//        if (bottomSheetDialog != null) {
+//            bottomSheetDialog.show();
+//        }
+//        if (!EventBus.getDefault().isRegistered(this)) {
+//            EventBus.getDefault().register(this);
+//        }
+//        if (mAlarmPopupModel != null) {
+//            mAlarmPopupModel.mRemark = null;
+//        }
+//
+//    }
 
     public void show(final AlarmPopupModel alarmPopupModel) {
         //
@@ -342,8 +355,30 @@ public class AlarmPopUtilsTest implements Constants,
         this.mAlarmPopupModel = alarmPopupModel;
         mAlarmPopupModel.mRemark = null;
         SetSecurityRiskVisible(mAlarmPopupModel.securityRiskVisible, mAlarmPopupModel.isSecurityRiskRequire);
+        tvAlarmPopupName.setText(mAlarmPopupModel.title);
+        String type = mActivity.getString(R.string.unknown);
+        if (TextUtils.isEmpty(mAlarmPopupModel.mergeType)) {
+            MergeTypeStyles configMergeType = PreferencesHelper.getInstance().getConfigMergeType(mAlarmPopupModel.mergeType);
+            if (configMergeType != null) {
+                String name = configMergeType.getName();
+                if (!TextUtils.isEmpty(name)) {
+                    type = name;
+                }
+            }
+
+        }
+        tvAlarmPopupDeviceType.setText(type);
+        tvAlarmPopupDate.setText(DateUtil.getStrTimeTodayByDevice(mActivity, mAlarmPopupModel.updateTime));
+        if (1 == mAlarmPopupModel.alarmStatus) {
+            tvAlarmPopupStatus.setTextColor(mActivity.getResources().getColor(R.color.c_29c093));
+            tvAlarmPopupStatus.setText(mActivity.getString(R.string.normal));
+        } else {
+            tvAlarmPopupStatus.setTextColor(mActivity.getResources().getColor(R.color.color_alarm_pup_red));
+            tvAlarmPopupStatus.setText(mActivity.getString(R.string.status_alarm_true));
+        }
         alarmPopupMainTagAdapter.updateAdapter(mAlarmPopupModel.mainTags);
         alarmPopupContentAdapter.updateData(mAlarmPopupModel.subAlarmPopupModels);
+        setDescText(mAlarmPopupModel.desc);
         btAlarmPopupCommit.setBackground(mActivity.getResources().getDrawable(mAlarmPopupModel.resButtonBg));
     }
 
