@@ -17,7 +17,9 @@ import com.amap.api.maps.model.LatLng;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.adapter.AlertLogRcContentAdapter;
+import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
@@ -38,6 +40,7 @@ import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,7 +48,7 @@ import butterknife.OnClick;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
+public class AlarmLogPopUtils implements AlarmPopUtilsTest.OnPopupCallbackListener,
         AlertLogRcContentAdapter.OnPhotoClickListener, Constants {
 
     private final FixHeightBottomSheetDialog mAlarmLogDialog;
@@ -84,13 +87,14 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
     LinearLayout acAlertLlBottom;
     @BindView(R.id.alarm_log_close)
     ImageView alarmLogClose;
-    private AlarmPopUtils mAlarmPopUtils;
+    private AlarmPopUtilsTest mAlarmPopUtils;
     private List<AlarmInfo.RecordInfo> mList = new ArrayList<>();
     private AlertLogRcContentAdapter alertLogRcContentAdapter;
     private DeviceAlarmLogInfo mDeviceAlarmLogInfo;
     private LatLng destPosition;
     private boolean isReConfirm = false;
     private ProgressUtils mProgressUtils;
+    private AlarmPopupModel mAlarmPopupModel;
 
     public AlarmLogPopUtils(Activity activity) {
         mActivity = activity;
@@ -135,7 +139,8 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         acAlertRcContent.setLayoutParams(layoutParams);
     }
 
-    public void show() {
+    public void show(AlarmPopupModel alarmPopupModel) {
+        this.mAlarmPopupModel = alarmPopupModel;
         if (mAlarmLogDialog != null) {
             mAlarmLogDialog.show();
         }
@@ -150,13 +155,13 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         String deviceSN = deviceAlarmLogInfo.getDeviceSN();
         if (TextUtils.isEmpty(deviceSN)) {
             deviceSN = mActivity.getString(R.string.device_number) + mActivity.getString(R.string.unknown);
-        }else{
+        } else {
             deviceSN = mActivity.getString(R.string.device_number) + deviceSN;
         }
         acAlertTvSn.setText(deviceSN);
 
 
-        acAlertTvAlertTime.setText(DateUtil.getStrTimeToday(mActivity,mDeviceAlarmLogInfo.getCreatedTime(), 1));
+        acAlertTvAlertTime.setText(DateUtil.getStrTimeToday(mActivity, mDeviceAlarmLogInfo.getCreatedTime(), 1));
 
         acAlertTvAlertCount.setText(mDeviceAlarmLogInfo.getDisplayStatus() + 10 + "");
 
@@ -300,45 +305,11 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
     }
 
     private void doConfirm() {
-        mAlarmPopUtils = new AlarmPopUtils(mActivity);
+        mAlarmPopUtils = new AlarmPopUtilsTest(mActivity);
         mAlarmPopUtils.setOnPopupCallbackListener(this);
-        mAlarmPopUtils.show();
+        mAlarmPopUtils.show(mAlarmPopupModel);
     }
 
-    @Override
-    public void onPopupCallback(int statusResult, int statusType, int statusPlace, List<ScenesData> scenesDataList, String remark) {
-        mAlarmPopUtils.setUpdateButtonClickable(false);
-        mProgressUtils.showProgress();
-        RetrofitServiceHelper.getInstance().doUpdatePhotosUrl(mDeviceAlarmLogInfo.get_id(), statusResult, statusType,
-                statusPlace,
-                remark, isReConfirm, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe
-                        (new CityObserver<DeviceAlarmItemRsp>(null) {
-
-
-                            @Override
-                            public void onCompleted(DeviceAlarmItemRsp deviceAlarmItemRsp) {
-                                if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                                    SensoroToast.getInstance().makeText(mActivity.getResources().
-                                            getString(R.string.tips_commit_success), Toast.LENGTH_SHORT).show();
-                                    mDeviceAlarmLogInfo = deviceAlarmItemRsp.getData();
-                                    refreshData(mDeviceAlarmLogInfo);
-                                } else {
-                                    SensoroToast.getInstance().makeText(mActivity.getResources().
-                                            getString(R.string.tips_commit_failed), Toast.LENGTH_SHORT).show();
-                                }
-                                mProgressUtils.dismissProgress();
-                                mAlarmPopUtils.dismiss();
-                            }
-
-                            @Override
-                            public void onErrorMsg(int errorCode, String errorMsg) {
-                                mProgressUtils.dismissProgress();
-                                mAlarmPopUtils.dismiss();
-                                mAlarmPopUtils.setUpdateButtonClickable(true);
-                            }
-                        });
-    }
 
     @Override
     public void onPhotoItemClick(int position, List<ScenesData> scenesDataList) {
@@ -374,6 +345,44 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
             }
 
         }
+    }
+
+    @Override
+    public void onPopupCallback(AlarmPopupModel alarmPopupModel, List<ScenesData> scenesDataList) {
+        mAlarmPopUtils.setUpdateButtonClickable(false);
+        mProgressUtils.showProgress();
+        Map<String, Integer> alarmPopupServerData = AlarmPopupConfigAnalyzer.createAlarmPopupServerData(alarmPopupModel);
+        RetrofitServiceHelper.getInstance().doUpdatePhotosUrl(mDeviceAlarmLogInfo.get_id(), alarmPopupServerData, alarmPopupModel.securityRisksList,
+                alarmPopupModel.mRemark, false, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CityObserver<DeviceAlarmItemRsp>(null) {
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        if (mAlarmLogDialog != null && mAlarmPopUtils != null) {
+                            mProgressUtils.dismissProgress();
+                            mAlarmPopUtils.dismiss();
+                            mAlarmPopUtils.setUpdateButtonClickable(true);
+                        }
+                    }
+
+                    @Override
+                    public void onCompleted(DeviceAlarmItemRsp deviceAlarmItemRsp) {
+                        if (mProgressUtils != null && mAlarmLogDialog != null) {
+                            if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
+
+                                SensoroToast.getInstance().makeText(mActivity.getResources().
+                                        getString(R.string.tips_commit_success), Toast.LENGTH_SHORT).show();
+                                mDeviceAlarmLogInfo = deviceAlarmItemRsp.getData();
+                                refreshData(mDeviceAlarmLogInfo);
+                            } else {
+                                SensoroToast.getInstance().makeText(mActivity.getResources().
+                                        getString(R.string.tips_commit_failed), Toast.LENGTH_SHORT).show();
+                            }
+                            mProgressUtils.dismissProgress();
+                            mAlarmPopUtils.dismiss();
+                        }
+                    }
+                });
     }
 
     public interface DialogDisplayStatusListener {

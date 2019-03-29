@@ -951,6 +951,9 @@
     <string name="confirm_upload_real_fire">Whether to report the real fire alarm</string>
     <string name="confirm_upload">Upload</string>
     <string name="text_unfilled">unfilled</string>
-    <string name="alarm_pop_text_fire_phase">Fire phase</string>
-    <string name="alarm_pop_text_fire_type">Fire type</string>
+    <string name="alarm_pop_text_fire_phase">Fire phase:</string>
+    <string name="alarm_pop_text_fire_type">Fire type:</string>
+    <string name="please_complete_the_required_fields_first">Please complete the required fields first</string>
+    <string name="alarm_detail_security_risks">Security risks:</string>
+    <string name="alarm_popup_result_type">Result Type:</string>
 </resources>

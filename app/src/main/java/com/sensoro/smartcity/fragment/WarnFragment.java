@@ -498,11 +498,6 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     }
 
     @Override
-    public void showAlarmPopupView() {
-        mAlarmPopUtils.show(null);
-    }
-
-    @Override
     public void showAlarmPopupView(AlarmPopupModel alarmPopupModel) {
         mAlarmPopUtils.show(alarmPopupModel);
     }

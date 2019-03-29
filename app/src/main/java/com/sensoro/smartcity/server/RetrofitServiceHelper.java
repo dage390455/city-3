@@ -65,7 +65,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -868,7 +867,7 @@ public class RetrofitServiceHelper {
      * @param remark
      * @return
      */
-    public Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(String id, HashMap<String, Integer> map, List<SecurityRisksAdapterModel> alarmPopupDangerDataList, String remark, boolean isReconfirm, List<ScenesData> scenesDataList) {
+    public Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(String id, Map<String, Integer> map, List<SecurityRisksAdapterModel> alarmPopupDangerDataList, String remark, boolean isReconfirm, List<ScenesData> scenesDataList) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (map != null) {
@@ -905,7 +904,7 @@ public class RetrofitServiceHelper {
                 jsonObject.put("type", "confirm");
             }
             //
-            if (scenesDataList != null) {
+            if (scenesDataList != null && scenesDataList.size() > 0) {
                 JSONArray jsonArray = new JSONArray();
                 for (ScenesData scenesData : scenesDataList) {
                     JSONObject jsonObject1 = new JSONObject();

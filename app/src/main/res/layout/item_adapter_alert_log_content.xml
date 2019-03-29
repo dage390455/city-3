@@ -197,7 +197,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:text="@string/alarm_pop_security_risks"
+                android:text="@string/alarm_detail_security_risks"
                 android:textColor="@color/c_626262"
                 android:textSize="@dimen/city_size" />
 

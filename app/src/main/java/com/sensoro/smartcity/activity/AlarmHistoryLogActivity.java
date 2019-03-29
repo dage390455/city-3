@@ -27,6 +27,7 @@ import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.presenter.AlarmHistoryLogActivityPresenter;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.popup.AlarmPopUtilsTest;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
@@ -80,7 +81,7 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mPresenter.handlerActivityResult(requestCode, resultCode, data);
+        AlarmPopUtilsTest.handlePhotoIntent(requestCode, resultCode, data);
     }
 
     private void initView() {

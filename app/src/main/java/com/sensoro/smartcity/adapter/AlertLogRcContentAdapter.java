@@ -124,15 +124,12 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-//                    changTextColor(confirm_text, temp, spannableString, confirmStatusTextColorArray[displayStatus]);
                 }
                 holder.itemAlertContentTvContent.setText(spannableString);
             } else if ("platform".equals(source)) {
                 //TODO 状态兼容
                 confirm_text = mContext.getString(R.string.contact) + " [" + recordInfo.getName() + "]" + mContext.getString(R.string.confirm_that_the_alert_type_web_is) + ":\n" +
                         reasonStr;
-                //用span改变字体颜色,换行 用\n
-//            String content = "联系人[高鹏]通过 平台 确认本次预警类型为：\n安全隐患";
                 SpannableString spannableString = new SpannableString(confirm_text);
                 // 改变高鹏 颜色
                 String temp = "[" + recordInfo.getName() + "]";
@@ -146,7 +143,6 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-//                    changTextColor(confirm_text, temp, spannableString, confirmStatusTextColorArray[displayStatus]);
                 }
                 holder.itemAlertContentTvContent.setText(spannableString);
             }
@@ -172,7 +168,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 //TODO model配置
                 holder.itemAlarmDetailChildAlarmType.setText(AlarmPopupConfigAnalyzer.gerAlarmPopModelName("reason", reason, mContext));
             } else {
-                holder.llItemAlarmDetailChildAlarmType.setVisibility(View.VISIBLE);
+                holder.llItemAlarmDetailChildAlarmType.setVisibility(View.GONE);
             }
             //预警场所
             Integer place = recordInfo.getPlace();
@@ -216,6 +212,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             final List<ScenesData> scenes = recordInfo.getScenes();
             if (scenes != null && scenes.size() > 0) {
                 //TODO 防止数据错误清除
+                holder.rvAlarmPhoto.setVisibility(View.VISIBLE);
                 if (holder.rvAlarmPhoto.getTag() instanceof AlarmDetailPhotoAdapter) {
                     holder.rvAlarmPhoto.removeAllViews();
                 }
@@ -244,6 +241,8 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 adapter.setImages(scenes);
                 //TODO 防止数据错误打标签
                 holder.rvAlarmPhoto.setTag(adapter);
+            }else {
+                holder.rvAlarmPhoto.setVisibility(View.GONE);
             }
 
 

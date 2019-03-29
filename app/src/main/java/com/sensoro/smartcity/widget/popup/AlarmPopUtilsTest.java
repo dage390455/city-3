@@ -327,17 +327,22 @@ public class AlarmPopUtilsTest implements Constants,
         if (bottomSheetDialog != null) {
             bottomSheetDialog.show();
         }
+        selImageList.clear();
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
-        alarmPopupModel.securityRisksList = null;
         //TODO 作为默认项展示
         this.mAlarmPopupModel = alarmPopupModel;
         mAlarmPopupModel.mRemark = null;
+        if (mAlarmPopupModel.securityRisksList != null) {
+            mAlarmPopupModel.securityRisksList.clear();
+            mAlarmPopupModel.securityRisksList = null;
+        }
+        tvAlarmPopupAlarmSecurityRisksContent.setText(mActivity.getString(R.string.text_unfilled));
         SetSecurityRiskVisible(mAlarmPopupModel.securityRiskVisible, mAlarmPopupModel.isSecurityRiskRequire);
         tvAlarmPopupName.setText(mAlarmPopupModel.title);
         String type = mActivity.getString(R.string.unknown);
-        if (TextUtils.isEmpty(mAlarmPopupModel.mergeType)) {
+        if (!TextUtils.isEmpty(mAlarmPopupModel.mergeType)) {
             MergeTypeStyles configMergeType = PreferencesHelper.getInstance().getConfigMergeType(mAlarmPopupModel.mergeType);
             if (configMergeType != null) {
                 String name = configMergeType.getName();
@@ -383,6 +388,10 @@ public class AlarmPopUtilsTest implements Constants,
     }
 
     private void doAlarmConfirm() {
+        if (!AlarmPopupConfigAnalyzer.canGoOnNext(mAlarmPopupModel)) {
+            toastShort(mActivity.getString(R.string.please_complete_the_required_fields_first));
+            return;
+        }
         if (mAlarmPopupModel.resButtonBg == R.drawable.shape_button_alarm_pup) {
             mRealFireDialog.show();
             return;
@@ -567,7 +576,7 @@ public class AlarmPopUtilsTest implements Constants,
                 //TODO 安全隐患
                 Intent intent = new Intent(mActivity, SecurityRisksActivity.class);
                 if (mAlarmPopupModel.securityRisksList != null && mAlarmPopupModel.securityRisksList.size() > 0) {
-                    intent.putParcelableArrayListExtra(Constants.EXTRA_SECURITY_RISK,mAlarmPopupModel.securityRisksList);
+                    intent.putParcelableArrayListExtra(Constants.EXTRA_SECURITY_RISK, mAlarmPopupModel.securityRisksList);
                 }
                 mActivity.startActivity(intent);
                 break;

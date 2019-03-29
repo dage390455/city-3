@@ -45,8 +45,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -286,34 +286,51 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
     public void clickItemByConfirmStatus(final DeviceAlarmLogInfo deviceAlarmLogInfo, boolean isReConfirm) {
         this.isReConfirm = isReConfirm;
         mCurrentDeviceAlarmLogInfo = deviceAlarmLogInfo;
-        RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesAlarmPopupConfigRsp>(this) {
-            @Override
-            public void onCompleted(DevicesAlarmPopupConfigRsp devicesAlarmPopupConfigRsp) {
-                PreferencesHelper.getInstance().saveAlarmPopupDataBeanCache(devicesAlarmPopupConfigRsp.getData());
-                final AlarmPopupModel alarmPopupModel = new AlarmPopupModel();
-                String deviceName = deviceAlarmLogInfo.getDeviceName();
-                if (TextUtils.isEmpty(deviceName)) {
-                    alarmPopupModel.title = deviceAlarmLogInfo.getDeviceSN();
-                } else {
-                    alarmPopupModel.title = deviceName;
+        if (PreferencesHelper.getInstance().getAlarmPopupDataBeanCache() == null) {
+            RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesAlarmPopupConfigRsp>(this) {
+                @Override
+                public void onCompleted(DevicesAlarmPopupConfigRsp devicesAlarmPopupConfigRsp) {
+                    PreferencesHelper.getInstance().saveAlarmPopupDataBeanCache(devicesAlarmPopupConfigRsp.getData());
+                    final AlarmPopupModel alarmPopupModel = new AlarmPopupModel();
+                    String deviceName = deviceAlarmLogInfo.getDeviceName();
+                    if (TextUtils.isEmpty(deviceName)) {
+                        alarmPopupModel.title = deviceAlarmLogInfo.getDeviceSN();
+                    } else {
+                        alarmPopupModel.title = deviceName;
+                    }
+                    alarmPopupModel.alarmStatus = deviceAlarmLogInfo.getAlarmStatus();
+                    alarmPopupModel.updateTime = deviceAlarmLogInfo.getUpdatedTime();
+                    alarmPopupModel.mergeType = WidgetUtil.handleMergeType(deviceAlarmLogInfo.getDeviceType());
+                    alarmPopupModel.sensorType = mCurrentDeviceAlarmLogInfo.getSensorType();
+                    //
+                    AlarmPopupConfigAnalyzer.handleAlarmPopupModel(null, alarmPopupModel);
+                    getView().showAlarmPopupView(alarmPopupModel);
+                    getView().dismissProgressDialog();
+
                 }
-                alarmPopupModel.alarmStatus = deviceAlarmLogInfo.getAlarmStatus();
-                alarmPopupModel.updateTime = deviceAlarmLogInfo.getUpdatedTime();
-                alarmPopupModel.mergeType = WidgetUtil.handleMergeType(deviceAlarmLogInfo.getDeviceType());
-                alarmPopupModel.sensorType = mCurrentDeviceAlarmLogInfo.getSensorType();
-                //
-                AlarmPopupConfigAnalyzer.handleAlarmPopupModel(null, alarmPopupModel);
-                getView().showAlarmPopupView(alarmPopupModel);
-                getView().dismissProgressDialog();
 
+                @Override
+                public void onErrorMsg(int errorCode, String errorMsg) {
+                    getView().toastShort(errorMsg);
+                    getView().dismissProgressDialog();
+                }
+            });
+        } else {
+            final AlarmPopupModel alarmPopupModel = new AlarmPopupModel();
+            String deviceName = deviceAlarmLogInfo.getDeviceName();
+            if (TextUtils.isEmpty(deviceName)) {
+                alarmPopupModel.title = deviceAlarmLogInfo.getDeviceSN();
+            } else {
+                alarmPopupModel.title = deviceName;
             }
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().toastShort(errorMsg);
-                getView().dismissProgressDialog();
-            }
-        });
+            alarmPopupModel.alarmStatus = deviceAlarmLogInfo.getAlarmStatus();
+            alarmPopupModel.updateTime = deviceAlarmLogInfo.getUpdatedTime();
+            alarmPopupModel.mergeType = WidgetUtil.handleMergeType(deviceAlarmLogInfo.getDeviceType());
+            alarmPopupModel.sensorType = mCurrentDeviceAlarmLogInfo.getSensorType();
+            //
+            AlarmPopupConfigAnalyzer.handleAlarmPopupModel(null, alarmPopupModel);
+            getView().showAlarmPopupView(alarmPopupModel);
+        }
 
     }
 
@@ -524,24 +541,8 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
     public void onPopupCallback(AlarmPopupModel alarmPopupModel, List<ScenesData> scenesDataList) {
         getView().showProgressDialog();
         getView().setUpdateButtonClickable(false);
-        Integer displayStatus = null;
-        for (AlarmPopupModel.AlarmPopupTagModel mainTag : alarmPopupModel.mainTags) {
-            if (mainTag.isChose) {
-                displayStatus = mainTag.id;
-                break;
-            }
-        }
-        HashMap<String, Integer> map = new HashMap<>();
-        map.put("displayStatus", displayStatus);
-        for (AlarmPopupModel.AlarmPopupSubModel subAlarmPopupModel : alarmPopupModel.subAlarmPopupModels) {
-            for (AlarmPopupModel.AlarmPopupTagModel subTag : subAlarmPopupModel.subTags) {
-                if (subTag.isChose) {
-                    map.put(subAlarmPopupModel.key, subTag.id);
-                }
-            }
-        }
-
-        RetrofitServiceHelper.getInstance().doUpdatePhotosUrl(mCurrentDeviceAlarmLogInfo.get_id(), map, alarmPopupModel.securityRisksList,
+        Map<String, Integer> alarmPopupServerData = AlarmPopupConfigAnalyzer.createAlarmPopupServerData(alarmPopupModel);
+        RetrofitServiceHelper.getInstance().doUpdatePhotosUrl(mCurrentDeviceAlarmLogInfo.get_id(), alarmPopupServerData, alarmPopupModel.securityRisksList,
                 alarmPopupModel.mRemark, isReConfirm, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CityObserver<DeviceAlarmItemRsp>(this) {
 

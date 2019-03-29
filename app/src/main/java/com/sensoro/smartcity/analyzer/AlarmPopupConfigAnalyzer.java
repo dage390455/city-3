@@ -25,8 +25,13 @@ import java.util.Map;
 import java.util.Set;
 
 public class AlarmPopupConfigAnalyzer {
-
-    public static void handleAlarmPopupModel(Integer displayStatus, AlarmPopupModel alarmPopupModel) {
+    /**
+     * 处理配置类型
+     *
+     * @param displayStatus
+     * @param alarmPopupModel
+     */
+    public static void handleAlarmPopupModel(Integer displayStatus, final AlarmPopupModel alarmPopupModel) {
         //
         AlarmPopupDataBean alarmPopupDataBeanCache = PreferencesHelper.getInstance().getAlarmPopupDataBeanCache();
 
@@ -210,6 +215,14 @@ public class AlarmPopupConfigAnalyzer {
         return alarmPopupTagModel;
     }
 
+    /**
+     * 通过字典获取指定类型的名称
+     *
+     * @param type
+     * @param id
+     * @param context
+     * @return
+     */
     public static String gerAlarmPopModelName(@NonNull String type, int id, @NonNull Context context) {
         AlarmPopupDataBean alarmPopupDataBeanCache = PreferencesHelper.getInstance().getAlarmPopupDataBeanCache();
         String defaultText = context.getString(R.string.unknown);
@@ -307,6 +320,12 @@ public class AlarmPopupConfigAnalyzer {
         return null;
     }
 
+    /**
+     * 获取字典对应的安全隐患文本
+     *
+     * @param securityRisksList
+     * @return
+     */
     public static String getSecurityRisksText(List<SecurityRisksAdapterModel> securityRisksList) {
         String defaultText = null;
         if (securityRisksList != null && securityRisksList.size() > 0) {
@@ -336,6 +355,72 @@ public class AlarmPopupConfigAnalyzer {
             }
         }
         return defaultText;
+    }
+
+    /**
+     * 检查必填项
+     *
+     * @param alarmPopupModel
+     * @return
+     */
+    public static boolean canGoOnNext(@NonNull AlarmPopupModel alarmPopupModel) {
+        ArrayList<Boolean> canDoNexts = new ArrayList<>();
+        if (alarmPopupModel.mainTags != null) {
+            boolean canDoNext = false;
+            for (AlarmPopupModel.AlarmPopupTagModel mainTag : alarmPopupModel.mainTags) {
+                if (mainTag.isChose) {
+                    canDoNext = true;
+                    break;
+                }
+            }
+            canDoNexts.add(canDoNext);
+        }
+        if (alarmPopupModel.subAlarmPopupModels != null) {
+            for (AlarmPopupModel.AlarmPopupSubModel subAlarmPopupModel : alarmPopupModel.subAlarmPopupModels) {
+                if (subAlarmPopupModel.isRequire) {
+                    if (subAlarmPopupModel.subTags != null) {
+                        boolean canDo = false;
+                        for (AlarmPopupModel.AlarmPopupTagModel subTag : subAlarmPopupModel.subTags) {
+                            if (subTag.isChose) {
+                                canDo = true;
+                                break;
+                            }
+                        }
+                        canDoNexts.add(canDo);
+                    }
+                }
+            }
+        }
+        if (alarmPopupModel.isSecurityRiskRequire) {
+            boolean hasContent = alarmPopupModel.securityRisksList != null && alarmPopupModel.securityRisksList.size() > 0;
+            canDoNexts.add(hasContent);
+        }
+        for (Boolean doNext : canDoNexts) {
+            if (!doNext) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static Map<String, Integer> createAlarmPopupServerData(@NonNull final AlarmPopupModel alarmPopupModel) {
+        Integer displayStatus = null;
+        for (AlarmPopupModel.AlarmPopupTagModel mainTag : alarmPopupModel.mainTags) {
+            if (mainTag.isChose) {
+                displayStatus = mainTag.id;
+                break;
+            }
+        }
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("displayStatus", displayStatus);
+        for (AlarmPopupModel.AlarmPopupSubModel subAlarmPopupModel : alarmPopupModel.subAlarmPopupModels) {
+            for (AlarmPopupModel.AlarmPopupTagModel subTag : subAlarmPopupModel.subTags) {
+                if (subTag.isChose) {
+                    map.put(subAlarmPopupModel.key, subTag.id);
+                }
+            }
+        }
+        return map;
     }
 
 }

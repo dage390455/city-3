@@ -13,7 +13,6 @@ public interface IWarnFragmentView extends IToast, IActivityIntent, IProgressDia
 
     void updateAlarmListAdapter(List<DeviceAlarmLogInfo> deviceAlarmLogInfoList);
 
-    void showAlarmPopupView();
     void showAlarmPopupView(AlarmPopupModel alarmPopupModel);
 
     void dismissAlarmPopupView();
