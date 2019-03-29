@@ -7,7 +7,6 @@ import android.support.constraint.Guideline;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -98,7 +97,7 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
     private void initTagAdapter() {
         securityRisksReferTagAdapter = new SecurityRisksReferTagAdapter(mActivity);
         securityRisksReferTagAdapter.setOnTagClickListener(mPresenter);
-        SensoroLinearLayoutManager linearLayoutManager = new SensoroLinearLayoutManager(mActivity);
+        SensoroLinearLayoutManager linearLayoutManager = new SensoroLinearLayoutManager(mActivity,false);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rvTagAcSecurityRisks.setLayoutManager(linearLayoutManager);
         rvTagAcSecurityRisks.setAdapter(securityRisksReferTagAdapter);
