@@ -12,6 +12,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.AlarmPopupDataBean;
 import com.sensoro.smartcity.server.bean.DeployPicInfo;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
@@ -33,6 +34,7 @@ public final class PreferencesHelper implements Constants {
 
     private volatile EventLoginData mEventLoginData;
     private volatile DeviceMergeTypesInfo mDeviceMergeTypesInfo;
+    private volatile AlarmPopupDataBean mAlarmPopupDataBean;
 
     private PreferencesHelper() {
     }
@@ -40,7 +42,6 @@ public final class PreferencesHelper implements Constants {
     public static PreferencesHelper getInstance() {
         return PreferencesHelperHolder.instance;
     }
-
 
 
     private static class PreferencesHelperHolder {
@@ -280,7 +281,7 @@ public final class PreferencesHelper implements Constants {
     public DeviceMergeTypesInfo getLocalDevicesMergeTypes() {
         try {
             if (mDeviceMergeTypesInfo == null) {
-                String json = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, null);
+                String json = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGE_TYPES, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, null);
                 LogUtils.loge("DeviceMergeTypesInfo json : " + json);
                 if (!TextUtils.isEmpty(json)) {
                     mDeviceMergeTypesInfo = RetrofitServiceHelper.getInstance().getGson().fromJson(json, DeviceMergeTypesInfo.class);
@@ -331,10 +332,51 @@ public final class PreferencesHelper implements Constants {
                 throwable.printStackTrace();
             }
         }
-        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Context
+        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGE_TYPES, Context
                 .MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, json);
+        editor.apply();
+        return true;
+    }
+
+    public AlarmPopupDataBean getAlarmPopupDataBeanCache() {
+        try {
+            if (mAlarmPopupDataBean == null) {
+                String json = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_ALARM_POPUP_DATA_BEAN, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_LOCAL_ALARM_POPUP_DATA_BEAN, null);
+                LogUtils.loge("alarmPopupDataBeanCache json : " + json);
+                if (!TextUtils.isEmpty(json)) {
+                    mAlarmPopupDataBean = RetrofitServiceHelper.getInstance().getGson().fromJson(json, AlarmPopupDataBean.class);
+                }
+            }
+            return mAlarmPopupDataBean;
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
+    public boolean saveAlarmPopupDataBeanCache(AlarmPopupDataBean alarmPopupDataBean) {
+        if (alarmPopupDataBean == null) {
+            return false;
+        }
+        mAlarmPopupDataBean = alarmPopupDataBean;
+        String json = RetrofitServiceHelper.getInstance().getGson().toJson(alarmPopupDataBean);
+        if (!TextUtils.isEmpty(json)) {
+            try {
+                LogUtils.loge("saveAlarmPopupDataBeanCache length = " + json.length());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+            try {
+                LogUtils.loge("saveAlarmPopupDataBeanCache :" + json);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        }
+        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_ALARM_POPUP_DATA_BEAN, Context
+                .MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(PREFERENCE_KEY_LOCAL_ALARM_POPUP_DATA_BEAN, json);
         editor.apply();
         return true;
     }
@@ -673,7 +715,7 @@ public final class PreferencesHelper implements Constants {
             list.add(model4);
             saveSecurityRiskLocationTag(list);
             return list;
-        }else{
+        } else {
             ArrayList<SecurityRisksTagModel> list = new ArrayList<>();
             String[] split = location.split("#");
             for (int i = 0; i < split.length; i++) {
@@ -685,18 +727,19 @@ public final class PreferencesHelper implements Constants {
         }
     }
 
-    public void saveSecurityRiskLocationTag(ArrayList<SecurityRisksTagModel> list){
+    public void saveSecurityRiskLocationTag(ArrayList<SecurityRisksTagModel> list) {
         StringBuilder sb = new StringBuilder();
         for (SecurityRisksTagModel model : list) {
             sb.append(model.tag);
             sb.append("#");
         }
         SensoroCityApplication.getInstance().getSharedPreferences(Constants.PREFERENCE_SECURITY_RISK_TAG, Context.MODE_PRIVATE)
-                .edit().putString(Constants.PREFERENCE_KEY_SECURITY_RISK_LOCATION,sb.toString()).apply();
+                .edit().putString(Constants.PREFERENCE_KEY_SECURITY_RISK_LOCATION, sb.toString()).apply();
     }
 
     /**
      * 安全隐患，参考行为标签
+     *
      * @param context
      * @return
      */
@@ -739,7 +782,7 @@ public final class PreferencesHelper implements Constants {
             list.add(model9);
             saveSecurityRiskBehaviorTag(list);
             return list;
-        }else{
+        } else {
             ArrayList<SecurityRisksTagModel> list = new ArrayList<>();
             String[] split = location.split("#");
             for (int i = 0; i < split.length; i++) {
@@ -751,13 +794,13 @@ public final class PreferencesHelper implements Constants {
         }
     }
 
-    public void saveSecurityRiskBehaviorTag(ArrayList<SecurityRisksTagModel> list){
+    public void saveSecurityRiskBehaviorTag(ArrayList<SecurityRisksTagModel> list) {
         StringBuilder sb = new StringBuilder();
         for (SecurityRisksTagModel model : list) {
             sb.append(model.tag);
             sb.append("#");
         }
         SensoroCityApplication.getInstance().getSharedPreferences(Constants.PREFERENCE_SECURITY_RISK_TAG, Context.MODE_PRIVATE)
-                .edit().putString(Constants.PREFERENCE_KEY_SECURITY_RISK_BEHAVIOR,sb.toString()).apply();
+                .edit().putString(Constants.PREFERENCE_KEY_SECURITY_RISK_BEHAVIOR, sb.toString()).apply();
     }
 }

@@ -289,6 +289,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesAlarmPopupConfigRsp>(this) {
             @Override
             public void onCompleted(DevicesAlarmPopupConfigRsp devicesAlarmPopupConfigRsp) {
+                PreferencesHelper.getInstance().saveAlarmPopupDataBeanCache(devicesAlarmPopupConfigRsp.getData());
                 final AlarmPopupModel alarmPopupModel = new AlarmPopupModel();
                 String deviceName = deviceAlarmLogInfo.getDeviceName();
                 if (TextUtils.isEmpty(deviceName)) {
@@ -298,7 +299,6 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 }
                 alarmPopupModel.alarmStatus = deviceAlarmLogInfo.getAlarmStatus();
                 alarmPopupModel.updateTime = deviceAlarmLogInfo.getUpdatedTime();
-                alarmPopupModel.configAlarmPopupDataBean = devicesAlarmPopupConfigRsp.getData();
                 alarmPopupModel.mergeType = WidgetUtil.handleMergeType(deviceAlarmLogInfo.getDeviceType());
                 alarmPopupModel.sensorType = mCurrentDeviceAlarmLogInfo.getSensorType();
                 //

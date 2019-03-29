@@ -950,4 +950,7 @@
     <string name="use_electric_blanket">Use Electric Blanket</string>
     <string name="confirm_upload_real_fire">Whether to report the real fire alarm</string>
     <string name="confirm_upload">Upload</string>
+    <string name="text_unfilled">unfilled</string>
+    <string name="alarm_pop_text_fire_phase">Fire phase</string>
+    <string name="alarm_pop_text_fire_type">Fire type</string>
 </resources>

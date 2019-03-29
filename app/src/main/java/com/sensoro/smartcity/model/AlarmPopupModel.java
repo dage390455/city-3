@@ -2,7 +2,6 @@ package com.sensoro.smartcity.model;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.model.SecurityRisksAdapterModel;
-import com.sensoro.smartcity.server.bean.AlarmPopupDataBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,6 @@ public class AlarmPopupModel {
     public int resButtonBg = R.drawable.shape_button;
     public String mergeType;
     public String sensorType;
-    public AlarmPopupDataBean configAlarmPopupDataBean;
     public ArrayList<SecurityRisksAdapterModel> securityRisksList;
     public int alarmStatus;
     public Long updateTime;

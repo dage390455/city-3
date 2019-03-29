@@ -942,5 +942,8 @@
     <string name="use_electric_blanket">使用电热毯</string>
     <string name="confirm_upload_real_fire">是否上报真实火警</string>
     <string name="confirm_upload">确认上报</string>
+    <string name="text_unfilled">未填写</string>
+    <string name="alarm_pop_text_fire_phase">火情阶段</string>
+    <string name="alarm_pop_text_fire_type">火灾类型</string>
 
 </resources>

@@ -171,9 +171,9 @@ public class AlarmPopUtilsTest implements Constants,
     public void SetSecurityRiskVisible(boolean isVisible, boolean isRequire) {
         if (isVisible) {
             if (isRequire) {
-                tvAlarmPopupAlarmSecurityRisks.setText("安全隐患（必填）");
+                tvAlarmPopupAlarmSecurityRisks.setText(mActivity.getString(R.string.alarm_pop_security_risks) + "(" + mActivity.getString(R.string.required) + ")");
             } else {
-                tvAlarmPopupAlarmSecurityRisks.setText("安全隐患");
+                tvAlarmPopupAlarmSecurityRisks.setText(mActivity.getString(R.string.alarm_pop_security_risks));
             }
         }
         llAlarmPopupAlarmSecurityRisks.setVisibility(isVisible ? View.VISIBLE : View.GONE);
@@ -300,7 +300,7 @@ public class AlarmPopUtilsTest implements Constants,
         mRealFireDialog.setTipMessageText(mActivity.getString(R.string.confirm_upload_real_fire));
         mRealFireDialog.setTipCacnleText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_a6a6a6));
         mRealFireDialog.setTipConfirmText(mActivity.getString(R.string.confirm_upload), mActivity.getResources().getColor(R.color.c_f34a4a));
-        mRealFireDialog.setTipDialogUtilsClickListener(new TipDialogUtils.TipDialogUtilsClickListener(){
+        mRealFireDialog.setTipDialogUtilsClickListener(new TipDialogUtils.TipDialogUtilsClickListener() {
 
             @Override
             public void onCancelClick() {
@@ -314,27 +314,6 @@ public class AlarmPopUtilsTest implements Constants,
             }
         });
     }
-
-//    public void show() {
-//        //
-//        this.etAlarmPopupRemark.getText().clear();
-////        mButton.setBackground(getResources().getDrawable(R.drawable.shape_button_normal));
-//        btAlarmPopupCommit.setBackground(mActivity.getResources().getDrawable(R.drawable.shape_button));
-//        setUpdateButtonClickable(true);
-//        if (progressDialog != null) {
-//            progressDialog.setProgress(0);
-//        }
-//        if (bottomSheetDialog != null) {
-//            bottomSheetDialog.show();
-//        }
-//        if (!EventBus.getDefault().isRegistered(this)) {
-//            EventBus.getDefault().register(this);
-//        }
-//        if (mAlarmPopupModel != null) {
-//            mAlarmPopupModel.mRemark = null;
-//        }
-//
-//    }
 
     public void show(final AlarmPopupModel alarmPopupModel) {
         //
@@ -351,6 +330,7 @@ public class AlarmPopUtilsTest implements Constants,
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+        alarmPopupModel.securityRisksList = null;
         //TODO 作为默认项展示
         this.mAlarmPopupModel = alarmPopupModel;
         mAlarmPopupModel.mRemark = null;
@@ -418,11 +398,9 @@ public class AlarmPopUtilsTest implements Constants,
                 setProgressDialog();
                 upLoadPhotosUtils.doUploadPhoto(selImageList);
             } else {
-                //
                 dismissProgressDialog();
                 mListener.onPopupCallback(mAlarmPopupModel, null);
             }
-//
         }
     }
 
@@ -450,26 +428,12 @@ public class AlarmPopUtilsTest implements Constants,
                     break;
                 }
             }
-//            adapter.notifyItemRemoved(position);
             adapter.setImages(selImageList);
-//            updateButton();
         } else if (IMAGE_ITEM_ADD == position) {
             List<String> names = new ArrayList<>();
             names.add(mActivity.getString(R.string.take_photo));
             names.add(mActivity.getString(R.string.shooting_video));
             names.add(mActivity.getString(R.string.album));
-//            boolean needRecord = true;
-//            for (ImageItem imageItem : selImageList) {
-//                if (!imageItem.isRecord) {
-//                    //只要有一个是照片
-//                    needRecord = false;
-//                    break;
-//                }
-//            }
-//            if (needRecord) {
-//                names.add("拍摄视频");
-//            }
-
             showDialog(this, names);
         } else {
             //打开预览
@@ -668,33 +632,13 @@ public class AlarmPopUtilsTest implements Constants,
                 if (data instanceof ArrayList) {
                     ArrayList<SecurityRisksAdapterModel> securityRisksList = (ArrayList<SecurityRisksAdapterModel>) data;
                     //分析list
-                    StringBuilder builder = new StringBuilder();
-                    for (SecurityRisksAdapterModel securityRisksAdapterModel : securityRisksList) {
-                        StringBuilder stringBuilder = new StringBuilder();
-                        String location = securityRisksAdapterModel.place;
-                        if (!TextUtils.isEmpty(location)) {
-                            stringBuilder.append(location);
-                        }
-                        for (String behavior : securityRisksAdapterModel.action) {
-                            stringBuilder.append(behavior).append("、");
-                        }
-                        String text = stringBuilder.toString();
-                        if (text.endsWith("、")) {
-                            text = text.substring(0, text.lastIndexOf("、"));
-                        }
-                        builder.append(text).append("\n");
-                    }
-                    String str = builder.toString();
-                    if (str.endsWith("、")) {
-                        str = str.substring(0, str.lastIndexOf("\n"));
-                    }
-                    if (!TextUtils.isEmpty(str)) {
-                        tvAlarmPopupAlarmSecurityRisksContent.setText(str);
-                        mAlarmPopupModel.securityRisksList = securityRisksList;
+                    String securityRisksText = AlarmPopupConfigAnalyzer.getSecurityRisksText(securityRisksList);
+                    if (TextUtils.isEmpty(securityRisksText)) {
+                        tvAlarmPopupAlarmSecurityRisksContent.setText(R.string.text_unfilled);
                     } else {
-                        tvAlarmPopupAlarmSecurityRisksContent.setText("未填写");
+                        tvAlarmPopupAlarmSecurityRisksContent.setText(securityRisksText);
+                        mAlarmPopupModel.securityRisksList = securityRisksList;
                     }
-
                 }
                 break;
         }
