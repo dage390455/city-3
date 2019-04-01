@@ -303,7 +303,6 @@ public class DateUtil {
         long diff = now - time;
         float day = diff / 3600000 / 24;
         String formatTime = new SimpleDateFormat("hh:mm:ss", Locale.ROOT).format(new Date(time));
-        String other_date = new SimpleDateFormat("MM.dd hh:mm:ss", Locale.ROOT).format(new Date(time));
         if (day < 1) {
             String nowString = DateUtil.getDayDate(now);
             String dataString = DateUtil.getDayDate(time);
@@ -315,7 +314,7 @@ public class DateUtil {
         } else if (day < 2) {
             return context.getString(R.string.yesterday)+ apm_text + formatTime;
         } else {
-
+            String other_date = new SimpleDateFormat("MM.dd hh:mm:ss", Locale.ROOT).format(new Date(time));
             return other_date.replace(" ", " " + apm_text);
         }
     }
@@ -328,8 +327,8 @@ public class DateUtil {
      * @return
      */
     public static String getStrTimeToday(Context context,long time, int status) {
-        final Calendar mCalendar = Calendar.getInstance();
-        mCalendar.setTimeInMillis(time);
+//        final Calendar mCalendar = Calendar.getInstance();
+//        mCalendar.setTimeInMillis(time);
         long now = System.currentTimeMillis();
         long diff = now - time;
         float day = diff / 3600000 / 24;
@@ -345,8 +344,6 @@ public class DateUtil {
 
         }
         String formatTime = new SimpleDateFormat(formatPattern, Locale.ROOT).format(new Date(time));
-        String other_date = new SimpleDateFormat(pattern, Locale.ROOT).format(new Date(time));
-
         if (day < 1) {
             String nowString = DateUtil.getDayDate(now);
             String dataString = DateUtil.getDayDate(time);
@@ -358,20 +355,19 @@ public class DateUtil {
         } else if (day < 2) {
             return context.getString(R.string.yesterday) + formatTime;
         } else {
-            return other_date;
+            return new SimpleDateFormat(pattern, Locale.ROOT).format(new Date(time));
         }
     }
 
     public static String getStrTimeTodayByDevice(Context context,long time) {
-        final Calendar mCalendar = Calendar.getInstance();
-        mCalendar.setTimeInMillis(time);
+//        final Calendar mCalendar = Calendar.getInstance();
+//        mCalendar.setTimeInMillis(time);
         long now = System.currentTimeMillis();
         long diff = now - time;
         float day = diff / 3600000 / 24;
         String pattern = "MM.dd HH:mm:ss";
         String formatPattern = "HH:mm:ss";
         String formatTime = new SimpleDateFormat(formatPattern, Locale.ROOT).format(new Date(time));
-        String other_date = new SimpleDateFormat(pattern, Locale.ROOT).format(new Date(time));
 
         if (day < 1) {
             String nowString = DateUtil.getDayDate(now);
@@ -384,7 +380,7 @@ public class DateUtil {
         } else if (day < 2) {
             return context.getString(R.string.yesterday) + formatTime;
         } else {
-            return other_date;
+            return new SimpleDateFormat(pattern, Locale.ROOT).format(new Date(time));
         }
     }
 
