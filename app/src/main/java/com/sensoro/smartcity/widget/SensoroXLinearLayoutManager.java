@@ -29,7 +29,6 @@ public class SensoroXLinearLayoutManager extends LinearLayoutManager {
             super.onLayoutChildren(recycler, state);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("SensoroXLinearLayoutManager.exception----->");
         }
     }
 
