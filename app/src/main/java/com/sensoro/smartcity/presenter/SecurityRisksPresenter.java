@@ -95,7 +95,6 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
 
     @Override
     public void onLocationClick(int position) {
-        Log.e("cxy","postion:::"+position);
         mAdapterPosition = position;
         getView().setConstraintTagVisible(true);
 //        getView().changLocationOrBehaviorColor(position, true);
