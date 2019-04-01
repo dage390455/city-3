@@ -294,7 +294,7 @@ public class DateUtil {
 //        }
 //    }
 
-    public static String getFullParseDatePoint(Context context,long time) {
+    public static String getFullParseDatePoint(Context context, long time) {
         final Calendar mCalendar = Calendar.getInstance();
         mCalendar.setTimeInMillis(time);
         int apm = mCalendar.get(Calendar.AM_PM);
@@ -303,19 +303,18 @@ public class DateUtil {
         long diff = now - time;
         float day = diff / 3600000 / 24;
         String formatTime = new SimpleDateFormat("hh:mm:ss", Locale.ROOT).format(new Date(time));
-        String other_date = new SimpleDateFormat("MM.dd hh:mm:ss", Locale.ROOT).format(new Date(time));
         if (day < 1) {
             String nowString = DateUtil.getDayDate(now);
             String dataString = DateUtil.getDayDate(time);
             if (dataString.equalsIgnoreCase(nowString)) {
                 return context.getString(R.string.today) + apm_text + formatTime;
             } else {
-                return context.getString(R.string.yesterday)+ apm_text + formatTime;
+                return context.getString(R.string.yesterday) + apm_text + formatTime;
             }
         } else if (day < 2) {
-            return context.getString(R.string.yesterday)+ apm_text + formatTime;
+            return context.getString(R.string.yesterday) + apm_text + formatTime;
         } else {
-
+            String other_date = new SimpleDateFormat("MM.dd hh:mm:ss", Locale.ROOT).format(new Date(time));
             return other_date.replace(" ", " " + apm_text);
         }
     }
@@ -327,9 +326,11 @@ public class DateUtil {
      * @param status
      * @return
      */
-    public static String getStrTimeToday(Context context,long time, int status) {
-        final Calendar mCalendar = Calendar.getInstance();
-        mCalendar.setTimeInMillis(time);
+
+    public static String getStrTimeToday(Context context, long time, int status) {
+        //TODO 暂时去掉
+//        final Calendar mCalendar = Calendar.getInstance();
+//        mCalendar.setTimeInMillis(time);
         long now = System.currentTimeMillis();
         long diff = now - time;
         float day = diff / 3600000 / 24;
@@ -345,8 +346,6 @@ public class DateUtil {
 
         }
         String formatTime = new SimpleDateFormat(formatPattern, Locale.ROOT).format(new Date(time));
-        String other_date = new SimpleDateFormat(pattern, Locale.ROOT).format(new Date(time));
-
         if (day < 1) {
             String nowString = DateUtil.getDayDate(now);
             String dataString = DateUtil.getDayDate(time);
@@ -358,21 +357,19 @@ public class DateUtil {
         } else if (day < 2) {
             return context.getString(R.string.yesterday) + formatTime;
         } else {
-            return other_date;
+            return new SimpleDateFormat(pattern, Locale.ROOT).format(new Date(time));
         }
     }
 
-    public static String getStrTimeTodayByDevice(Context context,long time) {
-        final Calendar mCalendar = Calendar.getInstance();
-        mCalendar.setTimeInMillis(time);
+    public static String getStrTimeTodayByDevice(Context context, long time) {
+//        final Calendar mCalendar = Calendar.getInstance();
+//        mCalendar.setTimeInMillis(time);
         long now = System.currentTimeMillis();
         long diff = now - time;
         float day = diff / 3600000 / 24;
         String pattern = "MM.dd HH:mm:ss";
         String formatPattern = "HH:mm:ss";
         String formatTime = new SimpleDateFormat(formatPattern, Locale.ROOT).format(new Date(time));
-        String other_date = new SimpleDateFormat(pattern, Locale.ROOT).format(new Date(time));
-
         if (day < 1) {
             String nowString = DateUtil.getDayDate(now);
             String dataString = DateUtil.getDayDate(time);
@@ -384,7 +381,7 @@ public class DateUtil {
         } else if (day < 2) {
             return context.getString(R.string.yesterday) + formatTime;
         } else {
-            return other_date;
+            return new SimpleDateFormat(pattern, Locale.ROOT).format(new Date(time));
         }
     }
 
@@ -442,7 +439,7 @@ public class DateUtil {
         return strtodate;
     }
 
-    public static String secToTimeBefore(Context context,int second) {
+    public static String secToTimeBefore(Context context, int second) {
         int h = 0;
         int d = 0;
         int s = 0;
@@ -469,14 +466,14 @@ public class DateUtil {
         if (h >= 24) {
             int day = h / 24;
             h = day % 24;
-            return day + context.getString(R.string.day) + getStrTime(context,h, d, s);
+            return day + context.getString(R.string.day) + getStrTime(context, h, d, s);
         } else {
-            return getStrTime(context,h, d, s);
+            return getStrTime(context, h, d, s);
         }
     }
 
     @NonNull
-    private static String getStrTime(Context context,int hours, int min, int sec) {
+    private static String getStrTime(Context context, int hours, int min, int sec) {
         String second = context.getString(R.string.second);
         String minute = context.getString(R.string.minute);
         String hour = context.getString(R.string.hour);
@@ -516,17 +513,17 @@ public class DateUtil {
     public static String getChineseCalendar(long time) {
         Calendar instance = Calendar.getInstance();
         instance.setTimeInMillis(time);
-        return String.format(Locale.ROOT,"%d年%02d月%02d日 %02d:%02d",instance.get(Calendar.YEAR),instance.get(Calendar.MONTH)+1,
-                instance.get(Calendar.DAY_OF_MONTH),instance.get(Calendar.HOUR_OF_DAY),instance.get(Calendar.MINUTE));
+        return String.format(Locale.ROOT, "%d年%02d月%02d日 %02d:%02d", instance.get(Calendar.YEAR), instance.get(Calendar.MONTH) + 1,
+                instance.get(Calendar.DAY_OF_MONTH), instance.get(Calendar.HOUR_OF_DAY), instance.get(Calendar.MINUTE));
     }
 
     public static String getStrTime_yymmdd(long time) {
-       SimpleDateFormat simpleDateFormat =  new SimpleDateFormat("yyyyMMdd",Locale.ROOT);
-       return simpleDateFormat.format(new Date(time));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.ROOT);
+        return simpleDateFormat.format(new Date(time));
     }
 
     public static String getStrTime_yy(long time) {
-        SimpleDateFormat simpleDateFormat =  new SimpleDateFormat("yyyy",Locale.ROOT);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy", Locale.ROOT);
         return simpleDateFormat.format(new Date(time));
     }
 }
