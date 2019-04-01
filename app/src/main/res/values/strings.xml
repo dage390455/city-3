@@ -959,4 +959,5 @@
     <string name="alarm_popup_main_reason">Result Type</string>
     <string name="alarm_popup_main_reason_tip">Please select the type of alert result first</string>
     <string name="deploy_record_deploy_staff">Deploy Staff</string>
+    <string name="exit_alarm_confirm">是否退出预警确认</string>
 </resources>
