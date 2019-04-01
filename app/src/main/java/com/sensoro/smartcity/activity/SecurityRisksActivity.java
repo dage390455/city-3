@@ -86,11 +86,11 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
         tagDialogUtils.registerListener(mPresenter);
 
         showTagAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1, Animation.RELATIVE_TO_SELF, 0);
-        showTagAnimation.setDuration(500);
+        showTagAnimation.setDuration(300);
         showTagAnimation.setInterpolator(new LinearInterpolator());
 
         dismissTagAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1);
-        dismissTagAnimation.setDuration(500);
+        dismissTagAnimation.setDuration(300);
         dismissTagAnimation.setInterpolator(new LinearInterpolator());
 
         initCancelDialog();
