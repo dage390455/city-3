@@ -10,7 +10,6 @@
       <module fileurl="file://$PROJECT_DIR$/pickerview/pickerview.iml" filepath="$PROJECT_DIR$/pickerview/pickerview.iml" />
       <module fileurl="file://$PROJECT_DIR$/sensor-kit/sensor-kit.iml" filepath="$PROJECT_DIR$/sensor-kit/sensor-kit.iml" />
       <module fileurl="file://$PROJECT_DIR$/simplescanner/simplescanner.iml" filepath="$PROJECT_DIR$/simplescanner/simplescanner.iml" />
-      <module fileurl="file://$PROJECT_DIR$/smartcity_P.iml" filepath="$PROJECT_DIR$/smartcity_P.iml" />
       <module fileurl="file://$PROJECT_DIR$/wheelview/wheelview.iml" filepath="$PROJECT_DIR$/wheelview/wheelview.iml" />
     </modules>
   </component>
