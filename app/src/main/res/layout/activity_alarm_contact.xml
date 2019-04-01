@@ -119,7 +119,7 @@
             android:contentDescription="@null"
             android:paddingStart="8dp"
             android:paddingTop="8dp"
-            android:paddingEnd="8dp"
+            android:paddingEnd="12dp"
             android:src="@drawable/tag_delete"
             android:visibility="gone" />
     </LinearLayout>

@@ -314,7 +314,6 @@ public class DateUtil {
         } else if (day < 2) {
             return context.getString(R.string.yesterday) + apm_text + formatTime;
         } else {
-
             String other_date = new SimpleDateFormat("MM.dd hh:mm:ss", Locale.ROOT).format(new Date(time));
             return other_date.replace(" ", " " + apm_text);
         }
@@ -327,6 +326,7 @@ public class DateUtil {
      * @param status
      * @return
      */
+
     public static String getStrTimeToday(Context context, long time, int status) {
         //TODO 暂时去掉
 //        final Calendar mCalendar = Calendar.getInstance();
