@@ -84,7 +84,6 @@ implements SecurityRiskContentTouchHelper.ItemTouchHelperAdapter {
                     notifyDataSetChanged();
 
                     if (mListener != null) {
-                        Log.e("cxy","ll:postion::"+position);
                         mListener.onLocationClick((Integer) position);
                     }
                 }
