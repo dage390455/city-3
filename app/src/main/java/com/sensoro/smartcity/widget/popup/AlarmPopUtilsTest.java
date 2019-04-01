@@ -114,6 +114,7 @@ public class AlarmPopUtilsTest implements Constants,
     private UpLoadPhotosUtils upLoadPhotosUtils;
     private AlarmPopupModel mAlarmPopupModel;
     private TipDialogUtils mRealFireDialog;
+    private TipDialogUtils mExitDialog;
 
     public AlarmPopUtilsTest(Activity activity) {
         mActivity = activity;
@@ -293,6 +294,31 @@ public class AlarmPopUtilsTest implements Constants,
 
         //
         initRealFireDialog();
+
+        initExitDialog();
+    }
+
+    private void initExitDialog() {
+        mExitDialog = new TipDialogUtils(mActivity);
+        mExitDialog.setTipMessageText(mActivity.getString(R.string.exit_alarm_confirm));
+        mExitDialog.setTipCacnleText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_a6a6a6));
+        mExitDialog.setTipConfirmText(mActivity.getString(R.string.confirm_exit), mActivity.getResources().getColor(R.color.c_f34a4a));
+        mExitDialog.setTipDialogUtilsClickListener(new TipDialogUtils.TipDialogUtilsClickListener() {
+
+            @Override
+            public void onCancelClick() {
+                mExitDialog.dismiss();
+            }
+
+            @Override
+            public void onConfirmClick() {
+                mExitDialog.dismiss();
+                dismissInputMethodManager(etAlarmPopupRemark);
+                etAlarmPopupRemark.clearFocus();
+                etAlarmPopupRemark.getText().clear();
+                dismiss();
+            }
+        });
     }
 
     private void initRealFireDialog() {
@@ -567,10 +593,14 @@ public class AlarmPopUtilsTest implements Constants,
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_alarm_popup_close:
-                dismissInputMethodManager(view);
-                etAlarmPopupRemark.clearFocus();
-                etAlarmPopupRemark.getText().clear();
-                dismiss();
+                if (mExitDialog != null) {
+                    mExitDialog.show();
+                } else {
+                    dismissInputMethodManager(view);
+                    etAlarmPopupRemark.clearFocus();
+                    etAlarmPopupRemark.getText().clear();
+                    dismiss();
+                }
                 break;
             case R.id.ll_alarm_popup_alarm_security_risks:
                 //TODO 安全隐患

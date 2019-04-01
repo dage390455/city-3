@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -49,7 +50,7 @@ implements SecurityRiskContentTouchHelper.ItemTouchHelperAdapter {
         if (VIEW_TYPE_ADD_ITEM == viewType) {
             View viewAddItem = LayoutInflater.from(mContext).inflate(R.layout.item_adapter_security_risk_add_item, parent, false);
             securityRisksContentHolder = new SecurityRisksContentHolder(viewAddItem);
-            securityRisksContentHolder.tvAddAdapterSecurityRisks.setOnClickListener(new View.OnClickListener() {
+            securityRisksContentHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mListener != null) {
@@ -83,13 +84,14 @@ implements SecurityRiskContentTouchHelper.ItemTouchHelperAdapter {
                     notifyDataSetChanged();
 
                     if (mListener != null) {
+                        Log.e("cxy","ll:postion::"+position);
                         mListener.onLocationClick((Integer) position);
                     }
                 }
             });
 
 
-            securityRisksContentHolder.viewBehaviorsAdapterSecurityRisks.setOnClickListener(new View.OnClickListener() {
+            securityRisksContentHolder.llBehaviorAdapterSecurityRisks.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                         Integer position = (Integer) v.getTag();
@@ -164,7 +166,7 @@ implements SecurityRiskContentTouchHelper.ItemTouchHelperAdapter {
             holder.tvLocationNameAdapterSecurityRisks.setTag(position);
             holder.rvBehaviorsAdapterSecurityRisks.setTag(position);
             holder.llLocationNameAdapterSecurityRisks.setTag(position);
-            holder.viewBehaviorsAdapterSecurityRisks.setTag(position);
+            holder.llBehaviorAdapterSecurityRisks.setTag(position);
             holder.ivDelAdapterSecurityRisksTag.setTag(position);
 
             SecurityRisksAdapterModel model = list.get(position);
@@ -178,8 +180,6 @@ implements SecurityRiskContentTouchHelper.ItemTouchHelperAdapter {
             }
 
             if (model.action.size() > 0) {
-                holder.viewBehaviorsAdapterSecurityRisks.setVisibility(View.GONE);
-                holder.rvBehaviorsAdapterSecurityRisks.setVisibility(View.VISIBLE);
                 SecurityRisksTagAdapter securityRisksTagAdapter = new SecurityRisksTagAdapter(mContext);
                 securityRisksTagAdapter.setOnSecurityRisksTagClickListener(new SecurityRisksTagAdapter.SecurityRisksTagClickListener() {
                     @Override
@@ -194,9 +194,6 @@ implements SecurityRiskContentTouchHelper.ItemTouchHelperAdapter {
                 holder.rvBehaviorsAdapterSecurityRisks.setLayoutManager(manager);
                 holder.rvBehaviorsAdapterSecurityRisks.setAdapter(securityRisksTagAdapter);
                 securityRisksTagAdapter.updateData(model.action);
-            }else{
-                holder.viewBehaviorsAdapterSecurityRisks.setVisibility(View.VISIBLE);
-                holder.rvBehaviorsAdapterSecurityRisks.setVisibility(View.GONE);
             }
 
 
@@ -330,14 +327,14 @@ implements SecurityRiskContentTouchHelper.ItemTouchHelperAdapter {
         @BindView(R.id.iv_del_adapter_security_risks_tag)
         ImageView ivDelAdapterSecurityRisksTag;
         @Nullable
-        @BindView(R.id.ll_location_name_content_adapter_security_risks)
-        LinearLayout llLocationNameContentAdapterSecurityRisks;
-        @Nullable
         @BindView(R.id.ll_location_name_adapter_security_risks)
         LinearLayout llLocationNameAdapterSecurityRisks;
         @Nullable
-        @BindView(R.id.view_behaviors_adapter_security_risks)
-        View viewBehaviorsAdapterSecurityRisks;
+        @BindView(R.id.ll_location_name_content_adapter_security_risks)
+        LinearLayout llLocationNameContentAdapterSecurityRisks;
+        @Nullable
+        @BindView(R.id.ll_behavior_adapter_security_risks)
+        LinearLayout llBehaviorAdapterSecurityRisks;
 
         SecurityRisksContentHolder(View itemView) {
             super(itemView);

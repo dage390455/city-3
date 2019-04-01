@@ -8,6 +8,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,6 +66,8 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
     private SecurityRisksReferTagAdapter securityRisksReferTagAdapter;
     private TagDialogUtils tagDialogUtils;
     private TipDialogUtils mCancelDialog;
+    private TranslateAnimation dismissTagAnimation;
+    private TranslateAnimation showTagAnimation;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -79,6 +84,14 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
 
         tagDialogUtils = new TagDialogUtils(mActivity);
         tagDialogUtils.registerListener(mPresenter);
+
+        showTagAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1, Animation.RELATIVE_TO_SELF, 0);
+        showTagAnimation.setDuration(500);
+        showTagAnimation.setInterpolator(new LinearInterpolator());
+
+        dismissTagAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1);
+        dismissTagAnimation.setDuration(500);
+        dismissTagAnimation.setInterpolator(new LinearInterpolator());
 
         initCancelDialog();
         initContentAdapter();
@@ -181,7 +194,36 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
 
     @Override
     public void setConstraintTagVisible(boolean isVisible) {
-        clTagAcSecurityRisks.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        if (isVisible) {
+            if (clTagAcSecurityRisks.getVisibility() != View.VISIBLE) {
+                clTagAcSecurityRisks.setVisibility(View.VISIBLE);
+                clTagAcSecurityRisks.clearAnimation();
+                clTagAcSecurityRisks.startAnimation(showTagAnimation);
+            }
+
+        }else{
+            if(clTagAcSecurityRisks.getVisibility() == View.VISIBLE){
+                clTagAcSecurityRisks.setVisibility(View.GONE);
+                clTagAcSecurityRisks.clearAnimation();
+                clTagAcSecurityRisks.startAnimation(dismissTagAnimation);
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(clTagAcSecurityRisks.getVisibility() == View.VISIBLE){
+            clTagAcSecurityRisks.setVisibility(View.GONE);
+            clTagAcSecurityRisks.clearAnimation();
+            clTagAcSecurityRisks.startAnimation(dismissTagAnimation);
+        }else{
+            if (mCancelDialog != null) {
+                mCancelDialog.show();
+            }else{
+                super.onBackPressed();
+            }
+        }
+
     }
 
     @Override

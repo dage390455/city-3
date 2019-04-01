@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.SecurityRisksContentAdapter;
@@ -94,6 +95,7 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
 
     @Override
     public void onLocationClick(int position) {
+        Log.e("cxy","postion:::"+position);
         mAdapterPosition = position;
         getView().setConstraintTagVisible(true);
 //        getView().changLocationOrBehaviorColor(position, true);
