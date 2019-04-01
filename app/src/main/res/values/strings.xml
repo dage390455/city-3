@@ -955,5 +955,8 @@
     <string name="alarm_pop_text_fire_type">Fire type:</string>
     <string name="please_complete_the_required_fields_first">Please complete the required fields first</string>
     <string name="alarm_detail_security_risks">Security risks:</string>
-    <string name="alarm_popup_result_type">Result Type:</string>
+    <string name="alarm_popup_result_type">Result Type:（Require）</string>
+    <string name="alarm_popup_main_reason">Result Type</string>
+    <string name="alarm_popup_main_reason_tip">Please select the type of alert result first</string>
+    <string name="deploy_record_deploy_staff">Deploy Staff</string>
 </resources>

@@ -100,6 +100,10 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
                 }
                 getView().setForceDeployReason(forceReasonStr);
             }
+            String deployStaff = mDeployRecordInfo.getDeployStaff();
+            if (!TextUtils.isEmpty(deployStaff)) {
+                getView().setDeployRecordDetailDeployStaff(deployStaff);
+            }
             List<String> deployPics = mDeployRecordInfo.getDeployPics();
             if (deployPics != null && deployPics.size() > 0) {
                 ArrayList<ScenesData> list = new ArrayList<>();

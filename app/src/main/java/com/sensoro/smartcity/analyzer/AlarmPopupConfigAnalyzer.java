@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.adapter.model.SecurityRisksAdapterModel;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.AlarmPopupModel;
@@ -17,12 +18,9 @@ import com.sensoro.smartcity.server.bean.AlarmPopupDataLabelsBean;
 import com.sensoro.smartcity.util.PreferencesHelper;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class AlarmPopupConfigAnalyzer {
     /**
@@ -37,42 +35,28 @@ public class AlarmPopupConfigAnalyzer {
 
         if (alarmPopupDataBeanCache != null) {
             //展示的map
-            Map<String, AlarmPopupDataDisplayBean> display = alarmPopupDataBeanCache.getDisplay();
+            List<AlarmPopupDataDisplayBean> display = alarmPopupDataBeanCache.getDisplay();
             Map<String, AlarmPopupDataConfigBean> config = alarmPopupDataBeanCache.getConfig();
             if (config != null && display != null) {
                 HashMap<Integer, AlarmPopupDataDisplayBean> displayShowMap = new HashMap<>();
                 //
                 List<AlarmPopupModel.AlarmPopupTagModel> mainAlarmPopupTagModels = new ArrayList<>();
                 //main 配置
-                Set<Map.Entry<String, AlarmPopupDataDisplayBean>> entriesDefault = display.entrySet();
-                for (Map.Entry<String, AlarmPopupDataDisplayBean> entryDefault : entriesDefault) {
-                    AlarmPopupDataDisplayBean value = entryDefault.getValue();
+                for (AlarmPopupDataDisplayBean value : display) {
                     if (value != null) {
                         AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel = new AlarmPopupModel.AlarmPopupTagModel();
                         alarmPopupTagModel.name = value.getTitle();
                         alarmPopupTagModel.id = value.getDisplayStatus();
                         if (1 == alarmPopupTagModel.id) {
                             alarmPopupTagModel.resDrawable = R.drawable.shape_bg_solid_f3_20dp_corner;
+                        } else {
+                            alarmPopupTagModel.resDrawable = R.drawable.shape_bg_solid_29c_20dp_corner;
                         }
                         mainAlarmPopupTagModels.add(alarmPopupTagModel);
                         displayShowMap.put(alarmPopupTagModel.id, value);
                     }
 
                 }
-                final Comparator<AlarmPopupModel.AlarmPopupTagModel> modelComparator = new Comparator<AlarmPopupModel.AlarmPopupTagModel>() {
-                    @Override
-                    public int compare(AlarmPopupModel.AlarmPopupTagModel o1, AlarmPopupModel.AlarmPopupTagModel o2) {
-                        if (o1.id - o2.id > 0) {
-                            return -1;
-                        } else if (o1.id - o2.id == 0) {
-                            return 0;
-                        } else {
-                            return 1;
-                        }
-
-                    }
-                };
-                Collections.sort(mainAlarmPopupTagModels, modelComparator);
                 alarmPopupModel.mainTags = mainAlarmPopupTagModels;
 
                 if (displayStatus == null) {
@@ -80,8 +64,8 @@ public class AlarmPopupConfigAnalyzer {
                     //
                     AlarmPopupModel.AlarmPopupSubModel alarmPopupSubModelReason = new AlarmPopupModel.AlarmPopupSubModel();
                     alarmPopupSubModelReason.isRequire = true;
-                    alarmPopupSubModelReason.title = "预警成因";
-                    alarmPopupSubModelReason.tips = "请先选择预警结果类型";
+                    alarmPopupSubModelReason.title = SensoroCityApplication.getInstance().getString(R.string.alarm_popup_main_reason);
+                    alarmPopupSubModelReason.tips = SensoroCityApplication.getInstance().getString(R.string.alarm_popup_main_reason_tip);
                     alarmPopupSubModelReason.key = "reason";
                     //
                     AlarmPopupModel.AlarmPopupSubModel alarmPopupSubModelPlace = new AlarmPopupModel.AlarmPopupSubModel();

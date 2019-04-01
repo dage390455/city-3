@@ -947,6 +947,9 @@
     <string name="alarm_pop_text_fire_type">火灾类型:</string>
     <string name="please_complete_the_required_fields_first">请先完善必填项</string>
     <string name="alarm_detail_security_risks">安全隐患:</string>
-    <string name="alarm_popup_result_type">预警结果类型:</string>
+    <string name="alarm_popup_result_type">预警结果类型（必填）</string>
+    <string name="alarm_popup_main_reason">预警成因</string>
+    <string name="alarm_popup_main_reason_tip">请先选择预警结果类型</string>
+    <string name="deploy_record_deploy_staff">部署人员</string>
 
 </resources>
