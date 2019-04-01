@@ -25,9 +25,12 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ILoginView;
 import com.sensoro.smartcity.presenter.LoginPresenter;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
+
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -81,6 +84,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
 
     private void initView() {
 
+        acLoginTvLogoBottom.setText(String.format(Locale.ROOT, "Copyright \u00a9 %s SENSORO", DateUtil.getStrTime_yy(System.currentTimeMillis())));
         if (acLoginEtAccount.getText().length() > 0 || acLoginEtPsd.getText().length() > 0) {
             updateLogoDescriptionState(false);
         }

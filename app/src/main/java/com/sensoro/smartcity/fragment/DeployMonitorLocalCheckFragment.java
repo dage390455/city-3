@@ -84,6 +84,8 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
     LinearLayout llFgDeployLocalCheckConfig;
     @BindView(R.id.fl_deploy_local_check_not_own)
     FrameLayout flDeployLocalCheckNotOwn;
+    @BindView(R.id.iv_fg_deploy_upload_check_deploy_smoke_example)
+    ImageView ivFgDeployUploadCheckDeploySmokeExample;
     private EarlyWarningThresholdDialogUtils overCurrentDialog;
     private OptionsPickerView pvCustomOptions;
     private DeployMonitorCheckDialogUtils deployMonitorCheckDialogUtils;
@@ -596,6 +598,11 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
     @Override
     public void setDeployLocalCheckTipText(String text) {
         tvFgDeployLocalCheckTip.setText(text);
+    }
+
+    @Override
+    public void setSmokeExampleVisible(boolean isVisible) {
+        ivFgDeployUploadCheckDeploySmokeExample.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override

@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/c_f4f4f4"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:paddingTop="20dp">
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        android:background="@color/c_f4f4f4"
-        android:orientation="vertical">
+        android:gravity="center_horizontal"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:text="@string/manager_fragment_manager"
+        android:textColor="@color/c_252525"
+        android:textSize="18sp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:text="@string/manager_fragment_manager"
-            android:textColor="@color/c_252525"
-            android:textSize="18sp" />
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/c_f4f4f4">
 
         <LinearLayout
             android:id="@+id/fg_main_manage_ll_main_function"
@@ -89,6 +89,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white">
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/view_divider_height"
@@ -238,8 +239,8 @@
                 android:id="@+id/line4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:visibility="gone">
 
                 <View
                     android:layout_width="match_parent"
@@ -285,12 +286,13 @@
                     android:contentDescription="@null"
                     android:src="@drawable/arrows_right" />
             </LinearLayout>
+
             <FrameLayout
                 android:id="@+id/line6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:visibility="visible">
 
                 <View
                     android:layout_width="match_parent"
@@ -450,6 +452,7 @@
                     android:layout_marginEnd="20dp"
                     android:background="@color/c_dfdfdf" />
             </FrameLayout>
+
             <LinearLayout
                 android:id="@+id/fg_main_manage_ll_version_info"
                 android:layout_width="match_parent"
@@ -524,5 +527,5 @@
             </LinearLayout>
 
         </LinearLayout>
-    </LinearLayout>
-</android.support.v4.widget.NestedScrollView>
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>
