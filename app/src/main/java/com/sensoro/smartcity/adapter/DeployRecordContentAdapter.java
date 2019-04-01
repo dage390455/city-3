@@ -16,6 +16,7 @@ import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
+import com.sensoro.smartcity.widget.TouchRecycleView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +91,7 @@ public class DeployRecordContentAdapter extends RecyclerView.Adapter<DeployRecor
         @BindView(R.id.item_adapter_deploy_record_tv_name)
         TextView itemAdapterDeployRecordTvName;
         @BindView(R.id.item_adapter_deploy_record_rc_tag)
-        RecyclerView itemAdapterDeployRecordRcTag;
+        TouchRecycleView itemAdapterDeployRecordRcTag;
         @BindView(R.id.item_adapter_deploy_record_tv_time)
         TextView itemAdapterDeployRecordTvTime;
         @BindView(R.id.item_adapter_deploy_record_tv_device_type)
@@ -101,6 +102,7 @@ public class DeployRecordContentAdapter extends RecyclerView.Adapter<DeployRecor
             ButterKnife.bind(this, itemView);
             int spacingInPixels = mActivity.getResources().getDimensionPixelSize(R.dimen.x10);
             itemAdapterDeployRecordRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
+            itemAdapterDeployRecordRcTag.setIntercept(true);
         }
     }
 
