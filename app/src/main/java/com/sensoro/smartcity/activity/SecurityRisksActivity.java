@@ -291,6 +291,14 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
             mCancelDialog.destory();
             mCancelDialog = null;
         }
+
+        if (showTagAnimation != null) {
+            showTagAnimation.cancel();
+        }
+
+        if (dismissTagAnimation != null) {
+            dismissTagAnimation.cancel();
+        }
         mPresenter.onDestroy();
         super.onDestroy();
     }
