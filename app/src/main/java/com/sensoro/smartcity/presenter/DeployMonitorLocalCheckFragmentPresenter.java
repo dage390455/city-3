@@ -114,42 +114,78 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
                 try {
                     RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
+
                     StringBuilder stringBuilder = new StringBuilder();
-//        String subLoc = regeocodeAddress.getDistrict();// 区或县或县级市
-                    String ts = regeocodeAddress.getTownship();// 乡镇
-                    String thf = null;// 道路
+                    //
+                    String province = regeocodeAddress.getProvince();
+                    //
+                    String district = regeocodeAddress.getDistrict();// 区或县或县级市
+                    //
+                    //
+                    String township = regeocodeAddress.getTownship();// 乡镇
+                    //
+                    String streetName = null;// 道路
                     List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
                     if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
                         RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
                         if (regeocodeRoad != null) {
-                            thf = regeocodeRoad.getName();
+                            streetName = regeocodeRoad.getName();
                         }
                     }
-                    String subthf = null;// 门牌号
-                    StreetNumber streetNumber = regeocodeAddress.getStreetNumber();
-                    if (streetNumber != null) {
-                        subthf = streetNumber.getNumber();
+                    //
+                    String streetNumber = null;// 门牌号
+                    StreetNumber number = regeocodeAddress.getStreetNumber();
+                    if (number != null) {
+                        String street = number.getStreet();
+                        if (street != null) {
+                            streetNumber = street + number.getNumber();
+                        } else {
+                            streetNumber = number.getNumber();
+                        }
                     }
-//        String fn = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
-//        if (subLoc != null) {
-//            stringBuffer.append(subLoc);
-//        }
-//        if (ts != null) {
-//            stringBuffer.append(ts);
-//        }
-                    if (thf != null) {
-                        stringBuilder.append(thf);
+                    //
+                    String building = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
+                    //区县
+                    if (!TextUtils.isEmpty(province)) {
+                        stringBuilder.append(province);
                     }
-                    if (subthf != null) {
-                        stringBuilder.append(subthf);
+                    if (!TextUtils.isEmpty(district)) {
+                        stringBuilder.append(district);
                     }
-                    String address = stringBuilder.toString();
-                    if (TextUtils.isEmpty(address)) {
-                        address = ts;
+                    //乡镇
+                    if (!TextUtils.isEmpty(township)) {
+                        stringBuilder.append(township);
+                    }
+                    //道路
+                    if (!TextUtils.isEmpty(streetName)) {
+                        stringBuilder.append(streetName);
+                    }
+                    //标志性建筑
+                    if (!TextUtils.isEmpty(building)) {
+                        stringBuilder.append(building);
+                    } else {
+                        //门牌号
+                        if (!TextUtils.isEmpty(streetNumber)) {
+                            stringBuilder.append(streetNumber);
+                        }
+                    }
+                    String address;
+                    if (TextUtils.isEmpty(stringBuilder)) {
+                        address = township;
+                    } else {
+                        address = stringBuilder.append("附近").toString();
                     }
                     if (!TextUtils.isEmpty(address)) {
                         deployAnalyzerModel.address = address;
+                        getView().setDeployPosition(true, address);
                     }
+                    try {
+                        LogUtils.loge("deployMapModel", "----" + deployAnalyzerModel.address);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+
+                    //
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -162,10 +198,13 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         });
         //默认显示已定位
         deployAnalyzerModel.address = mActivity.getString(R.string.positioned);
-        if (deployAnalyzerModel.latLng.size() == 2) {
+        if (checkHasLatLng()) {
+            getView().setDeployPosition(true, deployAnalyzerModel.address);
             LatLonPoint lp = new LatLonPoint(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
             RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
             geocoderSearch.getFromLocationAsyn(query);
+        } else {
+            getView().setDeployPosition(false, null);
         }
     }
 
@@ -191,7 +230,6 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         getView().setDeviceSn(mActivity.getString(R.string.device_number) + deployAnalyzerModel.sn);
         //TODO 这是是否要回显位置信息
         getView().updateBtnStatus(canDoOneNextTest());
-        getView().setDeployPosition(checkHasLatLng());
         //
         String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType);
         //控制界面显示逻辑
@@ -261,7 +299,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                 //地图信息
                 if (data instanceof DeployAnalyzerModel) {
                     deployAnalyzerModel = (DeployAnalyzerModel) data;
-                    getView().setDeployPosition(deployAnalyzerModel.latLng.size() == 2);
+                    getView().setDeployPosition(checkHasLatLng(), deployAnalyzerModel.address);
                 }
                 getView().updateBtnStatus(canDoOneNextTest());
                 break;

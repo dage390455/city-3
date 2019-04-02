@@ -246,10 +246,10 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
     }
 
     @Override
-    public void setDeployPosition(boolean hasPosition) {
+    public void setDeployPosition(boolean hasPosition, String position) {
         if (hasPosition) {
             tvFgDeployLocalCheckLocation.setTextColor(mRootFragment.getResources().getColor(R.color.c_252525));
-            tvFgDeployLocalCheckLocation.setText(mRootFragment.getString(R.string.positioned));
+            tvFgDeployLocalCheckLocation.setText(position);
         } else {
             tvFgDeployLocalCheckLocation.setTextColor(mRootFragment.getResources().getColor(R.color.c_a6a6a6));
             tvFgDeployLocalCheckLocation.setText(mRootFragment.getString(R.string.required));

@@ -19,6 +19,7 @@ import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
@@ -107,37 +108,64 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
 
     private void setMarkerAddress(RegeocodeAddress regeocodeAddress) {
         StringBuilder stringBuilder = new StringBuilder();
-//        String subLoc = regeocodeAddress.getDistrict();// 区或县或县级市
-        String ts = regeocodeAddress.getTownship();// 乡镇
-        String thf = null;// 道路
+        //
+        String province = regeocodeAddress.getProvince();
+        //
+        String district = regeocodeAddress.getDistrict();// 区或县或县级市
+        //
+        //
+        String township = regeocodeAddress.getTownship();// 乡镇
+        //
+        String streetName = null;// 道路
         List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
         if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
             RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
             if (regeocodeRoad != null) {
-                thf = regeocodeRoad.getName();
+                streetName = regeocodeRoad.getName();
             }
         }
-        String subthf = null;// 门牌号
-        StreetNumber streetNumber = regeocodeAddress.getStreetNumber();
-        if (streetNumber != null) {
-            subthf = streetNumber.getNumber();
+        //
+        String streetNumber = null;// 门牌号
+        StreetNumber number = regeocodeAddress.getStreetNumber();
+        if (number != null) {
+            String street = number.getStreet();
+            if (street != null) {
+                streetNumber = street + number.getNumber();
+            } else {
+                streetNumber = number.getNumber();
+            }
         }
-//        String fn = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
-//        if (subLoc != null) {
-//            stringBuffer.append(subLoc);
-//        }
-//        if (ts != null) {
-//            stringBuffer.append(ts);
-//        }
-        if (thf != null) {
-            stringBuilder.append(thf);
+        //
+        String building = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
+        //区县
+        if (!TextUtils.isEmpty(province)) {
+            stringBuilder.append(province);
         }
-        if (subthf != null) {
-            stringBuilder.append(subthf);
+        if (!TextUtils.isEmpty(district)) {
+            stringBuilder.append(district);
         }
-        String address = stringBuilder.toString();
-        if (TextUtils.isEmpty(address)) {
-            address = ts;
+        //乡镇
+        if (!TextUtils.isEmpty(township)) {
+            stringBuilder.append(township);
+        }
+        //道路
+        if (!TextUtils.isEmpty(streetName)) {
+            stringBuilder.append(streetName);
+        }
+        //标志性建筑
+        if (!TextUtils.isEmpty(building)) {
+            stringBuilder.append(building);
+        } else {
+            //门牌号
+            if (!TextUtils.isEmpty(streetNumber)) {
+                stringBuilder.append(streetNumber);
+            }
+        }
+        String address;
+        if (TextUtils.isEmpty(stringBuilder)) {
+            address = township;
+        } else {
+            address = stringBuilder.append("附近").toString();
         }
         if (!TextUtils.isEmpty(address)) {
             deployAnalyzerModel.address = address;
@@ -158,6 +186,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                 }
             });
         }
+        //
     }
 
 //    private void setMapCustomStyleFile() {
@@ -414,13 +443,53 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     }
 
     @Override
-    public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
+    public void onRegeocodeSearched(RegeocodeResult result, int i) {
         System.out.println("====>onRegeocodeSearched");
         try {
-            RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
+
+            RegeocodeAddress regeocodeAddress = result.getRegeocodeAddress();
             setMarkerAddress(regeocodeAddress);
+//            updateAddressInfo(result, i);
+            //
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void updateAddressInfo(RegeocodeResult result, int rCode) {
+        if (rCode == AMapException.CODE_AMAP_SUCCESS) {
+            if (result != null && result.getRegeocodeAddress() != null && result.getRegeocodeAddress().getFormatAddress() != null) {
+                String addressName = result.getRegeocodeAddress().getFormatAddress();
+                if (TextUtils.isEmpty(addressName)) {
+                    deviceMarker.hideInfoWindow();
+                } else {
+                    deployAnalyzerModel.address = addressName;
+                    deviceMarker.setTitle(addressName);
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            deviceMarker.showInfoWindow();
+                        }
+                    });
+                }
+            } else {
+                try {
+                    LogUtils.loge("查找位置无结果");
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }
+        } else {
+            try {
+                LogUtils.loge("查找位置失败：rCode = " + rCode);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        }
+        try {
+            LogUtils.loge("deployMapModel", "----" + deployAnalyzerModel.address);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
     }
 

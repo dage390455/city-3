@@ -210,7 +210,7 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
 
     @Override
     public void toastLong(String msg) {
-
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_LONG).show();
     }
 
     @OnClick({R.id.include_text_title_imv_arrows_left, R.id.bt_deploy_map_signal, R.id.tv_deploy_map_save, R.id.iv_deploy_map_location,R.id.include_text_title_tv_subtitle})
