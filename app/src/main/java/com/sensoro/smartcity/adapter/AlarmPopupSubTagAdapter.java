@@ -40,9 +40,18 @@ public class AlarmPopupSubTagAdapter extends RecyclerView.Adapter<AlarmPopupSubT
             public void onClick(View v) {
                 //处理数据
                 Integer position = (Integer) v.getTag();
-                for (int i = 0; i < mList.size(); i++) {
-                    AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel = mList.get(i);
-                    alarmPopupTagModel.isChose = i == position;
+                AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel = mList.get(position);
+                if (alarmPopupTagModel.isRequire) {
+                    for (int i = 0; i < mList.size(); i++) {
+                        mList.get(i).isChose = i == position;
+                    }
+                } else {
+                    alarmPopupTagModel.isChose = !alarmPopupTagModel.isChose;
+                    for (int i = 0; i < mList.size(); i++) {
+                        if (i != position) {
+                            mList.get(i).isChose = false;
+                        }
+                    }
                 }
                 notifyDataSetChanged();
             }

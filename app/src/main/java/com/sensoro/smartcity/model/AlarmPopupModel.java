@@ -33,6 +33,7 @@ public class AlarmPopupModel {
         public Integer id;
         public boolean isChose;
         public String name;
+        public boolean isRequire;
         public int resDrawable = R.drawable.shape_bg_solid_29c_20dp_corner;
     }
 

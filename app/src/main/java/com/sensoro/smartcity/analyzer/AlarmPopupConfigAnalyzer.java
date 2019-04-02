@@ -84,6 +84,7 @@ public class AlarmPopupConfigAnalyzer {
                                         AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel = createAlarmPopupTagModel(-1);
                                         alarmPopupTagModel.name = alarmPopupDataLabelsBean.getTitle();
                                         alarmPopupTagModel.id = alarmPopupDataLabelsBean.getId();
+                                        alarmPopupTagModel.isRequire = false;
                                         subAlarmPopupTagModels.add(alarmPopupTagModel);
                                     }
                                 }
@@ -168,6 +169,7 @@ public class AlarmPopupConfigAnalyzer {
                                                     AlarmPopupModel.AlarmPopupTagModel tagModel = createAlarmPopupTagModel(displayStatus);
                                                     tagModel.name = alarmPopupDataLabelsBean.getTitle();
                                                     tagModel.id = alarmPopupDataLabelsBean.getId();
+                                                    tagModel.isRequire = alarmPopupSubModel.isRequire;
                                                     subAlarmPopupTagModels.add(tagModel);
                                                 }
                                                 alarmPopupSubModel.subTags = subAlarmPopupTagModels;
