@@ -445,7 +445,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 break;
             case EVENT_DATA_SOCKET_DATA_INFO:
                 if (data instanceof DeviceInfo) {
-                    needRefreshContent = needHandleDevicePush((DeviceInfo) data);
+                    if (needHandleDevicePush((DeviceInfo) data)) {
+                        needRefreshContent = true;
+                    }
                 }
                 break;
             case EVENT_DATA_SOCKET_DATA_COUNT:
