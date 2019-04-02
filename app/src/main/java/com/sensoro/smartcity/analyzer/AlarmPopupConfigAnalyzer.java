@@ -331,7 +331,7 @@ public class AlarmPopupConfigAnalyzer {
                 builder.append(text).append(";").append("\n");
             }
             defaultText = builder.toString();
-            if (defaultText.endsWith("、")) {
+            if (defaultText.endsWith("\n")) {
                 defaultText = defaultText.substring(0, defaultText.lastIndexOf("\n"));
             }
             if (!TextUtils.isEmpty(defaultText)) {

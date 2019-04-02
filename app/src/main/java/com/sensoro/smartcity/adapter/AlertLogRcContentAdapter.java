@@ -208,6 +208,8 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             String remark = recordInfo.getRemark();
             if (!TextUtils.isEmpty(remark)) {
                 holder.itemAlarmDetailChildAlarmRemarks.setText(remark);
+            }else {
+                holder.itemAlarmDetailChildAlarmRemarks.setText("");
             }
             final List<ScenesData> scenes = recordInfo.getScenes();
             if (scenes != null && scenes.size() > 0) {

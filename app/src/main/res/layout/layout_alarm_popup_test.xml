@@ -181,6 +181,7 @@
                 android:hint="@string/alarm_descript"
                 android:inputType="textMultiLine"
                 android:padding="10dp"
+                android:maxLength="100"
                 android:scrollbars="vertical"
                 android:textColor="@color/c_626262"
                 android:textSize="14sp" />

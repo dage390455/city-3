@@ -409,6 +409,7 @@ public class AlarmPopUtilsTest implements Constants,
             EventBus.getDefault().unregister(this);
         }
         selImageList.clear();
+        mAlarmPopupModel.mRemark = null;
         adapter.setImages(selImageList);
         setUpdateButtonClickable(false);
     }
@@ -423,7 +424,11 @@ public class AlarmPopUtilsTest implements Constants,
             return;
         }
         setUpdateButtonClickable(false);
-        mAlarmPopupModel.mRemark = etAlarmPopupRemark.getText().toString();
+
+        String remark = etAlarmPopupRemark.getText().toString();
+        if (!TextUtils.isEmpty(remark)) {
+            mAlarmPopupModel.mRemark = remark;
+        }
         doCommit();
     }
 
