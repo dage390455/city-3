@@ -601,8 +601,14 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
     }
 
     @Override
-    public void setSmokeExampleVisible(boolean isVisible) {
+    public void setDeviceExampleVisible(boolean isVisible) {
         ivFgDeployUploadCheckDeploySmokeExample.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+
+    }
+
+    @Override
+    public void setDeviceExampleImageResource(int resId) {
+        ivFgDeployUploadCheckDeploySmokeExample.setImageResource(resId);
     }
 
     @Override

@@ -521,13 +521,20 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                     String mergeType = configDeviceType.getMergeType();
                     if ("smoke".equals(mergeType)) {
                         getView().setDeployLocalCheckTipText(mActivity.getString(R.string.deploy_check_button_tip_press_the_sensor));
-                        getView().setSmokeExampleVisible(true);
+                        getView().setDeviceExampleVisible(true);
+                        getView().setDeviceExampleImageResource(R.drawable.deploy_smoke_example);
+                        return;
+                    } else if ("lpg".equals(mergeType) || "ch4".equals(mergeType)) {
+                        getView().setDeployLocalCheckTipText("");
+                        getView().setDeviceExampleVisible(true);
+                        getView().setDeviceExampleImageResource(R.drawable.deploy_smoke_example);
                         return;
                     }
                 }
                 getView().setDeployLocalCheckTipText("");
             }
         }
+        getView().setDeviceExampleVisible(false);
 
     }
 

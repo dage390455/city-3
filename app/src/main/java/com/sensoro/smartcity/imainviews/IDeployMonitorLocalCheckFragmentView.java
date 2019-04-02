@@ -47,5 +47,7 @@ public interface IDeployMonitorLocalCheckFragmentView extends IToast, IActivityI
 
     void setDeployLocalCheckTipText(String text);
 
-    void setSmokeExampleVisible(boolean isVisible);
+    void setDeviceExampleVisible(boolean isVisible);
+
+    void setDeviceExampleImageResource(int resId);
 }
