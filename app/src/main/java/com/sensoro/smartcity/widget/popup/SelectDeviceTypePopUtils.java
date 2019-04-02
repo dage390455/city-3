@@ -121,10 +121,10 @@ public class SelectDeviceTypePopUtils {
 
     public void showAtLocation(View view, int gravity) {
         mPopupWindow.showAtLocation(view, gravity, 0, 0);
-        int i = mTypeSelectAdapter.getItemCount() / 4;
-        i *= 100;
-        showTranslateAnimation.setDuration(i);
-        dismissTranslateAnimation.setDuration(i);
+//        int i = mTypeSelectAdapter.getItemCount() / 4;
+//        i *= 100;
+        showTranslateAnimation.setDuration(300);
+        dismissTranslateAnimation.setDuration(300);
         mFl.startAnimation(showTranslateAnimation);
     }
 
@@ -150,13 +150,13 @@ public class SelectDeviceTypePopUtils {
     }
 
     private void showAnimation() {
-        int i = mTypeSelectAdapter.getItemCount() / 4;
-        i *= 100;
-        if(i<300){
-            i = 300;
-        }
-        showTranslateAnimation.setDuration(i);
-        dismissTranslateAnimation.setDuration(i);
+//        int i = mTypeSelectAdapter.getItemCount() / 4;
+//        i *= 100;
+//        if(i<300){
+//            i = 300;
+//        }
+        showTranslateAnimation.setDuration(300);
+        dismissTranslateAnimation.setDuration(300);
         mFl.startAnimation(showTranslateAnimation);
     }
 
