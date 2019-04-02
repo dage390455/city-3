@@ -305,18 +305,19 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         @Override
         public void call(Object... args) {
             try {
-                synchronized (MainPresenter.DeviceInfoListener.class) {
-                    for (Object arg : args) {
-                        if (arg instanceof JSONArray) {
-                            JSONArray jsonArray = (JSONArray) arg;
-                            final JSONObject jsonObject = jsonArray.getJSONObject(0);
-                            String json = jsonObject.toString();
-                            try {
-                                LogUtils.loge(this, "socket-->>> DeviceInfoListener jsonArray = " + json);
-                            } catch (Throwable throwable) {
-                                throwable.printStackTrace();
-                            }
-                            if (hasDeviceBriefControl()) {
+                if (hasDeviceBriefControl()) {
+                    synchronized (MainPresenter.DeviceInfoListener.class) {
+                        for (Object arg : args) {
+                            if (arg instanceof JSONArray) {
+                                JSONArray jsonArray = (JSONArray) arg;
+                                final JSONObject jsonObject = jsonArray.getJSONObject(0);
+                                String json = jsonObject.toString();
+                                try {
+                                    LogUtils.loge(this, "socket-->>> DeviceInfoListener jsonArray = " + json);
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
+
                                 try {
                                     DeviceInfo data = RetrofitServiceHelper.getInstance().getGson().fromJson(json,
                                             DeviceInfo.class);
@@ -345,17 +346,17 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         @Override
         public void call(Object... args) {
             try {
-                synchronized (MainPresenter.DeviceAlarmCountListener.class) {
-                    for (Object arg : args) {
-                        if (arg instanceof JSONObject) {
-                            JSONObject jsonObject = (JSONObject) arg;
-                            String json = jsonObject.toString();
-                            try {
-                                LogUtils.loge(this, "socket-->>> DeviceAlarmCountListener jsonArray = " + json);
-                            } catch (Throwable throwable) {
-                                throwable.printStackTrace();
-                            }
-                            if (hasDeviceBriefControl()) {
+                if (hasDeviceBriefControl()) {
+                    synchronized (MainPresenter.DeviceAlarmCountListener.class) {
+                        for (Object arg : args) {
+                            if (arg instanceof JSONObject) {
+                                JSONObject jsonObject = (JSONObject) arg;
+                                String json = jsonObject.toString();
+                                try {
+                                    LogUtils.loge(this, "socket-->>> DeviceAlarmCountListener jsonArray = " + json);
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
                                 try {
                                     DeviceAlarmCount deviceAlarmCount = RetrofitServiceHelper.getInstance().getGson().fromJson(json, DeviceAlarmCount.class);
                                     List<DeviceAlarmCount.AllBean> all = deviceAlarmCount.getAll();
@@ -385,17 +386,17 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         @Override
         public void call(Object... args) {
             try {
-                synchronized (MainPresenter.DeviceAlarmDisplayStatusListener.class) {
-                    for (Object arg : args) {
-                        if (arg instanceof JSONObject) {
-                            JSONObject jsonObject = (JSONObject) arg;
-                            String json = jsonObject.toString();
-                            try {
-                                LogUtils.loge(this, "socket-->>> DeviceAlarmDisplayStatusListener json = " + json);
-                            } catch (Throwable throwable) {
-                                throwable.printStackTrace();
-                            }
-                            if (hasAlarmInfoControl()) {
+                if (hasAlarmInfoControl()) {
+                    synchronized (MainPresenter.DeviceAlarmDisplayStatusListener.class) {
+                        for (Object arg : args) {
+                            if (arg instanceof JSONObject) {
+                                JSONObject jsonObject = (JSONObject) arg;
+                                String json = jsonObject.toString();
+                                try {
+                                    LogUtils.loge(this, "socket-->>> DeviceAlarmDisplayStatusListener json = " + json);
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
                                 try {
                                     DeviceAlarmLogInfo deviceAlarmLogInfo = RetrofitServiceHelper.getInstance().getGson().fromJson(json, DeviceAlarmLogInfo.class);
                                     String event = deviceAlarmLogInfo.getEvent();
@@ -515,7 +516,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                                 EventBus.getDefault().post(eventData2);
                             }
                             Beta.checkUpgrade(false, false);
-                            mHandler.postDelayed(mRunnable, 5 * 1000);
+                            mHandler.postDelayed(mRunnable, 10 * 1000);
                             try {
                                 LogUtils.loge("TaskRunnable == pingNetCanUse = " + pingNetCanUse + ",检查更新");
                             } catch (Throwable throwable) {
