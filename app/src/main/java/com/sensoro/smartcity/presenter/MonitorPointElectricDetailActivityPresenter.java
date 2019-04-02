@@ -1187,7 +1187,69 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
         String address;
         if (AppUtils.isChineseLanguage()) {
-            address = regeocodeResult.getRegeocodeAddress().getFormatAddress();
+//            address = regeocodeResult.getRegeocodeAddress().getFormatAddress();
+
+//                改为自定义
+                StringBuilder stringBuilder = new StringBuilder();
+                //
+                String province = regeocodeAddress.getProvince();
+                //
+                String district = regeocodeAddress.getDistrict();// 区或县或县级市
+                //
+                //
+                String township = regeocodeAddress.getTownship();// 乡镇
+                //
+                String streetName = null;// 道路
+                List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
+                if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
+                    RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
+                    if (regeocodeRoad != null) {
+                        streetName = regeocodeRoad.getName();
+                    }
+                }
+                //
+                String streetNumber = null;// 门牌号
+                StreetNumber number = regeocodeAddress.getStreetNumber();
+                if (number != null) {
+                    String street = number.getStreet();
+                    if (street != null) {
+                        streetNumber = street + number.getNumber();
+                    } else {
+                        streetNumber = number.getNumber();
+                    }
+                }
+                //
+                String building = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
+                //区县
+                if (!TextUtils.isEmpty(province)) {
+                    stringBuilder.append(province);
+                }
+                if (!TextUtils.isEmpty(district)) {
+                    stringBuilder.append(district);
+                }
+                //乡镇
+                if (!TextUtils.isEmpty(township)) {
+                    stringBuilder.append(township);
+                }
+                //道路
+                if (!TextUtils.isEmpty(streetName)) {
+                    stringBuilder.append(streetName);
+                }
+                //标志性建筑
+                if (!TextUtils.isEmpty(building)) {
+                    stringBuilder.append(building);
+                } else {
+                    //门牌号
+                    if (!TextUtils.isEmpty(streetNumber)) {
+                        stringBuilder.append(streetNumber);
+                    }
+                }
+                if (TextUtils.isEmpty(stringBuilder)) {
+                    address = township;
+                } else {
+                    address = stringBuilder.append("附近").toString();
+                }
+                //
             try {
                 LogUtils.loge(this, "onRegeocodeSearched: " + "code = " + i + ",address = " + address);
             } catch (Throwable throwable) {

@@ -17,7 +17,7 @@ public interface IDeployMonitorLocalCheckFragmentView extends IToast, IActivityI
 
     void setDeployDeviceConfigVisible(boolean isVisible);
 
-    void setDeployPosition(boolean hasPosition);
+    void setDeployPosition(boolean hasPosition, String position);
 
     void setSwitchSpecHintText(String text);
 
