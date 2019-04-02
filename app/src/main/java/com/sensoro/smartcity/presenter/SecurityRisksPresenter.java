@@ -2,9 +2,7 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Parcelable;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.SecurityRisksContentAdapter;
@@ -224,6 +222,7 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
             PreferencesHelper.getInstance().saveSecurityRiskBehaviorTag(behaviorTagList);
             getView().updateSecurityRisksTag(behaviorTagList,false);
         }
+        getView().tagScrollBottom();
         getView().dismissTagDialog();
     }
 

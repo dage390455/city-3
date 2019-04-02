@@ -409,7 +409,10 @@ public class AlarmPopUtilsTest implements Constants,
             EventBus.getDefault().unregister(this);
         }
         selImageList.clear();
-        mAlarmPopupModel.mRemark = null;
+        if (mAlarmPopupModel != null) {
+            mAlarmPopupModel.mRemark = null;
+        }
+
         adapter.setImages(selImageList);
         setUpdateButtonClickable(false);
     }

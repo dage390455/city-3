@@ -29,4 +29,5 @@ public interface ISecurityRisksActivityView extends IToast, IActivityIntent {
 
     void rvContentScrollBottom(int position);
 
+    void tagScrollBottom();
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.Guideline;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -60,6 +61,8 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
     TextView tvMangerAcSecurityRisks;
     @BindView(R.id.rv_tag_ac_security_risks)
     RecyclerView rvTagAcSecurityRisks;
+    @BindView(R.id.sv_tag_ac_security_risks)
+    NestedScrollView svTagAcSecurityRisks;
     @BindView(R.id.cl_tag_ac_security_risks)
     ConstraintLayout clTagAcSecurityRisks;
     private SecurityRisksContentAdapter securityRisksContentAdapter;
@@ -273,6 +276,16 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
                 }
             });
 
+    }
+
+    @Override
+    public void tagScrollBottom() {
+        svTagAcSecurityRisks.post(new Runnable() {
+            @Override
+            public void run() {
+                svTagAcSecurityRisks.fullScroll(NestedScrollView.FOCUS_DOWN);
+            }
+        });
     }
 
     @Override
