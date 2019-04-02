@@ -80,8 +80,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:paddingStart="20dp"
         android:paddingEnd="20dp">
         <TextView
@@ -89,8 +89,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/c_a6a6a6"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
             android:textSize="14sp"
             android:text="@string/security_behavior"
 

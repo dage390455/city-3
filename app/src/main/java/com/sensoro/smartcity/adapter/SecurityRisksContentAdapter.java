@@ -2,6 +2,7 @@ package com.sensoro.smartcity.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +22,7 @@ import com.sensoro.smartcity.adapter.model.SecurityRisksAdapterModel;
 import com.sensoro.smartcity.adapter.touchHelper.SecurityRiskContentTouchHelper;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,12 +72,16 @@ implements SecurityRiskContentTouchHelper.ItemTouchHelperAdapter {
                             SecurityRisksAdapterModel model = list.get(position);
                             model.locationColor = R.color.c_252525;
                             model.behaviorColor = R.color.c_a6a6a6;
+                            model.locationIsBold = true;
+                            model.behaviorIsBold = false;
 //                            notifyItemChanged(position);
                         }else{
                             SecurityRisksAdapterModel model = list.get(i);
                             if (model.locationColor == R.color.c_252525 || model.behaviorColor == R.color.c_252525) {
                                 model.locationColor = R.color.c_a6a6a6;
                                 model.behaviorColor = R.color.c_a6a6a6;
+                                model.locationIsBold = false;
+                                model.behaviorIsBold = false;
 //                                notifyItemChanged(i);
 
                             }
@@ -99,11 +105,15 @@ implements SecurityRiskContentTouchHelper.ItemTouchHelperAdapter {
                                 SecurityRisksAdapterModel model = list.get(position);
                                 model.locationColor = R.color.c_a6a6a6;
                                 model.behaviorColor = R.color.c_252525;
+                                model.locationIsBold = false;
+                                model.behaviorIsBold = true;
                             }else{
                                 SecurityRisksAdapterModel model = list.get(i);
                                 if (model.locationColor == R.color.c_252525 || model.behaviorColor == R.color.c_252525) {
                                     model.locationColor = R.color.c_a6a6a6;
                                     model.behaviorColor = R.color.c_a6a6a6;
+                                    model.locationIsBold = false;
+                                    model.behaviorIsBold = false;
                                 }
                             }
                         }
@@ -168,9 +178,15 @@ implements SecurityRiskContentTouchHelper.ItemTouchHelperAdapter {
             holder.llBehaviorAdapterSecurityRisks.setTag(position);
             holder.ivDelAdapterSecurityRisksTag.setTag(position);
 
+
+
             SecurityRisksAdapterModel model = list.get(position);
             holder.tvLocationAdapterSecurityRisks.setTextColor(mContext.getResources().getColor(model.locationColor));
             holder.tvBehaviorAdapterSecurityRisks.setTextColor(mContext.getResources().getColor(model.behaviorColor));
+
+            holder.tvLocationAdapterSecurityRisks.setTypeface(Typeface.defaultFromStyle(model.locationIsBold ? Typeface.BOLD : Typeface.NORMAL));
+            holder.tvBehaviorAdapterSecurityRisks.setTypeface(Typeface.defaultFromStyle(model.behaviorIsBold ? Typeface.BOLD : Typeface.NORMAL));
+
             if (!TextUtils.isEmpty(model.place)) {
                 holder.llLocationNameContentAdapterSecurityRisks.setVisibility(View.VISIBLE);
                 holder.tvLocationNameAdapterSecurityRisks.setText(model.place);
@@ -275,6 +291,8 @@ implements SecurityRiskContentTouchHelper.ItemTouchHelperAdapter {
             if (model.locationColor == R.color.c_252525 || model.behaviorColor == R.color.c_252525) {
                 model.locationColor = R.color.c_a6a6a6;
                 model.behaviorColor = R.color.c_a6a6a6;
+                model.locationIsBold = false;
+                model.behaviorIsBold = false;
                 notifyItemChanged(i);
             }
         }
