@@ -91,6 +91,7 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
         SecurityRisksAdapterModel model = new SecurityRisksAdapterModel();
         securityRisksList.add(model);
         getView().updateSecurityRisksContent(securityRisksList);
+        getView().rvContentScrollBottom(securityRisksList.size());
     }
 
     @Override
