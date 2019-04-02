@@ -193,8 +193,6 @@ implements SecurityRiskContentTouchHelper.ItemTouchHelperAdapter {
             }else{
                 holder.llLocationNameContentAdapterSecurityRisks.setVisibility(View.GONE);
             }
-
-            if (model.action.size() > 0) {
                 SecurityRisksTagAdapter securityRisksTagAdapter = new SecurityRisksTagAdapter(mContext);
                 securityRisksTagAdapter.setOnSecurityRisksTagClickListener(new SecurityRisksTagAdapter.SecurityRisksTagClickListener() {
                     @Override
@@ -209,7 +207,7 @@ implements SecurityRiskContentTouchHelper.ItemTouchHelperAdapter {
                 holder.rvBehaviorsAdapterSecurityRisks.setLayoutManager(manager);
                 holder.rvBehaviorsAdapterSecurityRisks.setAdapter(securityRisksTagAdapter);
                 securityRisksTagAdapter.updateData(model.action);
-            }
+
 
 
         }
@@ -293,9 +291,9 @@ implements SecurityRiskContentTouchHelper.ItemTouchHelperAdapter {
                 model.behaviorColor = R.color.c_a6a6a6;
                 model.locationIsBold = false;
                 model.behaviorIsBold = false;
-                notifyItemChanged(i);
             }
         }
+        notifyDataSetChanged();
     }
 
     public void updateLocationTag(String tag, boolean check) {
