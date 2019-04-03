@@ -9,8 +9,8 @@
     android:background="@drawable/shape_progress_dialog_bf_black">
     <ImageView
         android:id="@+id/progress_imv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:src="@drawable/progress_loading"
         android:contentDescription="@null"
         android:layout_gravity="center"

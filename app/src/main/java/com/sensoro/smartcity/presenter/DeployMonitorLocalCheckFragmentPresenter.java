@@ -562,10 +562,10 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                         getView().setDeviceExampleVisible(true);
                         getView().setDeviceExampleImageResource(R.drawable.deploy_smoke_example);
                         return;
-                    } else if ("lpg".equals(mergeType) || "ch4".equals(mergeType)) {
-                        getView().setDeployLocalCheckTipText("");
+                    } else if ("fhsj_ch4".equals(deployAnalyzerModel.deviceType) || "baymax_ch4".equals(deployAnalyzerModel.deviceType)) {
+                        getView().setDeployLocalCheckTipText(mActivity.getString(R.string.deploy_check_button_tip_press_the_sensor));
                         getView().setDeviceExampleVisible(true);
-                        getView().setDeviceExampleImageResource(R.drawable.deploy_smoke_example);
+                        getView().setDeviceExampleImageResource(R.drawable.icon_ch4);
                         return;
                     }
                 }
