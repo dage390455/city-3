@@ -210,12 +210,24 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
             return;
         }
         if (mAddTagTypeIsLocation) {
+            for (SecurityRisksTagModel tagModel : locationTagList) {
+                if (tagModel.tag != null && tagModel.tag.equals(text)) {
+                    getView().toastShort(mActivity.getString(R.string.label_cannot_be_repeated));
+                    return;
+                }
+            }
             SecurityRisksTagModel model = new SecurityRisksTagModel();
             model.tag = text;
             locationTagList.add(model);
             PreferencesHelper.getInstance().saveSecurityRiskLocationTag(locationTagList);
             getView().updateSecurityRisksTag(locationTagList,true);
         }else{
+            for (SecurityRisksTagModel tagModel : behaviorTagList) {
+                if (tagModel.tag != null && tagModel.tag.equals(text)) {
+                    getView().toastShort(mActivity.getString(R.string.label_cannot_be_repeated));
+                    return;
+                }
+            }
             SecurityRisksTagModel model = new SecurityRisksTagModel();
             model.tag = text;
             behaviorTagList.add(model);
