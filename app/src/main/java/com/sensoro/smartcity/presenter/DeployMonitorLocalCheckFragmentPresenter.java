@@ -547,32 +547,51 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         }
     }
 
-    public void updateCheckTipText() {
-        if (TYPE_SCAN_DEPLOY_STATION == deployAnalyzerModel.deployType) {
-            getView().setDeployLocalCheckTipText("");
-        } else {
-            if (DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType) || "mantun_fires".equals(deployAnalyzerModel.deviceType)) {
-                getView().setDeployLocalCheckTipText(mActivity.getString(R.string.deploy_check_button_tip_is_powered_on));
-            } else {
-                DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deployAnalyzerModel.deviceType);
-                if (configDeviceType != null) {
-                    String mergeType = configDeviceType.getMergeType();
-                    if ("smoke".equals(mergeType)) {
-                        getView().setDeployLocalCheckTipText(mActivity.getString(R.string.deploy_check_button_tip_press_the_sensor));
-                        getView().setDeviceExampleVisible(true);
-                        getView().setDeviceExampleImageResource(R.drawable.deploy_smoke_example);
-                        return;
-                    } else if ("lpg".equals(mergeType) || "ch4".equals(mergeType)) {
-                        getView().setDeployLocalCheckTipText("");
-                        getView().setDeviceExampleVisible(true);
-                        getView().setDeviceExampleImageResource(R.drawable.deploy_smoke_example);
-                        return;
-                    }
-                }
+    public void updateCheckTipText(boolean hasConfig) {
+        if (hasConfig) {
+            if (TYPE_SCAN_DEPLOY_STATION == deployAnalyzerModel.deployType) {
                 getView().setDeployLocalCheckTipText("");
+            } else {
+                if (DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType) || "mantun_fires".equals(deployAnalyzerModel.deviceType)) {
+                    getView().setDeployLocalCheckTipText(mActivity.getString(R.string.deploy_check_button_tip_is_powered_on));
+                } else {
+                    DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deployAnalyzerModel.deviceType);
+                    if (configDeviceType != null) {
+                        String mergeType = configDeviceType.getMergeType();
+                        if ("smoke".equals(mergeType)) {
+                            getView().setDeployLocalCheckTipText(mActivity.getString(R.string.deploy_check_button_tip_press_the_sensor));
+                            getView().setDeviceExampleVisible(true);
+                            getView().setDeviceExampleImageResource(R.drawable.deploy_smoke_example);
+                            return;
+                        } else if ("fhsj_ch4".equals(deployAnalyzerModel.deviceType) || "baymax_ch4".equals(deployAnalyzerModel.deviceType)) {
+                            getView().setDeployLocalCheckTipText(mActivity.getString(R.string.deploy_check_button_tip_press_the_sensor));
+                            getView().setDeviceExampleVisible(true);
+                            getView().setDeviceExampleImageResource(R.drawable.icon_ch4);
+                            return;
+                        }
+                    }
+                    getView().setDeployLocalCheckTipText("");
+                }
             }
+            getView().setDeviceExampleVisible(false);
+        } else {
+            getView().setDeployLocalCheckTipText(mActivity.getString(R.string.deploy_device_detail_add_all_required));
+            DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deployAnalyzerModel.deviceType);
+            if (configDeviceType != null) {
+                String mergeType = configDeviceType.getMergeType();
+                if ("smoke".equals(mergeType)) {
+                    getView().setDeviceExampleVisible(true);
+                    getView().setDeviceExampleImageResource(R.drawable.deploy_smoke_example);
+                    return;
+                } else if ("fhsj_ch4".equals(deployAnalyzerModel.deviceType) || "baymax_ch4".equals(deployAnalyzerModel.deviceType)) {
+                    getView().setDeviceExampleVisible(true);
+                    getView().setDeviceExampleImageResource(R.drawable.icon_ch4);
+                    return;
+                }
+            }
+            getView().setDeviceExampleVisible(false);
         }
-        getView().setDeviceExampleVisible(false);
+
 
     }
 

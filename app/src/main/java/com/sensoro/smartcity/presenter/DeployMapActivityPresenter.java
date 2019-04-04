@@ -110,6 +110,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
         StringBuilder stringBuilder = new StringBuilder();
         //
         String province = regeocodeAddress.getProvince();
+        String city = regeocodeAddress.getCity();
         //
         String district = regeocodeAddress.getDistrict();// 区或县或县级市
         //
@@ -137,10 +138,17 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
         }
         //
         String building = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
-        //区县
+        //省
         if (!TextUtils.isEmpty(province)) {
             stringBuilder.append(province);
         }
+        //市
+        if (!TextUtils.isEmpty(city)) {
+            if (!city.contains(province)) {
+                stringBuilder.append(city);
+            }
+        }
+        //区县
         if (!TextUtils.isEmpty(district)) {
             stringBuilder.append(district);
         }

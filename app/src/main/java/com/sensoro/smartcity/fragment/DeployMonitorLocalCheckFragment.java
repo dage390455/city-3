@@ -296,15 +296,11 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
     }
 
     @Override
-    public void updateBtnStatus(boolean canConfig) {
-        tvFgDeployLocalButton.setEnabled(canConfig);
-        tvFgDeployLocalButton.setClickable(canConfig);
-        tvFgDeployLocalButton.setBackgroundResource(canConfig ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_solid_df_corner);
-        if (canConfig) {
-            mPresenter.updateCheckTipText();
-        } else {
-            setDeployLocalCheckTipText(mRootFragment.getString(R.string.deploy_device_detail_add_all_required));
-        }
+    public void updateBtnStatus(boolean hasConfig) {
+        tvFgDeployLocalButton.setEnabled(hasConfig);
+        tvFgDeployLocalButton.setClickable(hasConfig);
+        tvFgDeployLocalButton.setBackgroundResource(hasConfig ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_solid_df_corner);
+        mPresenter.updateCheckTipText(hasConfig);
     }
 
     @Override
