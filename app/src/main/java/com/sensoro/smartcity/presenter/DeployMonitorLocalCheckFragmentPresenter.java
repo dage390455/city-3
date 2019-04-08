@@ -89,6 +89,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     private String tempSignalQuality;
     private String tempSignal = "none";
     private DeployAnalyzerModel deployAnalyzerModel;
+    private long initTime;
 
 
     @Override
@@ -739,16 +740,31 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
      *
      * @return
      */
-    private int checkSignalState() {
-        long time_diff = System.currentTimeMillis() - deployAnalyzerModel.updatedTime;
-        if (tempSignal != null && (time_diff < 2 * 60 * 1000)) {
-            switch (tempSignal) {
-                case "good":
-                    return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD;
-                case "normal":
-                    return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NORMAL;
-                case "bad":
-                    return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD;
+    private int checkSignalState(boolean needConfig) {
+        if (needConfig) {
+            //需要蓝牙配置的话只需要信号的状态大于配置成功后的时间点即可
+            if (tempSignal != null && deployAnalyzerModel.updatedTime - initTime > 0) {
+                switch (tempSignal) {
+                    case "good":
+                        return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD;
+                    case "normal":
+                        return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NORMAL;
+                    case "bad":
+                        return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD;
+                }
+            }
+        } else {
+            //不需要蓝牙配置的只要在两分钟内便认为有效
+            long time_diff = System.currentTimeMillis() - deployAnalyzerModel.updatedTime;
+            if (tempSignal != null && (time_diff < 2 * 60 * 1000)) {
+                switch (tempSignal) {
+                    case "good":
+                        return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD;
+                    case "normal":
+                        return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NORMAL;
+                    case "bad":
+                        return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD;
+                }
             }
         }
         return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NONE;
@@ -877,11 +893,13 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                     connectDevice(new OnConfigInfoObserver() {
                         @Override
                         public void onSuccess() {
+
                             if (isAttachedView()) {
+
                                 HandlerDeployCheck.OnMessageDeal signalMsgDeal = new HandlerDeployCheck.OnMessageDeal() {
                                     @Override
                                     public void onNext() {
-                                        int signalState = checkSignalState();
+                                        int signalState = checkSignalState(true);
                                         switch (signalState) {
                                             case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD:
                                                 getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_SUC_GOOD, "", false);
@@ -901,7 +919,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
                                     @Override
                                     public void onFinish() {
-                                        int state = checkSignalState();
+                                        int state = checkSignalState(true);
                                         switch (state) {
                                             case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NONE:
                                                 tempForceReason = "signalQuality";
@@ -923,6 +941,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                 checkHandler.dealMessage(3, signalMsgDeal);
                                 getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_SUC, "", false);
                                 getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_START, "", false);
+                                initTime = System.currentTimeMillis();
                             }
                         }
 
@@ -1041,7 +1060,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         HandlerDeployCheck.OnMessageDeal signalMsgDeal = new HandlerDeployCheck.OnMessageDeal() {
             @Override
             public void onNext() {
-                int signalState = checkSignalState();
+                int signalState = checkSignalState(false);
                 switch (signalState) {
                     case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD:
                         getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_SUC_GOOD, "", false);
@@ -1061,7 +1080,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
             @Override
             public void onFinish() {
-                int state = checkSignalState();
+                int state = checkSignalState(false);
                 switch (state) {
                     case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NONE:
                         tempForceReason = "signalQuality";
