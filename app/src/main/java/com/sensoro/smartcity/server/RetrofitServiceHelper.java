@@ -504,8 +504,8 @@ public class RetrofitServiceHelper {
         return deployRecordList;
     }
 
-    public Observable<DeviceStatusRsp> getDeviceRealStatus(String sn) {
-        Observable<DeviceStatusRsp> realStatus = retrofitService.getRealStatus(sn);
+    public Observable<DeviceDeployRsp> getDeviceRealStatus(String sn) {
+        Observable<DeviceDeployRsp> realStatus = retrofitService.getRealStatus(sn);
         RxApiManager.getInstance().add("getDeviceRealStatus", realStatus.subscribe());
         return realStatus;
     }

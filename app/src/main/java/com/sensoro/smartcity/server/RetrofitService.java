@@ -165,7 +165,7 @@ public interface RetrofitService {
     Observable<DeviceDeployRsp> doDevicePointDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
 
     @GET("devices/realStatus/{sn}")
-    Observable<DeviceStatusRsp> getRealStatus(@Path("sn") String sn);
+    Observable<DeviceDeployRsp> getRealStatus(@Path("sn") String sn);
 
 
     @GET(DEPLOY_DEVICE_DETAIL)
