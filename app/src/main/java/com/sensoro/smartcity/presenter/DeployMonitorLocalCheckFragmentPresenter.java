@@ -1175,11 +1175,10 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
     private String handleAlarmReason(DeviceInfo deviceInfo) {
         DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deviceInfo.getDeviceType());
-        StringBuilder sb = new StringBuilder(mActivity.getString(R.string.device_is_alarm));
         if (configDeviceType == null) {
-            sb.append(mActivity.getString(R.string.deploy_check_suggest_repair_instruction));
-            return sb.toString();
+            return "";
         }
+        StringBuilder sb = new StringBuilder(mActivity.getString(R.string.device_is_alarm));
         Map<String, SensorStruct> sensoroDetails = deviceInfo.getSensoroDetails();
         if (sensoroDetails != null && sensoroDetails.size() > 0) {
             ArrayList<String> sensoroTypes = new ArrayList<>(sensoroDetails.keySet());
@@ -1194,11 +1193,10 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             if (s.endsWith("、")) {
                 s = s.substring(0, s.lastIndexOf("、"));
             }
-            s += mActivity.getString(R.string.deploy_check_suggest_repair_instruction);
+            s += "，";
             return s;
         } else {
-            sb.append(mActivity.getString(R.string.deploy_check_suggest_repair_instruction));
-            return sb.toString();
+            return "";
         }
     }
 
@@ -1209,17 +1207,13 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         if (malfunctionData != null) {
             LinkedHashSet<String> linkedHashSet = new LinkedHashSet<>();
             Set<Map.Entry<String, MalfunctionDataBean>> entrySet = malfunctionData.entrySet();
-            if (entrySet != null) {
-                for (Map.Entry<String, MalfunctionDataBean> entry : entrySet) {
-                    MalfunctionDataBean entryValue = entry.getValue();
-                    if (entryValue != null) {
-                        Map<String, MalfunctionDataBean> details = entryValue.getDetails();
-                        if (details != null) {
-                            Set<String> keySet = details.keySet();
-                            if (keySet != null) {
-                                linkedHashSet.addAll(keySet);
-                            }
-                        }
+            for (Map.Entry<String, MalfunctionDataBean> entry : entrySet) {
+                MalfunctionDataBean entryValue = entry.getValue();
+                if (entryValue != null) {
+                    Map<String, MalfunctionDataBean> details = entryValue.getDetails();
+                    if (details != null) {
+                        Set<String> keySet = details.keySet();
+                        linkedHashSet.addAll(keySet);
                     }
                 }
             }
@@ -1234,12 +1228,16 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             }
         }
         StringBuilder sb = new StringBuilder(mActivity.getString(R.string.device_is_malfunction));
-        for (int i = 0; i < malfunctionBeanData.size(); i++) {
-            if (i == malfunctionBeanData.size() - 1) {
-                sb.append(malfunctionBeanData.get(i)).append(mActivity.getString(R.string.deploy_check_suggest_repair_instruction));
-            } else {
-                sb.append(malfunctionBeanData.get(i)).append("、");
+        if (malfunctionBeanData.size() > 0) {
+            for (int i = 0; i < malfunctionBeanData.size(); i++) {
+                if (i == malfunctionBeanData.size() - 1) {
+                    sb.append(malfunctionBeanData.get(i)).append("，");
+                } else {
+                    sb.append(malfunctionBeanData.get(i)).append("、");
+                }
             }
+        } else {
+            return "";
         }
         return sb.toString();
     }
