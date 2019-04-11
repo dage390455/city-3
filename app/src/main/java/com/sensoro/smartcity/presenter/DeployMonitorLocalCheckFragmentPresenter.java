@@ -1174,19 +1174,24 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     }
 
     private String handleAlarmReason(DeviceInfo deviceInfo) {
+        StringBuilder sb = new StringBuilder(mActivity.getString(R.string.device_is_alarm));
         DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deviceInfo.getDeviceType());
         if (configDeviceType == null) {
-            return "";
+            return sb.toString();
         }
-        StringBuilder sb = new StringBuilder(mActivity.getString(R.string.device_is_alarm));
         Map<String, SensorStruct> sensoroDetails = deviceInfo.getSensoroDetails();
         if (sensoroDetails != null && sensoroDetails.size() > 0) {
             ArrayList<String> sensoroTypes = new ArrayList<>(sensoroDetails.keySet());
             Collections.sort(sensoroTypes);
+            sb.append(mActivity.getString(R.string.reason)).append("：");
             for (String sensoroType : sensoroTypes) {
                 MonitoringPointRcContentAdapterModel model = MonitorPointModelsFactory.createMonitoringPointRcContentAdapterModel(mActivity, deviceInfo, sensoroDetails, sensoroType);
                 if (model != null && model.hasAlarmStatus()) {
-                    sb.append(model.name).append(" ").append(model.content).append("、");
+                    sb.append(model.name).append(" ").append(model.content);
+                    if (!TextUtils.isEmpty(model.unit)) {
+                        sb.append(model.unit);
+                    }
+                    sb.append("、");
                 }
             }
             String s = sb.toString();
@@ -1196,7 +1201,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             s += "，";
             return s;
         } else {
-            return "";
+            return sb.toString();
         }
     }
 
@@ -1229,6 +1234,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         }
         StringBuilder sb = new StringBuilder(mActivity.getString(R.string.device_is_malfunction));
         if (malfunctionBeanData.size() > 0) {
+            sb.append(mActivity.getString(R.string.reason)).append("：");
             for (int i = 0; i < malfunctionBeanData.size(); i++) {
                 if (i == malfunctionBeanData.size() - 1) {
                     sb.append(malfunctionBeanData.get(i)).append("，");
@@ -1236,8 +1242,6 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                     sb.append(malfunctionBeanData.get(i)).append("、");
                 }
             }
-        } else {
-            return "";
         }
         return sb.toString();
     }
