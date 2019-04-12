@@ -233,7 +233,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="16dp"
-                        android:text="@string/air_rated_current"
+                        android:text="@string/rated_current_colon"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="12sp"
                         app:layout_constraintBottom_toTopOf="@+id/tv_in_line_total_ac_wire_material_diameter"
