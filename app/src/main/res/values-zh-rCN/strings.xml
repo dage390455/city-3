@@ -794,7 +794,7 @@
     <string name="cu">铜芯</string>
     <string name="al">铝芯</string>
     <string name="please_set_initial_configuration">请先设置初始配置信息</string>
-    <string name="actual_overcurrent_threshold_format">实际过流阈值：%dA</string>
+    <string name="actual_overcurrent_threshold_format">实际过流阈值（三项额定电流最小值）：</string>
     <string name="business_name_phone">商户名称/联系人电话</string>
     <string name="empty_open_rated_current_is_out_of_range">空开额定电流超出范围</string>
     <string name="wire_current_carrying_capacity_is_not_within_the_open_range">电线载流量不在空开量程范围内</string>
@@ -837,7 +837,7 @@
     <string name="s_normal">良</string>
     <string name="s_bad">差</string>
     <string name="s_none">无</string>
-    <string name="air_rated_current">空开额定电流</string>
+    <string name="air_rated_current">空开额定电流：</string>
     <string name="monitor_material">线材</string>
     <string name="splash_copyright">Copyright \u00a9 %s SENSORO</string>
     <string name="device_demo_mode">演示模式</string>
@@ -913,5 +913,27 @@
     <string name="deploy_check_record_reason_config">设备初始配置失败</string>
     <string name="deploy_check_record_reason_signal">设备信号：</string>
     <string name="deploy_check_record_reason_status">设备状态：</string>
+    <string name="in_line">进线</string>
+    <string name="out_line">出线</string>
+    <string name="current_transformer">电流互感器：</string>
+    <string name="leakage_current_transformer">漏电流互感器：</string>
+    <string name="recommend_transformer">匹配互感器</string>
+    <string name="rated_current_no">额定电流</string>
+    <string name="wire_material_diameter_calculator">线材线径计算器</string>
+    <string name="wire_material_diameter_tip">输入空开、进线、出线参数，即可获取互感器型号</string>
+    <string name="count_unit">数量/根</string>
+    <string name="delete_this_group">删除本组</string>
+    <string name="not_matched_current_transformer">暂无推荐，请联系升哲研发人员确认</string>
+    <string name="air_open_arguments">空开参数</string>
+    <string name="air_open_rated_current">空开标注额定电流/A (1&#8211;560A)</string>
+    <string name="diameter_arguments_tip">电线参数，请根据现场实际情况进行选择</string>
+    <string name="match_result">匹配结果</string>
+    <string name="look_detail">查看详情</string>
+    <string name="in_line_total_current">进线总额定电流：</string>
+    <string name="out_line_total_current">出线总额定电流：</string>
+    <string name="rated_current_match_tramformer">根据线路实际过流阈值，匹配互感器型号如上方显示</string>
+    <string name="add_wire">添加</string>
+    <string name="diameter_mm">线径/mm²</string>
+    <string name="please_input_air_rated_current">请输入空开额定电流</string>
 
 </resources>

@@ -419,10 +419,15 @@ public class AppUtils {
 //    }
 
     public static void dismissInputMethodManager(Context context, EditText editText) {
-        editText.setCursorVisible(false);
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);//从控件所在的窗口中隐藏
         editText.setCursorVisible(false);
+    }
+
+    public static void dismissInputMethodManager(Context context, EditText editText,boolean cursorVisible) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);//从控件所在的窗口中隐藏
+        editText.setCursorVisible(cursorVisible);
     }
 
     public static void openInputMethodManager(Context context, EditText editText) {

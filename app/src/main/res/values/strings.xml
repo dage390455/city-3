@@ -845,7 +845,7 @@
     <string name="s_normal">Normal</string>
     <string name="s_bad">Bad</string>
     <string name="s_none">None</string>
-    <string name="air_rated_current">Air rated current</string>
+    <string name="air_rated_current">Air rated current:</string>
     <string name="monitor_material">Material</string>
     <string name="splash_copyright">Copyright \u00a9 %s SENSORO</string>
     <string name="device_demo_mode">Demo mode</string>
@@ -924,4 +924,27 @@
     <string name="deploy_check_record_reason_config">Device config setting failed</string>
     <string name="deploy_check_record_reason_signal">Device signal:</string>
     <string name="deploy_check_record_reason_status">Device status:</string>
+    <string name="air_open">空开</string>
+    <string name="in_line">进线</string>
+    <string name="out_line">出线</string>
+    <string name="current_transformer">电流互感器</string>
+    <string name="leakage_current_transformer">漏电流互感器</string>
+    <string name="recommend_transformer">推荐互感器</string>
+    <string name="rated_current_no">Rated Current</string>
+    <string name="wire_material_diameter_calculator">线材线径计算器</string>
+    <string name="wire_material_diameter_tip">输入空开、进线、出线参数，即可获取互感器型号</string>
+    <string name="count_unit">数量</string>
+    <string name="delete_this_group">删除本组</string>
+    <string name="not_matched_current_transformer">未匹配到合适电流互感器</string>
+    <string name="air_open_arguments">空开参数</string>
+    <string name="air_open_rated_current">空开标注额定电流/A (0-560A)</string>
+    <string name="diameter_arguments_tip">电线参数，请根据现场实际情况进行选择</string>
+    <string name="match_result">匹配结果</string>
+    <string name="look_detail">查看详情</string>
+    <string name="in_line_total_current">进线总额定电流</string>
+    <string name="out_line_total_current">出线总额定电流：</string>
+    <string name="rated_current_match_tramformer">根据线路实际过流阈值，匹配互感器型号如上方显示</string>
+    <string name="add_wire">添加</string>
+    <string name="diameter_mm">线径/mm²</string>
+    <string name="please_input_air_rated_current">请输入空开额定电流</string>
 </resources>
