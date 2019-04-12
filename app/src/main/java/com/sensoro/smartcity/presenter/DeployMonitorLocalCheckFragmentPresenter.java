@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.geocoder.GeocodeResult;
@@ -39,7 +38,6 @@ import com.sensoro.smartcity.imainviews.IDeployMonitorLocalCheckFragmentView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
-import com.sensoro.smartcity.model.Elect3DetailModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.MaterialValueModel;
 import com.sensoro.smartcity.server.CityObserver;
@@ -48,7 +46,6 @@ import com.sensoro.smartcity.server.RetryWithDelay;
 import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
-import com.sensoro.smartcity.server.bean.DisplayOptionsBean;
 import com.sensoro.smartcity.server.bean.MalfunctionDataBean;
 import com.sensoro.smartcity.server.bean.MalfunctionTypeStyles;
 import com.sensoro.smartcity.server.bean.MergeTypeStyles;
@@ -92,6 +89,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     private String tempSignalQuality;
     private String tempSignal = "none";
     private DeployAnalyzerModel deployAnalyzerModel;
+    private long initTime;
 
 
     @Override
@@ -742,16 +740,31 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
      *
      * @return
      */
-    private int checkSignalState() {
-        long time_diff = System.currentTimeMillis() - deployAnalyzerModel.updatedTime;
-        if (tempSignal != null && (time_diff < 2 * 60 * 1000)) {
-            switch (tempSignal) {
-                case "good":
-                    return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD;
-                case "normal":
-                    return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NORMAL;
-                case "bad":
-                    return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD;
+    private int checkSignalState(boolean needConfig) {
+        if (needConfig) {
+            //需要蓝牙配置的话只需要信号的状态大于配置成功后的时间点即可
+            if (tempSignal != null && deployAnalyzerModel.updatedTime - initTime > 0) {
+                switch (tempSignal) {
+                    case "good":
+                        return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD;
+                    case "normal":
+                        return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NORMAL;
+                    case "bad":
+                        return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD;
+                }
+            }
+        } else {
+            //不需要蓝牙配置的只要在两分钟内便认为有效
+            long time_diff = System.currentTimeMillis() - deployAnalyzerModel.updatedTime;
+            if (tempSignal != null && (time_diff < 2 * 60 * 1000)) {
+                switch (tempSignal) {
+                    case "good":
+                        return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD;
+                    case "normal":
+                        return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NORMAL;
+                    case "bad":
+                        return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD;
+                }
             }
         }
         return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NONE;
@@ -880,11 +893,13 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                     connectDevice(new OnConfigInfoObserver() {
                         @Override
                         public void onSuccess() {
+
                             if (isAttachedView()) {
+
                                 HandlerDeployCheck.OnMessageDeal signalMsgDeal = new HandlerDeployCheck.OnMessageDeal() {
                                     @Override
                                     public void onNext() {
-                                        int signalState = checkSignalState();
+                                        int signalState = checkSignalState(true);
                                         switch (signalState) {
                                             case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD:
                                                 getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_SUC_GOOD, "", false);
@@ -904,7 +919,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
                                     @Override
                                     public void onFinish() {
-                                        int state = checkSignalState();
+                                        int state = checkSignalState(true);
                                         switch (state) {
                                             case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NONE:
                                                 tempForceReason = "signalQuality";
@@ -926,6 +941,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                 checkHandler.dealMessage(3, signalMsgDeal);
                                 getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_SUC, "", false);
                                 getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_START, "", false);
+                                initTime = System.currentTimeMillis();
                             }
                         }
 
@@ -1044,7 +1060,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         HandlerDeployCheck.OnMessageDeal signalMsgDeal = new HandlerDeployCheck.OnMessageDeal() {
             @Override
             public void onNext() {
-                int signalState = checkSignalState();
+                int signalState = checkSignalState(false);
                 switch (signalState) {
                     case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD:
                         getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_SUC_GOOD, "", false);
@@ -1064,7 +1080,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
             @Override
             public void onFinish() {
-                int state = checkSignalState();
+                int state = checkSignalState(false);
                 switch (state) {
                     case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NONE:
                         tempForceReason = "signalQuality";
@@ -1158,63 +1174,51 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     }
 
     private String handleAlarmReason(DeviceInfo deviceInfo) {
-        DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deviceInfo.getDeviceType());
         StringBuilder sb = new StringBuilder(mActivity.getString(R.string.device_is_alarm));
+        DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deviceInfo.getDeviceType());
         if (configDeviceType == null) {
-            sb.append(mActivity.getString(R.string.deploy_check_suggest_repair_instruction));
             return sb.toString();
         }
-
-        DisplayOptionsBean displayOptions = configDeviceType.getDisplayOptions();
-        if (displayOptions == null) {
-            sb.append(mActivity.getString(R.string.deploy_check_suggest_repair_instruction));
-            return sb.toString();
-        }
-
         Map<String, SensorStruct> sensoroDetails = deviceInfo.getSensoroDetails();
-        ArrayList<String> sensoroTypes = new ArrayList<>();
-        if (sensoroDetails != null && sensoroDetails.size()>0) {
-            for (String s : sensoroDetails.keySet()) {
-                sensoroTypes.add(s);
-            }
+        if (sensoroDetails != null && sensoroDetails.size() > 0) {
+            ArrayList<String> sensoroTypes = new ArrayList<>(sensoroDetails.keySet());
             Collections.sort(sensoroTypes);
+            sb.append(mActivity.getString(R.string.reason)).append("：");
             for (String sensoroType : sensoroTypes) {
                 MonitoringPointRcContentAdapterModel model = MonitorPointModelsFactory.createMonitoringPointRcContentAdapterModel(mActivity, deviceInfo, sensoroDetails, sensoroType);
                 if (model != null && model.hasAlarmStatus()) {
-                    sb.append(model.name).append(" ").append(model.content).append("、");
+                    sb.append(model.name).append(" ").append(model.content);
+                    if (!TextUtils.isEmpty(model.unit)) {
+                        sb.append(model.unit);
+                    }
+                    sb.append("、");
                 }
             }
             String s = sb.toString();
             if (s.endsWith("、")) {
-                s = s.substring(0,s.lastIndexOf("、"));
+                s = s.substring(0, s.lastIndexOf("、"));
             }
-            s += mActivity.getString(R.string.deploy_check_suggest_repair_instruction);
+            s += "，";
             return s;
-        }else{
-
-            sb.append(mActivity.getString(R.string.deploy_check_suggest_repair_instruction));
+        } else {
             return sb.toString();
         }
     }
 
-    private  String handleMalfunctionReason(DeviceInfo deviceInfo) {
+    private String handleMalfunctionReason(DeviceInfo deviceInfo) {
         ArrayList<String> malfunctionBeanData = new ArrayList<>();
         Map<String, MalfunctionDataBean> malfunctionData = deviceInfo.getMalfunctionData();
         //TODO 添加故障字段数组
         if (malfunctionData != null) {
             LinkedHashSet<String> linkedHashSet = new LinkedHashSet<>();
             Set<Map.Entry<String, MalfunctionDataBean>> entrySet = malfunctionData.entrySet();
-            if (entrySet != null) {
-                for (Map.Entry<String, MalfunctionDataBean> entry : entrySet) {
-                    MalfunctionDataBean entryValue = entry.getValue();
-                    if (entryValue != null) {
-                        Map<String, MalfunctionDataBean> details = entryValue.getDetails();
-                        if (details != null) {
-                            Set<String> keySet = details.keySet();
-                            if (keySet != null) {
-                                linkedHashSet.addAll(keySet);
-                            }
-                        }
+            for (Map.Entry<String, MalfunctionDataBean> entry : entrySet) {
+                MalfunctionDataBean entryValue = entry.getValue();
+                if (entryValue != null) {
+                    Map<String, MalfunctionDataBean> details = entryValue.getDetails();
+                    if (details != null) {
+                        Set<String> keySet = details.keySet();
+                        linkedHashSet.addAll(keySet);
                     }
                 }
             }
@@ -1229,11 +1233,14 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             }
         }
         StringBuilder sb = new StringBuilder(mActivity.getString(R.string.device_is_malfunction));
-        for (int i = 0; i < malfunctionBeanData.size(); i++) {
-            if (i == malfunctionBeanData.size() -1) {
-                sb.append(malfunctionBeanData.get(i)).append(mActivity.getString(R.string.deploy_check_suggest_repair_instruction));
-            }else{
-                sb.append(malfunctionBeanData.get(i)).append("、");
+        if (malfunctionBeanData.size() > 0) {
+            sb.append(mActivity.getString(R.string.reason)).append("：");
+            for (int i = 0; i < malfunctionBeanData.size(); i++) {
+                if (i == malfunctionBeanData.size() - 1) {
+                    sb.append(malfunctionBeanData.get(i)).append("，");
+                } else {
+                    sb.append(malfunctionBeanData.get(i)).append("、");
+                }
             }
         }
         return sb.toString();

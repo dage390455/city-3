@@ -18,7 +18,6 @@ import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
-import com.sensoro.smartcity.server.response.DeviceStatusRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 import com.sensoro.smartcity.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
@@ -58,8 +57,8 @@ public interface RetrofitService {
     String SCOPE_DEMO = "https://city-demo-api.sensoro.com/";
     //测试环境
     String SCOPE_TEST = "https://city-test-api.sensoro.com/";
-    //摩卡环境
-    String SCOPE_MOCHA = "https://mocha-city-api.sensoro.com/";
+    //预发布环境
+    String SCOPE_MOCHA = "https://city-pre-api.sensoro.com/";
     //    String SCOPE_MOCHA = "http://xiaolai.ngrok.gkzyk.com/";
     //正式环境
     String SCOPE_MASTER = "https://city-api.sensoro.com/";
