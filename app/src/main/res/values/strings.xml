@@ -934,7 +934,7 @@
     <string name="wire_material_diameter_tip">Enter the parameters of the open, incoming, and outgoing lines to obtain the transformer model</string>
     <string name="count_unit">Count</string>
     <string name="delete_this_group">Delete</string>
-    <string name="not_matched_current_transformer">No recommendation, please contact Shengzhe R &amp; D personnel to confirm</string>
+    <string name="not_matched_current_transformer">No recommendation, please contact Sensoro R &amp; D personnel to confirm</string>
     <string name="air_open_arguments">Parameter</string>
     <string name="air_open_rated_current">Rated current/A (0&#8211;560A)</string>
     <string name="diameter_arguments_tip">Wire parameters, please choose according to the actual situation on site</string>
