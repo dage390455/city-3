@@ -20,8 +20,8 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeoutException;
 
+import io.reactivex.Observer;
 import retrofit2.HttpException;
-import rx.Observer;
 
 import static com.sensoro.smartcity.constant.Constants.EVENT_DATA_SESSION_ID_OVERTIME;
 
@@ -205,7 +205,7 @@ public abstract class CityObserver<T> implements Observer<T> {
     }
 
     @Override
-    public void onCompleted() {
+    public void onComplete() {
         if (presenterWeakReference != null) {
             presenterWeakReference.clear();
         }
