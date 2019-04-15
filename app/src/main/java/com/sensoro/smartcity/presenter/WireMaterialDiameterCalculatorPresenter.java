@@ -61,11 +61,9 @@ public class WireMaterialDiameterCalculatorPresenter extends BasePresenter<IWire
 
     public void doOutLineItemClick(int position, boolean isAction) {
         mIsInlineClick = false;
-        mClickPosition = position-1;
+        mClickPosition = position;
         mIsAction = isAction;
-        if (isAction) {
-            getView().setPickerViewSelectOptions(0, 6, 0);
-        } else {
+        if (!isAction && mClickPosition != -1) {
             WireMaterialDiameterModel model = mOutLineList.get(mClickPosition);
             model.isSelected = true;
             getView().setPickerViewSelectOptions(model.material - 1, pickerStrings.indexOf(String.valueOf(model.diameter)), model.count - 1);
@@ -78,11 +76,9 @@ public class WireMaterialDiameterCalculatorPresenter extends BasePresenter<IWire
 
     public void doInLineItemClick(int position, boolean isAction) {
         mIsInlineClick = true;
-        mClickPosition = position-1;
+        mClickPosition = position;
         mIsAction = isAction;
-        if (isAction) {
-            getView().setPickerViewSelectOptions(0, 6, 0);
-        } else {
+        if (!isAction && mClickPosition != -1) {
             WireMaterialDiameterModel model = mInLineList.get(mClickPosition);
             model.isSelected = true;
             getView().setPickerViewSelectOptions(model.material, pickerStrings.indexOf(String.valueOf(model.diameter)), model.count - 1);
@@ -105,21 +101,24 @@ public class WireMaterialDiameterCalculatorPresenter extends BasePresenter<IWire
                 getView().updateOutLineData(mOutLineList);
             }
         } else {
-            if (mIsInlineClick) {
-                WireMaterialDiameterModel model = mInLineList.get(mClickPosition);
-                model.material = material;
-                model.isSelected = false;
-                model.diameter = pickerStrings.get(diameter);
-                model.count = count;
-                getView().updateInLineData(mInLineList);
-            } else {
-                WireMaterialDiameterModel model = mOutLineList.get(mClickPosition);
-                model.material = material;
-                model.isSelected = false;
-                model.diameter = pickerStrings.get(diameter);
-                model.count = count;
-                getView().updateOutLineData(mOutLineList);
+            if (mClickPosition != -1) {
+                if (mIsInlineClick) {
+                    WireMaterialDiameterModel model = mInLineList.get(mClickPosition);
+                    model.material = material;
+                    model.isSelected = false;
+                    model.diameter = pickerStrings.get(diameter);
+                    model.count = count;
+                    getView().updateInLineData(mInLineList);
+                } else {
+                    WireMaterialDiameterModel model = mOutLineList.get(mClickPosition);
+                    model.material = material;
+                    model.isSelected = false;
+                    model.diameter = pickerStrings.get(diameter);
+                    model.count = count;
+                    getView().updateOutLineData(mOutLineList);
+                }
             }
+
         }
         checkRecommendTransformer();
         getView().dismissPickerView();
@@ -127,17 +126,20 @@ public class WireMaterialDiameterCalculatorPresenter extends BasePresenter<IWire
 
     public void doDeleteGroup() {
         if(!mIsAction){
-            if (mIsInlineClick) {
-                if (mClickPosition < mInLineList.size()) {
-                    mInLineList.remove(mClickPosition);
-                    getView().updateInLineData(mInLineList);
-                }
-            } else {
-                if (mClickPosition < mOutLineList.size()) {
-                    mOutLineList.remove(mClickPosition);
-                    getView().updateOutLineData(mOutLineList);
+            if (mClickPosition != -1) {
+                if (mIsInlineClick) {
+                    if (mClickPosition < mInLineList.size()) {
+                        mInLineList.remove(mClickPosition);
+                        getView().updateInLineData(mInLineList);
+                    }
+                } else {
+                    if (mClickPosition < mOutLineList.size()) {
+                        mOutLineList.remove(mClickPosition);
+                        getView().updateOutLineData(mOutLineList);
+                    }
                 }
             }
+
         }
         checkRecommendTransformer();
         getView().dismissPickerView();
@@ -228,7 +230,6 @@ public class WireMaterialDiameterCalculatorPresenter extends BasePresenter<IWire
                     model.isSelected = false;
                     isNeedUpdate = true;
                 }
-
             }
 
             if (isNeedUpdate) {
@@ -237,5 +238,27 @@ public class WireMaterialDiameterCalculatorPresenter extends BasePresenter<IWire
         }
 
 
+    }
+
+    public void doAddInLine() {
+        mIsInlineClick = true;
+        mIsAction = true;
+        mClickPosition = -1;
+        getView().setPickerViewSelectOptions(0, 6, 0);
+        getView().updateInLineData(mInLineList);
+        getView().setPickerTitle(mActivity.getString(R.string.in_line));
+        getView().showPickerView();
+        getView().setResultVisible(false);
+    }
+
+    public void doAddOutLine() {
+        mIsInlineClick = false;
+        mClickPosition = -1;
+        mIsAction = true;
+        getView().setPickerViewSelectOptions(0, 6, 0);
+        getView().updateOutLineData(mOutLineList);
+        getView().setPickerTitle(mActivity.getString(R.string.out_line));
+        getView().showPickerView();
+        getView().setResultVisible(false);
     }
 }

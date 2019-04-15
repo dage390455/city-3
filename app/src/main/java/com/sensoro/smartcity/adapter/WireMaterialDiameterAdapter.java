@@ -33,7 +33,6 @@ public class WireMaterialDiameterAdapter extends RecyclerView.Adapter<WireMateri
     private final int flBgGreenColor;
     private final int flBgWhiteColor;
     private final int flBgBlackColor;
-    private final Drawable addDrawable;
 
     public WireMaterialDiameterAdapter(Context context) {
         mContext = context;
@@ -43,10 +42,7 @@ public class WireMaterialDiameterAdapter extends RecyclerView.Adapter<WireMateri
         flBgGreenColor = resources.getColor(R.color.c_29c093);
         flBgWhiteColor = resources.getColor(R.color.white);
         flBgBlackColor = resources.getColor(R.color.c_252525);
-        addDrawable = mContext.getDrawable(R.drawable.wire_add);
-        if (addDrawable != null) {
-            addDrawable.setBounds(0,0,addDrawable.getMinimumWidth(),addDrawable.getMinimumHeight());
-        }
+
     }
 
 
@@ -60,7 +56,7 @@ public class WireMaterialDiameterAdapter extends RecyclerView.Adapter<WireMateri
             public void onClick(View v) {
                 if (mListener != null) {
                     Integer position = (Integer) holder.flTittleItemAdapterWireMaterialDiameter.getTag();
-                    mListener.onItemClick(position, position == 0);
+                    mListener.onItemClick(position, false);
                 }
             }
         });
@@ -70,27 +66,27 @@ public class WireMaterialDiameterAdapter extends RecyclerView.Adapter<WireMateri
     @Override
     public void onBindViewHolder(@NonNull WireMaterialDiameterViewHolder holder, int position) {
         holder.flTittleItemAdapterWireMaterialDiameter.setTag(position);
-        if(position == 0){
-            holder.flTittleItemAdapterWireMaterialDiameter.setBackground(null);
-            if(getItemCount() == 6){
-                holder.tvTitleItemAdapterWireMaterialDiameter.setText(mContext.getString(R.string.add_wire));
-                holder.flWrapItemAdapterWireMaterialDiameter.setBackground(noClickBgDrawable);
-                holder.tvTitleItemAdapterWireMaterialDiameter.setClickable(false);
-                holder.flTittleItemAdapterWireMaterialDiameter.setClickable(false);
-                holder.tvTitleItemAdapterWireMaterialDiameter.setTextColor(Color.WHITE);
-                addDrawable.setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.SRC_ATOP);
-                holder.tvTitleItemAdapterWireMaterialDiameter.setCompoundDrawables(addDrawable,null,null,null);
-
-            }else{
-                holder.tvTitleItemAdapterWireMaterialDiameter.setText(mContext.getString(R.string.add_wire));
-                holder.tvTitleItemAdapterWireMaterialDiameter.setTextColor(flBgBlackColor);
-                holder.flWrapItemAdapterWireMaterialDiameter.setBackground(bgDrawable);
-                addDrawable.setColorFilter(Color.parseColor("#000000"), PorterDuff.Mode.SRC_ATOP);
-                holder.tvTitleItemAdapterWireMaterialDiameter.setCompoundDrawables(addDrawable,null,null,null);
-            }
-        }else{
+//        if(position == 0){
+//            holder.flTittleItemAdapterWireMaterialDiameter.setBackground(null);
+//            if(getItemCount() == 6){
+//                holder.tvTitleItemAdapterWireMaterialDiameter.setText(mContext.getString(R.string.add_wire));
+//                holder.flWrapItemAdapterWireMaterialDiameter.setBackground(noClickBgDrawable);
+//                holder.tvTitleItemAdapterWireMaterialDiameter.setClickable(false);
+//                holder.flTittleItemAdapterWireMaterialDiameter.setClickable(false);
+//                holder.tvTitleItemAdapterWireMaterialDiameter.setTextColor(Color.WHITE);
+//                addDrawable.setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.SRC_ATOP);
+//                holder.tvTitleItemAdapterWireMaterialDiameter.setCompoundDrawables(addDrawable,null,null,null);
+//
+//            }else{
+//                holder.tvTitleItemAdapterWireMaterialDiameter.setText(mContext.getString(R.string.add_wire));
+//                holder.tvTitleItemAdapterWireMaterialDiameter.setTextColor(flBgBlackColor);
+//                holder.flWrapItemAdapterWireMaterialDiameter.setBackground(bgDrawable);
+//                addDrawable.setColorFilter(Color.parseColor("#000000"), PorterDuff.Mode.SRC_ATOP);
+//                holder.tvTitleItemAdapterWireMaterialDiameter.setCompoundDrawables(addDrawable,null,null,null);
+//            }
+//        }else{
             holder.tvTitleItemAdapterWireMaterialDiameter.setCompoundDrawables(null,null,null,null);
-            WireMaterialDiameterModel model = mList.get(position - 1);
+            WireMaterialDiameterModel model = mList.get(position);
             holder.flTittleItemAdapterWireMaterialDiameter.setBackgroundColor(model.isSelected ? flBgGreenColor : flBgWhiteColor);
             holder.tvTitleItemAdapterWireMaterialDiameter.setTextColor( model.isSelected ? flBgWhiteColor : flBgBlackColor);
             StringBuilder sb;
@@ -102,14 +98,14 @@ public class WireMaterialDiameterAdapter extends RecyclerView.Adapter<WireMateri
             sb.append(" ").append(model.diameter).append("mm² × ").append(model.count);
             holder.tvTitleItemAdapterWireMaterialDiameter.setText(sb.toString());
 //            holder.flTittleItemAdapterWireMaterialDiameter.setBackground(flBgDrawable);
-        }
+//        }
 
     }
 
 
     @Override
     public int getItemCount() {
-        return mList.size()+1;
+        return mList.size();
     }
 
 
