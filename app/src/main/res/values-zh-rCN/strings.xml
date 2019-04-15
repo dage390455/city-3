@@ -935,5 +935,6 @@
     <string name="add_wire">添加</string>
     <string name="diameter_mm">线径/mm²</string>
     <string name="please_input_air_rated_current">请输入空开额定电流</string>
+    <string name="rated_current_colon" >空开额定电流：</string>
 
 </resources>
