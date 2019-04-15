@@ -1,8 +1,6 @@
 package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -335,15 +333,15 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
 
     @Override
     public void updateInLineData(ArrayList<WireMaterialDiameterModel> mInLineList) {
-        setInLineAddStatus(mInLineList.size() != 5);
-
+        //个数大于5个不能点击
+        setInLineAddStatus(mInLineList.size() < 5);
         mInLineAdapter.updateData(mInLineList);
     }
 
     @Override
     public void updateOutLineData(ArrayList<WireMaterialDiameterModel> mOutLineList) {
-        setOutLineAddStatus(mOutLineList.size() != 5);
-
+        //个数大于5个不能点击
+        setOutLineAddStatus(mOutLineList.size() < 5);
         mOutLineAdapter.updateData(mOutLineList);
     }
 
@@ -371,7 +369,7 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
             tvInLineAddAcWireMaterialDiameter.setCompoundDrawables(addWhiteDrawable, null, null, null);
             tvInLineAddAcWireMaterialDiameter.setTextColor(mActivity.getResources().getColor(R.color.white));
             flInLineAddAcWireMaterialDiameter.setBackground(mActivity.getResources().getDrawable(R.drawable.shape_bg_solid_df_corner_2));
-            flInLineAddAcWireMaterialDiameter.setClickable(true);
+            flInLineAddAcWireMaterialDiameter.setClickable(false);
         }
     }
 
