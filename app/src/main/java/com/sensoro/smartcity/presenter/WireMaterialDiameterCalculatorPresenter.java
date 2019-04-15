@@ -71,7 +71,8 @@ public class WireMaterialDiameterCalculatorPresenter extends BasePresenter<IWire
         if (!isAction && mClickPosition != -1) {
             WireMaterialDiameterModel model = mOutLineList.get(mClickPosition);
             model.isSelected = true;
-            getView().setPickerViewSelectOptions(model.material - 1, pickerStrings.indexOf(String.valueOf(model.diameter)), model.count - 1);
+            int index = model.count - 1;
+            getView().setPickerViewSelectOptions(model.material, pickerStrings.indexOf(String.valueOf(model.diameter)), index);
         }
         getView().updateOutLineData(mOutLineList);
         getView().setPickerTitle(mActivity.getString(R.string.out_line));
@@ -86,7 +87,8 @@ public class WireMaterialDiameterCalculatorPresenter extends BasePresenter<IWire
         if (!isAction && mClickPosition != -1) {
             WireMaterialDiameterModel model = mInLineList.get(mClickPosition);
             model.isSelected = true;
-            getView().setPickerViewSelectOptions(model.material, pickerStrings.indexOf(String.valueOf(model.diameter)), model.count - 1);
+            int index = model.count - 1;
+            getView().setPickerViewSelectOptions(model.material, pickerStrings.indexOf(String.valueOf(model.diameter)), index);
         }
         getView().updateInLineData(mInLineList);
         getView().setPickerTitle(mActivity.getString(R.string.in_line));
