@@ -1504,5 +1504,35 @@ public class RetrofitServiceHelper {
         }
     }
 
+    /**
+     * 通过sn获取摄像头详情
+     *
+     * @param sn
+     * @return
+     */
+    public Observable<ResponseBase> getDeviceCamera(String sn) {
+        return retrofitService.getDeviceCamera(sn);
+    }
+
+    /**
+     * 获取用户下摄像头列表
+     *
+     * @param pageSize
+     * @param page
+     * @param search
+     * @return
+     */
+    public Observable<ResponseBase> getDeviceCameraList(Integer pageSize, Integer page, String search) {
+        return retrofitService.getDeviceCameraList(pageSize, page, search);
+    }
+
+    /**
+     * 获取用户下全量摄像头列表
+     *
+     * @return
+     */
+    public Observable<ResponseBase> getDeviceCameraMapList() {
+        return retrofitService.getDeviceCameraMapList();
+    }
 
 }

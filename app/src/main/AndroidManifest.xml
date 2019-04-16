@@ -357,6 +357,7 @@
         <activity android:name=".temp.TestUpdateActivity" />
         <activity android:name=".activity.DeployMonitorCheckActivity" />
         <activity android:name=".activity.DeployRepairInstructionActivity" />
+        <activity android:name=".temp.CameraTest" />
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"

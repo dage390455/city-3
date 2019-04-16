@@ -322,5 +322,32 @@ public interface RetrofitService {
     @Streaming
     @GET
     Observable<ResponseBody> downloadDeviceFirmwareFile(@Url String url);
+
+    /**
+     * 通过sn获取摄像头详情
+     *
+     * @param sn
+     * @return
+     */
+    @GET("camera")
+    Observable<ResponseBase> getDeviceCamera(@Query("sn") String sn);
+
+    /**
+     * 获取用户下摄像头列表
+     *
+     * @param pageSize
+     * @param page
+     * @param search
+     * @return
+     */
+    @GET("cameras")
+    Observable<ResponseBase> getDeviceCameraList(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search);
+
+    /**
+     * 获取用户下全量摄像头列表
+     * @return
+     */
+    @GET("cameras/map")
+    Observable<ResponseBase> getDeviceCameraMapList();
 }
 
