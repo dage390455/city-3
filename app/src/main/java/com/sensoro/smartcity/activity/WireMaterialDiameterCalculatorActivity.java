@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +56,7 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
     @BindView(R.id.et_input_rated_current_ac_wire_material_diameter1)
     EditText etInputRatedCurrentAcWireMaterialDiameter1;
     @BindView(R.id.ll_input_rated_current_ac_wire_material_diameter1)
-    LinearLayout llInputRatedCurrentAcWireMaterialDiameter1;
+    RelativeLayout llInputRatedCurrentAcWireMaterialDiameter1;
     @BindView(R.id.rv_in_line_ac_wire_material_diameter)
     RecyclerView rvInLineAcWireMaterialDiameter;
     @BindView(R.id.rv_out_line_ac_wire_material_diameter)
@@ -161,40 +163,44 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
     }
 
     private void initEtListener() {
-        etInputRatedCurrentAcWireMaterialDiameter1.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String s1 = s.toString();
-                if (!TextUtils.isEmpty(s1)) {
-                    try {
-                        int i = Integer.parseInt(s1);
-                        if (i > 560 || i <= 0) {
-                            toastShort(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.leakage_current_transformer), "1-560"));
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
+//        etInputRatedCurrentAcWireMaterialDiameter1.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                String s1 = s.toString();
+//                if (!TextUtils.isEmpty(s1)) {
+//                    try {
+//                        int i = Integer.parseInt(s1);
+//                        if (i > 560 || i <= 0) {
+//                            toastShort(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.rated_current_colon), "1-560"));
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                        toastShort(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.rated_current_colon), "1-560"));
+//                    }
+//                }
+//            }
+//        });
 
         etInputRatedCurrentAcWireMaterialDiameter1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     AppUtils.dismissInputMethodManager(mActivity, etInputRatedCurrentAcWireMaterialDiameter1, true);
                     return true;
                 }
+
                 return false;
             }
         });
@@ -269,6 +275,7 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
         mInLineAdapter.setOnItemClickListener(new WireMaterialDiameterAdapter.onItemClickListener() {
             @Override
             public void onItemClick(int position, boolean isAction) {
+                AppUtils.dismissInputMethodManager(mActivity,etInputRatedCurrentAcWireMaterialDiameter1);
                 mPresenter.doInLineItemClick(position, isAction);
             }
         });
@@ -283,6 +290,7 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
         mOutLineAdapter.setOnItemClickListener(new WireMaterialDiameterAdapter.onItemClickListener() {
             @Override
             public void onItemClick(int position, boolean isAction) {
+                AppUtils.dismissInputMethodManager(mActivity,etInputRatedCurrentAcWireMaterialDiameter1);
                 mPresenter.doOutLineItemClick(position, isAction);
             }
         });
@@ -470,10 +478,10 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
                 etInputRatedCurrentAcWireMaterialDiameter1.setCursorVisible(true);
                 etInputRatedCurrentAcWireMaterialDiameter1.requestFocus();
                 etInputRatedCurrentAcWireMaterialDiameter1.setFocusableInTouchMode(true);
-                AppUtils.openInputMethodManager(mActivity, etInputRatedCurrentAcWireMaterialDiameter1);
 //                etInputRatedCurrentAcWireMaterialDiameter1.performClick();
                 break;
             case R.id.tv_recommend_transformer_ac_wire_material_diameter:
+                AppUtils.dismissInputMethodManager(mActivity, etInputRatedCurrentAcWireMaterialDiameter1, true);
                 mPresenter.doRecommendTransformer();
                 scrollBottom();
                 break;

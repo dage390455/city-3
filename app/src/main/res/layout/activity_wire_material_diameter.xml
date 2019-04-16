@@ -37,38 +37,39 @@
                 android:textColor="@color/c_a6a6a6"
                 android:textSize="12sp" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/ll_input_rated_current_ac_wire_material_diameter1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:orientation="horizontal"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp"
                 >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/air_open_rated_current"
                     android:layout_marginStart="20dp"
-                    android:text="@string/air_open_rated_current" />
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"/>
 
                 <EditText
                     android:id="@+id/et_input_rated_current_ac_wire_material_diameter1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="20dp"
                     android:textSize="14sp"
                     android:textColor="@color/c_252525"
                     android:background="@null"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
                     android:cursorVisible="true"
                     android:textStyle="bold"
                     android:imeOptions="actionDone"
                     android:inputType="numberSigned"
                     android:gravity="end"
+                    android:paddingEnd="20dp"
                     android:textCursorDrawable="@drawable/my_cursor" />
-            </LinearLayout>
+            </RelativeLayout>
 
 
             <TextView
@@ -139,7 +140,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp">
+                        >
 
                     </android.support.v7.widget.RecyclerView>
                 </LinearLayout>
@@ -195,7 +196,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp">
+                        >
 
                     </android.support.v7.widget.RecyclerView>
 

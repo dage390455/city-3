@@ -18,6 +18,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.RemoteException;
 import android.provider.ContactsContract;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
