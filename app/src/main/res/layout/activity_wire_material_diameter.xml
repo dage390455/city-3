@@ -63,7 +63,6 @@
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"
                     android:cursorVisible="true"
-                    android:textStyle="bold"
                     android:imeOptions="actionDone"
                     android:inputType="numberSigned"
                     android:gravity="end"
@@ -218,7 +217,6 @@
                 android:paddingBottom="10dp"
                 android:text="@string/recommend_transformer"
                 android:textColor="@color/white"
-                android:textStyle="bold"
                 android:textSize="16sp" />
 
             <LinearLayout
@@ -255,7 +253,6 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="20dp"
                     android:textColor="@color/c_252525"
-                    android:textStyle="bold"
                     android:textSize="16sp" />
 
                 <TextView
@@ -266,7 +263,6 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="20dp"
                     android:layout_marginBottom="16dp"
-                    android:textStyle="bold"
                     android:textColor="@color/c_252525"
                     android:textSize="16sp" />
 

@@ -127,7 +127,6 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
 
     private void initView() {
         includeImvTitleTvTitle.setText(mActivity.getString(R.string.wire_material_diameter_calculator));
-//        includeImvTitleTvTitle.getPaint().
         includeImvTitleTvTitle.getPaint().setFakeBoldText(true);
         includeImvTitleImvSubtitle.setVisibility(View.GONE);
 
