@@ -39,9 +39,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.Map;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class LoginPresenter extends BasePresenter<ILoginView> implements Constants, IOnCreate {
@@ -153,9 +153,9 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     }
 
     private void getMergeType(final EventLoginData eventLoginData) {
-        RetrofitServiceHelper.getInstance().getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Action1<DevicesMergeTypesRsp>() {
+        RetrofitServiceHelper.getInstance().getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Consumer<DevicesMergeTypesRsp>() {
             @Override
-            public void call(DevicesMergeTypesRsp devicesMergeTypesRsp) {
+            public void accept(DevicesMergeTypesRsp devicesMergeTypesRsp) throws Exception {
                 DeviceMergeTypesInfo data = devicesMergeTypesRsp.getData();
                 PreferencesHelper.getInstance().saveLocalDevicesMergeTypes(data);
                 //测试信息
@@ -198,6 +198,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                     }
                 }
             }
+
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesMergeTypesRsp>(LoginPresenter.this) {
             @Override
             public void onCompleted(DevicesMergeTypesRsp devicesMergeTypesRsp) {

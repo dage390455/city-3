@@ -20,8 +20,9 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeoutException;
 
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 import retrofit2.HttpException;
-import rx.Observer;
 
 import static com.sensoro.smartcity.constant.Constants.EVENT_DATA_SESSION_ID_OVERTIME;
 
@@ -29,7 +30,6 @@ public abstract class CityObserver<T> implements Observer<T> {
     public static int ERR_CODE_NET_CONNECT_EX = -0x1001;
     public static int ERR_CODE_UNKNOWN_EX = -0x1002;
     private final WeakReference<BasePresenter> presenterWeakReference;
-    private boolean needPresenter;
 
     /**
      * 如果不需要绑定Activity的生命周期，传入null即可
@@ -39,10 +39,8 @@ public abstract class CityObserver<T> implements Observer<T> {
     public CityObserver(BasePresenter basePresenter) {
         if (basePresenter == null) {
             presenterWeakReference = null;
-            needPresenter = false;
         } else {
             presenterWeakReference = new WeakReference<>(basePresenter);
-            needPresenter = true;
         }
     }
 
@@ -200,21 +198,28 @@ public abstract class CityObserver<T> implements Observer<T> {
             }
 
         }
-
-
+        RxApiManager.getInstance().remove(this);
     }
 
     @Override
-    public void onCompleted() {
+    public void onComplete() {
         if (presenterWeakReference != null) {
             presenterWeakReference.clear();
         }
     }
 
     @Override
+    public void onSubscribe(Disposable d) {
+        RxApiManager.getInstance().add(this, d);
+    }
+
+    @Override
     public void onNext(T t) {
         if (viewAttachedAlive()) {
             onCompleted(t);
+            RxApiManager.getInstance().remove(this);
+        } else {
+            RxApiManager.getInstance().cancel(this);
         }
     }
 
@@ -224,23 +229,22 @@ public abstract class CityObserver<T> implements Observer<T> {
      * @return
      */
     private boolean viewAttachedAlive() {
-        if (needPresenter) {
-            if (presenterWeakReference != null) {
-                if (presenterWeakReference.get() != null && presenterWeakReference.get().isAttachedView()) {
-                    return true;
-                } else {
-                    try {
-                        LogUtils.loge(this, "------->>界面在未完成任务前销毁！！！");
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
+        if (presenterWeakReference == null) {
+            return true;
+        } else {
+            if (presenterWeakReference.get() != null && presenterWeakReference.get().isAttachedView()) {
+                return true;
+            } else {
+                try {
+                    LogUtils.loge(this, "------->>界面在未完成任务前销毁！！！");
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
                 }
             }
-        } else {
-            return true;
         }
         return false;
     }
+
 
     public abstract void onCompleted(T t);
 

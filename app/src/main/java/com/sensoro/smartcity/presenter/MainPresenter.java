@@ -56,12 +56,12 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
 
@@ -723,9 +723,9 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 break;
             case EVENT_DATA_CHECK_MERGE_TYPE_CONFIG_DATA:
                 //mergeTypeConfig配置参数需要更新
-                RetrofitServiceHelper.getInstance().getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Action1<DevicesMergeTypesRsp>() {
+                RetrofitServiceHelper.getInstance().getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Consumer<DevicesMergeTypesRsp>() {
                     @Override
-                    public void call(DevicesMergeTypesRsp devicesMergeTypesRsp) {
+                    public void accept(DevicesMergeTypesRsp devicesMergeTypesRsp) throws Exception {
                         DeviceMergeTypesInfo data = devicesMergeTypesRsp.getData();
                         PreferencesHelper.getInstance().saveLocalDevicesMergeTypes(data);
                     }

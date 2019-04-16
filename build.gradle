@@ -17,7 +17,14 @@ allprojects {
             maven { url "https://jitpack.io" }
             maven { url 'https://maven.google.com' }
             google()
+<<<<<<< HEAD
             jcenter()
+=======
+//            jcenter()
+            jcenter { "http://jcenter.bintray.com/" }
+            maven { url "https://jitpack.io" }
+            mavenCentral()
+>>>>>>> gradle_check_detail
         }
     }
     repositories {
@@ -25,11 +32,24 @@ allprojects {
         maven { url "https://jitpack.io" }
         maven { url 'https://maven.google.com' }
         google()
+<<<<<<< HEAD
         jcenter()
+=======
+//        jcenter()
+        jcenter { "http://jcenter.bintray.com/" }
+        maven { url "https://jitpack.io" }
+        mavenCentral()
+>>>>>>> gradle_check_detail
     }
 }
 buildscript {
     repositories {
+<<<<<<< HEAD
+=======
+        google()
+//        jcenter()
+        jcenter { "http://jcenter.bintray.com/" }
+>>>>>>> gradle_check_detail
         mavenCentral()
         maven { url 'https://maven.google.com' }
         maven { url "https://jitpack.io" }

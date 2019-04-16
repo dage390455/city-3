@@ -18,7 +18,6 @@ import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
-import com.sensoro.smartcity.server.response.DeviceStatusRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 import com.sensoro.smartcity.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.smartcity.server.response.DevicesAlarmPopupConfigRsp;
@@ -38,6 +37,7 @@ import com.sensoro.smartcity.server.response.UpdateRsp;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
 
+import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.http.Body;
@@ -52,15 +52,14 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.Streaming;
 import retrofit2.http.Url;
-import rx.Observable;
 
 public interface RetrofitService {
     //demo环境
     String SCOPE_DEMO = "https://city-demo-api.sensoro.com/";
     //测试环境
     String SCOPE_TEST = "https://city-test-api.sensoro.com/";
-    //摩卡环境
-    String SCOPE_MOCHA = "https://mocha-city-api.sensoro.com/";
+    //预发布环境
+    String SCOPE_MOCHA = "https://city-pre-api.sensoro.com/";
     //    String SCOPE_MOCHA = "http://xiaolai.ngrok.gkzyk.com/";
     //正式环境
     String SCOPE_MASTER = "https://city-api.sensoro.com/";
@@ -167,7 +166,7 @@ public interface RetrofitService {
     Observable<DeviceDeployRsp> doDevicePointDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
 
     @GET("devices/realStatus/{sn}")
-    Observable<DeviceStatusRsp> getRealStatus(@Path("sn") String sn);
+    Observable<DeviceDeployRsp> getRealStatus(@Path("sn") String sn);
 
 
     @GET(DEPLOY_DEVICE_DETAIL)

@@ -222,7 +222,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     private int scope_selectedIndex = 0;
 
     private void switchApi() {
-        final String[] urlArr = new String[]{"正式版", "Demo版", "测试版", "摩卡环境"};
+        final String[] urlArr = new String[]{"正式版", "Demo版", "测试版", "预发布"};
         //
         scope_selectedIndex = RetrofitServiceHelper.getInstance().getBaseUrlType();
         Dialog alertDialog = new AlertDialog.Builder(mActivity).

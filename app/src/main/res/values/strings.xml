@@ -898,10 +898,13 @@
     <string name="deploy_check_dialog_bad_signal">Bad signal</string>
     <string name="installation_test_not_nearby">Please turn on the phone Bluetooth and make sure it is near the device</string>
     <string name="installation_config_failed">Initial configuration failed, fix description，Reason:</string>
+
+
+
     <string name="deploy_check_dialog_quality_bad_signal">Poor signal quality, fix description</string>
-    <string name="device_is_malfunction">The device is faulting, fix description</string>
-    <string name="device_is_alarm">The device is faulting, fix description</string>
-    <string name="deploy_check_suggest_repair_instruction">&#160;&#160;Fix Description</string>
+    <string name="device_is_malfunction">The device is faulting，</string>
+    <string name="device_is_alarm">The device is faulting，</string>
+    <string name="deploy_check_suggest_repair_instruction">Fix Description</string>
     <string name="ble_init_config_write_failure">initial configuration write failed</string>
     <string name="init_config_not_support_device">device does not support initial configuration</string>
     <string name="init_config_info_error">initial configuration information error</string>
