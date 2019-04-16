@@ -27,8 +27,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Locale;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class ContractDetailPresenter extends BasePresenter<IContractDetailView> {
     private Activity mActivity;

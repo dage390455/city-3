@@ -32,7 +32,6 @@ import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
-import com.sensoro.smartcity.server.response.DeviceStatusRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 import com.sensoro.smartcity.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
@@ -66,6 +65,10 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
@@ -77,12 +80,8 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 import static com.sensoro.smartcity.server.RetrofitService.SCOPE_DEMO;
 import static com.sensoro.smartcity.server.RetrofitService.SCOPE_MASTER;
@@ -126,7 +125,7 @@ public class RetrofitServiceHelper {
         //支持RxJava
         builder = new Retrofit.Builder().baseUrl(BASE_URL).client(getNewClient())
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create());
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
         retrofitService = builder.build().create(RetrofitService.class);
     }
 
@@ -356,9 +355,7 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<LoginRsp> login(String account, String pwd, String phoneId) {
-        Observable<LoginRsp> login = retrofitService.login(account, pwd, phoneId, "android", true);
-        RxApiManager.getInstance().add("login", login.subscribe());
-        return login;
+        return retrofitService.login(account, pwd, phoneId, "android", true);
     }
 
 
@@ -379,9 +376,7 @@ public class RetrofitServiceHelper {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<ResponseBase> logout = retrofitService.logout(phoneId, uid, body);
-        RxApiManager.getInstance().add("logout", logout.subscribe());
-        return logout;
+        return retrofitService.logout(phoneId, uid, body);
     }
 
     /**
@@ -398,9 +393,7 @@ public class RetrofitServiceHelper {
      */
     public Observable<DeviceAlarmLogRsp> getDeviceAlarmLogList(int page, String sn, String deviceName, String phone
             , String search, Long beginTime, Long endTime, String unionTypes) {
-        Observable<DeviceAlarmLogRsp> deviceAlarmLogList = retrofitService.getDeviceAlarmLogList(10, page, sn, deviceName, phone, search, beginTime, endTime, unionTypes);
-        RxApiManager.getInstance().add("getDeviceAlarmLogList", deviceAlarmLogList.subscribe());
-        return deviceAlarmLogList;
+        return retrofitService.getDeviceAlarmLogList(10, page, sn, deviceName, phone, search, beginTime, endTime, unionTypes);
     }
 
     /**
@@ -415,9 +408,7 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<MalfunctionListRsp> getDeviceMalfunctionLogList(int page, String sn, String deviceName, String search, Long beginTime, Long endTime) {
-        Observable<MalfunctionListRsp> deviceMalfunctionLogList = retrofitService.getDeviceMalfunctionLogList(20, page, sn, deviceName, search, beginTime, endTime);
-        RxApiManager.getInstance().add("getDeviceMalfunctionLogList", deviceMalfunctionLogList.subscribe());
-        return deviceMalfunctionLogList;
+        return retrofitService.getDeviceMalfunctionLogList(20, page, sn, deviceName, search, beginTime, endTime);
     }
 
     /**
@@ -440,10 +431,8 @@ public class RetrofitServiceHelper {
      */
     public Observable<DeviceInfoListRsp> getDeviceBriefInfoList(int page, String sensorTypes, String mergeTypes, Integer status, String
             search) {
-        Observable<DeviceInfoListRsp> deviceBriefInfoList = retrofitService.getDeviceBriefInfoList(page, 20, 1, 1,
+        return retrofitService.getDeviceBriefInfoList(page, 20, 1, 1,
                 sensorTypes, mergeTypes, status, search);
-        RxApiManager.getInstance().add("getDeviceBriefInfoList", deviceBriefInfoList.subscribe());
-        return deviceBriefInfoList;
     }
 
     /**
@@ -452,9 +441,7 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<DeviceTypeCountRsp> getDeviceTypeCount() {
-        Observable<DeviceTypeCountRsp> deviceTypeCount = retrofitService.getDeviceTypeCount();
-        RxApiManager.getInstance().add("getDeviceTypeCount", deviceTypeCount.subscribe());
-        return deviceTypeCount;
+        return retrofitService.getDeviceTypeCount();
     }
 
     /**
@@ -464,9 +451,7 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<UserAccountRsp> getUserAccountList(String search, Integer page, Integer offset, Integer limit) {
-        Observable<UserAccountRsp> userAccountList = retrofitService.getUserAccountList(search, page, 20, offset, limit);
-        RxApiManager.getInstance().add("getUserAccountList", userAccountList.subscribe());
-        return userAccountList;
+        return retrofitService.getUserAccountList(search, page, 20, offset, limit);
     }
 
     /**
@@ -486,9 +471,7 @@ public class RetrofitServiceHelper {
         }
 //        application/json;charset=UTF-8
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<UserAccountControlRsp> userAccountControlRspObservable = retrofitService.doAccountControl(uid, body);
-        RxApiManager.getInstance().add("doAccountControl", userAccountControlRspObservable.subscribe());
-        return userAccountControlRspObservable;
+        return retrofitService.doAccountControl(uid, body);
     }
 
     /**
@@ -499,15 +482,11 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<DeployRecordRsp> getDeployRecordList(String sn, String searchText, Long beginTime, Long endTime, String owners, String signalQuality, Integer limit, Integer offset, Boolean group) {
-        Observable<DeployRecordRsp> deployRecordList = retrofitService.getDeployRecordList(sn, searchText, beginTime, endTime, owners, signalQuality, limit, offset, group);
-        RxApiManager.getInstance().add("getDeployRecordList", deployRecordList.subscribe());
-        return deployRecordList;
+        return retrofitService.getDeployRecordList(sn, searchText, beginTime, endTime, owners, signalQuality, limit, offset, group);
     }
 
     public Observable<DeviceDeployRsp> getDeviceRealStatus(String sn) {
-        Observable<DeviceDeployRsp> realStatus = retrofitService.getRealStatus(sn);
-        RxApiManager.getInstance().add("getDeviceRealStatus", realStatus.subscribe());
-        return realStatus;
+        return retrofitService.getRealStatus(sn);
     }
 
     /**
@@ -605,9 +584,7 @@ public class RetrofitServiceHelper {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<DeviceDeployRsp> deviceDeployRspObservable = retrofitService.doDevicePointDeploy(sn, body);
-        RxApiManager.getInstance().add("doDevicePointDeploy", deviceDeployRspObservable.subscribe());
-        return deviceDeployRspObservable;
+        return retrofitService.doDevicePointDeploy(sn, body);
     }
 
     /**
@@ -619,13 +596,11 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<DeployDeviceDetailRsp> getDeployDeviceDetail(String sn, Double longitude, Double latitude) {
-        Observable<DeployDeviceDetailRsp> deployDeviceDetail = retrofitService.getDeployDeviceDetail(sn, longitude, latitude);
-        RxApiManager.getInstance().add("deployDeviceDetail", deployDeviceDetail.subscribe());
-        return deployDeviceDetail;
+        return retrofitService.getDeployDeviceDetail(sn, longitude, latitude);
     }
 
     public Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(String oldSn, String newSn, String taskId, Integer reason, double lon, double lat, List<String> tags, String
-            name, String contact, String content, List<String> imgUrls, String wxPhone,String forceReason, Integer status, String signalQuality) {
+            name, String contact, String content, List<String> imgUrls, String wxPhone, String forceReason, Integer status, String signalQuality) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(newSn)) {
@@ -678,9 +653,7 @@ public class RetrofitServiceHelper {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<DeviceDeployRsp> inspectionChangeDeviceDeployRspObservable = retrofitService.doInspectionChangeDeviceDeploy(oldSn, body);
-        RxApiManager.getInstance().add("doInspectionChangeDeviceDeploy", inspectionChangeDeviceDeployRspObservable.subscribe());
-        return inspectionChangeDeviceDeployRspObservable;
+        return retrofitService.doInspectionChangeDeviceDeploy(oldSn, body);
     }
 
     /**
@@ -714,9 +687,7 @@ public class RetrofitServiceHelper {
         }
 
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<DeployStationInfoRsp> stationInfoRspObservable = retrofitService.doStationDeploy(sn, body);
-        RxApiManager.getInstance().add("doStationDeploy", stationInfoRspObservable.subscribe());
-        return stationInfoRspObservable;
+        return retrofitService.doStationDeploy(sn, body);
     }
 
     /**
@@ -742,9 +713,7 @@ public class RetrofitServiceHelper {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<DeviceAlarmItemRsp> deviceAlarmItemRspObservable = retrofitService.doAlarmConfirm(id, body);
-        RxApiManager.getInstance().add("deviceAlarmItemRspObservable", deviceAlarmItemRspObservable.subscribe());
-        return deviceAlarmItemRspObservable;
+        return retrofitService.doAlarmConfirm(id, body);
     }
 
     /**
@@ -754,9 +723,7 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<DeviceAlarmTimeRsp> getDeviceAlarmTime(String sn) {
-        Observable<DeviceAlarmTimeRsp> deviceAlarmTime = retrofitService.getDeviceAlarmTime(sn);
-        RxApiManager.getInstance().add("getDeviceAlarmTime", deviceAlarmTime.subscribe());
-        return deviceAlarmTime;
+        return retrofitService.getDeviceAlarmTime(sn);
     }
 
     public Observable<DeviceHistoryListRsp> getDeviceHistoryList(String sn, int count) {
@@ -772,9 +739,7 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<DeviceRecentRsp> getDeviceHistoryList(String sn, long startTime, long endTime) {
-        Observable<DeviceRecentRsp> hours = retrofitService.getDeviceHistoryList(sn, startTime, endTime, "hours");
-        RxApiManager.getInstance().add("getDeviceHistoryList", hours.subscribe());
-        return hours;
+        return retrofitService.getDeviceHistoryList(sn, startTime, endTime, "hours");
     }
 
     /**
@@ -786,9 +751,7 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<DeviceInfoListRsp> getDeviceDetailInfoList(String sns, String search, int all) {
-        Observable<DeviceInfoListRsp> deviceDetailInfoList = retrofitService.getDeviceDetailInfoList(sns, search, all);
-        RxApiManager.getInstance().add("getDeviceDetailInfoList", deviceDetailInfoList.subscribe());
-        return deviceDetailInfoList;
+        return retrofitService.getDeviceDetailInfoList(sns, search, all);
     }
 
     /**
@@ -798,9 +761,7 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<DeployStationInfoRsp> getStationDetail(String sn) {
-        Observable<DeployStationInfoRsp> stationDetail = retrofitService.getStationDetail(sn);
-        RxApiManager.getInstance().add("getStationDetail", stationDetail.subscribe());
-        return stationDetail;
+        return retrofitService.getStationDetail(sn);
     }
 
 
@@ -845,9 +806,7 @@ public class RetrofitServiceHelper {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<DeviceAlarmItemRsp> deviceAlarmItemRspObservable = retrofitService.doUpdatePhotosUrl(id, body);
-        RxApiManager.getInstance().add("doUpdatePhotosUrl", deviceAlarmItemRspObservable.subscribe());
-        return deviceAlarmItemRspObservable;
+        return retrofitService.doUpdatePhotosUrl(id, body);
     }
 
     /**
@@ -856,9 +815,7 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<QiNiuToken> getQiNiuToken() {
-        Observable<QiNiuToken> qiNiuToken = retrofitService.getQiNiuToken();
-        RxApiManager.getInstance().add("getQiNiuToken", qiNiuToken.subscribe());
-        return qiNiuToken;
+        return retrofitService.getQiNiuToken();
     }
 
     /**
@@ -867,9 +824,7 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<ContractsTemplateRsp> getContractstemplate() {
-        Observable<ContractsTemplateRsp> contractstemplate = retrofitService.getContractsTemplate();
-        RxApiManager.getInstance().add("getContractsTemplate", contractstemplate.subscribe());
-        return contractstemplate;
+        return retrofitService.getContractsTemplate();
     }
 
     public Observable<ContractAddRsp> getNewContract(Integer contractType, String cardId,
@@ -942,15 +897,11 @@ public class RetrofitServiceHelper {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<ContractAddRsp> contractAddRspObservable = retrofitService.newContract(body);
-        RxApiManager.getInstance().add("getNewContract", contractAddRspObservable.subscribe());
-        return contractAddRspObservable;
+        return retrofitService.newContract(body);
     }
 
     public Observable<ContractInfoRsp> getContractInfo(String id) {
-        Observable<ContractInfoRsp> contractInfo = retrofitService.getContractInfo(id);
-        RxApiManager.getInstance().add("contractInfo", contractInfo.subscribe());
-        return contractInfo;
+        return retrofitService.getContractInfo(id);
     }
 
     /**
@@ -999,9 +950,7 @@ public class RetrofitServiceHelper {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<ContractsListRsp> contractsListRspObservable = retrofitService.searchContract(body);
-        RxApiManager.getInstance().add("searchContract", contractsListRspObservable.subscribe());
-        return contractsListRspObservable;
+        return retrofitService.searchContract(body);
     }
 
     /**
@@ -1011,9 +960,7 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<ResponseBase> getLoginScanResult(String qrcodeId) {
-        Observable<ResponseBase> loginScanResult = retrofitService.getLoginScanResult(qrcodeId);
-        RxApiManager.getInstance().add("getLoginScanResult", loginScanResult.subscribe());
-        return loginScanResult;
+        return retrofitService.getLoginScanResult(qrcodeId);
     }
 
     /**
@@ -1023,9 +970,7 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<ResponseBase> scanLoginIn(String qrcodeId) {
-        Observable<ResponseBase> responseBaseObservable = retrofitService.scanLoginIn(qrcodeId);
-        RxApiManager.getInstance().add("scanLoginIn", responseBaseObservable.subscribe());
-        return responseBaseObservable;
+        return retrofitService.scanLoginIn(qrcodeId);
     }
 
     /**
@@ -1035,9 +980,7 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<ResponseBase> scanLoginCancel(String qrcodeId) {
-        Observable<ResponseBase> responseBaseObservable = retrofitService.scanLoginCancel(qrcodeId);
-        RxApiManager.getInstance().add("scanLoginCancel", responseBaseObservable.subscribe());
-        return responseBaseObservable;
+        return retrofitService.scanLoginCancel(qrcodeId);
     }
 
     /**
@@ -1166,9 +1109,7 @@ public class RetrofitServiceHelper {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<ResponseBase> uploadInspectionResult = retrofitService.uploadInspectionResult(body);
-        RxApiManager.getInstance().add("uploadInspectionResult", uploadInspectionResult.subscribe());
-        return uploadInspectionResult;
+        return retrofitService.uploadInspectionResult(body);
     }
 
     public Observable<InspectionTaskExecutionRsp> getInspectTaskExecution(String taskId) {
@@ -1182,9 +1123,7 @@ public class RetrofitServiceHelper {
 //                stringBuilder.append(deviceType);
 //            }
 //        }
-        Observable<InspectionTaskDeviceDetailRsp> inspectionDeviceList = retrofitService.getInspectionDeviceList(taskId, search, sn, finish, deviceTypes, offset, limit);
-        RxApiManager.getInstance().add("inspectionDeviceList", inspectionDeviceList.subscribe());
-        return inspectionDeviceList;
+        return retrofitService.getInspectionDeviceList(taskId, search, sn, finish, deviceTypes, offset, limit);
     }
 
     /**
@@ -1200,10 +1139,8 @@ public class RetrofitServiceHelper {
      */
     public Observable<InspectionTaskModelRsp> getInspectTaskList(String search, Integer finish, Integer offset, Integer
             limit, Long startTime, Long finishTime) {
-        Observable<InspectionTaskModelRsp> inspectTaskList = retrofitService.getInspectTaskList(search, finish, offset, limit,
+        return retrofitService.getInspectTaskList(search, finish, offset, limit,
                 startTime, finishTime);
-        RxApiManager.getInstance().add("getInspectTaskList", inspectTaskList.subscribe());
-        return inspectTaskList;
     }
 
     /**
@@ -1238,9 +1175,7 @@ public class RetrofitServiceHelper {
         }
 
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<ChangeInspectionTaskStateRsp> changeInspectionTaskState = retrofitService.changeInspectionTaskState(body);
-        RxApiManager.getInstance().add("doChangeInspectionTaskState", changeInspectionTaskState.subscribe());
-        return changeInspectionTaskState;
+        return retrofitService.changeInspectionTaskState(body);
     }
 
     /**
@@ -1278,9 +1213,7 @@ public class RetrofitServiceHelper {
         }
 
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<InspectionTaskExceptionDeviceRsp> getInspectionDeviceDetail = retrofitService.getInspectionDeviceDetail(body);
-        RxApiManager.getInstance().add("getInspectionDeviceDetail", getInspectionDeviceDetail.subscribe());
-        return getInspectionDeviceDetail;
+        return retrofitService.getInspectionDeviceDetail(body);
     }
 
     /**
@@ -1290,9 +1223,7 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<InspectionTaskInstructionRsp> getInspectionTemplate(String deviceType) {
-        Observable<InspectionTaskInstructionRsp> inspectionTemplate = retrofitService.getInspectionTemplate(deviceType);
-        RxApiManager.getInstance().add("inspectionTemplate", inspectionTemplate.subscribe());
-        return inspectionTemplate;
+        return retrofitService.getInspectionTemplate(deviceType);
     }
 
     /**
@@ -1301,9 +1232,7 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<DevicesMergeTypesRsp> getDevicesMergeTypes() {
-        Observable<DevicesMergeTypesRsp> devicesMergeTypes = retrofitService.getDevicesMergeTypes();
-        RxApiManager.getInstance().add("devicesMergeTypes", devicesMergeTypes.subscribe());
-        return devicesMergeTypes;
+        return retrofitService.getDevicesMergeTypes();
     }
 
     public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer switchSpec, Integer wireMaterial, Double diameter) {
@@ -1345,9 +1274,7 @@ public class RetrofitServiceHelper {
         }
 
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation = retrofitService.doMonitorPointOperation(body);
-        RxApiManager.getInstance().add("doMonitorPointOperation", doMonitorPointOperation.subscribe());
-        return doMonitorPointOperation;
+        return retrofitService.doMonitorPointOperation(body);
     }
 
     public Observable<DeviceDeployRsp> doDevicePositionCalibration(String sn, Double lon, Double lat) {
@@ -1360,9 +1287,7 @@ public class RetrofitServiceHelper {
         }
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
 
-        Observable<DeviceDeployRsp> doDevicePositionCalibration = retrofitService.doDevicePositionCalibration(sn, body);
-        RxApiManager.getInstance().add("doDevicePositionCalibration", doDevicePositionCalibration.subscribe());
-        return doDevicePositionCalibration;
+        return retrofitService.doDevicePositionCalibration(sn, body);
     }
 
     public Observable<ResponseBase> modifyContract(String uid, Integer contractID, Integer contractType, String cardId, Integer sex, String enterpriseCardId,
@@ -1440,9 +1365,7 @@ public class RetrofitServiceHelper {
         }
 
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<ResponseBase> modifyContract = retrofitService.modifyContract(body);
-        RxApiManager.getInstance().add("modifyContract", modifyContract.subscribe());
-        return modifyContract;
+        return retrofitService.modifyContract(body);
     }
 
     /**
@@ -1500,9 +1423,7 @@ public class RetrofitServiceHelper {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<DeviceUpdateFirmwareDataRsp> deviceUpdateVision = retrofitService.getDeviceUpdateVision(sn, body);
-        RxApiManager.getInstance().add("getDeviceUpdateVision", deviceUpdateVision.subscribe());
-        return deviceUpdateVision;
+        return retrofitService.getDeviceUpdateVision(sn, body);
     }
 
     /**
@@ -1522,9 +1443,7 @@ public class RetrofitServiceHelper {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<ResponseBase> upLoadDeviceUpdateVision = retrofitService.upLoadDeviceUpdateVision(sn, body);
-        RxApiManager.getInstance().add("upLoadDeviceUpdateVision", upLoadDeviceUpdateVision.subscribe());
-        return upLoadDeviceUpdateVision;
+        return retrofitService.upLoadDeviceUpdateVision(sn, body);
     }
 
     /**
@@ -1535,11 +1454,12 @@ public class RetrofitServiceHelper {
      * @param observer
      */
     public void downloadDeviceFirmwareFile(String url, final String filePath, CityObserver<Boolean> observer) {
-        retrofitService.downloadDeviceFirmwareFile(url).subscribeOn(Schedulers.io()).map(new Func1<ResponseBody, Boolean>() {
+        retrofitService.downloadDeviceFirmwareFile(url).subscribeOn(Schedulers.io()).map(new Function<ResponseBody, Boolean>() {
             @Override
-            public Boolean call(ResponseBody responseBody) {
+            public Boolean apply(ResponseBody responseBody) {
                 return writeResponseBodyToDisk(responseBody, filePath);
             }
+
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(observer);
     }
 
