@@ -13,6 +13,7 @@ import com.sensoro.smartcity.model.WireMaterialDiameterModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class WireMaterialDiameterCalculatorPresenter extends BasePresenter<IWireMaterialDiameterCalculatorView> {
     private Activity mActivity;
@@ -173,16 +174,16 @@ public class WireMaterialDiameterCalculatorPresenter extends BasePresenter<IWire
 
         try {
             ratedCurrent = Integer.parseInt(getView().getEtInputText());
+            if(ratedCurrent < 1 || ratedCurrent > 560) {
+                getView().toastShort(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.rated_current_colon), "1-560"));
+                return;
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            getView().toastShort(mActivity.getString(R.string.enter_the_correct_number_format));
+            getView().toastShort(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.rated_current_colon), "1-560"));
             return;
         }
 
-        if (ratedCurrent == -1) {
-            getView().toastShort(mActivity.getString(R.string.please_input_air_rated_current));
-            return;
-        }
 
         int temp = Math.min(ratedCurrent, inLineTotal);
         int actualRatedCurrent = Math.min(temp, outLineTotal);
