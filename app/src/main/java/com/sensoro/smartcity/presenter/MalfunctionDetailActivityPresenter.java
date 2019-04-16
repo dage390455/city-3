@@ -32,10 +32,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfunctionDetailActivityView> implements Constants, IOnCreate {
     private Activity mActivity;
@@ -89,12 +89,13 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
         long current = System.currentTimeMillis();
         final StringBuffer stringBuffer = new StringBuffer();
         RetrofitServiceHelper.getInstance().getMalfunctionCount(current - 3600 * 24 * 180 * 1000L, current, null, mMalfunctionInfo.getDeviceSN()).subscribeOn(Schedulers.io())
-                .flatMap(new Func1<MalfunctionCountRsp, Observable<DeviceInfoListRsp>>() {
+                .flatMap(new Function<MalfunctionCountRsp, ObservableSource<DeviceInfoListRsp>>() {
                     @Override
-                    public Observable<DeviceInfoListRsp> call(MalfunctionCountRsp malfunctionCountRsp) {
+                    public ObservableSource<DeviceInfoListRsp> apply(MalfunctionCountRsp malfunctionCountRsp) throws Exception {
                         stringBuffer.append(malfunctionCountRsp.getCount());
                         return RetrofitServiceHelper.getInstance().getDeviceDetailInfoList(mMalfunctionInfo.getDeviceSN(), null, 1);
                     }
+
                 }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
 
             @Override

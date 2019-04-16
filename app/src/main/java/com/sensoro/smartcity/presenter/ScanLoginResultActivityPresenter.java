@@ -15,8 +15,8 @@ import com.sensoro.smartcity.server.response.ResponseBase;
 
 import org.greenrobot.eventbus.EventBus;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class ScanLoginResultActivityPresenter extends BasePresenter<IScanLoginResultActivityView> implements Constants {
     private String qrcodeId;

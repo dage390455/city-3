@@ -98,10 +98,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<IMonitorPointElectricDetailActivityView> implements IOnCreate, Constants, IOnResume,
         GeocodeSearch.OnGeocodeSearchListener, MonitorDetailOperationAdapter.OnMonitorDetailOperationAdapterListener, BLEDeviceListener<BLEDevice>
@@ -538,9 +538,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     private void requestBlePassword() {
         // 获取固件版本和下载固件的地址信息
         RetrofitServiceHelper.getInstance().getDeployDeviceDetail(mDeviceInfo.getSn(), null, null).subscribeOn
-                (Schedulers.io()).flatMap(new Func1<DeployDeviceDetailRsp, Observable<DeviceUpdateFirmwareDataRsp>>() {
+                (Schedulers.io()).flatMap(new Function<DeployDeviceDetailRsp, ObservableSource<DeviceUpdateFirmwareDataRsp>>() {
             @Override
-            public Observable<DeviceUpdateFirmwareDataRsp> call(DeployDeviceDetailRsp deployDeviceDetailRsp) {
+            public ObservableSource<DeviceUpdateFirmwareDataRsp> apply(DeployDeviceDetailRsp deployDeviceDetailRsp) throws Exception {
                 DeviceInfo data = deployDeviceDetailRsp.getData();
                 if (data != null) {
                     mDeviceInfo = data;
@@ -1190,66 +1190,66 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 //            address = regeocodeResult.getRegeocodeAddress().getFormatAddress();
 
 //                改为自定义
-                StringBuilder stringBuilder = new StringBuilder();
-                //
-                String province = regeocodeAddress.getProvince();
-                //
-                String district = regeocodeAddress.getDistrict();// 区或县或县级市
-                //
-                //
-                String township = regeocodeAddress.getTownship();// 乡镇
-                //
-                String streetName = null;// 道路
-                List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
-                if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
-                    RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
-                    if (regeocodeRoad != null) {
-                        streetName = regeocodeRoad.getName();
-                    }
+            StringBuilder stringBuilder = new StringBuilder();
+            //
+            String province = regeocodeAddress.getProvince();
+            //
+            String district = regeocodeAddress.getDistrict();// 区或县或县级市
+            //
+            //
+            String township = regeocodeAddress.getTownship();// 乡镇
+            //
+            String streetName = null;// 道路
+            List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
+            if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
+                RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
+                if (regeocodeRoad != null) {
+                    streetName = regeocodeRoad.getName();
                 }
-                //
-                String streetNumber = null;// 门牌号
-                StreetNumber number = regeocodeAddress.getStreetNumber();
-                if (number != null) {
-                    String street = number.getStreet();
-                    if (street != null) {
-                        streetNumber = street + number.getNumber();
-                    } else {
-                        streetNumber = number.getNumber();
-                    }
-                }
-                //
-                String building = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
-                //区县
-                if (!TextUtils.isEmpty(province)) {
-                    stringBuilder.append(province);
-                }
-                if (!TextUtils.isEmpty(district)) {
-                    stringBuilder.append(district);
-                }
-                //乡镇
-                if (!TextUtils.isEmpty(township)) {
-                    stringBuilder.append(township);
-                }
-                //道路
-                if (!TextUtils.isEmpty(streetName)) {
-                    stringBuilder.append(streetName);
-                }
-                //标志性建筑
-                if (!TextUtils.isEmpty(building)) {
-                    stringBuilder.append(building);
+            }
+            //
+            String streetNumber = null;// 门牌号
+            StreetNumber number = regeocodeAddress.getStreetNumber();
+            if (number != null) {
+                String street = number.getStreet();
+                if (street != null) {
+                    streetNumber = street + number.getNumber();
                 } else {
-                    //门牌号
-                    if (!TextUtils.isEmpty(streetNumber)) {
-                        stringBuilder.append(streetNumber);
-                    }
+                    streetNumber = number.getNumber();
                 }
-                if (TextUtils.isEmpty(stringBuilder)) {
-                    address = township;
-                } else {
-                    address = stringBuilder.append("附近").toString();
+            }
+            //
+            String building = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
+            //区县
+            if (!TextUtils.isEmpty(province)) {
+                stringBuilder.append(province);
+            }
+            if (!TextUtils.isEmpty(district)) {
+                stringBuilder.append(district);
+            }
+            //乡镇
+            if (!TextUtils.isEmpty(township)) {
+                stringBuilder.append(township);
+            }
+            //道路
+            if (!TextUtils.isEmpty(streetName)) {
+                stringBuilder.append(streetName);
+            }
+            //标志性建筑
+            if (!TextUtils.isEmpty(building)) {
+                stringBuilder.append(building);
+            } else {
+                //门牌号
+                if (!TextUtils.isEmpty(streetNumber)) {
+                    stringBuilder.append(streetNumber);
                 }
-                //
+            }
+            if (TextUtils.isEmpty(stringBuilder)) {
+                address = township;
+            } else {
+                address = stringBuilder.append("附近").toString();
+            }
+            //
             try {
                 LogUtils.loge(this, "onRegeocodeSearched: " + "code = " + i + ",address = " + address);
             } catch (Throwable throwable) {

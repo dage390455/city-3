@@ -48,8 +48,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActivityView> implements IOnCreate, Constants, OnMapReadyCallback, MapboxMap.InfoWindowAdapter, MapboxMap.OnCameraChangeListener {
