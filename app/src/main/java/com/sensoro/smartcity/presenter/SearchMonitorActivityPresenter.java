@@ -33,9 +33,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.sensoro.smartcity.widget.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
 
@@ -262,9 +262,9 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         if (direction == DIRECTION_DOWN) {
             page = 1;
             RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, null, null, searchText).subscribeOn
-                    (Schedulers.io()).doOnNext(new Action1<DeviceInfoListRsp>() {
+                    (Schedulers.io()).doOnNext(new Consumer<DeviceInfoListRsp>() {
                 @Override
-                public void call(DeviceInfoListRsp deviceInfoListRsp) {
+                public void accept(DeviceInfoListRsp deviceInfoListRsp) throws Exception {
                     if (deviceInfoListRsp.getData().size() == 0) {
                         mDataList.clear();
                     } else {
@@ -273,6 +273,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
                         refreshCacheData();
                     }
                 }
+
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
 
 
@@ -297,9 +298,9 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         } else {
             page++;
             RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, null, null, searchText).subscribeOn
-                    (Schedulers.io()).doOnNext(new Action1<DeviceInfoListRsp>() {
+                    (Schedulers.io()).doOnNext(new Consumer<DeviceInfoListRsp>() {
                 @Override
-                public void call(DeviceInfoListRsp deviceInfoListRsp) {
+                public void accept(DeviceInfoListRsp deviceInfoListRsp) throws Exception {
                     try {
                         if (deviceInfoListRsp.getData().size() == 0) {
                             page--;
@@ -312,6 +313,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
                         e.printStackTrace();
                     }
                 }
+
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
 
 

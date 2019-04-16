@@ -24,8 +24,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class InspectionExceptionDetailActivityPresenter extends BasePresenter<IInspectionExceptionDetailActivityView>
         implements Constants {

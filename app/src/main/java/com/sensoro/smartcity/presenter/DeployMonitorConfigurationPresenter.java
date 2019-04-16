@@ -31,8 +31,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMonitorConfigurationView> implements Constants, IOnCreate {
     private Activity mActivity;

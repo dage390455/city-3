@@ -36,6 +36,7 @@ import com.sensoro.smartcity.server.response.UpdateRsp;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
 
+import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.http.Body;
@@ -50,7 +51,6 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.Streaming;
 import retrofit2.http.Url;
-import rx.Observable;
 
 public interface RetrofitService {
     //demo环境

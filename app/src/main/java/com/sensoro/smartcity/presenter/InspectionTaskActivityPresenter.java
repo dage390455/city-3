@@ -48,8 +48,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTaskActivityView> implements
         BLEDeviceListener<BLEDevice>, IOnCreate, IOnStart, Constants, Runnable {

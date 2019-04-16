@@ -31,11 +31,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwitchActivityView> implements Constants, IOnCreate {
 
@@ -141,18 +141,18 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
         getView().showProgressDialog();
         eventLoginData = null;
         final String phoneId = PreferencesHelper.getInstance().getUserData().phoneId;
-        RetrofitServiceHelper.getInstance().doAccountControl(uid, phoneId).subscribeOn(Schedulers.io()).flatMap(new Func1<UserAccountControlRsp, Observable<DevicesMergeTypesRsp>>() {
+        RetrofitServiceHelper.getInstance().doAccountControl(uid, phoneId).subscribeOn(Schedulers.io()).flatMap(new Function<UserAccountControlRsp, ObservableSource<DevicesMergeTypesRsp>>() {
             @Override
-            public Observable<DevicesMergeTypesRsp> call(UserAccountControlRsp userAccountControlRsp) {
+            public ObservableSource<DevicesMergeTypesRsp> apply(UserAccountControlRsp userAccountControlRsp) throws Exception {
                 UserInfo userInfo = userAccountControlRsp.getData();
                 RetrofitServiceHelper.getInstance().saveSessionId(userInfo.getSessionID());
                 //
                 eventLoginData = UserPermissionFactory.createLoginData(userInfo, phoneId);
                 return RetrofitServiceHelper.getInstance().getDevicesMergeTypes();
             }
-        }).doOnNext(new Action1<DevicesMergeTypesRsp>() {
+        }).doAfterNext(new Consumer<DevicesMergeTypesRsp>() {
             @Override
-            public void call(DevicesMergeTypesRsp devicesMergeTypesRsp) {
+            public void accept(DevicesMergeTypesRsp devicesMergeTypesRsp) throws Exception {
                 DeviceMergeTypesInfo data = devicesMergeTypesRsp.getData();
                 PreferencesHelper.getInstance().saveLocalDevicesMergeTypes(data);
             }
@@ -166,7 +166,6 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                 getView().dismissProgressDialog();
                 getView().finishAc();
             }
-
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
@@ -293,9 +292,9 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
 //                getView().onPullRefreshComplete();
 //            }
 //        });
-        RetrofitServiceHelper.getInstance().backMainAccount().subscribeOn(Schedulers.io()).flatMap(new Func1<LoginRsp, Observable<DevicesMergeTypesRsp>>() {
+        RetrofitServiceHelper.getInstance().backMainAccount().subscribeOn(Schedulers.io()).flatMap(new Function<LoginRsp, ObservableSource<DevicesMergeTypesRsp>>() {
             @Override
-            public Observable<DevicesMergeTypesRsp> call(LoginRsp loginRsp) {
+            public ObservableSource<DevicesMergeTypesRsp> apply(LoginRsp loginRsp) throws Exception {
                 //
                 String sessionID = loginRsp.getData().getSessionID();
                 RetrofitServiceHelper.getInstance().saveSessionId(sessionID);
@@ -304,9 +303,9 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                 PreferencesHelper.getInstance().saveUserData(eventLoginData);
                 return RetrofitServiceHelper.getInstance().getDevicesMergeTypes();
             }
-        }).doOnNext(new Action1<DevicesMergeTypesRsp>() {
+        }).doOnNext(new Consumer<DevicesMergeTypesRsp>() {
             @Override
-            public void call(DevicesMergeTypesRsp devicesMergeTypesRsp) {
+            public void accept(DevicesMergeTypesRsp devicesMergeTypesRsp) throws Exception {
                 DeviceMergeTypesInfo data = devicesMergeTypesRsp.getData();
                 PreferencesHelper.getInstance().saveLocalDevicesMergeTypes(data);
             }

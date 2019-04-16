@@ -33,8 +33,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class InspectionActivityPresenter extends BasePresenter<IInspectionActivityView> implements
         BLEDeviceListener<BLEDevice>, IOnCreate, Constants, IOnStart, Runnable {

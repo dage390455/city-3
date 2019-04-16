@@ -39,8 +39,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class ContractServiceActivityPresenter extends BasePresenter<IContractServiceActivityView> implements

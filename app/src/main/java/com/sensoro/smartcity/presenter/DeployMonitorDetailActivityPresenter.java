@@ -60,8 +60,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployMonitorDetailActivityView> implements IOnCreate, IOnStart, Constants
         , SensoroConnectionCallback, BLEDeviceListener<BLEDevice>, Runnable {
