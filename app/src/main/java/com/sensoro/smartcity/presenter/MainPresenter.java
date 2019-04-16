@@ -43,7 +43,6 @@ import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
-import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -502,7 +501,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                                 }
                                 EventBus.getDefault().post(eventData2);
                             }
-                            Beta.checkUpgrade(false, false);
+                            //TODO 暂时去掉频繁后台请求
+//                            Beta.checkUpgrade(false, false);
                             mHandler.postDelayed(mRunnable, 10 * 1000);
                             try {
                                 LogUtils.loge("TaskRunnable == pingNetCanUse = " + pingNetCanUse + ",检查更新");
