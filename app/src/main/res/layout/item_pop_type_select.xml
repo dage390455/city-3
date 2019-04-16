@@ -53,7 +53,7 @@
 
 
 
-    <com.sensoro.smartcity.widget.MinView
+    <View
         android:id="@+id/pop_type_view_cancel"
         android:layout_below="@id/pop_type_fl"
         android:layout_width="match_parent"
