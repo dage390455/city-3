@@ -32,6 +32,10 @@ import com.antelope.sdk.utils.WorkThreadExecutor;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.server.CityObserver;
+import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.response.DeviceCameraListRsp;
+import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.temp.entity.DeviceDetailEntity;
 import com.sensoro.smartcity.temp.entity.LmBaseResponseEntity;
 
@@ -40,13 +44,18 @@ import java.nio.ByteBuffer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import retrofit2.HttpException;
 import retrofit2.Response;
 
 public class CameraTest extends AppCompatActivity {
+    public static final String KEY_TOKEN = "app_token";
 
+    public static final String KEY_USER_NAME = "user_name";
+    public static final String KEY_PASSWORD = "password";
     private static final String TAG = "CameraTest";
 
     @BindView(R.id.video_play_progress)
@@ -338,6 +347,29 @@ public class CameraTest extends AppCompatActivity {
 
 
     private void performGetDeviceInfo(String deviceId) {
+        RetrofitServiceHelper.getInstance().getDeviceCameraList(null, null, null).subscribeOn(Schedulers.io()).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(null) {
+            @Override
+            public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
+
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+
+            }
+        });
+        RetrofitServiceHelper.getInstance().getDeviceCameraMapList().subscribeOn(Schedulers.io()).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(null) {
+            @Override
+            public void onCompleted(ResponseBase responseBase) {
+
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+
+            }
+        });
+
 //        RetrofitManager.getInstance(this).getRetrofit()
 //                .create(CommonService.class)
 //                .getDeviceInfoById(deviceId)

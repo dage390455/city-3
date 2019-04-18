@@ -14,6 +14,7 @@ import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmTimeRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraListRsp;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
@@ -341,7 +342,7 @@ public interface RetrofitService {
      * @return
      */
     @GET("cameras")
-    Observable<ResponseBase> getDeviceCameraList(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search);
+    Observable<DeviceCameraListRsp> getDeviceCameraList(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search);
 
     /**
      * 获取用户下全量摄像头列表

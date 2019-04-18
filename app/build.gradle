@@ -274,6 +274,9 @@ dependencies {
         exclude group: "com.amap.api"
     }
     implementation files('libs/player.jar')
+//    implementation 'com.shuyu:GSYVideoPlayer:6.0.3'
+    implementation 'com.shuyu:gsyVideoPlayer-java:6.0.3'
+    implementation 'com.shuyu:gsyVideoPlayer-armv7a:6.0.3'
 }
 //获取编译时间
 static def releaseTime() {

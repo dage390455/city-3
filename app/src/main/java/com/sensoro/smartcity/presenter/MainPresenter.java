@@ -212,6 +212,13 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         }
         //保存一遍当前的版本信息
         PreferencesHelper.getInstance().saveCurrentVersionCode(AppUtils.getVersionCode(mContext));
+//        if (true){
+//            Intent intent = new Intent(mContext, RecyclerViewActivity.class);
+//            getView().startAC(intent);
+//            getView().finishAc();
+//            return;
+//        }
+        //
         initViewPager();
         mHandler.postDelayed(new Runnable() {
             @Override

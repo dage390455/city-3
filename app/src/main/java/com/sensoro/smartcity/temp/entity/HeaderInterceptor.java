@@ -4,12 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.sensoro.smartcity.temp.CameraTest;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import cloud.antelope.videoplaydemo.Constants;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -42,7 +43,7 @@ public class HeaderInterceptor implements Interceptor {
         if (mHeaders != null) {
             mHeaders.put("User-Agent", "Android");
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
-            mHeaders.put(AUTHORIZATION, sp.getString(Constants.KEY_TOKEN, ""));
+            mHeaders.put(AUTHORIZATION, sp.getString(CameraTest.KEY_TOKEN, ""));
             Set<String> keys = mHeaders.keySet();
             for (String headerKey : keys) {
                 builder.addHeader(headerKey, mHeaders.get(headerKey));

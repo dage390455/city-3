@@ -28,6 +28,7 @@ import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmTimeRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraListRsp;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
@@ -1522,7 +1523,7 @@ public class RetrofitServiceHelper {
      * @param search
      * @return
      */
-    public Observable<ResponseBase> getDeviceCameraList(Integer pageSize, Integer page, String search) {
+    public Observable<DeviceCameraListRsp> getDeviceCameraList(Integer pageSize, Integer page, String search) {
         return retrofitService.getDeviceCameraList(pageSize, page, search);
     }
 
