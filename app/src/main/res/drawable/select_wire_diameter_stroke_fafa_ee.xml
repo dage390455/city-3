@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/shape_bg_solid_ee_stroke_df_corner_2dp" android:state_pressed="true"/>
+<item android:drawable="@drawable/shape_bg_solid_fa_stroke_df_corner_2dp"/>
+</selector>
