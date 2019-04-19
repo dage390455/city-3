@@ -22,7 +22,7 @@ public class DeviceCameraInfo {
     private String sn;
     private String cid;
     private String name;
-    private DeviceCameraUseridBean userid;
+//    private DeviceCameraUseridBean userid;
     private InfoBean info;
     private String mobilePhone;
     private String id;
@@ -68,13 +68,13 @@ public class DeviceCameraInfo {
         this.name = name;
     }
 
-    public DeviceCameraUseridBean getUserid() {
-        return userid;
-    }
+//    public DeviceCameraUseridBean getUserid() {
+//        return userid;
+//    }
 
-    public void setUserid(DeviceCameraUseridBean userid) {
-        this.userid = userid;
-    }
+//    public void setUserid(DeviceCameraUseridBean userid) {
+//        this.userid = userid;
+//    }
 
     public InfoBean getInfo() {
         return info;

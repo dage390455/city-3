@@ -22,6 +22,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeviceCameraContentAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeviceCameraActivityView;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.presenter.DeviceCameraActivityPresenter;
@@ -68,7 +69,7 @@ public class DeviceCameraActivity extends BaseActivity<IDeviceCameraActivityView
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_alarm_history_log);
+        setContentView(R.layout.activity_device_camera);
         ButterKnife.bind(mActivity);
         initView();
         mPresenter.initData(mActivity);
@@ -80,7 +81,8 @@ public class DeviceCameraActivity extends BaseActivity<IDeviceCameraActivityView
     }
 
     private void initView() {
-        includeImvTitleTvTitle.setText(mActivity.getString(R.string.historical_log));
+        includeImvTitleTvTitle.setText("摄像头列表");
+        includeImvTitleImvSubtitle.setVisibility(View.GONE);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mDeviceCameraContentAdapter = new DeviceCameraContentAdapter(mActivity);
         mDeviceCameraContentAdapter.setOnAlarmHistoryLogConfirmListener(this);
@@ -102,14 +104,14 @@ public class DeviceCameraActivity extends BaseActivity<IDeviceCameraActivityView
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
                 isShowDialog = false;
-//                mPresenter.requestDataByFilter(DIRECTION_DOWN);
+                mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN);
             }
         });
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
                 isShowDialog = false;
-//                mPresenter.requestDataByFilter(DIRECTION_UP);
+                mPresenter.requestDataByFilter(Constants.DIRECTION_UP);
             }
         });
         //

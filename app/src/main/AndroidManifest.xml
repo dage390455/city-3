@@ -360,6 +360,7 @@
         <activity android:name=".temp.CameraTest" />
         <activity android:name=".temp.RecyclerViewActivity" />
         <activity android:name=".activity.DeviceCameraActivity" />
+        <activity android:name=".temp.SimpleDetailActivityMode" />
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"

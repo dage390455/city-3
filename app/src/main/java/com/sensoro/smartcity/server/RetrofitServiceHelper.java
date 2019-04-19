@@ -28,6 +28,9 @@ import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmTimeRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraDetailRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraFacePicListRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraHistoryRsp;
 import com.sensoro.smartcity.server.response.DeviceCameraListRsp;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
@@ -1511,7 +1514,7 @@ public class RetrofitServiceHelper {
      * @param sn
      * @return
      */
-    public Observable<ResponseBase> getDeviceCamera(String sn) {
+    public Observable<DeviceCameraDetailRsp> getDeviceCamera(String sn) {
         return retrofitService.getDeviceCamera(sn);
     }
 
@@ -1534,6 +1537,67 @@ public class RetrofitServiceHelper {
      */
     public Observable<ResponseBase> getDeviceCameraMapList() {
         return retrofitService.getDeviceCameraMapList();
+    }
+
+    /**
+     * 获取摄像头详情
+     *
+     * @param pageSize
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    public Observable<DeviceCameraFacePicListRsp> getDeviceCameraFaceList(List<String> cids, Integer pageSize, Integer limit, String startTime, String endTime) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (cids != null && cids.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (String cid : cids) {
+                    jsonArray.put(cid);
+                }
+                jsonObject.put("cids", jsonArray);
+            }
+            if (pageSize != null) {
+                jsonObject.put("pageSize", pageSize);
+            }
+            if (limit != null) {
+                jsonObject.put("limit", limit);
+            }
+
+            if (!TextUtils.isEmpty(startTime)) {
+                jsonObject.put("startTime", startTime);
+            }
+            if (!TextUtils.isEmpty(endTime)) {
+                jsonObject.put("endTime", endTime);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.getDeviceCameraFaceList(body);
+    }
+
+    public Observable<DeviceCameraHistoryRsp> getDeviceCameraPlayHistoryAddress(String cid, String beginTime, String endTime, String mediaType) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(cid)) {
+                jsonObject.put("cid", cid);
+            }
+
+            if (!TextUtils.isEmpty(beginTime)) {
+                jsonObject.put("beginTime", beginTime);
+            }
+            if (!TextUtils.isEmpty(endTime)) {
+                jsonObject.put("endTime", endTime);
+            }
+            if (!TextUtils.isEmpty(mediaType)) {
+                jsonObject.put("mediaType", mediaType);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.getDeviceCameraPlayHistoryAddress(body);
     }
 
 }

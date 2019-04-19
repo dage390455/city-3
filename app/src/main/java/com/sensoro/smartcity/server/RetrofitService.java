@@ -14,6 +14,9 @@ import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmTimeRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraDetailRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraFacePicListRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraHistoryRsp;
 import com.sensoro.smartcity.server.response.DeviceCameraListRsp;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
@@ -331,7 +334,7 @@ public interface RetrofitService {
      * @return
      */
     @GET("camera")
-    Observable<ResponseBase> getDeviceCamera(@Query("sn") String sn);
+    Observable<DeviceCameraDetailRsp> getDeviceCamera(@Query("sn") String sn);
 
     /**
      * 获取用户下摄像头列表
@@ -346,9 +349,16 @@ public interface RetrofitService {
 
     /**
      * 获取用户下全量摄像头列表
+     *
      * @return
      */
     @GET("cameras/map")
     Observable<ResponseBase> getDeviceCameraMapList();
+
+    @POST("picture/faceList")
+    Observable<DeviceCameraFacePicListRsp> getDeviceCameraFaceList(@Body RequestBody requestBody);
+
+    @POST("video/queryHistoryAddress")
+    Observable<DeviceCameraHistoryRsp> getDeviceCameraPlayHistoryAddress(@Body RequestBody requestBody);
 }
 
