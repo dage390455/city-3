@@ -67,7 +67,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     public IWXAPI api;
     private static volatile SensoroCityApplication instance;
     private NotificationUtils mNotificationUtils;
-    private static boolean isAPPBack = true;
+    public boolean isAPPBack = true;
     private static PushHandler pushHandler;
     public UploadManager uploadManager;
     public volatile boolean hasGotToken = false;
