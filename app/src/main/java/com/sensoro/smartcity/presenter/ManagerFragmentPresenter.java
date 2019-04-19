@@ -12,6 +12,7 @@ import com.sensoro.smartcity.activity.InspectionTaskListActivity;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.MerchantSwitchActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
+import com.sensoro.smartcity.activity.WireMaterialDiameterCalculatorActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
@@ -244,5 +245,10 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, TYPE_SCAN_SIGNAL_CHECK);
         getView().startAC(intent);
 
+    }
+
+    public void doWireMaterial_diameter() {
+        Intent intent = new Intent(mContext, WireMaterialDiameterCalculatorActivity.class);
+        getView().startAC(intent);
     }
 }

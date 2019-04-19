@@ -65,6 +65,8 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     LinearLayout fgMainManageLlMainFunction;
     @BindView(R.id.fg_main_manage_ll_signal_check)
     LinearLayout fgMainManageLlSignalCheck;
+    @BindView(R.id.fg_main_manage_ll_wire_material_diameter)
+    LinearLayout fgMainManageLlWireMaterialDiameter;
     @BindView(R.id.line1)
     FrameLayout line1;
     @BindView(R.id.line2)
@@ -217,7 +219,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
             R.id.fg_main_manage_ll_contract_management, R.id.fg_main_manage_ll_polling_mission,
             R.id.fg_main_manage_ll_maintenance_mission, R.id.fg_main_manage_ll_scan_login,
             R.id.fg_main_manage_ll_about_us, R.id.fg_main_manage_ll_version_info,
-            R.id.fg_main_manage_ll_exit, R.id.fg_main_manage_ll_signal_check, R.id.fg_main_manage_ll_camera})
+            R.id.fg_main_manage_ll_exit, R.id.fg_main_manage_ll_signal_check, R.id.fg_main_manage_ll_wire_material_diameter, R.id.fg_main_manage_ll_camera})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fg_main_manage_ll_change_merchants:
@@ -331,6 +333,9 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 } else {
                     showBleTips();
                 }
+                break;
+            case R.id.fg_main_manage_ll_wire_material_diameter:
+                mPresenter.doWireMaterial_diameter();
                 break;
             case R.id.fg_main_manage_ll_camera:
                 startAC(new Intent(mRootFragment.getActivity(), DeviceCameraActivity.class));

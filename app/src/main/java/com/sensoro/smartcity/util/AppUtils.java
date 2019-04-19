@@ -18,6 +18,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.RemoteException;
 import android.provider.ContactsContract;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -419,10 +420,15 @@ public class AppUtils {
 //    }
 
     public static void dismissInputMethodManager(Context context, EditText editText) {
-        editText.setCursorVisible(false);
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);//从控件所在的窗口中隐藏
         editText.setCursorVisible(false);
+    }
+
+    public static void dismissInputMethodManager(Context context, EditText editText,boolean cursorVisible) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);//从控件所在的窗口中隐藏
+        editText.setCursorVisible(cursorVisible);
     }
 
     public static void openInputMethodManager(Context context, EditText editText) {

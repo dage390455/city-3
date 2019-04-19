@@ -315,7 +315,7 @@
         <!-- <action android:name="com.tencent.mm.plugin.openapi.Intent.ACTION_REFRESH_WXAPP" /> -->
         <!-- </intent-filter> -->
         <!-- </receiver> -->
-        <activity android:name=".activity.DeployRecordActivity"/>
+        <activity android:name=".activity.DeployRecordActivity" />
         <activity android:name=".activity.DeployRecordDetailActivity" />
         <activity android:name=".activity.SignalCheckActivity" />
         <activity android:name=".widget.imagepicker.ui.ImageBaseActivity" />
@@ -361,6 +361,7 @@
         <activity android:name=".temp.RecyclerViewActivity" />
         <activity android:name=".activity.DeviceCameraActivity" />
         <activity android:name=".temp.SimpleDetailActivityMode" />
+        <activity android:name=".activity.WireMaterialDiameterCalculatorActivity" />
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"

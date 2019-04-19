@@ -796,10 +796,10 @@
     <string name="over_current_description_one">if current  ≤ carrying current\nOvercurrent threshold = air rated current</string>
     <string name="over_current_description_two">if current ＞ carrying current\nOvercurrent threshold = carrying current</string>
     <string name="over_current">Overcurrent threshold</string>
-    <string name="cu">Copper core</string>
-    <string name="al">Aluminum core</string>
+    <string name="cu">Copper</string>
+    <string name="al">Aluminum</string>
     <string name="please_set_initial_configuration">Please set the initial configuration first</string>
-    <string name="actual_overcurrent_threshold_format">Actual overcurrent threshold：%dA</string>
+    <string name="actual_overcurrent_threshold_format">Actual overcurrent threshold:&#160;</string>
     <string name="business_name_phone">Merchant Name/Phone</string>
     <string name="empty_open_rated_current_is_out_of_range">overcurrent rated current is out of range</string>
     <string name="wire_current_carrying_capacity_is_not_within_the_open_range">Wire current carrying capacity is not within the open range</string>
@@ -845,7 +845,7 @@
     <string name="s_normal">Normal</string>
     <string name="s_bad">Bad</string>
     <string name="s_none">None</string>
-    <string name="air_rated_current">Air rated current</string>
+    <string name="air_rated_current">Air rated current:</string>
     <string name="monitor_material">Material</string>
     <string name="splash_copyright">Copyright \u00a9 %s SENSORO</string>
     <string name="device_demo_mode">Demo mode</string>
@@ -924,4 +924,27 @@
     <string name="deploy_check_record_reason_config">Device config setting failed</string>
     <string name="deploy_check_record_reason_signal">Device signal:</string>
     <string name="deploy_check_record_reason_status">Device status:</string>
+    <string name="in_line">Input</string>
+    <string name="out_line">Output</string>
+    <string name="current_transformer">Current transformer:&#160;</string>
+    <string name="leakage_current_transformer">Leakage current transformer:&#160;</string>
+    <string name="recommend_transformer">Match</string>
+    <string name="rated_current_no">Rated Current</string>
+    <string name="wire_material_diameter_calculator">Calculator</string>
+    <string name="wire_material_diameter_tip">Enter the parameters of the open, incoming, and outgoing lines to obtain the transformer model</string>
+    <string name="count_unit">Count</string>
+    <string name="delete_this_group">Delete</string>
+    <string name="not_matched_current_transformer">No recommendation, please contact Sensoro R &amp; D personnel to confirm</string>
+    <string name="air_open_arguments">Parameter</string>
+    <string name="air_open_rated_current">Rated current/A (0&#8211;560A)</string>
+    <string name="diameter_arguments_tip">Wire parameters, please choose according to the actual situation on site</string>
+    <string name="match_result">Result</string>
+    <string name="look_detail">Detail</string>
+    <string name="in_line_total_current">Total Value of Input:&#160;</string>
+    <string name="out_line_total_current">Total Value of Output:&#160;</string>
+    <string name="rated_current_match_tramformer">According to the actual overcurrent threshold of the line, the matching transformer model is shown above</string>
+    <string name="add_wire">Add</string>
+    <string name="diameter_mm">Diameter/mm²</string>
+    <string name="please_input_air_rated_current">Please enter the rated current</string>
+    <string name="rated_current_colon" >Rated current:&#160;</string>
 </resources>

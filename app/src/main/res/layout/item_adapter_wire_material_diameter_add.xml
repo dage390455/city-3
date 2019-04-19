@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fl_tittle_item_adapter_wire_material_diameter"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    android:background="@drawable/selector_keyboard_view"
+    >
+    <FrameLayout
+        android:id="@+id/fl_wrap_item_adapter_wire_material_diameter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        >
+        <TextView
+            android:id="@+id/tv_title_item_adapter_wire_material_diameter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/c_252525"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:drawablePadding="4dp"
+            />
+    </FrameLayout>
+
+</FrameLayout>
+
+
