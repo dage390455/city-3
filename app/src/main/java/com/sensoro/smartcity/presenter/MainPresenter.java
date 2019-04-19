@@ -78,6 +78,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     private final DeviceTaskResultListener mTaskResultListener = new DeviceTaskResultListener();
     private final Handler mHandler = new Handler();
     private final MainPresenter.TaskRunnable mRunnable = new MainPresenter.TaskRunnable();
+    private final NetWorkTaskRunnable mNetWorkTaskRunnable = new NetWorkTaskRunnable();
     //
     private WarnFragment warnFragment;
     private HomeFragment homeFragment;
@@ -228,7 +229,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 mScreenReceiver = new ScreenBroadcastReceiver();
                 mContext.registerReceiver(mScreenReceiver, intentFilter);
             }
-        }, 3000);
+        }, 500);
         //每次初始化静默拉取一次预警弹窗的配置项
         RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesAlarmPopupConfigRsp>(this) {
             @Override
@@ -275,12 +276,13 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 PushManager.getInstance().turnOnPush(SensoroCityApplication.getInstance());
             }
             mHandler.postDelayed(mRunnable, 3000L);
+            mHandler.postDelayed(mNetWorkTaskRunnable, 10 * 1000L);
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     createSocket();
                 }
-            }, 2000);
+            }, 1500);
             freshAlarmCount();
         } else {
             openLogin();
@@ -493,6 +495,22 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
         @Override
         public void run() {
+            if (mSocket != null && !mSocket.connected()) {
+                boolean reconnect = reconnect();
+                try {
+                    LogUtils.loge("mSocket  断开---->>> reconnect = " + reconnect);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }
+            mHandler.postDelayed(mRunnable, 10 * 1000);
+        }
+    }
+
+    private final class NetWorkTaskRunnable implements Runnable {
+
+        @Override
+        public void run() {
             //检查网络状态和app更新
             ThreadPoolManager.getInstance().execute(new Runnable() {
                 @Override
@@ -503,20 +521,22 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                         public void run() {
                             if (!pingNetCanUse) {
                                 if (isAttachedView()) {
-                                    getView().toastShort(mContext.getString(R.string.disconnected_from_network));
+                                    //应用在前台时提示
+                                    if (!SensoroCityApplication.getInstance().isAPPBack) {
+                                        getView().toastShort(mContext.getString(R.string.disconnected_from_network));
+                                    }
                                 }
-                                EventData eventData2 = new EventData();
-                                eventData2.code = EVENT_DATA_NET_WORK_CHANGE;
+                                EventData eventData = new EventData();
+                                eventData.code = EVENT_DATA_NET_WORK_CHANGE;
                                 try {
                                     LogUtils.loge("CONNECTIVITY_ACTION--->>重新拉取");
                                 } catch (Throwable throwable) {
                                     throwable.printStackTrace();
                                 }
-                                EventBus.getDefault().post(eventData2);
+                                EventBus.getDefault().post(eventData);
                             }
                             //TODO 暂时去掉频繁后台请求
 //                            Beta.checkUpgrade(false, false);
-                            mHandler.postDelayed(mRunnable, 10 * 1000);
                             try {
                                 LogUtils.loge("TaskRunnable == pingNetCanUse = " + pingNetCanUse + ",检查更新");
                             } catch (Throwable throwable) {
@@ -526,14 +546,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                     });
                 }
             });
-            if (mSocket != null && !mSocket.connected()) {
-                boolean reconnect = reconnect();
-                try {
-                    LogUtils.loge("mSocket  断开---->>> reconnect = " + reconnect);
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
-                }
-            }
+            mHandler.postDelayed(mNetWorkTaskRunnable, 30 * 1000);
         }
     }
 

@@ -880,9 +880,7 @@ public class RetrofitServiceHelper {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<DeviceAlarmItemRsp> deviceAlarmItemRspObservable = retrofitService.doUpdatePhotosUrl(id, body);
-        RxApiManager.getInstance().add("doUpdatePhotosUrl", deviceAlarmItemRspObservable.subscribe());
-        return deviceAlarmItemRspObservable;
+        return retrofitService.doUpdatePhotosUrl(id, body);
     }
 
     /**
@@ -1586,9 +1584,7 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<DevicesAlarmPopupConfigRsp> getDevicesAlarmPopupConfig() {
-        Observable<DevicesAlarmPopupConfigRsp> devicesAlarmPopupConfig = retrofitService.getDevicesAlarmPopupConfig();
-        RxApiManager.getInstance().add("getDevicesAlarmPopupConfig", devicesAlarmPopupConfig.subscribe());
-        return devicesAlarmPopupConfig;
+        return retrofitService.getDevicesAlarmPopupConfig();
     }
 
 
