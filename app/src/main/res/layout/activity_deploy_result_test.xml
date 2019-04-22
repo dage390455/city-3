@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <TextView
+    <com.sensoro.smartcity.widget.BoldTextView
         android:id="@+id/ac_deploy_result_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
