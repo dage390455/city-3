@@ -56,6 +56,7 @@ import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeployControlSettingData;
+import com.sensoro.smartcity.server.bean.DeviceCameraInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
 import com.sensoro.smartcity.server.bean.DeviceUpdateFirmwareData;
@@ -69,6 +70,7 @@ import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraListRsp;
 import com.sensoro.smartcity.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.smartcity.server.response.MonitorPointOperationRequestRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
@@ -145,6 +147,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     private SensoroDeviceConnection sensoroDeviceConnection;
     private String mOperationType;
     private volatile int deviceDemoMode = DEVICE_DEMO_MODE_NOT_SUPPORT;
+    private List<DeviceCameraInfo> deviceCameras;
 
     @Override
     public void initData(Context context) {
@@ -417,7 +420,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     }
 
     private void requestDeviceRecentLog() {
-        String sn = mDeviceInfo.getSn();
         getView().showProgressDialog();
         requestBlePassword();
         //合并请求
@@ -578,9 +580,30 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
                     }
                 }
+                String id = mDeviceInfo.getDeviceGroup();
+                if (!TextUtils.isEmpty(id)) {
+                    RetrofitServiceHelper.getInstance().getDeviceGroupCameraList(id, 10, 1, null).subscribeOn(Schedulers.io()).observeOn
+                            (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(MonitorPointElectricDetailActivityPresenter.this) {
+                        @Override
+                        public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
+                            deviceCameras = deviceCameraListRsp.getData();
+                            if (deviceCameras != null && deviceCameras.size() > 0) {
+                                getView().setDeviceCamerasText(mContext.getString(R.string.device_detail_camera_has_camera) + deviceCameras.size() + mContext.getString(R.string.device_detail_camera_camera_count));
+                            } else {
+                                getView().setDeviceCamerasText(mContext.getString(R.string.device_detail_camera_no_camera));
+                            }
+                        }
+
+                        @Override
+                        public void onErrorMsg(int errorCode, String errorMsg) {
+                            getView().toastShort(errorMsg);
+                        }
+                    });
+                } else {
+                    getView().setDeviceCamerasText(mContext.getString(R.string.device_detail_camera_no_camera));
+                }
                 refreshOperationStatus();
                 freshDeviceUpdateVersionInfo();
-
                 freshLocationDeviceInfo();
                 handleDeployInfo();
                 handleDeviceModeInfo();
@@ -1967,6 +1990,14 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 getView().toastShort(mContext.getString(R.string.device_is_not_nearby));
             }
 
+        }
+    }
+
+    public void doDeviceGroupCameras() {
+        if (deviceCameras != null && deviceCameras.size() > 0) {
+
+        } else {
+            getView().setDeviceCamerasText(mContext.getString(R.string.device_detail_camera_no_camera));
         }
     }
 }

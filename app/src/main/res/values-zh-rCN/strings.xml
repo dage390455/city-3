@@ -935,6 +935,10 @@
     <string name="add_wire">添加</string>
     <string name="diameter_mm">线径/mm²</string>
     <string name="please_input_air_rated_current">请输入空开额定电流</string>
-    <string name="rated_current_colon" >空开额定电流：</string>
+    <string name="rated_current_colon">空开额定电流：</string>
+    <string name="deploy_detail_camera_group">部署摄像头</string>
+    <string name="device_detail_camera_no_camera">未关联摄像头</string>
+    <string name="device_detail_camera_has_camera">已关联</string>
+    <string name="device_detail_camera_camera_count">个摄像头</string>
 
 </resources>

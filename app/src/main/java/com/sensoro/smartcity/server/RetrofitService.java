@@ -360,5 +360,8 @@ public interface RetrofitService {
 
     @POST("video/queryHistoryAddress")
     Observable<DeviceCameraHistoryRsp> getDeviceCameraPlayHistoryAddress(@Body RequestBody requestBody);
+
+    @GET("cameras/group/bind")
+    Observable<DeviceCameraListRsp> getDeviceGroupCameraList(@Query("_id") String _id, @Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search);
 }
 
