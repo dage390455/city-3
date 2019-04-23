@@ -18,7 +18,7 @@ import com.sensoro.smartcity.server.bean.DeviceCameraInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.DeviceCameraDetailRsp;
 import com.sensoro.smartcity.server.response.DeviceCameraListRsp;
-import com.sensoro.smartcity.temp.SimpleDetailActivityMode;
+import com.sensoro.smartcity.activity.CameraDetailActivity;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
@@ -56,7 +56,7 @@ public class DeviceCameraActivityPresenter extends BasePresenter<IDeviceCameraAc
         final String cid = deviceCameraInfo.getCid();
 //        deviceCameraInfo.getInfo().
 
-//        getView().startAC(new Intent(mContext, SimpleDetailActivityMode.class));
+//        getView().startAC(new Intent(mContext, CameraDetailActivity.class));
         getView().showProgressDialog();
         RetrofitServiceHelper.getInstance().getDeviceCamera(sn).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraDetailRsp>(null) {
             @Override
@@ -64,7 +64,7 @@ public class DeviceCameraActivityPresenter extends BasePresenter<IDeviceCameraAc
                 DeviceCameraDetailInfo data = deviceCameraDetailRsp.getData();
                 String hls = data.getHls();
                 Intent intent = new Intent();
-                intent.setClass(mContext, SimpleDetailActivityMode.class);
+                intent.setClass(mContext, CameraDetailActivity.class);
                 intent.putExtra("cid", cid);
                 intent.putExtra("hls", hls);
                 getView().startAC(intent);
