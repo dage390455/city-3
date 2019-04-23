@@ -1547,7 +1547,7 @@ public class RetrofitServiceHelper {
      * @param endTime
      * @return
      */
-    public Observable<DeviceCameraFacePicListRsp> getDeviceCameraFaceList(List<String> cids, Integer pageSize, Integer limit, String startTime, String endTime) {
+    public Observable<DeviceCameraFacePicListRsp> getDeviceCameraFaceList(List<String> cids, Integer pageSize, Integer limit,String minID, String startTime, String endTime) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (cids != null && cids.size() > 0) {
@@ -1562,6 +1562,9 @@ public class RetrofitServiceHelper {
             }
             if (limit != null) {
                 jsonObject.put("limit", limit);
+            }
+            if(minID != null){
+                jsonObject.put("minId", minID);
             }
 
             if (!TextUtils.isEmpty(startTime)) {

@@ -360,7 +360,7 @@
         <activity android:name=".temp.CameraTest" />
         <activity android:name=".temp.RecyclerViewActivity" />
         <activity android:name=".activity.DeviceCameraActivity" />
-        <activity android:name=".temp.SimpleDetailActivityMode" />
+        <activity android:name=".activity.CameraDetailActivity" />
         <activity android:name=".activity.WireMaterialDiameterCalculatorActivity" />
 
         <provider

@@ -80,7 +80,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     @BindView(R.id.line5)
     FrameLayout line5;
     @BindView(R.id.fg_main_manage_ll_camera)
-    LinearLayout fgMainManagellamera;
+    LinearLayout fgMainManageLlCamera;
     private ProgressUtils mProgressUtils;
     private TipDialogUtils mExitDialog;
     private VersionDialogUtils mVersionDialog;
