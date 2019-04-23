@@ -1603,4 +1603,8 @@ public class RetrofitServiceHelper {
         return retrofitService.getDeviceCameraPlayHistoryAddress(body);
     }
 
+    public Observable<DeviceCameraListRsp> getDeviceGroupCameraList(String _id, Integer pageSize, Integer page, String search) {
+        return retrofitService.getDeviceGroupCameraList(_id, pageSize, page, search);
+    }
+
 }

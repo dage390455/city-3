@@ -900,7 +900,6 @@
     <string name="installation_config_failed">Initial configuration failed, fix description，Reason:</string>
 
 
-
     <string name="deploy_check_dialog_quality_bad_signal">Poor signal quality, fix description</string>
     <string name="device_is_malfunction">The device is faulting，</string>
     <string name="device_is_alarm">The device is faulting，</string>
@@ -946,5 +945,9 @@
     <string name="add_wire">Add</string>
     <string name="diameter_mm">Diameter/mm²</string>
     <string name="please_input_air_rated_current">Please enter the rated current</string>
-    <string name="rated_current_colon" >Rated current:&#160;</string>
+    <string name="rated_current_colon">Rated current:&#160;</string>
+    <string name="deploy_detail_camera_group">Deploy Cameras</string>
+    <string name="device_detail_camera_no_camera">No Camera</string>
+    <string name="device_detail_camera_has_camera">Has</string>
+    <string name="device_detail_camera_camera_count">Camera</string>
 </resources>
