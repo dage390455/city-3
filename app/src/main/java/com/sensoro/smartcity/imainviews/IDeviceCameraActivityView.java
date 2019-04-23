@@ -21,4 +21,5 @@ public interface IDeviceCameraActivityView extends IToast, IProgressDialog, IAct
     void setDateSelectText(String text);
 
     void setNoContentVisible(boolean isVisible);
+    void setSmartRefreshEnable(boolean enable);
 }

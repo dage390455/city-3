@@ -1,6 +1,8 @@
 package com.sensoro.smartcity.server.bean;
 
-public class DeviceCameraUserPayInfoBean {
+import java.io.Serializable;
+
+public class DeviceCameraUserPayInfoBean implements Serializable {
     /**
      * sub_mch_id : 13962862021
      * card_id : 91110105306401130D

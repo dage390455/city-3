@@ -243,6 +243,12 @@ public class DeviceCameraActivity extends BaseActivity<IDeviceCameraActivityView
     }
 
     @Override
+    public void setSmartRefreshEnable(boolean enable) {
+        refreshLayout.setEnableLoadMore(enable);
+        refreshLayout.setEnableRefresh(enable);
+    }
+
+    @Override
     public void onPullRefreshCompleteNoMoreData() {
         refreshLayout.finishLoadMoreWithNoMoreData();
     }

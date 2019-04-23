@@ -1,6 +1,8 @@
 package com.sensoro.smartcity.server.bean;
 
-public class DeviceCameraUserManagerBean {
+import java.io.Serializable;
+
+public class DeviceCameraUserManagerBean implements Serializable {
     /**
      * contacts : 15110041945
      * name : 高鹏
