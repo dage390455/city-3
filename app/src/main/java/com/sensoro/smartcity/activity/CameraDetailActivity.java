@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
@@ -29,6 +28,7 @@ import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ import butterknife.ButterKnife;
 public class CameraDetailActivity extends BaseActivity<ICameraDetailView, CameraDetailPresenter>
         implements ICameraDetailView {
 
-//    @BindView(R.id.include_text_title_imv_arrows_left)
+    //    @BindView(R.id.include_text_title_imv_arrows_left)
 //    ImageView includeTextTitleImvArrowsLeft;
 //    @BindView(R.id.include_text_title_tv_title)
 //    TextView includeTextTitleTvTitle;
@@ -64,16 +64,15 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.activity_detail_player)
-    RelativeLayout activityDetailPlayer;
+    LinearLayout activityDetailPlayer;
 
     private boolean isPlay;
     private boolean isPause;
     private ProgressUtils mProgressUtils;
     private OrientationUtils orientationUtils;
     private DeviceCameraListAdapter deviceCameraListAdapter;
-    public ImmersionBar immersionBar;
     private GSYVideoOptionBuilder gsyVideoOption;
-
+    private ImmersionBar immersionBar;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -91,29 +90,28 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 //        includeTextTitleTvTitle.setTextColor(Color.WHITE);
 //        includeTextTitleClRoot.setBackgroundColor(Color.TRANSPARENT);
 
-        //增加title
-        detailPlayer.getTitleTextView().setVisibility(View.GONE);
-        detailPlayer.getBackButton().setVisibility(View.GONE);
-
         //外部辅助的旋转，帮助全屏
         orientationUtils = new OrientationUtils(this, detailPlayer);
         //初始化不打开外部的旋转
         orientationUtils.setEnable(false);
-
+//增加title
+        getCurPlay().getTitleTextView().setVisibility(View.VISIBLE);
+        //设置返回键
+        getCurPlay().getBackButton().setVisibility(View.VISIBLE);
 //        initVideoOption();
 
         initRefreshLayout();
 
         initRvCameraList();
 
-
-        detailPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
+        getCurPlay().getFullscreenButton().setImageDrawable(getDrawable(R.drawable.ic_camera_full_screen));
+        getCurPlay().getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //直接横屏
                 orientationUtils.resolveByClick();
                 //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
-                detailPlayer.startWindowFullscreen(CameraDetailActivity.this, true, true);
+                getCurPlay().startWindowFullscreen(CameraDetailActivity.this, true, true);
             }
         });
 
@@ -181,9 +179,24 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
                     orientationUtils.setEnable(!lock);
                 }
             }
-        }).build(detailPlayer);
+        }).build(getCurPlay());
+        getCurPlay().getFullscreenButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //直接横屏
+                orientationUtils.resolveByClick();
 
-        detailPlayer.startPlayLogic();
+                //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
+                getCurPlay().startWindowFullscreen(mActivity, true, true);
+            }
+        });
+        getCurPlay().getBackButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        getCurPlay().startPlayLogic();
     }
 
     @Override
@@ -195,8 +208,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
     @Override
     public void startPlayLogic(String url1) {
-        gsyVideoOption.setUrl(url1).build(detailPlayer);
-        detailPlayer.startPlayLogic();
+        gsyVideoOption.setUrl(url1).build(getCurPlay());
+        getCurPlay().startPlayLogic();
     }
 
     @Override
@@ -248,9 +261,9 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
 //                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                    int firstPosition = manager.findFirstVisibleItemPosition();
-                    mPresenter.doDateTime(firstPosition);
+                LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int firstPosition = manager.findFirstVisibleItemPosition();
+                mPresenter.doDateTime(firstPosition);
 //                }
 
 
@@ -279,7 +292,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
     @Override
     protected void onPause() {
-        detailPlayer.getCurrentPlayer().onVideoPause();
+        getCurPlay().onVideoPause();
         super.onPause();
         isPause = true;
     }
@@ -291,7 +304,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
     @Override
     protected void onResume() {
-        detailPlayer.getCurrentPlayer().onVideoResume(false);
+        getCurPlay().onVideoResume(false);
         super.onResume();
         isPause = false;
     }
@@ -300,7 +313,10 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
     protected void onDestroy() {
         super.onDestroy();
         if (isPlay) {
-            detailPlayer.getCurrentPlayer().release();
+            getCurPlay().release();
+        }
+        if (immersionBar != null) {
+            immersionBar.destroy();
         }
         if (orientationUtils != null)
             orientationUtils.releaseListener();
@@ -316,7 +332,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
         super.onConfigurationChanged(newConfig);
         //如果旋转了就全屏
         if (isPlay && !isPause) {
-//            detailPlayer.onConfigurationChanged(this, newConfig, orientationUtils, true, true);
+            getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
         }
     }
 
@@ -335,8 +351,26 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
         }
     }
 
+    @Override
+    public boolean isActivityOverrideStatusBar() {
+        immersionBar = ImmersionBar.with(mActivity);
+        immersionBar.transparentStatusBar().init();
+        return true;
+    }
 
-//    @OnClick(R.id.include_text_title_imv_arrows_left)
+    private GSYVideoPlayer getCurPlay() {
+        if (detailPlayer.getFullWindowPlayer() != null) {
+            return detailPlayer.getFullWindowPlayer();
+        }
+        return detailPlayer;
+    }
+
+    @Override
+    public boolean setMyCurrentActivityTheme() {
+        setTheme(R.style.Theme_AppCompat_Full);
+        return true;
+    }
+    //    @OnClick(R.id.include_text_title_imv_arrows_left)
 //    public void onViewClicked() {
 //    }
 }

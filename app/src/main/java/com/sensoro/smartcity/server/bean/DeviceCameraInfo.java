@@ -1,8 +1,9 @@
 package com.sensoro.smartcity.server.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class DeviceCameraInfo {
+public class DeviceCameraInfo implements Serializable {
 
     /**
      * label : []
@@ -108,7 +109,7 @@ public class DeviceCameraInfo {
         this.label = label;
     }
 
-    public static class InfoBean {
+    public static class InfoBean implements Serializable{
         /**
          * type : 抓拍机
          * version : SENSORO

@@ -710,19 +710,22 @@
                 </LinearLayout>
 
                 <View
+                    android:id="@+id/line_monitor_deploy_cameras"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/view_divider_width"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="20dp"
-                    android:background="@color/c_dfdfdf" />
+                    android:background="@color/c_dfdfdf"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/ll_monitor_deploy_cameras"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -741,8 +744,7 @@
                         android:layout_marginEnd="20dp"
                         android:layout_marginBottom="16dp"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp"
-                        android:visibility="visible" />
+                        android:textSize="14sp" />
                 </LinearLayout>
 
             </LinearLayout>

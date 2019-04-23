@@ -1,8 +1,9 @@
 package com.sensoro.smartcity.server.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class DeviceCameraUseridBean {
+public class DeviceCameraUseridBean implements Serializable {
     /**
      * _id : 590c235044aa4369905d455b
      * updatedTime : 1529484942657
@@ -368,7 +369,7 @@ public class DeviceCameraUseridBean {
     }
 
 
-    public static class CharacterBean {
+    public static class CharacterBean implements Serializable {
         /**
          * logoUrl1 : https://resource-city.sensoro.com/1542702608103935.png
          * logoUrl : https://resource-city.sensoro.com/1543475323312911.jpeg
@@ -470,9 +471,9 @@ public class DeviceCameraUseridBean {
         }
     }
 
-    public static class ConfigBean {
+    public static class ConfigBean implements Serializable {
     }
 
-    public static class GrantsBean {
+    public static class GrantsBean implements Serializable {
     }
 }

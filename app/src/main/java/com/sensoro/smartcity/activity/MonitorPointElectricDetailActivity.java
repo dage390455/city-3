@@ -205,6 +205,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     LinearLayout llMonitorDeployCameras;
     @BindView(R.id.monitor_detail_tv_deploy_cameras)
     TextView monitorDetailTvDeployCameras;
+    @BindView(R.id.line_monitor_deploy_cameras)
+    View lineMonitorDeployCameras;
     private boolean showDetail = false;
     private MonitoringPointRcContentAdapter mContentAdapter;
     private MonitoringPointRcMalfunctionContentAdapter mContentMalfunctionAdapter;
@@ -689,7 +691,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
 
     @Override
     public void setDeviceCamerasText(String text) {
-        monitorDetailTvDeployCameras.setVisibility(View.VISIBLE);
+        llMonitorDeployCameras.setVisibility(View.VISIBLE);
+        lineMonitorDeployCameras.setVisibility(View.VISIBLE);
         monitorDetailTvDeployCameras.setText(text);
     }
 

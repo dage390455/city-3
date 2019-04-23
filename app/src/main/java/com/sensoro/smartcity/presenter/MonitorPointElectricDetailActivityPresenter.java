@@ -31,6 +31,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
 import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
+import com.sensoro.smartcity.activity.DeviceCameraActivity;
 import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapENActivity;
@@ -147,7 +148,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     private SensoroDeviceConnection sensoroDeviceConnection;
     private String mOperationType;
     private volatile int deviceDemoMode = DEVICE_DEMO_MODE_NOT_SUPPORT;
-    private List<DeviceCameraInfo> deviceCameras;
+    private ArrayList<DeviceCameraInfo> deviceCameras;
 
     @Override
     public void initData(Context context) {
@@ -586,11 +587,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(MonitorPointElectricDetailActivityPresenter.this) {
                         @Override
                         public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
-                            deviceCameras = deviceCameraListRsp.getData();
+                            deviceCameras = (ArrayList<DeviceCameraInfo>) deviceCameraListRsp.getData();
                             if (deviceCameras != null && deviceCameras.size() > 0) {
                                 getView().setDeviceCamerasText(mContext.getString(R.string.device_detail_camera_has_camera) + deviceCameras.size() + mContext.getString(R.string.device_detail_camera_camera_count));
-                            } else {
-                                getView().setDeviceCamerasText(mContext.getString(R.string.device_detail_camera_no_camera));
                             }
                         }
 
@@ -599,8 +598,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             getView().toastShort(errorMsg);
                         }
                     });
-                } else {
-                    getView().setDeviceCamerasText(mContext.getString(R.string.device_detail_camera_no_camera));
                 }
                 refreshOperationStatus();
                 freshDeviceUpdateVersionInfo();
@@ -1995,7 +1992,11 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     public void doDeviceGroupCameras() {
         if (deviceCameras != null && deviceCameras.size() > 0) {
-
+            //TODO 去摄像头列表
+            Intent intent = new Intent();
+            intent.putExtra(EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST, deviceCameras);
+            intent.setClass(mContext, DeviceCameraActivity.class);
+            getView().startAC(intent);
         } else {
             getView().setDeviceCamerasText(mContext.getString(R.string.device_detail_camera_no_camera));
         }

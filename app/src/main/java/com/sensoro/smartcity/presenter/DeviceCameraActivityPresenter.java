@@ -26,6 +26,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +44,19 @@ public class DeviceCameraActivityPresenter extends BasePresenter<IDeviceCameraAc
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        requestDataByFilter(DIRECTION_DOWN);
+        Serializable serializableExtra = mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST);
+        if (serializableExtra instanceof ArrayList) {
+            getView().setSmartRefreshEnable(false);
+            deviceCameraInfos.clear();
+            List<DeviceCameraInfo> data = (List<DeviceCameraInfo>) serializableExtra;
+            deviceCameraInfos.addAll(data);
+            getView().updateDeviceCameraAdapter(deviceCameraInfos);
+            getView().onPullRefreshComplete();
+            getView().dismissProgressDialog();
+        } else {
+            requestDataByFilter(DIRECTION_DOWN);
+        }
+
     }
 
     @Override

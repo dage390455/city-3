@@ -474,4 +474,6 @@ public interface Constants {
 
         }
     };
+    //camera
+    String EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST = "extra_device_camera_detail_info_list";
 }
