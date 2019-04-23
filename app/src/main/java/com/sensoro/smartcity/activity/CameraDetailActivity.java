@@ -227,7 +227,14 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
         deviceCameraListAdapter.setOnContentItemClickListener(new DeviceCameraListAdapter.OnDeviceCameraListClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                mPresenter.onCameraItemClick(position);
+                LinearLayoutManager manager = (LinearLayoutManager) rvDeviceCamera.getLayoutManager();
+                int firstVisibleItemPosition = manager.findFirstVisibleItemPosition();
+                View childAt = rvDeviceCamera.getChildAt(position-firstVisibleItemPosition);
+                int top = childAt.getTop();
+                rvDeviceCamera.smoothScrollBy(0, top);
+
+                mPresenter.onCameraItemClick(position-1);
+
             }
 
 

@@ -7,4 +7,5 @@ import java.util.ArrayList;
 public class DeviceCameraFacePicListModel {
     public String time;
     public ArrayList<DeviceCameraFacePic> pics = new ArrayList<>();
+    public boolean isSelect = false;
 }
