@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_detail_player"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/c_f4f4f4"
+    android:orientation="vertical">
 
-
-    <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
-        android:id="@+id/detail_player"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp" />
+        android:layout_height="210dp">
+
+        <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
+            android:id="@+id/detail_player"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
 
     <LinearLayout
         android:id="@+id/ll_time"
@@ -32,17 +39,15 @@
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/ll_time"
-        >
+        android:layout_below="@id/ll_time">
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_device_camera"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
 
         </android.support.v7.widget.RecyclerView>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
-    <!--<include layout="@layout/item_include_text_title" />-->
 
-</RelativeLayout>
+</LinearLayout>

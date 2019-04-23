@@ -589,8 +589,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             deviceCameras = deviceCameraListRsp.getData();
                             if (deviceCameras != null && deviceCameras.size() > 0) {
                                 getView().setDeviceCamerasText(mContext.getString(R.string.device_detail_camera_has_camera) + deviceCameras.size() + mContext.getString(R.string.device_detail_camera_camera_count));
-                            } else {
-                                getView().setDeviceCamerasText(mContext.getString(R.string.device_detail_camera_no_camera));
                             }
                         }
 
@@ -599,8 +597,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             getView().toastShort(errorMsg);
                         }
                     });
-                } else {
-                    getView().setDeviceCamerasText(mContext.getString(R.string.device_detail_camera_no_camera));
                 }
                 refreshOperationStatus();
                 freshDeviceUpdateVersionInfo();

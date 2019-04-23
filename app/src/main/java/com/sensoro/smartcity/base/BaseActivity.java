@@ -2,6 +2,7 @@ package com.sensoro.smartcity.base;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,10 +38,10 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         public void run() {
             boolean hasNo = NotificationManagerCompat.from(mActivity).areNotificationsEnabled();
 //        final NotificationManagerCompat manager = NotificationManagerCompat.from(mActivity);
-//        boolean isOpened = manager.areNotificationsEnabled();
-//        if (!isNotificationEnabled(mActivity) && !isOpened) {
-//            showRationaleDialog();
-//        }
+////        boolean isOpened = manager.areNotificationsEnabled();
+////        if (!isNotificationEnabled(mActivity) && !isOpened) {
+////            showRationaleDialog();
+////        }
             if (!hasNo) {
                 showRationaleDialog();
             }
@@ -75,7 +76,9 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
             mActivity = this;
         }
         permissionDialogUtils = new PermissionDialogUtils(mActivity);
-        setTheme(R.style.MyTheme);
+        if (!setMyCurrentActivityTheme()) {
+            setTheme(R.style.MyTheme);
+        }
         //取消bar
         ActionBar supportActionBar = mActivity.getSupportActionBar();
         if (supportActionBar != null) {
@@ -103,6 +106,10 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
      * @return
      */
     public boolean isActivityOverrideStatusBar() {
+        return false;
+    }
+
+    public boolean setMyCurrentActivityTheme() {
         return false;
     }
 
@@ -258,5 +265,10 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
     public void startActivityForResult(Intent intent, int requestCode) {
         super.startActivityForResult(intent, requestCode);
         overridePendingTransition(R.anim.slide_left, R.anim.slide_out);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 }
