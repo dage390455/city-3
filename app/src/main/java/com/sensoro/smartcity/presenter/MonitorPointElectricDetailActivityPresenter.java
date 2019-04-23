@@ -1995,7 +1995,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     public void doDeviceGroupCameras() {
         if (deviceCameras != null && deviceCameras.size() > 0) {
-
+            //TODO 去摄像头列表
         } else {
             getView().setDeviceCamerasText(mContext.getString(R.string.device_detail_camera_no_camera));
         }
