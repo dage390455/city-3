@@ -104,7 +104,10 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
         initRvCameraList();
 
-        getCurPlay().getFullscreenButton().setImageDrawable(getDrawable(R.drawable.ic_camera_full_screen));
+        getCurPlay().setEnlargeImageRes(R.drawable.ic_camera_full_screen);
+
+//        退出全屏
+//        getCurPlay().setShrinkImageRes(R.drawable.ic_camera_full_screen);
         getCurPlay().getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
