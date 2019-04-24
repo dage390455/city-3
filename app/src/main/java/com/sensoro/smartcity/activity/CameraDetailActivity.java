@@ -21,13 +21,14 @@ import com.sensoro.smartcity.adapter.model.DeviceCameraFacePicListModel;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ICameraDetailView;
 import com.sensoro.smartcity.presenter.CameraDetailPresenter;
+import com.sensoro.smartcity.widget.CustomStandardGSYVideoPlayer;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
+import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
-import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 //    @BindView(R.id.include_text_title_cl_root)
 //    ConstraintLayout includeTextTitleClRoot;
     @BindView(R.id.detail_player)
-    StandardGSYVideoPlayer detailPlayer;
+    CustomStandardGSYVideoPlayer detailPlayer;
     @BindView(R.id.tv_time)
     TextView tvTime;
     @BindView(R.id.ll_time)
@@ -106,8 +107,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
         getCurPlay().setEnlargeImageRes(R.drawable.ic_camera_full_screen);
 
-//        退出全屏
-//        getCurPlay().setShrinkImageRes(R.drawable.ic_camera_full_screen);
+        getCurPlay().setShrinkImageRes(R.drawable.ic_camera_full_screen);
+
         getCurPlay().getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,6 +143,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
     @Override
     public void initVideoOption(String url) {
+        detailPlayer.progressBar.setVisibility(View.GONE);
+
         //增加封面
         ImageView imageView = new ImageView(this);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -210,7 +213,20 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
     }
 
     @Override
-    public void startPlayLogic(String url1) {
+    public void startPlayLogic(final String url1) {
+        //
+        if (!NetworkUtils.isWifiConnected(this) || (!NetworkUtils.isWifiConnected(this))) {
+
+            detailPlayer.playBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    gsyVideoOption.setUrl(url1).build(getCurPlay());
+                    getCurPlay().startPlayLogic();
+
+                }
+            });
+            return;
+        }
         gsyVideoOption.setUrl(url1).build(getCurPlay());
         getCurPlay().startPlayLogic();
     }
@@ -236,6 +252,18 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
         refreshLayout.finishLoadMore();
     }
 
+    @Override
+    public void playError(final int pos) {
+        detailPlayer.playAgainBtn.setText("Video loading failed, please try again");
+        detailPlayer.playAgainBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.onCameraItemClick(pos);
+
+            }
+        });
+    }
+
     private void initRvCameraList() {
         deviceCameraListAdapter = new DeviceCameraListAdapter(this);
         rvDeviceCamera.setLayoutManager(new LinearLayoutManager(this));
@@ -245,11 +273,11 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
             public void onItemClick(View view, int position) {
                 LinearLayoutManager manager = (LinearLayoutManager) rvDeviceCamera.getLayoutManager();
                 int firstVisibleItemPosition = manager.findFirstVisibleItemPosition();
-                View childAt = rvDeviceCamera.getChildAt(position-firstVisibleItemPosition);
+                View childAt = rvDeviceCamera.getChildAt(position - firstVisibleItemPosition);
                 int top = childAt.getTop();
                 rvDeviceCamera.smoothScrollBy(0, top);
 
-                mPresenter.onCameraItemClick(position-1);
+                mPresenter.onCameraItemClick(position - 1);
 
             }
 

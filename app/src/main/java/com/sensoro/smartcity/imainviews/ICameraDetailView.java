@@ -20,4 +20,6 @@ public interface ICameraDetailView extends IProgressDialog {
     List<DeviceCameraFacePicListModel> getRvListData();
 
     void onPullRefreshComplete();
+    //播放失败
+    void playError(int pos);
 }

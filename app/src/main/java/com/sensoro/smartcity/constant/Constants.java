@@ -428,6 +428,9 @@ public interface Constants {
     int DEVICE_DEMO_MODE_CLOSE = 3;
 
 
+    int NetworkInfo = 0X55;
+
+
     List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{
         add("elec_fire");
         add("smoke");
