@@ -428,6 +428,9 @@ public interface Constants {
     int DEVICE_DEMO_MODE_CLOSE = 3;
 
 
+    int NetworkInfo = 0X55;
+
+
     List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{
         add("elec_fire");
         add("smoke");
@@ -476,4 +479,5 @@ public interface Constants {
     };
     //camera
     String EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST = "extra_device_camera_detail_info_list";
+    String EXTRA_PERSON_LOCUS_FACE_ID = "extra_person_locus_face_id";
 }

@@ -113,10 +113,14 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                         boolean netCanUse = false;
                         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
                         if (manager != null) {
+                            EventData netCanUseData = new EventData();
+                            netCanUseData.code = NetworkInfo;
                             NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
                             if (activeNetwork != null) {
                                 if (activeNetwork.isConnected()) {
                                     if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                                        netCanUseData.data = ConnectivityManager.TYPE_WIFI;
+
                                         netCanUse = true;
                                         try {
                                             LogUtils.loge("CONNECTIVITY_ACTION--->>当前WiFi连接可用 ");
@@ -125,6 +129,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                                         }
                                     } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
                                         netCanUse = true;
+                                        netCanUseData.data = ConnectivityManager.TYPE_MOBILE;
+
                                         try {
                                             LogUtils.loge("CONNECTIVITY_ACTION--->>当前移动网络连接可用 ");
                                         } catch (Throwable throwable) {
@@ -132,6 +138,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                                         }
                                     }
                                 } else {
+                                    netCanUseData.data = -1;
+
                                     try {
                                         LogUtils.loge("CONNECTIVITY_ACTION--->>当前没有网络连接，请确保你已经打开网络 ");
                                         LogUtils.loge("CONNECTIVITY_ACTION--->>info.getTypeName()" + activeNetwork.getTypeName());
@@ -147,13 +155,17 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                                 }
 
                             } else {   // not connected to the internet
+                                netCanUseData.data = -1;
+
                                 try {
                                     LogUtils.loge("CONNECTIVITY_ACTION--->>当前没有网络连接，请确保你已经打开网络 ");
                                 } catch (Throwable throwable) {
                                     throwable.printStackTrace();
                                 }
                             }
+                            EventBus.getDefault().post(netCanUseData);
                         }
+
                         if (netCanUse) {
                             if (!isFirst) {
                                 ThreadPoolManager.getInstance().execute(new Runnable() {

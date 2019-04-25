@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.PersonLocusActivity;
 import com.sensoro.smartcity.adapter.model.DeviceCameraFacePicListModel;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -212,7 +214,7 @@ public class CameraDetailPresenter extends BasePresenter<ICameraDetailView> impl
     public void onDestroy() {
     }
 
-    public void onCameraItemClick(int index) {
+    public void onCameraItemClick(final int index) {
         List<DeviceCameraFacePicListModel> rvListData = getView().getRvListData();
         if (rvListData != null) {
             getView().showProgressDialog();
@@ -272,6 +274,7 @@ public class CameraDetailPresenter extends BasePresenter<ICameraDetailView> impl
                 @Override
                 public void onErrorMsg(int errorCode, String errorMsg) {
                     if (isAttachedView()) {
+                        getView().playError(index);
                         getView().dismissProgressDialog();
                     }
                 }
@@ -345,5 +348,20 @@ public class CameraDetailPresenter extends BasePresenter<ICameraDetailView> impl
         endDateTime = 0;
         getView().showProgressDialog();
         requestData(cid,Constants.DIRECTION_DOWN);
+    }
+
+    public void doPersonLocus(int modelPosition, int avatarPosition) {
+        DeviceCameraFacePicListModel model = getView().getItemData(modelPosition);
+        DeviceCameraFacePic deviceCameraFacePic = model.pics.get(avatarPosition);
+        String id = deviceCameraFacePic.getId();
+        if (TextUtils.isEmpty(id)) {
+            getView().toastShort(mActivity.getString(R.string.not_obtain_face_id));
+            return;
+        }
+        Intent intent = new Intent();
+        intent.putExtra(Constants.EXTRA_PERSON_LOCUS_FACE_ID,deviceCameraFacePic.getId());
+        intent.setClass(mActivity, PersonLocusActivity.class);
+        getView().startAC(intent);
+
     }
 }

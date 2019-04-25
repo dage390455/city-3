@@ -940,5 +940,6 @@
     <string name="device_detail_camera_no_camera">未关联摄像头</string>
     <string name="device_detail_camera_has_camera">已关联</string>
     <string name="device_detail_camera_camera_count">个摄像头</string>
+    <string name="not_obtain_face_id">获取图片ID失败</string>
 
 </resources>

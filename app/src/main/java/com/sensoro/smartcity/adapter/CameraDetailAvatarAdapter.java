@@ -2,7 +2,9 @@ package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +16,6 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.server.bean.DeviceCameraFacePic;
 import com.sensoro.smartcity.widget.GlideRoundTransform;
-import com.yixia.camera.util.Log;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,7 @@ import butterknife.ButterKnife;
 class CameraDetailAvatarAdapter extends RecyclerView.Adapter<CameraDetailAvatarAdapter.CameraDetailAvatarViewHolder> {
     private final Context mContext;
     private ArrayList<DeviceCameraFacePic> mList = new ArrayList<>();
+    private OnAvatarClickListener mListener;
 
     public CameraDetailAvatarAdapter(Context context) {
         mContext = context;
@@ -33,11 +35,27 @@ class CameraDetailAvatarAdapter extends RecyclerView.Adapter<CameraDetailAvatarA
     @Override
     public CameraDetailAvatarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View inflate = LayoutInflater.from(mContext).inflate(R.layout.item_adapter_camera_detail_avater, parent, false);
-        return new CameraDetailAvatarViewHolder(inflate);
+        CameraDetailAvatarViewHolder holder = new CameraDetailAvatarViewHolder(inflate);
+        holder.cLAvatarItemAdapterCameraDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    int position = (int) v.getTag();
+                    mListener.onAvatar(position);
+                }
+            }
+        });
+        return holder;
+    }
+
+    public void setOnAvatarClickListener(OnAvatarClickListener listener){
+        mListener = listener;
     }
 
     @Override
     public void onBindViewHolder(@NonNull final CameraDetailAvatarViewHolder holder, int position) {
+
+        holder.cLAvatarItemAdapterCameraDetail.setTag(position);
         DeviceCameraFacePic pic = mList.get(position);
         String baseUrl = "https://scpub-eye.antelopecloud.cn";
         Glide.with(mContext)                             //配置上下文
@@ -67,10 +85,16 @@ class CameraDetailAvatarAdapter extends RecyclerView.Adapter<CameraDetailAvatarA
 
         @BindView(R.id.imv_avatar_item_adapter_camera_detail)
         ImageView imvAvatarItemAdapterCameraDetail;
+        @BindView(R.id.cl_avatar_item_adapter_camera_detail)
+        ConstraintLayout cLAvatarItemAdapterCameraDetail;
 
         public CameraDetailAvatarViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    interface OnAvatarClickListener{
+        void onAvatar(int position);
     }
 }

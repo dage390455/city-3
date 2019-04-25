@@ -10,10 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="210dp">
 
-        <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
+        <com.sensoro.smartcity.widget.CustomStandardGSYVideoPlayer
             android:id="@+id/detail_player"
+
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+
+        </com.sensoro.smartcity.widget.CustomStandardGSYVideoPlayer>
     </FrameLayout>
 
 
