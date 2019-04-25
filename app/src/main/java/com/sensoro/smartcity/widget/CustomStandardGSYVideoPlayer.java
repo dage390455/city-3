@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,9 +28,18 @@ import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
 
 public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     private RelativeLayout rmobileData;
-    public Button playBtn, playAgainBtn;
+
+    public Button getPlayBtn() {
+        return playBtn;
+    }
+
+    public Button getPlayAgainBtn() {
+        return playAgainBtn;
+    }
+
+    private Button playBtn, playAgainBtn;
     private TextView tiptv;
-    public ViewGroup layoutBottom;
+    private int bottomContainerState;
 
     public CustomStandardGSYVideoPlayer(Context context, Boolean fullFlag) {
         super(context, fullFlag);
@@ -65,6 +73,18 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         tiptv.setText("Network connection failed, \nplease check your network settings");
         playBtn.setVisibility(GONE);
         rmobileData.setVisibility(VISIBLE);
+    }
+
+    /**
+     * 底部进度条是否显示，直播不显示
+     *
+     * @param islive
+     */
+    public void changeBottomContainer(boolean islive) {
+        bottomContainerState = islive ? View.VISIBLE : View.GONE;
+
+        setViewShowState(mBottomContainer, bottomContainerState);
+
     }
 
 
@@ -117,7 +137,6 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         playAgainBtn = findViewById(R.id.playagain_btn);
 
         tiptv = findViewById(R.id.tip_data_tv);
-        layoutBottom = (ViewGroup) findViewById(R.id.layout_bottom);
 
         playBtn.setOnClickListener(new OnClickListener() {
             @Override
@@ -220,26 +239,37 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     @Override
     protected void changeUiToPreparingShow() {
         super.changeUiToPreparingShow();
+
+        setViewShowState(mBottomContainer, bottomContainerState);
+
     }
 
     @Override
     protected void changeUiToPlayingShow() {
         super.changeUiToPlayingShow();
+        setViewShowState(mBottomContainer, bottomContainerState);
+
     }
 
     @Override
     protected void changeUiToPauseShow() {
         super.changeUiToPauseShow();
+        setViewShowState(mBottomContainer, bottomContainerState);
+
     }
 
     @Override
     protected void changeUiToPlayingBufferingShow() {
         super.changeUiToPlayingBufferingShow();
+        setViewShowState(mBottomContainer, bottomContainerState);
+
     }
 
     @Override
     protected void changeUiToCompleteShow() {
         super.changeUiToCompleteShow();
+        setViewShowState(mBottomContainer, bottomContainerState);
+
     }
 
     @Override

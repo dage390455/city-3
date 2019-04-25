@@ -143,7 +143,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
     @Override
     public void initVideoOption(String url) {
-        detailPlayer.layoutBottom.setVisibility(View.INVISIBLE);
+        detailPlayer.changeBottomContainer(false);
 
         //增加封面
         ImageView imageView = new ImageView(this);
@@ -217,7 +217,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
         //
         if (!NetworkUtils.isWifiConnected(this) || (!NetworkUtils.isWifiConnected(this))) {
 
-            detailPlayer.playBtn.setOnClickListener(new View.OnClickListener() {
+            detailPlayer.getPlayBtn().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     gsyVideoOption.setUrl(url1).build(getCurPlay());
@@ -227,7 +227,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
             });
             return;
         }
-        detailPlayer.layoutBottom.setVisibility(View.VISIBLE);
+        detailPlayer.changeBottomContainer(true);
 
         gsyVideoOption.setUrl(url1).build(getCurPlay());
         getCurPlay().startPlayLogic();
@@ -256,8 +256,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
     @Override
     public void playError(final int pos) {
-        detailPlayer.playAgainBtn.setText("Video loading failed, please try again");
-        detailPlayer.playAgainBtn.setOnClickListener(new View.OnClickListener() {
+        detailPlayer.getPlayAgainBtn().setText("Video loading failed, please try again");
+        detailPlayer.getPlayAgainBtn().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPresenter.onCameraItemClick(pos);
