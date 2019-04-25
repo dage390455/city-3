@@ -24,14 +24,15 @@ import com.sensoro.smartcity.adapter.model.DeviceCameraFacePicListModel;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ICameraDetailView;
 import com.sensoro.smartcity.presenter.CameraDetailPresenter;
+import com.sensoro.smartcity.widget.CustomStandardGSYVideoPlayer;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
+import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
-import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
         implements ICameraDetailView {
 
     @BindView(R.id.detail_player)
-    StandardGSYVideoPlayer detailPlayer;
+    CustomStandardGSYVideoPlayer detailPlayer;
     @BindView(R.id.tv_time)
     TextView tvTime;
     @BindView(R.id.ll_time)
@@ -104,8 +105,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
         getCurPlay().setEnlargeImageRes(R.drawable.ic_camera_full_screen);
 
-//        退出全屏
-//        getCurPlay().setShrinkImageRes(R.drawable.ic_camera_full_screen);
+        getCurPlay().setShrinkImageRes(R.drawable.ic_camera_full_screen);
+
         getCurPlay().getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,6 +141,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
     @Override
     public void initVideoOption(String url) {
+        detailPlayer.changeBottomContainer(false);
+
         //增加封面
         if (imageView == null) {
             imageView = new ImageView(this);
@@ -211,9 +214,30 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
     }
 
     @Override
-    public void startPlayLogic(String url1) {
+    public void startPlayLogic(final String url1) {
+        if (!NetworkUtils.isAvailable(this)) {
+            orientationUtils.setEnable(false);
+            return;
+        }
+
+        if (!NetworkUtils.isWifiConnected(this)) {
+            orientationUtils.setEnable(false);
+            detailPlayer.getPlayBtn().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    gsyVideoOption.setUrl(url1).build(getCurPlay());
+                    getCurPlay().startPlayLogic();
+
+                }
+            });
+            return;
+        }
+        detailPlayer.changeBottomContainer(true);
+
         gsyVideoOption.setUrl(url1).build(getCurPlay());
         getCurPlay().startPlayLogic();
+        orientationUtils.setEnable(true);
+
     }
 
     @Override
@@ -281,6 +305,17 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
     @Override
     public void onPullRefreshCompleteNoMoreData() {
         refreshLayout.finishLoadMoreWithNoMoreData();
+    }
+
+    public void playError(final int pos) {
+        detailPlayer.changeRetryType();
+        detailPlayer.getPlayRetryBtn().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.onCameraItemClick(pos);
+
+            }
+        });
     }
 
     private void initRvCameraList() {
@@ -383,6 +418,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
         if (deviceCameraListAdapter != null) {
             deviceCameraListAdapter.clearPreModel();
         }
+        GSYVideoManager.releaseAllVideos();
     }
 
 

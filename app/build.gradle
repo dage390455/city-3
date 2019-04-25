@@ -273,6 +273,7 @@ dependencies {
     api(project(':simplescanner')) {
         exclude group: "com.amap.api"
     }
+
     implementation files('libs/player.jar')
 //    implementation 'com.shuyu:GSYVideoPlayer:6.0.3'
     implementation 'com.shuyu:gsyVideoPlayer-java:6.0.3'

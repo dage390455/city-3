@@ -214,7 +214,7 @@ public class CameraDetailPresenter extends BasePresenter<ICameraDetailView> impl
     public void onDestroy() {
     }
 
-    public void onCameraItemClick(int index) {
+    public void onCameraItemClick(final int index) {
         List<DeviceCameraFacePicListModel> rvListData = getView().getRvListData();
         if (rvListData != null) {
             getView().showProgressDialog();
@@ -274,6 +274,7 @@ public class CameraDetailPresenter extends BasePresenter<ICameraDetailView> impl
                 @Override
                 public void onErrorMsg(int errorCode, String errorMsg) {
                     if (isAttachedView()) {
+                        getView().playError(index);
                         getView().dismissProgressDialog();
                     }
                 }
