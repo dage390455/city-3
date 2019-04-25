@@ -39,6 +39,15 @@ public class DeviceCameraListAdapter extends RecyclerView.Adapter<DeviceCameraLi
     private final List<DeviceCameraFacePicListModel> mList = new ArrayList<>();
     private OnDeviceCameraListClickListener onDeviceCameraListClickListener;
     private DeviceCameraFacePicListModel preModel;
+    private boolean liveClick = true;
+
+    public void setLiveState(boolean isLiveStream) {
+        liveClick = isLiveStream;
+    }
+
+    public void clearPreModel() {
+        preModel = null;
+    }
 
     public interface OnDeviceCameraListClickListener {
         void onItemClick(View view, int position);
@@ -77,15 +86,20 @@ public class DeviceCameraListAdapter extends RecyclerView.Adapter<DeviceCameraLi
             holder.clLiveStream.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (preModel != null) {
+                        preModel.isSelect = false;
+                    }
+                    liveClick = true;
+                    notifyDataSetChanged();
                     if (onDeviceCameraListClickListener != null) {
                         onDeviceCameraListClickListener.setOnLiveClick();
                     }
                 }
             });
-        } else if( viewType == 2) {
+        } else if (viewType == 2) {
             View inflate = LayoutInflater.from(mContext).inflate(R.layout.item_adapter_camera_list_title, parent, false);
             holder = new MyViewHolder(inflate);
-        }else{
+        } else {
             View inflate = LayoutInflater.from(mContext).inflate(R.layout.item_device_camera_list_adapter, parent, false);
             holder = new MyViewHolder(inflate);
             holder.clPicture.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +109,7 @@ public class DeviceCameraListAdapter extends RecyclerView.Adapter<DeviceCameraLi
                     if (preModel != null) {
                         preModel.isSelect = false;
                     }
+                    liveClick = false;
                     DeviceCameraFacePicListModel model = mList.get(position - 1);
                     model.isSelect = true;
                     preModel = model;
@@ -114,19 +129,19 @@ public class DeviceCameraListAdapter extends RecyclerView.Adapter<DeviceCameraLi
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         if (getItemViewType(position) == 1) {
             holder.clLiveStream.setTag(position);
-//            holder.clLiveStream.setBackgroundColor( != -1 && mClickPosition == position ? Color.parseColor("#F3F4F4") :
-//                    mContext.getResources().
-//                    getColor(R.color.white));
-        } else if(getItemViewType(position) == 2 ){
-           holder.tvTimeTitle.setTag(position);
+            holder.clLiveStream.setBackgroundColor(liveClick ? Color.parseColor("#F3F4F4") :
+                    mContext.getResources().getColor(R.color.white));
+        } else if (getItemViewType(position) == 2) {
+            holder.tvTimeTitle.setTag(position);
+            holder.tvTimeTitle.setBackgroundColor(Color.WHITE);
             DeviceCameraFacePicListModel model = mList.get(position - 1);
-           holder.tvTimeTitle.setText(model.time);
-        }  else{
+            holder.tvTimeTitle.setText(model.time);
+        } else {
             holder.clPicture.setTag(position);
 
             int index = position - 1;
             DeviceCameraFacePicListModel model = mList.get(index);
-            holder.clPicture.setBackgroundColor( model.isSelect ? Color.parseColor("#F3F4F4") : mContext.getResources().
+            holder.clPicture.setBackgroundColor(model.isSelect ? Color.parseColor("#F3F4F4") : mContext.getResources().
                     getColor(R.color.white));
             String captureTime = model.pics.get(0).getCaptureTime();
             String strTime_hm = DateUtil.getStrTime_hm(captureTime);
@@ -139,11 +154,11 @@ public class DeviceCameraListAdapter extends RecyclerView.Adapter<DeviceCameraLi
             holder.rvPicture.setLayoutFrozen(true);
 
             //
-            if (position -1 > -1 && getItemViewType(position -1) == 2) {
-               holder.viewAbove.setVisibility(View.INVISIBLE);
-            }else if(position + 1 < getItemCount() && getItemViewType(position + 1) == 2){
+            if (position - 1 > -1 && getItemViewType(position - 1) == 2) {
+                holder.viewAbove.setVisibility(View.INVISIBLE);
+            } else if (position + 1 < getItemCount() && getItemViewType(position + 1) == 2) {
                 holder.viewBelow.setVisibility(View.INVISIBLE);
-            }else{
+            } else {
                 holder.viewAbove.setVisibility(View.VISIBLE);
                 holder.viewBelow.setVisibility(View.VISIBLE);
             }
@@ -176,10 +191,9 @@ public class DeviceCameraListAdapter extends RecyclerView.Adapter<DeviceCameraLi
     }
 
 
-
     @Override
     public int getItemCount() {
-        return mList.size() == 0 ? 0 : mList.size()+1;
+        return mList.size() == 0 ? 0 : mList.size() + 1;
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
