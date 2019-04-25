@@ -141,7 +141,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
     @Override
     public void initVideoOption(String url) {
-        detailPlayer.changeBottomContainer(false);
+        detailPlayer.changeBottomContainer(View.INVISIBLE);
 
         //增加封面
         if (imageView == null) {
@@ -232,7 +232,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
             });
             return;
         }
-        detailPlayer.changeBottomContainer(true);
+        detailPlayer.changeBottomContainer(View.VISIBLE);
 
         gsyVideoOption.setUrl(url1).build(getCurPlay());
         getCurPlay().startPlayLogic();
@@ -307,12 +307,16 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
         refreshLayout.finishLoadMoreWithNoMoreData();
     }
 
+    @Override
     public void playError(final int pos) {
+        orientationUtils.setEnable(false);
+
         detailPlayer.changeRetryType();
         detailPlayer.getPlayRetryBtn().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPresenter.onCameraItemClick(pos);
+
 
             }
         });
@@ -343,7 +347,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
             @Override
             public void onAvatarClick(int modelPosition, int avatarPosition) {
-                mPresenter.doPersonLocus(modelPosition,avatarPosition);
+                mPresenter.doPersonLocus(modelPosition, avatarPosition);
             }
         });
         rvDeviceCamera.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -419,6 +423,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
             deviceCameraListAdapter.clearPreModel();
         }
         GSYVideoManager.releaseAllVideos();
+
     }
 
 
@@ -476,9 +481,9 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
         SensoroToast.getInstance().makeText(msg, Toast.LENGTH_LONG).show();
     }
 
-    @OnClick({R.id.imv_calendar,R.id.tv_select_time,R.id.imv_time_close})
+    @OnClick({R.id.imv_calendar, R.id.tv_select_time, R.id.imv_time_close})
     public void onViewClicked(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.imv_calendar:
             case R.id.tv_select_time:
                 mPresenter.doCalendar(activityDetailPlayer);
