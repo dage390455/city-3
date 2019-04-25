@@ -950,4 +950,5 @@
     <string name="device_detail_camera_no_camera">No Camera</string>
     <string name="device_detail_camera_has_camera">Has</string>
     <string name="device_detail_camera_camera_count">Camera</string>
+    <string name="not_obtain_face_id">Failed to get image id</string>
 </resources>

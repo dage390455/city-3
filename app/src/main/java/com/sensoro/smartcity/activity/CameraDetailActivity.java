@@ -1,6 +1,8 @@
 package com.sensoro.smartcity.activity;
 
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -22,6 +25,7 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ICameraDetailView;
 import com.sensoro.smartcity.presenter.CameraDetailPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
@@ -35,6 +39,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -43,16 +48,6 @@ import butterknife.ButterKnife;
 public class CameraDetailActivity extends BaseActivity<ICameraDetailView, CameraDetailPresenter>
         implements ICameraDetailView {
 
-    //    @BindView(R.id.include_text_title_imv_arrows_left)
-//    ImageView includeTextTitleImvArrowsLeft;
-//    @BindView(R.id.include_text_title_tv_title)
-//    TextView includeTextTitleTvTitle;
-//    @BindView(R.id.include_text_title_tv_subtitle)
-//    TextView includeTextTitleTvSubtitle;
-//    @BindView(R.id.include_text_title_divider)
-//    View includeTextTitleDivider;
-//    @BindView(R.id.include_text_title_cl_root)
-//    ConstraintLayout includeTextTitleClRoot;
     @BindView(R.id.detail_player)
     StandardGSYVideoPlayer detailPlayer;
     @BindView(R.id.tv_time)
@@ -65,6 +60,12 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.activity_detail_player)
     LinearLayout activityDetailPlayer;
+    @BindView(R.id.tv_select_time)
+    TextView tvSelectTime;
+    @BindView(R.id.imv_calendar)
+    ImageView imvCalendar;
+    @BindView(R.id.imv_time_close)
+    ImageView imvTimeClose;
 
     private boolean isPlay;
     private boolean isPause;
@@ -73,6 +74,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
     private DeviceCameraListAdapter deviceCameraListAdapter;
     private GSYVideoOptionBuilder gsyVideoOption;
     private ImmersionBar immersionBar;
+    private ImageView imageView;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -85,10 +87,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
-//        includeTextTitleImvArrowsLeft.setColorFilter(mActivity.getResources().getColor(R.color.white));
-//        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-//        includeTextTitleTvTitle.setTextColor(Color.WHITE);
-//        includeTextTitleClRoot.setBackgroundColor(Color.TRANSPARENT);
 
         //外部辅助的旋转，帮助全屏
         orientationUtils = new OrientationUtils(this, detailPlayer);
@@ -143,9 +141,12 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
     @Override
     public void initVideoOption(String url) {
         //增加封面
-        ImageView imageView = new ImageView(this);
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageView.setImageResource(R.mipmap.ic_launcher);
+        if (imageView == null) {
+            imageView = new ImageView(this);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setImageResource(R.mipmap.ic_launcher);
+        }
+
 
         gsyVideoOption = new GSYVideoOptionBuilder();
         gsyVideoOption.setThumbImageView(imageView)
@@ -236,6 +237,52 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
         refreshLayout.finishLoadMore();
     }
 
+    @Override
+    public void setLiveState(boolean isLiveStream) {
+        deviceCameraListAdapter.setLiveState(isLiveStream);
+    }
+
+    @Override
+    public void setImage(Drawable resource) {
+        if (imageView != null) {
+            imageView.setImageDrawable(resource);
+        } else {
+            imageView = new ImageView(this);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setImageDrawable(resource);
+        }
+
+    }
+
+    @Override
+    public void clearAdapterPreModel() {
+        if (deviceCameraListAdapter != null) {
+            deviceCameraListAdapter.clearPreModel();
+        }
+    }
+
+    @Override
+    public boolean isSelectedDateLayoutVisible() {
+        return tvSelectTime.getVisibility() == View.VISIBLE;
+    }
+
+    @Override
+    public void setSelectedDateLayoutVisible(boolean isVisible) {
+        imvCalendar.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        tvSelectTime.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+        imvTimeClose.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    public void setSelectedDateSearchText(String s) {
+        tvSelectTime.setText(s);
+    }
+
+    @Override
+    public void onPullRefreshCompleteNoMoreData() {
+        refreshLayout.finishLoadMoreWithNoMoreData();
+    }
+
     private void initRvCameraList() {
         deviceCameraListAdapter = new DeviceCameraListAdapter(this);
         rvDeviceCamera.setLayoutManager(new LinearLayoutManager(this));
@@ -245,18 +292,23 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
             public void onItemClick(View view, int position) {
                 LinearLayoutManager manager = (LinearLayoutManager) rvDeviceCamera.getLayoutManager();
                 int firstVisibleItemPosition = manager.findFirstVisibleItemPosition();
-                View childAt = rvDeviceCamera.getChildAt(position-firstVisibleItemPosition);
+                View childAt = rvDeviceCamera.getChildAt(position - firstVisibleItemPosition);
                 int top = childAt.getTop();
                 rvDeviceCamera.smoothScrollBy(0, top);
 
-                mPresenter.onCameraItemClick(position-1);
+                mPresenter.onCameraItemClick(position - 1);
 
             }
 
 
             @Override
-            public void setOnLiveClick() {
+            public void onLiveClick() {
+                mPresenter.doLive();
+            }
 
+            @Override
+            public void onAvatarClick(int modelPosition, int avatarPosition) {
+                mPresenter.doPersonLocus(modelPosition,avatarPosition);
             }
         });
         rvDeviceCamera.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -327,6 +379,10 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
         if (mProgressUtils != null) {
             mProgressUtils.destroyProgress();
         }
+
+        if (deviceCameraListAdapter != null) {
+            deviceCameraListAdapter.clearPreModel();
+        }
     }
 
 
@@ -373,7 +429,55 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
         setTheme(R.style.Theme_AppCompat_Full);
         return true;
     }
-    //    @OnClick(R.id.include_text_title_imv_arrows_left)
-//    public void onViewClicked() {
-//    }
+
+    @Override
+    public void toastShort(String msg) {
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void toastLong(String msg) {
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_LONG).show();
+    }
+
+    @OnClick({R.id.imv_calendar,R.id.tv_select_time,R.id.imv_time_close})
+    public void onViewClicked(View view) {
+        switch (view.getId()){
+            case R.id.imv_calendar:
+            case R.id.tv_select_time:
+                mPresenter.doCalendar(activityDetailPlayer);
+                break;
+            case R.id.imv_time_close:
+                setSelectedDateLayoutVisible(false);
+                mPresenter.doRequestData();
+                break;
+        }
+
+    }
+
+
+    @Override
+    public void startAC(Intent intent) {
+        mActivity.startActivity(intent);
+    }
+
+    @Override
+    public void finishAc() {
+        mActivity.finish();
+    }
+
+    @Override
+    public void startACForResult(Intent intent, int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int resultCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int resultCode, Intent data) {
+
+    }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cl_avatar_item_adapter_camera_detail"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="8dp"

@@ -18,6 +18,7 @@ import com.sensoro.smartcity.server.response.DeviceCameraDetailRsp;
 import com.sensoro.smartcity.server.response.DeviceCameraFacePicListRsp;
 import com.sensoro.smartcity.server.response.DeviceCameraHistoryRsp;
 import com.sensoro.smartcity.server.response.DeviceCameraListRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraPersonFaceRsp;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
@@ -363,5 +364,8 @@ public interface RetrofitService {
 
     @GET("cameras/group/bind")
     Observable<DeviceCameraListRsp> getDeviceGroupCameraList(@Query("_id") String _id, @Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search);
+
+    @POST("picture/getFaceListById")
+    Observable<DeviceCameraPersonFaceRsp> getDeviceCameraPersonFace(@Body RequestBody requestBody);
 }
 

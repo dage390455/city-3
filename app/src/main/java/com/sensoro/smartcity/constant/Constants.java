@@ -476,4 +476,5 @@ public interface Constants {
     };
     //camera
     String EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST = "extra_device_camera_detail_info_list";
+    String EXTRA_PERSON_LOCUS_FACE_ID = "extra_person_locus_face_id";
 }
