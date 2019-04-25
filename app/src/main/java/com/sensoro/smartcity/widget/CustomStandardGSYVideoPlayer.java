@@ -33,11 +33,14 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         return playBtn;
     }
 
-    public Button getPlayAgainBtn() {
-        return playAgainBtn;
+
+    private Button playBtn;
+
+    public Button getPlayRetryBtn() {
+        return playRetryBtn;
     }
 
-    private Button playBtn, playAgainBtn;
+    private Button playRetryBtn;
     private TextView tiptv;
     private int bottomContainerState;
 
@@ -54,6 +57,18 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     }
 
 
+
+    /**
+     * 加载失败
+     */
+    public void changeRetryType() {
+        rmobileData.setVisibility(VISIBLE);
+        playBtn.setVisibility(GONE);
+        playRetryBtn.setVisibility(VISIBLE);
+
+        tiptv.setText("Video loading failed, please try again");
+    }
+
     /**
      * 移动网络
      */
@@ -61,6 +76,8 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         GSYVideoManager.onPause();
         rmobileData.setVisibility(VISIBLE);
         playBtn.setVisibility(VISIBLE);
+        playRetryBtn.setVisibility(GONE);
+
         tiptv.setText("You are now using mobile network,\n please mind your data usage.");
     }
 
@@ -73,6 +90,8 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         tiptv.setText("Network connection failed, \nplease check your network settings");
         playBtn.setVisibility(GONE);
         rmobileData.setVisibility(VISIBLE);
+        playRetryBtn.setVisibility(GONE);
+
     }
 
     /**
@@ -134,7 +153,7 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
         rmobileData = findViewById(R.id.mobile_data_rl);
         playBtn = findViewById(R.id.play_btn);
-        playAgainBtn = findViewById(R.id.playagain_btn);
+        playRetryBtn = findViewById(R.id.playa_retry_btn);
 
         tiptv = findViewById(R.id.tip_data_tv);
 

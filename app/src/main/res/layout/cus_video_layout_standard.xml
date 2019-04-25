@@ -168,7 +168,8 @@
 
         android:background="@color/c_5d5d5d"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        >
 
         <TextView
             android:id="@+id/tip_data_tv"
@@ -194,7 +195,7 @@
             android:textColor="@color/white" />
 
         <Button
-            android:id="@+id/playagain_btn"
+            android:id="@+id/playa_retry_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tip_data_tv"
@@ -202,7 +203,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:background="@drawable/shape_bg_corner_2dp_29c_shadow"
-            android:text="Play"
+            android:text="Retry"
             android:textColor="@color/white"
             android:visibility="gone" />
 

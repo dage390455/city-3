@@ -217,6 +217,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
         //
         if (!NetworkUtils.isWifiConnected(this) || (!NetworkUtils.isWifiConnected(this))) {
 
+            orientationUtils.setEnable(false);
+
             detailPlayer.getPlayBtn().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -231,6 +233,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
         gsyVideoOption.setUrl(url1).build(getCurPlay());
         getCurPlay().startPlayLogic();
+        orientationUtils.setEnable(true);
+
     }
 
     @Override
@@ -256,8 +260,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
     @Override
     public void playError(final int pos) {
-        detailPlayer.getPlayAgainBtn().setText("Video loading failed, please try again");
-        detailPlayer.getPlayAgainBtn().setOnClickListener(new View.OnClickListener() {
+        detailPlayer.changeRetryType();
+        detailPlayer.getPlayRetryBtn().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPresenter.onCameraItemClick(pos);
@@ -357,6 +361,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
         if (mProgressUtils != null) {
             mProgressUtils.destroyProgress();
         }
+        GSYVideoManager.releaseAllVideos();
     }
 
 
