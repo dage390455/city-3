@@ -97,6 +97,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     }
 
     private void init() {
+        //默认显示已定位
+        deployAnalyzerModel.address = mContext.getString(R.string.positioned);
         switch (deployAnalyzerModel.deployType) {
             case TYPE_SCAN_DEPLOY_STATION:
                 //基站部署
@@ -204,17 +206,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
             case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 //巡检设备更换
-                //TODO 暂时对电气火灾设备直接上传
-//                if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
-//                    doUploadImages(lon, lan);
-//                } else {
-
-//                if (PreferencesHelper.getInstance().getUserData().hasSignalConfig || Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
-//                    changeDevice(lon, lan);
-//                } else {
-//                    doUploadImages(lon, lan);
-//                }
-//                }
                 handleBleSetting(lon, lan);
                 break;
             default:
@@ -363,7 +354,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             doDeployResult(lon, lan, null);
         }
     }
-
+    //TODO 添加设备状态字段
     private void doDeployResult(double lon, double lan, List<String> imgUrls) {
         DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
         switch (deployAnalyzerModel.deployType) {
@@ -711,7 +702,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     public void onCreate() {
         EventBus.getDefault().register(this);
     }
-
+    //TODO 添加接口
     public void doConfirm() {
         //姓名地址校验
         switch (deployAnalyzerModel.deployType) {
@@ -766,9 +757,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         }
         switch (deployAnalyzerModel.deployType) {
             case TYPE_SCAN_DEPLOY_STATION:
-                if (getRealImageSize(deployAnalyzerModel.images) == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
-                    return false;
-                }
                 //经纬度校验
                 if (deployAnalyzerModel.latLng.size() != 2) {
                     return false;
@@ -814,6 +802,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
      * 检查是否能强制上传
      */
     private void checkHasForceUploadPermission() {
+        //TODO
         String mergeType = WidgetUtil.handleMergeType(deployAnalyzerModel.deviceType);
         if (TextUtils.isEmpty(mergeType)) {
             getView().showWarnDialog(true);
@@ -828,34 +817,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 getView().showWarnDialog(true);
             }
         }
-    }
-
-    /**
-     * 检测姓名和地址是否填写
-     *
-     * @return
-     */
-    private boolean checkHasNameAddress() {
-        //例：大悦城20层走廊2号配电箱
-        String name_default = mContext.getString(R.string.tips_hint_name_address);
-        if (TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress) || deployAnalyzerModel.nameAndAddress.equals(name_default)) {
-            getView().toastShort(mContext.getResources().getString(R.string.tips_input_name));
-            getView().updateUploadState(true);
-            return true;
-        } else {
-            byte[] bytes = new byte[0];
-            try {
-                bytes = deployAnalyzerModel.nameAndAddress.getBytes("UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            if (bytes.length > 48) {
-                getView().toastShort(mContext.getString(R.string.name_address_length));
-                getView().updateUploadState(true);
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
