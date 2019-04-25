@@ -143,7 +143,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
     @Override
     public void initVideoOption(String url) {
-        detailPlayer.progressBar.setVisibility(View.GONE);
+        detailPlayer.layoutBottom.setVisibility(View.INVISIBLE);
 
         //增加封面
         ImageView imageView = new ImageView(this);
@@ -227,6 +227,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
             });
             return;
         }
+        detailPlayer.layoutBottom.setVisibility(View.VISIBLE);
+
         gsyVideoOption.setUrl(url1).build(getCurPlay());
         getCurPlay().startPlayLogic();
     }

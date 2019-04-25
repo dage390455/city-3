@@ -5,8 +5,8 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -31,7 +31,7 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     private RelativeLayout rmobileData;
     public Button playBtn, playAgainBtn;
     private TextView tiptv;
-    public ProgressBar progressBar;
+    public ViewGroup layoutBottom;
 
     public CustomStandardGSYVideoPlayer(Context context, Boolean fullFlag) {
         super(context, fullFlag);
@@ -110,7 +110,6 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     protected void init(Context context) {
         super.init(context);
         EventBus.getDefault().register(this);
-        progressBar = (ProgressBar) findViewById(R.id.bottom_progressbar);
 
 
         rmobileData = findViewById(R.id.mobile_data_rl);
@@ -118,6 +117,7 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         playAgainBtn = findViewById(R.id.playagain_btn);
 
         tiptv = findViewById(R.id.tip_data_tv);
+        layoutBottom = (ViewGroup) findViewById(R.id.layout_bottom);
 
         playBtn.setOnClickListener(new OnClickListener() {
             @Override
