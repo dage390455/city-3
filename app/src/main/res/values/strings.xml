@@ -900,7 +900,6 @@
     <string name="installation_config_failed">Initial configuration failed, fix description，Reason:</string>
 
 
-
     <string name="deploy_check_dialog_quality_bad_signal">Poor signal quality, fix description</string>
     <string name="device_is_malfunction">The device is faulting，</string>
     <string name="device_is_alarm">The device is faulting，</string>
@@ -946,5 +945,8 @@
     <string name="add_wire">Add</string>
     <string name="diameter_mm">Diameter/mm²</string>
     <string name="please_input_air_rated_current">Please enter the rated current</string>
-    <string name="rated_current_colon" >Rated current:&#160;</string>
+    <string name="rated_current_colon">Rated current:&#160;</string>
+    <string name="deploy_device_detail_check_failed">Deploy Check Failed</string>
+    <string name="deploy_device_detail_checking">Deploy Checking</string>
+    <string name="deploy_device_detail_check_not_nearby">设备位置检测失败，请开启手机蓝牙并确保在设备附近</string>
 </resources>

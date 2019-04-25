@@ -2,9 +2,16 @@ package com.sensoro.smartcity.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -229,6 +236,35 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
         mUploadDialog = new CustomCornerDialog(mActivity, R.style.CustomCornerDialogStyle, view);
     }
 
+
+    @NonNull
+    private CharSequence getClickableSpannable(String suggest, String instruction) {
+        if (TextUtils.isEmpty(instruction)) {
+            return suggest;
+        }
+        final String repairInstructionUrl = mPresenter.getRepairInstructionUrl();
+        if (TextUtils.isEmpty(repairInstructionUrl)) {
+            return suggest;
+        }
+        StringBuilder stringBuilder = new StringBuilder(suggest);
+        stringBuilder.append(instruction);
+        SpannableString sb = new SpannableString(stringBuilder);
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                ds.setColor(ds.linkColor);
+                ds.setUnderlineText(false);
+            }
+
+            @Override
+            public void onClick(@NonNull View widget) {
+                mPresenter.doInstruction(repairInstructionUrl);
+            }
+        };
+        sb.setSpan(clickableSpan, stringBuilder.length() - instruction.length(), stringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        return sb;
+    }
+
     @Override
     protected void onStart() {
         mPresenter.onStart();
@@ -445,29 +481,28 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     }
 
     @Override
-    public void showWarnDialog(boolean canForceUpload) {
+    public void showWarnDialog(boolean canForceUpload, String tipText, String instruction) {
         if (mUploadDialog == null) {
             initConfirmDialog();
-            setWarDialogStyle(canForceUpload);
-            mUploadDialog.show();
-        } else {
-            setWarDialogStyle(canForceUpload);
-            mUploadDialog.show();
         }
+        setWarDialogStyle(canForceUpload, tipText, instruction);
+        mUploadDialog.show();
     }
 
-    private void setWarDialogStyle(boolean canForceUpload) {
+    private void setWarDialogStyle(boolean canForceUpload, String tipText, String instruction) {
         if (canForceUpload) {
             line1.setVisibility(View.VISIBLE);
             mDialogTvCancel.setVisibility(View.VISIBLE);
-            mDialogTvTitle.setText(R.string.deploy_result_is_upload);
             mDialogTvConfirm.setBackgroundResource(R.drawable.selector_item_white_ee_corner_right);
         } else {
             line1.setVisibility(View.GONE);
             mDialogTvCancel.setVisibility(View.GONE);
-            mDialogTvTitle.setText(R.string.no_signal_can_not_uploaded);
             mDialogTvConfirm.setBackgroundResource(R.drawable.selector_item_white_corner_bottom);
         }
+        mDialogTvMsg.setVisibility(View.VISIBLE);
+        mDialogTvMsg.setText(getClickableSpannable(tipText, instruction));
+        mDialogTvMsg.setMovementMethod(LinkMovementMethod.getInstance());
+        mDialogTvMsg.setHighlightColor(Color.TRANSPARENT);
     }
 
     @Override
@@ -559,7 +594,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
                 break;
             case R.id.dialog_deploy_device_upload_tv_cancel:
                 mUploadDialog.dismiss();
-                mPresenter.requestUpload();
+                mPresenter.doForceUpload();
                 break;
         }
     }

@@ -39,7 +39,7 @@ public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialo
 
     void setDeployPhotoText(String text);
 
-    void showWarnDialog(boolean canForceUpload);
+    void showWarnDialog(boolean canForceUpload, String tipText, String instruction);
 
     void updateUploadTvText(String text);
 

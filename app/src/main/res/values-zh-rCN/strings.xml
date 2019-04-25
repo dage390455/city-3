@@ -935,6 +935,9 @@
     <string name="add_wire">添加</string>
     <string name="diameter_mm">线径/mm²</string>
     <string name="please_input_air_rated_current">请输入空开额定电流</string>
-    <string name="rated_current_colon" >空开额定电流：</string>
+    <string name="rated_current_colon">空开额定电流：</string>
+    <string name="deploy_device_detail_check_failed">安装检测失败</string>
+    <string name="deploy_device_detail_checking">安装检测中</string>
+    <string name="deploy_device_detail_check_not_nearby">设备位置检测失败，请开启手机蓝牙并确保在设备附近</string>
 
 </resources>
