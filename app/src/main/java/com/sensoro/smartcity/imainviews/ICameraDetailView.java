@@ -4,13 +4,14 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 import com.sensoro.smartcity.adapter.model.DeviceCameraFacePicListModel;
+import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public interface ICameraDetailView extends IProgressDialog, IToast {
+public interface ICameraDetailView extends IProgressDialog, IToast , IActivityIntent {
     void initVideoOption(String url);
 
     void updateCameraList(ArrayList<DeviceCameraFacePicListModel> data);

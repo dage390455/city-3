@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.activity;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -86,10 +87,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
-//        includeTextTitleImvArrowsLeft.setColorFilter(mActivity.getResources().getColor(R.color.white));
-//        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-//        includeTextTitleTvTitle.setTextColor(Color.WHITE);
-//        includeTextTitleClRoot.setBackgroundColor(Color.TRANSPARENT);
 
         //外部辅助的旋转，帮助全屏
         orientationUtils = new OrientationUtils(this, detailPlayer);
@@ -302,8 +299,13 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
 
             @Override
-            public void setOnLiveClick() {
+            public void onLiveClick() {
                 mPresenter.doLive();
+            }
+
+            @Override
+            public void onAvatarClick(int modelPosition, int avatarPosition) {
+                mPresenter.doPersonLocus(modelPosition,avatarPosition);
             }
         });
         rvDeviceCamera.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -451,4 +453,28 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
     }
 
 
+    @Override
+    public void startAC(Intent intent) {
+        mActivity.startActivity(intent);
+    }
+
+    @Override
+    public void finishAc() {
+        mActivity.finish();
+    }
+
+    @Override
+    public void startACForResult(Intent intent, int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int resultCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int resultCode, Intent data) {
+
+    }
 }

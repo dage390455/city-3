@@ -52,7 +52,8 @@ import java.util.List;
 
 import static com.amap.api.maps.AMap.MAP_TYPE_NORMAL;
 
-public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPointMapActivityView> implements Constants, AMap.OnMapLoadedListener, IOnCreate {
+public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPointMapActivityView> implements Constants,
+        AMap.OnMapLoadedListener, IOnCreate {
 
     private Activity mContext;
     private AMap aMap;
@@ -340,7 +341,6 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 
     public void backToCurrentLocation() {
         List<Double> lonlat = mDeviceInfo.getLonlat();
-
         if (lonlat != null && lonlat.size() > 2 && lonlat.get(0) != 0 && lonlat.get(1) != 0) {
             double lat = lonlat.get(1);//获取纬度
             double lon = lonlat.get(0);//获取经度
@@ -350,6 +350,8 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
                 CameraUpdate update = CameraUpdateFactory
                         .newCameraPosition(new CameraPosition(latLng, 15, 0, 30));
                 aMap.moveCamera(update);
+            }else{
+                getView().toastShort(mContext.getString(R.string.tips_data_error));
             }
         }
     }

@@ -32,6 +32,7 @@ import com.sensoro.smartcity.server.response.DeviceCameraDetailRsp;
 import com.sensoro.smartcity.server.response.DeviceCameraFacePicListRsp;
 import com.sensoro.smartcity.server.response.DeviceCameraHistoryRsp;
 import com.sensoro.smartcity.server.response.DeviceCameraListRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraPersonFaceRsp;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
@@ -66,6 +67,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -1605,6 +1607,49 @@ public class RetrofitServiceHelper {
 
     public Observable<DeviceCameraListRsp> getDeviceGroupCameraList(String _id, Integer pageSize, Integer page, String search) {
         return retrofitService.getDeviceGroupCameraList(_id, pageSize, page, search);
+    }
+
+    public Observable<DeviceCameraPersonFaceRsp> getDeviceCameraPersonFace(String id,
+                                                                           Long startTime, Long endTime,
+                                                                           Integer score,Integer offset, Integer limit,List<String> cameraIds){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(id)) {
+                jsonObject.put("id",id);
+            }
+
+            if (startTime != null) {
+                jsonObject.put("startTime",startTime);
+            }
+
+            if (endTime != null) {
+                jsonObject.put("endTime",endTime);
+            }
+
+            if (offset != null) {
+                jsonObject.put("offset", offset);
+            }
+
+            if (limit != null) {
+                jsonObject.put("limit", limit);
+            }
+
+            if (score != null) {
+                jsonObject.put("score",score);
+            }
+
+            if (cameraIds != null && cameraIds.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (String cameraId : cameraIds) {
+                    jsonArray.put(cameraId);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.getDeviceCameraPersonFace(requestBody);
+
     }
 
 }

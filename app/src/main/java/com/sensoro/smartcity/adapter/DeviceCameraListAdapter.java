@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,19 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.model.DeviceCameraFacePicListModel;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.server.bean.DeviceCameraFacePic;
-import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.util.DateUtil;
-import com.sensoro.smartcity.util.ImageFactory;
-import com.sensoro.smartcity.util.PreferencesHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +42,9 @@ public class DeviceCameraListAdapter extends RecyclerView.Adapter<DeviceCameraLi
     public interface OnDeviceCameraListClickListener {
         void onItemClick(View view, int position);
 
-        void setOnLiveClick();
+        void onLiveClick();
+
+        void onAvatarClick(int modelPosition,int avatarPosition);
     }
 
     public void setOnContentItemClickListener(OnDeviceCameraListClickListener onDeviceCameraListClickListener) {
@@ -92,7 +84,7 @@ public class DeviceCameraListAdapter extends RecyclerView.Adapter<DeviceCameraLi
                     liveClick = true;
                     notifyDataSetChanged();
                     if (onDeviceCameraListClickListener != null) {
-                        onDeviceCameraListClickListener.setOnLiveClick();
+                        onDeviceCameraListClickListener.onLiveClick();
                     }
                 }
             });
@@ -105,6 +97,7 @@ public class DeviceCameraListAdapter extends RecyclerView.Adapter<DeviceCameraLi
             holder.clPicture.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.e("cxy",":条目点击::");
                     Integer position = (Integer) holder.clPicture.getTag();
                     if (preModel != null) {
                         preModel.isSelect = false;
@@ -139,7 +132,7 @@ public class DeviceCameraListAdapter extends RecyclerView.Adapter<DeviceCameraLi
         } else {
             holder.clPicture.setTag(position);
 
-            int index = position - 1;
+            final int index = position - 1;
             DeviceCameraFacePicListModel model = mList.get(index);
             holder.clPicture.setBackgroundColor(model.isSelect ? Color.parseColor("#F3F4F4") : mContext.getResources().
                     getColor(R.color.white));
@@ -152,6 +145,14 @@ public class DeviceCameraListAdapter extends RecyclerView.Adapter<DeviceCameraLi
             holder.rvPicture.setLayoutManager(manager);
             holder.rvPicture.setAdapter(avatarAdapter);
             holder.rvPicture.setLayoutFrozen(true);
+            avatarAdapter.setOnAvatarClickListener(new CameraDetailAvatarAdapter.OnAvatarClickListener() {
+                @Override
+                public void onAvatar(int position) {
+                    if (onDeviceCameraListClickListener != null) {
+                        onDeviceCameraListClickListener.onAvatarClick(index,position);
+                    }
+                }
+            });
 
             //
             if (position - 1 > -1 && getItemViewType(position - 1) == 2) {
