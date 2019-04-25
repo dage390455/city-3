@@ -57,7 +57,6 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     }
 
 
-
     /**
      * 加载失败
      */
@@ -189,6 +188,7 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
             return;
         }
+        rmobileData.setVisibility(GONE);
 
 
     }

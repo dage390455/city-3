@@ -214,11 +214,13 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
     @Override
     public void startPlayLogic(final String url1) {
-        //
-        if (!NetworkUtils.isWifiConnected(this) || (!NetworkUtils.isWifiConnected(this))) {
-
+        if (!NetworkUtils.isAvailable(this)) {
             orientationUtils.setEnable(false);
+            return;
+        }
 
+        if (!NetworkUtils.isWifiConnected(this)) {
+            orientationUtils.setEnable(false);
             detailPlayer.getPlayBtn().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
