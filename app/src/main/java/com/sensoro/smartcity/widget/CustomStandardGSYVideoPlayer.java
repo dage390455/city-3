@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.widget;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -11,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.model.EventData;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.listener.GSYVideoShotListener;
@@ -26,7 +28,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 
 import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
+import static com.sensoro.smartcity.constant.Constants.PREFERENCE_LOGIN_NAME_PWD;
 
+/**
+ * 涉及生命横竖屏旋转
+ */
 public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     private RelativeLayout rMobileData;
 
@@ -43,7 +49,6 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     private Button playRetryBtn;
     private TextView tiptv;
-    private int islive;
 
     public CustomStandardGSYVideoPlayer(Context context, Boolean fullFlag) {
         super(context, fullFlag);
@@ -101,8 +106,21 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
      */
     public void changeBottomContainer(int islive) {
 
-        this.islive = islive;
-        hide(islive);
+        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOGIN_NAME_PWD, Context
+                .MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt("islive", islive);
+        editor.apply();
+//        if (islive == VISIBLE) {
+//            mProgressBar.setProgressDrawable(getResources().getDrawable(R.drawable.custom_video_seek_progress));
+//            mProgressBar.setThumb(getResources().getDrawable(R.drawable.video_seek_thumb));
+//        } else {
+//            mProgressBar.setProgressDrawable(null);
+//            mProgressBar.setThumb(null);
+//        }
+        hide();
+        invalidate();
+
 
     }
 
@@ -157,6 +175,7 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
         tiptv = findViewById(R.id.tip_data_tv);
 
+
         playBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -194,11 +213,14 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     }
 
-    public void hide(int bottomContainerState) {
-        setViewShowState(mProgressBar, bottomContainerState);
-        setViewShowState(mCurrentTimeTextView, bottomContainerState);
+    public void hide() {
+        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOGIN_NAME_PWD, Context
+                .MODE_PRIVATE);
+        int islive = sp.getInt("islive", 0);
+        setViewShowState(mProgressBar, islive);
+//        setViewShowState(mCurrentTimeTextView, islive);
 
-        setViewShowState(mTotalTimeTextView, bottomContainerState);
+        setViewShowState(mTotalTimeTextView, islive);
     }
 
     @Override
@@ -273,28 +295,28 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     @Override
     protected void changeUiToPlayingShow() {
         super.changeUiToPlayingShow();
-        hide(islive);
+        hide();
 
     }
 
     @Override
     protected void changeUiToPauseShow() {
         super.changeUiToPauseShow();
-        hide(islive);
+        hide();
 
     }
 
     @Override
     protected void changeUiToPlayingBufferingShow() {
         super.changeUiToPlayingBufferingShow();
-        hide(islive);
+        hide();
 
     }
 
     @Override
     protected void changeUiToCompleteShow() {
         super.changeUiToCompleteShow();
-        hide(islive);
+        hide();
 
     }
 
@@ -436,7 +458,38 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     @Override
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        hide(INVISIBLE);
+//        hide(INVISIBLE);
+
+        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOGIN_NAME_PWD, Context
+                .MODE_PRIVATE);
+        int islive = sp.getInt("islive", 0);
+        Configuration mConfiguration = this.getResources().getConfiguration(); //获取设置的配置信息
+        int ori = mConfiguration.orientation; //获取屏幕方向
+
+        hide();
+//        if (ori == mConfiguration.ORIENTATION_LANDSCAPE) {
+////            setViewShowState(mProgressBar, INVISIBLE);
+//            //横屏
+////            hide(INVISIBLE);
+//            if (islive == VISIBLE) {
+//                mProgressBar.setProgressDrawable(getResources().getDrawable(R.drawable.custom_video_seek_progress));
+//                mProgressBar.setThumb(getResources().getDrawable(R.drawable.video_seek_thumb));
+//            } else {
+//                mProgressBar.setProgressDrawable(null);
+//                mProgressBar.setThumb(null);
+//            }
+//        } else if (ori == mConfiguration.ORIENTATION_PORTRAIT) {
+//            //竖屏
+//            if (islive == VISIBLE) {
+//                mProgressBar.setProgressDrawable(getResources().getDrawable(R.drawable.custom_video_seek_progress));
+//                mProgressBar.setThumb(getResources().getDrawable(R.drawable.video_seek_thumb));
+//            } else {
+//                mProgressBar.setProgressDrawable(null);
+//                mProgressBar.setThumb(null);
+//            }
+
+//        }
+
 
     }
 
