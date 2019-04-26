@@ -14,9 +14,8 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/item_adapter_alarm_cantact_add_ll"
         android:layout_below="@+id/ac_alarm_contact_title"
-        android:background="@color/c_f4f4f4"
 
-        android:fillViewport="true">
+        android:background="@color/c_f4f4f4">
 
         <LinearLayout
             android:layout_width="match_parent"
