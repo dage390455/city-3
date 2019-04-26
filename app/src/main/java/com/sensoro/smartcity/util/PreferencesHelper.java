@@ -147,7 +147,9 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasMalfunction = hasMalfunction;
             eventLoginData.hasDeviceBrief = hasDeviceBrief;
             eventLoginData.hasSignalCheck = hasDeviceSignalCheck;
-            eventLoginData.hasSignalConfig = hasDeviceSignalConfig;
+            //TODO 统一去掉信号配置
+//            eventLoginData.hasSignalConfig = hasDeviceSignalConfig;
+            eventLoginData.hasSignalConfig = false;
             eventLoginData.hasBadSignalUpload = hasBadSignalUpload;
             eventLoginData.hasDevicePositionCalibration = hasDevicePositionCalibration;
             eventLoginData.hasDeviceMuteShort = hasDeviceMuteShort;
