@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.widget;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.util.AttributeSet;
@@ -26,8 +27,13 @@ import java.io.File;
 
 import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
 
+/**
+ * 涉及生命横竖屏旋转
+ */
 public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
-    private RelativeLayout rmobileData;
+    private RelativeLayout rMobileData;
+
+    private static int isLive;
 
     public Button getPlayBtn() {
         return playBtn;
@@ -42,7 +48,6 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     private Button playRetryBtn;
     private TextView tiptv;
-    private int bottomContainerState;
 
     public CustomStandardGSYVideoPlayer(Context context, Boolean fullFlag) {
         super(context, fullFlag);
@@ -61,11 +66,11 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
      * 加载失败
      */
     public void changeRetryType() {
-        rmobileData.setVisibility(VISIBLE);
+        rMobileData.setVisibility(VISIBLE);
         playBtn.setVisibility(GONE);
         playRetryBtn.setVisibility(VISIBLE);
 
-        tiptv.setText("Video loading failed, please try again");
+        tiptv.setText(getResources().getString(R.string.retry_play));
     }
 
     /**
@@ -73,11 +78,11 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
      */
     public void changeMobileType() {
         GSYVideoManager.onPause();
-        rmobileData.setVisibility(VISIBLE);
+        rMobileData.setVisibility(VISIBLE);
         playBtn.setVisibility(VISIBLE);
         playRetryBtn.setVisibility(GONE);
 
-        tiptv.setText("You are now using mobile network,\n please mind your data usage.");
+        tiptv.setText(getResources().getString(R.string.mobile_network));
     }
 
     /**
@@ -86,9 +91,9 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     public void changeNoDataType() {
         GSYVideoManager.onPause();
-        tiptv.setText("Network connection failed, \nplease check your network settings");
+        tiptv.setText(getResources().getString(R.string.online_tip));
         playBtn.setVisibility(GONE);
-        rmobileData.setVisibility(VISIBLE);
+        rMobileData.setVisibility(VISIBLE);
         playRetryBtn.setVisibility(GONE);
 
     }
@@ -98,10 +103,23 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
      *
      * @param islive
      */
-    public void changeBottomContainer(boolean islive) {
-        bottomContainerState = islive ? View.VISIBLE : View.GONE;
+    public void changeBottomContainer(int islive) {
+        isLive = islive;
+//        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOGIN_NAME_PWD, Context
+//                .MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sp.edit();
+//        editor.putInt("islive", islive);
+//        editor.apply();
+//        if (islive == VISIBLE) {
+//            mProgressBar.setProgressDrawable(getResources().getDrawable(R.drawable.custom_video_seek_progress));
+//            mProgressBar.setThumb(getResources().getDrawable(R.drawable.video_seek_thumb));
+//        } else {
+//            mProgressBar.setProgressDrawable(null);
+//            mProgressBar.setThumb(null);
+//        }
+        hide();
+//        invalidate();
 
-        setViewShowState(mBottomContainer, bottomContainerState);
 
     }
 
@@ -120,8 +138,8 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
             switch (data) {
 
                 case ConnectivityManager.TYPE_WIFI:
-                    if (rmobileData.getVisibility() == VISIBLE) {
-                        rmobileData.setVisibility(GONE);
+                    if (rMobileData.getVisibility() == VISIBLE) {
+                        rMobileData.setVisibility(GONE);
                         GSYVideoManager.onResume();
                     }
 
@@ -150,17 +168,18 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         EventBus.getDefault().register(this);
 
 
-        rmobileData = findViewById(R.id.mobile_data_rl);
+        rMobileData = findViewById(R.id.rl_mobile_data);
         playBtn = findViewById(R.id.play_btn);
         playRetryBtn = findViewById(R.id.playa_retry_btn);
 
         tiptv = findViewById(R.id.tip_data_tv);
 
+
         playBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (rmobileData.getVisibility() == VISIBLE) {
-                    rmobileData.setVisibility(GONE);
+                if (rMobileData.getVisibility() == VISIBLE) {
+                    rMobileData.setVisibility(GONE);
                     GSYVideoManager.onResume();
                 }
             }
@@ -188,9 +207,19 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
             return;
         }
-        rmobileData.setVisibility(GONE);
+        rMobileData.setVisibility(GONE);
 
 
+    }
+
+    public void hide() {
+//        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOGIN_NAME_PWD, Context
+//                .MODE_PRIVATE);
+//        int islive = sp.getInt("islive", 0);
+        setViewShowState(mProgressBar, isLive);
+//        setViewShowState(mCurrentTimeTextView, islive);
+
+        setViewShowState(mTotalTimeTextView, isLive);
     }
 
     @Override
@@ -259,35 +288,34 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     protected void changeUiToPreparingShow() {
         super.changeUiToPreparingShow();
 
-        setViewShowState(mBottomContainer, bottomContainerState);
 
     }
 
     @Override
     protected void changeUiToPlayingShow() {
         super.changeUiToPlayingShow();
-        setViewShowState(mBottomContainer, bottomContainerState);
+        hide();
 
     }
 
     @Override
     protected void changeUiToPauseShow() {
         super.changeUiToPauseShow();
-        setViewShowState(mBottomContainer, bottomContainerState);
+        hide();
 
     }
 
     @Override
     protected void changeUiToPlayingBufferingShow() {
         super.changeUiToPlayingBufferingShow();
-        setViewShowState(mBottomContainer, bottomContainerState);
+        hide();
 
     }
 
     @Override
     protected void changeUiToCompleteShow() {
         super.changeUiToCompleteShow();
-        setViewShowState(mBottomContainer, bottomContainerState);
+        hide();
 
     }
 
@@ -425,4 +453,60 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     public void restartTimerTask() {
         super.restartTimerTask();
     }
+
+    @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+//        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOGIN_NAME_PWD, Context
+//                .MODE_PRIVATE);
+//        int islive = sp.getInt("islive", 0);
+//        Configuration mConfiguration = this.getResources().getConfiguration(); //获取设置的配置信息
+//        int ori = mConfiguration.orientation; //获取屏幕方向
+        hide();
+//        if (ori == mConfiguration.ORIENTATION_LANDSCAPE) {
+////            setViewShowState(mProgressBar, INVISIBLE);
+//            //横屏
+////            hide(INVISIBLE);
+//            if (islive == VISIBLE) {
+//                mProgressBar.setProgressDrawable(getResources().getDrawable(R.drawable.custom_video_seek_progress));
+//                mProgressBar.setThumb(getResources().getDrawable(R.drawable.video_seek_thumb));
+//            } else {
+//                mProgressBar.setProgressDrawable(null);
+//                mProgressBar.setThumb(null);
+//            }
+//        } else if (ori == mConfiguration.ORIENTATION_PORTRAIT) {
+//            //竖屏
+//            if (islive == VISIBLE) {
+//                mProgressBar.setProgressDrawable(getResources().getDrawable(R.drawable.custom_video_seek_progress));
+//                mProgressBar.setThumb(getResources().getDrawable(R.drawable.video_seek_thumb));
+//            } else {
+//                mProgressBar.setProgressDrawable(null);
+//                mProgressBar.setThumb(null);
+//            }
+
+//        }
+
+
+    }
+
+//
+//    @Nullable
+//    @Override
+//    protected Parcelable onSaveInstanceState() {
+//        super.onSaveInstanceState();
+//
+//        Bundle bundle = new Bundle();
+//        bundle.putInt("islive", islive);
+//        return bundle;
+//
+//    }
+//
+//    @Override
+//    protected void onRestoreInstanceState(Parcelable state) {
+//
+//        Bundle bundle = (Bundle) state;
+//        islive = bundle.getInt("islive");
+//        super.onRestoreInstanceState(bundle);
+//    }
 }

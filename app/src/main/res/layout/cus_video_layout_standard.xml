@@ -162,7 +162,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/mobile_data_rl"
+        android:id="@+id/rl_mobile_data"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
@@ -178,7 +178,7 @@
             android:layout_centerInParent="true"
             android:gravity="center"
             android:lineSpacingExtra="@dimen/px10dp"
-            android:text="You are now using mobile network,\n please mind your data usage."
+            android:text="@string/mobile_network"
             android:textColor="@color/white"
             android:textSize="14sp" />
 
@@ -203,7 +203,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:background="@drawable/shape_bg_corner_2dp_29c_shadow"
-            android:text="Retry"
+            android:text="@string/retry"
             android:textColor="@color/white"
             android:visibility="gone" />
 

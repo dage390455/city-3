@@ -951,4 +951,12 @@
     <string name="device_detail_camera_has_camera">Has</string>
     <string name="device_detail_camera_camera_count">Camera</string>
     <string name="not_obtain_face_id">Failed to get image id</string>
+
+    <string name="online_tip">"Network connection failed,\nplease check your network settings"</string>
+
+    <string name="play">"Play"</string>
+    <string name="retry">"Retry"</string>
+    <string name="retry_play">"Video loading failed, please try again"</string>
+
+    <string name="mobile_network">"You are now using mobile network,\n please mind your data usage."</string>
 </resources>
