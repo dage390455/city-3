@@ -239,9 +239,6 @@ public class CameraDetailPresenter extends BasePresenter<ICameraDetailView> impl
                 }
 
                 DeviceCameraFacePic deviceCameraFacePic = model.pics.get(0);
-                String sceneUrl = deviceCameraFacePic.getSceneUrl();
-                String baseUrl = "https://scpub-eye.antelopecloud.cn";
-//                getLastCoverImage(baseUrl+sceneUrl);
 
             }else{
                 getView().toastShort("未获取到数据");
