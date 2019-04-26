@@ -81,11 +81,9 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
         initTitle();
         initRcHistory();
         initClearHistoryDialog();
-//        initEtWatcher();
         addAlarmCantactDeleteTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //之前数据是否为空
                 alarmContactRcContentAdapter.addNewDataAdapter();
             }
         });
@@ -101,36 +99,6 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
         historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
-//    private void initEtWatcher() {
-//        acNameAddressEtAlarmContactName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                return (event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
-//            }
-//        });
-//        acNameAddressEtAlarmContactPhone.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                return (event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
-//            }
-//        });
-//        acNameAddressEtAlarmContactName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (hasFocus) {
-//                    mPresenter.updateStatus(0);
-//                }
-//            }
-//        });
-//        acNameAddressEtAlarmContactPhone.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (hasFocus) {
-//                    mPresenter.updateStatus(1);
-//                }
-//            }
-//        });
-//    }
 
     private void initRcHistory() {
         mHistoryAdapter = new AlarmContactHistoryAdapter(mActivity);
@@ -171,15 +139,6 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
         }
     }
 
-//    @Override
-//    public void setName(String name) {
-//        acNameAddressEtAlarmContactName.setText(name);
-//    }
-//
-//    @Override
-//    public void setPhone(String phone) {
-//        acNameAddressEtAlarmContactPhone.setText(phone);
-//    }
 
     private void initRcContent() {
         alarmContactRcContentAdapter = new AlarmContactRcContentAdapter(this);
@@ -276,7 +235,6 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
     @Override
     public void onItemClick(View view, int position) {
         String s = mHistoryAdapter.getSearchHistoryList().get(position);
-//        mPresenter.updateText(s);
 
         if (alarmContactRcContentAdapter.mFoucusPos != -1) {
             DeployContactModel model = alarmContactRcContentAdapter.mList.get(alarmContactRcContentAdapter.mFoucusPos);
@@ -291,8 +249,6 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
             alarmContactRcContentAdapter.notifyItemChanged(alarmContactRcContentAdapter.mFoucusPos);
         }
 
-//        alarmContactRcContentAdapter.mList
-//        alarmContactRcContentAdapter.updateFoucosText(s);
 
     }
 
