@@ -3,6 +3,7 @@ package com.sensoro.smartcity.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -104,6 +105,8 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     TextView acDeployDeviceDetailTvAlarmContactRequired;
     @BindView(R.id.line_deploy_detail_we_chat)
     View lineDeployDetailWeChat;
+    @BindView(R.id.ac_deploy_device_detail_tv_upload_tip)
+    TextView acDeployDeviceDetailTvUploadTip;
     private DeployDeviceDetailAlarmContactAdapter mAlarmContactAdapter;
     private TagAdapter mTagAdapter;
     private TextView mDialogTvConfirm;
@@ -131,7 +134,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         tipBleDialogUtils = new TipBleDialogUtils(mActivity);
         mLoadBleConfigDialogBuilder = new ProgressUtils.Builder(mActivity);
-        mLoadBleConfigDialog = new ProgressUtils(mLoadBleConfigDialogBuilder.setMessage(mActivity.getString(R.string.get_the_middle_profile)).build());
+        mLoadBleConfigDialog = new ProgressUtils(mLoadBleConfigDialogBuilder.setMessage(mActivity.getString(R.string.loading)).build());
         includeTextTitleTvTitle.setText(R.string.device_deployment);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
 //        updateUploadState(true);
@@ -402,19 +405,16 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     }
 
     @Override
-    public void refreshSignal(boolean hasStation, String signal, int resSignalId, String locationInfo) {
+    public void refreshSignal(boolean hasStation, String signal, @NonNull Drawable drawable, String locationInfo) {
         if (hasStation) {
             //TODO 背景选择器
             acDeployDeviceDetailTvFixedPointSignal.setVisibility(View.GONE);
             acDeployDeviceDetailTvFixedPointState.setText(locationInfo);
-//        signalButton.setPadding(6, 10, 6, 10);
         } else {
             acDeployDeviceDetailTvFixedPointSignal.setVisibility(View.VISIBLE);
             //TODO 背景选择器
             acDeployDeviceDetailTvFixedPointSignal.setText(signal);
-            acDeployDeviceDetailTvFixedPointSignal.setBackground(getResources().getDrawable(resSignalId));
             acDeployDeviceDetailTvFixedPointState.setText(locationInfo);
-//        signalButton.setPadding(6, 10, 6, 10);
         }
 
         //定位信息是必填的情况下，颜色a6a6 其他2525
@@ -423,6 +423,10 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
         } else {
             acDeployDeviceDetailTvFixedPointState.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
         }
+        //
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        acDeployDeviceDetailTvFixedPointSignal.setText(signal);
+        acDeployDeviceDetailTvFixedPointSignal.setCompoundDrawables(drawable, null, null, null);
 
     }
 
@@ -574,8 +578,14 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
     @Override
     public void setUploadBtnStatus(boolean isEnable) {
+        mPresenter.updateCheckTipText(isEnable);
         acDeployDeviceDetailTvUpload.setEnabled(isEnable);
         acDeployDeviceDetailTvUpload.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_solid_df_corner);
+    }
+
+    @Override
+    public void setDeployLocalCheckTipText(String tipText) {
+        acDeployDeviceDetailTvUploadTip.setText(tipText);
     }
 
     @Override

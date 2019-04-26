@@ -3,6 +3,8 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -105,12 +107,14 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         onCreate();
         Intent intent = mContext.getIntent();
         deployAnalyzerModel = (DeployAnalyzerModel) intent.getSerializableExtra(EXTRA_DEPLOY_ANALYZER_MODEL);
+        //TODO 暂时用烟感做测试
+//        PreferencesHelper.getInstance().getUserData().hasSignalConfig = true;
+        //
+//        deployAnalyzerModel.deviceType ="acrel_single";
+        //
         getView().setNotOwnVisible(deployAnalyzerModel.notOwn);
         init();
-        //TODO 暂时用烟感做测试
-        PreferencesHelper.getInstance().getUserData().hasSignalConfig = true;
-        //
-        if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION || Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+        if ((PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) || Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
             mHandler.post(this);
         }
         BleObserver.getInstance().registerBleObserver(this);
@@ -127,15 +131,18 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 getView().setDeployDeviceRlSignalVisible(false);
                 getView().setDeployPhotoVisible(false);
                 getView().setDeviceSn(mContext.getString(R.string.device_number) + deployAnalyzerModel.sn);
+                getView().setDeployDeviceType(mContext.getString(R.string.deploy_device_type) + ":" + mContext.getString(R.string.station));
                 if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
                     getView().setNameAddressText(deployAnalyzerModel.nameAndAddress);
                 }
+                getView().setUploadBtnStatus(checkCanUpload());
                 break;
             case TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
                 getView().setDeployContactRelativeLayoutVisible(true);
                 getView().setDeployDeviceRlSignalVisible(true);
                 getView().setDeployPhotoVisible(true);
+                getView().setDeployDeviceType(mContext.getString(R.string.deploy_device_type) + ":" + WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType));
                 echoDeviceInfo();
                 break;
             case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
@@ -145,6 +152,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 getView().setDeployDeviceRlSignalVisible(true);
                 getView().setDeployPhotoVisible(true);
                 getView().updateUploadTvText(mContext.getString(R.string.replacement_equipment));
+                getView().setDeployDeviceType(mContext.getString(R.string.deploy_device_type) + ":" + WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType));
                 echoDeviceInfo();
                 getView().setDeployDetailArrowWeChatVisible(false);
                 break;
@@ -154,8 +162,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             default:
                 break;
         }
-        String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType);
-        getView().setDeployDeviceType(mContext.getString(R.string.deploy_device_type) + ":" + deviceTypeName);
         //TODO 暂时只针对ancre的电器火灾并且排除掉泛海三江电气火灾
         boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
         getView().setDeployDetailDeploySettingVisible(isFire);
@@ -177,6 +183,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         }
         getView().updateContactData(deployAnalyzerModel.deployContactModelList);
         getView().updateTagsData(deployAnalyzerModel.tagList);
+        tempSignal = deployAnalyzerModel.signal;
         freshSignalInfo();
         getView().setUploadBtnStatus(checkCanUpload());
         getView().setDeployWeChatText(deployAnalyzerModel.weChatAccount);
@@ -186,6 +193,33 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             throwable.printStackTrace();
         }
 
+    }
+
+    public void updateCheckTipText(boolean isEnable) {
+        if (isEnable) {
+            if (TYPE_SCAN_DEPLOY_STATION == deployAnalyzerModel.deployType) {
+                getView().setDeployLocalCheckTipText("");
+            } else {
+                if (DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType) || "mantun_fires".equals(deployAnalyzerModel.deviceType)) {
+                    getView().setDeployLocalCheckTipText(mContext.getString(R.string.deploy_device_detail_check_tip_is_powered_on));
+                } else {
+                    DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deployAnalyzerModel.deviceType);
+                    if (configDeviceType != null) {
+                        String mergeType = configDeviceType.getMergeType();
+                        if ("smoke".equals(mergeType)) {
+                            getView().setDeployLocalCheckTipText(mContext.getString(R.string.deploy_device_detail_check_tip_press_the_sensor));
+                            return;
+                        } else if ("fhsj_ch4".equals(deployAnalyzerModel.deviceType) || "baymax_ch4".equals(deployAnalyzerModel.deviceType)) {
+                            getView().setDeployLocalCheckTipText(mContext.getString(R.string.deploy_device_detail_check_tip_press_the_sensor));
+                            return;
+                        }
+                    }
+                    getView().setDeployLocalCheckTipText("");
+                }
+            }
+        } else {
+            getView().setDeployLocalCheckTipText(mContext.getString(R.string.deploy_device_detail_add_all_required));
+        }
     }
 
     //
@@ -237,7 +271,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         final OnConfigInfoObserver onConfigInfoObserver = new OnConfigInfoObserver() {
             @Override
             public void onSuccess() {
-//                doUploadImages(lon, lan);
                 if (isAttachedView()) {
                     HandlerDeployCheck.OnMessageDeal signalMsgDeal = new HandlerDeployCheck.OnMessageDeal() {
                         @Override
@@ -595,7 +628,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         }
         intent.putExtra(EXTRA_DEPLOY_TO_SN, deployAnalyzerModel.sn);
         intent.putExtra(EXTRA_DEPLOY_TYPE, deployAnalyzerModel.deployType);
-        intent.putExtra(EXTRA_DEPLOY_TYPE, deployAnalyzerModel.deployType);
         getView().startAC(intent);
     }
 
@@ -896,43 +928,47 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     }
 
     private void freshSignalInfo() {
-        String signal_text = null;
+        Resources resources = mContext.getResources();
+        String signal_text = mContext.getString(R.string.s_none);
         long time_diff = System.currentTimeMillis() - deployAnalyzerModel.updatedTime;
-        int resId = 0;
-        if (tempSignal != null && (time_diff < 3 * 60 * 1000)) {
+        //
+        Drawable drawable = resources.getDrawable(R.drawable.signal_none);
+        if (tempSignal != null && (time_diff < 2 * 60 * 1000)) {
             switch (tempSignal) {
                 case "good":
-                    signal_text = mContext.getString(R.string.signal_excellent);
-                    resId = R.drawable.shape_signal_good;
+                    signal_text = mContext.getString(R.string.s_good);
+                    drawable = resources.getDrawable(R.drawable.signal_good);
                     break;
                 case "normal":
-                    signal_text = mContext.getString(R.string.signal_good);
-                    resId = R.drawable.shape_signal_normal;
+                    signal_text = mContext.getString(R.string.s_normal);
+                    drawable = resources.getDrawable(R.drawable.signal_normal);
                     break;
                 case "bad":
-                    signal_text = mContext.getString(R.string.signal_weak);
-                    resId = R.drawable.shape_signal_bad;
+                    signal_text = mContext.getString(R.string.s_bad);
+                    drawable = resources.getDrawable(R.drawable.signal_bad);
+                    break;
+                default:
+                    signal_text = mContext.getString(R.string.s_bad);
+                    drawable = resources.getDrawable(R.drawable.signal_bad);
                     break;
             }
-        } else {
-            signal_text = mContext.getString(R.string.no_signal);
-            resId = R.drawable.shape_signal_none;
         }
+        //
         switch (deployAnalyzerModel.deployType) {
             case TYPE_SCAN_DEPLOY_STATION:
                 if (deployAnalyzerModel.latLng.size() != 2) {
-                    getView().refreshSignal(true, signal_text, resId, mContext.getString(R.string.not_positioned));
+                    getView().refreshSignal(true, signal_text, drawable, mContext.getString(R.string.not_positioned));
                 } else {
-                    getView().refreshSignal(true, signal_text, resId, mContext.getString(R.string.positioned));
+                    getView().refreshSignal(true, signal_text, drawable, mContext.getString(R.string.positioned));
                 }
                 break;
             case TYPE_SCAN_DEPLOY_DEVICE:
             case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
             case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 if (deployAnalyzerModel.latLng.size() != 2) {
-                    getView().refreshSignal(false, signal_text, resId, mContext.getString(R.string.required));
+                    getView().refreshSignal(false, signal_text, drawable, mContext.getString(R.string.required));
                 } else {
-                    getView().refreshSignal(false, signal_text, resId, mContext.getString(R.string.positioned));
+                    getView().refreshSignal(false, signal_text, drawable, mContext.getString(R.string.positioned));
                 }
                 break;
             case TYPE_SCAN_INSPECTION:

@@ -1,5 +1,8 @@
 package com.sensoro.smartcity.imainviews;
 
+import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+
 import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
@@ -21,7 +24,7 @@ public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialo
 
     void updateTagsData(List<String> tagList);
 
-    void refreshSignal(boolean hasStation, String signal, int resSignalId, String locationInfo);
+    void refreshSignal(boolean hasStation, String signal, @NonNull Drawable drawable, String locationInfo);
 
     void setDeployDeviceRlSignalVisible(boolean isVisible);
 
@@ -64,4 +67,6 @@ public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialo
     void setDeployDeviceDetailDeploySetting(String setting);
 
     void setUploadBtnStatus(boolean isEnable);
+
+    void setDeployLocalCheckTipText(String tipText);
 }
