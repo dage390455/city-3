@@ -260,7 +260,13 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
             case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 //巡检设备更换
-                handleBleSetting(lon, lan);
+
+                //TODO 加入白名单处理
+                if (TYPE_SCAN_DEPLOY_WHITE_LIST == deployAnalyzerModel.whiteListDeployType) {
+                    doUploadImages(lon, lan);
+                } else {
+                    handleBleSetting(lon, lan);
+                }
                 break;
             default:
                 break;
