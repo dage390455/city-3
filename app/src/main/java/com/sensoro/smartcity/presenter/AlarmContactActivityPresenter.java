@@ -20,13 +20,13 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactActivityView> implements Constants {
     private Activity mContext;
     private final List<DeployContactModel> deployContactModelList = new ArrayList<>();
     private ArrayList<String> mHistoryKeywords = new ArrayList<>();
     private int mStatus = -1;
+
 
     @Override
     public void initData(Context context) {
@@ -35,12 +35,20 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
         if (deployContactModels != null && deployContactModels.size() > 0) {
             deployContactModelList.clear();
             deployContactModelList.addAll(deployContactModels);
-            DeployContactModel deployContactModel = deployContactModelList.get(0);
-            if (isAttachedView()) {
-                getView().setNameAndPhone(deployContactModel.name, deployContactModel.phone);
-            }
+            getView().updateContactData(deployContactModels);
 
+        } else {
+
+            deployContactModels = new ArrayList<>();
+            DeployContactModel deployContactModel = new DeployContactModel();
+            deployContactModel.name = "";
+            deployContactModel.phone = "";
+
+            deployContactModels.add(deployContactModel);
         }
+
+        getView().updateContactData(deployContactModels);
+
         getView().updateHistoryData(mHistoryKeywords);
         //TODO 目前只支持一个联系人
     }
@@ -123,44 +131,51 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
 //        }
 //    }
 
-    public void doFinish(String name, String phone) {
-        if (TextUtils.isEmpty(name)) {
-            if (isAttachedView()) {
-                getView().toastShort(mContext.getString(R.string.Contact_name_cannot_be_empty));
-            }
-            return;
-        }else{
-            if (name.getBytes().length > 36) {
+    public void doFinish(List<DeployContactModel> mList) {
+        deployContactModelList.clear();
+        for (int i = 0; i < mList.size(); i++) {
+            DeployContactModel model = mList.get(i);
+            String name = model.name;
+            String phone = model.phone;
+            if (TextUtils.isEmpty(name)) {
                 if (isAttachedView()) {
-                    getView().toastShort(mContext.getString(R.string.contact_name_length_to_long));
+                    getView().toastShort(mContext.getString(R.string.Contact_name_cannot_be_empty));
                 }
                 return;
+            } else {
+                if (name.getBytes().length > 36) {
+                    if (isAttachedView()) {
+                        getView().toastShort(mContext.getString(R.string.contact_name_length_to_long));
+                    }
+                    return;
+                }
             }
-        }
-        if (RegexUtils.checkPhone(phone)) {
+            if (RegexUtils.checkPhone(phone)) {
 //            saveName(name);
 //            savePhone(phone);
 //            mNameEt.clearFocus();
 //            mPhoneEt.clearFocus();
 //            getView().updateAdapter(mNameHistoryKeywords, mPhoneHistoryKeywords);
-            deployContactModelList.clear();
-            //保存标签
-            save(name,phone);
-            DeployContactModel deployContactModel = new DeployContactModel();
-            deployContactModel.name = name;
-            deployContactModel.phone = phone;
-            deployContactModelList.add(deployContactModel);
-            //
+                //保存标签
+                save(name, phone);
+                DeployContactModel deployContactModel = new DeployContactModel();
+                deployContactModel.name = name;
+                deployContactModel.phone = phone;
+                deployContactModelList.add(deployContactModel);
+                //
+
+            } else {
+                if (isAttachedView()) {
+                    getView().toastShort(mContext.getResources().getString(R.string.tips_phone_empty));
+                }
+            }
+
             EventData eventData = new EventData();
             eventData.code = EVENT_DATA_DEPLOY_SETTING_CONTACT;
             eventData.data = deployContactModelList;
             EventBus.getDefault().post(eventData);
             if (isAttachedView()) {
                 getView().finishAc();
-            }
-        } else {
-            if (isAttachedView()) {
-                getView().toastShort(mContext.getResources().getString(R.string.tips_phone_empty));
             }
         }
     }
@@ -242,12 +257,13 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
 
     /**
      * 判断应该展示姓名还是电话的历史记录
+     *
      * @param status 0 姓名 1 电话
      */
     public void updateStatus(int status) {
         mStatus = status;
         mHistoryKeywords.clear();
-        switch (status){
+        switch (status) {
             case 0:
                 String name = PreferencesHelper.getInstance().getDeployAlarmContactNameHistory();
                 if (!TextUtils.isEmpty(name)) {
@@ -270,13 +286,13 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
             switch (mStatus) {
                 case 0:
                     if (isAttachedView()) {
-                        getView().setName(content);
+//                        getView().setName(content);
                     }
 
                     break;
                 case 1:
                     if (isAttachedView()) {
-                        getView().setPhone(content);
+//                        getView().setPhone(content);
                     }
                     break;
             }
