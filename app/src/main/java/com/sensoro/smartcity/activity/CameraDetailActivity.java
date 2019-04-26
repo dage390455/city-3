@@ -24,14 +24,15 @@ import com.sensoro.smartcity.adapter.model.DeviceCameraFacePicListModel;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ICameraDetailView;
 import com.sensoro.smartcity.presenter.CameraDetailPresenter;
+import com.sensoro.smartcity.widget.CustomStandardGSYVideoPlayer;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
+import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
-import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
         implements ICameraDetailView {
 
     @BindView(R.id.detail_player)
-    StandardGSYVideoPlayer detailPlayer;
+    CustomStandardGSYVideoPlayer detailPlayer;
     @BindView(R.id.tv_time)
     TextView tvTime;
     @BindView(R.id.ll_time)
@@ -102,7 +103,10 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
         initRvCameraList();
 
-        getCurPlay().getFullscreenButton().setImageDrawable(getDrawable(R.drawable.ic_camera_full_screen));
+        getCurPlay().setEnlargeImageRes(R.drawable.ic_camera_full_screen);
+
+        getCurPlay().setShrinkImageRes(R.drawable.ic_camera_full_screen);
+
         getCurPlay().getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,6 +141,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
     @Override
     public void initVideoOption(String url) {
+        detailPlayer.changeBottomContainer(View.INVISIBLE);
+
         //增加封面
         if (imageView == null) {
             imageView = new ImageView(this);
@@ -208,9 +214,30 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
     }
 
     @Override
-    public void startPlayLogic(String url1) {
+    public void startPlayLogic(final String url1) {
+        if (!NetworkUtils.isAvailable(this)) {
+            orientationUtils.setEnable(false);
+            return;
+        }
+
+        if (!NetworkUtils.isWifiConnected(this)) {
+            orientationUtils.setEnable(false);
+            detailPlayer.getPlayBtn().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    gsyVideoOption.setUrl(url1).build(getCurPlay());
+                    getCurPlay().startPlayLogic();
+
+                }
+            });
+            return;
+        }
+        detailPlayer.changeBottomContainer(View.VISIBLE);
+
         gsyVideoOption.setUrl(url1).build(getCurPlay());
         getCurPlay().startPlayLogic();
+        orientationUtils.setEnable(true);
+
     }
 
     @Override
@@ -280,6 +307,21 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
         refreshLayout.finishLoadMoreWithNoMoreData();
     }
 
+    @Override
+    public void playError(final int pos) {
+        orientationUtils.setEnable(false);
+
+        detailPlayer.changeRetryType();
+        detailPlayer.getPlayRetryBtn().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.onCameraItemClick(pos);
+
+
+            }
+        });
+    }
+
     private void initRvCameraList() {
         deviceCameraListAdapter = new DeviceCameraListAdapter(this);
         rvDeviceCamera.setLayoutManager(new LinearLayoutManager(this));
@@ -305,7 +347,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
 
             @Override
             public void onAvatarClick(int modelPosition, int avatarPosition) {
-                mPresenter.doPersonLocus(modelPosition,avatarPosition);
+                mPresenter.doPersonLocus(modelPosition, avatarPosition);
             }
         });
         rvDeviceCamera.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -380,6 +422,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
         if (deviceCameraListAdapter != null) {
             deviceCameraListAdapter.clearPreModel();
         }
+        GSYVideoManager.releaseAllVideos();
+
     }
 
 
@@ -437,9 +481,9 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
         SensoroToast.getInstance().makeText(msg, Toast.LENGTH_LONG).show();
     }
 
-    @OnClick({R.id.imv_calendar,R.id.tv_select_time,R.id.imv_time_close})
+    @OnClick({R.id.imv_calendar, R.id.tv_select_time, R.id.imv_time_close})
     public void onViewClicked(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.imv_calendar:
             case R.id.tv_select_time:
                 mPresenter.doCalendar(activityDetailPlayer);
