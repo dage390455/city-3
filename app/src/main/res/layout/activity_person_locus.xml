@@ -8,7 +8,8 @@
         layout="@layout/item_include_text_title"/>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
         <com.amap.api.maps.MapView
             android:id="@+id/mv_ac_person_locus"
             android:layout_width="match_parent"
@@ -16,6 +17,51 @@
             >
 
         </com.amap.api.maps.MapView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/iv_move_left_ac_person_locus"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="bottom"
+                android:scaleType="centerInside"
+                android:padding="10dp"
+                android:src="@drawable/ic_move_left"/>
+            <com.warkiz.widget.IndicatorSeekBar
+                android:id="@+id/seek_bar_track_ac_person_locus"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                app:isb_indicator_custom_layout="@layout/layout_seekbar_indicator"
+                app:isb_indicator_stay="true"
+                app:isb_indicator_type="custom"
+                app:isb_show_indicator="true"
+                app:isb_thumb_drawable="@drawable/seekbar_thumb"
+                app:isb_thumb_width="20dp"
+                app:isb_track_background_bar_color="#DBDBDB"
+                app:isb_track_background_bar_size="2dp"
+                app:isb_track_progress_bar_color="#2c87fb"
+                app:isb_track_progress_bar_size="3dp"
+                />
+
+
+            <ImageView
+                android:id="@+id/iv_move_right_ac_person_locus"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="bottom"
+                android:scaleType="centerInside"
+                android:padding="10dp"
+                android:src="@drawable/ic_move_right"/>
+        </LinearLayout>
     </RelativeLayout>
 
 

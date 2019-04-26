@@ -12,21 +12,26 @@ import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
-import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.PolylineOptions;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IPersonLocusView;
 import com.sensoro.smartcity.presenter.PersonLocusPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.warkiz.widget.IndicatorSeekBar;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class PersonLocusActivity extends BaseActivity<IPersonLocusView, PersonLocusPresenter>
-        implements IPersonLocusView ,AMap.OnMapLoadedListener{
+        implements IPersonLocusView, AMap.OnMapLoadedListener {
 
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
@@ -40,6 +45,12 @@ public class PersonLocusActivity extends BaseActivity<IPersonLocusView, PersonLo
     ConstraintLayout includeTextTitleClRoot;
     @BindView(R.id.mv_ac_person_locus)
     MapView mvAcPersonLocus;
+    @BindView(R.id.iv_move_left_ac_person_locus)
+    ImageView ivMoveLeftAcPersonLocus;
+    @BindView(R.id.seek_bar_track_ac_person_locus)
+    IndicatorSeekBar seekBarTrackAcPersonLocus;
+    @BindView(R.id.iv_move_right_ac_person_locus)
+    ImageView ivMoveRightAcPersonLocus;
     private ProgressUtils mProgressUtils;
     private AMap mMap;
 
@@ -47,7 +58,6 @@ public class PersonLocusActivity extends BaseActivity<IPersonLocusView, PersonLo
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_person_locus);
         ButterKnife.bind(this);
-        Log.e("cxy",":开始加载::"+System.currentTimeMillis());
         mvAcPersonLocus.onCreate(savedInstanceState);
         initView();
         mPresenter.initData(mActivity);
@@ -68,7 +78,6 @@ public class PersonLocusActivity extends BaseActivity<IPersonLocusView, PersonLo
         mMap.getUiSettings().setLogoBottomMargin(-100);
         mMap.setMapCustomEnable(true);
         mMap.setOnMapLoadedListener(this);
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(15f));
     }
 
     @Override
@@ -155,7 +164,6 @@ public class PersonLocusActivity extends BaseActivity<IPersonLocusView, PersonLo
 
     @Override
     public void onMapLoaded() {
-        Log.e("cxy",":加载结束::"+System.currentTimeMillis());
     }
 
     @Override
@@ -166,9 +174,59 @@ public class PersonLocusActivity extends BaseActivity<IPersonLocusView, PersonLo
     }
 
     @Override
-    public void addMarker(MarkerOptions markerOptions) {
+    public void addMarker(MarkerOptions markerOptions, int tag) {
         if (mMap != null) {
-            mMap.addMarker(markerOptions);
+            Marker marker = mMap.addMarker(markerOptions);
+            marker.setObject(tag);
+        }
+    }
+
+    @Override
+    public void addPolyLine(PolylineOptions linePoints) {
+        mMap.addPolyline(linePoints);
+    }
+
+    @Override
+    public void setTimeText(String time) {
+        seekBarTrackAcPersonLocus.setIndicatorText(time);
+    }
+
+    @Override
+    public void setMoveLeftClickable(boolean clickable) {
+        ivMoveLeftAcPersonLocus.setClickable(clickable);
+    }
+
+    @Override
+    public void setMoveRightClickable(boolean clickable) {
+        ivMoveRightAcPersonLocus.setClickable(clickable);
+    }
+
+    @Override
+    public void removeAvatarMarker() {
+        if (mMap != null) {
+            List<Marker> markers = mMap.getMapScreenMarkers();
+            for (Marker marker : markers) {
+                Object object = marker.getObject();
+                if (object instanceof Integer && (Integer)object == -1) {
+                    marker.remove();
+                    mvAcPersonLocus.invalidate();
+                    Log.e("cxy",":移除::");
+                }
+            }
+
+        }
+    }
+
+
+    @OnClick({R.id.iv_move_left_ac_person_locus, R.id.iv_move_right_ac_person_locus})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.iv_move_left_ac_person_locus:
+                mPresenter.doMoveLeft();
+                break;
+            case R.id.iv_move_right_ac_person_locus:
+                mPresenter.doMoveRight();
+                break;
         }
     }
 }
