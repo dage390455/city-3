@@ -2,7 +2,16 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bottomnavigation/bottomnavigation.iml" filepath="$PROJECT_DIR$/bottomnavigation/bottomnavigation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/calendarview/calendarview.iml" filepath="$PROJECT_DIR$/calendarview/calendarview.iml" />
       <module fileurl="file://$PROJECT_DIR$/city-3.iml" filepath="$PROJECT_DIR$/city-3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/indicatorseekbar/indicatorseekbar.iml" filepath="$PROJECT_DIR$/indicatorseekbar/indicatorseekbar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ocr_ui/ocr_ui.iml" filepath="$PROJECT_DIR$/ocr_ui/ocr_ui.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pickerview/pickerview.iml" filepath="$PROJECT_DIR$/pickerview/pickerview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sensor-kit/sensor-kit.iml" filepath="$PROJECT_DIR$/sensor-kit/sensor-kit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/simplescanner/simplescanner.iml" filepath="$PROJECT_DIR$/simplescanner/simplescanner.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wheelview/wheelview.iml" filepath="$PROJECT_DIR$/wheelview/wheelview.iml" />
     </modules>
   </component>
 </project>

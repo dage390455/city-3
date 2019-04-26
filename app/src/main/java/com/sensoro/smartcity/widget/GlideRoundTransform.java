@@ -22,6 +22,7 @@ import com.sensoro.smartcity.util.AppUtils;
  */
 
 public class GlideRoundTransform implements Transformation<Bitmap> {
+    private  int radius = -1;
 
 //    private final float radius;
 
@@ -63,6 +64,11 @@ public class GlideRoundTransform implements Transformation<Bitmap> {
         this(Glide.get(context).getBitmapPool());
     }
 
+    public GlideRoundTransform(Context context,int radius) {
+        this(Glide.get(context).getBitmapPool());
+        this.radius = radius;
+    }
+
     public GlideRoundTransform(BitmapPool pool) {
         this.mBitmapPool = pool;
     }
@@ -93,7 +99,12 @@ public class GlideRoundTransform implements Transformation<Bitmap> {
         paint.setAntiAlias(true);
 
         float r = size / 2f;
-        canvas.drawCircle(r, r, r, paint);
+        if (radius == -1) {
+            canvas.drawCircle(r, r, r, paint);
+        }else{
+            canvas.drawCircle(r, radius, radius, paint);
+        }
+
 
         return BitmapResource.obtain(bitmap, mBitmapPool);
     }

@@ -97,7 +97,6 @@ public class DeviceCameraListAdapter extends RecyclerView.Adapter<DeviceCameraLi
             holder.clPicture.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e("cxy",":条目点击::");
                     Integer position = (Integer) holder.clPicture.getTag();
                     if (preModel != null) {
                         preModel.isSelect = false;

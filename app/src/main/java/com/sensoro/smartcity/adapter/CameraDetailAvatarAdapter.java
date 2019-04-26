@@ -14,7 +14,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.DeviceCameraFacePic;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.GlideRoundTransform;
 
 import java.util.ArrayList;
@@ -57,9 +59,9 @@ class CameraDetailAvatarAdapter extends RecyclerView.Adapter<CameraDetailAvatarA
 
         holder.cLAvatarItemAdapterCameraDetail.setTag(position);
         DeviceCameraFacePic pic = mList.get(position);
-        String baseUrl = "https://scpub-eye.antelopecloud.cn";
+
         Glide.with(mContext)                             //配置上下文
-                .load(baseUrl + pic.getFaceUrl())
+                .load(Constants.CAMERA_BASE_URL + pic.getFaceUrl())
                 .bitmapTransform(new GlideRoundTransform(mContext))
 //                    .thumbnail(0.01f)//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
                 .error(R.drawable.deploy_pic_placeholder)           //设置错误图片
