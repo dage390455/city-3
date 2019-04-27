@@ -158,11 +158,10 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
 //            getView().updateAdapter(mNameHistoryKeywords, mPhoneHistoryKeywords);
                 //保存标签
                 save(name, phone);
-                DeployContactModel deployContactModel = new DeployContactModel();
-                deployContactModel.name = name;
-                deployContactModel.phone = phone;
-                deployContactModelList.add(deployContactModel);
-                //
+//                DeployContactModel deployContactModel = new DeployContactModel();
+//                deployContactModel.name = name;
+//                deployContactModel.phone = phone;
+//                deployContactModelList.add(deployContactModel);
 
             } else {
                 if (isAttachedView()) {
@@ -170,13 +169,14 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
                 }
             }
 
-            EventData eventData = new EventData();
-            eventData.code = EVENT_DATA_DEPLOY_SETTING_CONTACT;
-            eventData.data = deployContactModelList;
-            EventBus.getDefault().post(eventData);
-            if (isAttachedView()) {
-                getView().finishAc();
-            }
+
+        }
+        EventData eventData = new EventData();
+        eventData.code = EVENT_DATA_DEPLOY_SETTING_CONTACT;
+        eventData.data = deployContactModelList;
+        EventBus.getDefault().post(eventData);
+        if (isAttachedView()) {
+            getView().finishAc();
         }
     }
 

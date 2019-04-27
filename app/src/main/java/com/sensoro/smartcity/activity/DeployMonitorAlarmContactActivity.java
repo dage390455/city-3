@@ -24,6 +24,7 @@ import com.sensoro.smartcity.imainviews.IAlarmContactActivityView;
 import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.presenter.AlarmContactActivityPresenter;
 import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.smartcity.util.SoftHideKeyBoardUtil;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
@@ -68,6 +69,7 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_alarm_contact);
         ButterKnife.bind(this);
+        SoftHideKeyBoardUtil.assistActivity(this);
         initView();
         mPresenter.initData(mActivity);
 
