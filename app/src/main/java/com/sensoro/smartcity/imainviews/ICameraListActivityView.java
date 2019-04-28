@@ -7,7 +7,7 @@ import com.sensoro.smartcity.server.bean.DeviceCameraInfo;
 
 import java.util.List;
 
-public interface IDeviceCameraActivityView extends IToast, IProgressDialog, IActivityIntent {
+public interface ICameraListActivityView extends IToast, IProgressDialog, IActivityIntent {
     void showCalendar(long startTime, long endTime);
 
     void updateDeviceCameraAdapter(List<DeviceCameraInfo> data);

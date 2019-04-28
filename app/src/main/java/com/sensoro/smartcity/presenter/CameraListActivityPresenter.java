@@ -7,7 +7,7 @@ import android.content.Intent;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.imainviews.IDeviceCameraActivityView;
+import com.sensoro.smartcity.imainviews.ICameraListActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.model.EventData;
@@ -33,7 +33,7 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class DeviceCameraActivityPresenter extends BasePresenter<IDeviceCameraActivityView> implements IOnCreate, Constants, AlarmPopUtils.OnPopupCallbackListener {
+public class CameraListActivityPresenter extends BasePresenter<ICameraListActivityView> implements IOnCreate, Constants, AlarmPopUtils.OnPopupCallbackListener {
     private Activity mContext;
     private Long startTime;
     private Long endTime;

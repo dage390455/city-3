@@ -12,11 +12,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.PersonLocusActivity;
+import com.sensoro.smartcity.activity.CameraPersonLocusActivity;
 import com.sensoro.smartcity.adapter.model.DeviceCameraFacePicListModel;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.imainviews.ICameraDetailView;
+import com.sensoro.smartcity.imainviews.ICameraDetailActivityView;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
@@ -33,7 +33,7 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class CameraDetailPresenter extends BasePresenter<ICameraDetailView> implements CalendarPopUtils.OnCalendarPopupCallbackListener {
+public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailActivityView> implements CalendarPopUtils.OnCalendarPopupCallbackListener {
     private Activity mActivity;
     private String cid;
     private String minId = null;
@@ -357,7 +357,7 @@ public class CameraDetailPresenter extends BasePresenter<ICameraDetailView> impl
         }
         Intent intent = new Intent();
         intent.putExtra(Constants.EXTRA_PERSON_LOCUS_FACE_ID,deviceCameraFacePic.getId());
-        intent.setClass(mActivity, PersonLocusActivity.class);
+        intent.setClass(mActivity, CameraPersonLocusActivity.class);
         getView().startAC(intent);
 
     }

@@ -359,13 +359,15 @@
         <activity android:name=".activity.DeployRepairInstructionActivity" />
         <activity android:name=".temp.CameraTest" />
         <activity android:name=".temp.RecyclerViewActivity" />
-        <activity android:name=".activity.DeviceCameraActivity" />
+        <activity android:name=".activity.CameraListActivity" />
         <activity
             android:name=".activity.CameraDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
         <activity android:name=".activity.WireMaterialDiameterCalculatorActivity" />
-        <activity android:name=".activity.PersonLocusActivity" />
+        <activity
+            android:name=".activity.CameraPersonLocusActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"

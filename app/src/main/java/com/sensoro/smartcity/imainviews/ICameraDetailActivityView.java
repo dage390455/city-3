@@ -11,7 +11,7 @@ import com.sensoro.smartcity.iwidget.IToast;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface ICameraDetailView extends IProgressDialog, IToast , IActivityIntent {
+public interface ICameraDetailActivityView extends IProgressDialog, IToast , IActivityIntent {
     void initVideoOption(String url);
 
     void updateCameraList(ArrayList<DeviceCameraFacePicListModel> data);

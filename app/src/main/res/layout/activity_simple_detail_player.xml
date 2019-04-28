@@ -12,7 +12,6 @@
 
         <com.sensoro.smartcity.widget.CustomStandardGSYVideoPlayer
             android:id="@+id/detail_player"
-
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

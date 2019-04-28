@@ -23,9 +23,9 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeviceCameraContentAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.imainviews.IDeviceCameraActivityView;
+import com.sensoro.smartcity.imainviews.ICameraListActivityView;
 import com.sensoro.smartcity.model.CalendarDateModel;
-import com.sensoro.smartcity.presenter.DeviceCameraActivityPresenter;
+import com.sensoro.smartcity.presenter.CameraListActivityPresenter;
 import com.sensoro.smartcity.server.bean.DeviceCameraInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
@@ -36,8 +36,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DeviceCameraActivity extends BaseActivity<IDeviceCameraActivityView, DeviceCameraActivityPresenter>
-        implements IDeviceCameraActivityView, DeviceCameraContentAdapter.OnDeviceCameraContentClickListener, CalendarPopUtils.OnCalendarPopupCallbackListener, View.OnClickListener {
+public class CameraListActivity extends BaseActivity<ICameraListActivityView, CameraListActivityPresenter>
+        implements ICameraListActivityView, DeviceCameraContentAdapter.OnDeviceCameraContentClickListener, CalendarPopUtils.OnCalendarPopupCallbackListener, View.OnClickListener {
     @BindView(R.id.include_imv_title_imv_arrows_left)
     ImageView includeImvTitleImvArrowsLeft;
     @BindView(R.id.include_imv_title_tv_title)
@@ -69,7 +69,7 @@ public class DeviceCameraActivity extends BaseActivity<IDeviceCameraActivityView
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_device_camera);
+        setContentView(R.layout.activity_camera_list);
         ButterKnife.bind(mActivity);
         initView();
         mPresenter.initData(mActivity);
@@ -160,8 +160,8 @@ public class DeviceCameraActivity extends BaseActivity<IDeviceCameraActivityView
     }
 
     @Override
-    protected DeviceCameraActivityPresenter createPresenter() {
-        return new DeviceCameraActivityPresenter();
+    protected CameraListActivityPresenter createPresenter() {
+        return new CameraListActivityPresenter();
     }
 
     @Override

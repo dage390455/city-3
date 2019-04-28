@@ -22,8 +22,8 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeviceCameraListAdapter;
 import com.sensoro.smartcity.adapter.model.DeviceCameraFacePicListModel;
 import com.sensoro.smartcity.base.BaseActivity;
-import com.sensoro.smartcity.imainviews.ICameraDetailView;
-import com.sensoro.smartcity.presenter.CameraDetailPresenter;
+import com.sensoro.smartcity.imainviews.ICameraDetailActivityView;
+import com.sensoro.smartcity.presenter.CameraDetailActivityPresenter;
 import com.sensoro.smartcity.widget.CustomStandardGSYVideoPlayer;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
@@ -46,8 +46,8 @@ import butterknife.OnClick;
 /**
  * 简单详情实现模式2
  */
-public class CameraDetailActivity extends BaseActivity<ICameraDetailView, CameraDetailPresenter>
-        implements ICameraDetailView {
+public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView, CameraDetailActivityPresenter>
+        implements ICameraDetailActivityView {
 
     @BindView(R.id.detail_player)
     CustomStandardGSYVideoPlayer detailPlayer;
@@ -392,8 +392,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailView, Camera
     }
 
     @Override
-    protected CameraDetailPresenter createPresenter() {
-        return new CameraDetailPresenter();
+    protected CameraDetailActivityPresenter createPresenter() {
+        return new CameraDetailActivityPresenter();
     }
 
     @Override
