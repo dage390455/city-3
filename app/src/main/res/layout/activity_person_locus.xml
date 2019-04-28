@@ -62,6 +62,12 @@
                 android:padding="10dp"
                 android:src="@drawable/ic_move_right"/>
         </LinearLayout>
+        <ImageView
+            android:id="@+id/imv"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="#f00"
+            />
     </RelativeLayout>
 
 

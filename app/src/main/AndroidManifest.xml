@@ -365,7 +365,9 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
         <activity android:name=".activity.WireMaterialDiameterCalculatorActivity" />
-        <activity android:name=".activity.PersonLocusActivity" />
+        <activity
+            android:name=".activity.PersonLocusActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"
