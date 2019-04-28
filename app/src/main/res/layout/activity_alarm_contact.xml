@@ -86,13 +86,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
 
-            android:drawableLeft="@mipmap/add_alarm_contact"
+            android:drawableLeft="@drawable/add_alarm_contact"
             android:drawablePadding="5dp"
             android:gravity="center"
 
 
             android:padding="10dp"
-            android:text="新增联系人"
+            android:text="@string/new_contact"
 
             android:textColor="@color/c_252525"
             android:textSize="40px" />

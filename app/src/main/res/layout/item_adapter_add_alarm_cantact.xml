@@ -11,7 +11,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="12dp"
-        android:background="@color/c_f4f4f4"/>
+        android:background="@color/c_f4f4f4"></View>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -102,6 +102,7 @@
 
 
         <TextView
+            android:id="@+id/item_adapter_alarm_cantact_delete_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -112,7 +113,7 @@
 
 
             android:padding="10dp"
-            android:text="删除本条"
+            android:text="@string/delete_this"
 
             android:textColor="@color/c_252525"
             android:textSize="40px" />
