@@ -86,7 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
 
-            android:drawableLeft="@mipmap/add_alarm_contact"
+            android:drawableStart="@mipmap/add_alarm_contact"
             android:drawablePadding="5dp"
             android:gravity="center"
 
