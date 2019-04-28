@@ -1,141 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/c_f4f4f4"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
+
 
     <include
         android:id="@+id/ac_alarm_contact_title"
         layout="@layout/item_include_text_text_title" />
 
-    <LinearLayout
-        android:id="@+id/ac_name_address_ll_add_name_phone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:background="@color/white"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:text="@string/alert_contact"
-                android:textColor="@color/c_a6a6a6"
-                android:textSize="14sp" />
-
-            <EditText
-                android:id="@+id/ac_name_address_et_alarm_contact_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_weight="1"
-                android:background="@null"
-                android:cursorVisible="true"
-                android:gravity="end"
-                android:hint="@string/alarm_contact_tip_sample"
-                android:imeOptions="actionDone|actionNext"
-                android:textCursorDrawable="@drawable/my_cursor"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/view_divider_height"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:background="@color/c_dfdfdf" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:text="@string/alarm_contact_tip_phone"
-                android:textColor="@color/c_a6a6a6"
-                android:textSize="14sp" />
-
-            <EditText
-                android:id="@+id/ac_name_address_et_alarm_contact_phone"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_weight="1"
-                android:background="@null"
-                android:cursorVisible="true"
-                android:gravity="end"
-                android:hint="@string/alarm_contact_tip_phone_sample"
-                android:imeOptions="actionDone|actionNext"
-                android:textCursorDrawable="@drawable/my_cursor"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_weight="1"
-            android:text="@string/name_address_history_record"
-            android:textColor="@color/c_252525"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:id="@+id/iv_ac_name_address_delete_tag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginEnd="12dp"
-            android:contentDescription="@null"
-            android:paddingStart="8dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="12dp"
-            android:src="@drawable/tag_delete"
-            android:visibility="gone" />
-    </LinearLayout>
-
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/item_adapter_alarm_contact_add_ll"
+        android:layout_below="@+id/ac_alarm_contact_title"
+        android:background="@color/c_f4f4f4">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rc_ac_deploy_alarm_contact_history"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="20dp" />
+            android:orientation="vertical">
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/ac_alarm_contact_rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+            </android.support.v7.widget.RecyclerView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_weight="1"
+                    android:text="@string/name_address_history_record"
+                    android:textColor="@color/c_252525"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:id="@+id/iv_ac_name_address_delete_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginEnd="12dp"
+                    android:contentDescription="@null"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="12dp"
+                    android:src="@drawable/tag_delete"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rc_ac_deploy_alarm_contact_history"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="20dp"
+                android:paddingBottom="30dp" />
+
+
+        </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
+    <LinearLayout
+        android:id="@+id/item_adapter_alarm_contact_add_ll"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:gravity="center">
 
-</LinearLayout>
 
+        <TextView
+            android:id="@+id/add_alarm_contact_delete_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            android:drawableLeft="@mipmap/add_alarm_contact"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+
+
+            android:padding="10dp"
+            android:text="新增联系人"
+
+            android:textColor="@color/c_252525"
+            android:textSize="40px" />
+    </LinearLayout>
+
+</RelativeLayout>
