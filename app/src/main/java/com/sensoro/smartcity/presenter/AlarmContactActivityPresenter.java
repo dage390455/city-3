@@ -39,8 +39,6 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
         } else {
             deployContactModels = new ArrayList<>();
             DeployContactModel deployContactModel = new DeployContactModel();
-            deployContactModel.name = "";
-            deployContactModel.phone = "";
             deployContactModels.add(deployContactModel);
         }
         getView().updateContactData(deployContactModels);

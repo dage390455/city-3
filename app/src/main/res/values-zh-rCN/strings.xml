@@ -941,5 +941,8 @@
     <string name="deploy_device_detail_check_not_nearby">设备位置检测失败，请开启手机蓝牙并确保在设备附近</string>
     <string name="deploy_device_detail_check_tip_is_powered_on">请确保设备通电</string>
     <string name="deploy_device_detail_check_tip_press_the_sensor">请按下设备自检按钮</string>
+    <string name="new_contact">新增联系人</string>
+    <string name="delete_this">删除本条</string>
+
 
 </resources>

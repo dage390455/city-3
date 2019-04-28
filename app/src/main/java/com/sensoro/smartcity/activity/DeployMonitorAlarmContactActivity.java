@@ -1,24 +1,17 @@
 package com.sensoro.smartcity.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.AlarmContactHistoryAdapter;
+import com.sensoro.smartcity.adapter.AlarmContactRcContentAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IAlarmContactActivityView;
 import com.sensoro.smartcity.model.DeployContactModel;
@@ -31,18 +24,17 @@ import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContactActivityView, AlarmContactActivityPresenter>
-        implements IAlarmContactActivityView, RecycleViewItemClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
+        implements IAlarmContactActivityView, RecycleViewItemClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener, AlarmContactRcContentAdapter.OnAlarmContactAdapterListener {
 
 
-    @BindView(R.id.add_alarm_contact_delete_tv)
-    TextView addAlarmContactDeleteTv;
+    @BindView(R.id.alarm_contact_tv_add)
+    TextView alarmContactTvAdd;
     @BindView(R.id.include_text_title_tv_cancel)
     TextView includeTextTitleTvCancel;
     @BindView(R.id.include_text_title_tv_title)
@@ -51,12 +43,18 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
     TextView includeTextTitleTvSubtitle;
     @BindView(R.id.rc_ac_deploy_alarm_contact_history)
     RecyclerView rcAcDeployAlarmContactHistory;
+    //    @BindView(R.id.ac_name_address_et_alarm_contact_name)
+//    EditText acNameAddressEtAlarmContactName;
+//    @BindView(R.id.ac_name_address_et_alarm_contact_phone)
+//    EditText acNameAddressEtAlarmContactPhone;
     @BindView(R.id.iv_ac_name_address_delete_tag)
     ImageView ivAcDeployAlarmContactDeleteHistory;
-    @BindView(R.id.ac_alarm_contact_rv)
-    RecyclerView acAlarmContactRv;
+    //    @BindView(R.id.ac_name_address_ll_add_name_phone)
+//    LinearLayout acNameAddressLlAddNamePhone;
+    @BindView(R.id.rc_add_alarm_contact)
+    RecyclerView rcAddAlarmContactRv;
     private AlarmContactHistoryAdapter mHistoryAdapter;
-    private AlarmContactRcContentAdapter alarmContactRcContentAdapter;
+    private AlarmContactRcContentAdapter mAlarmContactRcContentAdapter;
     private TipOperationDialogUtils historyClearDialog;
 
     @Override
@@ -77,12 +75,8 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
         initTitle();
         initRcHistory();
         initClearHistoryDialog();
-        addAlarmContactDeleteTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alarmContactRcContentAdapter.addNewDataAdapter();
-            }
-        });
+
+        mAlarmContactRcContentAdapter.setOnAlarmContactAdapterListener(this);
 
     }
 
@@ -107,8 +101,8 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
 
         SensoroLinearLayoutManager contactManager = new SensoroLinearLayoutManager(mActivity);
         contactManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        acAlarmContactRv.setLayoutManager(contactManager);
-        acAlarmContactRv.setAdapter(alarmContactRcContentAdapter);
+        rcAddAlarmContactRv.setLayoutManager(contactManager);
+        rcAddAlarmContactRv.setAdapter(mAlarmContactRcContentAdapter);
     }
 
     private void initTitle() {
@@ -137,7 +131,7 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
 
 
     private void initRcContent() {
-        alarmContactRcContentAdapter = new AlarmContactRcContentAdapter(this);
+        mAlarmContactRcContentAdapter = new AlarmContactRcContentAdapter(this);
     }
 
     @Override
@@ -181,10 +175,16 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
     }
 
 
-    @OnClick({R.id.include_text_title_tv_cancel, R.id.include_text_title_tv_subtitle, R.id.iv_ac_name_address_delete_tag})
+    @OnClick({R.id.alarm_contact_tv_add, R.id.include_text_title_tv_cancel, R.id.include_text_title_tv_subtitle, R.id.iv_ac_name_address_delete_tag})
     public void onViewClicked(View view) {
 
         switch (view.getId()) {
+
+
+            case R.id.alarm_contact_tv_add:
+                mAlarmContactRcContentAdapter.addNewDataAdapter();
+
+                break;
 
 
             case R.id.include_text_title_tv_cancel:
@@ -192,21 +192,32 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
                 finishAc();
                 break;
             case R.id.include_text_title_tv_subtitle:
-                mPresenter.doFinish(alarmContactRcContentAdapter.mList);
+//                AppUtils.dismissInputMethodManager(mActivity, acNameAddressEtAlarmContactName);
+//                String name = acNameAddressEtAlarmContactName.getText().toString();
+//                String phone = acNameAddressEtAlarmContactPhone.getText().toString();
+
+
+                mPresenter.doFinish(mAlarmContactRcContentAdapter.mList);
                 break;
             case R.id.iv_ac_name_address_delete_tag:
                 AppUtils.dismissInputMethodManager(mActivity);
                 showHistoryClearDialog();
                 break;
-            default:
-                break;
+//            case R.id.ac_name_address_et_alarm_contact_name:
+//                acNameAddressEtAlarmContactName.requestFocus();
+//                acNameAddressEtAlarmContactName.setCursorVisible(true);
+//                break;
+//            case R.id.ac_name_address_et_alarm_contact_phone:
+//                acNameAddressEtAlarmContactPhone.requestFocus();
+//                acNameAddressEtAlarmContactPhone.setCursorVisible(true);
+//                break;
         }
     }
 
 
     @Override
     public void updateContactData(ArrayList<DeployContactModel> mdContactModelList) {
-        alarmContactRcContentAdapter.updateAdapter(mdContactModelList);
+        mAlarmContactRcContentAdapter.updateAdapter(mdContactModelList);
 
 
     }
@@ -220,14 +231,18 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
     @Override
     public void onItemClick(View view, int position) {
         String s = mHistoryAdapter.getSearchHistoryList().get(position);
-        if (alarmContactRcContentAdapter.mFoucusPos != -1) {
-            DeployContactModel model = alarmContactRcContentAdapter.mList.get(alarmContactRcContentAdapter.mFoucusPos);
+
+        if (mAlarmContactRcContentAdapter.mFocusPos != -1) {
+            DeployContactModel model = mAlarmContactRcContentAdapter.mList.get(mAlarmContactRcContentAdapter.mFocusPos);
+
             if (model.clickType == 1) {
+
                 model.name = s;
             } else if (model.clickType == 2) {
                 model.phone = s;
+
             }
-            alarmContactRcContentAdapter.notifyItemChanged(alarmContactRcContentAdapter.mFoucusPos);
+            mAlarmContactRcContentAdapter.notifyItemChanged(mAlarmContactRcContentAdapter.mFocusPos);
         }
 
 
@@ -260,180 +275,15 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
     }
 
 
-    public class AlarmContactRcContentAdapter extends RecyclerView.Adapter<AlarmContactRcContentAdapter.AlarmContactRcContentHolder> {
+    @Override
+    public void onPhoneFocusChange(boolean hasFocus) {
 
-        private final Context mContext;
-        private final List<DeployContactModel> mList = new ArrayList<>();
-
-
-        public int mFoucusPos = -1;//焦点位置
-
-
-        public AlarmContactRcContentAdapter(Context context) {
-            mContext = context;
-        }
-
-        @Override
-        public AlarmContactRcContentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            View view = LayoutInflater.from(mContext).inflate(R.layout.item_adapter_add_alarm_cantact, parent, false);
-
-            return new AlarmContactRcContentHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(final AlarmContactRcContentHolder itemHolder, final int position) {
-
-
-            if (mList.size() == 1 && position == 0) {
-                itemHolder.itemAdapterAlarmCantactDeletell.setVisibility(View.GONE);
-            } else {
-                itemHolder.itemAdapterAlarmCantactDeletell.setVisibility(View.VISIBLE);
-
-
-            }
-            itemHolder.itemAdapterAlarmCantactDeletell.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mList.remove(position);
-//                    notifyItemRemoved(position);
-//                    notifyItemRangeChanged(position, mList.size() - position);
-
-                    notifyDataSetChanged();
-                }
-            });
-
-            if (itemHolder.itemAdapterEtAlarmContactPhone.getTag() instanceof TextWatcher) {
-
-                itemHolder.itemAdapterEtAlarmContactPhone.removeTextChangedListener((TextWatcher) itemHolder.itemAdapterEtAlarmContactPhone.getTag());
-            }
-            final TextWatcher watcher = new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence sequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence sequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    if (!TextUtils.isEmpty(editable.toString())) {
-                        mList.get(position).phone = editable.toString();
-                    } else {
-                        mList.get(position).phone = "";
-                    }
-
-
-                }
-            };
-
-            itemHolder.itemAdapterEtAlarmContactPhone.addTextChangedListener(watcher);
-            itemHolder.itemAdapterEtAlarmContactPhone.setTag(watcher);
-
-
-            if (itemHolder.itemAdapterEtAlarmContactName.getTag() instanceof TextWatcher) {
-
-                itemHolder.itemAdapterEtAlarmContactName.removeTextChangedListener((TextWatcher) itemHolder.itemAdapterEtAlarmContactName.getTag());
-            }
-            final TextWatcher watcherContactName = new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence sequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence sequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-
-                    if (!TextUtils.isEmpty(editable.toString())) {
-                        mList.get(position).name = editable.toString();
-                    } else {
-                        mList.get(position).name = "";
-                    }
-
-                }
-            };
-
-
-            itemHolder.itemAdapterEtAlarmContactName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (hasFocus) {
-                        mPresenter.updateStatus(0);
-
-                        mFoucusPos = position;
-                        mList.get(position).clickType = 1;
-                    }
-                }
-            });
-
-
-            itemHolder.itemAdapterEtAlarmContactPhone.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (hasFocus) {
-                        mPresenter.updateStatus(1);
-                        mFoucusPos = position;
-                        mList.get(position).clickType = 2;
-
-                    }
-                }
-            });
-
-
-            itemHolder.itemAdapterEtAlarmContactName.addTextChangedListener(watcherContactName);
-            itemHolder.itemAdapterEtAlarmContactName.setTag(watcherContactName);
-
-            itemHolder.itemAdapterEtAlarmContactName.setText(mList.get(position).name);
-            itemHolder.itemAdapterEtAlarmContactPhone.setText(mList.get(position).phone);
-        }
-
-
-        @Override
-        public int getItemCount() {
-            return mList.size();
-        }
-
-        class AlarmContactRcContentHolder extends RecyclerView.ViewHolder {
-
-            @BindView(R.id.item_adapter_et_alarm_contact_name)
-            EditText itemAdapterEtAlarmContactName;
-            @BindView(R.id.item_adapter_et_alarm_contact_phone)
-            EditText itemAdapterEtAlarmContactPhone;
-            @BindView(R.id.item_adapter_alarm_cantact_delete_tv)
-            TextView itemAdapterAlarmCantactDeleteTv;
-            @BindView(R.id.item_adapter_alarm_cantact_delete_ll)
-            LinearLayout itemAdapterAlarmCantactDeletell;
-
-            AlarmContactRcContentHolder(View itemView) {
-                super(itemView);
-                ButterKnife.bind(this, itemView);
-            }
-
-        }
-
-
-        public void updateAdapter(List<DeployContactModel> list) {
-            this.mList.clear();
-            this.mList.addAll(list);
-            notifyDataSetChanged();
-        }
-
-        public void addNewDataAdapter() {
-            DeployContactModel deployContactModel = new DeployContactModel();
-            deployContactModel.name = "";
-            deployContactModel.phone = "";
-            this.mList.add(deployContactModel);
-            notifyDataSetChanged();
-//        notifyItemInserted(mList.size()-1);
-        }
+        mPresenter.updateStatus(1);
     }
 
+    @Override
+    public void onNameFocusChange(boolean hasFocus) {
+        mPresenter.updateStatus(0);
+
+    }
 }
