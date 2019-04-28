@@ -41,8 +41,8 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
         implements IAlarmContactActivityView, RecycleViewItemClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
 
 
-    @BindView(R.id.add_alarm_contact_delete_tv)
-    TextView addAlarmContactDeleteTv;
+    @BindView(R.id.alarm_contact_tv_add)
+    TextView alarmContactTvAdd;
     @BindView(R.id.include_text_title_tv_cancel)
     TextView includeTextTitleTvCancel;
     @BindView(R.id.include_text_title_tv_title)
@@ -51,12 +51,18 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
     TextView includeTextTitleTvSubtitle;
     @BindView(R.id.rc_ac_deploy_alarm_contact_history)
     RecyclerView rcAcDeployAlarmContactHistory;
+    //    @BindView(R.id.ac_name_address_et_alarm_contact_name)
+//    EditText acNameAddressEtAlarmContactName;
+//    @BindView(R.id.ac_name_address_et_alarm_contact_phone)
+//    EditText acNameAddressEtAlarmContactPhone;
     @BindView(R.id.iv_ac_name_address_delete_tag)
     ImageView ivAcDeployAlarmContactDeleteHistory;
-    @BindView(R.id.ac_alarm_contact_rv)
-    RecyclerView acAlarmContactRv;
+    //    @BindView(R.id.ac_name_address_ll_add_name_phone)
+//    LinearLayout acNameAddressLlAddNamePhone;
+    @BindView(R.id.rc_add_alarm_contact)
+    RecyclerView rcAddAlarmContactRv;
     private AlarmContactHistoryAdapter mHistoryAdapter;
-    private AlarmContactRcContentAdapter alarmContactRcContentAdapter;
+    private AlarmContactRcContentAdapter mAlarmContactRcContentAdapter;
     private TipOperationDialogUtils historyClearDialog;
 
     @Override
@@ -77,10 +83,10 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
         initTitle();
         initRcHistory();
         initClearHistoryDialog();
-        addAlarmContactDeleteTv.setOnClickListener(new View.OnClickListener() {
+        alarmContactTvAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alarmContactRcContentAdapter.addNewDataAdapter();
+                mAlarmContactRcContentAdapter.addNewDataAdapter();
             }
         });
 
@@ -107,8 +113,8 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
 
         SensoroLinearLayoutManager contactManager = new SensoroLinearLayoutManager(mActivity);
         contactManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        acAlarmContactRv.setLayoutManager(contactManager);
-        acAlarmContactRv.setAdapter(alarmContactRcContentAdapter);
+        rcAddAlarmContactRv.setLayoutManager(contactManager);
+        rcAddAlarmContactRv.setAdapter(mAlarmContactRcContentAdapter);
     }
 
     private void initTitle() {
@@ -137,7 +143,7 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
 
 
     private void initRcContent() {
-        alarmContactRcContentAdapter = new AlarmContactRcContentAdapter(this);
+        mAlarmContactRcContentAdapter = new AlarmContactRcContentAdapter(this);
     }
 
     @Override
@@ -192,21 +198,32 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
                 finishAc();
                 break;
             case R.id.include_text_title_tv_subtitle:
-                mPresenter.doFinish(alarmContactRcContentAdapter.mList);
+//                AppUtils.dismissInputMethodManager(mActivity, acNameAddressEtAlarmContactName);
+//                String name = acNameAddressEtAlarmContactName.getText().toString();
+//                String phone = acNameAddressEtAlarmContactPhone.getText().toString();
+
+
+                mPresenter.doFinish(mAlarmContactRcContentAdapter.mList);
                 break;
             case R.id.iv_ac_name_address_delete_tag:
                 AppUtils.dismissInputMethodManager(mActivity);
                 showHistoryClearDialog();
                 break;
-            default:
-                break;
+//            case R.id.ac_name_address_et_alarm_contact_name:
+//                acNameAddressEtAlarmContactName.requestFocus();
+//                acNameAddressEtAlarmContactName.setCursorVisible(true);
+//                break;
+//            case R.id.ac_name_address_et_alarm_contact_phone:
+//                acNameAddressEtAlarmContactPhone.requestFocus();
+//                acNameAddressEtAlarmContactPhone.setCursorVisible(true);
+//                break;
         }
     }
 
 
     @Override
     public void updateContactData(ArrayList<DeployContactModel> mdContactModelList) {
-        alarmContactRcContentAdapter.updateAdapter(mdContactModelList);
+        mAlarmContactRcContentAdapter.updateAdapter(mdContactModelList);
 
 
     }
@@ -220,14 +237,18 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
     @Override
     public void onItemClick(View view, int position) {
         String s = mHistoryAdapter.getSearchHistoryList().get(position);
-        if (alarmContactRcContentAdapter.mFoucusPos != -1) {
-            DeployContactModel model = alarmContactRcContentAdapter.mList.get(alarmContactRcContentAdapter.mFoucusPos);
+
+        if (mAlarmContactRcContentAdapter.mFoucusPos != -1) {
+            DeployContactModel model = mAlarmContactRcContentAdapter.mList.get(mAlarmContactRcContentAdapter.mFoucusPos);
+
             if (model.clickType == 1) {
+
                 model.name = s;
             } else if (model.clickType == 2) {
                 model.phone = s;
+
             }
-            alarmContactRcContentAdapter.notifyItemChanged(alarmContactRcContentAdapter.mFoucusPos);
+            mAlarmContactRcContentAdapter.notifyItemChanged(mAlarmContactRcContentAdapter.mFoucusPos);
         }
 
 
@@ -286,13 +307,13 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
 
 
             if (mList.size() == 1 && position == 0) {
-                itemHolder.itemAdapterAlarmCantactDeletell.setVisibility(View.GONE);
+                itemHolder.itemAdapterAlarmLlContactDelete.setVisibility(View.GONE);
             } else {
-                itemHolder.itemAdapterAlarmCantactDeletell.setVisibility(View.VISIBLE);
+                itemHolder.itemAdapterAlarmLlContactDelete.setVisibility(View.VISIBLE);
 
 
             }
-            itemHolder.itemAdapterAlarmCantactDeletell.setOnClickListener(new View.OnClickListener() {
+            itemHolder.itemAdapterAlarmLlContactDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mList.remove(position);
@@ -407,10 +428,8 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
             EditText itemAdapterEtAlarmContactName;
             @BindView(R.id.item_adapter_et_alarm_contact_phone)
             EditText itemAdapterEtAlarmContactPhone;
-            @BindView(R.id.item_adapter_alarm_cantact_delete_tv)
-            TextView itemAdapterAlarmCantactDeleteTv;
-            @BindView(R.id.item_adapter_alarm_cantact_delete_ll)
-            LinearLayout itemAdapterAlarmCantactDeletell;
+            @BindView(R.id.item_adapter_alarm_ll_contact_delete)
+            LinearLayout itemAdapterAlarmLlContactDelete;
 
             AlarmContactRcContentHolder(View itemView) {
                 super(itemView);

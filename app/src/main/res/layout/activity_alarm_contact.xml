@@ -12,8 +12,9 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/item_adapter_alarm_contact_add_ll"
+        android:layout_above="@+id/item_adapter_alarm_cantact_add_ll"
         android:layout_below="@+id/ac_alarm_contact_title"
+
         android:background="@color/c_f4f4f4">
 
         <LinearLayout
@@ -23,7 +24,7 @@
 
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/ac_alarm_contact_rv"
+                android:id="@+id/rc_add_alarm_contact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -72,7 +73,6 @@
     </android.support.v4.widget.NestedScrollView>
 
     <LinearLayout
-        android:id="@+id/item_adapter_alarm_contact_add_ll"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:layout_alignParentBottom="true"
@@ -81,7 +81,7 @@
 
 
         <TextView
-            android:id="@+id/add_alarm_contact_delete_tv"
+            android:id="@+id/alarm_contact_tv_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
