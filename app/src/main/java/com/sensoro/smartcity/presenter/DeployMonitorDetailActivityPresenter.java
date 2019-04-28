@@ -30,6 +30,7 @@ import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.smartcity.callback.OnConfigInfoObserver;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.DeoloyCheckPointConstants;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
@@ -274,9 +275,17 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     }
 
     private void handleBleSetting(final double lon, final double lan) {
-        final OnConfigInfoObserver onConfigInfoObserver = new OnConfigInfoObserver() {
+
+        final OnConfigInfoObserver<String> onConfigInfoObserver = new OnConfigInfoObserver<String>() {
             @Override
-            public void onSuccess() {
+            public void onStart(String msg) {
+                if (isAttachedView()) {
+                    getView().showBleConfigDialog();
+                }
+            }
+
+            @Override
+            public void onSuccess(String s) {
                 if (isAttachedView()) {
                     HandlerDeployCheck.OnMessageDeal signalMsgDeal = new HandlerDeployCheck.OnMessageDeal() {
                         @Override
@@ -340,14 +349,12 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                         if (deployAnalyzerModel.settingData != null) {
                             //配置频点信息和初始配置
-                            getView().showBleConfigDialog();
                             connectDevice(onConfigInfoObserver);
                         } else {
                             getView().toastShort(mContext.getString(R.string.please_set_initial_configuration));
                         }
                     } else {
                         //直接配置频点信息
-                        getView().showBleConfigDialog();
                         connectDevice(onConfigInfoObserver);
                     }
 
@@ -364,7 +371,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                 //单独配置初始配置
                 if (BLE_DEVICE_SET.containsKey(deployAnalyzerModel.sn)) {
-                    getView().showBleConfigDialog();
                     connectDevice(onConfigInfoObserver);
                 } else {
                     //不在附近
@@ -1103,6 +1109,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             }
         };
         try {
+            onConfigInfoObserver.onStart(null);
             sensoroDeviceConnection = new SensoroDeviceConnection(mContext, BLE_DEVICE_SET.get(deployAnalyzerModel.sn).getMacAddress());
             //蓝牙连接回调
             final SensoroConnectionCallback sensoroConnectionCallback = new SensoroConnectionCallback() {
@@ -1128,7 +1135,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                                                             if (isAttachedView()) {
                                                                 sensoroDeviceConnection.disconnect();
                                                                 mHandler.removeCallbacks(configOvertime);
-                                                                onConfigInfoObserver.onSuccess();
+                                                                onConfigInfoObserver.onSuccess(null);
                                                             }
                                                         }
 
@@ -1157,7 +1164,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                                             //不需要写入信息直接成功
                                             sensoroDeviceConnection.disconnect();
                                             mHandler.removeCallbacks(configOvertime);
-                                            onConfigInfoObserver.onSuccess();
+                                            onConfigInfoObserver.onSuccess(null);
                                         }
                                     }
 
@@ -1188,7 +1195,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                                                 if (isAttachedView()) {
                                                     sensoroDeviceConnection.disconnect();
                                                     mHandler.removeCallbacks(configOvertime);
-                                                    onConfigInfoObserver.onSuccess();
+                                                    onConfigInfoObserver.onSuccess(null);
                                                 }
                                             }
 
@@ -1218,7 +1225,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                                 //不需要直接成功
                                 sensoroDeviceConnection.disconnect();
                                 mHandler.removeCallbacks(configOvertime);
-                                onConfigInfoObserver.onSuccess();
+                                onConfigInfoObserver.onSuccess(null);
                             }
 
                         }
@@ -1268,14 +1275,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         Intent intent = new Intent(mContext, DeployRepairInstructionActivity.class);
         intent.putExtra(Constants.EXTRA_DEPLOY_CHECK_REPAIR_INSTRUCTION_URL, repairInstructionUrl);
         getView().startAC(intent);
-    }
-
-    public interface OnConfigInfoObserver {
-        void onSuccess();
-
-        void onFailed(String errorMsg);
-
-        void onOverTime(String overTimeMsg);
     }
 
     private void getDeviceRealStatus() {
