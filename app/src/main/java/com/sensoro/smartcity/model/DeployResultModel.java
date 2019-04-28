@@ -4,6 +4,8 @@ import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DeployResultModel implements Serializable {
     public int resultCode;
@@ -23,4 +25,7 @@ public class DeployResultModel implements Serializable {
     public int stationStatus;
     public DeviceInfo deviceInfo;
     public Long deployTime;
+    public List<DeployContactModel> deployContactModelList = new ArrayList<>();
+
+
 }

@@ -24,7 +24,8 @@ import java.util.List;
 public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactActivityView> implements Constants {
     private Activity mContext;
     private final List<DeployContactModel> deployContactModelList = new ArrayList<>();
-    private ArrayList<String> mHistoryKeywords = new ArrayList<>();
+    private ArrayList<String> mNameKeywords = new ArrayList<>();
+    private ArrayList<String> mPhoneKeywords = new ArrayList<>();
     private int mStatus = -1;
 
 
@@ -42,11 +43,13 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
             deployContactModels.add(deployContactModel);
         }
         getView().updateContactData(deployContactModels);
-        getView().updateHistoryData(mHistoryKeywords);
+        getView().updateHistoryData(mNameKeywords);
     }
 
     @Override
     public void onDestroy() {
+        mNameKeywords.clear();
+        mPhoneKeywords.clear();
     }
 
     public void doFinish(List<DeployContactModel> mList) {
@@ -107,9 +110,10 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
             }
         }
 
-        mHistoryKeywords.clear();
+        mNameKeywords.clear();
+        mPhoneKeywords.clear();
         if (isAttachedView()) {
-            getView().updateHistoryData(mHistoryKeywords);
+            getView().updateHistoryData(mPhoneKeywords);
         }
     }
 
@@ -121,21 +125,25 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
     public void updateStatus(int status) {
         //TODO 这里频繁读取sp 可能会造成卡顿 要改
         mStatus = status;
-        mHistoryKeywords.clear();
         switch (status) {
             case 0:
-                String name = PreferencesHelper.getInstance().getDeployAlarmContactNameHistory();
-                if (!TextUtils.isEmpty(name)) {
-                    mHistoryKeywords.addAll(Arrays.asList(name.split(",")));
+                if (mNameKeywords.size() == 0) {
+                    String name = PreferencesHelper.getInstance().getDeployAlarmContactNameHistory();
+                    if (!TextUtils.isEmpty(name)) {
+                        mNameKeywords.addAll(Arrays.asList(name.split(",")));
+                    }
                 }
-                getView().updateHistoryData(mHistoryKeywords);
+                getView().updateHistoryData(mNameKeywords);
                 break;
             case 1:
-                String phone = PreferencesHelper.getInstance().getDeployAlarmContactPhoneHistory();
-                if (!TextUtils.isEmpty(phone)) {
-                    mHistoryKeywords.addAll(Arrays.asList(phone.split(",")));
+                if (mPhoneKeywords.size() == 0) {
+
+                    String phone = PreferencesHelper.getInstance().getDeployAlarmContactPhoneHistory();
+                    if (!TextUtils.isEmpty(phone)) {
+                        mPhoneKeywords.addAll(Arrays.asList(phone.split(",")));
+                    }
                 }
-                getView().updateHistoryData(mHistoryKeywords);
+                getView().updateHistoryData(mPhoneKeywords);
                 break;
         }
     }
