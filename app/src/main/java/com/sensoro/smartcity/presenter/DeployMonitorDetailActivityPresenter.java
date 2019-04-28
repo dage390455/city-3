@@ -560,9 +560,12 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deployResultModel.wxPhone = deployAnalyzerModel.weChatAccount;
         deployResultModel.settingData = deployAnalyzerModel.settingData;
         if (deployAnalyzerModel.deployContactModelList.size() > 0) {
-            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
-            deployResultModel.contact = deployContactModel.name;
-            deployResultModel.phone = deployContactModel.phone;
+//            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+//            deployResultModel.contact = deployContactModel.name;
+//            deployResultModel.phone = deployContactModel.phone;
+
+            deployResultModel.deployContactModelList.addAll(deployAnalyzerModel.deployContactModelList);
+
         }
         deployResultModel.address = deployAnalyzerModel.address;
         deployResultModel.updateTime = deployAnalyzerModel.updatedTime;
@@ -587,9 +590,12 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deployResultModel.settingData = deployAnalyzerModel.settingData;
         //TODO 新版联系人
         if (deployAnalyzerModel.deployContactModelList.size() > 0) {
-            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
-            deployResultModel.contact = deployContactModel.name;
-            deployResultModel.phone = deployContactModel.phone;
+//            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+//            deployResultModel.contact = deployContactModel.name;
+//            deployResultModel.phone = deployContactModel.phone;
+
+
+            deployResultModel.deployContactModelList.addAll(deployAnalyzerModel.deployContactModelList);
         }
         deployResultModel.address = deployAnalyzerModel.address;
         deployResultModel.updateTime = deviceInfo.getUpdatedTime();

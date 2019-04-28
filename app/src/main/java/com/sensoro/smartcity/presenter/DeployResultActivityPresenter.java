@@ -8,6 +8,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployResultActivityView;
+import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.model.DeployResultModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.bean.DeployControlSettingData;
@@ -17,6 +18,8 @@ import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.PreferencesHelper;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
 
 public class DeployResultActivityPresenter extends BasePresenter<IDeployResultActivityView> implements Constants {
     private Activity mContext;
@@ -214,10 +217,33 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                     getView().setAddressTextView(deployResultModel.address);
                 }
                 getView().setContactAndSignalVisible(true);
-                getView().setContactTextView((TextUtils.isEmpty(deployResultModel.contact) ? mContext.getString(R.string.no)
-                        : deployResultModel.contact) + "(" + (TextUtils.isEmpty
-                        (deployResultModel.phone) ?
-                        mContext.getString(R.string.no) : deployResultModel.phone) + ")");
+
+
+                if (null != deployResultModel.deployContactModelList && deployResultModel.deployContactModelList.size() > 0) {
+
+                    List<DeployContactModel> deployContactModelList = deployResultModel.deployContactModelList;
+
+                    StringBuffer stringBuffer = new StringBuffer();
+
+
+                    for (int i = 0; i < deployContactModelList.size(); i++) {
+                        DeployContactModel model = deployContactModelList.get(i);
+                        stringBuffer.append(model.name);
+                        stringBuffer.append("(");
+                        stringBuffer.append(model.phone);
+                        stringBuffer.append(")");
+                        stringBuffer.append("\n");
+
+                    }
+                    getView().setContactTextView(stringBuffer.toString());
+
+                } else {
+
+                    getView().setContactTextView(mContext.getString(R.string.no)
+                            + "(" + mContext.getString(R.string.no) + ")");
+                }
+
+
                 getView().setWeChatTextView((TextUtils.isEmpty(deployResultModel.wxPhone) ?
                         mContext.getString(R.string.not_added) : deployResultModel.wxPhone));
                 getView().refreshSignal(deployResultModel.updateTime, deployResultModel.signal);
@@ -314,10 +340,37 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                     getView().setAddressTextView(deployResultModel.address);
                 }
                 getView().setContactAndSignalVisible(true);
-                getView().setContactTextView((TextUtils.isEmpty(deployResultModel.contact) ? mContext.getString(R.string.no)
-                        : deployResultModel.contact) + "(" + (TextUtils.isEmpty
-                        (deployResultModel.phone) ?
-                        mContext.getString(R.string.no) : deployResultModel.phone) + ")");
+
+
+                if (null != deployResultModel.deployContactModelList && deployResultModel.deployContactModelList.size() > 0) {
+
+                    List<DeployContactModel> deployContactModelList = deployResultModel.deployContactModelList;
+
+                    StringBuffer stringBuffer = new StringBuffer();
+
+
+                    for (int i = 0; i < deployContactModelList.size(); i++) {
+
+                        DeployContactModel model = deployContactModelList.get(i);
+                        stringBuffer.append(model.name);
+                        stringBuffer.append("(");
+                        stringBuffer.append(model.phone);
+                        stringBuffer.append(")");
+                        stringBuffer.append("\n");
+
+                    }
+                    getView().setContactTextView(stringBuffer.toString());
+
+//                    MyLoaLat.logd("----"+stringBuffer.toString());
+                } else {
+
+                    getView().setContactTextView(mContext.getString(R.string.no)
+                            + "(" + mContext.getString(R.string.no) + ")");
+                }
+//                getView().setContactTextView((TextUtils.isEmpty(deployResultModel.contact) ? mContext.getString(R.string.no)
+//                        : deployResultModel.contact) + "(" + (TextUtils.isEmpty
+//                        (deployResultModel.phone) ?
+//                        mContext.getString(R.string.no) : deployResultModel.phone) + ")");
                 getView().setWeChatTextView((TextUtils.isEmpty(deployResultModel.wxPhone) ?
                         mContext.getString(R.string.not_added) : deployResultModel.wxPhone));
                 if (deployResultModel.deviceStatus == 0 || deployResultModel.deviceStatus == 4) {
