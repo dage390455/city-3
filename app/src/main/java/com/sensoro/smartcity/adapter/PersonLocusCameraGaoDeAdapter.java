@@ -1,17 +1,12 @@
 package com.sensoro.smartcity.adapter;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.model.Marker;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.CameraDetailActivity;
-import com.sensoro.smartcity.activity.PersonLocusActivity;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.widget.CustomStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;

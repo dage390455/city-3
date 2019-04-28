@@ -31,7 +31,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
 import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
-import com.sensoro.smartcity.activity.DeviceCameraActivity;
+import com.sensoro.smartcity.activity.CameraListActivity;
 import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapENActivity;
@@ -1995,7 +1995,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             //TODO 去摄像头列表
             Intent intent = new Intent();
             intent.putExtra(EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST, deviceCameras);
-            intent.setClass(mContext, DeviceCameraActivity.class);
+            intent.setClass(mContext, CameraListActivity.class);
             getView().startAC(intent);
         } else {
             getView().setDeviceCamerasText(mContext.getString(R.string.device_detail_camera_no_camera));

@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.constraint.ConstraintLayout;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,8 +24,8 @@ import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.PersonLocusCameraGaoDeAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
-import com.sensoro.smartcity.imainviews.IPersonLocusView;
-import com.sensoro.smartcity.presenter.PersonLocusPresenter;
+import com.sensoro.smartcity.imainviews.ICameraPersonLocusActivityView;
+import com.sensoro.smartcity.presenter.CameraPersonLocusActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.warkiz.widget.IndicatorSeekBar;
@@ -37,8 +36,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PersonLocusActivity extends BaseActivity<IPersonLocusView, PersonLocusPresenter>
-        implements IPersonLocusView, AMap.OnMapLoadedListener, AMap.OnMarkerClickListener {
+public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusActivityView, CameraPersonLocusActivityPresenter>
+        implements ICameraPersonLocusActivityView, AMap.OnMapLoadedListener, AMap.OnMarkerClickListener {
 
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
@@ -130,8 +129,8 @@ public class PersonLocusActivity extends BaseActivity<IPersonLocusView, PersonLo
     }
 
     @Override
-    protected PersonLocusPresenter createPresenter() {
-        return new PersonLocusPresenter();
+    protected CameraPersonLocusActivityPresenter createPresenter() {
+        return new CameraPersonLocusActivityPresenter();
     }
 
     @Override

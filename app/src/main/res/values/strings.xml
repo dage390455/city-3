@@ -946,7 +946,7 @@
     <string name="diameter_mm">Diameter/mm²</string>
     <string name="please_input_air_rated_current">Please enter the rated current</string>
     <string name="rated_current_colon">Rated current:&#160;</string>
-    <string name="deploy_detail_camera_group">Deploy Cameras</string>
+    <string name="deploy_detail_camera_group">关联摄像头</string>
     <string name="device_detail_camera_no_camera">No Camera</string>
     <string name="device_detail_camera_has_camera">Has</string>
     <string name="device_detail_camera_camera_count">Camera</string>
@@ -959,4 +959,5 @@
     <string name="retry_play">"Video loading failed, please try again"</string>
 
     <string name="mobile_network">"You are now using mobile network,\n please mind your data usage."</string>
+    <string name="camera_manager">摄像机管理</string>
 </resources>

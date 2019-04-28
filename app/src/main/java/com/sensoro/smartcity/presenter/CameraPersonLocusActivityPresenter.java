@@ -16,19 +16,16 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.model.DeviceCameraFacePicListModel;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.imainviews.IPersonLocusView;
+import com.sensoro.smartcity.imainviews.ICameraPersonLocusActivityView;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.DeviceCameraFacePic;
 import com.sensoro.smartcity.server.bean.DeviceCameraHistoryBean;
 import com.sensoro.smartcity.server.response.DeviceCameraHistoryRsp;
 import com.sensoro.smartcity.server.response.DeviceCameraPersonFaceRsp;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
-import com.sensoro.smartcity.util.ImageFactory;
 import com.sensoro.smartcity.widget.GlideRoundTransform;
 
 import java.util.ArrayList;
@@ -38,7 +35,7 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class PersonLocusPresenter extends BasePresenter<IPersonLocusView> {
+public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPersonLocusActivityView> {
     private Activity mActivity;
     private int index = 0;
     private int size;

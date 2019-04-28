@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.activity.DeviceCameraActivity;
+import com.sensoro.smartcity.activity.CameraListActivity;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
 import com.sensoro.smartcity.presenter.ManagerFragmentPresenter;
@@ -75,10 +75,12 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     FrameLayout line3;
     @BindView(R.id.line4)
     FrameLayout line4;
-    @BindView(R.id.line6)
-    FrameLayout line6;
     @BindView(R.id.line5)
     FrameLayout line5;
+    @BindView(R.id.line6)
+    FrameLayout line6;
+    @BindView(R.id.line7)
+    FrameLayout line7;
     @BindView(R.id.fg_main_manage_ll_camera)
     LinearLayout fgMainManageLlCamera;
     private ProgressUtils mProgressUtils;
@@ -338,7 +340,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 mPresenter.doWireMaterial_diameter();
                 break;
             case R.id.fg_main_manage_ll_camera:
-                startAC(new Intent(mRootFragment.getActivity(), DeviceCameraActivity.class));
+                startAC(new Intent(mRootFragment.getActivity(), CameraListActivity.class));
                 break;
         }
     }
