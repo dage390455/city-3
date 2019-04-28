@@ -218,7 +218,7 @@
             android:name=".activity.DeployMonitorAlarmContactActivity"
 
 
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activity.DeployMonitorNameAddressActivity" />
         <activity android:name=".activity.DeployResultActivity" />
         <activity android:name=".activity.SearchMonitorActivity" />

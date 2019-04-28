@@ -171,6 +171,7 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
 
 
         }
+        deployContactModelList.addAll(mList);
         EventData eventData = new EventData();
         eventData.code = EVENT_DATA_DEPLOY_SETTING_CONTACT;
         eventData.data = deployContactModelList;
