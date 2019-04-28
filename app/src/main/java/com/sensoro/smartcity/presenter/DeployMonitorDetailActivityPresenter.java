@@ -115,7 +115,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         //
         getView().setNotOwnVisible(deployAnalyzerModel.notOwn);
         init();
-        if ((PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) || Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+        if ((PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION && deployAnalyzerModel.whiteListDeployType != Constants.TYPE_SCAN_DEPLOY_WHITE_LIST) || Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
             mHandler.post(this);
         }
         BleObserver.getInstance().registerBleObserver(this);
@@ -261,7 +261,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
             case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 //巡检设备更换
-
                 //TODO 加入白名单处理
                 if (TYPE_SCAN_DEPLOY_WHITE_LIST == deployAnalyzerModel.whiteListDeployType) {
                     doUploadImages(lon, lan);
