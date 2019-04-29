@@ -136,6 +136,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
                     getView().setNameAddressText(deployAnalyzerModel.nameAndAddress);
                 }
+                getView().updateTagsData(deployAnalyzerModel.tagList);
                 getView().setUploadBtnStatus(checkCanUpload());
                 break;
             case TYPE_SCAN_DEPLOY_DEVICE:
