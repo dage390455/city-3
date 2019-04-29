@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
@@ -19,6 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DeviceCameraContentAdapter extends RecyclerView.Adapter<DeviceCameraContentAdapter.DeviceCameraContentHolder> implements Constants {
+
     private Context mContext;
     private OnDeviceCameraContentClickListener listener;
     private final List<DeviceCameraInfo> mData = new ArrayList<>();
@@ -62,7 +64,7 @@ public class DeviceCameraContentAdapter extends RecyclerView.Adapter<DeviceCamer
                 name = mContext.getString(R.string.unknown);
             }
 //            holder.tvAlarmHistoryLogContent.setText(DateUtil.getStrTimeToday(mContext, alarmLogInfo.getCreatedTime(), 0) + mContext.getString(R.string.occur_alarmed));
-            holder.tvAlarmHistoryLogContent.setText(name);
+            holder.itemDeviceCameraTvDeviceName.setText(name);
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,8 +96,14 @@ public class DeviceCameraContentAdapter extends RecyclerView.Adapter<DeviceCamer
     }
 
     class DeviceCameraContentHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.tv_alarm_history_log_content)
-        TextView tvAlarmHistoryLogContent;
+        @BindView(R.id.item_device_camera_tv_device_name)
+        TextView itemDeviceCameraTvDeviceName;
+        @BindView(R.id.item_device_camera_tv_onlinestate)
+        TextView itemDeviceCameraTvOnlinestate;
+        @BindView(R.id.item_device_camera_tv_id)
+        TextView itemDeviceCameraTvId;
+        @BindView(R.id.item_device_camera_ll_detail)
+        LinearLayout itemDeviceCameraLlDetail;
 
         DeviceCameraContentHolder(View itemView) {
             super(itemView);

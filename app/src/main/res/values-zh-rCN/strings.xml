@@ -950,5 +950,8 @@
 
     <string name="mobile_network">"您正在使用移动网络，请注意您的数据使用。"</string>
     <string name="camera_manager">摄像机管理</string>
+    <string name="camera_name_device_number">摄像机名称/设备号</string>
+    <string name="reset_filter">重置</string>
+
 
 </resources>

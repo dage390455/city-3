@@ -960,4 +960,8 @@
 
     <string name="mobile_network">"You are now using mobile network,\n please mind your data usage."</string>
     <string name="camera_manager">摄像机管理</string>
+    <string name="camera_name_device_number">camera name or device number</string>
+
+    <string name="reset_filter">reset</string>
+
 </resources>

@@ -9,9 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,12 +25,15 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
 import com.sensoro.smartcity.model.CalendarDateModel;
+import com.sensoro.smartcity.model.InspectionStatusCountModel;
 import com.sensoro.smartcity.presenter.CameraListActivityPresenter;
 import com.sensoro.smartcity.server.bean.DeviceCameraInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
+import com.sensoro.smartcity.widget.popup.CameraListFilterPopupWindow;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -38,34 +41,38 @@ import butterknife.ButterKnife;
 
 public class CameraListActivity extends BaseActivity<ICameraListActivityView, CameraListActivityPresenter>
         implements ICameraListActivityView, DeviceCameraContentAdapter.OnDeviceCameraContentClickListener, CalendarPopUtils.OnCalendarPopupCallbackListener, View.OnClickListener {
-    @BindView(R.id.include_imv_title_imv_arrows_left)
-    ImageView includeImvTitleImvArrowsLeft;
-    @BindView(R.id.include_imv_title_tv_title)
-    TextView includeImvTitleTvTitle;
+
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
-    @BindView(R.id.include_imv_title_imv_subtitle)
-    ImageView includeImvTitleImvSubtitle;
     @BindView(R.id.fg_history_log_rc_content)
     RecyclerView acHistoryLogRcContent;
-    @BindView(R.id.rl_alarm_log_date_edit)
-    RelativeLayout rlAlarmLogDateEdit;
-    @BindView(R.id.tv_alarm_log_date_edit)
-    TextView tvAlarmLogDateEdit;
-    @BindView(R.id.iv_alarm_log_date_close)
-    ImageView ivAlarmLogDateClose;
     @BindView(R.id.alarm_return_top)
     ImageView mReturnTopImageView;
     @BindView(R.id.no_content)
     ImageView imv_content;
     @BindView(R.id.ic_no_content)
     LinearLayout icNoContent;
+    @BindView(R.id.camera_list_ll_top_search)
+    LinearLayout cameraListLlTopSearch;
+    @BindView(R.id.camera_list_iv_top_back)
+    ImageView cameraListIvTopBack;
+    @BindView(R.id.camera_list_iv_search_clear)
+    ImageView cameraListIvSearchClear;
+    @BindView(R.id.camera_list_et_search)
+    EditText cameraListEtSearch;
+    @BindView(R.id.camera_list_tv_search_cancel)
+    TextView cameraListTvSearchCancel;
+    @BindView(R.id.camera_list_iv_filter)
+    ImageView cameraListIvFilter;
+    @BindView(R.id.no_content_tip)
+    TextView noContentTip;
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
-    private CalendarPopUtils mCalendarPopUtils;
     private DeviceCameraContentAdapter mDeviceCameraContentAdapter;
     private Animation returnTopAnimation;
 
+    private CameraListFilterPopupWindow mCameraListFilterPopupWindow;
+    private List<InspectionStatusCountModel> list;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -81,8 +88,6 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
     }
 
     private void initView() {
-        includeImvTitleTvTitle.setText("摄像头列表");
-        includeImvTitleImvSubtitle.setVisibility(View.GONE);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mDeviceCameraContentAdapter = new DeviceCameraContentAdapter(mActivity);
         mDeviceCameraContentAdapter.setOnAlarmHistoryLogConfirmListener(this);
@@ -97,6 +102,7 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
         mReturnTopImageView.setAnimation(returnTopAnimation);
         mReturnTopImageView.setVisibility(View.GONE);
         mReturnTopImageView.setOnClickListener(this);
+        cameraListIvFilter.setOnClickListener(this);
         //
         //新控件
         refreshLayout.setEnableAutoLoadMore(false);//开启自动加载功能（非必须）
@@ -143,11 +149,35 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
 
             }
         });
-        mCalendarPopUtils = new CalendarPopUtils(mActivity);
-        mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
-        includeImvTitleImvSubtitle.setOnClickListener(this);
-        ivAlarmLogDateClose.setOnClickListener(this);
-        includeImvTitleImvArrowsLeft.setOnClickListener(this);
+        mCameraListFilterPopupWindow = new CameraListFilterPopupWindow(this);
+        list = new ArrayList<>();
+
+
+        for (int i = 0; i < 3; i++) {
+            InspectionStatusCountModel model = new InspectionStatusCountModel();
+
+            if (i != 0) {
+                model.isMutilSelect = true;
+            } else {
+                model.isMutilSelect = false;
+
+            }
+            model.statusTitle = "摄像机状态==" + i;
+
+            for (int j = 0; j < 4; j++) {
+                InspectionStatusCountModel modelj = new InspectionStatusCountModel();
+
+                modelj.statusTitle = i + "==支架==" + j;
+
+                modelj.list.add(model);
+
+                model.list.add(modelj);
+
+            }
+            list.add(model);
+
+        }
+
     }
 
     @Override
@@ -225,7 +255,7 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
 
     @Override
     public void showCalendar(long startTime, long endTime) {
-        mCalendarPopUtils.show(includeImvTitleImvArrowsLeft, startTime, endTime);
+//        mCalendarPopUtils.show(includeImvTitleImvArrowsLeft, startTime, endTime);
     }
 
     @Override
@@ -261,20 +291,16 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
 
     @Override
     public void setDateSelectVisible(boolean isVisible) {
-        rlAlarmLogDateEdit.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void setDateSelectText(String text) {
-        tvAlarmLogDateEdit.setText(text);
+//        tvAlarmLogDateEdit.setText(text);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.include_imv_title_imv_subtitle:
-                mPresenter.doSelectDate();
-                break;
             case R.id.iv_alarm_log_date_close:
                 mPresenter.closeDateSearch();
                 break;
@@ -283,9 +309,37 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
                 mReturnTopImageView.setVisibility(View.GONE);
                 refreshLayout.closeHeaderOrFooter();
                 break;
-            case R.id.include_imv_title_imv_arrows_left:
+            case R.id.camera_list_iv_top_back:
                 finishAc();
+                break;
+
+            case R.id.camera_list_iv_filter:
+
+
+                if (!mCameraListFilterPopupWindow.isShowing()) {
+                    mCameraListFilterPopupWindow.updateSelectDeviceStatusList(list);
+                    cameraListIvFilter.setImageResource(R.drawable.camera_filter_selected);
+                    mCameraListFilterPopupWindow.showAsDropDown(cameraListLlTopSearch);
+                } else {
+                    cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
+                    mCameraListFilterPopupWindow.dismiss();
+                }
+
                 break;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        if (mCameraListFilterPopupWindow.isShowing()) {
+            cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
+
+            mCameraListFilterPopupWindow.dismiss();
+        } else {
+            super.onBackPressed();
+        }
+
+    }
+
+
 }
