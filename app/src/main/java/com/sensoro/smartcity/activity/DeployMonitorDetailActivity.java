@@ -73,6 +73,8 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     TextView acDeployDeviceDetailTvDeployPic;
     @BindView(R.id.ac_deploy_device_detail_ll_deploy_pic)
     LinearLayout acDeployDeviceDetailLlDeployPic;
+    @BindView(R.id.line_deploy_pic)
+    View lineDeployPic;
     @BindView(R.id.ac_deploy_device_detail_tv_fixed_point_signal)
     TextView acDeployDeviceDetailTvFixedPointSignal;
     @BindView(R.id.ac_deploy_device_detail_tv_fixed_point_state)
@@ -134,7 +136,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         tipBleDialogUtils = new TipBleDialogUtils(mActivity);
         mLoadBleConfigDialogBuilder = new ProgressUtils.Builder(mActivity);
-        mLoadBleConfigDialog = new ProgressUtils(mLoadBleConfigDialogBuilder.setMessage(mActivity.getString(R.string.loading)).build());
+        mLoadBleConfigDialog = new ProgressUtils(mLoadBleConfigDialogBuilder.setMessage(mActivity.getString(R.string.loading)).setCancelable(false).build());
         includeTextTitleTvTitle.setText(R.string.device_deployment);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
 //        updateUploadState(true);
@@ -448,6 +450,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     @Override
     public void setDeployPhotoVisible(boolean isVisible) {
         acDeployDeviceDetailLlDeployPic.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        lineDeployPic.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override

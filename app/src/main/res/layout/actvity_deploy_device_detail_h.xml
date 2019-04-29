@@ -353,6 +353,7 @@
                 </LinearLayout>
 
                 <View
+                    android:id="@+id/line_deploy_pic"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/view_divider_height"
                     android:layout_marginStart="20dp"

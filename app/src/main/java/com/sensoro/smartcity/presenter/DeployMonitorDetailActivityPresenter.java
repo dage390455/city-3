@@ -266,7 +266,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 if (TYPE_SCAN_DEPLOY_WHITE_LIST == deployAnalyzerModel.whiteListDeployType) {
                     doUploadImages(lon, lan);
                 } else {
-                    handleBleSetting(lon, lan);
+                    handleDeviceSignalStatusAndBleSetting();
                 }
                 break;
             default:
@@ -274,7 +274,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         }
     }
 
-    private void handleBleSetting(final double lon, final double lan) {
+    private void handleDeviceSignalStatusAndBleSetting() {
 
         final OnConfigInfoObserver<String> onConfigInfoObserver = new OnConfigInfoObserver<String>() {
             @Override
@@ -287,44 +287,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             @Override
             public void onSuccess(String s) {
                 if (isAttachedView()) {
-                    HandlerDeployCheck.OnMessageDeal signalMsgDeal = new HandlerDeployCheck.OnMessageDeal() {
-                        @Override
-                        public void onNext() {
-                            int signalState = checkNeedSignal();
-                            switch (signalState) {
-                                case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD:
-                                case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NORMAL:
-                                    checkHandler.removeAllMessage();
-                                    getDeviceRealStatus();
-                                    break;
-                            }
-                        }
-
-                        @Override
-                        public void onFinish() {
-                            int state = checkNeedSignal();
-                            switch (state) {
-                                case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NONE:
-                                    tempForceReason = "signalQuality";
-                                    tempSignalQuality = "none";
-                                    getView().dismissBleConfigDialog();
-                                    getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_check_dialog_no_signal), mContext.getString(R.string.deploy_check_suggest_repair_instruction));
-                                    return;
-                                case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD:
-                                    tempForceReason = "signalQuality";
-                                    tempSignalQuality = "bad";
-                                    getView().dismissBleConfigDialog();
-                                    getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_check_dialog_quality_bad_signal), mContext.getString(R.string.deploy_check_suggest_repair_instruction));
-                                    return;
-                            }
-                            tempForceReason = "signalQuality";
-                            tempSignalQuality = "none";
-                            getView().dismissBleConfigDialog();
-                            getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_check_dialog_quality_bad_signal), mContext.getString(R.string.deploy_check_suggest_repair_instruction));
-                        }
-                    };
-                    checkHandler.init(1000, 10);
-                    checkHandler.dealMessage(3, signalMsgDeal);
+                    CheckDeviceSignalStatus();
                 }
             }
 
@@ -380,7 +343,55 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 return;
             }
         }
-        doUploadImages(lon, lan);
+//        doUploadImages(lon, lan);
+
+        //统一进行信号和状态监测
+        getView().showBleConfigDialog();
+        CheckDeviceSignalStatus();
+    }
+
+    /**
+     * 信号和状态监测
+     */
+    private void CheckDeviceSignalStatus() {
+        HandlerDeployCheck.OnMessageDeal signalMsgDeal = new HandlerDeployCheck.OnMessageDeal() {
+            @Override
+            public void onNext() {
+                int signalState = checkNeedSignal();
+                switch (signalState) {
+                    case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD:
+                    case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NORMAL:
+                        checkHandler.removeAllMessage();
+                        getDeviceRealStatus();
+                        break;
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                int state = checkNeedSignal();
+                switch (state) {
+                    case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NONE:
+                        tempForceReason = "signalQuality";
+                        tempSignalQuality = "none";
+                        getView().dismissBleConfigDialog();
+                        getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_check_dialog_quality_bad_signal) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
+                        return;
+                    case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD:
+                        tempForceReason = "signalQuality";
+                        tempSignalQuality = "bad";
+                        getView().dismissBleConfigDialog();
+                        getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_check_dialog_quality_bad_signal) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
+                        return;
+                }
+                tempForceReason = "signalQuality";
+                tempSignalQuality = "none";
+                getView().dismissBleConfigDialog();
+                getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_check_dialog_quality_bad_signal) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
+            }
+        };
+        checkHandler.init(1000, 10);
+        checkHandler.dealMessage(3, signalMsgDeal);
     }
 
 
@@ -941,7 +952,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         long time_diff = System.currentTimeMillis() - deployAnalyzerModel.updatedTime;
         //
         Drawable drawable = resources.getDrawable(R.drawable.signal_none);
-        if (tempSignal != null && (time_diff < 2 * 60 * 1000)) {
+        if (tempSignal != null && (time_diff < 3 * 60 * 1000)) {
             switch (tempSignal) {
                 case "good":
                     signal_text = mContext.getString(R.string.s_good);
@@ -956,10 +967,12 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     drawable = resources.getDrawable(R.drawable.signal_bad);
                     break;
                 default:
-                    signal_text = mContext.getString(R.string.s_bad);
+                    signal_text = mContext.getString(R.string.s_none);
                     drawable = resources.getDrawable(R.drawable.signal_bad);
                     break;
             }
+        } else {
+            tempSignal = "none";
         }
         //
         switch (deployAnalyzerModel.deployType) {
