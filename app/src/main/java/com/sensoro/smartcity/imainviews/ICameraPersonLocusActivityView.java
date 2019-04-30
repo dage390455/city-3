@@ -18,13 +18,11 @@ public interface ICameraPersonLocusActivityView extends IToast , IActivityIntent
 
     void addPolyLine(PolylineOptions linePoints, boolean b);
 
-    void setTimeText(String mothDayHourMinuteFormatDate);
-
     void setMoveLeftClickable(boolean clickable);
 
     void setMoveRightClickable(boolean clickable);
 
-    void removeAvatarMarker();
+    void removeAllMarker();
 
     ImageView getIMv();
 
@@ -36,9 +34,21 @@ public interface ICameraPersonLocusActivityView extends IToast , IActivityIntent
 
     void updateSeekBar(int index);
 
-    void refreshMap(LatLng latLng, Bitmap resource);
+    void updateAvatarMarker(LatLng latLng, Bitmap resource);
 
     void startPlay(String url1);
 
     void playError(int index);
+
+    void setMarkerTime(String time);
+
+    void setMarkerAddress(String address);
+
+    void removeNormalMarker(Integer tag);
+
+    void clearNormalMarker();
+
+    void setSelectDayBg(int day);
+
+    void setSeekBarTime(String time);
 }

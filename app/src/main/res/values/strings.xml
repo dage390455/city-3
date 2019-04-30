@@ -960,4 +960,15 @@
 
     <string name="mobile_network">"You are now using mobile network,\n please mind your data usage."</string>
     <string name="camera_manager">摄像机管理</string>
+    <string name="camera_living">直播中</string>
+    <string name="click_select_date">点击选择日期</string>
+    <string name="time_parse_error">时间解析错误</string>
+    <string name="camera_back_live">回到直播</string>
+    <string name="move_locus">移动轨迹</string>
+    <string name="person_avatar_history">人脸记录</string>
+    <string name="person_avatar_video">人脸视频</string>
+    <string name="obtain_video_fail">获取视频失败</string>
+    <string name="one_day">1天内</string>
+    <string name="three_day">3天内</string>
+    <string name="seven_day">7天内</string>
 </resources>

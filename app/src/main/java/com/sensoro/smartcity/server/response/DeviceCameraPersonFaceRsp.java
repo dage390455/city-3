@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.server.response;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class DeviceCameraPersonFaceRsp extends ResponseBase{
@@ -14,7 +15,7 @@ public class DeviceCameraPersonFaceRsp extends ResponseBase{
         this.data = data;
     }
 
-    public static class DataBean {
+    public static class DataBean implements Serializable {
         /**
          * id : 1556097276010009002
          * cid : 540409860

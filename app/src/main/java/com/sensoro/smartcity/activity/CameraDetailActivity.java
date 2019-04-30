@@ -19,11 +19,11 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.DeviceCameraListAdapter;
-import com.sensoro.smartcity.adapter.model.DeviceCameraFacePicListModel;
+import com.sensoro.smartcity.adapter.CameraDetailListAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ICameraDetailActivityView;
 import com.sensoro.smartcity.presenter.CameraDetailActivityPresenter;
+import com.sensoro.smartcity.server.bean.DeviceCameraFacePic;
 import com.sensoro.smartcity.widget.CustomStandardGSYVideoPlayer;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
@@ -35,7 +35,6 @@ import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -49,30 +48,34 @@ import butterknife.OnClick;
 public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView, CameraDetailActivityPresenter>
         implements ICameraDetailActivityView {
 
-    @BindView(R.id.detail_player)
-    CustomStandardGSYVideoPlayer detailPlayer;
-    @BindView(R.id.tv_time)
-    TextView tvTime;
-    @BindView(R.id.ll_time)
-    LinearLayout llTime;
-    @BindView(R.id.rv_device_camera)
-    RecyclerView rvDeviceCamera;
+
+    @BindView(R.id.gsy_player_ac_camera_detail)
+    CustomStandardGSYVideoPlayer gsyPlayerAcCameraDetail;
+    @BindView(R.id.iv_live_ac_camera_detail)
+    ImageView ivLiveAcCameraDetail;
+    @BindView(R.id.tv_live_ac_camera_detail)
+    TextView tvLiveAcCameraDetail;
+    @BindView(R.id.ll_live_ac_camera_detail)
+    LinearLayout llLiveAcCameraDetail;
+    @BindView(R.id.iv_calendar_ac_camera_detail)
+    ImageView ivCalendarAcCameraDetail;
+    @BindView(R.id.tv_select_time_ac_camera_detail)
+    TextView tvSelectTimeAcCameraDetail;
+    @BindView(R.id.iv_time_close_ac_camera_detail)
+    ImageView ivTimeCloseAcCameraDetail;
+    @BindView(R.id.ll_select_time_ac_camera_detail)
+    LinearLayout llSelectTimeAcCameraDetail;
+    @BindView(R.id.rv_device_camera_ac_camera_detail)
+    RecyclerView rvDeviceCameraAcCameraDetail;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.activity_detail_player)
     LinearLayout activityDetailPlayer;
-    @BindView(R.id.tv_select_time)
-    TextView tvSelectTime;
-    @BindView(R.id.imv_calendar)
-    ImageView imvCalendar;
-    @BindView(R.id.imv_time_close)
-    ImageView imvTimeClose;
-
     private boolean isPlay;
     private boolean isPause;
     private ProgressUtils mProgressUtils;
     private OrientationUtils orientationUtils;
-    private DeviceCameraListAdapter deviceCameraListAdapter;
+    private CameraDetailListAdapter deviceCameraListAdapter;
     private GSYVideoOptionBuilder gsyVideoOption;
     private ImmersionBar immersionBar;
     private ImageView imageView;
@@ -90,7 +93,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
 
         //外部辅助的旋转，帮助全屏
-        orientationUtils = new OrientationUtils(this, detailPlayer);
+        orientationUtils = new OrientationUtils(this, gsyPlayerAcCameraDetail);
         //初始化不打开外部的旋转
         orientationUtils.setEnable(false);
 //增加title
@@ -98,6 +101,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         //设置返回键
         getCurPlay().getBackButton().setVisibility(View.VISIBLE);
 //        initVideoOption();
+
+        ivCalendarAcCameraDetail.setColorFilter(mActivity.getResources().getColor(R.color.c_a6a6a6));
 
         initRefreshLayout();
 
@@ -135,13 +140,14 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
             }
         });
 
+
         //
 
     }
 
     @Override
     public void initVideoOption(String url) {
-        detailPlayer.changeBottomContainer(View.INVISIBLE);
+        gsyPlayerAcCameraDetail.changeBottomContainer(View.INVISIBLE);
 
         //增加封面
         if (imageView == null) {
@@ -207,7 +213,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     @Override
-    public void updateCameraList(ArrayList<DeviceCameraFacePicListModel> data) {
+    public void updateCameraList(List<DeviceCameraFacePic> data) {
         if (data != null) {
             deviceCameraListAdapter.updateData(data);
         }
@@ -222,7 +228,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
         if (!NetworkUtils.isWifiConnected(this)) {
             orientationUtils.setEnable(false);
-            detailPlayer.getPlayBtn().setOnClickListener(new View.OnClickListener() {
+            gsyPlayerAcCameraDetail.getPlayBtn().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     gsyVideoOption.setUrl(url1).build(getCurPlay());
@@ -232,7 +238,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
             });
             return;
         }
-        detailPlayer.changeBottomContainer(View.VISIBLE);
+        gsyPlayerAcCameraDetail.changeBottomContainer(View.VISIBLE);
 
         gsyVideoOption.setUrl(url1).build(getCurPlay());
         getCurPlay().startPlayLogic();
@@ -241,17 +247,17 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     @Override
-    public DeviceCameraFacePicListModel getItemData(int position) {
+    public DeviceCameraFacePic getItemData(int position) {
         return deviceCameraListAdapter.getData().get(position);
     }
 
     @Override
     public void setDateTime(String time) {
-        tvTime.setText(time);
+        tvSelectTimeAcCameraDetail.setText(time);
     }
 
     @Override
-    public List<DeviceCameraFacePicListModel> getRvListData() {
+    public List<DeviceCameraFacePic> getRvListData() {
         return deviceCameraListAdapter.getData();
     }
 
@@ -263,7 +269,19 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     @Override
     public void setLiveState(boolean isLiveStream) {
-        deviceCameraListAdapter.setLiveState(isLiveStream);
+        if (isLiveStream) {
+            ivLiveAcCameraDetail.setImageResource( R.drawable.camera_live_normal );
+            tvLiveAcCameraDetail.setText(mActivity.getString( R.string.camera_living ));
+            tvLiveAcCameraDetail.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+            llLiveAcCameraDetail.setBackgroundResource(R.drawable.shape_bg_solid_ee_full_corner_4 );
+
+        }else{
+            ivLiveAcCameraDetail.setImageResource(R.drawable.camera_live_rollback);
+            tvLiveAcCameraDetail.setText(mActivity.getString( R.string.camera_back_live));
+            tvLiveAcCameraDetail.setTextColor(mActivity.getResources().getColor(R.color.white));
+            llLiveAcCameraDetail.setBackgroundResource( R.drawable.shape_bg_corner_29c_shadow);
+
+        }
     }
 
     @Override
@@ -279,27 +297,34 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     @Override
-    public void clearAdapterPreModel() {
+    public void clearClickPosition() {
         if (deviceCameraListAdapter != null) {
-            deviceCameraListAdapter.clearPreModel();
+            deviceCameraListAdapter.clearClickPosition();
         }
     }
 
     @Override
     public boolean isSelectedDateLayoutVisible() {
-        return tvSelectTime.getVisibility() == View.VISIBLE;
+        return ivTimeCloseAcCameraDetail.getVisibility() == View.VISIBLE;
     }
 
     @Override
     public void setSelectedDateLayoutVisible(boolean isVisible) {
-        imvCalendar.setVisibility(isVisible ? View.GONE : View.VISIBLE);
-        tvSelectTime.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
-        imvTimeClose.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+        ivCalendarAcCameraDetail.setColorFilter(mActivity.getResources().
+                getColor(isVisible ? R.color.c_252525: R.color.c_a6a6a6));
+        ivTimeCloseAcCameraDetail.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+
+        if (isVisible) {
+            tvSelectTimeAcCameraDetail.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+        }else{
+            tvSelectTimeAcCameraDetail.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+            tvSelectTimeAcCameraDetail.setText(mActivity.getString(R.string.click_select_date));
+        }
     }
 
     @Override
     public void setSelectedDateSearchText(String s) {
-        tvSelectTime.setText(s);
+        tvSelectTimeAcCameraDetail.setText(s);
     }
 
     @Override
@@ -311,8 +336,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     public void playError(final int pos) {
         orientationUtils.setEnable(false);
 
-        detailPlayer.changeRetryType();
-        detailPlayer.getPlayRetryBtn().setOnClickListener(new View.OnClickListener() {
+        gsyPlayerAcCameraDetail.changeRetryType();
+        gsyPlayerAcCameraDetail.getPlayRetryBtn().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPresenter.onCameraItemClick(pos);
@@ -322,35 +347,60 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         });
     }
 
+    @Override
+    public void autoRefresh() {
+        if (refreshLayout != null) {
+            refreshLayout.autoRefresh();
+        }
+    }
+
+    @Override
+    public ImageView getImageView() {
+        return imageView;
+    }
+
     private void initRvCameraList() {
-        deviceCameraListAdapter = new DeviceCameraListAdapter(this);
-        rvDeviceCamera.setLayoutManager(new LinearLayoutManager(this));
-        rvDeviceCamera.setAdapter(deviceCameraListAdapter);
-        deviceCameraListAdapter.setOnContentItemClickListener(new DeviceCameraListAdapter.OnDeviceCameraListClickListener() {
+        deviceCameraListAdapter = new CameraDetailListAdapter(this);
+        rvDeviceCameraAcCameraDetail.setLayoutManager(new LinearLayoutManager(this));
+        rvDeviceCameraAcCameraDetail.setAdapter(deviceCameraListAdapter);
+
+        deviceCameraListAdapter.setOnCameraDetailListClickListener(new CameraDetailListAdapter.CameraDetailListClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
-                LinearLayoutManager manager = (LinearLayoutManager) rvDeviceCamera.getLayoutManager();
-                int firstVisibleItemPosition = manager.findFirstVisibleItemPosition();
-                View childAt = rvDeviceCamera.getChildAt(position - firstVisibleItemPosition);
-                int top = childAt.getTop();
-                rvDeviceCamera.smoothScrollBy(0, top);
-
-                mPresenter.onCameraItemClick(position - 1);
-
-            }
-
-
-            @Override
-            public void onLiveClick() {
-                mPresenter.doLive();
+            public void onItemClick(int position) {
+                setLiveState(false);
+                mPresenter.onCameraItemClick(position);
             }
 
             @Override
-            public void onAvatarClick(int modelPosition, int avatarPosition) {
-                mPresenter.doPersonLocus(modelPosition, avatarPosition);
+            public void onAvatarClick(int position) {
+                mPresenter.doPersonAvatarHistory(position);
             }
         });
-        rvDeviceCamera.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//        deviceCameraListAdapter.setOnContentItemClickListener(new DeviceCameraListAdapter.OnDeviceCameraListClickListener() {
+//            @Override
+//            public void onItemClick(View view, int position) {
+//                LinearLayoutManager manager = (LinearLayoutManager) rvDeviceCameraAcCameraDetail.getLayoutManager();
+//                int firstVisibleItemPosition = manager.findFirstVisibleItemPosition();
+//                View childAt = rvDeviceCameraAcCameraDetail.getChildAt(position - firstVisibleItemPosition);
+//                int top = childAt.getTop();
+//                rvDeviceCameraAcCameraDetail.smoothScrollBy(0, top);
+//
+//                mPresenter.onCameraItemClick(position - 1);
+//
+//            }
+//
+//
+//            @Override
+//            public void onLiveClick() {
+//                mPresenter.doLive();
+//            }
+//
+//            @Override
+//            public void onAvatarClick(int modelPosition, int avatarPosition) {
+//                mPresenter.doPersonAvatarHistory(modelPosition, avatarPosition);
+//            }
+//        });
+        rvDeviceCameraAcCameraDetail.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -409,9 +459,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         if (isPlay) {
             getCurPlay().release();
         }
-        if (immersionBar != null) {
-            immersionBar.destroy();
-        }
+
         if (orientationUtils != null)
             orientationUtils.releaseListener();
 
@@ -419,9 +467,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
             mProgressUtils.destroyProgress();
         }
 
-        if (deviceCameraListAdapter != null) {
-            deviceCameraListAdapter.clearPreModel();
-        }
         GSYVideoManager.releaseAllVideos();
 
     }
@@ -459,10 +504,10 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     private GSYVideoPlayer getCurPlay() {
-        if (detailPlayer.getFullWindowPlayer() != null) {
-            return detailPlayer.getFullWindowPlayer();
+        if (gsyPlayerAcCameraDetail.getFullWindowPlayer() != null) {
+            return gsyPlayerAcCameraDetail.getFullWindowPlayer();
         }
-        return detailPlayer;
+        return gsyPlayerAcCameraDetail;
     }
 
     @Override
@@ -481,19 +526,23 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         SensoroToast.getInstance().makeText(msg, Toast.LENGTH_LONG).show();
     }
 
-    @OnClick({R.id.imv_calendar, R.id.tv_select_time, R.id.imv_time_close})
+    @OnClick({R.id.ll_select_time_ac_camera_detail, R.id.iv_time_close_ac_camera_detail,R.id.ll_live_ac_camera_detail})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.imv_calendar:
-            case R.id.tv_select_time:
+            case R.id.ll_select_time_ac_camera_detail:
                 mPresenter.doCalendar(activityDetailPlayer);
                 break;
-            case R.id.imv_time_close:
+            case R.id.iv_time_close_ac_camera_detail:
                 setSelectedDateLayoutVisible(false);
                 mPresenter.doRequestData();
                 break;
-        }
+            case R.id.ll_live_ac_camera_detail:
+                clearClickPosition();
+                setLiveState(true);
+                mPresenter.doLive();
+                break;
 
+        }
     }
 
 
@@ -521,4 +570,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     public void setIntentResult(int resultCode, Intent data) {
 
     }
+
+
+
 }
