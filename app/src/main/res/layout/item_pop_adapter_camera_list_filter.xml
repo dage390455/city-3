@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_pop_select_ll_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:orientation="vertical"
+    android:paddingLeft="14dp"
+    android:paddingRight="7dp"
+
+    >
+
+
+    <TextView
+        android:id="@+id/item_pop_tv_camer_list_filter_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingLeft="6dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="6dp"
+        android:text="摄像机状态"
+        android:textColor="@color/c_6a6a6a"
+        android:textSize="14sp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/item_pop_rv_camer_list_filter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_pop_tv_camer_list_filter_title"
+
+
+        >
+
+    </android.support.v7.widget.RecyclerView>
+
+
+</RelativeLayout>

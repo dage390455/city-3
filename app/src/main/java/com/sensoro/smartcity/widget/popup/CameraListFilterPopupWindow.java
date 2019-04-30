@@ -1,0 +1,210 @@
+package com.sensoro.smartcity.widget.popup;
+
+import android.app.Activity;
+import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.CameraListPopAdapter;
+import com.sensoro.smartcity.model.InspectionStatusCountModel;
+
+import java.util.List;
+
+public class CameraListFilterPopupWindow {
+    private final Activity mActivity;
+    private final PopupWindow mPopupWindow;
+    private TranslateAnimation showTranslateAnimation;
+    private TranslateAnimation dismissTranslateAnimation;
+    private final RelativeLayout mLl;
+    private TextView resetFilter, saveFilter;
+    CameraListPopAdapter cameraListPopAdapter;
+
+    public CameraListFilterPopupWindow(final Activity activity) {
+        mActivity = activity;
+        View view = LayoutInflater.from(activity).inflate(R.layout.pop_camera_list_filter, null);
+        final RecyclerView mRcStateSelect = view.findViewById(R.id.pop_rc_camera_list);
+        mLl = view.findViewById(R.id.item_pop_select_state_ll);
+        resetFilter = view.findViewById(R.id.camera_list_reset_filter);
+        saveFilter = view.findViewById(R.id.camera_list_save_filter);
+//        view.findViewById(R.id.pop_inspection_task_view).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mRl.startAnimation(dismissTranslateAnimation);
+//            }
+//        });
+
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
+        mRcStateSelect.setLayoutManager(linearLayoutManager);
+        cameraListPopAdapter = new CameraListPopAdapter(activity);
+        mRcStateSelect.setAdapter(cameraListPopAdapter);
+
+
+//
+//        cameraListPopAdapter.setOnItemClickListener(new RecycleViewItemClickListener() {
+//            @Override
+//            public void onItemClick(View view, int position) {
+//                listener.onSelectDeviceTypeItemClick(view,position);
+//
+//            }
+//        });
+        mPopupWindow = new PopupWindow(activity);
+        mPopupWindow.setContentView(view);
+        mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+        mPopupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_aa000000)));
+        mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
+//        mPopupWindow.setFocusable(true);
+        initAnimation();
+        resetFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (null != cameraListPopAdapter.getmStateCountList()) {
+
+
+                    List<InspectionStatusCountModel> list = cameraListPopAdapter.getmStateCountList();
+
+                    for (InspectionStatusCountModel model : list) {
+
+                        for (InspectionStatusCountModel countModel : model.list) {
+
+                            countModel.isSelect = false;
+                        }
+
+                    }
+
+                    cameraListPopAdapter.notifyDataSetChanged();
+//                    cameraListPopAdapter = new CameraListPopAdapter(activity);
+//                    mRcStateSelect.setAdapter(cameraListPopAdapter);
+                }
+
+
+            }
+        });
+
+        saveFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null != cameraListPopAdapter.getmStateCountList()) {
+
+
+                    StringBuffer stringBuffer = new StringBuffer();
+                    List<InspectionStatusCountModel> list = cameraListPopAdapter.getmStateCountList();
+
+                    for (InspectionStatusCountModel model : list) {
+
+                        for (InspectionStatusCountModel countModel : model.list) {
+
+
+                            if (countModel.isSelect) {
+                                stringBuffer.append(countModel.statusTitle);
+
+                            }
+
+
+                        }
+
+                    }
+//                    if (stringBuffer.length() > 0) {
+//
+//                        SensoroToast.getInstance().makeText(stringBuffer.toString(), Toast.LENGTH_SHORT).show();
+//                    }
+
+                    dismiss();
+                }
+
+            }
+        });
+
+    }
+
+    private void initAnimation() {
+        showTranslateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, -1f, Animation.RELATIVE_TO_SELF, 0);
+        dismissTranslateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, -1);
+        dismissTranslateAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mPopupWindow.dismiss();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+    }
+
+    public void updateSelectDeviceStatusList(List<InspectionStatusCountModel> list) {
+        cameraListPopAdapter.updateDeviceTypList(list);
+    }
+
+
+    public void dismiss() {
+        mLl.startAnimation(dismissTranslateAnimation);
+    }
+
+
+    /**
+     * poup 展示在某个控件下
+     */
+    public void showAsDropDown(View view) {
+        if (Build.VERSION.SDK_INT < 24) {
+            mPopupWindow.showAsDropDown(view);
+        } else {  // 适配 android 7.0
+            int[] location = new int[2];
+            view.getLocationOnScreen(location);
+            Point point = new Point();
+            mActivity.getWindowManager().getDefaultDisplay().getSize(point);
+            int tempHeight = mPopupWindow.getHeight();
+            if (tempHeight == WindowManager.LayoutParams.MATCH_PARENT || point.y <= tempHeight) {
+                mPopupWindow.setHeight(point.y - location[1] - view.getHeight());
+            }
+            mPopupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0], location[1] + view.getHeight());
+        }
+        mPopupWindow.showAsDropDown(view);
+        int i = cameraListPopAdapter.getItemCount() / 3;
+        i *= 100;
+        if (i < 300) {
+            i = 300;
+        }
+        showTranslateAnimation.setDuration(i);
+        dismissTranslateAnimation.setDuration(i);
+        mLl.startAnimation(showTranslateAnimation);
+
+
+    }
+
+    public void setUpAnimation() {
+        mPopupWindow.setAnimationStyle(R.style.DialogFragmentUpAnim);
+    }
+
+
+    public boolean isShowing() {
+        return mPopupWindow.isShowing();
+    }
+
+    public void clearAnimation() {
+        mPopupWindow.setAnimationStyle(-1);
+    }
+
+
+}
