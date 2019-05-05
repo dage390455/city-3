@@ -51,4 +51,6 @@ public interface ICameraPersonLocusActivityView extends IToast , IActivityIntent
     void setSelectDayBg(int day);
 
     void setSeekBarTime(String time);
+
+    void moveAvatarMarker(LatLng latLng);
 }

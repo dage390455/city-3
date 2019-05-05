@@ -34,6 +34,7 @@ import com.sensoro.smartcity.widget.GlideRoundTransform;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -53,6 +54,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
     private int dp24;
     private String faceId;
     private int day = 1;
+    private float mMapZoom = 18f;
 
     @Override
     public void initData(Context context) {
@@ -106,6 +108,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                             List<LatLng> linePoints = new ArrayList<>();
 
                             if (isAttachedView()) {
+
                                 for (int i = 0; i < data.size(); i++) {
                                     DeviceCameraPersonFaceRsp.DataBean dataFace = data.get(i);
                                     LatLng latLn = new LatLng(dataFace.getLatitude(), dataFace.getLongitude());
@@ -119,8 +122,11 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                                 DeviceCameraPersonFaceRsp.DataBean dataBean = data.get(0);
                                 preBean = dataBean;
 
+                                setAddressTime(dataBean);
+
                                 final LatLng latLng = new LatLng(dataBean.getLatitude(), dataBean.getLongitude());
-                                CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 18f, 0, 30));
+
+                                CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, mMapZoom, 0, 30));
                                 getView().setMapCenter(cameraUpdate);
 
                                 hightLightPoints.add(0);
@@ -258,9 +264,11 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
         if (index >= 0 && data.size() > index) {
             DeviceCameraPersonFaceRsp.DataBean bean = data.get(index);
             LatLng latLng = new LatLng(bean.getLatitude(), bean.getLongitude());
-//            getView().removeAllMarker();
-//            getView().setMapCenter(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 18f, 0, 30)));
+            getView().setMapCenter(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, mMapZoom, 0, 30)));
 
+            if (avatarMarkerOptions != null) {
+                getView().moveAvatarMarker(latLng);
+            }
 
             getView().removeNormalMarker(hightLightPoints.get(hightLightPoints.size()-1));
             hightLightPoints.remove(displayLinePoints.size() -1);
@@ -300,7 +308,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
         getView().setMoveLeftClickable(index >0);
 
 
-        getView().setMoveRightClickable(data.size() > 0 && index < data.size());
+        getView().setMoveRightClickable(data.size() > 1 && index < data.size());
 
 
     }
@@ -310,9 +318,11 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
         if (index > -1 && data.size() > index){
             DeviceCameraPersonFaceRsp.DataBean bean = data.get(index);
             LatLng latLng = new LatLng(bean.getLatitude(), bean.getLongitude());
-//            getView().removeAllMarker();
-//            getView().setMapCenter(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 18f, 0, 30)));
+            getView().setMapCenter(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, mMapZoom, 0, 30)));
 
+            if (avatarMarkerOptions != null) {
+                getView().moveAvatarMarker(latLng);
+            }
 
             hightLightPoints.add(index);
             addNormalMarker(latLng,index);
@@ -332,7 +342,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
 
             setAddressTime(bean);
 
-
+            preBean = bean;
         }
         getView().updateSeekBar(index);
         checkLeftRightStatus();
@@ -350,9 +360,11 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
         }
         DeviceCameraPersonFaceRsp.DataBean bean = data.get(mSeekBarProgres);
         LatLng latLng = new LatLng(bean.getLatitude(), bean.getLongitude());
-//        getView().removeAllMarker();
-//        getView().setMapCenter(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 18f, 0, 30)));
+        getView().setMapCenter(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, mMapZoom, 0, 30)));
 
+        if (avatarMarkerOptions != null) {
+            getView().moveAvatarMarker(latLng);
+        }
 
         getView().clearNormalMarker();
 
@@ -373,7 +385,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                 .width(AppUtils.dp2px(mActivity,4))
                 .color(mActivity.getResources().getColor(R.color.c_119f82));
         getView().addPolyLine(polylineOptions, true);
-
+        preBean = bean;
         setAddressTime(bean);
         checkLeftRightStatus();
     }
@@ -432,6 +444,20 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
     public void doSevenDay() {
         day = 7;
         requestData(faceId);
+
+    }
+
+    public void setMapZoom(float zoom) {
+        mMapZoom = zoom;
+    }
+
+    public void doMonitorMapLocation() {
+        CameraPosition cameraPosition = new CameraPosition(new LatLng(preBean.getLatitude(),preBean.getLongitude()), mMapZoom, 0, 30);
+        getView().setMapCenter( CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        String a = "";
+        a = null;
+        Objects.requireNonNull(a).split("%");
 
     }
 }

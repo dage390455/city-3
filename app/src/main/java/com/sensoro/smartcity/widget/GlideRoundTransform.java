@@ -2,6 +2,7 @@ package com.sensoro.smartcity.widget;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -16,6 +17,8 @@ import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapResource;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.sensoro.smartcity.util.AppUtils;
+
+import java.nio.ByteBuffer;
 
 
 /**
@@ -81,6 +84,28 @@ public class GlideRoundTransform implements Transformation<Bitmap> {
             size = Math.min(source.getWidth(), source.getHeight());
         }else{
             size = radius*2;
+            int width = source.getWidth();
+            int height = source.getHeight();
+
+            float scaleWidth = (float)size / width;
+            float scaleHeight = (float)size / height;
+
+            float min = Math.max(scaleHeight, scaleWidth);
+            Matrix matrix = new Matrix();
+            matrix.postScale(scaleWidth,scaleHeight);
+            source = Bitmap.createBitmap(source,0,0,width,height,matrix,true);
+////            BitmapFactory.
+//            BitmapFactory.Options options = new BitmapFactory.Options();
+//            options.inJustDecodeBounds = true;
+//            ByteBuffer allocate = ByteBuffer.allocate(source.getByteCount());
+//            byte[] array = allocate.array();
+////            BitmapFactory.decodeByteArray(array,0,array.length,options);
+//
+//            options.inSampleSize = calculateInSampleSize(options,size,size);
+//            options.inJustDecodeBounds = false;
+//            source = BitmapFactory.decodeByteArray(array, 0, array.length, options);
+
+
         }
 
 
@@ -117,6 +142,27 @@ public class GlideRoundTransform implements Transformation<Bitmap> {
         return BitmapResource.obtain(bitmap, mBitmapPool);
     }
 
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
+    }
     @Override
     public String getId() {
         return getClass().getName() + "";
