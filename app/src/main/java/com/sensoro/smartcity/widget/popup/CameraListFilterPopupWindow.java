@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.CameraListPopAdapter;
 import com.sensoro.smartcity.model.CameraFilterModel;
+import com.yixia.camera.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,8 @@ public class CameraListFilterPopupWindow {
     private final RelativeLayout mLl;
     private TextView resetFilter, saveFilter;
     CameraListPopAdapter cameraListPopAdapter;
+
+    private SelectModleListener mSelectModleListener;
 
     public CameraListFilterPopupWindow(final Activity activity) {
         mActivity = activity;
@@ -111,29 +114,28 @@ public class CameraListFilterPopupWindow {
                         StringBuffer stringBuffer = new StringBuffer();
 
 
-                        for (int i = 0; i < model.getList().size(); i++) {
+                        for (CameraFilterModel.ListBean listBean : model.getList()) {
 
-                            CameraFilterModel.ListBean countModel = model.getList().get(i);
-                            if (countModel.isSelect()) {
-                                stringBuffer.append(countModel);
+                            if (listBean.isSelect()) {
+                                stringBuffer.append(listBean.getCode());
 
+                                stringBuffer.append(",");
                             }
                         }
-                        for (CameraFilterModel.ListBean countModel : model.getList()) {
-
-
+                        if (!StringUtils.isEmpty(stringBuffer.toString())) {
+//                            stringBuffer.substring(0, stringBuffer.length() - 1);
+                            stringBuffer.deleteCharAt(stringBuffer.length() - 1).toString();
+                            hashMap.put(key, stringBuffer);
                         }
 
-
-                        hashMap.put(key, stringBuffer);
-
                     }
-//                    if (stringBuffer.length() > 0) {
-//
-//                        SensoroToast.getInstance().makeText(stringBuffer.toString(), Toast.LENGTH_SHORT).show();
-//                    }
 
+                    if (mSelectModleListener != null && hashMap.size() > 0) {
+
+                        mSelectModleListener.selectedListener(hashMap);
+                    }
                     dismiss();
+
                 }
 
             }
@@ -216,9 +218,15 @@ public class CameraListFilterPopupWindow {
         mPopupWindow.setAnimationStyle(-1);
     }
 
+
+    public void setSelectModleListener(SelectModleListener listener) {
+
+        mSelectModleListener = listener;
+    }
+
     public interface SelectModleListener {
 
-        void selected();
+        void selectedListener(HashMap<String, String> hashMap);
     }
 
 

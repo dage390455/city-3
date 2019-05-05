@@ -13,6 +13,7 @@ public interface SearchHistoryTypeConstants {
     int TYPE_SEARCH_HISTORY_DEPLOY_ALARM_CONTRACT_NAME = 9;
     int TYPE_SEARCH_HISTORY_DEPLOY_ALARM_CONTRACT_PHONE = 10;
     int TYPE_SEARCH_HISTORY_DEPLOY_TAG = 11;
+    int TYPE_SEARCH_CAMERALIST_WARN = 12;
 
     String SEARCH_HISTORY_KEY = "search_history_key";
 

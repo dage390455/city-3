@@ -25,4 +25,15 @@ public interface ICameraListActivityView extends IToast, IProgressDialog, IActiv
 
     void setNoContentVisible(boolean isVisible);
     void setSmartRefreshEnable(boolean enable);
+
+
+    void setSearchClearImvVisible(boolean isVisible);
+
+    void updateSearchHistoryList(List<String> data);
+
+    void setSearchHistoryVisible(boolean isVisible);
+
+    void showHistoryClearDialog();
+
+    void setSearchButtonTextVisible(boolean isVisible);
 }

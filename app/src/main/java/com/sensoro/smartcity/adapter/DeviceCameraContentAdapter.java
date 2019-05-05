@@ -1,6 +1,8 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DeviceCameraContentAdapter extends RecyclerView.Adapter<DeviceCameraContentAdapter.DeviceCameraContentHolder> implements Constants {
+
 
     private Context mContext;
     private OnDeviceCameraContentClickListener listener;
@@ -74,6 +77,30 @@ public class DeviceCameraContentAdapter extends RecyclerView.Adapter<DeviceCamer
                 }
             }
         });
+
+
+        holder.itemDeviceCameraTvId.setText(deviceCameraInfo.getSn());
+        holder.orientationTv.setText(TextUtils.isEmpty(deviceCameraInfo.getOrientationName()) ? "" : deviceCameraInfo.getOrientationName());
+        holder.installationmodeTv.setText(TextUtils.isEmpty(deviceCameraInfo.getInstallationModeName()) ? "" : deviceCameraInfo.getInstallationModeName());
+
+        if (deviceCameraInfo.getDeviceStatus().equals("1")) {
+
+
+            Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_device_online);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);
+            holder.itemDeviceCameraTvOnlinestate.setText("在线");
+            holder.itemDeviceCameraTvOnlinestate.setTextColor(Color.parseColor("#1DBB99"));
+        } else {
+            Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_device_offline);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+
+            holder.itemDeviceCameraTvOnlinestate.setText("离线");
+            holder.itemDeviceCameraTvOnlinestate.setTextColor(Color.parseColor("#A6A6A6"));
+            holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);
+
+
+        }
 //        AlarmInfo.RecordInfo[] recordInfoArray = alarmLogInfo.getRecords();
 //        boolean isAlarm = false;
 //        for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
@@ -104,6 +131,10 @@ public class DeviceCameraContentAdapter extends RecyclerView.Adapter<DeviceCamer
         TextView itemDeviceCameraTvId;
         @BindView(R.id.item_device_camera_ll_detail)
         LinearLayout itemDeviceCameraLlDetail;
+        @BindView(R.id.orientation_tv)
+        TextView orientationTv;
+        @BindView(R.id.installationmode_tv)
+        TextView installationmodeTv;
 
         DeviceCameraContentHolder(View itemView) {
             super(itemView);

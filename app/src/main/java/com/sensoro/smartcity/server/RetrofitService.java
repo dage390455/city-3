@@ -382,7 +382,7 @@ public interface RetrofitService {
 
 
     @GET("cameras")
-    Observable<DeviceCameraListRsp> getDeviceCameraListByFilter(@QueryMap Map map);
+    Observable<DeviceCameraListRsp> getDeviceCameraListByFilter(@QueryMap Map<String, String> map);
 
 }
 
