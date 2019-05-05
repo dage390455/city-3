@@ -64,7 +64,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
         } else {
             requestDataByFilter(DIRECTION_DOWN);
         }
-        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST_WARN);
+        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST);
         if (list != null) {
             mSearchHistoryList.addAll(list);
             getView().updateSearchHistoryList(mSearchHistoryList);
@@ -80,7 +80,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
         }
 //        mSearchHistoryList.remove(text);
 //        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
-        List<String> warnList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST_WARN, text);
+        List<String> warnList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST, text);
 //        mSearchHistoryList.add(0, text);
         mSearchHistoryList.clear();
         mSearchHistoryList.addAll(warnList);
@@ -89,7 +89,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
     }
 
     public void clearSearchHistory() {
-        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST_WARN);
+        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST);
         mSearchHistoryList.clear();
         getView().updateSearchHistoryList(mSearchHistoryList);
     }
@@ -191,6 +191,8 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
 
             hashMap.putAll(map);
         }
+
+        getView().showProgressDialog();
 
         RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(hashMap).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(null) {
             @Override

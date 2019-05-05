@@ -30,14 +30,39 @@
                 android:padding="8dp"
                 android:src="@drawable/arrows_left" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="20dp"
                 android:layout_weight="1"
-                android:background="@drawable/shape_bg_full_corner">
+                android:background="@drawable/shape_bg_full_corner"
+                android:orientation="horizontal">
+
+
+                <EditText
+                    android:id="@+id/camera_list_et_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_toStartOf="@id/fg_main_top_search_imv_clear"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:cursorVisible="true"
+                    android:drawableStart="@drawable/main_search"
+                    android:drawablePadding="8dp"
+                    android:hint="@string/warn_fragment_search_tip"
+                    android:imeOptions="actionSearch"
+                    android:singleLine="true"
+                    android:textColor="@color/c_252525"
+                    android:textColorHint="@color/c_a6a6a6"
+                    android:textCursorDrawable="@drawable/my_cursor"
+                    android:textSize="12sp" />
 
                 <ImageView
                     android:id="@+id/camera_list_iv_search_clear"
@@ -51,28 +76,7 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/search_monitor_clear_search"
                     android:visibility="gone" />
-
-                <EditText
-                    android:id="@+id/camera_list_et_search"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_toStartOf="@id/ac_contract_record_search_imv_clear"
-                    android:background="@null"
-                    android:cursorVisible="true"
-                    android:drawableStart="@drawable/main_search"
-                    android:drawablePadding="8dp"
-                    android:hint="@string/camera_name_device_number"
-                    android:imeOptions="actionSearch"
-                    android:singleLine="true"
-                    android:textColor="@color/c_252525"
-                    android:textColorHint="@color/c_a6a6a6"
-                    android:textCursorDrawable="@drawable/my_cursor"
-                    android:textSize="12sp" />
-            </RelativeLayout>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/camera_list_tv_search_cancel"

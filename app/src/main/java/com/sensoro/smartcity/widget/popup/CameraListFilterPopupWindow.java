@@ -130,7 +130,7 @@ public class CameraListFilterPopupWindow {
 
                     }
 
-                    if (mSelectModleListener != null && hashMap.size() > 0) {
+                    if (mSelectModleListener != null) {
 
                         mSelectModleListener.selectedListener(hashMap);
                     }

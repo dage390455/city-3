@@ -185,12 +185,14 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
             public void selectedListener(HashMap hashMap) {
 
 
-                if (hashMap != null) {
-                    filterHashMap.clear();
+                filterHashMap.clear();
+                if (hashMap.size() > 0) {
                     filterHashMap.putAll(hashMap);
                     cameraListIvFilter.setImageResource(R.drawable.camera_filter_selected);
-                    mPresenter.getDeviceCameraListByFilter(hashMap);
+                } else {
+                    cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
                 }
+                mPresenter.getDeviceCameraListByFilter(hashMap);
             }
         });
 
@@ -205,6 +207,10 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
 //                                .show();
 //                        return true;
 //                    }
+
+
+                    mPresenter.save(text);
+
                     cameraListEtSearch.clearFocus();
                     filterHashMap.put("search", text);
                     mPresenter.getDeviceCameraListByFilter(filterHashMap);
@@ -317,6 +323,11 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
     }
 
     @Override
+    public void setSearchClearImvVisible(boolean isVisible) {
+        cameraListIvSearchClear.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
     protected CameraListActivityPresenter createPresenter() {
         return new CameraListActivityPresenter();
     }
@@ -404,11 +415,6 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
     public void setSmartRefreshEnable(boolean enable) {
         refreshLayout.setEnableLoadMore(enable);
         refreshLayout.setEnableRefresh(enable);
-    }
-
-    @Override
-    public void setSearchClearImvVisible(boolean isVisible) {
-
     }
 
     @Override
@@ -502,13 +508,20 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
 
 
             case R.id.camera_list_et_search:
+
+                if (mCameraListFilterPopupWindow.isShowing()) {
+
+                    mCameraListFilterPopupWindow.dismiss();
+
+                }
+
                 cameraListEtSearch.requestFocus();
                 cameraListEtSearch.setCursorVisible(true);
                 setSearchHistoryVisible(true);
 //                forceOpenSoftKeyboard();
                 break;
             case R.id.camera_list_iv_search_clear:
-                cameraListEtSearch.getText().clear();
+                cameraListEtSearch.setText("");
                 cameraListEtSearch.requestFocus();
                 AppUtils.openInputMethodManager(CameraListActivity.this, cameraListEtSearch);
                 setSearchHistoryVisible(true);

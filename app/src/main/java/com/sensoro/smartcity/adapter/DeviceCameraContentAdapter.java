@@ -80,8 +80,20 @@ public class DeviceCameraContentAdapter extends RecyclerView.Adapter<DeviceCamer
 
 
         holder.itemDeviceCameraTvId.setText(deviceCameraInfo.getSn());
-        holder.orientationTv.setText(TextUtils.isEmpty(deviceCameraInfo.getOrientationName()) ? "" : deviceCameraInfo.getOrientationName());
-        holder.installationmodeTv.setText(TextUtils.isEmpty(deviceCameraInfo.getInstallationModeName()) ? "" : deviceCameraInfo.getInstallationModeName());
+        if (!TextUtils.isEmpty(deviceCameraInfo.getOrientationName())) {
+            holder.orientationTv.setVisibility(View.VISIBLE);
+            holder.orientationTv.setText(deviceCameraInfo.getOrientationName());
+        } else {
+            holder.orientationTv.setVisibility(View.GONE);
+
+        }
+        if (!TextUtils.isEmpty(deviceCameraInfo.getInstallationModeName())) {
+            holder.installationmodeTv.setVisibility(View.VISIBLE);
+            holder.installationmodeTv.setText(deviceCameraInfo.getInstallationModeName());
+        } else {
+            holder.installationmodeTv.setVisibility(View.GONE);
+
+        }
 
         if (deviceCameraInfo.getDeviceStatus().equals("1")) {
 
