@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
-import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.CameraDetailActivity;
 import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -47,6 +46,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
     private volatile int cur_page = 1;
     private final List<DeviceCameraInfo> deviceCameraInfos = new ArrayList<>();
     private final List<String> mSearchHistoryList = new ArrayList<>();
+    private HashMap filterHashMap = new HashMap();
 
     @Override
     public void initData(Context context) {
@@ -189,11 +189,20 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
 
         if (null != map) {
 
+            filterHashMap = map;
             hashMap.putAll(map);
         }
 
-        getView().showProgressDialog();
+        requestData(hashMap);
 
+    }
+
+
+    public void requestData(HashMap hashMap) {
+
+        if (isAttachedView()) {
+            getView().showProgressDialog();
+        }
         RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(hashMap).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(null) {
             @Override
             public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
@@ -215,67 +224,28 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
 
             }
         });
-        ;
-
     }
 
     public void requestDataByFilter(final int direction) {
+        HashMap hashMap = new HashMap(16);
+        hashMap.put("pageSize", 20);
+        hashMap.put("page", cur_page);
+        if (filterHashMap.size() > 0) {
+            hashMap.putAll(filterHashMap);
+        }
         switch (direction) {
             case DIRECTION_DOWN:
                 cur_page = 1;
-                if (isAttachedView()) {
-                    getView().showProgressDialog();
-                }
-                RetrofitServiceHelper.getInstance().getDeviceCameraList(20, cur_page, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(null) {
-                    @Override
-                    public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
-                        deviceCameraInfos.clear();
-                        List<DeviceCameraInfo> data = deviceCameraListRsp.getData();
-                        if (data != null && data.size() > 0) {
-                            deviceCameraInfos.addAll(data);
-                        }
-                        getView().updateDeviceCameraAdapter(deviceCameraInfos);
-                        getView().onPullRefreshComplete();
-                        getView().dismissProgressDialog();
-                    }
 
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().dismissProgressDialog();
-                        getView().toastShort(errorMsg);
-                        getView().onPullRefreshComplete();
-
-                    }
-                });
+                requestData(hashMap);
                 break;
             case DIRECTION_UP:
                 cur_page++;
-                if (isAttachedView()) {
-                    getView().showProgressDialog();
-                }
-                RetrofitServiceHelper.getInstance().getDeviceCameraList(20, cur_page, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(null) {
-                    @Override
-                    public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
-                        List<DeviceCameraInfo> data = deviceCameraListRsp.getData();
-                        if (data != null && data.size() > 0) {
-                            deviceCameraInfos.addAll(data);
-                            getView().updateDeviceCameraAdapter(deviceCameraInfos);
-                        } else {
-                            getView().toastShort(mContext.getString(R.string.no_more_data));
-                        }
-                        getView().dismissProgressDialog();
-                        getView().onPullRefreshComplete();
-                    }
+                requestData(hashMap);
 
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().dismissProgressDialog();
-                        getView().toastShort(errorMsg);
-                        getView().onPullRefreshComplete();
-                    }
-                });
                 break;
             default:
+
                 break;
         }
 
