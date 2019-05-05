@@ -188,7 +188,7 @@ public class ListGSYVideoPlayer extends StandardGSYVideoPlayer {
             setViewShowState(mBottomContainer, INVISIBLE);
             setViewShowState(mStartButton, GONE);
             setViewShowState(mLoadingProgressBar, VISIBLE);
-            setViewShowState(mBottomProgressBar, INVISIBLE);
+//            setViewShowState(mBottomProgressBar, INVISIBLE);
             setViewShowState(mLockScreen, GONE);
             if (mLoadingProgressBar instanceof ENDownloadView) {
                 ((ENDownloadView) mLoadingProgressBar).start();

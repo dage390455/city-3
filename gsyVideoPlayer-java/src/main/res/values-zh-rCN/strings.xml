@@ -1,0 +1,18 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+
+
+    <string name="play">"播放"</string>
+    <string name="retry">"重试"</string>
+
+    <string name="online_tip">当前手机无网络，请检查网络配置</string>
+    <string name="retry_play">"视频加载失败，请重试"</string>
+
+
+    <string name="mobile_network">你正在使用移动网络，将会消耗你的流量</string>
+    <string name="tips_not_wifi">你正在使用移动网络，将会消耗你的流量</string>
+    <string name="tips_not_wifi_confirm">继续播放</string>
+    <string name="no_net">当前找不到网络</string>
+    <string name="tips_not_wifi_cancel">停止播放</string>
+    <string name="no_url">播放地址无效</string>
+    <string name="jump_ad">跳过</string>
+</resources>

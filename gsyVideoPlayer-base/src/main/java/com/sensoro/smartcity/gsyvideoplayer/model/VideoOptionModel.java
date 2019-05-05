@@ -1,4 +1,4 @@
-package com.shuyu.gsyvideoplayer.model;
+package com.sensoro.smartcity.gsyvideoplayer.model;
 
 /**
  * Created by guoshuyu on 2017/1/11.

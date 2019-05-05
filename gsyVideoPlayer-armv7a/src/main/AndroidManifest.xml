@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 
-    package="com.shuyu.gsyvideoplayer.armv7a">
+    package="com.sensoro.smartcity.gsyvideoplayer.armv7a">
 
     <application
         android:allowBackup="true"

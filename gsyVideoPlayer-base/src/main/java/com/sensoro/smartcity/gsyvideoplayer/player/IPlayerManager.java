@@ -1,10 +1,10 @@
-package com.shuyu.gsyvideoplayer.player;
+package com.sensoro.smartcity.gsyvideoplayer.player;
 
 import android.content.Context;
 import android.os.Message;
 
-import com.shuyu.gsyvideoplayer.model.VideoOptionModel;
-import com.shuyu.gsyvideoplayer.cache.ICacheManager;
+import com.sensoro.smartcity.gsyvideoplayer.model.VideoOptionModel;
+import com.sensoro.smartcity.gsyvideoplayer.cache.ICacheManager;
 
 import java.util.List;
 

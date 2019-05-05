@@ -1,4 +1,4 @@
-package com.shuyu.gsyvideoplayer.model;
+package com.sensoro.smartcity.gsyvideoplayer.model;
 
 import java.io.File;
 import java.util.Map;

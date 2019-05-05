@@ -1,4 +1,4 @@
-package com.shuyu.gsyvideoplayer.cache;
+package com.sensoro.smartcity.gsyvideoplayer.cache;
 
 import android.content.Context;
 

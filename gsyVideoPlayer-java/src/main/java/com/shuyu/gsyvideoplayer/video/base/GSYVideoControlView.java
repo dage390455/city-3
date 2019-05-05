@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -32,7 +31,6 @@ import java.io.File;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-
 
 import static com.shuyu.gsyvideoplayer.utils.CommonUtil.hideNavKey;
 
@@ -151,6 +149,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
 
     //title
     protected TextView mTitleTextView;
+    protected TextView mStateTv;//直播，录像
 
     //顶部和底部区域
     protected ViewGroup mTopContainer, mBottomContainer;
@@ -159,7 +158,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
     protected RelativeLayout mThumbImageViewLayout;
 
     //底部进度调
-    protected ProgressBar mBottomProgressBar;
+//    protected ProgressBar mBottomProgressBar;
 
     //进度定时器
     protected Timer updateProcessTimer;
@@ -197,8 +196,9 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
     protected void init(Context context) {
         super.init(context);
 
-        mStartButton = findViewById(R.id.start);
+        mStartButton = findViewById(R.id.play_pause_iv);
         mTitleTextView = (TextView) findViewById(R.id.title);
+        mStateTv = (TextView) findViewById(R.id.state_tv);
         mBackButton = (ImageView) findViewById(R.id.back);
         mFullscreenButton = (ImageView) findViewById(R.id.fullscreen);
         mProgressBar = (SeekBar) findViewById(R.id.progress);
@@ -206,12 +206,29 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
         mTotalTimeTextView = (TextView) findViewById(R.id.total);
         mBottomContainer = (ViewGroup) findViewById(R.id.layout_bottom);
         mTopContainer = (ViewGroup) findViewById(R.id.layout_top);
-        mBottomProgressBar = (ProgressBar) findViewById(R.id.bottom_progressbar);
+//        mBottomProgressBar = (ProgressBar) findViewById(R.id.bottom_progressbar);
         mThumbImageViewLayout = (RelativeLayout) findViewById(R.id.thumb);
         mLockScreen = (ImageView) findViewById(R.id.lock_screen);
 
         mLoadingProgressBar = findViewById(R.id.loading);
-
+//        final ImageView audioIv = findViewById(R.id.audio_iv);
+//        final ImageView play_pause_iv = findViewById(R.id.play_pause_iv);
+//
+//        audioIv.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                audioIv
+////                audioIv.setImageResource(R.drawable.audio_off);
+//
+//            }
+//        });
+//
+//        play_pause_iv.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
 
         if (isInEditMode())
             return;
@@ -357,9 +374,9 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
                 if (mCurrentTimeTextView != null && mTotalTimeTextView != null) {
                     mCurrentTimeTextView.setText(mTotalTimeTextView.getText());
                 }
-                if (mBottomProgressBar != null) {
-                    mBottomProgressBar.setProgress(100);
-                }
+//                if (mBottomProgressBar != null) {
+//                    mBottomProgressBar.setProgress(100);
+//                }
                 break;
         }
         resolveUIState(state);
@@ -379,7 +396,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
         if (mHideKey && mIfCurrentIsFullscreen) {
             hideNavKey(mContext);
         }
-        if (i == R.id.start) {
+        if (i == R.id.play_pause_iv) {
             clickStartIcon();
         } else if (i == R.id.surface_container && mCurrentState == CURRENT_STATE_ERROR) {
             if (mVideoAllCallBack != null) {
@@ -728,8 +745,8 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
         if (mChangePosition) {
             int duration = getDuration();
             int progress = mSeekTimePosition * 100 / (duration == 0 ? 1 : duration);
-            if (mBottomProgressBar != null)
-                mBottomProgressBar.setProgress(progress);
+//            if (mBottomProgressBar != null)
+//                mBottomProgressBar.setProgress(progress);
         }
 
         mTouchingProgressBar = false;
@@ -932,10 +949,10 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
         if (currentTime > 0)
             mCurrentTimeTextView.setText(CommonUtil.stringForTime(currentTime));
 
-        if (mBottomProgressBar != null) {
-            if (progress != 0) mBottomProgressBar.setProgress(progress);
-            setSecondaryProgress(secProgress);
-        }
+//        if (mBottomProgressBar != null) {
+//            if (progress != 0) mBottomProgressBar.setProgress(progress);
+//            setSecondaryProgress(secProgress);
+//        }
     }
 
     protected void setSecondaryProgress(int secProgress) {
@@ -944,11 +961,11 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
                 mProgressBar.setSecondaryProgress(secProgress);
             }
         }
-        if (mBottomProgressBar != null) {
-            if (secProgress != 0 && !getGSYVideoManager().isCacheFile()) {
-                mBottomProgressBar.setSecondaryProgress(secProgress);
-            }
-        }
+//        if (mBottomProgressBar != null) {
+//            if (secProgress != 0 && !getGSYVideoManager().isCacheFile()) {
+//                mBottomProgressBar.setSecondaryProgress(secProgress);
+//            }
+//        }
     }
 
 
@@ -961,10 +978,10 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
         mCurrentTimeTextView.setText(CommonUtil.stringForTime(0));
         mTotalTimeTextView.setText(CommonUtil.stringForTime(0));
 
-        if (mBottomProgressBar != null) {
-            mBottomProgressBar.setProgress(0);
-            mBottomProgressBar.setSecondaryProgress(0);
-        }
+//        if (mBottomProgressBar != null) {
+//            mBottomProgressBar.setProgress(0);
+//            mBottomProgressBar.setSecondaryProgress(0);
+//        }
     }
 
 
@@ -975,8 +992,8 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
         mProgressBar.setProgress(0);
         mProgressBar.setSecondaryProgress(0);
         mCurrentTimeTextView.setText(CommonUtil.stringForTime(0));
-        if (mBottomProgressBar != null)
-            mBottomProgressBar.setProgress(0);
+//        if (mBottomProgressBar != null)
+//            mBottomProgressBar.setProgress(0);
     }
 
 
@@ -1356,4 +1373,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
     public void setGSYVideoProgressListener(GSYVideoProgressListener videoProgressListener) {
         this.mGSYVideoProgressListener = videoProgressListener;
     }
+
+
+
 }
