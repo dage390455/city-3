@@ -131,6 +131,7 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
         cameraListIvSearchClear.setOnClickListener(this);
         cameraListEtSearch.setOnClickListener(this);
         cameraListTvSearchCancel.setOnClickListener(this);
+        btnSearchClear.setOnClickListener(this);
         //
         //新控件
         refreshLayout.setEnableAutoLoadMore(false);//开启自动加载功能（非必须）
@@ -537,6 +538,10 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
                 mPresenter.getDeviceCameraListByFilter(filterHashMap);
                 setSearchHistoryVisible(false);
                 AppUtils.dismissInputMethodManager(CameraListActivity.this, cameraListEtSearch);
+                break;
+
+            case R.id.btn_search_clear:
+                showHistoryClearDialog();
                 break;
             default:
                 break;
