@@ -273,6 +273,7 @@ dependencies {
     api(project(':simplescanner')) {
         exclude group: "com.amap.api"
     }
+    implementation project(path: ':lib_common')
 }
 //获取编译时间
 static def releaseTime() {

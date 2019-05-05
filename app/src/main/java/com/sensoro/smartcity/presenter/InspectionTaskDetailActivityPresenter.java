@@ -11,7 +11,7 @@ import com.sensoro.smartcity.activity.InspectionTaskActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionTaskDetailActivityView;
-import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;

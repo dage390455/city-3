@@ -5,9 +5,9 @@ import android.support.annotation.DrawableRes;
 
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
-import com.sensoro.smartcity.iwidget.IActivityIntent;
-import com.sensoro.smartcity.iwidget.IProgressDialog;
-import com.sensoro.smartcity.iwidget.IToast;
+import com.sensoro.common.iwidget.IActivityIntent;
+import com.sensoro.common.iwidget.IProgressDialog;
+import com.sensoro.common.iwidget.IToast;
 import com.sensoro.smartcity.model.Elect3DetailModel;
 import com.sensoro.smartcity.model.TaskOptionModel;
 import com.sensoro.smartcity.server.bean.ScenesData;

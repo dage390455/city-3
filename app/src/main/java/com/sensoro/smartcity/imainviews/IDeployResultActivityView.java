@@ -3,8 +3,8 @@ package com.sensoro.smartcity.imainviews;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 
-import com.sensoro.smartcity.iwidget.IActivityIntent;
-import com.sensoro.smartcity.iwidget.IToast;
+import com.sensoro.common.iwidget.IActivityIntent;
+import com.sensoro.common.iwidget.IToast;
 
 public interface IDeployResultActivityView extends IToast, IActivityIntent {
     void refreshSignal(long updateTime, String signal);

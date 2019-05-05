@@ -10,7 +10,7 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractResultActivityView;
 import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.util.ImageFactory;
+import com.sensoro.common.utils.ImageFactory;
 import com.sensoro.smartcity.util.LogUtils;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXImageObject;

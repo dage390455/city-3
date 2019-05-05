@@ -1,8 +1,8 @@
 package com.sensoro.smartcity.imainviews;
 
-import com.sensoro.smartcity.iwidget.IActivityIntent;
-import com.sensoro.smartcity.iwidget.IProgressDialog;
-import com.sensoro.smartcity.iwidget.IToast;
+import com.sensoro.common.iwidget.IActivityIntent;
+import com.sensoro.common.iwidget.IProgressDialog;
+import com.sensoro.common.iwidget.IToast;
 
 public interface IContractCreationSuccessView extends IToast,IActivityIntent,IProgressDialog {
 }
