@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.model.InspectionStatusCountModel;
+import com.sensoro.smartcity.model.CameraFilterModel;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
@@ -22,13 +22,13 @@ public class CameraListPopAdapter extends RecyclerView.Adapter<CameraListPopAdap
     private final Context mContext;
 
     private RecycleViewItemClickListener mListener;
-    private List<InspectionStatusCountModel> mStateCountList = new ArrayList<>();
+    private List<CameraFilterModel> mStateCountList = new ArrayList<>();
 
     public CameraListPopAdapter(Context context) {
         mContext = context;
     }
 
-    public List<InspectionStatusCountModel> getmStateCountList() {
+    public List<CameraFilterModel> getmStateCountList() {
 
         return mStateCountList;
     }
@@ -46,7 +46,7 @@ public class CameraListPopAdapter extends RecyclerView.Adapter<CameraListPopAdap
     public void onBindViewHolder(InspectionTaskStateSelectHolder holder, int position) {
 
 
-        InspectionStatusCountModel model = mStateCountList.get(position);
+        CameraFilterModel model = mStateCountList.get(position);
 
 //        if (!(holder.itemPopRvCamerListFilter.getTag() instanceof CameraListFilterAdapter)) {
 
@@ -60,12 +60,12 @@ public class CameraListPopAdapter extends RecyclerView.Adapter<CameraListPopAdap
 
 
 //            holder.itemPopRvCamerListFilter.addItemDecoration(new RecyclerItemDecoration(12, 3));
-        holder.itemPopTvCamerListFilterTitle.setText(model.statusTitle + model.isMutilSelect);
+        holder.itemPopTvCamerListFilterTitle.setText(model.getTitle().trim());
 
         holder.itemPopRvCamerListFilter.setTag(cameraListFilterAdapter);
 
 
-        cameraListFilterAdapter.updateDeviceTypList(model.list, model.isMutilSelect);
+        cameraListFilterAdapter.updateDeviceTypList(model.getList(), model.isMulti());
 
         cameraListFilterAdapter.setOnItemClickListener(new RecycleViewItemClickListener() {
             @Override
@@ -81,7 +81,7 @@ public class CameraListPopAdapter extends RecyclerView.Adapter<CameraListPopAdap
 //        }
     }
 
-    public InspectionStatusCountModel getItem(int position) {
+    public CameraFilterModel getItem(int position) {
         return mStateCountList.get(position);
     }
 
@@ -89,7 +89,7 @@ public class CameraListPopAdapter extends RecyclerView.Adapter<CameraListPopAdap
         mListener = listener;
     }
 
-    public void updateDeviceTypList(List<InspectionStatusCountModel> list) {
+    public void updateDeviceTypList(List<CameraFilterModel> list) {
         mStateCountList.clear();
         mStateCountList.addAll(list);
         notifyDataSetChanged();

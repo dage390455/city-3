@@ -19,8 +19,9 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.CameraListPopAdapter;
-import com.sensoro.smartcity.model.InspectionStatusCountModel;
+import com.sensoro.smartcity.model.CameraFilterModel;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class CameraListFilterPopupWindow {
@@ -75,13 +76,13 @@ public class CameraListFilterPopupWindow {
                 if (null != cameraListPopAdapter.getmStateCountList()) {
 
 
-                    List<InspectionStatusCountModel> list = cameraListPopAdapter.getmStateCountList();
+                    List<CameraFilterModel> list = cameraListPopAdapter.getmStateCountList();
 
-                    for (InspectionStatusCountModel model : list) {
+                    for (CameraFilterModel model : list) {
 
-                        for (InspectionStatusCountModel countModel : model.list) {
+                        for (CameraFilterModel.ListBean countModel : model.getList()) {
 
-                            countModel.isSelect = false;
+                            countModel.setSelect(false);
                         }
 
                     }
@@ -101,21 +102,30 @@ public class CameraListFilterPopupWindow {
                 if (null != cameraListPopAdapter.getmStateCountList()) {
 
 
-                    StringBuffer stringBuffer = new StringBuffer();
-                    List<InspectionStatusCountModel> list = cameraListPopAdapter.getmStateCountList();
+                    List<CameraFilterModel> list = cameraListPopAdapter.getmStateCountList();
 
-                    for (InspectionStatusCountModel model : list) {
+                    HashMap hashMap = new HashMap();
+                    for (CameraFilterModel model : list) {
 
-                        for (InspectionStatusCountModel countModel : model.list) {
+                        String key = model.getKey();
+                        StringBuffer stringBuffer = new StringBuffer();
 
 
-                            if (countModel.isSelect) {
-                                stringBuffer.append(countModel.statusTitle);
+                        for (int i = 0; i < model.getList().size(); i++) {
+
+                            CameraFilterModel.ListBean countModel = model.getList().get(i);
+                            if (countModel.isSelect()) {
+                                stringBuffer.append(countModel);
 
                             }
+                        }
+                        for (CameraFilterModel.ListBean countModel : model.getList()) {
 
 
                         }
+
+
+                        hashMap.put(key, stringBuffer);
 
                     }
 //                    if (stringBuffer.length() > 0) {
@@ -153,7 +163,7 @@ public class CameraListFilterPopupWindow {
 
     }
 
-    public void updateSelectDeviceStatusList(List<InspectionStatusCountModel> list) {
+    public void updateSelectDeviceStatusList(List<CameraFilterModel> list) {
         cameraListPopAdapter.updateDeviceTypList(list);
     }
 
@@ -204,6 +214,11 @@ public class CameraListFilterPopupWindow {
 
     public void clearAnimation() {
         mPopupWindow.setAnimationStyle(-1);
+    }
+
+    public interface SelectModleListener {
+
+        void selected();
     }
 
 

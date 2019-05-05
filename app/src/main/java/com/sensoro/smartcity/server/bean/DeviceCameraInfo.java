@@ -27,6 +27,11 @@ public class DeviceCameraInfo implements Serializable {
     private InfoBean info;
     private String mobilePhone;
     private String id;
+    private String orientation;
+    private String installationMode;
+    private String deviceStatus;//摄像机在线状态
+
+
     private List<?> label;
 
     public String getCreateTime() {

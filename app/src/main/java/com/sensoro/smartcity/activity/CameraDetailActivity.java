@@ -231,7 +231,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     public void startPlayLogic(final String url1) {
 
 
-        getCurPlay().getBackButton().setVisibility(View.INVISIBLE);
+//        getCurPlay().getBackButton().setVisibility(View.INVISIBLE);
         if (!NetworkUtils.isAvailable(this) || !NetworkUtils.isWifiConnected(this)) {
             orientationUtils.setEnable(false);
             gsyPlayerAcCameraDetail.getPlayBtn().setOnClickListener(new View.OnClickListener() {
@@ -262,21 +262,18 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                         });
                         return;
 
-                    } else {
-
-
-                        gsyPlayerAcCameraDetail.changeBottomContainer(View.VISIBLE);
-
-                        gsyVideoOption.setUrl(url1).build(getCurPlay());
-                        getCurPlay().startPlayLogic();
-                        orientationUtils.setEnable(true);
-                        gsyPlayerAcCameraDetail.changeBottomContainer(View.VISIBLE);
                     }
 
                 }
             });
 
 
+        } else {
+
+            gsyVideoOption.setUrl(url1).build(getCurPlay());
+            getCurPlay().startPlayLogic();
+            orientationUtils.setEnable(true);
+            gsyPlayerAcCameraDetail.changeBottomContainer(View.VISIBLE);
         }
     }
 

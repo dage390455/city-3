@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.model.InspectionStatusCountModel;
+import com.sensoro.smartcity.model.CameraFilterModel;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class CameraListFilterAdapter extends RecyclerView.Adapter<CameraListFilt
     private final Context mContext;
     private RecycleViewItemClickListener mListener;
     private boolean isMutilSelect;
-    private List<InspectionStatusCountModel> mStateCountList = new ArrayList<>();
+    private List<CameraFilterModel.ListBean> mStateCountList = new ArrayList<>();
 
     public CameraListFilterAdapter(Context context) {
         mContext = context;
@@ -41,14 +41,14 @@ public class CameraListFilterAdapter extends RecyclerView.Adapter<CameraListFilt
     @Override
     public void onBindViewHolder(final InspectionTaskStateSelectHolder holder, int position) {
         Resources resources = mContext.getResources();
-        final InspectionStatusCountModel ic = mStateCountList.get(position);
-        holder.itemPopTvSelectState.setText(ic.statusTitle);
+        final CameraFilterModel.ListBean ic = mStateCountList.get(position);
+        holder.itemPopTvSelectState.setText(ic.getName());
 
 
-        holder.itemPopSelectLlRoot.setBackgroundResource(!ic.isSelect ? R.drawable.shape_bg_solid_ff_stroke_df_corner
+        holder.itemPopSelectLlRoot.setBackgroundResource(!ic.isSelect() ? R.drawable.shape_bg_solid_ff_stroke_df_corner
                 : R.drawable.shape_bg_corner_1dbb99_shadow);
 
-        holder.itemPopTvSelectState.setTextColor(resources.getColor(!ic.isSelect ? R.color.c_252525 : R.color.white));
+        holder.itemPopTvSelectState.setTextColor(resources.getColor(!ic.isSelect() ? R.color.c_252525 : R.color.white));
 
         holder.itemPopSelectLlRoot.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,11 +56,11 @@ public class CameraListFilterAdapter extends RecyclerView.Adapter<CameraListFilt
 
                 if (!isMutilSelect) {
                     for (int i = 0; i < mStateCountList.size(); i++) {
-                        mStateCountList.get(i).isSelect = false;
+                        mStateCountList.get(i).setSelect(false);
                     }
 
                 }
-                ic.isSelect = !ic.isSelect;
+                ic.setSelect(!ic.isSelect());
                 notifyDataSetChanged();
 
 //                if (mListener != null) {
@@ -73,7 +73,7 @@ public class CameraListFilterAdapter extends RecyclerView.Adapter<CameraListFilt
 
     }
 
-    public InspectionStatusCountModel getItem(int position) {
+    public CameraFilterModel.ListBean getItem(int position) {
         return mStateCountList.get(position);
     }
 
@@ -81,7 +81,7 @@ public class CameraListFilterAdapter extends RecyclerView.Adapter<CameraListFilt
         mListener = listener;
     }
 
-    public void updateDeviceTypList(List<InspectionStatusCountModel> list, boolean isMutilSelect) {
+    public void updateDeviceTypList(List<CameraFilterModel.ListBean> list, boolean isMutilSelect) {
         mStateCountList.clear();
         mStateCountList.addAll(list);
         this.isMutilSelect = isMutilSelect;
