@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Shader;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.Transformation;
@@ -75,7 +76,13 @@ public class GlideRoundTransform implements Transformation<Bitmap> {
     @Override
     public Resource<Bitmap> transform(Resource<Bitmap> resource, int outWidth, int outHeight) {
         Bitmap source = resource.get();
-        int size = Math.min(source.getWidth(), source.getHeight());
+        int size;
+        if(radius == -1){
+            size = Math.min(source.getWidth(), source.getHeight());
+        }else{
+            size = radius*2;
+        }
+
 
         int width = (source.getWidth() - size) / 2;
         int height = (source.getHeight() - size) / 2;
@@ -99,11 +106,12 @@ public class GlideRoundTransform implements Transformation<Bitmap> {
         paint.setAntiAlias(true);
 
         float r = size / 2f;
-        if (radius == -1) {
-            canvas.drawCircle(r, r, r, paint);
-        }else{
-            canvas.drawCircle(r, radius, radius, paint);
-        }
+//        if (radius == -1) {
+//            canvas.drawCircle(r, r, r, paint);
+//        }else{
+//            canvas.drawCircle(r, radius, radius, paint);
+//        }
+        canvas.drawCircle(r, r, r, paint);
 
 
         return BitmapResource.obtain(bitmap, mBitmapPool);

@@ -3,7 +3,9 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
@@ -13,6 +15,7 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.PolylineOptions;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.sensoro.smartcity.R;
@@ -43,22 +46,42 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
     private int index1;
     private DeviceCameraPersonFaceRsp.DataBean preBean;
     private ArrayList<LatLng> displayLinePoints = new ArrayList<>();
+    private ArrayList<Integer> hightLightPoints = new ArrayList<>();
     private MarkerOptions avatarMarkerOptions;
     private DeviceCameraPersonFaceRsp.DataBean playBean;
+    private ImageView imageView;
+    private int dp24;
+    private String faceId;
+    private int day = 1;
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
-        String faceId = mActivity.getIntent().getStringExtra(Constants.EXTRA_PERSON_LOCUS_FACE_ID);
-        size = AppUtils.dp2px(mActivity, 24);
+        faceId = mActivity.getIntent().getStringExtra(Constants.EXTRA_PERSON_LOCUS_FACE_ID);
+        size = AppUtils.dp2px(mActivity, 58);
+        dp24 = AppUtils.dp2px(mActivity, 24);
         requestData(faceId);
 
+        initMarkerImageView();
+
+    }
+
+    private void initMarkerImageView() {
+        imageView = new ImageView(mActivity);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.width=AppUtils.dp2px(mActivity,64);
+        layoutParams.height=AppUtils.dp2px(mActivity,80);
+        imageView.setBackgroundResource(R.drawable.person_locus_avatar_bg);
+        imageView.setScaleType(ImageView.ScaleType.FIT_START);
+        int dp8 = AppUtils.dp2px(mActivity, 8);
+        imageView.setPadding(dp8,AppUtils.dp2px(mActivity, 4),dp8,AppUtils.dp2px(mActivity, 12));
     }
 
     private void requestData(String faceId) {
 
+        getView().setSelectDayBg(day);
         Long endTime = System.currentTimeMillis();
-        Long startTime = endTime - 24*60*60*1000*7L;
+        Long startTime = endTime - 24*60*60*1000L*day;
         if (isAttachedView()) {
             getView().showProgressDialog();
         }
@@ -70,6 +93,15 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                         data = deviceCameraPersonFaceRsp.getData();
 
                         if (data != null && data.size() > 0) {
+                            if (isAttachedView()) {
+                                getView().removeAllMarker();
+                                getView().clearDisplayLine();
+                            }
+
+                            hightLightPoints.clear();
+                            displayLinePoints.clear();
+                            avatarMarkerOptions = null;
+
                             Collections.reverse(data);
                             List<LatLng> linePoints = new ArrayList<>();
 
@@ -80,7 +112,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
 
                                     linePoints.add(latLn);
 
-                                    addNormalMarker(latLn,i);
+                                    addNormalMarker(latLn,-2);
                                 }
 
 
@@ -91,6 +123,9 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                                 CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 18f, 0, 30));
                                 getView().setMapCenter(cameraUpdate);
 
+                                hightLightPoints.add(0);
+                                addNormalMarker(latLng,0);
+
 
                                 loadAvatar(dataBean, latLng,-1);
                                 displayLinePoints.add(latLng);
@@ -99,15 +134,9 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                                 PolylineOptions polylineOptions = new PolylineOptions();
                                 polylineOptions.addAll(linePoints)
                                 .width(AppUtils.dp2px(mActivity,4))
-                                .color(Color.parseColor("#D8D8D8"));
+                                .color(mActivity.getResources().getColor(R.color.c_b6b6b6));
 
                                 if (isAttachedView()) {
-                                    try {
-                                        long l = Long.parseLong(dataBean.getCaptureTime());
-                                        getView().setTimeText(DateUtil.getMothDayHourMinuteFormatDate(l));
-                                    } catch (NumberFormatException e) {
-                                        e.printStackTrace();
-                                    }
                                     getView().addPolyLine(polylineOptions,false);
                                     checkLeftRightStatus();
                                     getView().initSeekBar(data.size()-1);
@@ -138,50 +167,56 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(latLn)
                 .anchor(0.5f,0.5f)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.person_locus_normal))
+                .icon(BitmapDescriptorFactory.fromResource(tag < -1 ? R.drawable.person_locus_normal : R.drawable.person_locus_selected))
                 .draggable(false);
 
         getView().addMarker(markerOptions,tag);
     }
 
     private void loadAvatar(final DeviceCameraPersonFaceRsp.DataBean dataBean, final LatLng latLng, final int tag) {
+
         Glide.with(mActivity)
                 .load(Constants.CAMERA_BASE_URL+dataBean.getFaceUrl())
                 .asBitmap()
                 .thumbnail(0.1f)
-                .override(size,size)
-                .transform(new GlideRoundTransform(mActivity))
+//                .override(size,size)
+                .transform(new GlideRoundTransform(mActivity,dp24))
                 .error(R.drawable.deploy_pic_placeholder)           //设置错误图片
                 .placeholder(R.drawable.ic_default_cround_image)
-//                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        if (avatarMarkerOptions == null) {
-                            avatarMarkerOptions = new MarkerOptions()
-                                    .position(latLng)
-                                    .icon(BitmapDescriptorFactory.fromBitmap(resource))
-                                    .anchor(0.5f,1)
-                                    .draggable(false).title("dd").snippet("ddd");
-                            if (isAttachedView()) {
-                                mActivity.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        getView().addMarker(avatarMarkerOptions, tag);
-                                    }
-                                });
-
+            @Override
+            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                imageView.setImageBitmap(resource);
+                Bitmap viewBitmap = getViewBitmap(imageView);
+                if (avatarMarkerOptions == null) {
+                    avatarMarkerOptions = new MarkerOptions()
+                            .position(latLng)
+//                            .icon(BitmapDescriptorFactory.fromView(resource))
+                            .icon(BitmapDescriptorFactory.fromBitmap(viewBitmap))
+                            .anchor(0.5f,0.96f)
+                            .draggable(false).title("dd").snippet("ddd")
+                    .zIndex(10f);
+                    if (isAttachedView()) {
+                        mActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                getView().addMarker(avatarMarkerOptions, tag);
                             }
-                        }else{
-//                            avatarMarkerOptions.position(latLng).icon(BitmapDescriptorFactory.fromBitmap(resource));
-
-                            getView().refreshMap(latLng,resource);
-                        }
-                        playBean = dataBean;
-
+                        });
 
                     }
-                });
+                }else{
+//                            avatarMarkerOptions.position(latLng).icon(BitmapDescriptorFactory.fromBitmap(resource));
+//                    avatarMarkerOptions.icon(BitmapDescriptorFactory.fromBitmap(resource));
+                    getView().updateAvatarMarker(latLng,viewBitmap);
+                }
+                playBean = dataBean;
+
+
+            }
+        });
+//
 
         getView().clearIMv();
         Glide.with(mActivity)
@@ -197,6 +232,22 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
     }
 
 
+    private Bitmap getViewBitmap(View view) {
+
+        view.setDrawingCacheEnabled(true);
+
+        view.measure(
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        view.layout(0, 0,
+                view.getMeasuredWidth(),
+                view.getMeasuredHeight());
+
+        view.buildDrawingCache();
+        Bitmap cacheBitmap = view.getDrawingCache();
+        return Bitmap.createBitmap(cacheBitmap);
+
+    }
     @Override
     public void onDestroy() {
 
@@ -207,25 +258,42 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
         if (index >= 0 && data.size() > index) {
             DeviceCameraPersonFaceRsp.DataBean bean = data.get(index);
             LatLng latLng = new LatLng(bean.getLatitude(), bean.getLongitude());
-//            getView().removeAvatarMarker();
-            getView().setMapCenter(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 18f, 0, 30)));
-            loadAvatar(bean,latLng,-1);
+//            getView().removeAllMarker();
+//            getView().setMapCenter(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 18f, 0, 30)));
 
+
+            getView().removeNormalMarker(hightLightPoints.get(hightLightPoints.size()-1));
+            hightLightPoints.remove(displayLinePoints.size() -1);
+
+            loadAvatar(bean,latLng,-1);
             displayLinePoints.remove(displayLinePoints.size()-1);
             getView().clearDisplayLine();
             if (displayLinePoints.size()>1) {
                 PolylineOptions polylineOptions = new PolylineOptions();
                 polylineOptions.addAll(displayLinePoints)
                         .width(AppUtils.dp2px(mActivity,4))
-                        .setCustomTexture(BitmapDescriptorFactory.defaultMarker());
+                        .color(mActivity.getResources().getColor(R.color.c_119f82));
                 getView().addPolyLine(polylineOptions, true);
             }
 
+            setAddressTime(bean);
             preBean = bean;
 
         }
         getView().updateSeekBar(index);
         checkLeftRightStatus();
+    }
+
+    private void setAddressTime(DeviceCameraPersonFaceRsp.DataBean bean) {
+        try {
+            String captureTime = bean.getCaptureTime();
+            String time = DateUtil.getStrTime_ymd_hm_ss(Long.parseLong(captureTime));
+            getView().setMarkerTime(time);
+            getView().setSeekBarTime(time);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        getView().setMarkerAddress(bean.getAddress());
     }
 
     private void checkLeftRightStatus() {
@@ -242,8 +310,13 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
         if (index > -1 && data.size() > index){
             DeviceCameraPersonFaceRsp.DataBean bean = data.get(index);
             LatLng latLng = new LatLng(bean.getLatitude(), bean.getLongitude());
-//            getView().removeAvatarMarker();
-            getView().setMapCenter(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 18f, 0, 30)));
+//            getView().removeAllMarker();
+//            getView().setMapCenter(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 18f, 0, 30)));
+
+
+            hightLightPoints.add(index);
+            addNormalMarker(latLng,index);
+
             loadAvatar(bean,latLng,-1);
 
             displayLinePoints.add(latLng);
@@ -253,10 +326,11 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                 PolylineOptions polylineOptions = new PolylineOptions();
                 polylineOptions.addAll(displayLinePoints)
                         .width(AppUtils.dp2px(mActivity,4))
-                        .setCustomTexture(BitmapDescriptorFactory.defaultMarker());
+                        .color(mActivity.getResources().getColor(R.color.c_119f82));
                 getView().addPolyLine(polylineOptions, true);
             }
 
+            setAddressTime(bean);
 
 
         }
@@ -276,22 +350,31 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
         }
         DeviceCameraPersonFaceRsp.DataBean bean = data.get(mSeekBarProgres);
         LatLng latLng = new LatLng(bean.getLatitude(), bean.getLongitude());
-//        getView().removeAvatarMarker();
-        getView().setMapCenter(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 18f, 0, 30)));
-        loadAvatar(bean,latLng,-1);
+//        getView().removeAllMarker();
+//        getView().setMapCenter(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 18f, 0, 30)));
 
+
+        getView().clearNormalMarker();
+
+        hightLightPoints.clear();
         displayLinePoints.clear();
         for (int i = 0; i <= mSeekBarProgres; i++) {
-            displayLinePoints.add(new LatLng(data.get(i).getLatitude(),data.get(i).getLongitude()));
+            LatLng latLng1 = new LatLng(data.get(i).getLatitude(), data.get(i).getLongitude());
+            displayLinePoints.add(latLng1);
+            hightLightPoints.add(i);
+            addNormalMarker(latLng1,i);
         }
+        loadAvatar(bean,latLng,-1);
+
         getView().clearDisplayLine();
 
         PolylineOptions polylineOptions = new PolylineOptions();
         polylineOptions.addAll(displayLinePoints)
                 .width(AppUtils.dp2px(mActivity,4))
-                .setCustomTexture(BitmapDescriptorFactory.defaultMarker());
+                .color(mActivity.getResources().getColor(R.color.c_119f82));
         getView().addPolyLine(polylineOptions, true);
 
+        setAddressTime(bean);
         checkLeftRightStatus();
     }
 
@@ -332,6 +415,23 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                 }
             }
         });
+
+    }
+
+    public void doOneDay() {
+        day = 1;
+        requestData(faceId);
+    }
+
+    public void doThreeDay() {
+        day = 3;
+        requestData(faceId);
+
+    }
+
+    public void doSevenDay() {
+        day = 7;
+        requestData(faceId);
 
     }
 }

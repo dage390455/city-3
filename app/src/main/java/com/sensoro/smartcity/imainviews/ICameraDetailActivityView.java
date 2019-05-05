@@ -1,28 +1,27 @@
 package com.sensoro.smartcity.imainviews;
 
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.widget.ImageView;
 
-import com.sensoro.smartcity.adapter.model.DeviceCameraFacePicListModel;
 import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
+import com.sensoro.smartcity.server.bean.DeviceCameraFacePic;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface ICameraDetailActivityView extends IProgressDialog, IToast , IActivityIntent {
     void initVideoOption(String url);
 
-    void updateCameraList(ArrayList<DeviceCameraFacePicListModel> data);
+    void updateCameraList(List<DeviceCameraFacePic> data);
 
     void startPlayLogic(String url1);
 
-    DeviceCameraFacePicListModel getItemData(int position);
+    DeviceCameraFacePic getItemData(int position);
 
     void setDateTime(String time);
 
-    List<DeviceCameraFacePicListModel> getRvListData();
+    List<DeviceCameraFacePic> getRvListData();
 
     void onPullRefreshComplete();
 
@@ -30,7 +29,7 @@ public interface ICameraDetailActivityView extends IProgressDialog, IToast , IAc
 
     void setImage(Drawable resource);
 
-    void clearAdapterPreModel();
+    void clearClickPosition();
 
     boolean isSelectedDateLayoutVisible();
 
@@ -41,4 +40,8 @@ public interface ICameraDetailActivityView extends IProgressDialog, IToast , IAc
     void onPullRefreshCompleteNoMoreData();
     //播放失败
     void playError(int pos);
+
+    void autoRefresh();
+
+    ImageView getImageView();
 }

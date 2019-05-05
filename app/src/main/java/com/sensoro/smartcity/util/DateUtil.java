@@ -526,4 +526,9 @@ public class DateUtil {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy", Locale.ROOT);
         return simpleDateFormat.format(new Date(time));
     }
+
+    public static String getStrTime_MM_dd_hms(long time) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM.dd HH:mm:ss", Locale.ROOT);
+        return simpleDateFormat.format(new Date(time));
+    }
 }

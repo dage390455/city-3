@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_ll"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/c_fafafa">
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
@@ -31,7 +32,6 @@
             app:max_select_range="-1"
             app:min_select_range="-1"
             app:min_year="2004"
-            app:month_view="com.sensoro.smartcity.calendarview.customview.CustomRangeMonthView"
             app:month_view_show_mode="mode_only_current"
             app:other_month_text_color="@color/c_a6a6a6"
             app:scheme_text="假"
@@ -51,37 +51,34 @@
             android:layout_height="wrap_content"
             android:background="@color/c_fafafa"
             android:gravity="center"
-            android:paddingTop="8dp"
-            android:paddingBottom="24dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
 
             <TextView
                 android:id="@+id/ac_calendar_tv_cancel"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingStart="60dp"
-                android:paddingEnd="60dp"
+                android:background="@color/white"
+                android:text="@string/cancel"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:layout_marginEnd="12dp"
-                android:background="@drawable/shape_bg_solid_ff_stroke_df_corner_4"
-                android:text="@string/cancel"
                 android:textColor="@color/c_252525"
-                android:textSize="12sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/ac_calendar_tv_save"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape_btn_corner_29c_bg_4dp"
-                android:paddingStart="60dp"
-                android:paddingEnd="60dp"
+                android:background="@color/c_29c093"
+                android:text="@string/save"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:text="@string/save"
+                android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="12sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
     </LinearLayout>
@@ -147,7 +144,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/c_252525"
-                android:textSize="28sp" />
+                android:textSize="28sp"
+                />
 
             <TextView
                 android:id="@+id/ac_calendar_tv_start_year"
@@ -170,7 +168,7 @@
             android:id="@+id/ac_calendar_ll_end_month"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
+            android:layout_marginStart="18dp"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone">
@@ -180,7 +178,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/c_252525"
-                android:textSize="28sp" />
+                android:textSize="28sp"
+                />
 
             <TextView
                 android:id="@+id/ac_calendar_tv_end_year"

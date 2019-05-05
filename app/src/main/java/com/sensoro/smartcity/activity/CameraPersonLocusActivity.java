@@ -45,6 +45,16 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
     TextView includeTextTitleTvTitle;
     @BindView(R.id.include_text_title_tv_subtitle)
     TextView includeTextTitleTvSubtitle;
+    @BindView(R.id.tv_time_right_ac_person_locus)
+    TextView tvTimeRightAcPersonLocus;
+    @BindView(R.id.tv_address_right_ac_person_locus)
+    TextView tvAddressRightAcPersonLocus;
+    @BindView(R.id.tv_one_day_ac_person_locus)
+    TextView tvOneDayAcPersonLocus;
+    @BindView(R.id.tv_three_day_ac_person_locus)
+    TextView tvThreeDayAcPersonLocus;
+    @BindView(R.id.tv_seven_day_ac_person_locus)
+    TextView tvSevenDayAcPersonLocus;
     @BindView(R.id.include_text_title_divider)
     View includeTextTitleDivider;
     @BindView(R.id.include_text_title_cl_root)
@@ -77,6 +87,8 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
 
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
+        includeTextTitleTvTitle.setText(getString(R.string.move_locus));
+        includeTextTitleTvSubtitle.setVisibility(View.GONE);
         seekBarTrackAcPersonLocus.setOnSeekChangeListener(new IndicatorSeekBar.OnSeekBarChangeListener() {
             private int mSeekBarProgres;
 
@@ -253,36 +265,30 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
 
     }
 
-    @Override
-    public void setTimeText(String time) {
-        seekBarTrackAcPersonLocus.setIndicatorText(time);
-    }
 
     @Override
     public void setMoveLeftClickable(boolean clickable) {
         ivMoveLeftAcPersonLocus.setEnabled(clickable);
-        ivMoveLeftAcPersonLocus.setColorFilter(mActivity.getResources().getColor(clickable ? R.color.c_252525 : R.color.c_a6a6a6));
+        ivMoveLeftAcPersonLocus.setColorFilter(mActivity.getResources().getColor(clickable ? R.color.c_29c093 : R.color.c_a6a6a6));
     }
 
     @Override
     public void setMoveRightClickable(boolean clickable) {
         ivMoveRightAcPersonLocus.setClickable(clickable);
-        ivMoveRightAcPersonLocus.setColorFilter(mActivity.getResources().getColor(clickable ? R.color.c_252525 : R.color.c_a6a6a6));
+        ivMoveRightAcPersonLocus.setColorFilter(mActivity.getResources().getColor(clickable ? R.color.c_29c093 : R.color.c_a6a6a6));
     }
 
     @Override
-    public void removeAvatarMarker() {
+    public void removeAllMarker() {
         if (mMap != null) {
             List<Marker> markers = mMap.getMapScreenMarkers();
             for (Marker marker : markers) {
-                Object object = marker.getObject();
-                if (object instanceof Integer && (Integer)object == -1) {
+                if (marker != null) {
                     marker.remove();
                     mvAcPersonLocus.invalidate();
                 }
+
             }
-
-
         }
     }
 
@@ -315,7 +321,7 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
     }
 
     @Override
-    public void refreshMap(LatLng latLng, Bitmap resource) {
+    public void updateAvatarMarker(LatLng latLng, Bitmap resource) {
         if (mAvatarMarker != null) {
             mAvatarMarker.setPosition(latLng);
             mAvatarMarker.setIcon(BitmapDescriptorFactory.fromBitmap(resource));
@@ -345,8 +351,64 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
 
     }
 
+    @Override
+    public void setMarkerAddress(String address) {
+        tvAddressRightAcPersonLocus.setText(address);
+    }
 
-    @OnClick({R.id.iv_move_left_ac_person_locus, R.id.iv_move_right_ac_person_locus})
+    @Override
+    public void removeNormalMarker(Integer tag) {
+        if (mMap != null) {
+            List<Marker> markers = mMap.getMapScreenMarkers();
+            for (Marker marker : markers) {
+                Object object = marker.getObject();
+                if (object instanceof Integer && tag.equals(object)) {
+                    marker.remove();
+                    mvAcPersonLocus.invalidate();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void clearNormalMarker() {
+        if (mMap != null) {
+            List<Marker> markers = mMap.getMapScreenMarkers();
+            for (Marker marker : markers) {
+                Object object = marker.getObject();
+                if (object instanceof Integer && (Integer)object > -1) {
+                    marker.remove();
+                    mvAcPersonLocus.invalidate();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void setSelectDayBg(int day) {
+
+        tvOneDayAcPersonLocus.setBackgroundColor(mActivity.getResources().getColor(day == 1 ? R.color.c_29c093 : R.color.white));
+        tvOneDayAcPersonLocus.setTextColor(mActivity.getResources().getColor(day == 1 ? R.color.white : R.color.c_252525));
+
+        tvThreeDayAcPersonLocus.setBackgroundColor(mActivity.getResources().getColor(day == 3 ? R.color.c_29c093 : R.color.white));
+        tvThreeDayAcPersonLocus.setTextColor(mActivity.getResources().getColor(day == 3 ? R.color.white : R.color.c_252525));
+
+        tvSevenDayAcPersonLocus.setBackgroundColor(mActivity.getResources().getColor(day == 7 ? R.color.c_29c093 : R.color.white));
+        tvSevenDayAcPersonLocus.setTextColor(mActivity.getResources().getColor(day == 7 ? R.color.white : R.color.c_252525));
+    }
+
+    @Override
+    public void setSeekBarTime(String time) {
+        seekBarTrackAcPersonLocus.setIndicatorText(time);
+    }
+
+    @Override
+    public void setMarkerTime(String time) {
+        tvTimeRightAcPersonLocus.setText(time);
+    }
+
+    @OnClick({R.id.iv_move_left_ac_person_locus, R.id.iv_move_right_ac_person_locus,R.id.tv_one_day_ac_person_locus,R.id.tv_three_day_ac_person_locus
+    ,R.id.tv_seven_day_ac_person_locus})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_move_left_ac_person_locus:
@@ -354,6 +416,15 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
                 break;
             case R.id.iv_move_right_ac_person_locus:
                 mPresenter.doMoveRight();
+                break;
+            case R.id.tv_one_day_ac_person_locus:
+                mPresenter.doOneDay();
+                break;
+            case R.id.tv_three_day_ac_person_locus:
+                mPresenter.doThreeDay();
+                break;
+            case R.id.tv_seven_day_ac_person_locus:
+                mPresenter.doSevenDay();
                 break;
         }
     }

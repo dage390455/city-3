@@ -368,6 +368,10 @@
         <activity
             android:name=".activity.CameraPersonLocusActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity android:name=".activity.CameraPersonAvatarHistoryActivity" />
+        <activity android:name=".activity.CameraPersonDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            />
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"
