@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@color/transparent"
+    android:orientation="vertical">
+    <com.sensoro.smartcity.widget.CustomStandardGSYVideoPlayer
+        android:id="@+id/detail_player_adapter_gao_de_person_locus"
+        android:layout_width="320dp"
+        android:layout_height="180dp">
+
+    </com.sensoro.smartcity.widget.CustomStandardGSYVideoPlayer>
+
+
+
+</RelativeLayout>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
@@ -8,12 +8,85 @@
     android:paddingBottom="16dp">
 
     <TextView
-        android:id="@+id/tv_alarm_history_log_content"
-        android:layout_width="0dp"
+        android:id="@+id/item_device_camera_tv_device_name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:gravity="start"
+        android:text="小刘模板充棉加工厂车间工厂车间5"
         android:textColor="@color/c_252525"
-        android:textSize="14sp" />
+        android:textSize="16sp" />
 
-</LinearLayout>
+
+    <TextView
+        android:id="@+id/item_device_camera_tv_onlinestate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_device_camera_tv_device_name"
+        android:layout_marginTop="8dp"
+        android:drawableLeft="@drawable/item_device_online"
+        android:drawablePadding="5dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="在线"
+        android:textColor="@color/c_1dbb99"
+        android:textSize="12sp" />
+
+
+    <TextView
+        android:id="@+id/item_device_camera_tv_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/item_device_camera_tv_onlinestate"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@+id/item_device_camera_tv_onlinestate"
+        android:text="01A01117C6FF906A"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="12sp" />
+
+
+    <LinearLayout
+        android:id="@+id/item_device_camera_ll_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_device_camera_tv_onlinestate"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="4dp"
+
+        android:gravity="right"
+        android:orientation="horizontal"
+
+
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:background="@drawable/shape_bg_solid_fa_stroke_df_full_corner"
+            android:drawableLeft="@drawable/camera_device_right"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingTop="4dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="4dp"
+            android:text="正东"
+            android:textColor="@color/c_252525"
+            android:textSize="10sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:background="@drawable/shape_bg_solid_fa_stroke_df_full_corner"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingTop="4dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="4dp"
+            android:text="悬臂托装"
+            android:textColor="@color/c_252525"
+            android:textSize="10sp" />
+    </LinearLayout>
+    >
+</RelativeLayout>

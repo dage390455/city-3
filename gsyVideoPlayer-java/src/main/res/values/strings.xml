@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="tips_not_wifi">您当前正在使用移动网络，继续播放将消耗流量</string>
+    <string name="tips_not_wifi_confirm">继续播放</string>
+    <string name="no_net">当前找不到网络</string>
+    <string name="tips_not_wifi_cancel">停止播放</string>
+    <string name="no_url">播放地址无效</string>
+    <string name="jump_ad">跳过</string>
+    <string name="online_tip">The current mobile phone has no network, please check the network configuration</string>
+
+    <string name="play">"Play"</string>
+    <string name="retry">"Retry"</string>
+    <string name="retry_play">"Video loading failed, please try again"</string>
+    <string name="mobile_network">You are using a mobile network, which will consume your traffic</string>
+
+</resources>

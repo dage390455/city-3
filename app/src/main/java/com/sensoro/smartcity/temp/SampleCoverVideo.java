@@ -162,7 +162,7 @@ public class SampleCoverVideo extends StandardGSYVideoPlayer {
         Debuger.printfLog("Sample startAfterPrepared");
         setViewShowState(mBottomContainer, INVISIBLE);
         setViewShowState(mStartButton, INVISIBLE);
-        setViewShowState(mBottomProgressBar, VISIBLE);
+//        setViewShowState(mBottomProgressBar, VISIBLE);
     }
 
     @Override

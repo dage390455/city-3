@@ -24,6 +24,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.annotations.Nullable;
 
+/**
+ * camera list有聚合，为防止改回去，先保留
+ */
 public class DeviceCameraListAdapter extends RecyclerView.Adapter<DeviceCameraListAdapter.MyViewHolder> implements Constants {
     private final Activity mContext;
     private final List<DeviceCameraFacePicListModel> mList = new ArrayList<>();

@@ -277,9 +277,21 @@ dependencies {
     }
 
     implementation files('libs/player.jar')
+    implementation project(path: ':gsyVideoPlayer-base')
+    implementation project(path: ':gsyVideoPlayer-proxy_cache')
+    implementation project(path: ':gsyVideoPlayer-java')
+    implementation project(path: ':gsyVideoPlayer-armv7a')
+
+
+//    implementation androidDependencies.appcompat_v7
+//
+//    def viewDependencies = rootProject.ext.viewDependencies
+//    api viewDependencies.ijkplayer_java
+////    api viewDependencies.ijkplayer_exo
+//    api viewDependencies.transitionseverywhere
 //    implementation 'com.shuyu:GSYVideoPlayer:6.0.3'
-    implementation 'com.shuyu:gsyVideoPlayer-java:6.0.3'
-    implementation 'com.shuyu:gsyVideoPlayer-armv7a:6.0.3'
+//    implementation 'com.shuyu:gsyVideoPlayer-java:6.0.3'
+//    implementation 'com.shuyu:gsyVideoPlayer-armv7a:6.0.3'
 }
 //获取编译时间
 static def releaseTime() {

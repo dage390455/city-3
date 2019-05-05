@@ -936,10 +936,10 @@
     <string name="diameter_mm">线径/mm²</string>
     <string name="please_input_air_rated_current">请输入空开额定电流</string>
     <string name="rated_current_colon">空开额定电流：</string>
-    <string name="deploy_detail_camera_group">摄像头</string>
+    <string name="deploy_detail_camera_group">关联摄像头</string>
     <string name="device_detail_camera_no_camera">未关联摄像头</string>
-    <string name="device_detail_camera_has_camera">已关联</string>
-    <string name="device_detail_camera_camera_count">个摄像头</string>
+    <string name="device_detail_camera_has_camera">已关联摄像头机位</string>
+    <string name="device_detail_camera_camera_count">个</string>
     <string name="not_obtain_face_id">获取图片ID失败</string>
 
     <string name="play">"播放"</string>
@@ -949,5 +949,17 @@
     <string name="retry_play">"视频加载失败，请重试"</string>
 
     <string name="mobile_network">"您正在使用移动网络，请注意您的数据使用。"</string>
+    <string name="camera_manager">摄像机管理</string>
+    <string name="camera_living">直播中</string>
+    <string name="click_select_date">点击选择日期</string>
+    <string name="time_parse_error">时间解析错误</string>
+    <string name="camera_back_live">回到直播</string>
+    <string name="move_locus">移动轨迹</string>
+    <string name="person_avatar_history">人脸记录</string>
+    <string name="person_avatar_video">人脸视频</string>
+    <string name="obtain_video_fail">获取视频失败</string>
+    <string name="camera_name_device_number">摄像机名称/设备号</string>
+    <string name="reset_filter">重置</string>
+
 
 </resources>
