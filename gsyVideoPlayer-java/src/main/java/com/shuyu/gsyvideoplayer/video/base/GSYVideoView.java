@@ -133,7 +133,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
     protected String mOriginUrl;
 
     //转化后的URL
-    protected String mUrl;
+    public String mUrl;
 
     //标题
     protected String mTitle;

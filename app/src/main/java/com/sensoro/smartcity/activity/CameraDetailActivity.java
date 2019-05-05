@@ -130,6 +130,27 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
             }
         });
 
+
+        gsyPlayerAcCameraDetail.setReplayListener(new StandardGSYVideoPlayer.ReplayListener() {
+            @Override
+            public void rePlay() {
+                orientationUtils.setEnable(false);
+
+                gsyPlayerAcCameraDetail.getPlayBtn().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        gsyPlayerAcCameraDetail.changeBottomContainer(View.VISIBLE);
+
+                        gsyVideoOption.setUrl(getCurPlay().mUrl).build(getCurPlay());
+                        getCurPlay().startPlayLogic();
+                        orientationUtils.setEnable(true);
+
+
+                    }
+                });
+            }
+        });
+
     }
 
     private void initRefreshLayout() {
@@ -174,7 +195,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 .setShowFullAnimation(false)
                 .setNeedLockFull(true)
                 .setUrl(url)
-                .setCacheWithPlay(false)
+                .setCacheWithPlay(true)
                 .setVideoTitle("测试视频")
                 .setVideoAllCallBack(new GSYSampleCallBack() {
                     @Override

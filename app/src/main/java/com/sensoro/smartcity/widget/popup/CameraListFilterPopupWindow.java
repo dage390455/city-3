@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.widget.popup;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -68,7 +69,11 @@ public class CameraListFilterPopupWindow {
         mPopupWindow.setContentView(view);
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        mPopupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+        WindowManager wm = (WindowManager) mActivity.getSystemService(Context.WINDOW_SERVICE);
+        int height = wm.getDefaultDisplay().getHeight();
+//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mLl.getLayoutParams();
+//        mLl.setLayoutParams(mLl.getLayoutParams());
+        mPopupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_aa000000)));
         mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
 //        mPopupWindow.setFocusable(true);
