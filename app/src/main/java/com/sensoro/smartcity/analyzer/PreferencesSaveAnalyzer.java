@@ -135,6 +135,10 @@ public class PreferencesSaveAnalyzer {
     private static String obtainOldText(int status) {
         String oldText = null;
         switch (status) {
+            case SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST:
+                oldText = SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_WARN, Context
+                        .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
+                break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN:
                 oldText = SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_WARN, Context
                         .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");

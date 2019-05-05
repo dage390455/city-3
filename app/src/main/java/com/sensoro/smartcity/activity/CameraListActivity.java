@@ -533,6 +533,7 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
                 if (cameraListTvSearchCancel.getVisibility() == View.VISIBLE) {
                     cameraListEtSearch.getText().clear();
                 }
+                filterHashMap.remove("search");
                 mPresenter.getDeviceCameraListByFilter(filterHashMap);
                 setSearchHistoryVisible(false);
                 AppUtils.dismissInputMethodManager(CameraListActivity.this, cameraListEtSearch);
