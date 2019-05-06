@@ -202,12 +202,12 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
                 if (null != hashMap && hashMap.size() > 0) {
                     filterHashMap.putAll(hashMap);
                     cameraListIvFilter.setImageResource(R.drawable.camera_filter_selected);
-                    mPresenter.getDeviceCameraListByFilter(hashMap);
                 } else {
 
                     mPresenter.clearMap();
                     cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
                 }
+                mPresenter.getDeviceCameraListByFilter(hashMap);
             }
         });
 
@@ -314,6 +314,7 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
                     public void onItemClick(View view, int position) {
                         String text = mSearchHistoryAdapter.getSearchHistoryList().get(position);
                         if (!TextUtils.isEmpty(text)) {
+                            filterHashMap.put("search", text);
                             cameraListEtSearch.setText(text);
                             cameraListEtSearch.setSelection(cameraListEtSearch.getText().toString().length());
                         }
@@ -499,7 +500,7 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
                 break;
             case R.id.camera_list_iv_top_back:
                 finishAc();
-                AppUtils.dismissInputMethodManager(mActivity,cameraListEtSearch);
+                AppUtils.dismissInputMethodManager(mActivity, cameraListEtSearch);
                 break;
 
             case R.id.camera_list_iv_filter:
