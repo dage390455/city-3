@@ -27,9 +27,27 @@ public class DeviceCameraInfo implements Serializable {
     private InfoBean info;
     private String mobilePhone;
     private String id;
-    private String orientation;
-    private String installationMode;
+    private String orientationName;
+    private String installationModeName;
     private String deviceStatus;//摄像机在线状态
+
+    public String getInstallationModeName() {
+        return installationModeName;
+    }
+
+    public void setInstallationModeName(String installationModeName) {
+        this.installationModeName = installationModeName;
+    }
+
+    public String getDeviceStatus() {
+        return deviceStatus;
+    }
+
+    public void setDeviceStatus(String deviceStatus) {
+        this.deviceStatus = deviceStatus;
+    }
+
+
 
 
     private List<?> label;
@@ -112,6 +130,14 @@ public class DeviceCameraInfo implements Serializable {
 
     public void setLabel(List<?> label) {
         this.label = label;
+    }
+
+    public String getOrientationName() {
+        return orientationName;
+    }
+
+    public void setOrientationName(String orientationName) {
+        this.orientationName = orientationName;
     }
 
     public static class InfoBean implements Serializable{

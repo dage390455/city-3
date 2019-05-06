@@ -177,6 +177,28 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
     }
 
+
+    /**
+     * 重播
+     */
+
+    public void replay() {
+        GSYVideoManager.onPause();
+
+        tiptv.setText(getResources().getString(R.string.played));
+        playBtn.setText(getResources().getString(R.string.replay));
+        playBtn.setVisibility(VISIBLE);
+
+        rMobileData.setVisibility(VISIBLE);
+        playRetryBtn.setVisibility(GONE);
+        mask_title_tv.setText(mTitle);
+
+
+//        rMobileData.setBackgroundColor(Color.parseColor("#5d5d5d"));
+
+
+    }
+
     /**
      * 底部进度条是否显示，直播不显示
      *
@@ -281,8 +303,12 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
                         }
 
                         break;
+                    default:
+                        break;
 
                 }
+
+
             }
         }
     }
@@ -310,19 +336,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
         back_mask_tv = findViewById(R.id.mask_iv_back);
         mask_title_tv = findViewById(R.id.mask_title_tv);
-//        mask_layout_top = findViewById(R.id.mask_layout_top);
         tiptv = findViewById(R.id.tip_data_tv);
-
-
-//        playBtn.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (rMobileData.getVisibility() == VISIBLE) {
-//                    rMobileData.setVisibility(GONE);
-//                    GSYVideoManager.onResume();
-//                }
-//            }
-//        });
 
 
         back_mask_tv.setOnClickListener(new OnClickListener() {
@@ -332,23 +346,9 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
                 if (getContext() instanceof Activity) {
                     ((Activity) getContext()).finish();
                 }
-//                getContext().
             }
         });
 
-
-//        playBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                GSYVideoManager.onResume();
-//                rMobileData.setVisibility(GONE);
-//
-////                    gsyVideoOption.setUrl(url1).build(getCurPlay());
-////                    getCurPlay().startPlayLogic();
-//
-//            }
-//        });
 
         audioIv = findViewById(R.id.audio_iv);
         audioIv.setOnClickListener(new OnClickListener() {
@@ -372,11 +372,6 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
             }
         });
 
-        //增加自定义ui
-
-//        if (mBottomProgressDrawable != null) {
-//            mBottomProgressBar.setProgressDrawable(mBottomProgressDrawable);
-//        }
 
         if (mBottomShowProgressDrawable != null) {
             mProgressBar.setProgressDrawable(mBottomProgressDrawable);
@@ -387,12 +382,9 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         }
 
         IntentFilter intentFilter = new IntentFilter();
-//                intentFilter.addAction(Intent.ACTION_SCREEN_ON);
-//                intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
         intentFilter.addAction(Intent.ACTION_USER_PRESENT);
         intentFilter.addAction(Intent.ACTION_LOCALE_CHANGED);
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-//        CONNECTIVITY_CHANGE WIFI_STATE_CHANGED&STATE_CHANGE
         broadcastReceiver = new ScreenBroadcastReceiver();
         mContext.registerReceiver(broadcastReceiver, intentFilter);
 
@@ -410,26 +402,13 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         prepareVideo();
         startDismissControlViewTimer();
 
-
-//        if (!NetworkUtils.isAvailable(getContext())) {
-//            changeNoDataType();
-//        }
-//        if (!NetworkUtils.isWifiConnected(getContext())) {
-//            changeMobileType();
-//
-//        }
         rMobileData.setVisibility(GONE);
     }
 
     public void hide() {
-//        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOGIN_NAME_PWD, Context
-//                .MODE_PRIVATE);
-//        int islive = sp.getInt("islive", 0);
         setViewShowState(mProgressBar, isLive);
-//        setViewShowState(mCurrentTimeTextView, islive);
 
         setViewShowState(mTotalTimeTextView, isLive);
-//        setViewShowState(mBottomProgressBar, isLive);
 
     }
 
@@ -1207,11 +1186,43 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     }
 
     @Override
-    protected void releaseVideos() {
-        super.releaseVideos();
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
 
         if (broadcastReceiver != null) {
             mContext.unregisterReceiver(broadcastReceiver);
         }
+    }
+
+
+    @Override
+    public void onAutoCompletion() {
+        super.onAutoCompletion();
+
+        if (replayListener != null) {
+
+            replayListener.rePlay();
+            replay();
+        }
+
+    }
+
+
+    private ReplayListener replayListener;
+
+    public void setReplayListener(ReplayListener listener) {
+        replayListener = listener;
+
+    }
+
+    public interface ReplayListener {
+
+        void rePlay();
+    }
+
+    @Override
+    protected void releaseVideos() {
+        super.releaseVideos();
+
     }
 }
