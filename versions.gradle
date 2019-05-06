@@ -1,0 +1,86 @@
+/**
+ * Shared file between builds so that they can all use the same dependencies and
+ * maven repositories.
+ **/
+ext.deps = [:]
+
+def versions = [:]
+versions.android_gradle_plugin = '3.3.2'
+versions.support = "27.1.1"
+versions.multidex = "1.0.3"
+versions.constraint_layout = "1.2.3"
+versions.glide = "3.7.0"
+versions.rxjava2 = "2.2.8"
+versions.rx_android = "2.1.1"
+versions.retrofit = "2.5.0"
+versions.event_bus = "3.1.1"
+versions.gson = "2.8.2"
+versions.permission = "2.0.0-rc12"
+versions.utils = "1.10.0"
+versions.top_snackbar = "1.1.1"
+versions.litepal = "1.6.1"
+versions.toasty = "1.1.3"
+versions.logger = "1.15"
+versions.material_dialog = "0.9.6.0"
+//Arouter
+versions.arouter_compiler = "1.1.4"
+versions.arouter_api = "1.3.1"
+
+
+def deps = [:]
+
+def support = [:]
+support.annotations = "com.android.support:support-annotations:$versions.support"
+support.app_compat = "com.android.support:appcompat-v7:$versions.support"
+support.v4 = "com.android.support:support-v4:$versions.support"
+support.recyclerview = "com.android.support:recyclerview-v7:$versions.support"
+support.cardview = "com.android.support:cardview-v7:$versions.support"
+support.design = "com.android.support:design:$versions.support"
+support.multidex = "com.android.support:multidex:$versions.multidex"
+deps.support = support
+
+
+def retrofit = [:]
+retrofit.runtime = "com.squareup.retrofit2:retrofit:$versions.retrofit"
+retrofit.adapter = "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofi"
+retrofit.gson = "com.squareup.retrofit2:converter-gson:$versions.retrofit"
+deps.retrofit = retrofit
+
+
+//view
+deps.constraint_layout = "com.android.support.constraint:constraint-layout:$versions.constraint_layout"
+
+deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
+deps.rxjava2 = "io.reactivex.rxjava2:rxjava:$versions.rxjava2"
+deps.rx_android = "io.reactivex.rxjava2:rxandroid:$versions.rx_android"
+//other
+deps.glide = "com.github.bumptech.glide:glide:$versions.glide"
+deps.event_bus = "org.greenrobot:eventbus:$versions.event_bus"
+deps.gson = "com.google.code.gson:gson:$versions.gson"
+deps.permission = "com.yanzhenjie:permission:$versions.permission"
+//
+deps.arouter_api = "com.alibaba:arouter-api:$versions.arouter_api"
+deps.arouter_compiler = "com.alibaba:arouter-compiler:$versions.arouter_compiler"
+
+ext.deps = deps
+
+def build_versions = [:]
+build_versions.min_sdk = 21
+build_versions.target_sdk = 21
+build_versions.compile_sdk = 27
+build_versions.build_tools = "27.0.3"
+ext.build_versions = build_versions
+
+
+def addRepos(RepositoryHandler handler) {
+    handler.google()
+//    handler.jcenter()
+    handler.jcenter { "http://jcenter.bintray.com/" }
+    handler.mavenCentral()
+    //Add the JitPack repository
+    handler.maven { url "https://jitpack.io" }
+    handler.maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    handler.mavenCentral()
+}
+
+ext.addRepos = this.&addRepos

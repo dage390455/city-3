@@ -12,7 +12,7 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/item_adapter_alarm_cantact_add_ll"
+        android:layout_above="@+id/item_adapter_alarm_contact_add_ll"
         android:layout_below="@+id/ac_alarm_contact_title"
 
         android:background="@color/c_f4f4f4">
@@ -73,11 +73,12 @@
     </android.support.v4.widget.NestedScrollView>
 
     <LinearLayout
-        android:id="@+id/item_adapter_alarm_cantact_add_ll"
+        android:id="@+id/item_adapter_alarm_contact_add_ll"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:layout_alignParentBottom="true"
         android:background="@color/white"
+        android:visibility="gone"
         android:gravity="center">
 
 

@@ -341,7 +341,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
     public void backToCurrentLocation() {
         List<Double> lonlat = mDeviceInfo.getLonlat();
 
-        if (lonlat != null && lonlat.size() > 2 && lonlat.get(0) != 0 && lonlat.get(1) != 0) {
+        if (lonlat != null && lonlat.size() == 2 && lonlat.get(0) != 0 && lonlat.get(1) != 0) {
             double lat = lonlat.get(1);//获取纬度
             double lon = lonlat.get(0);//获取经度
             LatLng latLng = new LatLng(lat, lon);

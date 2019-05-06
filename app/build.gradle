@@ -1,5 +1,12 @@
 apply plugin: 'com.android.application'
 //apply plugin: 'android-apt'
+// Create a variable called keystorePropertiesFile, and initialize it to your
+// keystore.properties file, in the rootProject folder.
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+// Initialize a new Properties() object called keystoreProperties.
+def keystoreProperties = new Properties()
+// Load your keystore.properties file into the keystoreProperties object.
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 android {
     def verName = "3.3.1"
     def verCode = 1
@@ -10,25 +17,35 @@ android {
 
     signingConfigs {
         release {
-            keyAlias 'sensoro'
-            keyPassword 'sensoro'
-            storeFile file('/Users/sensoro/Work/AppKey/sensoro.keystore')
-            storePassword 'sensoro'
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+
+//            keyAlias 'sensoro'
+//            keyPassword 'sensoro'
+//            storeFile file('sensoro.keystore')
+//            storePassword 'sensoro'
         }
         debug {
-            keyAlias 'sensoro'
-            keyPassword 'sensoro'
-            storeFile file('/Users/sensoro/Work/AppKey/sensoro.keystore')
-            storePassword 'sensoro'
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+
+//            keyAlias 'sensoro'
+//            keyPassword 'sensoro'
+//            storeFile file('sensoro.keystore')
+//            storePassword 'sensoro'
         }
     }
-    compileSdkVersion 27
+    compileSdkVersion build_versions.compile_sdk
     //    useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.sensoro.smartcity"
-        minSdkVersion 21
+        minSdkVersion build_versions.min_sdk
         //考虑到vcamera库只能在23以下
-        targetSdkVersion 21
+        targetSdkVersion build_versions.target_sdk
         versionCode verCode
         versionName verName + connector + buildCode
 //         Enabling multidex support.

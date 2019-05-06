@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,8 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
 //    LinearLayout acNameAddressLlAddNamePhone;
     @BindView(R.id.rc_add_alarm_contact)
     RecyclerView rcAddAlarmContactRv;
+    @BindView(R.id.item_adapter_alarm_contact_add_ll)
+    LinearLayout itemAdapterAlarmContactAddLl;
     private AlarmContactHistoryAdapter mHistoryAdapter;
     private AlarmContactRcContentAdapter mAlarmContactRcContentAdapter;
     private TipOperationDialogUtils historyClearDialog;
