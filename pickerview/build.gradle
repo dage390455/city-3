@@ -3,11 +3,11 @@ apply plugin: 'com.android.library'
 
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion build_versions.compile_sdk
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 26
+        minSdkVersion build_versions.min_sdk
+        targetSdkVersion build_versions.target_sdk
         versionCode 32
         versionName "4.1.7"
         flavorDimensions "default"
@@ -36,5 +36,5 @@ allprojects {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(path: ':wheelview')
-    implementation 'com.android.support:support-annotations:28.0.0'
+    implementation deps.support.annotations
 }
