@@ -200,6 +200,8 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
 
             filterHashMap = map;
             hashMap.putAll(map);
+        } else {
+            filterHashMap.clear();
         }
 
         requestData(hashMap);

@@ -198,10 +198,10 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
                 if (null != hashMap && hashMap.size() > 0) {
                     filterHashMap.putAll(hashMap);
                     cameraListIvFilter.setImageResource(R.drawable.camera_filter_selected);
-                    mPresenter.getDeviceCameraListByFilter(hashMap);
                 } else {
                     cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
                 }
+                mPresenter.getDeviceCameraListByFilter(hashMap);
             }
         });
 
