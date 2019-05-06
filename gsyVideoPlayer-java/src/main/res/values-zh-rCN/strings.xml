@@ -17,5 +17,6 @@
     <string name="jump_ad">跳过</string>
     <string name="played">"录像已播放完毕"</string>
     <string name="replay">"重播"</string>
-
+    <string name="video">"录像"</string>
+    <string name="live">"直播"</string>
 </resources>

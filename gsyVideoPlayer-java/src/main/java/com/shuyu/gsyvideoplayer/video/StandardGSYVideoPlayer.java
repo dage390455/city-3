@@ -56,6 +56,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     private RelativeLayout rMobileData;
 
     private static int isLive;
+    private static boolean audioIsChecked;
 
     public Button getPlayBtn() {
         return playBtn;
@@ -196,7 +197,6 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         mask_title_tv.setText(mTitle);
 
 
-//        rMobileData.setBackgroundColor(Color.parseColor("#5d5d5d"));
 
 
     }
@@ -209,28 +209,15 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     public void changeBottomContainer(int islive) {
 
         if (islive == View.INVISIBLE) {
-            mStateTv.setText("直播");
+            mStateTv.setText(R.string.live);
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_29c_shadow);
         } else {
-            mStateTv.setText("录像");
+            mStateTv.setText(R.string.video);
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_f48f57_shadow);
         }
 
         isLive = islive;
-//        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOGIN_NAME_PWD, Context
-//                .MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sp.edit();
-//        editor.putInt("islive", islive);
-//        editor.apply();
-//        if (islive == VISIBLE) {
-//            mProgressBar.setProgressDrawable(getResources().getDrawable(R.drawable.city_video_seek_progress));
-//            mProgressBar.setThumb(getResources().getDrawable(R.drawable.video_seek_thumb));
-//        } else {
-//            mProgressBar.setProgressDrawable(null);
-//            mProgressBar.setThumb(null);
-//        }
         hide();
-//        invalidate();
 
 
     }
@@ -357,6 +344,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
+                audioIsChecked = isChecked;
                 if (isChecked) {
 //                    audioIv.setBackgroundDrawable(getResources().getDrawable(R.drawable.audio_off));
 
@@ -1161,37 +1149,16 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        int mGestureDownVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-
-//        if (mGestureDownVolume > 0) {
-//            audioIv.setImageResource(R.drawable.audio_off);
-//
-//            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
-//        } else {
-//            audioIv.setImageResource(R.drawable.audio_on);
-//
-//            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 5, 0);
-//
-//        }
 
         if (isLive == View.INVISIBLE) {
-            mStateTv.setText("直播");
+            mStateTv.setText(getResources().getString(R.string.live));
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_29c_shadow);
         } else {
-            mStateTv.setText("录像");
+            mStateTv.setText(getResources().getString(R.string.video));
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_f48f57_shadow);
         }
 
-//        if (audioIv.isChecked()) {
-//            audioIv.setBackgroundDrawable(getResources().getDrawable(R.drawable.audio_off));
-//
-//            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
-//        } else {
-//            audioIv.setBackgroundDrawable(getResources().getDrawable(R.drawable.audio_on));
-//
-//            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 5, 0);
-//
-//        }
+        audioIv.setChecked(audioIsChecked);
     }
 
     @Override
