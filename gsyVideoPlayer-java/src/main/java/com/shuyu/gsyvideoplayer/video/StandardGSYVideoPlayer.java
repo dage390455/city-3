@@ -1171,8 +1171,12 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-        if (broadcastReceiver != null) {
-            mContext.unregisterReceiver(broadcastReceiver);
+        try {
+            if (broadcastReceiver != null) {
+                mContext.unregisterReceiver(broadcastReceiver);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

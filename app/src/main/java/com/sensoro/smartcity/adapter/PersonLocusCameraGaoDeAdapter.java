@@ -89,7 +89,7 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
         if (imageView == null) {
             imageView = new ImageView(mContext);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setImageResource(R.mipmap.ic_launcher);
+//            imageView.setImageResource(R.mipmap.ic_launcher);
         }
 
 
@@ -104,7 +104,7 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
                 .setNeedLockFull(true)
 //                .setUrl(url)
                 .setCacheWithPlay(false)
-                .setVideoTitle("测试视频")
+//                .setVideoTitle("测试视频")
                 .setVideoAllCallBack(new GSYSampleCallBack() {
                     @Override
                     public void onPrepared(String url, Object... objects) {

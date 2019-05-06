@@ -476,6 +476,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 //                        toolbarDirection == DIRECTION_DOWN) {
 ////                    mListRecyclerView.setre
 //                }
+
                 if (linearLayoutManager.findFirstVisibleItemPosition() > 4) {
                     if (newState == 0) {
                         mReturnTopImageView.setVisibility(View.VISIBLE);

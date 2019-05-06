@@ -47,7 +47,8 @@
                     android:layout_gravity="bottom"
                     android:scaleType="centerInside"
                     android:padding="10dp"
-                    android:src="@drawable/ic_move_left"/>
+                    android:src="@drawable/ic_move_left"
+                    />
 
                 <com.warkiz.widget.IndicatorSeekBar
                     android:id="@+id/seek_bar_track_ac_person_locus"
