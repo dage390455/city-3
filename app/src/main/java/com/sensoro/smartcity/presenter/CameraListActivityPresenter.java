@@ -216,7 +216,8 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
             @Override
             public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
 
-                if (hashMap.containsKey("page") && hashMap.get("page").equals("1")) {
+
+                if (cur_page == 1) {
                     deviceCameraInfos.clear();
                 }
                 List<DeviceCameraInfo> data = deviceCameraListRsp.getData();
