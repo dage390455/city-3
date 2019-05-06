@@ -21,10 +21,12 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.R;
@@ -71,7 +73,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
     private ImageView back_mask_tv;
     //    private RelativeLayout mask_layout_top;
-    private ImageView audioIv;
+    private ToggleButton audioIv;
 
     private TextView mask_title_tv;
     //亮度dialog
@@ -351,24 +353,20 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
 
         audioIv = findViewById(R.id.audio_iv);
-        audioIv.setOnClickListener(new OnClickListener() {
+        audioIv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                int mGestureDownVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if (mGestureDownVolume > 0) {
-                    audioIv.setImageResource(R.drawable.audio_off);
+                if (isChecked) {
+//                    audioIv.setBackgroundDrawable(getResources().getDrawable(R.drawable.audio_off));
 
                     mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
                 } else {
-                    audioIv.setImageResource(R.drawable.audio_on);
+//                    audioIv.setBackgroundDrawable(getResources().getDrawable(R.drawable.audio_on));
 
                     mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 5, 0);
 
                 }
-
-
-//                audioIv.getsr
             }
         });
 
@@ -1165,16 +1163,16 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
         int mGestureDownVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
-        if (mGestureDownVolume > 0) {
-            audioIv.setImageResource(R.drawable.audio_off);
-
-            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
-        } else {
-            audioIv.setImageResource(R.drawable.audio_on);
-
-            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 5, 0);
-
-        }
+//        if (mGestureDownVolume > 0) {
+//            audioIv.setImageResource(R.drawable.audio_off);
+//
+//            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+//        } else {
+//            audioIv.setImageResource(R.drawable.audio_on);
+//
+//            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 5, 0);
+//
+//        }
 
         if (isLive == View.INVISIBLE) {
             mStateTv.setText("直播");
@@ -1183,6 +1181,17 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
             mStateTv.setText("录像");
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_f48f57_shadow);
         }
+
+//        if (audioIv.isChecked()) {
+//            audioIv.setBackgroundDrawable(getResources().getDrawable(R.drawable.audio_off));
+//
+//            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+//        } else {
+//            audioIv.setBackgroundDrawable(getResources().getDrawable(R.drawable.audio_on));
+//
+//            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 5, 0);
+//
+//        }
     }
 
     @Override

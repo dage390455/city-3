@@ -143,9 +143,9 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                     intent.setClass(mContext, CameraDetailActivity.class);
                     intent.putExtra("cid", cid);
                     intent.putExtra("hls", hls);
-                    intent.putExtra("cameraName",name);
+                    intent.putExtra("cameraName", name);
                     getView().startAC(intent);
-                }else{
+                } else {
                     getView().toastShort(mContext.getString(R.string.camera_info_get_failed));
 
                 }
@@ -207,15 +207,18 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
     }
 
 
-    public void requestData(HashMap hashMap) {
+    public void requestData(final HashMap hashMap) {
 
         if (isAttachedView()) {
             getView().showProgressDialog();
         }
-        RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(hashMap).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(null) {
+        RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(hashMap).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(this) {
             @Override
             public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
-                deviceCameraInfos.clear();
+
+                if (hashMap.containsKey("page") && hashMap.get("page").equals("1")) {
+                    deviceCameraInfos.clear();
+                }
                 List<DeviceCameraInfo> data = deviceCameraListRsp.getData();
                 if (data != null && data.size() > 0) {
                     deviceCameraInfos.addAll(data);
