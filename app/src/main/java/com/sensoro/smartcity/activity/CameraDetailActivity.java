@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -67,16 +69,14 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     LinearLayout llSelectTimeAcCameraDetail;
     @BindView(R.id.rv_device_camera_ac_camera_detail)
     RecyclerView rvDeviceCameraAcCameraDetail;
-    //    @BindView(R.id.detail_player)
-//    StandardGSYVideoPlayer detailPlayer;
-//    @BindView(R.id.tv_time)
-//    TextView tvTime;
-//    @BindView(R.id.ll_time)
-//    LinearLayout llTime;
-//    @BindView(R.id.rv_device_camera)
-//    RecyclerView rvDeviceCamera;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
+    @BindView(R.id.alarm_return_top)
+    ImageView mReturnTopImageView;
+    @BindView(R.id.no_content)
+    ImageView imv_content;
+    @BindView(R.id.ic_no_content)
+    LinearLayout icNoContent;
     @BindView(R.id.activity_detail_player)
     LinearLayout activityDetailPlayer;
     private boolean isPlay;
@@ -87,6 +87,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     private GSYVideoOptionBuilder gsyVideoOption;
     private ImmersionBar immersionBar;
     private ImageView imageView;
+    private Animation returnTopAnimation;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -115,6 +116,10 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         initRefreshLayout();
 
         initRvCameraList();
+
+        returnTopAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.return_top_in_anim);
+        mReturnTopImageView.setAnimation(returnTopAnimation);
+        mReturnTopImageView.setVisibility(View.GONE);
 
         getCurPlay().setEnlargeImageRes(R.drawable.ic_camera_full_screen);
 
@@ -254,6 +259,13 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         if (data != null) {
             deviceCameraListAdapter.updateData(data);
         }
+
+        setNoContentVisible(data == null || data.size() < 1);
+    }
+
+    public void setNoContentVisible(boolean isVisible) {
+        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        rvDeviceCameraAcCameraDetail.setVisibility(isVisible ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -432,9 +444,16 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     }
 
+    @Override
+    public void setGsyVideoNoVideo() {
+        gsyPlayerAcCameraDetail.onVideoPause();
+        gsyPlayerAcCameraDetail.setNoVideo();
+    }
+
     private void initRvCameraList() {
         deviceCameraListAdapter = new CameraDetailListAdapter(this);
-        rvDeviceCameraAcCameraDetail.setLayoutManager(new LinearLayoutManager(this));
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rvDeviceCameraAcCameraDetail.setLayoutManager(linearLayoutManager);
         rvDeviceCameraAcCameraDetail.setAdapter(deviceCameraListAdapter);
 
         deviceCameraListAdapter.setOnCameraDetailListClickListener(new CameraDetailListAdapter.CameraDetailListClickListener() {
@@ -449,30 +468,34 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 mPresenter.doPersonAvatarHistory(position);
             }
         });
-//        deviceCameraListAdapter.setOnContentItemClickListener(new DeviceCameraListAdapter.OnDeviceCameraListClickListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                LinearLayoutManager manager = (LinearLayoutManager) rvDeviceCameraAcCameraDetail.getLayoutManager();
-//                int firstVisibleItemPosition = manager.findFirstVisibleItemPosition();
-//                View childAt = rvDeviceCameraAcCameraDetail.getChildAt(position - firstVisibleItemPosition);
-//                int top = childAt.getTop();
-//                rvDeviceCameraAcCameraDetail.smoothScrollBy(0, top);
-//
-//                mPresenter.onCameraItemClick(position - 1);
-//
-//            }
-//
-//
-//            @Override
-//            public void onLiveClick() {
-//                mPresenter.doLive();
-//            }
-//
-//            @Override
-//            public void onAvatarClick(int modelPosition, int avatarPosition) {
-//                mPresenter.doPersonAvatarHistory(modelPosition, avatarPosition);
-//            }
-//        });
+        rvDeviceCameraAcCameraDetail.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+//                if (xLinearLayoutManager.findFirstVisibleItemPosition() == 0 && newState == SCROLL_STATE_IDLE &&
+//                        toolbarDirection == DIRECTION_DOWN) {
+////                    mListRecyclerView.setre
+//                }
+                if (linearLayoutManager.findFirstVisibleItemPosition() > 4) {
+                    if (newState == 0) {
+                        mReturnTopImageView.setVisibility(View.VISIBLE);
+                        if (returnTopAnimation != null && returnTopAnimation.hasEnded()) {
+                            mReturnTopImageView.startAnimation(returnTopAnimation);
+                        }
+                    } else {
+                        mReturnTopImageView.setVisibility(View.GONE);
+                    }
+                } else {
+                    mReturnTopImageView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+            }
+        });
         rvDeviceCameraAcCameraDetail.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -599,7 +622,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         SensoroToast.getInstance().makeText(msg, Toast.LENGTH_LONG).show();
     }
 
-    @OnClick({R.id.ll_select_time_ac_camera_detail, R.id.iv_time_close_ac_camera_detail, R.id.ll_live_ac_camera_detail})
+    @OnClick({R.id.ll_select_time_ac_camera_detail, R.id.iv_time_close_ac_camera_detail,
+            R.id.ll_live_ac_camera_detail,R.id.alarm_return_top})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ll_select_time_ac_camera_detail:
@@ -613,6 +637,11 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 clearClickPosition();
                 setLiveState(true);
                 mPresenter.doLive();
+                break;
+            case R.id.alarm_return_top:
+                rvDeviceCameraAcCameraDetail.smoothScrollToPosition(0);
+                mReturnTopImageView.setVisibility(View.GONE);
+                refreshLayout.closeHeaderOrFooter();
                 break;
 
         }

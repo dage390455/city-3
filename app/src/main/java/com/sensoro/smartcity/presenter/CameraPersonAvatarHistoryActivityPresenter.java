@@ -54,8 +54,9 @@ public class CameraPersonAvatarHistoryActivityPresenter extends BasePresenter<IC
             curPage = 0;
         }
 
+        //人脸记录从服务器可以获取到30天的数据，但是，视频记录，羚羊云方面只能保留7天的历史视频，所以这里只请求7天的人脸记录
         Long endTime = System.currentTimeMillis();
-        Long startTime = endTime - 24*60*60*1000*30L;
+        Long startTime = endTime - 24*60*60*1000*7L;
         if (isAttachedView()) {
             getView().showProgressDialog();
         }

@@ -65,6 +65,7 @@
                     app:isb_track_background_bar_size="2dp"
                     app:isb_track_progress_bar_color="#119F82"
                     app:isb_track_progress_bar_size="3dp"
+                    android:visibility="visible"
                     />
 
 
@@ -79,11 +80,13 @@
             </LinearLayout>
             <TextView
                 android:id="@+id/tv_address_right_ac_person_locus"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:textSize="14sp"
+                android:singleLine="true"
+                android:ellipsize="start"
                 android:textColor="@color/c_252525"
                 android:drawableStart="@drawable/person_locus_location_address"
                 android:drawablePadding="18dp"

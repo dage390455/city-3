@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
@@ -197,6 +198,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         mask_title_tv.setText(mTitle);
 
 
+        rMobileData.setBackgroundColor(Color.parseColor("#66000000"));
 
 
     }
@@ -204,19 +206,19 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     /**
      * 底部进度条是否显示，直播不显示
      *
-     * @param islive
+     * @param isLive
      */
-    public void changeBottomContainer(int islive) {
+    public void changeBottomContainer(int isLive) {
 
-        if (islive == View.INVISIBLE) {
+        if (isLive == View.INVISIBLE) {
             mStateTv.setText(R.string.live);
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_29c_shadow);
         } else {
-            mStateTv.setText(R.string.video);
+            mStateTv.setText(R.string.gsy_video);
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_f48f57_shadow);
         }
 
-        isLive = islive;
+        StandardGSYVideoPlayer.isLive = isLive;
         hide();
 
 
@@ -1145,6 +1147,12 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         startDismissControlViewTimer();
     }
 
+    public void setNoVideo(){
+        rMobileData.setVisibility(VISIBLE);
+        tiptv.setText(getResources().getString(R.string.no_vido));
+        playBtn.setVisibility(GONE);
+    }
+
     @Override
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -1154,7 +1162,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
             mStateTv.setText(getResources().getString(R.string.live));
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_29c_shadow);
         } else {
-            mStateTv.setText(getResources().getString(R.string.video));
+            mStateTv.setText(getResources().getString(R.string.gsy_video));
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_f48f57_shadow);
         }
 

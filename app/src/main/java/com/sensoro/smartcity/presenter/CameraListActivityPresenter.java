@@ -228,12 +228,22 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                     deviceCameraInfos.clear();
                 }
                 List<DeviceCameraInfo> data = deviceCameraListRsp.getData();
+
+
+                if (data.size() == 0) {
+                    if (isAttachedView()) {
+                        getView().toastShort(mContext.getString(R.string.no_more_data));
+                        getView().onPullRefreshCompleteNoMoreData();
+                    }
+                }
                 if (data != null && data.size() > 0) {
                     deviceCameraInfos.addAll(data);
                 }
                 getView().updateDeviceCameraAdapter(deviceCameraInfos);
                 getView().onPullRefreshComplete();
                 getView().dismissProgressDialog();
+
+
             }
 
             @Override
@@ -249,18 +259,21 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
     public void requestDataByFilter(final int direction) {
         HashMap hashMap = new HashMap(16);
         hashMap.put("pageSize", 20);
-        hashMap.put("page", cur_page);
         if (filterHashMap.size() > 0) {
             hashMap.putAll(filterHashMap);
         }
         switch (direction) {
             case DIRECTION_DOWN:
                 cur_page = 1;
+                hashMap.put("page", cur_page);
+
 
                 requestData(hashMap);
                 break;
             case DIRECTION_UP:
                 cur_page++;
+                hashMap.put("page", cur_page);
+
                 requestData(hashMap);
 
                 break;

@@ -73,10 +73,10 @@ public class CameraListFilterPopupWindow {
 
         mPopupWindow = new PopupWindow(activity);
         mPopupWindow.setContentView(view);
-        mPopupWindow.setOutsideTouchable(true);
+//        mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
 
-        mPopupWindow.setFocusable(true);
+//        mPopupWindow.setFocusable(true);
         mPopupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_aa000000)));
         mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
@@ -94,18 +94,14 @@ public class CameraListFilterPopupWindow {
 
                         for (CameraFilterModel.ListBean countModel : model.getList()) {
 
-                            countModel.setSelect(false);
+//                            countModel.setSelect(false);
+                            countModel.setReset(true);
+
                         }
 
                     }
 
                     cameraListPopAdapter.notifyDataSetChanged();
-                    if (mSelectModleListener != null) {
-
-                        mSelectModleListener.selectedListener(null);
-                    }
-//                    cameraListPopAdapter = new CameraListPopAdapter(activity);
-//                    mRcStateSelect.setAdapter(cameraListPopAdapter);
                 }
 
 
@@ -129,7 +125,13 @@ public class CameraListFilterPopupWindow {
 
                         for (CameraFilterModel.ListBean listBean : model.getList()) {
 
-                            if (listBean.isSelect()) {
+                            if (listBean.isReset()) {
+                                listBean.setSelect(false);
+
+                            }
+
+
+                            if (listBean.isSelect() && !listBean.isReset()) {
                                 stringBuffer.append(listBean.getCode());
 
                                 stringBuffer.append(",");
@@ -196,6 +198,23 @@ public class CameraListFilterPopupWindow {
      * poup 展示在某个控件下
      */
     public void showAsDropDown(View view) {
+        if (null != cameraListPopAdapter.getmStateCountList()) {
+
+
+            List<CameraFilterModel> list = cameraListPopAdapter.getmStateCountList();
+
+            for (CameraFilterModel model : list) {
+
+                for (CameraFilterModel.ListBean countModel : model.getList()) {
+
+                    countModel.setReset(false);
+
+                }
+
+            }
+
+            cameraListPopAdapter.notifyDataSetChanged();
+        }
         if (Build.VERSION.SDK_INT < 24) {
             mPopupWindow.showAsDropDown(view);
         } else {  // 适配 android 7.0
