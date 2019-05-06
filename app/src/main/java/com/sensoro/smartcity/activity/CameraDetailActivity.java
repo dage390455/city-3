@@ -136,25 +136,25 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         });
 
 
-        gsyPlayerAcCameraDetail.setReplayListener(new StandardGSYVideoPlayer.ReplayListener() {
-            @Override
-            public void rePlay() {
-                orientationUtils.setEnable(false);
-
-                gsyPlayerAcCameraDetail.getPlayBtn().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        gsyPlayerAcCameraDetail.changeBottomContainer(View.VISIBLE);
-
-                        gsyVideoOption.setUrl(getCurPlay().mUrl).build(getCurPlay());
-                        getCurPlay().startPlayLogic();
-                        orientationUtils.setEnable(true);
-
-
-                    }
-                });
-            }
-        });
+//        gsyPlayerAcCameraDetail.setReplayListener(new StandardGSYVideoPlayer.ReplayListener() {
+//            @Override
+//            public void rePlay() {
+//                orientationUtils.setEnable(false);
+//
+//                gsyPlayerAcCameraDetail.getPlayBtn().setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        gsyPlayerAcCameraDetail.changeBottomContainer(View.VISIBLE);
+//
+//                        gsyVideoOption.setUrl(getCurPlay().mUrl).build(getCurPlay());
+//                        getCurPlay().startPlayLogic();
+//                        orientationUtils.setEnable(true);
+//
+//
+//                    }
+//                });
+//            }
+//        });
 
     }
 
