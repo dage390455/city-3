@@ -99,6 +99,10 @@ public class CameraListFilterPopupWindow {
                     }
 
                     cameraListPopAdapter.notifyDataSetChanged();
+                    if (mSelectModleListener != null) {
+
+                        mSelectModleListener.selectedListener(null);
+                    }
 //                    cameraListPopAdapter = new CameraListPopAdapter(activity);
 //                    mRcStateSelect.setAdapter(cameraListPopAdapter);
                 }
