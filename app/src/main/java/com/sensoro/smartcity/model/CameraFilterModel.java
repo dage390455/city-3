@@ -57,6 +57,7 @@ public class CameraFilterModel {
         this.list = list;
     }
 
+
     public static class ListBean {
         /**
          * code :
@@ -66,6 +67,7 @@ public class CameraFilterModel {
         private String code;
         private String name;
         private boolean isSelect;
+        private boolean isReset;
 
         public String getCode() {
             return code;
@@ -87,8 +89,17 @@ public class CameraFilterModel {
             return isSelect;
         }
 
+
         public void setSelect(boolean select) {
             isSelect = select;
+        }
+
+        public boolean isReset() {
+            return isReset;
+        }
+
+        public void setReset(boolean reset) {
+            isReset = reset;
         }
     }
 }

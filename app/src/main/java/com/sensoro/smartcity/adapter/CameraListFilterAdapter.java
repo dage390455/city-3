@@ -42,13 +42,16 @@ public class CameraListFilterAdapter extends RecyclerView.Adapter<CameraListFilt
     public void onBindViewHolder(final InspectionTaskStateSelectHolder holder, int position) {
         Resources resources = mContext.getResources();
         final CameraFilterModel.ListBean ic = mStateCountList.get(position);
-        holder.itemPopTvSelectState.setText(ic.getName());
+
+        String name = ic.getName().replace("（", "(").replace("）", ")");
+        holder.itemPopTvSelectState.setText(name);
 
 
-        holder.itemPopSelectLlRoot.setBackgroundResource(!ic.isSelect() ? R.drawable.shape_bg_solid_ff_stroke_df_corner
+        boolean select = ic.isSelect() && !ic.isReset();
+        holder.itemPopSelectLlRoot.setBackgroundResource(!select ? R.drawable.shape_bg_solid_ff_corner
                 : R.drawable.shape_bg_corner_1dbb99_shadow);
 
-        holder.itemPopTvSelectState.setTextColor(resources.getColor(!ic.isSelect() ? R.color.c_252525 : R.color.white));
+        holder.itemPopTvSelectState.setTextColor(resources.getColor(!select ? R.color.c_252525 : R.color.white));
 
         holder.itemPopSelectLlRoot.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +63,8 @@ public class CameraListFilterAdapter extends RecyclerView.Adapter<CameraListFilt
                     }
 
                 }
+
+                ic.setReset(false);
                 ic.setSelect(!ic.isSelect());
                 notifyDataSetChanged();
 

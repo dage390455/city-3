@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
@@ -197,6 +198,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         mask_title_tv.setText(mTitle);
 
 
+        rMobileData.setBackgroundColor(Color.parseColor("#66000000"));
 
 
     }
