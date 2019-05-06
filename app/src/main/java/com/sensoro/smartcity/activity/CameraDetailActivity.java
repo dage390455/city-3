@@ -252,7 +252,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     public void startPlayLogic(final String url1) {
 
 
-//        getCurPlay().getBackButton().setVisibility(View.INVISIBLE);
         if (!NetworkUtils.isAvailable(this) || !NetworkUtils.isWifiConnected(this)) {
             orientationUtils.setEnable(false);
             gsyPlayerAcCameraDetail.getPlayBtn().setOnClickListener(new View.OnClickListener() {
