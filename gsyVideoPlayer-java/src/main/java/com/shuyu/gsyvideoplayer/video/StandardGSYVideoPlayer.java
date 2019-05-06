@@ -1168,6 +1168,22 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         audioIv.setChecked(audioIsChecked);
     }
 
+
+//    @Override
+//    public void onVideoResume() {
+//        super.onVideoResume();
+//
+//        if (isLive == View.INVISIBLE) {
+//            mStateTv.setText(getResources().getString(R.string.live));
+//            mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_29c_shadow);
+//        } else {
+//            mStateTv.setText(getResources().getString(R.string.gsy_video));
+//            mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_f48f57_shadow);
+//        }
+//
+//        audioIv.setChecked(audioIsChecked);
+//    }
+
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
@@ -1184,8 +1200,21 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
 
 //        replayListener.rePlay();
-        replay();
 
+
+//        if (isIfCurrentIsFullscreen()) {
+//
+//            backFromFull(getContext());
+////          OrientationUtils setEnabled(false);
+//        }
+//        postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                replay();
+//
+//            }
+//        }, 300);
+        replay();
 
         playBtn.setOnClickListener(new View.OnClickListener() {
             @Override
