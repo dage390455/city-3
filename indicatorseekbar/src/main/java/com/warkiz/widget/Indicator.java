@@ -242,6 +242,7 @@ public class Indicator {
      */
 
     void show(float touchX) {
+//        boolean showing = mIndicator.isShowing();
         if (mIndicator.isShowing() || !mSeekBar.isEnabled() || !(mSeekBar.getVisibility() == View.VISIBLE)) {
             return;
         }
@@ -261,6 +262,14 @@ public class Indicator {
         mIndicatorText.setText(text);
     }
 
+    void setIndicatorVisible(boolean visible){
+//        mIndicatorText.getParent().setVisibility(visible);
+//        mIndicator.dismiss();
+//        forceHide();
+        mIndicatorView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+
+    }
+
     /**
      * call this method hide the indicator
      */
@@ -278,6 +287,7 @@ public class Indicator {
     public void forceHide() {
         if (mIndicator.isShowing()) {
             mIndicator.dismiss();
+            boolean showing = mIndicator.isShowing();
         }
     }
 

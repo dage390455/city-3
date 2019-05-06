@@ -3,6 +3,7 @@ package com.sensoro.smartcity.server;
 
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
+import com.sensoro.smartcity.server.response.CameraFilterRsp;
 import com.sensoro.smartcity.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractInfoRsp;
@@ -41,6 +42,8 @@ import com.sensoro.smartcity.server.response.UpdateRsp;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
 
+import java.util.Map;
+
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -54,6 +57,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 
@@ -367,5 +371,18 @@ public interface RetrofitService {
 
     @POST("picture/getFaceListById")
     Observable<DeviceCameraPersonFaceRsp> getDeviceCameraPersonFace(@Body RequestBody requestBody);
+
+    /**
+     * 100_camera - 100.026 获取安装方式和朝向选择字典
+     *
+     * @return
+     */
+    @GET("query-dict")
+    Observable<CameraFilterRsp> getCameraFilter();
+
+
+    @GET("cameras")
+    Observable<DeviceCameraListRsp> getDeviceCameraListByFilter(@QueryMap Map map);
+
 }
 

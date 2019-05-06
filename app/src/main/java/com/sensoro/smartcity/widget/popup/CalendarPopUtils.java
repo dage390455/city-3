@@ -91,6 +91,12 @@ public class CalendarPopUtils implements
     public CalendarPopUtils(Activity activity) {
         mActivity = activity;
     }
+
+    /**
+     * 指定日期当天有个小绿点
+     * @param monthStatus
+     * @return
+     */
     public CalendarPopUtils setMonthStatus(int monthStatus) {
        this.monthStatus = monthStatus;
        return this;

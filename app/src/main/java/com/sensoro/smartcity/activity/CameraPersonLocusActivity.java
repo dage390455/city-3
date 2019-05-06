@@ -3,6 +3,7 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.constraint.ConstraintLayout;
@@ -32,7 +33,6 @@ import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.warkiz.widget.IndicatorSeekBar;
 
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,7 +40,7 @@ import butterknife.OnClick;
 
 public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusActivityView, CameraPersonLocusActivityPresenter>
         implements ICameraPersonLocusActivityView, AMap.OnMapLoadedListener, AMap.OnMarkerClickListener, AMap.OnCameraChangeListener
-        , AMap.OnMapClickListener {
+        , AMap.OnMapClickListener, PersonLocusCameraGaoDeAdapter.onVideoButtonClickListener {
 
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
@@ -74,7 +74,6 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
     ImageView ivMoveRightAcPersonLocus;
     private ProgressUtils mProgressUtils;
     private AMap mMap;
-    private ImageView view;
     private Polyline mDisPlayLine;
     private PersonLocusCameraGaoDeAdapter mGaoDeInfoAdapter;
     private Marker mAvatarMarker;
@@ -84,9 +83,9 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
         setContentView(R.layout.activity_person_locus);
         ButterKnife.bind(this);
         mvAcPersonLocus.onCreate(savedInstanceState);
-        view = findViewById(R.id.imv);
         initView();
         mPresenter.initData(mActivity);
+
     }
 
 
@@ -133,18 +132,22 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.getUiSettings().setLogoBottomMargin(-100);
         mGaoDeInfoAdapter = new PersonLocusCameraGaoDeAdapter(mActivity);
+        mGaoDeInfoAdapter.setOnCloseClickListener(this);
         mMap.setInfoWindowAdapter(mGaoDeInfoAdapter);
         mMap.setMapCustomEnable(true);
         mMap.setOnMapLoadedListener(this);
         mMap.setOnMarkerClickListener(this);
         mMap.setOnCameraChangeListener(this);
         mMap.setOnMapClickListener(this);
+
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mGaoDeInfoAdapter.onConfigurationChanged(newConfig);
+        seekBarTrackAcPersonLocus.setIndicatorVisible(newConfig.orientation != Configuration.ORIENTATION_LANDSCAPE);
+
     }
 
     @Override
@@ -299,15 +302,6 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
         }
     }
 
-    @Override
-    public ImageView getIMv() {
-        return view;
-    }
-
-    @Override
-    public void clearIMv() {
-        view.setImageDrawable(null);
-    }
 
     @Override
     public void initSeekBar(int size) {
@@ -410,6 +404,7 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
         seekBarTrackAcPersonLocus.setIndicatorText(time);
     }
 
+
     @Override
     public void moveAvatarMarker(LatLng latLng) {
         if (mAvatarMarker != null) {
@@ -419,13 +414,18 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
     }
 
     @Override
+    public void setLastCover(BitmapDrawable bitmapDrawable) {
+        mGaoDeInfoAdapter.setLastCover(bitmapDrawable);
+    }
+
+    @Override
     public void setMarkerTime(String time) {
         tvTimeRightAcPersonLocus.setText(time);
     }
 
     @OnClick({R.id.iv_move_left_ac_person_locus, R.id.iv_move_right_ac_person_locus
             , R.id.tv_one_day_ac_person_locus, R.id.tv_three_day_ac_person_locus
-            , R.id.tv_seven_day_ac_person_locus, R.id.iv_monitor_map_location_ac_person_locus,R.id.include_text_title_imv_arrows_left})
+            , R.id.tv_seven_day_ac_person_locus, R.id.iv_monitor_map_location_ac_person_locus, R.id.include_text_title_imv_arrows_left})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_move_left_ac_person_locus:
@@ -446,7 +446,6 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
             case R.id.iv_monitor_map_location_ac_person_locus:
                 mPresenter.doMonitorMapLocation();
                 break;
-
             case R.id.include_text_title_imv_arrows_left:
                 finishAc();
                 break;
@@ -458,7 +457,7 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
         if (mAvatarMarker != null && mAvatarMarker.isInfoWindowShown()) {
             mAvatarMarker.hideInfoWindow();
             mGaoDeInfoAdapter.onPause();
-        }else{
+        } else {
             super.onBackPressed();
         }
 
@@ -492,5 +491,18 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
             mGaoDeInfoAdapter.onPause();
 
         }
+    }
+
+    @Override
+    public void onCloseClick() {
+        if (mAvatarMarker != null && mAvatarMarker.isInfoWindowShown()) {
+            mAvatarMarker.hideInfoWindow();
+            mGaoDeInfoAdapter.onPause();
+        }
+    }
+
+    @Override
+    public void onFullScreenClick() {
+
     }
 }

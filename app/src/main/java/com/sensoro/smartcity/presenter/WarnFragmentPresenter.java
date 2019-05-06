@@ -80,7 +80,9 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         mContext = (Activity) context;
         onCreate();
         mCalendarPopUtils = new CalendarPopUtils(mContext);
-        mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
+        mCalendarPopUtils
+                .setMonthStatus(1)
+                .setOnCalendarPopupCallbackListener(this);
         if (PreferencesHelper.getInstance().getUserData().hasAlarmInfo) {
             requestSearchData(DIRECTION_DOWN, null);
             mHandler.post(this);

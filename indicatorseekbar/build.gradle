@@ -27,11 +27,11 @@ ext {
 }
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 3
         versionName VERSION_NAME
     }
@@ -45,7 +45,7 @@ android {
 
 dependencies {
     testImplementation 'junit:junit:4.12'
-    implementation 'com.android.support:appcompat-v7:26.+'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
 }
 
 

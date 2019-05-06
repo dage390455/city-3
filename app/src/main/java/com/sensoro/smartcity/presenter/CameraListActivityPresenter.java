@@ -3,22 +3,25 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.provider.ContactsContract;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.CameraDetailActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.CalendarDateModel;
+import com.sensoro.smartcity.model.CameraFilterModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceCameraDetailInfo;
 import com.sensoro.smartcity.server.bean.DeviceCameraInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.smartcity.server.response.CameraFilterRsp;
 import com.sensoro.smartcity.server.response.DeviceCameraDetailRsp;
 import com.sensoro.smartcity.server.response.DeviceCameraListRsp;
-import com.sensoro.smartcity.activity.CameraDetailActivity;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
@@ -28,6 +31,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -64,6 +68,31 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
         EventBus.getDefault().unregister(this);
     }
 
+    public void getFilterPopData() {
+
+        getView().showProgressDialog();
+        RetrofitServiceHelper.getInstance().getCameraFilter().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<CameraFilterRsp>(null) {
+            @Override
+            public void onCompleted(CameraFilterRsp cameraFilterRsp) {
+                List<CameraFilterModel> data = cameraFilterRsp.getData();
+
+
+                getView().updateFilterPop(data);
+
+
+                getView().dismissProgressDialog();
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().dismissProgressDialog();
+                getView().toastShort(errorMsg);
+                getView().dismissProgressDialog();
+            }
+        });
+
+    }
+
     public void onClickDeviceCamera(DeviceCameraInfo deviceCameraInfo) {
         String sn = deviceCameraInfo.getSn();
         final String cid = deviceCameraInfo.getCid();
@@ -75,13 +104,21 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
             @Override
             public void onCompleted(DeviceCameraDetailRsp deviceCameraDetailRsp) {
                 DeviceCameraDetailInfo data = deviceCameraDetailRsp.getData();
-                String hls = data.getHls();
-                Intent intent = new Intent();
-                intent.setClass(mContext, CameraDetailActivity.class);
-                intent.putExtra("cid", cid);
-                intent.putExtra("hls", hls);
-                getView().startAC(intent);
+                if (data != null) {
+                    String hls = data.getHls();
+                    String name = data.getCamera().getName();
+                    Intent intent = new Intent();
+                    intent.setClass(mContext, CameraDetailActivity.class);
+                    intent.putExtra("cid", cid);
+                    intent.putExtra("hls", hls);
+                    intent.putExtra("cameraName",name);
+                    getView().startAC(intent);
+                }else{
+                    getView().toastShort(mContext.getString(R.string.camera_info_get_failed));
+
+                }
                 getView().dismissProgressDialog();
+
             }
 
             @Override
@@ -118,6 +155,17 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
 //                .getMothDayFormatDate(endTime));
         endTime += 1000 * 60 * 60 * 24;
         requestDataByFilter(DIRECTION_DOWN);
+    }
+
+
+    public void getDeviceCameraListByFilter() {
+        HashMap hashMap = new HashMap();
+        hashMap.put("pageSize", 20);
+        hashMap.put("page", cur_page);
+//        hashMap.putAll();
+
+        RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(hashMap);
+
     }
 
     public void requestDataByFilter(final int direction) {

@@ -974,5 +974,6 @@
     <string name="camera_name_device_number">camera name or device number</string>
 
     <string name="reset_filter">reset</string>
+    <string name="camera_info_get_failed">摄像机信息获取失败</string>
 
 </resources>

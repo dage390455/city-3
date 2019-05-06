@@ -111,7 +111,7 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 //        editor.putInt("islive", islive);
 //        editor.apply();
 //        if (islive == VISIBLE) {
-//            mProgressBar.setProgressDrawable(getResources().getDrawable(R.drawable.custom_video_seek_progress));
+//            mProgressBar.setProgressDrawable(getResources().getDrawable(R.drawable.city_video_seek_progress));
 //            mProgressBar.setThumb(getResources().getDrawable(R.drawable.video_seek_thumb));
 //        } else {
 //            mProgressBar.setProgressDrawable(null);
@@ -190,7 +190,7 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     @Override
     public int getLayoutId() {
-        return R.layout.cus_video_layout_standard;
+        return R.layout.city_video_layout_standard;
     }
 
     @Override
@@ -212,15 +212,15 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     }
 
-    public void hide() {
-//        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOGIN_NAME_PWD, Context
-//                .MODE_PRIVATE);
-//        int islive = sp.getInt("islive", 0);
-        setViewShowState(mProgressBar, isLive);
-//        setViewShowState(mCurrentTimeTextView, islive);
-
-        setViewShowState(mTotalTimeTextView, isLive);
-    }
+//    public void hide() {
+////        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOGIN_NAME_PWD, Context
+////                .MODE_PRIVATE);
+////        int islive = sp.getInt("islive", 0);
+//        setViewShowState(mProgressBar, isLive);
+////        setViewShowState(mCurrentTimeTextView, islive);
+//
+//        setViewShowState(mTotalTimeTextView, isLive);
+//    }
 
     @Override
     protected void showWifiDialog() {
@@ -469,7 +469,7 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 //            //横屏
 ////            hide(INVISIBLE);
 //            if (islive == VISIBLE) {
-//                mProgressBar.setProgressDrawable(getResources().getDrawable(R.drawable.custom_video_seek_progress));
+//                mProgressBar.setProgressDrawable(getResources().getDrawable(R.drawable.city_video_seek_progress));
 //                mProgressBar.setThumb(getResources().getDrawable(R.drawable.video_seek_thumb));
 //            } else {
 //                mProgressBar.setProgressDrawable(null);
@@ -478,7 +478,7 @@ public class CustomStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 //        } else if (ori == mConfiguration.ORIENTATION_PORTRAIT) {
 //            //竖屏
 //            if (islive == VISIBLE) {
-//                mProgressBar.setProgressDrawable(getResources().getDrawable(R.drawable.custom_video_seek_progress));
+//                mProgressBar.setProgressDrawable(getResources().getDrawable(R.drawable.city_video_seek_progress));
 //                mProgressBar.setThumb(getResources().getDrawable(R.drawable.video_seek_thumb));
 //            } else {
 //                mProgressBar.setProgressDrawable(null);

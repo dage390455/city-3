@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.imainviews;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageView;
 
 import com.amap.api.maps.CameraUpdate;
@@ -23,10 +24,6 @@ public interface ICameraPersonLocusActivityView extends IToast , IActivityIntent
     void setMoveRightClickable(boolean clickable);
 
     void removeAllMarker();
-
-    ImageView getIMv();
-
-    void clearIMv();
 
     void initSeekBar(int size);
 
@@ -53,4 +50,6 @@ public interface ICameraPersonLocusActivityView extends IToast , IActivityIntent
     void setSeekBarTime(String time);
 
     void moveAvatarMarker(LatLng latLng);
+
+    void setLastCover(BitmapDrawable bitmapDrawable);
 }

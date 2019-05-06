@@ -25,7 +25,7 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
 import com.sensoro.smartcity.model.CalendarDateModel;
-import com.sensoro.smartcity.model.InspectionStatusCountModel;
+import com.sensoro.smartcity.model.CameraFilterModel;
 import com.sensoro.smartcity.presenter.CameraListActivityPresenter;
 import com.sensoro.smartcity.server.bean.DeviceCameraInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
@@ -72,7 +72,7 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
     private Animation returnTopAnimation;
 
     private CameraListFilterPopupWindow mCameraListFilterPopupWindow;
-    private List<InspectionStatusCountModel> list;
+    private List<CameraFilterModel> mCameraFilterModelList = new ArrayList<>();
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -150,33 +150,6 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
             }
         });
         mCameraListFilterPopupWindow = new CameraListFilterPopupWindow(this);
-        list = new ArrayList<>();
-
-
-        for (int i = 0; i < 3; i++) {
-            InspectionStatusCountModel model = new InspectionStatusCountModel();
-
-            if (i != 0) {
-                model.isMutilSelect = true;
-            } else {
-                model.isMutilSelect = false;
-
-            }
-            model.statusTitle = "摄像机状态==" + i;
-
-            for (int j = 0; j < 4; j++) {
-                InspectionStatusCountModel modelj = new InspectionStatusCountModel();
-
-                modelj.statusTitle = i + "==支架==" + j;
-
-                modelj.list.add(model);
-
-                model.list.add(modelj);
-
-            }
-            list.add(model);
-
-        }
 
     }
 
@@ -266,6 +239,7 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
         setNoContentVisible(data == null || data.size() < 1);
     }
 
+
     @Override
     public void setNoContentVisible(boolean isVisible) {
         icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
@@ -316,17 +290,44 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
             case R.id.camera_list_iv_filter:
 
 
-                if (!mCameraListFilterPopupWindow.isShowing()) {
-                    mCameraListFilterPopupWindow.updateSelectDeviceStatusList(list);
-                    cameraListIvFilter.setImageResource(R.drawable.camera_filter_selected);
-                    mCameraListFilterPopupWindow.showAsDropDown(cameraListLlTopSearch);
+                if (mCameraFilterModelList.size() == 0) {
+
+                    mPresenter.getFilterPopData();
                 } else {
-                    cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
-                    mCameraListFilterPopupWindow.dismiss();
+                    if (!mCameraListFilterPopupWindow.isShowing()) {
+                        mCameraListFilterPopupWindow.updateSelectDeviceStatusList(mCameraFilterModelList);
+                        cameraListIvFilter.setImageResource(R.drawable.camera_filter_selected);
+                        mCameraListFilterPopupWindow.showAsDropDown(cameraListLlTopSearch);
+                    } else {
+                        cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
+                        mCameraListFilterPopupWindow.dismiss();
+                    }
                 }
 
+
+                break;
+            default:
                 break;
         }
+
+
+    }
+
+
+    @Override
+    public void updateFilterPop(List<CameraFilterModel> data) {
+
+        if (!mCameraListFilterPopupWindow.isShowing()) {
+            mCameraFilterModelList.clear();
+            mCameraFilterModelList.addAll(data);
+            mCameraListFilterPopupWindow.updateSelectDeviceStatusList(mCameraFilterModelList);
+            cameraListIvFilter.setImageResource(R.drawable.camera_filter_selected);
+            mCameraListFilterPopupWindow.showAsDropDown(cameraListLlTopSearch);
+        } else {
+            cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
+            mCameraListFilterPopupWindow.dismiss();
+        }
+
     }
 
     @Override
