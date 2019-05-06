@@ -385,7 +385,6 @@
                 </LinearLayout>
 
                 <View
-                    android:id="@+id/last_view"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/view_divider_height"
                     android:layout_marginStart="20dp"
@@ -431,6 +430,15 @@
                         android:src="@drawable/arrows_right" />
 
                 </LinearLayout>
+
+                <View
+                    android:id="@+id/last_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_divider_height"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:visibility="gone"
+                    android:background="@color/c_dfdfdf" />
             </LinearLayout>
 
 

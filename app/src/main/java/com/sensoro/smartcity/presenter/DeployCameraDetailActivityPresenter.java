@@ -110,6 +110,7 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
         getView().updateTagsData(deployAnalyzerModel.tagList);
         //TODO 刷线摄像头状态
         getView().setUploadBtnStatus(checkCanUpload());
+        getView().setDeployPosition(deployAnalyzerModel.latLng.size() == 2);
         try {
             LogUtils.loge("channelMask--->> " + deployAnalyzerModel.channelMask.size());
         } catch (Throwable throwable) {
@@ -519,6 +520,7 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
                     this.deployAnalyzerModel = (DeployAnalyzerModel) data;
                     //TODO 刷新数据状态
                 }
+                getView().setDeployPosition(deployAnalyzerModel.latLng.size() == 2);
                 getView().setUploadBtnStatus(checkCanUpload());
                 break;
             default:

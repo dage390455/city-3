@@ -3,7 +3,6 @@ package com.sensoro.smartcity.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
@@ -44,8 +43,6 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
     TextView includeTextTitleTvSubtitle;
     @BindView(R.id.include_text_title_divider)
     View includeTextTitleDivider;
-    @BindView(R.id.include_text_title_cl_root)
-    ConstraintLayout includeTextTitleClRoot;
     @BindView(R.id.tv_ac_deploy_device_camera_upload)
     TextView tvAcDeployDeviceCameraUpload;
     @BindView(R.id.tv_ac_deploy_device_camera_upload_tip)
@@ -364,6 +361,17 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
         mLoadBleConfigDialog.dismissProgress();
     }
 
+    @Override
+    public void setDeployPosition(boolean hasPosition) {
+        if (hasPosition) {
+            tvAcDeployDeviceCameraFixedPointState.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+            tvAcDeployDeviceCameraFixedPointState.setText(mActivity.getText(R.string.positioned));
+        } else {
+            tvAcDeployDeviceCameraFixedPointState.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+            tvAcDeployDeviceCameraFixedPointState.setText(mActivity.getString(R.string.required));
+        }
+    }
+
 
     @Override
     public void setNotOwnVisible(boolean isVisible) {
@@ -396,13 +404,6 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
-
     @OnClick({R.id.include_text_title_imv_arrows_left, R.id.tv_ac_deploy_device_camera_upload, R.id.ll_ac_deploy_device_camera_name_location, R.id.rl_ac_deploy_device_camera_tag, R.id.ll_ac_deploy_device_camera_deploy_pic, R.id.ll_ac_deploy_device_camera_fixed_point, R.id.ll_ac_deploy_device_camera_deploy_method, R.id.ll_ac_deploy_device_camera_deploy_orientation})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -425,6 +426,7 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
                 mPresenter.doDeployMap();
                 break;
             case R.id.ll_ac_deploy_device_camera_deploy_method:
+                int i = 1 / 0;
                 //
                 break;
             case R.id.ll_ac_deploy_device_camera_deploy_orientation:
