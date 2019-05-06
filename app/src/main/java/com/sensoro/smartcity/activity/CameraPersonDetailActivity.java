@@ -197,7 +197,7 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
         }
 
         gsyVideoOption.setUrl(url1).build(getCurPlay());
-        gsyPlayerAcCameraPersonDetail.changeBottomContainer(View.INVISIBLE);
+        gsyPlayerAcCameraPersonDetail.changeBottomContainer(View.VISIBLE);
         getCurPlay().startPlayLogic();
         orientationUtils.setEnable(true);
 

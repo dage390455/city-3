@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -49,10 +51,17 @@ implements ICameraPersonAvatarHistoryActivityView{
     RecyclerView rvContentAcCameraPersonAvatarHistory;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
+    @BindView(R.id.alarm_return_top)
+    ImageView mReturnTopImageView;
+    @BindView(R.id.no_content)
+    ImageView imv_content;
+    @BindView(R.id.ic_no_content)
+    LinearLayout icNoContent;
     @BindView(R.id.ll_move_locus_ac_camera_person_avatar_history)
     LinearLayout llMoveLocusAcCameraPersonAvatarHistory;
     private PersonAvatarHistoryAdapter rvContentAdapter;
     private ProgressUtils mProgressUtils;
+    private Animation returnTopAnimation;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -68,6 +77,10 @@ implements ICameraPersonAvatarHistoryActivityView{
 
         includeImvTitleTvTitle.setText(mActivity.getString(R.string.person_avatar_history));
         includeImvTitleImvSubtitle.setVisibility(View.GONE);
+
+        returnTopAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.return_top_in_anim);
+        mReturnTopImageView.setAnimation(returnTopAnimation);
+        mReturnTopImageView.setVisibility(View.GONE);
 
         initRvContent();
 
@@ -102,11 +115,39 @@ implements ICameraPersonAvatarHistoryActivityView{
                 mPresenter.doItemClick(rvContentAdapter.getData().get(position));
             }
         });
-        LinearLayoutManager manager = new LinearLayoutManager(mActivity);
+        final LinearLayoutManager manager = new LinearLayoutManager(mActivity);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         rvContentAcCameraPersonAvatarHistory.setLayoutManager(manager);
         rvContentAcCameraPersonAvatarHistory.setAdapter(rvContentAdapter);
 
+        rvContentAcCameraPersonAvatarHistory.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+//                if (xLinearLayoutManager.findFirstVisibleItemPosition() == 0 && newState == SCROLL_STATE_IDLE &&
+//                        toolbarDirection == DIRECTION_DOWN) {
+////                    mListRecyclerView.setre
+//                }
+                if (manager.findFirstVisibleItemPosition() > 4) {
+                    if (newState == 0) {
+                        mReturnTopImageView.setVisibility(View.VISIBLE);
+                        if (returnTopAnimation != null && returnTopAnimation.hasEnded()) {
+                            mReturnTopImageView.startAnimation(returnTopAnimation);
+                        }
+                    } else {
+                        mReturnTopImageView.setVisibility(View.GONE);
+                    }
+                } else {
+                    mReturnTopImageView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+            }
+        });
     }
 
     @Override
@@ -115,7 +156,7 @@ implements ICameraPersonAvatarHistoryActivityView{
     }
 
 
-    @OnClick({R.id.include_imv_title_imv_arrows_left, R.id.ll_move_locus_ac_camera_person_avatar_history})
+    @OnClick({R.id.include_imv_title_imv_arrows_left, R.id.ll_move_locus_ac_camera_person_avatar_history,R.id.alarm_return_top})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_imv_title_imv_arrows_left:
@@ -123,6 +164,11 @@ implements ICameraPersonAvatarHistoryActivityView{
                 break;
             case R.id.ll_move_locus_ac_camera_person_avatar_history:
                 mPresenter.doPersonLocus();
+                break;
+            case R.id.alarm_return_top:
+                rvContentAcCameraPersonAvatarHistory.smoothScrollToPosition(0);
+                mReturnTopImageView.setVisibility(View.GONE);
+                refreshLayout.closeHeaderOrFooter();
                 break;
         }
     }
@@ -189,7 +235,14 @@ implements ICameraPersonAvatarHistoryActivityView{
 
     @Override
     public void updateData(List<DeviceCameraPersonFaceRsp.DataBean> data) {
-        rvContentAdapter.updateData(data);
+        if (data!= null) {
+            rvContentAdapter.updateData(data);
+        }
+        setNoContentVisible(data == null || data.size() < 1);
+    }
+    public void setNoContentVisible(boolean isVisible) {
+        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        rvContentAcCameraPersonAvatarHistory.setVisibility(isVisible ? View.GONE : View.VISIBLE);
     }
 
     @Override

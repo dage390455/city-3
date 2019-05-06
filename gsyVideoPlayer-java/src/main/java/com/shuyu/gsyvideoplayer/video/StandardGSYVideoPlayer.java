@@ -204,11 +204,11 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     /**
      * 底部进度条是否显示，直播不显示
      *
-     * @param islive
+     * @param isLive
      */
-    public void changeBottomContainer(int islive) {
+    public void changeBottomContainer(int isLive) {
 
-        if (islive == View.INVISIBLE) {
+        if (isLive == View.INVISIBLE) {
             mStateTv.setText(R.string.live);
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_29c_shadow);
         } else {
@@ -216,7 +216,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_f48f57_shadow);
         }
 
-        isLive = islive;
+        StandardGSYVideoPlayer.isLive = isLive;
         hide();
 
 
