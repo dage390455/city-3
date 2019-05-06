@@ -65,6 +65,7 @@
                     app:isb_track_background_bar_size="2dp"
                     app:isb_track_progress_bar_color="#119F82"
                     app:isb_track_progress_bar_size="3dp"
+                    android:visibility="visible"
                     />
 
 

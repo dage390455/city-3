@@ -100,16 +100,23 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                     @Override
                     public void onCompleted(DeviceCameraPersonFaceRsp deviceCameraPersonFaceRsp) {
                         data = deviceCameraPersonFaceRsp.getData();
-
+                        if (isAttachedView()) {
+                            getView().removeAllMarker();
+                            getView().clearDisplayLine();
+                            getView().clearDisplayNormalLine();
+                            getView().setMarkerAddress("");
+                            getView().setMarkerTime("");
+                        }
                         if (data != null && data.size() > 0) {
                             if (isAttachedView()) {
-                                getView().removeAllMarker();
-                                getView().clearDisplayLine();
+                                getView().setSeekBarVisible(true);
                             }
+
 
                             hightLightPoints.clear();
                             displayLinePoints.clear();
                             avatarMarkerOptions = null;
+
 
                             Collections.reverse(data);
                             List<LatLng> linePoints = new ArrayList<>();
@@ -181,12 +188,17 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
 
 
                             }
+                        }else{
+                            if (isAttachedView()) {
+                                getView().setSeekBarVisible(false);
+                            }
                         }
 
 
                         if (isAttachedView()) {
                             getView().dismissProgressDialog();
                         }
+                        checkLeftRightStatus();
                     }
 
                     @Override
@@ -280,7 +292,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
 
     public void doMoveLeft() {
         index--;
-        if (index >= 0 && data.size() > index) {
+        if (index > -1 && data.size() > index) {
             DeviceCameraPersonFaceRsp.DataBean bean = data.get(index);
             LatLng latLng = new LatLng(bean.getLatitude(), bean.getLongitude());
             getView().setMapCenter(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, mMapZoom, 0, 30)));
@@ -332,8 +344,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
     private void checkLeftRightStatus() {
         getView().setMoveLeftClickable(index >0);
 
-
-        getView().setMoveRightClickable(data.size() > 1 && index < data.size());
+        getView().setMoveRightClickable(data != null && data.size() > 1 && index < data.size()-1);
 
 
     }
@@ -376,13 +387,14 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
     public void doSeekBarTouch(int mSeekBarProgres) {
         if (mSeekBarProgres != index) {
             index = mSeekBarProgres;
+
         }else{
             index++;
             if(index >= data.size()){
                 index = mSeekBarProgres;
             }
-            getView().updateSeekBar(index);
         }
+        getView().updateSeekBar(index);
         DeviceCameraPersonFaceRsp.DataBean bean = data.get(mSeekBarProgres);
         LatLng latLng = new LatLng(bean.getLatitude(), bean.getLongitude());
         getView().setMapCenter(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, mMapZoom, 0, 30)));
@@ -469,17 +481,20 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
 
     public void doOneDay() {
         day = 1;
+        index = 0;
         requestData(faceId);
     }
 
     public void doThreeDay() {
         day = 3;
+        index = 0;
         requestData(faceId);
 
     }
 
     public void doSevenDay() {
         day = 7;
+        index = 0;
         requestData(faceId);
 
     }

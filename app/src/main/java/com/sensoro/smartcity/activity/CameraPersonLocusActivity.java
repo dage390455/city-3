@@ -77,6 +77,7 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
     private Polyline mDisPlayLine;
     private PersonLocusCameraGaoDeAdapter mGaoDeInfoAdapter;
     private Marker mAvatarMarker;
+    private Polyline mDisplayNormalLine;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -271,6 +272,8 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
         Polyline polyline = mMap.addPolyline(linePoints);
         if (b) {
             mDisPlayLine = polyline;
+        }else{
+            mDisplayNormalLine = polyline;
         }
 
     }
@@ -295,10 +298,9 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
             for (Marker marker : markers) {
                 if (marker != null) {
                     marker.remove();
-                    mvAcPersonLocus.invalidate();
                 }
-
             }
+            mvAcPersonLocus.invalidate();
         }
     }
 
@@ -416,6 +418,18 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
     @Override
     public void setLastCover(BitmapDrawable bitmapDrawable) {
         mGaoDeInfoAdapter.setLastCover(bitmapDrawable);
+    }
+
+    @Override
+    public void setSeekBarVisible(boolean isVisible) {
+        seekBarTrackAcPersonLocus.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    public void clearDisplayNormalLine() {
+        if (mDisplayNormalLine != null) {
+            mDisplayNormalLine.remove();
+        }
     }
 
     @Override

@@ -266,7 +266,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     public void onCameraItemClick(final int index) {
         List<DeviceCameraFacePic> rvListData = getView().getRvListData();
         if (rvListData != null) {
-            getView().showProgressDialog();
+
             DeviceCameraFacePic model = rvListData.get(index);
             String captureTime1 = model.getCaptureTime();
 
@@ -279,12 +279,18 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                 getView().toastShort(mActivity.getString(R.string.time_parse_error));
                 return;
             }
+
+            //7天以为没有视频，所以显示没有视频，
+            if (System.currentTimeMillis() - 24*3600*1000*7L > time) {
+                getView().setGsyVideoNoVideo();
+                return;
+            }
             itemTitle = DateUtil.getStrTime_MM_dd_hms(time);
             time = time / 1000;
 
             String beginTime = String.valueOf(time - 15);
             String endTime = String.valueOf(time + 15);
-
+            getView().showProgressDialog();
             RetrofitServiceHelper.getInstance().getDeviceCameraPlayHistoryAddress(cid, beginTime, endTime, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraHistoryRsp>(null) {
                 @Override
                 public void onCompleted(DeviceCameraHistoryRsp deviceCameraHistoryRsp) {

@@ -444,6 +444,12 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     }
 
+    @Override
+    public void setGsyVideoNoVideo() {
+        gsyPlayerAcCameraDetail.onVideoPause();
+        gsyPlayerAcCameraDetail.setNoVideo();
+    }
+
     private void initRvCameraList() {
         deviceCameraListAdapter = new CameraDetailListAdapter(this);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);

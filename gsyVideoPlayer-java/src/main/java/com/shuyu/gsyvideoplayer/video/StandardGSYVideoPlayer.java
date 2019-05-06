@@ -212,7 +212,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
             mStateTv.setText(R.string.live);
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_29c_shadow);
         } else {
-            mStateTv.setText(R.string.video);
+            mStateTv.setText(R.string.gsy_video);
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_f48f57_shadow);
         }
 
@@ -1145,6 +1145,12 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         startDismissControlViewTimer();
     }
 
+    public void setNoVideo(){
+        rMobileData.setVisibility(VISIBLE);
+        tiptv.setText(getResources().getString(R.string.no_vido));
+        playBtn.setVisibility(GONE);
+    }
+
     @Override
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -1154,7 +1160,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
             mStateTv.setText(getResources().getString(R.string.live));
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_29c_shadow);
         } else {
-            mStateTv.setText(getResources().getString(R.string.video));
+            mStateTv.setText(getResources().getString(R.string.gsy_video));
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_f48f57_shadow);
         }
 

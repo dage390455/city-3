@@ -15,6 +15,7 @@
     <string name="retry_play">"Video loading failed, please try again"</string>
     <string name="mobile_network">You are using a mobile network, which will consume your traffic</string>
     <string name="replay">"replay"</string>
-    <string name="video">"video"</string>
+    <string name="gsy_video">"video"</string>
     <string name="live">"live"</string>
+    <string name="no_vido">Video has expired and the server only keeps video for 7 days</string>
 </resources>

@@ -99,7 +99,7 @@ public class RecyclerItemNormalHolder extends RecyclerItemBaseHolder {
                     public void onPrepared(String url, Object... objects) {
                         super.onPrepared(url, objects);
                         if (!gsyVideoPlayer.isIfCurrentIsFullscreen()) {
-                            //静音
+                            //audio_on
                             GSYVideoManager.instance().setNeedMute(true);
                         }
 

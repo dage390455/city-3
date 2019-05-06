@@ -52,4 +52,8 @@ public interface ICameraPersonLocusActivityView extends IToast , IActivityIntent
     void moveAvatarMarker(LatLng latLng);
 
     void setLastCover(BitmapDrawable bitmapDrawable);
+
+    void setSeekBarVisible(boolean isVisible);
+
+    void clearDisplayNormalLine();
 }
