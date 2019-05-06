@@ -48,6 +48,22 @@ public class CameraListFilterPopupWindow {
             @Override
             public void onClick(View v) {
                 mLl.startAnimation(dismissTranslateAnimation);
+
+
+//                if (null != cameraListPopAdapter.getmStateCountList()) {
+//
+//
+//                    List<CameraFilterModel> list = cameraListPopAdapter.getmStateCountList();
+//
+//                    for (CameraFilterModel model : list) {
+//
+//                        for (CameraFilterModel.ListBean countModel : model.getList()) {
+//
+//                            countModel.setSelect(false);
+//
+//                        }
+//                    }
+//                }
             }
         });
 
