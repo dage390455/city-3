@@ -203,7 +203,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 .setShowFullAnimation(false)
                 .setNeedLockFull(true)
                 .setUrl(url)
-                .setCacheWithPlay(true)
+//                .setCacheWithPlay(true)
                 .setVideoTitle(cameraName)
                 .setVideoAllCallBack(new GSYSampleCallBack() {
                     @Override
