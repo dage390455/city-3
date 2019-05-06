@@ -83,6 +83,8 @@ public class DeviceCameraContentAdapter extends RecyclerView.Adapter<DeviceCamer
         if (!TextUtils.isEmpty(deviceCameraInfo.getOrientationName())) {
             holder.orientationTv.setVisibility(View.VISIBLE);
             holder.orientationTv.setText(deviceCameraInfo.getOrientationName());
+            holder.orientationTv.setText(deviceCameraInfo.getOrientationName());
+
         } else {
             holder.orientationTv.setVisibility(View.GONE);
 

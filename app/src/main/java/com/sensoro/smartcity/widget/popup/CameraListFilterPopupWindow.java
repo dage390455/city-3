@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.widget.popup;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -36,6 +35,7 @@ public class CameraListFilterPopupWindow {
     CameraListPopAdapter cameraListPopAdapter;
 
     private SelectModleListener mSelectModleListener;
+    private DismissListener dismissListener;
 
     public CameraListFilterPopupWindow(final Activity activity) {
         mActivity = activity;
@@ -44,39 +44,41 @@ public class CameraListFilterPopupWindow {
         mLl = view.findViewById(R.id.item_pop_select_state_ll);
         resetFilter = view.findViewById(R.id.camera_list_reset_filter);
         saveFilter = view.findViewById(R.id.camera_list_save_filter);
-//        view.findViewById(R.id.pop_inspection_task_view).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mRl.startAnimation(dismissTranslateAnimation);
-//            }
-//        });
+        view.findViewById(R.id.item_pop_select_state_ll).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLl.startAnimation(dismissTranslateAnimation);
+            }
+        });
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         mRcStateSelect.setLayoutManager(linearLayoutManager);
         cameraListPopAdapter = new CameraListPopAdapter(activity);
         mRcStateSelect.setAdapter(cameraListPopAdapter);
 
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 1200);
 
+
+        mRcStateSelect.setLayoutParams(layoutParams);
+
+
+//        WindowManager wm = (WindowManager) mActivity.getSystemService(Context.WINDOW_SERVICE);
+//        int height = wm.getDefaultDisplay().getHeight();
 //
-//        cameraListPopAdapter.setOnItemClickListener(new RecycleViewItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                listener.onSelectDeviceTypeItemClick(view,position);
 //
-//            }
-//        });
+//        if (height - mRcStateSelect.getLayoutParams().height < 100) {
+//
+//        }
+
+
         mPopupWindow = new PopupWindow(activity);
         mPopupWindow.setContentView(view);
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        WindowManager wm = (WindowManager) mActivity.getSystemService(Context.WINDOW_SERVICE);
-        int height = wm.getDefaultDisplay().getHeight();
-//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mLl.getLayoutParams();
-//        mLl.setLayoutParams(mLl.getLayoutParams());
-        mPopupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        mPopupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_aa000000)));
         mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
-//        mPopupWindow.setFocusable(true);
         initAnimation();
         resetFilter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,6 +163,10 @@ public class CameraListFilterPopupWindow {
             @Override
             public void onAnimationEnd(Animation animation) {
                 mPopupWindow.dismiss();
+
+                if (null != dismissListener) {
+                    dismissListener.dismiss();
+                }
             }
 
             @Override
@@ -233,6 +239,16 @@ public class CameraListFilterPopupWindow {
     public interface SelectModleListener {
 
         void selectedListener(HashMap<String, String> hashMap);
+    }
+
+    public void setDismissListener(DismissListener listener) {
+
+        dismissListener = listener;
+    }
+
+    public interface DismissListener {
+
+        void dismiss();
     }
 
 
