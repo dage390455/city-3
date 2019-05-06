@@ -64,7 +64,8 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
 
     private void initCalendarPop() {
         mCalendarPopUtils = new CalendarPopUtils(mContext);
-        mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
+        mCalendarPopUtils.setMonthStatus(1)
+                .setOnCalendarPopupCallbackListener(this);
     }
 
     private void initSearchHistoryData() {

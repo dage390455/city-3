@@ -1,32 +1,38 @@
 package com.sensoro.smartcity.adapter;
 
+import android.app.Activity;
 import android.content.res.Configuration;
+import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.model.Marker;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BaseActivity;
-import com.sensoro.smartcity.widget.CustomStandardGSYVideoPlayer;
+import com.sensoro.smartcity.util.LogUtils;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
+import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
 public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
-    private final BaseActivity mContext;
-    private CustomStandardGSYVideoPlayer player;
+    private final Activity mContext;
+    private StandardGSYVideoPlayer player;
     private OrientationUtils orientationUtils;
     private GSYVideoOptionBuilder gsyVideoOption;
     private boolean isPlay;
     private boolean isPause;
     private final View view;
+    private ImageView imageView;
+    private onVideoButtonClickListener mListener;
 
-    public PersonLocusCameraGaoDeAdapter(BaseActivity context) {
+    public PersonLocusCameraGaoDeAdapter(Activity context) {
         mContext = context;
         view = LayoutInflater.from(mContext).inflate(R.layout.adapter_gao_de_info_window_person_locus, null);
         player = view.findViewById(R.id.detail_player_adapter_gao_de_person_locus);
@@ -44,6 +50,8 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
         orientationUtils = new OrientationUtils(mContext, player);
         //初始化不打开外部的旋转
         orientationUtils.setEnable(false);
+
+        player.bringToFront();
         getCurPlay().getTitleTextView().setVisibility(View.VISIBLE);
         //设置返回键
         getCurPlay().getBackButton().setVisibility(View.VISIBLE);
@@ -51,6 +59,8 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
         getCurPlay().setEnlargeImageRes(R.drawable.ic_camera_full_screen);
 
         getCurPlay().setShrinkImageRes(R.drawable.ic_camera_full_screen);
+
+        getCurPlay().getBackButton().setImageResource(R.drawable.video_small_close);
 
         getCurPlay().getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,86 +71,31 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
                 getCurPlay().startWindowFullscreen(mContext, true, true);
             }
         });
+//        getCurPlay().setBackFromFullScreenListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.e("cxy","监听到了:::");
+//            }
+//        });
 
         initVideoOption(null);
 
-//        gsyVideoOption = new GSYVideoOptionBuilder();
-//        gsyVideoOption
-////                .setThumbImageView(imageView)
-//                .setIsTouchWiget(true)
-//                .setRotateViewAuto(false)
-//                .setLockLand(false)
-//                .setAutoFullWithSize(false)
-//                .setShowFullAnimation(false)
-//                .setNeedLockFull(true)
-////                .setUrl(url)
-//                .setCacheWithPlay(false)
-//                .setVideoTitle("测试视频")
-//                .setVideoAllCallBack(new GSYSampleCallBack() {
-//                    @Override
-//                    public void onPrepared(String url, Object... objects) {
-//                        super.onPrepared(url, objects);
-//                        //开始播放了才能旋转和全屏
-//                        orientationUtils.setEnable(true);
-//                        isPlay = true;
-//                    }
-//
-//                    @Override
-//                    public void onQuitFullscreen(String url, Object... objects) {
-//                        super.onQuitFullscreen(url, objects);
-//                        if (orientationUtils != null) {
-//                            orientationUtils.backToProtVideo();
-//                        }
-//                    }
-//                }).setLockClickListener(new LockClickListener() {
-//            @Override
-//            public void onClick(View view, boolean lock) {
-//                if (orientationUtils != null) {
-//                    //配合下方的onConfigurationChanged
-//                    orientationUtils.setEnable(!lock);
-//                }
-//            }
-//        }).build(getCurPlay());
-////增加title
-//        getCurPlay().getTitleTextView().setVisibility(View.VISIBLE);
-//        //设置返回键
-//        getCurPlay().getBackButton().setVisibility(View.VISIBLE);
-//
-//        getCurPlay().setEnlargeImageRes(R.drawable.ic_camera_full_screen);
-//
-//        getCurPlay().setShrinkImageRes(R.drawable.ic_camera_full_screen);
-//
-//        getCurPlay().getFullscreenButton().setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //直接横屏
-//                orientationUtils.resolveByClick();
-//                //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
-//                getCurPlay().startWindowFullscreen(mContext, true, true);
-//            }
-//        });
-//        getCurPlay().getBackButton().setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mContext.finish();
-//            }
-//        });
     }
 
     public void initVideoOption(String url) {
-        player.changeBottomContainer(View.INVISIBLE);
+        player.changeBottomContainer(View.VISIBLE);
 
         //增加封面
-//        if (imageView == null) {
-//            imageView = new ImageView(this);
-//            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//            imageView.setImageResource(R.mipmap.ic_launcher);
-//        }
+        if (imageView == null) {
+            imageView = new ImageView(mContext);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setImageResource(R.mipmap.ic_launcher);
+        }
 
 
         gsyVideoOption = new GSYVideoOptionBuilder();
         gsyVideoOption
-//                .setThumbImageView(imageView)
+                .setThumbImageView(imageView)
                 .setIsTouchWiget(true)
                 .setRotateViewAuto(false)
                 .setLockLand(false)
@@ -188,7 +143,11 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
         getCurPlay().getBackButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContext.onBackPressed();
+//                mContext.onBackPressed();
+                if (mListener != null) {
+                    mListener.onCloseClick();
+                }
+
             }
         });
 //        getCurPlay().startPlayLogic();
@@ -219,12 +178,11 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
             });
             return;
         }
-        player.changeBottomContainer(View.VISIBLE);
 
         gsyVideoOption.setUrl(url1).build(getCurPlay());
         getCurPlay().startPlayLogic();
         orientationUtils.setEnable(true);
-
+        player.changeBottomContainer(View.VISIBLE);
     }
 
     @Override
@@ -243,6 +201,8 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
         if (isPlay && !isPause) {
             getCurPlay().onConfigurationChanged(mContext, newConfig, orientationUtils, true, true);
         }
+        Log.e("cxy",":::切换了");
+
     }
 
     public void onPause() {
@@ -253,5 +213,25 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
     public void onResume() {
 //        getCurPlay().onVideoResume(false);
         isPause = false;
+    }
+
+    public void setLastCover(BitmapDrawable bitmapDrawable) {
+        if (imageView != null) {
+            imageView.setImageDrawable(bitmapDrawable);
+        } else {
+            imageView = new ImageView(mContext);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setImageDrawable(bitmapDrawable);
+        }
+    }
+
+    public void setOnCloseClickListener(onVideoButtonClickListener listener){
+        mListener = listener;
+    }
+
+    public  interface onVideoButtonClickListener {
+       void onCloseClick();
+
+       void onFullScreenClick();
     }
 }

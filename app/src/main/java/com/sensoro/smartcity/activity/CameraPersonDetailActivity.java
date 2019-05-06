@@ -23,6 +23,7 @@ import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
+import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
 import butterknife.BindView;
@@ -38,7 +39,7 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
     @BindView(R.id.include_imv_title_imv_subtitle)
     ImageView includeImvTitleImvSubtitle;
     @BindView(R.id.gsy_player_ac_camera_person_detail)
-    CustomStandardGSYVideoPlayer gsyPlayerAcCameraPersonDetail;
+    StandardGSYVideoPlayer gsyPlayerAcCameraPersonDetail;
     private OrientationUtils orientationUtils;
     private ImageView imageView;
     private GSYVideoOptionBuilder gsyVideoOption;
@@ -85,6 +86,7 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
             }
         });
 
+        getCurPlay().getBackButton().setVisibility(View.INVISIBLE);
         initVideoOption();
     }
 
@@ -96,7 +98,7 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
     }
 
     public void initVideoOption() {
-        gsyPlayerAcCameraPersonDetail.changeBottomContainer(View.INVISIBLE);
+        gsyPlayerAcCameraPersonDetail.changeBottomContainer(View.VISIBLE);
 
         //增加封面
         if (imageView == null) {
@@ -193,9 +195,9 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
             });
             return;
         }
-        gsyPlayerAcCameraPersonDetail.changeBottomContainer(View.VISIBLE);
 
         gsyVideoOption.setUrl(url1).build(getCurPlay());
+        gsyPlayerAcCameraPersonDetail.changeBottomContainer(View.INVISIBLE);
         getCurPlay().startPlayLogic();
         orientationUtils.setEnable(true);
 

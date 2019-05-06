@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.text.TextUtils;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
@@ -43,6 +44,9 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     private long endDateTime;
     private CalendarPopUtils mCalendarPopUtils;
     private long time;
+    private String mCameraName;
+    private String itemTitle;
+    private String itemUrl;
 
     @Override
     public void initData(Context context) {
@@ -52,10 +56,11 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
         if (intent != null) {
             cid = intent.getStringExtra("cid");
             url = intent.getStringExtra("hls");
+            mCameraName = intent.getStringExtra("cameraName");
         }
 
 
-        doLive();
+        getView().initVideoOption(url, TextUtils.isEmpty(mCameraName) ? "" : mCameraName);
         getView().showProgressDialog();
         requestData(cid, Constants.DIRECTION_DOWN);
         mCalendarPopUtils = new CalendarPopUtils(mActivity);
@@ -273,8 +278,9 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                 getView().toastShort(mActivity.getString(R.string.time_parse_error));
                 return;
             }
-
+            itemTitle = DateUtil.getStrTime_MM_dd_hms(time);
             time = time / 1000;
+
             String beginTime = String.valueOf(time - 15);
             String endTime = String.valueOf(time + 15);
 
@@ -284,9 +290,10 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                     List<DeviceCameraHistoryBean> data = deviceCameraHistoryRsp.getData();
                     if (data != null && data.size() > 0) {
                         DeviceCameraHistoryBean deviceCameraHistoryBean = data.get(0);
-                        String url1 = deviceCameraHistoryBean.getUrl();
+                        itemUrl = deviceCameraHistoryBean.getUrl();
+
                         if (isAttachedView()) {
-                            getView().startPlayLogic(url1);
+                            getView().startPlayLogic(itemUrl, itemTitle);
                         }
 
                     }
@@ -304,6 +311,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                     }
                 }
             });
+
 
         }
     }
@@ -352,7 +360,9 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     }
 
     public void doLive() {
-        getView().initVideoOption(url);
+        getView().doPlayLive(url, TextUtils.isEmpty(mCameraName) ? "" : mCameraName);
+        itemUrl = null;
+        itemTitle = null;
     }
 
     @Override
@@ -383,5 +393,13 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
         intent.setClass(mActivity, CameraPersonAvatarHistoryActivity.class);
         getView().startAC(intent);
 
+    }
+
+    public void doOnRestart() {
+        if (itemUrl == null) {
+            doLive();
+        }else{
+            getView().doPlayLive(itemUrl,TextUtils.isEmpty(itemTitle) ? "" : itemTitle);
+        }
     }
 }

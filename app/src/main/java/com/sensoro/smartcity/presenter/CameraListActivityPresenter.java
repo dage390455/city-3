@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.CameraDetailActivity;
 import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -135,13 +136,21 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
             @Override
             public void onCompleted(DeviceCameraDetailRsp deviceCameraDetailRsp) {
                 DeviceCameraDetailInfo data = deviceCameraDetailRsp.getData();
-                String hls = data.getHls();
-                Intent intent = new Intent();
-                intent.setClass(mContext, CameraDetailActivity.class);
-                intent.putExtra("cid", cid);
-                intent.putExtra("hls", hls);
-                getView().startAC(intent);
+                if (data != null) {
+                    String hls = data.getHls();
+                    String name = data.getCamera().getName();
+                    Intent intent = new Intent();
+                    intent.setClass(mContext, CameraDetailActivity.class);
+                    intent.putExtra("cid", cid);
+                    intent.putExtra("hls", hls);
+                    intent.putExtra("cameraName",name);
+                    getView().startAC(intent);
+                }else{
+                    getView().toastShort(mContext.getString(R.string.camera_info_get_failed));
+
+                }
                 getView().dismissProgressDialog();
+
             }
 
             @Override

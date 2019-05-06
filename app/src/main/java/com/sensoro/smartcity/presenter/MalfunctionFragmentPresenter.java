@@ -49,7 +49,8 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
         mContext = (Activity) context;
         onCreate();
         mCalendarPopUtils = new CalendarPopUtils(mContext);
-        mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
+        mCalendarPopUtils.setMonthStatus(1)
+                .setOnCalendarPopupCallbackListener(this);
         List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION);
         if (list != null) {
             mSearchHistoryList.addAll(list);

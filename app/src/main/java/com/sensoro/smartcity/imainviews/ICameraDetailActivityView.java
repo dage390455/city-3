@@ -11,11 +11,11 @@ import com.sensoro.smartcity.server.bean.DeviceCameraFacePic;
 import java.util.List;
 
 public interface ICameraDetailActivityView extends IProgressDialog, IToast , IActivityIntent {
-    void initVideoOption(String url);
+    void initVideoOption(String s, String url);
 
     void updateCameraList(List<DeviceCameraFacePic> data);
 
-    void startPlayLogic(String url1);
+    void startPlayLogic(String url1, String title);
 
     DeviceCameraFacePic getItemData(int position);
 
@@ -44,4 +44,8 @@ public interface ICameraDetailActivityView extends IProgressDialog, IToast , IAc
     void autoRefresh();
 
     ImageView getImageView();
+
+    void doPlayerResume();
+
+    void doPlayLive(String url, String cameraName);
 }

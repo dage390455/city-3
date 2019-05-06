@@ -960,6 +960,7 @@
     <string name="obtain_video_fail">获取视频失败</string>
     <string name="camera_name_device_number">摄像机名称/设备号</string>
     <string name="reset_filter">重置</string>
+    <string name="camera_info_get_failed">摄像机信息获取失败</string>
 
 
 </resources>
