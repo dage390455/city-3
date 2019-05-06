@@ -208,6 +208,11 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
 
     }
 
+    public void clearMap() {
+
+        filterHashMap.clear();
+    }
+
 
     public void requestData(final HashMap hashMap) {
 

@@ -184,9 +184,7 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
         mCameraListFilterPopupWindow.setDismissListener(new CameraListFilterPopupWindow.DismissListener() {
             @Override
             public void dismiss() {
-                if (filterHashMap.size() == 0) {
-                    cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
-                }
+                cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
             }
         });
         mCameraListFilterPopupWindow.setSelectModleListener(new CameraListFilterPopupWindow.SelectModleListener() {
@@ -198,10 +196,12 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
                 if (null != hashMap && hashMap.size() > 0) {
                     filterHashMap.putAll(hashMap);
                     cameraListIvFilter.setImageResource(R.drawable.camera_filter_selected);
+                    mPresenter.getDeviceCameraListByFilter(hashMap);
                 } else {
+
+                    mPresenter.clearMap();
                     cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
                 }
-                mPresenter.getDeviceCameraListByFilter(hashMap);
             }
         });
 
