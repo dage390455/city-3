@@ -76,6 +76,7 @@ public class CameraListFilterPopupWindow {
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
 
+        mPopupWindow.setFocusable(true);
         mPopupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_aa000000)));
         mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
