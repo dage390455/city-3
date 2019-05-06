@@ -17,6 +17,7 @@ import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
+import com.sensoro.smartcity.server.response.CameraFilterRsp;
 import com.sensoro.smartcity.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractInfoRsp;
@@ -67,8 +68,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -1549,7 +1550,7 @@ public class RetrofitServiceHelper {
      * @param endTime
      * @return
      */
-    public Observable<DeviceCameraFacePicListRsp> getDeviceCameraFaceList(List<String> cids, Integer pageSize, Integer limit,String minID, String startTime, String endTime) {
+    public Observable<DeviceCameraFacePicListRsp> getDeviceCameraFaceList(List<String> cids, Integer pageSize, Integer limit, String minID, String startTime, String endTime) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (cids != null && cids.size() > 0) {
@@ -1565,7 +1566,7 @@ public class RetrofitServiceHelper {
             if (limit != null) {
                 jsonObject.put("limit", limit);
             }
-            if(minID != null){
+            if (minID != null) {
                 jsonObject.put("minId", minID);
             }
 
@@ -1611,19 +1612,19 @@ public class RetrofitServiceHelper {
 
     public Observable<DeviceCameraPersonFaceRsp> getDeviceCameraPersonFace(String id,
                                                                            Long startTime, Long endTime,
-                                                                           Integer score,Integer offset, Integer limit,List<String> cameraIds){
+                                                                           Integer score, Integer offset, Integer limit, List<String> cameraIds) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(id)) {
-                jsonObject.put("id",id);
+                jsonObject.put("id", id);
             }
 
             if (startTime != null) {
-                jsonObject.put("startTime",startTime);
+                jsonObject.put("startTime", startTime);
             }
 
             if (endTime != null) {
-                jsonObject.put("endTime",endTime);
+                jsonObject.put("endTime", endTime);
             }
 
             if (offset != null) {
@@ -1635,7 +1636,7 @@ public class RetrofitServiceHelper {
             }
 
             if (score != null) {
-                jsonObject.put("score",score);
+                jsonObject.put("score", score);
             }
 
             if (cameraIds != null && cameraIds.size() > 0) {
@@ -1651,5 +1652,19 @@ public class RetrofitServiceHelper {
         return retrofitService.getDeviceCameraPersonFace(requestBody);
 
     }
+
+    /**
+     * 100.026 获取安装方式和朝向选择字典
+     *
+     * @return
+     */
+    public Observable<CameraFilterRsp> getCameraFilter() {
+        return retrofitService.getCameraFilter();
+    }
+
+    public Observable<DeviceCameraListRsp> getDeviceCameraListByFilter(Map<String, String> map) {
+        return retrofitService.getDeviceCameraListByFilter(map);
+    }
+
 
 }

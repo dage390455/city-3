@@ -3,6 +3,7 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.constraint.ConstraintLayout;
@@ -15,6 +16,7 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
@@ -37,7 +39,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusActivityView, CameraPersonLocusActivityPresenter>
-        implements ICameraPersonLocusActivityView, AMap.OnMapLoadedListener, AMap.OnMarkerClickListener {
+        implements ICameraPersonLocusActivityView, AMap.OnMapLoadedListener, AMap.OnMarkerClickListener, AMap.OnCameraChangeListener
+        , AMap.OnMapClickListener, PersonLocusCameraGaoDeAdapter.onVideoButtonClickListener {
 
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
@@ -63,13 +66,14 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
     MapView mvAcPersonLocus;
     @BindView(R.id.iv_move_left_ac_person_locus)
     ImageView ivMoveLeftAcPersonLocus;
+    @BindView(R.id.iv_monitor_map_location_ac_person_locus)
+    ImageView ivMonitorMapLocationAcPersonLocus;
     @BindView(R.id.seek_bar_track_ac_person_locus)
     IndicatorSeekBar seekBarTrackAcPersonLocus;
     @BindView(R.id.iv_move_right_ac_person_locus)
     ImageView ivMoveRightAcPersonLocus;
     private ProgressUtils mProgressUtils;
     private AMap mMap;
-    private ImageView view;
     private Polyline mDisPlayLine;
     private PersonLocusCameraGaoDeAdapter mGaoDeInfoAdapter;
     private Marker mAvatarMarker;
@@ -79,9 +83,9 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
         setContentView(R.layout.activity_person_locus);
         ButterKnife.bind(this);
         mvAcPersonLocus.onCreate(savedInstanceState);
-        view = findViewById(R.id.imv);
         initView();
         mPresenter.initData(mActivity);
+
     }
 
 
@@ -128,16 +132,22 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.getUiSettings().setLogoBottomMargin(-100);
         mGaoDeInfoAdapter = new PersonLocusCameraGaoDeAdapter(mActivity);
+        mGaoDeInfoAdapter.setOnCloseClickListener(this);
         mMap.setInfoWindowAdapter(mGaoDeInfoAdapter);
         mMap.setMapCustomEnable(true);
         mMap.setOnMapLoadedListener(this);
         mMap.setOnMarkerClickListener(this);
+        mMap.setOnCameraChangeListener(this);
+        mMap.setOnMapClickListener(this);
+
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mGaoDeInfoAdapter.onConfigurationChanged(newConfig);
+        seekBarTrackAcPersonLocus.setIndicatorVisible(newConfig.orientation != Configuration.ORIENTATION_LANDSCAPE);
+
     }
 
     @Override
@@ -259,7 +269,7 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
     @Override
     public void addPolyLine(PolylineOptions linePoints, boolean b) {
         Polyline polyline = mMap.addPolyline(linePoints);
-        if(b){
+        if (b) {
             mDisPlayLine = polyline;
         }
 
@@ -292,15 +302,6 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
         }
     }
 
-    @Override
-    public ImageView getIMv() {
-        return view;
-    }
-
-    @Override
-    public void clearIMv() {
-        view.setImageDrawable(null);
-    }
 
     @Override
     public void initSeekBar(int size) {
@@ -327,6 +328,7 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
             mAvatarMarker.setIcon(BitmapDescriptorFactory.fromBitmap(resource));
         }
     }
+
 
     @Override
     public boolean setMyCurrentActivityTheme() {
@@ -376,7 +378,7 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
             List<Marker> markers = mMap.getMapScreenMarkers();
             for (Marker marker : markers) {
                 Object object = marker.getObject();
-                if (object instanceof Integer && (Integer)object > -1) {
+                if (object instanceof Integer && (Integer) object > -1) {
                     marker.remove();
                     mvAcPersonLocus.invalidate();
                 }
@@ -402,13 +404,28 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
         seekBarTrackAcPersonLocus.setIndicatorText(time);
     }
 
+
+    @Override
+    public void moveAvatarMarker(LatLng latLng) {
+        if (mAvatarMarker != null) {
+            mAvatarMarker.setPosition(latLng);
+//            mAvatarMarker.setIcon(BitmapDescriptorFactory.fromBitmap(resource));
+        }
+    }
+
+    @Override
+    public void setLastCover(BitmapDrawable bitmapDrawable) {
+        mGaoDeInfoAdapter.setLastCover(bitmapDrawable);
+    }
+
     @Override
     public void setMarkerTime(String time) {
         tvTimeRightAcPersonLocus.setText(time);
     }
 
-    @OnClick({R.id.iv_move_left_ac_person_locus, R.id.iv_move_right_ac_person_locus,R.id.tv_one_day_ac_person_locus,R.id.tv_three_day_ac_person_locus
-    ,R.id.tv_seven_day_ac_person_locus})
+    @OnClick({R.id.iv_move_left_ac_person_locus, R.id.iv_move_right_ac_person_locus
+            , R.id.tv_one_day_ac_person_locus, R.id.tv_three_day_ac_person_locus
+            , R.id.tv_seven_day_ac_person_locus, R.id.iv_monitor_map_location_ac_person_locus, R.id.include_text_title_imv_arrows_left})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_move_left_ac_person_locus:
@@ -426,17 +443,66 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
             case R.id.tv_seven_day_ac_person_locus:
                 mPresenter.doSevenDay();
                 break;
+            case R.id.iv_monitor_map_location_ac_person_locus:
+                mPresenter.doMonitorMapLocation();
+                break;
+            case R.id.include_text_title_imv_arrows_left:
+                finishAc();
+                break;
         }
     }
 
     @Override
+    public void onBackPressed() {
+        if (mAvatarMarker != null && mAvatarMarker.isInfoWindowShown()) {
+            mAvatarMarker.hideInfoWindow();
+            mGaoDeInfoAdapter.onPause();
+        } else {
+            super.onBackPressed();
+        }
+
+
+    }
+
+    @Override
     public boolean onMarkerClick(Marker marker) {
-        Object object = marker.getObject();
-        if (object instanceof Integer && (Integer)object == -1) {
+        if (mAvatarMarker != null && !mAvatarMarker.isInfoWindowShown()) {
             marker.showInfoWindow();
             mPresenter.doPlay();
+        }
+
+        return true;
+    }
+
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
+
+    }
+
+    @Override
+    public void onCameraChangeFinish(CameraPosition cameraPosition) {
+        mPresenter.setMapZoom(cameraPosition.zoom);
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        if (mAvatarMarker != null && mAvatarMarker.isInfoWindowShown()) {
+            mAvatarMarker.hideInfoWindow();
+            mGaoDeInfoAdapter.onPause();
 
         }
-        return true;
+    }
+
+    @Override
+    public void onCloseClick() {
+        if (mAvatarMarker != null && mAvatarMarker.isInfoWindowShown()) {
+            mAvatarMarker.hideInfoWindow();
+            mGaoDeInfoAdapter.onPause();
+        }
+    }
+
+    @Override
+    public void onFullScreenClick() {
+
     }
 }

@@ -130,6 +130,27 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
             }
         });
 
+
+        gsyPlayerAcCameraDetail.setReplayListener(new StandardGSYVideoPlayer.ReplayListener() {
+            @Override
+            public void rePlay() {
+                orientationUtils.setEnable(false);
+
+                gsyPlayerAcCameraDetail.getPlayBtn().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        gsyPlayerAcCameraDetail.changeBottomContainer(View.VISIBLE);
+
+                        gsyVideoOption.setUrl(getCurPlay().mUrl).build(getCurPlay());
+                        getCurPlay().startPlayLogic();
+                        orientationUtils.setEnable(true);
+
+
+                    }
+                });
+            }
+        });
+
     }
 
     private void initRefreshLayout() {
@@ -154,7 +175,15 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     @Override
-    public void initVideoOption(String url) {
+    protected void onRestart() {
+        mPresenter.doOnRestart();
+        super.onRestart();
+
+    }
+
+    @Override
+    public void initVideoOption( String url,String cameraName) {
+
         gsyPlayerAcCameraDetail.changeBottomContainer(View.INVISIBLE);
 
         //增加封面
@@ -174,8 +203,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 .setShowFullAnimation(false)
                 .setNeedLockFull(true)
                 .setUrl(url)
-                .setCacheWithPlay(false)
-                .setVideoTitle("测试视频")
+//                .setCacheWithPlay(true)
+                .setVideoTitle(cameraName)
                 .setVideoAllCallBack(new GSYSampleCallBack() {
                     @Override
                     public void onPrepared(String url, Object... objects) {
@@ -228,10 +257,9 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     @Override
-    public void startPlayLogic(final String url1) {
+    public void startPlayLogic(final String url1, String title) {
 
 
-        getCurPlay().getBackButton().setVisibility(View.INVISIBLE);
         if (!NetworkUtils.isAvailable(this) || !NetworkUtils.isWifiConnected(this)) {
             orientationUtils.setEnable(false);
             gsyPlayerAcCameraDetail.getPlayBtn().setOnClickListener(new View.OnClickListener() {
@@ -262,21 +290,18 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                         });
                         return;
 
-                    } else {
-
-
-                        gsyPlayerAcCameraDetail.changeBottomContainer(View.VISIBLE);
-
-                        gsyVideoOption.setUrl(url1).build(getCurPlay());
-                        getCurPlay().startPlayLogic();
-                        orientationUtils.setEnable(true);
-                        gsyPlayerAcCameraDetail.changeBottomContainer(View.VISIBLE);
                     }
 
                 }
             });
 
 
+        } else {
+
+            gsyVideoOption.setUrl(url1).setVideoTitle(title).build(getCurPlay());
+            getCurPlay().startPlayLogic();
+            orientationUtils.setEnable(true);
+            gsyPlayerAcCameraDetail.changeBottomContainer(View.VISIBLE);
         }
     }
 
@@ -394,6 +419,19 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         return imageView;
     }
 
+    @Override
+    public void doPlayerResume() {
+        getCurPlay().onVideoResume();
+    }
+
+    @Override
+    public void doPlayLive(String url, String cameraName) {
+        gsyVideoOption.setUrl(url).setVideoTitle(cameraName).build(getCurPlay());
+        gsyPlayerAcCameraDetail.changeBottomContainer(View.INVISIBLE);
+        getCurPlay().startPlayLogic();
+
+    }
+
     private void initRvCameraList() {
         deviceCameraListAdapter = new CameraDetailListAdapter(this);
         rvDeviceCameraAcCameraDetail.setLayoutManager(new LinearLayoutManager(this));
@@ -483,7 +521,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     @Override
     protected void onResume() {
-        getCurPlay().onVideoResume(false);
+        getCurPlay().onVideoResume();
         super.onResume();
         isPause = false;
     }

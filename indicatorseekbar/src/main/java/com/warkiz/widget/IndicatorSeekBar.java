@@ -1244,6 +1244,11 @@ public class IndicatorSeekBar extends View implements ViewTreeObserver.OnGlobalL
         mIndicator.setIndicatorText(text);
     }
 
+    public void setIndicatorVisible(boolean visible){
+        mIndicator.setIndicatorVisible(visible);
+
+    }
+
     public static class Builder {
         BuilderParams p;
         IndicatorSeekBar indicatorSeekBar;

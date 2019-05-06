@@ -974,5 +974,10 @@
     <string name="camera_name_device_number">camera name or device number</string>
 
     <string name="reset_filter">reset</string>
+    <string name="camera_info_get_failed">摄像机信息获取失败</string>
+
+    <string name="deploy_camera_install_method">Install Method</string>
+    <string name="deploy_camera_sets_lens_orientation">Set lens orientation</string>
+    <string name="deploy_camera_watch_live">Watch Live</string>
 
 </resources>

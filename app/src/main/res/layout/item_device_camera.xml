@@ -12,7 +12,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="start"
-        android:text="小刘模板充棉加工厂车间工厂车间5"
         android:textColor="@color/c_252525"
         android:textSize="16sp" />
 
@@ -23,11 +22,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/item_device_camera_tv_device_name"
         android:layout_marginTop="8dp"
-        android:drawableLeft="@drawable/item_device_online"
         android:drawablePadding="5dp"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:text="在线"
         android:textColor="@color/c_1dbb99"
         android:textSize="12sp" />
 
@@ -40,7 +37,6 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/item_device_camera_tv_onlinestate"
-        android:text="01A01117C6FF906A"
         android:textColor="@color/c_a6a6a6"
         android:textSize="12sp" />
 
@@ -60,33 +56,39 @@
         >
 
         <TextView
+            android:id="@+id/orientation_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="4dp"
             android:background="@drawable/shape_bg_solid_fa_stroke_df_full_corner"
-            android:drawableLeft="@drawable/camera_device_right"
             android:gravity="center"
+            android:includeFontPadding="false"
             android:paddingLeft="10dp"
             android:paddingTop="4dp"
             android:paddingRight="10dp"
             android:paddingBottom="4dp"
-            android:text="正东"
             android:textColor="@color/c_252525"
-            android:textSize="10sp" />
+
+            android:textSize="10sp"
+            android:visibility="gone" />
 
         <TextView
+            android:id="@+id/installationmode_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="4dp"
             android:background="@drawable/shape_bg_solid_fa_stroke_df_full_corner"
             android:gravity="center"
+            android:includeFontPadding="false"
             android:paddingLeft="10dp"
             android:paddingTop="4dp"
             android:paddingRight="10dp"
             android:paddingBottom="4dp"
-            android:text="悬臂托装"
+
             android:textColor="@color/c_252525"
-            android:textSize="10sp" />
+            android:textSize="10sp"
+            android:visibility="gone" />
     </LinearLayout>
-    >
 </RelativeLayout>

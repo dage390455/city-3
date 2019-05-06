@@ -19,8 +19,10 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.CameraListPopAdapter;
-import com.sensoro.smartcity.model.InspectionStatusCountModel;
+import com.sensoro.smartcity.model.CameraFilterModel;
+import com.yixia.camera.util.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class CameraListFilterPopupWindow {
@@ -32,6 +34,9 @@ public class CameraListFilterPopupWindow {
     private TextView resetFilter, saveFilter;
     CameraListPopAdapter cameraListPopAdapter;
 
+    private SelectModleListener mSelectModleListener;
+    private DismissListener dismissListener;
+
     public CameraListFilterPopupWindow(final Activity activity) {
         mActivity = activity;
         View view = LayoutInflater.from(activity).inflate(R.layout.pop_camera_list_filter, null);
@@ -39,34 +44,42 @@ public class CameraListFilterPopupWindow {
         mLl = view.findViewById(R.id.item_pop_select_state_ll);
         resetFilter = view.findViewById(R.id.camera_list_reset_filter);
         saveFilter = view.findViewById(R.id.camera_list_save_filter);
-//        view.findViewById(R.id.pop_inspection_task_view).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mRl.startAnimation(dismissTranslateAnimation);
-//            }
-//        });
+        view.findViewById(R.id.item_pop_select_state_ll).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLl.startAnimation(dismissTranslateAnimation);
+            }
+        });
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         mRcStateSelect.setLayoutManager(linearLayoutManager);
         cameraListPopAdapter = new CameraListPopAdapter(activity);
         mRcStateSelect.setAdapter(cameraListPopAdapter);
 
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 1200);
 
+
+        mRcStateSelect.setLayoutParams(layoutParams);
+
+
+//        WindowManager wm = (WindowManager) mActivity.getSystemService(Context.WINDOW_SERVICE);
+//        int height = wm.getDefaultDisplay().getHeight();
 //
-//        cameraListPopAdapter.setOnItemClickListener(new RecycleViewItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                listener.onSelectDeviceTypeItemClick(view,position);
 //
-//            }
-//        });
+//        if (height - mRcStateSelect.getLayoutParams().height < 100) {
+//
+//        }
+
+
         mPopupWindow = new PopupWindow(activity);
         mPopupWindow.setContentView(view);
+        mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+
+        mPopupWindow.setFocusable(true);
         mPopupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_aa000000)));
         mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
-//        mPopupWindow.setFocusable(true);
         initAnimation();
         resetFilter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,18 +88,22 @@ public class CameraListFilterPopupWindow {
                 if (null != cameraListPopAdapter.getmStateCountList()) {
 
 
-                    List<InspectionStatusCountModel> list = cameraListPopAdapter.getmStateCountList();
+                    List<CameraFilterModel> list = cameraListPopAdapter.getmStateCountList();
 
-                    for (InspectionStatusCountModel model : list) {
+                    for (CameraFilterModel model : list) {
 
-                        for (InspectionStatusCountModel countModel : model.list) {
+                        for (CameraFilterModel.ListBean countModel : model.getList()) {
 
-                            countModel.isSelect = false;
+                            countModel.setSelect(false);
                         }
 
                     }
 
                     cameraListPopAdapter.notifyDataSetChanged();
+                    if (mSelectModleListener != null) {
+
+                        mSelectModleListener.selectedListener(null);
+                    }
 //                    cameraListPopAdapter = new CameraListPopAdapter(activity);
 //                    mRcStateSelect.setAdapter(cameraListPopAdapter);
                 }
@@ -101,29 +118,37 @@ public class CameraListFilterPopupWindow {
                 if (null != cameraListPopAdapter.getmStateCountList()) {
 
 
-                    StringBuffer stringBuffer = new StringBuffer();
-                    List<InspectionStatusCountModel> list = cameraListPopAdapter.getmStateCountList();
+                    List<CameraFilterModel> list = cameraListPopAdapter.getmStateCountList();
 
-                    for (InspectionStatusCountModel model : list) {
+                    HashMap hashMap = new HashMap();
+                    for (CameraFilterModel model : list) {
 
-                        for (InspectionStatusCountModel countModel : model.list) {
+                        String key = model.getKey();
+                        StringBuffer stringBuffer = new StringBuffer();
 
 
-                            if (countModel.isSelect) {
-                                stringBuffer.append(countModel.statusTitle);
+                        for (CameraFilterModel.ListBean listBean : model.getList()) {
 
+                            if (listBean.isSelect()) {
+                                stringBuffer.append(listBean.getCode());
+
+                                stringBuffer.append(",");
                             }
-
-
+                        }
+                        if (!StringUtils.isEmpty(stringBuffer.toString())) {
+//                            stringBuffer.substring(0, stringBuffer.length() - 1);
+                            stringBuffer.deleteCharAt(stringBuffer.length() - 1).toString();
+                            hashMap.put(key, stringBuffer);
                         }
 
                     }
-//                    if (stringBuffer.length() > 0) {
-//
-//                        SensoroToast.getInstance().makeText(stringBuffer.toString(), Toast.LENGTH_SHORT).show();
-//                    }
 
+                    if (mSelectModleListener != null) {
+
+                        mSelectModleListener.selectedListener(hashMap);
+                    }
                     dismiss();
+
                 }
 
             }
@@ -143,6 +168,10 @@ public class CameraListFilterPopupWindow {
             @Override
             public void onAnimationEnd(Animation animation) {
                 mPopupWindow.dismiss();
+
+                if (null != dismissListener) {
+                    dismissListener.dismiss();
+                }
             }
 
             @Override
@@ -153,7 +182,7 @@ public class CameraListFilterPopupWindow {
 
     }
 
-    public void updateSelectDeviceStatusList(List<InspectionStatusCountModel> list) {
+    public void updateSelectDeviceStatusList(List<CameraFilterModel> list) {
         cameraListPopAdapter.updateDeviceTypList(list);
     }
 
@@ -204,6 +233,27 @@ public class CameraListFilterPopupWindow {
 
     public void clearAnimation() {
         mPopupWindow.setAnimationStyle(-1);
+    }
+
+
+    public void setSelectModleListener(SelectModleListener listener) {
+
+        mSelectModleListener = listener;
+    }
+
+    public interface SelectModleListener {
+
+        void selectedListener(HashMap<String, String> hashMap);
+    }
+
+    public void setDismissListener(DismissListener listener) {
+
+        dismissListener = listener;
+    }
+
+    public interface DismissListener {
+
+        void dismiss();
     }
 
 
