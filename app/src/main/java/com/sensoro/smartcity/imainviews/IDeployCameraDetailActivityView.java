@@ -43,4 +43,10 @@ public interface IDeployCameraDetailActivityView extends IToast, IProgressDialog
     void setDeployDeviceType(String text);
 
     void setUploadBtnStatus(boolean isEnable);
+
+    void setDeployMethod(String method);
+
+    void setDeployOrientation(String orientation);
+
+    void setDeployCameraStatus(String status);
 }

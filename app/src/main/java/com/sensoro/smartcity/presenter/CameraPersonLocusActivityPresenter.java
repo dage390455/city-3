@@ -292,7 +292,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
 
     public void doMoveLeft() {
         index--;
-        if (index > -1 && data.size() > index) {
+        if (index > -1 &&data!= null&& data.size() > index) {
             DeviceCameraPersonFaceRsp.DataBean bean = data.get(index);
             LatLng latLng = new LatLng(bean.getLatitude(), bean.getLongitude());
             getView().setMapCenter(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, mMapZoom, 0, 30)));
@@ -351,7 +351,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
 
     public void doMoveRight() {
         index++;
-        if (index > -1 && data.size() > index){
+        if (index > -1 &&data!= null&& data.size() > index){
             DeviceCameraPersonFaceRsp.DataBean bean = data.get(index);
             LatLng latLng = new LatLng(bean.getLatitude(), bean.getLongitude());
             getView().setMapCenter(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, mMapZoom, 0, 30)));
@@ -385,6 +385,9 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
     }
 
     public void doSeekBarTouch(int mSeekBarProgres) {
+        if (data == null) {
+            return;
+        }
         if (mSeekBarProgres != index) {
             index = mSeekBarProgres;
 

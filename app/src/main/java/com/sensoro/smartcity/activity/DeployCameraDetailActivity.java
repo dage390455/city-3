@@ -2,6 +2,7 @@ package com.sensoro.smartcity.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
@@ -392,6 +393,51 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
     }
 
     @Override
+    public void setDeployMethod(String method) {
+        if (TextUtils.isEmpty(method)) {
+            tvAcDeployDeviceCameraDeployMethod.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+            tvAcDeployDeviceCameraDeployMethod.setText(mActivity.getString(R.string.required));
+        } else {
+            tvAcDeployDeviceCameraDeployMethod.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+            tvAcDeployDeviceCameraDeployMethod.setText(method);
+        }
+    }
+
+    @Override
+    public void setDeployOrientation(String orientation) {
+        if (TextUtils.isEmpty(orientation)) {
+            tvAcDeployDeviceCameraDeployOrientation.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+            tvAcDeployDeviceCameraDeployOrientation.setText(mActivity.getString(R.string.required));
+        } else {
+            tvAcDeployDeviceCameraDeployOrientation.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+            tvAcDeployDeviceCameraDeployOrientation.setText(orientation);
+        }
+    }
+
+    @Override
+    public void setDeployCameraStatus(String status) {
+        switch (status) {
+            case "0:":
+                //离线
+                tvAcDeployDeviceCameraDeployLive.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+                Drawable drawableOffline = mActivity.getResources().getDrawable(R.drawable.shape_small_oval_fa6a6a6);
+                drawableOffline.setBounds(0, 0, drawableOffline.getMinimumWidth(), drawableOffline.getMinimumHeight());
+                tvAcDeployDeviceCameraDeployLive.setText(mActivity.getString(R.string.deploy_camera_status_offline));
+                tvAcDeployDeviceCameraDeployLive.setCompoundDrawables(drawableOffline, null, null, null);
+                break;
+            case "1":
+                //在线
+                tvAcDeployDeviceCameraDeployLive.setTextColor(mActivity.getResources().getColor(R.color.c_1DBB99));
+                Drawable drawableOnline = mActivity.getResources().getDrawable(R.drawable.shape_small_oval_f1dbb99);
+                drawableOnline.setBounds(0, 0, drawableOnline.getMinimumWidth(), drawableOnline.getMinimumHeight());
+                tvAcDeployDeviceCameraDeployLive.setText(mActivity.getString(R.string.deploy_camera_status_online));
+                tvAcDeployDeviceCameraDeployLive.setCompoundDrawables(drawableOnline, null, null, null);
+                break;
+        }
+
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.dialog_deploy_device_upload_tv_confirm:
@@ -426,11 +472,10 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
                 mPresenter.doDeployMap();
                 break;
             case R.id.ll_ac_deploy_device_camera_deploy_method:
-                int i = 1 / 0;
-                //
+                mPresenter.doDeployMethod();
                 break;
             case R.id.ll_ac_deploy_device_camera_deploy_orientation:
-                //
+                mPresenter.doDeployOrientation();
                 break;
         }
     }

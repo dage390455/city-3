@@ -3,6 +3,7 @@ package com.shuyu.gsyvideoplayer.utils;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.OrientationEventListener;
 
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
@@ -50,7 +51,7 @@ public class OrientationUtils {
                     return;
                 }
                 // 设置竖屏
-                if (((rotation >= 0) && (rotation <= 30)) || (rotation >= 330)) {
+                if (((rotation >= 0) && (rotation <= 60)) || (rotation >= 300)) {
                     if (mClick) {
                         if (mIsLand > 0 && !mClickLand) {
                             return;
@@ -76,7 +77,7 @@ public class OrientationUtils {
                     }
                 }
                 // 设置横屏
-                else if (((rotation >= 230) && (rotation <= 310))) {
+                else if ((rotation >180/*) && (rotation <= 270)*/)) {
                     if (mClick) {
                         if (!(mIsLand == 1) && !mClickPort) {
                             return;
@@ -98,7 +99,7 @@ public class OrientationUtils {
                     }
                 }
                 // 设置反向横屏
-                else if (rotation > 30 && rotation < 95) {
+                else  {
                     if (mClick) {
                         if (!(mIsLand == 2) && !mClickPort) {
                             return;

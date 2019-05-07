@@ -964,6 +964,8 @@
     <string name="deploy_camera_install_method">安装方式</string>
     <string name="deploy_camera_sets_lens_orientation">设置镜头朝向</string>
     <string name="deploy_camera_watch_live">观看直播</string>
+    <string name="deploy_camera_status_online">在线</string>
+    <string name="deploy_camera_status_offline">离线</string>
 
 
 </resources>

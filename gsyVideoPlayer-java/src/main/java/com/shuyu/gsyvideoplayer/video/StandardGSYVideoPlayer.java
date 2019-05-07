@@ -1,6 +1,5 @@
 package com.shuyu.gsyvideoplayer.video;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -77,7 +76,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     //    private RelativeLayout mask_layout_top;
     private ToggleButton audioIv;
 
-    private TextView mask_title_tv;
+    //    private TextView mask_title_tv;
     //亮度dialog
     protected Dialog mBrightnessDialog;
 
@@ -159,7 +158,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         playBtn.setText(R.string.play);
 
         tiptv.setText(getResources().getString(R.string.mobile_network));
-        mask_title_tv.setText(mTitle);
+//        mask_title_tv.setText(mTitle);
 
 //        rMobileData.setBackgroundColor(Color.TRANSPARENT);
 
@@ -175,7 +174,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         playBtn.setVisibility(GONE);
         rMobileData.setVisibility(VISIBLE);
         playRetryBtn.setVisibility(GONE);
-        mask_title_tv.setText(mTitle);
+//        mask_title_tv.setText(mTitle);
 //        rMobileData.setBackgroundColor(Color.parseColor("#5d5d5d"));
 
 
@@ -195,7 +194,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
         rMobileData.setVisibility(VISIBLE);
         playRetryBtn.setVisibility(GONE);
-        mask_title_tv.setText(mTitle);
+//        mask_title_tv.setText(mTitle);
 
 
         rMobileData.setBackgroundColor(Color.parseColor("#66000000"));
@@ -325,20 +324,20 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         playRetryBtn = findViewById(R.id.playa_retry_btn);
 
 
-        back_mask_tv = findViewById(R.id.mask_iv_back);
-        mask_title_tv = findViewById(R.id.mask_title_tv);
+//        back_mask_tv = findViewById(R.id.mask_iv_back);
+//        mask_title_tv = findViewById(R.id.mask_title_tv);
         tiptv = findViewById(R.id.tip_data_tv);
 
 
-        back_mask_tv.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (getContext() instanceof Activity) {
-                    ((Activity) getContext()).finish();
-                }
-            }
-        });
+//        back_mask_tv.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                if (getContext() instanceof Activity) {
+//                    ((Activity) getContext()).finish();
+//                }
+//            }
+//        });
 
 
         audioIv = findViewById(R.id.audio_iv);
@@ -1147,7 +1146,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         startDismissControlViewTimer();
     }
 
-    public void setNoVideo(){
+    public void setNoVideo() {
         rMobileData.setVisibility(VISIBLE);
         tiptv.setText(getResources().getString(R.string.no_vido));
         playBtn.setVisibility(GONE);
@@ -1169,12 +1168,32 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         audioIv.setChecked(audioIsChecked);
     }
 
+
+//    @Override
+//    public void onVideoResume() {
+//        super.onVideoResume();
+//
+//        if (isLive == View.INVISIBLE) {
+//            mStateTv.setText(getResources().getString(R.string.live));
+//            mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_29c_shadow);
+//        } else {
+//            mStateTv.setText(getResources().getString(R.string.gsy_video));
+//            mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_f48f57_shadow);
+//        }
+//
+//        audioIv.setChecked(audioIsChecked);
+//    }
+
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-        if (broadcastReceiver != null) {
-            mContext.unregisterReceiver(broadcastReceiver);
+        try {
+            if (broadcastReceiver != null) {
+                mContext.unregisterReceiver(broadcastReceiver);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -1183,11 +1202,37 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     public void onAutoCompletion() {
         super.onAutoCompletion();
 
-        if (replayListener != null) {
 
-            replayListener.rePlay();
-            replay();
-        }
+//        replayListener.rePlay();
+
+
+//        if (isIfCurrentIsFullscreen()) {
+//
+//            backFromFull(getContext());
+////          OrientationUtils setEnabled(false);
+//        }
+//        postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                replay();
+//
+//            }
+//        }, 300);
+        replay();
+
+        playBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeBottomContainer(View.VISIBLE);
+
+
+//                    gsyVideoOption.setUrl(getCurPlay().mUrl).build(getCurPlay());
+                startPlayLogic();
+//                    orientationUtils.setEnable(true);
+
+
+            }
+        });
 
     }
 

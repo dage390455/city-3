@@ -47,7 +47,7 @@ public interface ICameraDetailActivityView extends IProgressDialog, IToast , IAc
 
     void doPlayerResume();
 
-    void doPlayLive(String url, String cameraName);
+    void doPlayLive(String url, String cameraName, boolean b);
 
     void setGsyVideoNoVideo();
 }

@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.AdapterView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
@@ -37,6 +39,7 @@ import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.RegexUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.smartcity.widget.popup.SelectDialog;
 import com.sensoro.smartcity.widget.popup.UpLoadPhotosUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -63,9 +66,27 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
         }
     };
     private String originName;
+    private final List<String> deployMethods = new ArrayList<>();
+    private final List<String> deployOrientations = new ArrayList<>();
 
     @Override
     public void initData(Context context) {
+        deployMethods.add("支架");
+        deployMethods.add("吊顶");
+        deployMethods.add("壁装");
+        deployMethods.add("立杆(大于8米)");
+        deployMethods.add("立杆(6~8米)");
+        deployMethods.add("立杆(小于6米)");
+        deployMethods.add("悬臂拖装");
+        deployMethods.add("悬臂吊装");
+        deployOrientations.add("正东朝向");
+        deployOrientations.add("正南朝向");
+        deployOrientations.add("正西朝向");
+        deployOrientations.add("正北朝向");
+        deployOrientations.add("东南朝向");
+        deployOrientations.add("东北朝向");
+        deployOrientations.add("西南朝向");
+        deployOrientations.add("西北朝向");
         mContext = (Activity) context;
         mHandler = new Handler(Looper.getMainLooper());
         onCreate();
@@ -78,6 +99,9 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
             mHandler.post(this);
         }
         mHandler.post(signalTask);
+        //
+        getView().setDeployCameraStatus("1");
+
     }
 
     private void init() {
@@ -659,6 +683,15 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
         }
     }
 
+    private boolean checkHasDeployMethod() {
+        return false;
+    }
+
+    private boolean checkHasDeployOrientation() {
+        return false;
+    }
+
+
     /**
      * 检测姓名和地址是否填写
      *
@@ -730,5 +763,26 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
 
     @Override
     public void onStop() {
+    }
+
+    public void doDeployMethod() {
+        AppUtils.showDialog(mContext, new SelectDialog.SelectDialogListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String method = deployMethods.get(position);
+                getView().setDeployMethod(method);
+            }
+        }, deployMethods);
+
+    }
+
+    public void doDeployOrientation() {
+        AppUtils.showDialog(mContext, new SelectDialog.SelectDialogListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String orientation = deployOrientations.get(position);
+                getView().setDeployOrientation(orientation);
+            }
+        }, deployOrientations);
     }
 }

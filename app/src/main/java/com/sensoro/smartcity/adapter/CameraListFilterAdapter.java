@@ -3,6 +3,7 @@ package com.sensoro.smartcity.adapter;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,8 +44,11 @@ public class CameraListFilterAdapter extends RecyclerView.Adapter<CameraListFilt
         Resources resources = mContext.getResources();
         final CameraFilterModel.ListBean ic = mStateCountList.get(position);
 
-        String name = ic.getName().replace("（", "(").replace("）", ")");
-        holder.itemPopTvSelectState.setText(name);
+        if (!TextUtils.isEmpty(ic.getName())) {
+
+            String name = ic.getName().replace("（", "(").replace("）", ")");
+            holder.itemPopTvSelectState.setText(name);
+        }
 
 
         boolean select = ic.isSelect() && !ic.isReset();

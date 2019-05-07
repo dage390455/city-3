@@ -92,6 +92,7 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
 
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
+        setMoveLeftClickable(false);
         includeTextTitleTvTitle.setText(getString(R.string.move_locus));
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         seekBarTrackAcPersonLocus.setOnSeekChangeListener(new IndicatorSeekBar.OnSeekBarChangeListener() {

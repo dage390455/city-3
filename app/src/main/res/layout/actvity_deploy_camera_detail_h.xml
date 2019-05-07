@@ -407,6 +407,8 @@
                         android:layout_marginBottom="12dp"
                         android:layout_weight="1"
                         android:text="@string/deploy_camera_watch_live"
+                        android:drawableStart="@drawable/ic_deploy_camera_video"
+                        android:drawablePadding="10dp"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
@@ -416,8 +418,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="8dp"
-
-                        android:text="@string/required"
+                        android:drawablePadding="4dp"
                         android:textColor="@color/c_a6a6a6" />
 
                     <ImageView

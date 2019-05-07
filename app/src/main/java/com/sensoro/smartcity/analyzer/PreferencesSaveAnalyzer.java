@@ -89,7 +89,7 @@ public class PreferencesSaveAnalyzer {
         switch (status) {
 
             case SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST:
-                SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_WARN, Context
+                SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_SEARCH_CAMERALIST, Context
                         .MODE_PRIVATE).edit().putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, content).apply();
                 break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN:
@@ -136,7 +136,7 @@ public class PreferencesSaveAnalyzer {
         String oldText = null;
         switch (status) {
             case SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST:
-                oldText = SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_WARN, Context
+                oldText = SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_SEARCH_CAMERALIST, Context
                         .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
                 break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN:
@@ -190,7 +190,7 @@ public class PreferencesSaveAnalyzer {
         switch (status) {
 
             case SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST:
-                SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_WARN, Activity.MODE_PRIVATE)
+                SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_SEARCH_CAMERALIST, Activity.MODE_PRIVATE)
                         .edit().clear().apply();
                 break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN:
