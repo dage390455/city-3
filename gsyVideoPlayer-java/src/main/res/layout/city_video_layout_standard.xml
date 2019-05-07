@@ -140,7 +140,10 @@
         <RelativeLayout
             android:id="@+id/layout_top"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:minHeight="48dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="48dp"
+
             android:background="@drawable/video_title_bg"
             android:gravity="center_vertical">
 
