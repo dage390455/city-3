@@ -174,7 +174,10 @@
                 android:layout_marginRight="10dp"
 
                 android:gravity="center_vertical"
-                android:padding="4dp"
+                android:paddingLeft="4dp"
+                android:paddingTop="2dp"
+                android:paddingRight="4dp"
+                android:paddingBottom="2dp"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
         </RelativeLayout>
@@ -224,69 +227,55 @@
             android:layout_height="match_parent"
             android:background="@color/c_5d5d5d"
             android:orientation="vertical"
-            android:visibility="invisible">
+            android:visibility="gone">
 
-            <TextView
-                android:id="@+id/tip_data_tv"
+            <LinearLayout
                 android:layout_width="wrap_content"
+
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="70dp"
+                android:layout_centerInParent="true"
                 android:gravity="center"
-                android:lineSpacingExtra="10dp"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/play_btn"
-                android:layout_width="68dp"
-                android:layout_height="28dp"
-                android:layout_below="@+id/tip_data_tv"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/shape_bg_corner_2dp_29c_shadow"
-                android:textColor="@color/white" />
-
-            <Button
-                android:id="@+id/playa_retry_btn"
-                android:layout_width="68dp"
-                android:layout_height="28dp"
-                android:layout_below="@+id/tip_data_tv"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/shape_bg_corner_2dp_29c_shadow"
-                android:text="@string/retry"
-                android:textColor="@color/white"
-                android:visibility="gone" />
-
-
-            <RelativeLayout
-                android:id="@+id/mask_layout_top"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:visibility="gone">
-
-                <ImageView
-                    android:id="@+id/mask_iv_back"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:paddingLeft="10dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/video_back" />
 
                 <TextView
-                    android:id="@+id/mask_title_tv"
+                    android:id="@+id/tip_data_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp" />
+                    android:gravity="center"
+                    android:lineSpacingExtra="10dp"
 
 
-            </RelativeLayout>
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/play_btn"
+                    android:layout_width="68dp"
+                    android:layout_height="28dp"
+                    android:layout_below="@+id/tip_data_tv"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/shape_bg_corner_2dp_29c_shadow"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:visibility="invisible" />
+
+                <Button
+                    android:id="@+id/playa_retry_btn"
+                    android:layout_width="68dp"
+                    android:layout_height="28dp"
+                    android:layout_below="@+id/tip_data_tv"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/shape_bg_corner_2dp_29c_shadow"
+                    android:text="@string/retry"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:visibility="invisible" />
+            </LinearLayout>
+
+
         </RelativeLayout>
-
     </RelativeLayout>
 
 

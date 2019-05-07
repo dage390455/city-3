@@ -331,35 +331,24 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
             gsyPlayerAcCameraDetail.getPlayBtn().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    gsyPlayerAcCameraDetail.changeBottomContainer(VISIBLE);
+
                     gsyVideoOption.setUrl(url1).build(getCurPlay());
                     getCurPlay().startPlayLogic();
 
-                    if (!NetworkUtils.isAvailable(CameraDetailActivity.this)) {
-                        gsyPlayerAcCameraDetail.changeNoDataType();
-                        return;
-                    }
-                    if (!NetworkUtils.isWifiConnected(CameraDetailActivity.this)) {
-                        gsyPlayerAcCameraDetail.changeMobileType();
-
-
-                        gsyPlayerAcCameraDetail.getPlayBtn().setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                gsyPlayerAcCameraDetail.changeBottomContainer(VISIBLE);
-
-                                gsyVideoOption.setUrl(url1).build(getCurPlay());
-                                getCurPlay().startPlayLogic();
-                                orientationUtils.setEnable(true);
-
-
-                            }
-                        });
-                        return;
-
-                    }
 
                 }
             });
+
+            if (!NetworkUtils.isAvailable(CameraDetailActivity.this)) {
+                gsyPlayerAcCameraDetail.changeNoDataType();
+                return;
+            }
+            if (!NetworkUtils.isWifiConnected(CameraDetailActivity.this)) {
+                gsyPlayerAcCameraDetail.changeMobileType();
+                return;
+
+            }
 
 
         } else {
