@@ -39,6 +39,7 @@ import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
+import com.sensoro.smartcity.util.ActivityTaskManager;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -195,10 +196,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         RetrofitServiceHelper.getInstance().clearLoginDataSessionId();
         Intent intent = new Intent(mContext, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        ActivityTaskManager.getInstance().AppExit(mContext);
         mContext.startActivity(intent);
         // 杀掉进程
-        android.os.Process.killProcess(android.os.Process.myPid());
-        System.exit(0);
+//        android.os.Process.killProcess(android.os.Process.myPid());
+//        System.exit(0);
 
     }
 
@@ -696,6 +698,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         Object data = eventData.data;
         switch (code) {
             case EVENT_DATA_SESSION_ID_OVERTIME:
+                try {
+                    LogUtils.loge("app crash ------>>>> EVENT_DATA_SESSION_ID_OVERTIME");
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 RetrofitServiceHelper.getInstance().cancelAllRsp();
                 reLogin();
                 break;

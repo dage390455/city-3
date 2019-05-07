@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.util.ActivityTaskManager;
 import com.sensoro.smartcity.widget.MyVideoView;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
@@ -102,8 +103,7 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
 //            vv_play.setVideoPath(mImageItem.thumbPath);
             }
         }
-
-
+        ActivityTaskManager.getInstance().pushActivity(this);
     }
 
     @Override
@@ -214,6 +214,7 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
             immersionBar.destroy();
         }
         super.onDestroy();
+        ActivityTaskManager.getInstance().popActivity(this);
     }
 
     @Override
@@ -226,5 +227,11 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
                 vv_play.start();
             }
         }, 50);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        ActivityTaskManager.getInstance().popActivity(this);
     }
 }
