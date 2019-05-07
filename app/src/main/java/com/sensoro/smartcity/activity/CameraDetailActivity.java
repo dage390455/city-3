@@ -187,7 +187,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     @Override
-    public void initVideoOption( String url,String cameraName) {
+    public void initVideoOption(String url, String cameraName) {
 
         gsyPlayerAcCameraDetail.changeBottomContainer(View.INVISIBLE);
 
@@ -437,9 +437,9 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     @Override
-    public void doPlayLive(String url, String cameraName) {
+    public void doPlayLive(String url, String cameraName, boolean isLive) {
         gsyVideoOption.setUrl(url).setVideoTitle(cameraName).build(getCurPlay());
-        gsyPlayerAcCameraDetail.changeBottomContainer(View.INVISIBLE);
+        gsyPlayerAcCameraDetail.changeBottomContainer(isLive ? View.INVISIBLE : View.VISIBLE);
         getCurPlay().startPlayLogic();
 
     }
@@ -624,7 +624,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     @OnClick({R.id.ll_select_time_ac_camera_detail, R.id.iv_time_close_ac_camera_detail,
-            R.id.ll_live_ac_camera_detail,R.id.alarm_return_top})
+            R.id.ll_live_ac_camera_detail, R.id.alarm_return_top})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ll_select_time_ac_camera_detail:

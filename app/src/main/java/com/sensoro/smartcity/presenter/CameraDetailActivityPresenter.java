@@ -367,7 +367,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     }
 
     public void doLive() {
-        getView().doPlayLive(url, TextUtils.isEmpty(mCameraName) ? "" : mCameraName);
+        getView().doPlayLive(url, TextUtils.isEmpty(mCameraName) ? "" : mCameraName, true);
         itemUrl = null;
         itemTitle = null;
     }
@@ -406,7 +406,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
         if (itemUrl == null) {
             doLive();
         }else{
-            getView().doPlayLive(itemUrl,TextUtils.isEmpty(itemTitle) ? "" : itemTitle);
+            getView().doPlayLive(itemUrl, TextUtils.isEmpty(itemTitle) ? "" : itemTitle, false);
         }
     }
 }
