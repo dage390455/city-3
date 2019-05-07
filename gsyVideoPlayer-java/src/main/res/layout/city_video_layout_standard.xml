@@ -52,7 +52,7 @@
                     android:id="@+id/play_pause_iv"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/play"/>
+                    android:src="@drawable/play" />
             </LinearLayout>
 
 
@@ -94,16 +94,16 @@
             <ToggleButton
                 android:id="@+id/audio_iv"
 
-                android:text=""
-                android:button="@drawable/toggle_button"
-
-                android:checked="false"
                 android:layout_width="22dp"
-                android:background="@color/transparent"
                 android:layout_height="22dp"
-                android:textOff=""
-                android:layout_marginRight="16dp"
+
                 android:layout_gravity="center"
+                android:layout_marginRight="16dp"
+                android:background="@color/transparent"
+                android:button="@drawable/toggle_button"
+                android:checked="false"
+                android:text=""
+                android:textOff=""
 
                 android:textOn=""
 
@@ -141,7 +141,6 @@
             android:id="@+id/layout_top"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:paddingTop="24dp"
             android:background="@drawable/video_title_bg"
             android:gravity="center_vertical">
 
@@ -150,6 +149,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:paddingLeft="10dp"
+                android:layout_centerVertical="true"
                 android:scaleType="centerInside"
                 android:src="@drawable/video_back" />
 
@@ -159,8 +159,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:textColor="@android:color/white"
-                android:textSize="18sp"
-                android:layout_alignParentBottom="true"/>
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/state_tv"
@@ -169,9 +168,9 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
+
                 android:gravity="center_vertical"
                 android:padding="4dp"
-                android:layout_alignParentBottom="true"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
         </RelativeLayout>
@@ -214,75 +213,77 @@
             android:src="@drawable/unlock"
             android:visibility="gone" />
 
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/rl_mobile_data"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/c_5d5d5d"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/tip_data_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="70dp"
-            android:gravity="center"
-            android:lineSpacingExtra="10dp"
-            android:textColor="@color/white"
-            android:textSize="14sp" />
-
-        <Button
-            android:id="@+id/play_btn"
-            android:layout_width="68dp"
-            android:layout_height="28dp"
-            android:layout_below="@+id/tip_data_tv"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/shape_bg_corner_2dp_29c_shadow"
-            android:textColor="@color/white" />
-
-        <Button
-            android:id="@+id/playa_retry_btn"
-            android:layout_width="68dp"
-            android:layout_height="28dp"
-            android:layout_below="@+id/tip_data_tv"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/shape_bg_corner_2dp_29c_shadow"
-            android:text="@string/retry"
-            android:textColor="@color/white"
-            android:visibility="gone" />
-
 
         <RelativeLayout
-            android:id="@+id/mask_layout_top"
+            android:id="@+id/rl_mobile_data"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:gravity="center_vertical"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/mask_iv_back"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:paddingLeft="10dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/video_back" />
+            android:layout_height="match_parent"
+            android:background="@color/c_5d5d5d"
+            android:orientation="vertical"
+            android:visibility="invisible">
 
             <TextView
-                android:id="@+id/mask_title_tv"
+                android:id="@+id/tip_data_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:textColor="@android:color/white"
-                android:textSize="18sp" />
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="70dp"
+                android:gravity="center"
+                android:lineSpacingExtra="10dp"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/play_btn"
+                android:layout_width="68dp"
+                android:layout_height="28dp"
+                android:layout_below="@+id/tip_data_tv"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/shape_bg_corner_2dp_29c_shadow"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/playa_retry_btn"
+                android:layout_width="68dp"
+                android:layout_height="28dp"
+                android:layout_below="@+id/tip_data_tv"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/shape_bg_corner_2dp_29c_shadow"
+                android:text="@string/retry"
+                android:textColor="@color/white"
+                android:visibility="gone" />
 
 
+            <RelativeLayout
+                android:id="@+id/mask_layout_top"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/mask_iv_back"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:paddingLeft="10dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/video_back" />
+
+                <TextView
+                    android:id="@+id/mask_title_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp" />
+
+
+            </RelativeLayout>
         </RelativeLayout>
+
     </RelativeLayout>
+
 
 </FrameLayout>

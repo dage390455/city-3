@@ -43,6 +43,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 
 /**
  * 简单详情实现模式2
@@ -99,6 +102,16 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     private void initView() {
+
+//        rMobileData = findViewById(com.shuyu.gsyvideoplayer.R.id.rl_mobile_data);
+//        playBtn = findViewById(com.shuyu.gsyvideoplayer.R.id.play_btn);
+//        playRetryBtn = findViewById(com.shuyu.gsyvideoplayer.R.id.playa_retry_btn);
+//        playRetryBtn = findViewById(com.shuyu.gsyvideoplayer.R.id.playa_retry_btn);
+//
+//
+////        back_mask_tv = findViewById(R.id.mask_iv_back);
+////        mask_title_tv = findViewById(R.id.mask_title_tv);
+//        tiptv = findViewById(com.shuyu.gsyvideoplayer.R.id.tip_data_tv);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
 
         //外部辅助的旋转，帮助全屏
@@ -106,9 +119,9 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         //初始化不打开外部的旋转
         orientationUtils.setEnable(false);
 //增加title
-        getCurPlay().getTitleTextView().setVisibility(View.VISIBLE);
+        getCurPlay().getTitleTextView().setVisibility(VISIBLE);
         //设置返回键
-        getCurPlay().getBackButton().setVisibility(View.VISIBLE);
+        getCurPlay().getBackButton().setVisibility(VISIBLE);
 //        initVideoOption();
 
         ivCalendarAcCameraDetail.setColorFilter(mActivity.getResources().getColor(R.color.c_a6a6a6));
@@ -119,7 +132,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
         returnTopAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.return_top_in_anim);
         mReturnTopImageView.setAnimation(returnTopAnimation);
-        mReturnTopImageView.setVisibility(View.GONE);
+        mReturnTopImageView.setVisibility(GONE);
 
         getCurPlay().setEnlargeImageRes(R.drawable.ic_camera_full_screen);
 
@@ -156,6 +169,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 //            }
 //        });
 
+
     }
 
     private void initRefreshLayout() {
@@ -186,6 +200,15 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     }
 
+//    private RelativeLayout rMobileData;
+//
+//    private Button playBtn;
+//
+//
+//    private Button playRetryBtn;
+//    private TextView tiptv;
+
+
     @Override
     public void initVideoOption(String url, String cameraName) {
 
@@ -211,6 +234,37 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 //                .setCacheWithPlay(true)
                 .setVideoTitle(cameraName)
                 .setVideoAllCallBack(new GSYSampleCallBack() {
+
+                    @Override
+                    public void onAutoComplete(final String url, Object... objects) {
+
+
+//
+//                        tiptv.setText(getResources().getString(com.shuyu.gsyvideoplayer.R.string.played));
+//                        playBtn.setText(getResources().getString(com.shuyu.gsyvideoplayer.R.string.replay));
+//                        playBtn.setVisibility(VISIBLE);
+//
+//                        rMobileData.setVisibility(VISIBLE);
+//                        playRetryBtn.setVisibility(GONE);
+////        mask_title_tv.setText(mTitle);
+//
+//
+//                        rMobileData.setBackgroundColor(Color.parseColor("#66000000"));
+//                        playBtn.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                gsyPlayerAcCameraDetail.changeBottomContainer(VISIBLE);
+//
+//
+////                    gsyVideoOption.setUrl(getCurPlay().mUrl).build(getCurPlay());
+//                                getCurPlay().startPlayLogic();
+////                    orientationUtils.setEnable(true);
+//
+//
+//                            }
+//                        });
+                    }
+
                     @Override
                     public void onPrepared(String url, Object... objects) {
                         super.onPrepared(url, objects);
@@ -264,8 +318,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     public void setNoContentVisible(boolean isVisible) {
-        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        rvDeviceCameraAcCameraDetail.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        icNoContent.setVisibility(isVisible ? VISIBLE : GONE);
+        rvDeviceCameraAcCameraDetail.setVisibility(isVisible ? GONE : VISIBLE);
     }
 
     @Override
@@ -291,7 +345,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                         gsyPlayerAcCameraDetail.getPlayBtn().setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                gsyPlayerAcCameraDetail.changeBottomContainer(View.VISIBLE);
+                                gsyPlayerAcCameraDetail.changeBottomContainer(VISIBLE);
 
                                 gsyVideoOption.setUrl(url1).build(getCurPlay());
                                 getCurPlay().startPlayLogic();
@@ -313,7 +367,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
             gsyVideoOption.setUrl(url1).setVideoTitle(title).build(getCurPlay());
             getCurPlay().startPlayLogic();
             orientationUtils.setEnable(true);
-            gsyPlayerAcCameraDetail.changeBottomContainer(View.VISIBLE);
+            gsyPlayerAcCameraDetail.changeBottomContainer(VISIBLE);
         }
     }
 
@@ -377,14 +431,14 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     @Override
     public boolean isSelectedDateLayoutVisible() {
-        return ivTimeCloseAcCameraDetail.getVisibility() == View.VISIBLE;
+        return ivTimeCloseAcCameraDetail.getVisibility() == VISIBLE;
     }
 
     @Override
     public void setSelectedDateLayoutVisible(boolean isVisible) {
         ivCalendarAcCameraDetail.setColorFilter(mActivity.getResources().
                 getColor(isVisible ? R.color.c_252525 : R.color.c_a6a6a6));
-        ivTimeCloseAcCameraDetail.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        ivTimeCloseAcCameraDetail.setVisibility(isVisible ? VISIBLE : GONE);
 
         if (isVisible) {
             tvSelectTimeAcCameraDetail.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
@@ -439,7 +493,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     @Override
     public void doPlayLive(String url, String cameraName, boolean isLive) {
         gsyVideoOption.setUrl(url).setVideoTitle(cameraName).build(getCurPlay());
-        gsyPlayerAcCameraDetail.changeBottomContainer(isLive ? View.INVISIBLE : View.VISIBLE);
+        gsyPlayerAcCameraDetail.changeBottomContainer(isLive ? View.INVISIBLE : VISIBLE);
         getCurPlay().startPlayLogic();
 
     }
@@ -479,15 +533,15 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
                 if (linearLayoutManager.findFirstVisibleItemPosition() > 4) {
                     if (newState == 0) {
-                        mReturnTopImageView.setVisibility(View.VISIBLE);
+                        mReturnTopImageView.setVisibility(VISIBLE);
                         if (returnTopAnimation != null && returnTopAnimation.hasEnded()) {
                             mReturnTopImageView.startAnimation(returnTopAnimation);
                         }
                     } else {
-                        mReturnTopImageView.setVisibility(View.GONE);
+                        mReturnTopImageView.setVisibility(GONE);
                     }
                 } else {
-                    mReturnTopImageView.setVisibility(View.GONE);
+                    mReturnTopImageView.setVisibility(GONE);
                 }
             }
 
@@ -635,7 +689,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 break;
             case R.id.alarm_return_top:
                 rvDeviceCameraAcCameraDetail.smoothScrollToPosition(0);
-                mReturnTopImageView.setVisibility(View.GONE);
+                mReturnTopImageView.setVisibility(GONE);
                 refreshLayout.closeHeaderOrFooter();
                 break;
 
