@@ -163,18 +163,18 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
 //        getCurPlay().startPlayLogic();
     }
 
-    @Override
-    public boolean setMyCurrentActivityTheme() {
-        setTheme(R.style.Theme_AppCompat_Full);
-        return true;
-    }
+//    @Override
+//    public boolean setMyCurrentActivityTheme() {
+//        setTheme(R.style.Theme_AppCompat_Full);
+//        return true;
+//    }
 
-    @Override
-    public boolean isActivityOverrideStatusBar() {
-        immersionBar = ImmersionBar.with(mActivity);
-        immersionBar.transparentStatusBar().init();
-        return true;
-    }
+//    @Override
+//    public boolean isActivityOverrideStatusBar() {
+//        immersionBar = ImmersionBar.with(mActivity);
+//        immersionBar.transparentStatusBar().init();
+//        return true;
+//    }
 
     @Override
     public void startPlayLogic(final String url1) {
