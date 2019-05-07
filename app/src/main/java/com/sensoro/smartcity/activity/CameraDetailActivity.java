@@ -195,7 +195,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         if (imageView == null) {
             imageView = new ImageView(this);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setImageResource(R.mipmap.ic_launcher);
+//            imageView.setImageResource(R.mipmap.ic_launcher);
         }
 
 
@@ -501,12 +501,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-//                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                int firstPosition = manager.findFirstVisibleItemPosition();
-                mPresenter.doDateTime(firstPosition);
-//                }
-
 
             }
 

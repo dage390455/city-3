@@ -14,6 +14,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.CameraPersonAvatarHistoryActivity;
+import com.sensoro.smartcity.adapter.model.DeviceCameraFacePicListModel;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraDetailActivityView;
@@ -130,20 +131,6 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                     }
 
                 }
-//                if (direction == Constants.DIRECTION_DOWN) {
-////                    yearMonthDate = null;
-////                    getView().setLiveState(true);
-////                    getView().clearClickPosition();
-////                    refreshData(deviceCameraFacePicListRsp,null);
-//
-//                }else if(direction == Constants.DIRECTION_UP){
-////                    List<DeviceCameraFacePic> data = deviceCameraFacePicListRsp.getData();
-////                    if (data == null || data.size() <1) {
-////                        getView().onPullRefreshCompleteNoMoreData();
-////                        return;
-////                    }
-////                    refreshData(deviceCameraFacePicListRsp,getView().getRvListData());
-//                }
                 if (isAttachedView()) {
                     getView().dismissProgressDialog();
                 }
@@ -153,84 +140,15 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().dismissProgressDialog();
+                if (isAttachedView()) {
+                    getView().dismissProgressDialog();
+                }
+
             }
         });
     }
 
 
-//    private void refreshData(DeviceCameraFacePicListRsp deviceCameraFacePicListRsp,List<DeviceCameraFacePicListModel> oldList) {
-//        ArrayList<DeviceCameraFacePicListModel> cameraLists = new ArrayList<>();
-//
-//        if (oldList != null) {
-//            cameraLists.addAll(oldList);
-//        }
-//        List<DeviceCameraFacePic> data = deviceCameraFacePicListRsp.getData();
-//        if (data!= null && data.size() > 0) {
-//            minId = data.get(data.size()-1).getId();
-//            String currentDate = DateUtil.getDate(System.currentTimeMillis());
-//            for (DeviceCameraFacePic datum : data) {
-//                long l = 0;
-//                try {
-//                    l = Long.parseLong(datum.getCaptureTime());
-//                } catch (NumberFormatException e) {
-//                    e.printStackTrace();
-//                    //时间错误，把这项数据丢弃
-////                        time = mActivity.getString(R.s)
-//                    continue;
-//                }
-//
-//
-//                String ymd = DateUtil.getDate(l);
-//                if (currentDate.equals(ymd)) {
-//                    ymd = "今天";
-//                }else if(isYesterday(currentDate,ymd)){
-//                    ymd = "昨天";
-//                }
-//                if (yearMonthDate == null) {
-//                    yearMonthDate = ymd;
-//                    DeviceCameraFacePicListModel model = new DeviceCameraFacePicListModel();
-//                    model.time = ymd;
-//                    model.pics = null;
-//                    cameraLists.add(model);
-//                }else if(!yearMonthDate.equals(ymd)){
-//                    yearMonthDate = ymd;
-//                    DeviceCameraFacePicListModel model = new DeviceCameraFacePicListModel();
-//                    model.time = ymd;
-//                    model.pics = null;
-//                    cameraLists.add(model);
-//                }
-//
-//
-//                String time = DateUtil.getStrTime_ymd_hm(l);
-//                boolean isAdded = false;
-//                for (DeviceCameraFacePicListModel cameraList : cameraLists) {
-//                    if (cameraList.time.equals(time)) {
-//                        isAdded = true;
-//                        cameraList.pics.add(datum);
-//                        break;
-//                    }
-//                }
-//                if (!isAdded) {
-//                    DeviceCameraFacePicListModel model = new DeviceCameraFacePicListModel();
-//                    model.time = time;
-//                    model.pics.add(datum);
-//                    cameraLists.add(model);
-//                }
-//            }
-//
-//            cameraLists.remove(0);
-//
-//            if (isAttachedView()) {
-//                getView().onPullRefreshComplete();
-//                getView().updateCameraList(cameraLists);
-//                if (oldList == null) {
-//                    doDateTime(0);
-//                }
-//            }
-//        }
-//
-//    }
 
     private boolean isYesterday(String currentDate, String ymd) {
         String[] currentSplit = currentDate.split("-");
@@ -335,28 +253,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
     }
 
-    public void doDateTime(int firstPosition) {
-//        DeviceCameraFacePicListModel model = getView().getItemData(firstPosition);
-//        if (model.pics == null) {
-//            getView().setDateTime(model.time);
-//        }else{
-//            String currentDate = DateUtil.getDate(System.currentTimeMillis());
-//            long l = 0;
-//            try {
-//                l = Long.parseLong(model.pics.get(0).getCaptureTime());
-//                String ymd = DateUtil.getDate(l);
-//                if (currentDate.equals(ymd)) {
-//                    ymd = "今天";
-//                }else if(isYesterday(currentDate,ymd)){
-//                    ymd = "昨天";
-//                }
-//                getView().setDateTime(ymd);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//
-//        }
-    }
+
 
     public void doRefresh() {
         requestData(cid,Constants.DIRECTION_DOWN);

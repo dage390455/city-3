@@ -1,10 +1,13 @@
 package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +41,8 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
     TextView includeImvTitleTvTitle;
     @BindView(R.id.include_imv_title_imv_subtitle)
     ImageView includeImvTitleImvSubtitle;
+    @BindView(R.id.include_imv_title_imv_cl_root)
+    ConstraintLayout includeImvTitleImvClRoot;
     @BindView(R.id.gsy_player_ac_camera_person_detail)
     StandardGSYVideoPlayer gsyPlayerAcCameraPersonDetail;
     private OrientationUtils orientationUtils;
@@ -163,18 +168,18 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
 //        getCurPlay().startPlayLogic();
     }
 
-//    @Override
-//    public boolean setMyCurrentActivityTheme() {
-//        setTheme(R.style.Theme_AppCompat_Full);
-//        return true;
-//    }
+    @Override
+    public boolean setMyCurrentActivityTheme() {
+        setTheme(R.style.Theme_AppCompat_Full);
+        return true;
+    }
 
-//    @Override
-//    public boolean isActivityOverrideStatusBar() {
-//        immersionBar = ImmersionBar.with(mActivity);
-//        immersionBar.transparentStatusBar().init();
-//        return true;
-//    }
+    @Override
+    public boolean isActivityOverrideStatusBar() {
+        immersionBar = ImmersionBar.with(mActivity);
+        immersionBar.transparentStatusBar().init();
+        return true;
+    }
 
     @Override
     public void startPlayLogic(final String url1) {
@@ -274,6 +279,7 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
         if (isPlay && !isPause) {
             getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
         }
+
     }
 
     @OnClick(R.id.include_imv_title_imv_arrows_left)
