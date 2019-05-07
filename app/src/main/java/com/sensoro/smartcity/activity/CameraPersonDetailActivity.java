@@ -67,7 +67,7 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeImvTitleImvSubtitle.setVisibility(View.GONE);
 
-//        initViewHeight();
+        initViewHeight();
         initGsyVideo();
 
 
