@@ -184,28 +184,31 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
     public void replay() {
 
-        tiptv.setText(getResources().getString(R.string.played));
-        playBtn.setText(getResources().getString(R.string.replay));
-        playBtn.setVisibility(VISIBLE);
+        if (rMobileData.getVisibility() != VISIBLE) {
+            tiptv.setText(getResources().getString(R.string.played));
+            playBtn.setText(getResources().getString(R.string.replay));
+            playBtn.setVisibility(VISIBLE);
 
-        rMobileData.setVisibility(VISIBLE);
-        playRetryBtn.setVisibility(GONE);
+            rMobileData.setVisibility(VISIBLE);
+            playRetryBtn.setVisibility(GONE);
 
-        rMobileData.setBackground(null);
+            rMobileData.setBackground(null);
 
-        rMobileData.setBackgroundColor(Color.parseColor("#66000000"));
-        playBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeBottomContainer(View.VISIBLE);
-
-
-                startPlayLogic();
+            rMobileData.setBackgroundColor(Color.parseColor("#66000000"));
+            playBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    changeBottomContainer(View.VISIBLE);
 
 
-            }
-        });
+                    startPlayLogic();
 
+
+                }
+            });
+
+
+        }
     }
 
     /**
@@ -303,6 +306,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
             }
         }
+
     }
 
 
@@ -624,27 +628,27 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 //
 //            }
 //        }
-        if (getCurrentState() == CURRENT_STATE_AUTO_COMPLETE) {
-
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    replay();
-
-//                    if (null == viewMask) {
-//                        viewMask = LayoutInflater.from(getContext()).inflate(R.layout.mask, null);
+//        if (getCurrentState() == CURRENT_STATE_AUTO_COMPLETE) {
 //
-//                        viewMask.setTag("viewmask");
-//                        getViewGroup().addView(viewMask);
-//                    } else {
-//                        viewMask.setVisibility(VISIBLE);
-//                        Log.i("已存在===", String.valueOf(viewMask.getVisibility()));
+//            post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    replay();
 //
-//                    }
-
-                }
-            });
-        }
+////                    if (null == viewMask) {
+////                        viewMask = LayoutInflater.from(getContext()).inflate(R.layout.mask, null);
+////
+////                        viewMask.setTag("viewmask");
+////                        getViewGroup().addView(viewMask);
+////                    } else {
+////                        viewMask.setVisibility(VISIBLE);
+////                        Log.i("已存在===", String.valueOf(viewMask.getVisibility()));
+////
+////                    }
+//
+//                }
+//            });
+//        }
         return gsyBaseVideoPlayer;
     }
 
@@ -664,15 +668,15 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 //        }
 
 
-        if (getCurrentState() == CURRENT_STATE_AUTO_COMPLETE) {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    replay();
-
-                }
-            });
-        }
+//        if (getCurrentState() == CURRENT_STATE_AUTO_COMPLETE) {
+//            post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    replay();
+//
+//                }
+//            });
+//        }
     }
 
     /********************************各类UI的状态显示*********************************************/
@@ -1215,7 +1219,13 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
                 }
             });
+        } else {
+            if (rMobileData.getVisibility() == VISIBLE) {
+                rMobileData.setVisibility(GONE);
+            }
+
         }
+
     }
 
 
