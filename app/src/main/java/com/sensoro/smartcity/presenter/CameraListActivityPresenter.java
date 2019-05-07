@@ -137,6 +137,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
             public void onCompleted(DeviceCameraDetailRsp deviceCameraDetailRsp) {
                 DeviceCameraDetailInfo data = deviceCameraDetailRsp.getData();
                 if (data != null) {
+
                     String hls = data.getHls();
                     String name = data.getCamera().getName();
                     Intent intent = new Intent();
@@ -144,6 +145,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                     intent.putExtra("cid", cid);
                     intent.putExtra("hls", hls);
                     intent.putExtra("cameraName", name);
+                    intent.putExtra("lastCover",data.getLastCover());
                     getView().startAC(intent);
                 } else {
                     getView().toastShort(mContext.getString(R.string.camera_info_get_failed));

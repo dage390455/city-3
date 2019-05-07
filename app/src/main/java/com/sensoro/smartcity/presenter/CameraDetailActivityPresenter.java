@@ -59,6 +59,8 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
             cid = intent.getStringExtra("cid");
             url = intent.getStringExtra("hls");
             mCameraName = intent.getStringExtra("cameraName");
+            mCameraName = intent.getStringExtra("lastCover");
+
         }
 
 

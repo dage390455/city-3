@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -43,6 +44,8 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
     ImageView includeImvTitleImvSubtitle;
     @BindView(R.id.include_imv_title_imv_cl_root)
     ConstraintLayout includeImvTitleImvClRoot;
+    @BindView(R.id.view_top_ac_camera_person_detail)
+    View viewTopAcCameraPersonDetail;
     @BindView(R.id.gsy_player_ac_camera_person_detail)
     StandardGSYVideoPlayer gsyPlayerAcCameraPersonDetail;
     private OrientationUtils orientationUtils;
@@ -63,9 +66,21 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeImvTitleImvSubtitle.setVisibility(View.GONE);
+
+//        initViewHeight();
         initGsyVideo();
 
 
+    }
+
+    private void initViewHeight() {
+        int resourceId = this.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            int  result = this.getResources().getDimensionPixelSize(resourceId);
+            ViewGroup.LayoutParams lp = viewTopAcCameraPersonDetail.getLayoutParams();
+            lp.height = result;
+            viewTopAcCameraPersonDetail.setLayoutParams(lp);
+        }
     }
 
     private void initGsyVideo() {
@@ -170,14 +185,17 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
 
     @Override
     public boolean setMyCurrentActivityTheme() {
-        setTheme(R.style.Theme_AppCompat_Full);
+        setTheme(R.style.Theme_AppCompat_Translucent);
         return true;
     }
 
     @Override
     public boolean isActivityOverrideStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
-        immersionBar.transparentStatusBar().init();
+        immersionBar
+                .statusBarColor(R.color.white)
+                .statusBarDarkFont(true)
+                .init();
         return true;
     }
 

@@ -140,7 +140,8 @@
         <RelativeLayout
             android:id="@+id/layout_top"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:minHeight="48dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/video_title_bg"
             android:gravity="center_vertical">
 
@@ -149,6 +150,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:paddingLeft="10dp"
+                android:layout_marginTop="48dp"
                 android:layout_centerVertical="true"
                 android:scaleType="centerInside"
                 android:src="@drawable/video_back" />
@@ -158,12 +160,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:layout_marginTop="48dp"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/state_tv"
                 android:layout_width="wrap_content"
+                android:layout_marginTop="48dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"

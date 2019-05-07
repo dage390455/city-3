@@ -5,8 +5,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@color/c_f4f4f4"
-    android:fitsSystemWindows="true">
-
+    >
+    <View
+        android:id="@+id/view_top_ac_camera_person_detail"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:background="@color/transparent"/>
     <include layout="@layout/item_include_imv_title"/>
 
     <android.support.constraint.ConstraintLayout

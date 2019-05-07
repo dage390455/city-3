@@ -644,7 +644,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     @Override
     public boolean isActivityOverrideStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
-        immersionBar.transparentStatusBar().init();
+        immersionBar.transparentBar().init();
         return true;
     }
 
@@ -657,7 +657,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     @Override
     public boolean setMyCurrentActivityTheme() {
-        setTheme(R.style.Theme_AppCompat_Full);
+        setTheme(R.style.Theme_AppCompat_Translucent);
         return true;
     }
 
