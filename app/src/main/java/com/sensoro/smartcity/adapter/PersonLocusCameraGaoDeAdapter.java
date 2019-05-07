@@ -74,7 +74,6 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
 //        getCurPlay().setBackFromFullScreenListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                Log.e("cxy","监听到了:::");
 //            }
 //        });
 
@@ -201,7 +200,6 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
         if (isPlay && !isPause) {
             getCurPlay().onConfigurationChanged(mContext, newConfig, orientationUtils, true, true);
         }
-        Log.e("cxy",":::切换了");
 
     }
 

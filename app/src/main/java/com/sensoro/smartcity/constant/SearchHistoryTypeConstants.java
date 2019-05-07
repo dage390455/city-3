@@ -18,6 +18,7 @@ public interface SearchHistoryTypeConstants {
     String SEARCH_HISTORY_KEY = "search_history_key";
 
     String SP_FILE_WARN = "search_history_warn";
+    String SP_FILE_SEARCH_CAMERALIST = "search_search_cameralist";
     String SP_FILE_MALFUNCTION = "search_history_malfunction";
     String SP_FILE_INSPECTION = "search_history_inspection";
     String SP_FILE_CONTRACT = "search_history_contract";

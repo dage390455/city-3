@@ -97,9 +97,7 @@ public class DeviceCameraContentAdapter extends RecyclerView.Adapter<DeviceCamer
 
         }
 
-        if (deviceCameraInfo.getDeviceStatus().equals("1")) {
-
-
+        if ("1".equals(deviceCameraInfo.getDeviceStatus())) {
             Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_device_online);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);

@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
@@ -197,6 +198,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         mask_title_tv.setText(mTitle);
 
 
+        rMobileData.setBackgroundColor(Color.parseColor("#66000000"));
 
 
     }
@@ -1145,7 +1147,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         startDismissControlViewTimer();
     }
 
-    public void setNoVideo(){
+    public void setNoVideo() {
         rMobileData.setVisibility(VISIBLE);
         tiptv.setText(getResources().getString(R.string.no_vido));
         playBtn.setVisibility(GONE);
@@ -1185,11 +1187,24 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     public void onAutoCompletion() {
         super.onAutoCompletion();
 
-        if (replayListener != null) {
 
-            replayListener.rePlay();
-            replay();
-        }
+//        replayListener.rePlay();
+        replay();
+
+
+        playBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeBottomContainer(View.VISIBLE);
+
+
+//                    gsyVideoOption.setUrl(getCurPlay().mUrl).build(getCurPlay());
+                startPlayLogic();
+//                    orientationUtils.setEnable(true);
+
+
+            }
+        });
 
     }
 

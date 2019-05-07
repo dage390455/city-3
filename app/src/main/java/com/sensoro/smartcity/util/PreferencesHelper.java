@@ -374,6 +374,10 @@ public final class PreferencesHelper implements Constants {
     private String getSearchHistoryFileName(int type) {
         String spFileName = null;
         switch (type) {
+
+            case SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST:
+                spFileName = SearchHistoryTypeConstants.SP_FILE_SEARCH_CAMERALIST;
+                break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN:
                 spFileName = SearchHistoryTypeConstants.SP_FILE_WARN;
                 break;
