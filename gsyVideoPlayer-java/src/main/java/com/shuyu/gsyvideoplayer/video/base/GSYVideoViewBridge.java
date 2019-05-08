@@ -3,8 +3,8 @@ package com.shuyu.gsyvideoplayer.video.base;
 import android.content.Context;
 import android.view.Surface;
 
+import com.sensoro.smartcity.gsyvideoplayer.player.IPlayerManager;
 import com.shuyu.gsyvideoplayer.listener.GSYMediaPlayerListener;
-import com.shuyu.gsyvideoplayer.player.IPlayerManager;
 
 import java.io.File;
 import java.util.Map;

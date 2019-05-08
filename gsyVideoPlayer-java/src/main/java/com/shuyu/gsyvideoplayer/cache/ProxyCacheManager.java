@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.danikula.videocache.CacheListener;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.danikula.videocache.file.Md5FileNameGenerator;
+import com.sensoro.smartcity.gsyvideoplayer.cache.ICacheManager;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.FileUtils;
 import com.shuyu.gsyvideoplayer.utils.StorageUtils;
@@ -141,7 +142,7 @@ public class ProxyCacheManager implements ICacheManager, CacheListener {
 
 
     @Override
-    public void setCacheAvailableListener(ICacheAvailableListener cacheAvailableListener) {
+    public void setCacheAvailableListener(ICacheManager.ICacheAvailableListener cacheAvailableListener) {
         this.cacheAvailableListener = cacheAvailableListener;
     }
 

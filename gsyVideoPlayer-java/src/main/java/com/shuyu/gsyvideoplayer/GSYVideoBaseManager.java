@@ -1,25 +1,22 @@
 package com.shuyu.gsyvideoplayer;
 
 import android.content.Context;
-import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.Surface;
 
+import com.sensoro.smartcity.gsyvideoplayer.cache.ICacheManager;
+import com.sensoro.smartcity.gsyvideoplayer.model.GSYModel;
+import com.sensoro.smartcity.gsyvideoplayer.model.VideoOptionModel;
+import com.sensoro.smartcity.gsyvideoplayer.player.IPlayerManager;
 import com.shuyu.gsyvideoplayer.cache.CacheFactory;
-import com.shuyu.gsyvideoplayer.cache.ICacheManager;
 import com.shuyu.gsyvideoplayer.listener.GSYMediaPlayerListener;
-import com.shuyu.gsyvideoplayer.model.GSYModel;
-import com.shuyu.gsyvideoplayer.model.VideoOptionModel;
-import com.shuyu.gsyvideoplayer.player.IPlayerManager;
 import com.shuyu.gsyvideoplayer.player.PlayerFactory;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
-import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoViewBridge;
 
 import java.io.File;

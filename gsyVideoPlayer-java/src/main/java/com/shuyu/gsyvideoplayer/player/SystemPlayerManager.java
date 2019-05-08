@@ -8,9 +8,10 @@ import android.os.Build;
 import android.os.Message;
 import android.view.Surface;
 
-import com.shuyu.gsyvideoplayer.cache.ICacheManager;
-import com.shuyu.gsyvideoplayer.model.GSYModel;
-import com.shuyu.gsyvideoplayer.model.VideoOptionModel;
+import com.sensoro.smartcity.gsyvideoplayer.cache.ICacheManager;
+import com.sensoro.smartcity.gsyvideoplayer.model.GSYModel;
+import com.sensoro.smartcity.gsyvideoplayer.model.VideoOptionModel;
+import com.sensoro.smartcity.gsyvideoplayer.player.IPlayerManager;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 
 import java.util.List;

@@ -1,5 +1,7 @@
 package com.shuyu.gsyvideoplayer.player;
 
+import com.sensoro.smartcity.gsyvideoplayer.player.IPlayerManager;
+
 /**
  * 播放内核工厂
  * Created by guoshuyu on 2018/5/21.
