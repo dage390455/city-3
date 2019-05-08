@@ -14,7 +14,6 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.CameraPersonAvatarHistoryActivity;
-import com.sensoro.smartcity.adapter.model.DeviceCameraFacePicListModel;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraDetailActivityView;
@@ -45,7 +44,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     private long endDateTime;
     private CalendarPopUtils mCalendarPopUtils;
     private long time;
-    private String mCameraName;
+    private String mCameraName, lastCover;
     private String itemTitle;
     private String itemUrl;
     private ArrayList<DeviceCameraFacePic> mLists  = new ArrayList<>();;
@@ -59,8 +58,8 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
             cid = intent.getStringExtra("cid");
             url = intent.getStringExtra("hls");
             mCameraName = intent.getStringExtra("cameraName");
-            mCameraName = intent.getStringExtra("lastCover");
-
+            lastCover = intent.getStringExtra("lastCover");
+            getLastCoverImage(lastCover);
         }
 
 
@@ -189,6 +188,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
             DeviceCameraFacePic model = rvListData.get(index);
             String captureTime1 = model.getCaptureTime();
+            getLastCoverImage(Constants.CAMERA_BASE_URL + model.getSceneUrl());
 
             setLastCover(model);
             long time;

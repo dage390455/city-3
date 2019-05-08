@@ -1025,6 +1025,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
             layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
             thumb.setLayoutParams(layoutParams);
+
         }
     }
 

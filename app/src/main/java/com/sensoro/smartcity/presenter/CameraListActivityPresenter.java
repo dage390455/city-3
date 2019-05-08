@@ -145,7 +145,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                     intent.putExtra("cid", cid);
                     intent.putExtra("hls", hls);
                     intent.putExtra("cameraName", name);
-                    intent.putExtra("lastCover",data.getLastCover());
+                    intent.putExtra("lastCover", data.getLastCover());
                     getView().startAC(intent);
                 } else {
                     getView().toastShort(mContext.getString(R.string.camera_info_get_failed));
@@ -206,7 +206,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
             filterHashMap.clear();
         }
 
-        requestData(hashMap);
+        requestData(hashMap, DIRECTION_DOWN);
 
     }
 
@@ -216,7 +216,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
     }
 
 
-    public void requestData(final HashMap hashMap) {
+    public void requestData(final HashMap hashMap, final int directionDown) {
 
         if (isAttachedView()) {
             getView().showProgressDialog();
@@ -232,7 +232,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                 List<DeviceCameraInfo> data = deviceCameraListRsp.getData();
 
 
-                if (data.size() == 0) {
+                if (directionDown == DIRECTION_DOWN && data.size() == 0) {
                     if (isAttachedView()) {
                         getView().toastShort(mContext.getString(R.string.no_more_data));
                         getView().onPullRefreshCompleteNoMoreData();
@@ -270,13 +270,13 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                 hashMap.put("page", cur_page);
 
 
-                requestData(hashMap);
+                requestData(hashMap, DIRECTION_DOWN);
                 break;
             case DIRECTION_UP:
                 cur_page++;
                 hashMap.put("page", cur_page);
 
-                requestData(hashMap);
+                requestData(hashMap, DIRECTION_UP);
 
                 break;
             default:

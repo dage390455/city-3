@@ -3,6 +3,7 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +25,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.CameraDetailListAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ICameraDetailActivityView;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.presenter.CameraDetailActivityPresenter;
 import com.sensoro.smartcity.server.bean.DeviceCameraFacePic;
 import com.sensoro.smartcity.widget.ProgressUtils;
@@ -37,6 +39,10 @@ import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -45,6 +51,7 @@ import butterknife.OnClick;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
 
 
 /**
@@ -92,11 +99,54 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     private ImageView imageView;
     private Animation returnTopAnimation;
 
+
+    /**
+     * 网络改变状态
+     *
+     * @param eventData
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        int code = eventData.code;
+        if (code == NetworkInfo) {
+            int data = (int) eventData.data;
+
+            switch (data) {
+
+                case ConnectivityManager.TYPE_WIFI:
+//                    if (gsyPlayerAcCameraDetail..getVisibility() == VISIBLE) {
+//                        rMobileData.setVisibility(GONE);
+//                        GSYVideoManager.onResume();
+//                    }
+
+                    break;
+
+                case ConnectivityManager.TYPE_MOBILE:
+
+                    gsyPlayerAcCameraDetail.changeMobileType();
+
+                    break;
+
+                case -1:
+                    gsyPlayerAcCameraDetail.changeNoDataType();
+
+
+                    break;
+
+
+                default:
+                    break;
+
+            }
+        }
+    }
+
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_simple_detail_player);
         ButterKnife.bind(this);
         initView();
+        EventBus.getDefault().register(this);
         mPresenter.initData(mActivity);
 
     }
@@ -408,6 +458,13 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setImageDrawable(resource);
         }
+//        gsyVideoOption.build(getCurPlay());
+//        getCurPlay().startPlayLogic();
+
+//        getCurPlay().setThumbImageView(imageView);
+//
+//        getCurPlay().invalidate();
+        gsyPlayerAcCameraDetail.setMobileFace(resource);
 
     }
 
@@ -480,10 +537,39 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     @Override
-    public void doPlayLive(String url, String cameraName, boolean isLive) {
-        gsyVideoOption.setUrl(url).setVideoTitle(cameraName).build(getCurPlay());
-        gsyPlayerAcCameraDetail.changeBottomContainer(isLive ? View.INVISIBLE : VISIBLE);
-        getCurPlay().startPlayLogic();
+    public void doPlayLive(final String url, String cameraName, final boolean isLive) {
+        if (!NetworkUtils.isAvailable(this) || !NetworkUtils.isWifiConnected(this)) {
+            orientationUtils.setEnable(false);
+            gsyPlayerAcCameraDetail.getPlayBtn().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    gsyPlayerAcCameraDetail.changeBottomContainer(isLive ? View.INVISIBLE : VISIBLE);
+
+                    gsyVideoOption.setUrl(url).build(getCurPlay());
+                    getCurPlay().startPlayLogic();
+
+
+                }
+            });
+
+            if (!NetworkUtils.isAvailable(CameraDetailActivity.this)) {
+                gsyPlayerAcCameraDetail.changeNoDataType();
+                return;
+            }
+            if (!NetworkUtils.isWifiConnected(CameraDetailActivity.this)) {
+                gsyPlayerAcCameraDetail.changeMobileType();
+                return;
+
+            }
+
+
+        } else {
+            gsyVideoOption.setUrl(url).setVideoTitle(cameraName).build(getCurPlay());
+            gsyPlayerAcCameraDetail.changeBottomContainer(isLive ? View.INVISIBLE : VISIBLE);
+            getCurPlay().startPlayLogic();
+
+        }
+
 
     }
 
@@ -602,6 +688,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         }
 
         GSYVideoManager.releaseAllVideos();
+        EventBus.getDefault().unregister(this);
 
     }
 
