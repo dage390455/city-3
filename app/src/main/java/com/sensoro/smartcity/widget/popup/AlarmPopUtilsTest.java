@@ -202,9 +202,13 @@ public class AlarmPopUtilsTest implements Constants,
         mRoot = View.inflate(mActivity, R.layout.layout_alarm_popup_test, null);
         bind = ButterKnife.bind(this, mRoot);
         bottomSheetDialog = new FixHeightBottomSheetDialog(mActivity);
-        bottomSheetDialog.setCanceledOnTouchOutside(true);
+        //
+        bottomSheetDialog.setCanceledOnTouchOutside(false);
+        bottomSheetDialog.setCancelable(false);
+
         bottomSheetDialog.setOnDismissListener(this);
         bottomSheetDialog.setOnCancelListener(this);
+
         //
         upLoadPhotosUtils = new UpLoadPhotosUtils(mActivity, this);
         bottomSheetDialog.setContentView(mRoot);
@@ -233,6 +237,14 @@ public class AlarmPopUtilsTest implements Constants,
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }
+            }
+        });
+
+        //监听back事件
+        bottomSheetDialog.setOnBottomSheetDialogBackPressedListener(new FixHeightBottomSheetDialog.OnBottomSheetDialogBackPressedListener() {
+            @Override
+            public void onBottomSheetDialogBackPressed() {
+                exitDialogShow();
             }
         });
         //
@@ -601,14 +613,7 @@ public class AlarmPopUtilsTest implements Constants,
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_alarm_popup_close:
-                if (mExitDialog != null) {
-                    mExitDialog.show();
-                } else {
-                    dismissInputMethodManager(view);
-                    etAlarmPopupRemark.clearFocus();
-                    etAlarmPopupRemark.getText().clear();
-                    dismiss();
-                }
+                exitDialogShow(view);
                 break;
             case R.id.ll_alarm_popup_alarm_security_risks:
                 //TODO 安全隐患
@@ -623,6 +628,31 @@ public class AlarmPopUtilsTest implements Constants,
                 doAlarmConfirm();
                 break;
         }
+    }
+
+    public void exitDialogShow(View view) {
+        if (mExitDialog != null) {
+            mExitDialog.show();
+        } else {
+            dismissInputMethodManager(view);
+            etAlarmPopupRemark.clearFocus();
+            etAlarmPopupRemark.getText().clear();
+            dismiss();
+        }
+    }
+
+    public void exitDialogShow() {
+        if (mExitDialog != null) {
+            mExitDialog.show();
+        } else {
+            etAlarmPopupRemark.clearFocus();
+            etAlarmPopupRemark.getText().clear();
+            dismiss();
+        }
+    }
+
+    public boolean isShowing() {
+        return bottomSheetDialog != null && bottomSheetDialog.isShowing();
     }
 
     public interface OnPopupCallbackListener {

@@ -15,6 +15,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployManualActivityView;
 import com.sensoro.smartcity.presenter.DeployManualActivityPresenter;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
@@ -68,6 +69,7 @@ public class DeployManualActivity extends BaseActivity<IDeployManualActivityView
 
     @OnClick(R.id.deploy_manual_close)
     public void close() {
+        AppUtils.dismissInputMethodManager(mActivity,contentEditText);
         finishAc();
     }
 

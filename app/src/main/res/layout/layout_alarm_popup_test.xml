@@ -223,4 +223,5 @@
         android:text="@string/commit"
         android:textColor="@color/white"
         android:textSize="@dimen/city_btn_text_size" />
+
 </LinearLayout>
