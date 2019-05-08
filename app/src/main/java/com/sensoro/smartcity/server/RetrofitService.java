@@ -58,10 +58,12 @@ public interface RetrofitService {
     //测试环境
     String SCOPE_TEST = "https://city-test-api.sensoro.com/";
     //预发布环境
-    String SCOPE_MOCHA = "https://city-pre-api.sensoro.com/";
-    //    String SCOPE_MOCHA = "http://xiaolai.ngrok.gkzyk.com/";
+    String SCOPE_PRE = "https://city-pre-api.sensoro.com/";
+    //    String SCOPE_PRE = "http://xiaolai.ngrok.gkzyk.com/";
     //正式环境
     String SCOPE_MASTER = "https://city-api.sensoro.com/";
+    //开发环境
+    String SCOPE_DEVELOPER = "https://city-dev-api.sensoro.com/";
 
     String LOGIN = "sessions";
     String LOGOUT = "sessions/current";

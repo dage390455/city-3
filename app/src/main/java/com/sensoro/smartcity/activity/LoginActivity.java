@@ -222,7 +222,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     private int scope_selectedIndex = 0;
 
     private void switchApi() {
-        final String[] urlArr = new String[]{"正式版", "Demo版", "测试版", "预发布"};
+        final String[] urlArr = new String[]{"正式版", "Demo版", "测试版", "预发布","Dev"};
         //
         scope_selectedIndex = RetrofitServiceHelper.getInstance().getBaseUrlType();
         Dialog alertDialog = new AlertDialog.Builder(mActivity).
@@ -331,6 +331,9 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
                 break;
             case 3:
                 login_btn.setBackground(getResources().getDrawable(R.drawable.shape_button_mocha));
+                break;
+            case 4:
+                login_btn.setBackground(getResources().getDrawable(R.drawable.shape_button_dev));
                 break;
             default:
                 login_btn.setBackground(getResources().getDrawable(R.drawable.shape_button));
