@@ -105,7 +105,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
 
     }
 
-    public void onClickDeviceCamera(DeviceCameraInfo deviceCameraInfo) {
+    public void onClickDeviceCamera(final DeviceCameraInfo deviceCameraInfo) {
         String sn = deviceCameraInfo.getSn();
         final String cid = deviceCameraInfo.getCid();
         getView().showProgressDialog();
@@ -115,14 +115,18 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                 DeviceCameraDetailInfo data = deviceCameraDetailRsp.getData();
                 if (data != null) {
                     String hls = data.getHls();
-                    String name = data.getCamera().getName();
+                    DeviceCameraDetailInfo.CameraBean camera = data.getCamera();
+                    String lastCover = data.getLastCover();
                     Intent intent = new Intent();
                     intent.setClass(mContext, CameraDetailActivity.class);
                     intent.putExtra("cid", cid);
                     intent.putExtra("hls", hls);
-                    intent.putExtra("cameraName", name);
-                    String lastCover = data.getLastCover();
+                    if (camera != null) {
+                        String name = camera.getName();
+                        intent.putExtra("cameraName", name);
+                    }
                     intent.putExtra("lastCover", lastCover);
+                    intent.putExtra("deviceStatus", deviceCameraInfo.getDeviceStatus());
                     getView().startAC(intent);
                 } else {
                     getView().toastShort(mContext.getString(R.string.camera_info_get_failed));

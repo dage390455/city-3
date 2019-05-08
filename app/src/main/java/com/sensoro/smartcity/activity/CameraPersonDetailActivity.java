@@ -1,14 +1,11 @@
 package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +15,6 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ICameraPersonDetailActivityView;
 import com.sensoro.smartcity.presenter.CameraPersonDetailActivityPresenter;
-import com.sensoro.smartcity.widget.CustomStandardGSYVideoPlayer;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
@@ -27,7 +23,7 @@ import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
-import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
 import butterknife.BindView;
@@ -47,7 +43,7 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
     @BindView(R.id.view_top_ac_camera_person_detail)
     View viewTopAcCameraPersonDetail;
     @BindView(R.id.gsy_player_ac_camera_person_detail)
-    StandardGSYVideoPlayer gsyPlayerAcCameraPersonDetail;
+    CityStandardGSYVideoPlayer gsyPlayerAcCameraPersonDetail;
     private OrientationUtils orientationUtils;
     private ImageView imageView;
     private GSYVideoOptionBuilder gsyVideoOption;

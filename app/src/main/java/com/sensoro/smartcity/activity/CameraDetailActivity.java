@@ -36,7 +36,7 @@ import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
-import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
 import org.greenrobot.eventbus.EventBus;
@@ -62,7 +62,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
 
     @BindView(R.id.gsy_player_ac_camera_detail)
-    StandardGSYVideoPlayer gsyPlayerAcCameraDetail;
+    CityStandardGSYVideoPlayer gsyPlayerAcCameraDetail;
     @BindView(R.id.iv_live_ac_camera_detail)
     ImageView ivLiveAcCameraDetail;
     @BindView(R.id.tv_live_ac_camera_detail)
@@ -153,26 +153,15 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     private void initView() {
 
-//        rMobileData = findViewById(com.shuyu.gsyvideoplayer.R.id.rl_mobile_data);
-//        playBtn = findViewById(com.shuyu.gsyvideoplayer.R.id.play_btn);
-//        playRetryBtn = findViewById(com.shuyu.gsyvideoplayer.R.id.playa_retry_btn);
-//        playRetryBtn = findViewById(com.shuyu.gsyvideoplayer.R.id.playa_retry_btn);
-//
-//
-////        back_mask_tv = findViewById(R.id.mask_iv_back);
-////        mask_title_tv = findViewById(R.id.mask_title_tv);
-//        tiptv = findViewById(com.shuyu.gsyvideoplayer.R.id.tip_data_tv);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
 
         //外部辅助的旋转，帮助全屏
         orientationUtils = new OrientationUtils(this, gsyPlayerAcCameraDetail);
         //初始化不打开外部的旋转
         orientationUtils.setEnable(false);
-//增加title
-        getCurPlay().getTitleTextView().setVisibility(VISIBLE);
-        //设置返回键
-        getCurPlay().getBackButton().setVisibility(VISIBLE);
-//        initVideoOption();
+
+        initVideoOption();
+
 
         ivCalendarAcCameraDetail.setColorFilter(mActivity.getResources().getColor(R.color.c_a6a6a6));
 
@@ -183,42 +172,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         returnTopAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.return_top_in_anim);
         mReturnTopImageView.setAnimation(returnTopAnimation);
         mReturnTopImageView.setVisibility(GONE);
-
-        getCurPlay().setEnlargeImageRes(R.drawable.ic_camera_full_screen);
-
-        getCurPlay().setShrinkImageRes(R.drawable.video_shrink);
-
-        getCurPlay().getFullscreenButton().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //直接横屏
-                orientationUtils.resolveByClick();
-                //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
-                getCurPlay().startWindowFullscreen(CameraDetailActivity.this, true, true);
-            }
-        });
-
-
-//        gsyPlayerAcCameraDetail.setReplayListener(new StandardGSYVideoPlayer.ReplayListener() {
-//            @Override
-//            public void rePlay() {
-//                orientationUtils.setEnable(false);
-//
-//                gsyPlayerAcCameraDetail.getPlayBtn().setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        gsyPlayerAcCameraDetail.changeBottomContainer(View.VISIBLE);
-//
-//                        gsyVideoOption.setUrl(getCurPlay().mUrl).build(getCurPlay());
-//                        getCurPlay().startPlayLogic();
-//                        orientationUtils.setEnable(true);
-//
-//
-//                    }
-//                });
-//            }
-//        });
-
 
     }
 
@@ -250,18 +203,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     }
 
-//    private RelativeLayout rMobileData;
-//
-//    private Button playBtn;
-//
-//
-//    private Button playRetryBtn;
-//    private TextView tiptv;
-
-
-    @Override
-    public void initVideoOption(String url, String cameraName) {
-
+    public void initVideoOption() {
         gsyPlayerAcCameraDetail.changeBottomContainer(View.INVISIBLE);
 
         //增加封面
@@ -280,39 +222,28 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 .setAutoFullWithSize(false)
                 .setShowFullAnimation(false)
                 .setNeedLockFull(true)
-                .setUrl(url)
+//                .setUrl(url)
 //                .setCacheWithPlay(true)
-                .setVideoTitle(cameraName)
+//                .setVideoTitle(cameraName)
                 .setVideoAllCallBack(new GSYSampleCallBack() {
+                    @Override
+                    public void onPlayError(final String url, Object... objects) {
+                        orientationUtils.setEnable(false);
+
+                        gsyPlayerAcCameraDetail.changeRetryType();
+                        gsyPlayerAcCameraDetail.getPlayRetryBtn().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                gsyVideoOption.setUrl(url).build(getCurPlay());
+                                getCurPlay().startPlayLogic();
+                            }
+                        });
+                    }
 
                     @Override
                     public void onAutoComplete(final String url, Object... objects) {
 
-
 //
-//                        tiptv.setText(getResources().getString(com.shuyu.gsyvideoplayer.R.string.played));
-//                        playBtn.setText(getResources().getString(com.shuyu.gsyvideoplayer.R.string.replay));
-//                        playBtn.setVisibility(VISIBLE);
-//
-//                        rMobileData.setVisibility(VISIBLE);
-//                        playRetryBtn.setVisibility(GONE);
-////        mask_title_tv.setText(mTitle);
-//
-//
-//                        rMobileData.setBackgroundColor(Color.parseColor("#66000000"));
-//                        playBtn.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                gsyPlayerAcCameraDetail.changeBottomContainer(VISIBLE);
-//
-//
-////                    gsyVideoOption.setUrl(getCurPlay().mUrl).build(getCurPlay());
-//                                getCurPlay().startPlayLogic();
-////                    orientationUtils.setEnable(true);
-//
-//
-//                            }
-//                        });
                     }
 
                     @Override
@@ -339,23 +270,33 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 }
             }
         }).build(getCurPlay());
-        getCurPlay().getFullscreenButton().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //直接横屏
-                orientationUtils.resolveByClick();
 
-                //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
-                getCurPlay().startWindowFullscreen(mActivity, true, true);
-            }
-        });
+        //增加title
+        getCurPlay().getTitleTextView().setVisibility(VISIBLE);
+        //设置返回键
+        getCurPlay().getBackButton().setVisibility(VISIBLE);
+
         getCurPlay().getBackButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-        getCurPlay().startPlayLogic();
+
+        getCurPlay().setEnlargeImageRes(R.drawable.ic_camera_full_screen);
+
+        getCurPlay().setShrinkImageRes(R.drawable.video_shrink);
+
+        getCurPlay().getFullscreenButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //直接横屏
+                orientationUtils.resolveByClick();
+                //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
+                getCurPlay().startWindowFullscreen(CameraDetailActivity.this, true, true);
+            }
+        });
+//        getCurPlay().startPlayLogic();
     }
 
     @Override
@@ -378,6 +319,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
         if (!NetworkUtils.isAvailable(this) || !NetworkUtils.isWifiConnected(this)) {
             orientationUtils.setEnable(false);
+            getCurPlay().onVideoPause();
+
             gsyPlayerAcCameraDetail.getPlayBtn().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -504,6 +447,23 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         refreshLayout.finishLoadMoreWithNoMoreData();
     }
 
+
+    @Override
+    public void offlineType(final String url) {
+        orientationUtils.setEnable(false);
+//        orientationUtils.setEnable(false);
+
+        gsyPlayerAcCameraDetail.offlineType();
+        gsyPlayerAcCameraDetail.getPlayRetryBtn().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gsyVideoOption.setUrl(url).build(getCurPlay());
+                getCurPlay().startPlayLogic();
+            }
+        });
+
+    }
+
     @Override
     public void playError(final int pos) {
         orientationUtils.setEnable(false);
@@ -540,11 +500,11 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     public void doPlayLive(final String url, String cameraName, final boolean isLive) {
         if (!NetworkUtils.isAvailable(this) || !NetworkUtils.isWifiConnected(this)) {
             orientationUtils.setEnable(false);
+            getCurPlay().onVideoPause();
             gsyPlayerAcCameraDetail.getPlayBtn().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     gsyPlayerAcCameraDetail.changeBottomContainer(isLive ? View.INVISIBLE : VISIBLE);
-
                     gsyVideoOption.setUrl(url).build(getCurPlay());
                     getCurPlay().startPlayLogic();
 
@@ -767,6 +727,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 rvDeviceCameraAcCameraDetail.smoothScrollToPosition(0);
                 mReturnTopImageView.setVisibility(GONE);
                 refreshLayout.closeHeaderOrFooter();
+                break;
+            default:
                 break;
 
         }

@@ -91,9 +91,11 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
     private Animation returnTopAnimation;
 
     private CameraListFilterPopupWindow mCameraListFilterPopupWindow;
+    //
     private List<CameraFilterModel> mCameraFilterModelList = new ArrayList<>();
 
     private HashMap filterHashMap = new HashMap();
+    //
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private TipOperationDialogUtils historyClearDialog;
 
@@ -184,9 +186,7 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
             @Override
             public void dismiss() {
 
-
                 if (filterHashMap.size() == 0) {
-
                     cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
                 }
             }

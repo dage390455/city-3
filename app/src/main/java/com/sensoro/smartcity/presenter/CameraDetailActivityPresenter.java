@@ -48,7 +48,6 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     private String itemTitle;
     private String itemUrl;
     private ArrayList<DeviceCameraFacePic> mLists = new ArrayList<>();
-    ;
 
     @Override
     public void initData(Context context) {
@@ -61,10 +60,16 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
             mCameraName = intent.getStringExtra("cameraName");
             lastCover = intent.getStringExtra("lastCover");
             getLastCoverImage(lastCover);
+
+
+            String deviceStatus = intent.getStringExtra("deviceStatus");
+            if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
+                getView().offlineType(url);
+            }
+
         }
 
-
-        getView().initVideoOption(url, TextUtils.isEmpty(mCameraName) ? "" : mCameraName);
+        doLive();
         getView().showProgressDialog();
         requestData(cid, Constants.DIRECTION_DOWN);
         mCalendarPopUtils = new CalendarPopUtils(mActivity);

@@ -11,7 +11,6 @@ import com.sensoro.smartcity.server.bean.DeviceCameraFacePic;
 import java.util.List;
 
 public interface ICameraDetailActivityView extends IProgressDialog, IToast , IActivityIntent {
-    void initVideoOption(String s, String url);
 
     void updateCameraList(List<DeviceCameraFacePic> data);
 
@@ -40,6 +39,8 @@ public interface ICameraDetailActivityView extends IProgressDialog, IToast , IAc
     void onPullRefreshCompleteNoMoreData();
     //播放失败
     void playError(int pos);
+
+    void offlineType(String url);
 
     void autoRefresh();
 
