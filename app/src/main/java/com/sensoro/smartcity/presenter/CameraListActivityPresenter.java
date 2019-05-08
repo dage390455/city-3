@@ -217,7 +217,6 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
 
         if (isAttachedView()) {
             getView().showProgressDialog();
-            getView().resetRefreshNoMoreData();
         }
         RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(hashMap).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(this) {
