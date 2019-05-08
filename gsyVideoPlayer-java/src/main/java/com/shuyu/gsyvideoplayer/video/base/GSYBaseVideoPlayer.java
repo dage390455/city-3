@@ -13,15 +13,15 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.shuyu.gsyvideoplayer.R;
-import com.shuyu.gsyvideoplayer.view.SmallVideoTouch;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
+import com.shuyu.gsyvideoplayer.view.SmallVideoTouch;
 import com.transitionseverywhere.TransitionManager;
 
 import java.lang.reflect.Constructor;
-
 
 import static com.shuyu.gsyvideoplayer.utils.CommonUtil.getActionBarHeight;
 import static com.shuyu.gsyvideoplayer.utils.CommonUtil.getStatusBarHeight;
@@ -36,6 +36,7 @@ import static com.shuyu.gsyvideoplayer.utils.CommonUtil.showSupportActionBar;
  */
 
 public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
+
 
     //保存系统状态ui
     protected int mSystemUiVisibility;
@@ -72,6 +73,7 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
 
     //旋转工具类
     protected OrientationUtils mOrientationUtils;
+
 
     //全屏返回监听，如果设置了，默认返回无效
     protected View.OnClickListener mBackFromFullScreenListener;
@@ -166,7 +168,7 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
     }
 
 
-    private ViewGroup getViewGroup() {
+    public ViewGroup getViewGroup() {
         return (ViewGroup) (CommonUtil.scanForActivity(getContext())).findViewById(Window.ID_ANDROID_CONTENT);
     }
 
@@ -343,6 +345,8 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
         if (oldF != null && oldF.getParent() != null) {
             ViewGroup viewGroup = (ViewGroup) oldF.getParent();
             vp.removeView(viewGroup);
+
+
         }
         mCurrentState = getGSYVideoManager().getLastState();
         if (gsyVideoPlayer != null) {
@@ -535,6 +539,7 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
 
     }
 
+
     /**
      * 旋转处理
      *
@@ -664,10 +669,20 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
             final FrameLayout frameLayout = new FrameLayout(context);
             frameLayout.setBackgroundColor(Color.BLACK);
 
+
+//            viewMask = LayoutInflater.from(getContext()).inflate(R.layout.mask, null);
+
+
             if (mShowFullAnimation) {
                 LayoutParams lp = new LayoutParams(getWidth(), getHeight());
                 lp.setMargins(mListItemRect[0], mListItemRect[1], 0, 0);
                 frameLayout.addView(gsyVideoPlayer, lp);
+
+//                if (getCurrentState() == CURRENT_STATE_AUTO_COMPLETE) {
+//
+//
+//                frameLayout.addView(viewMask);
+//                }
                 vp.addView(frameLayout, lpParent);
                 postDelayed(new Runnable() {
                     @Override
@@ -679,6 +694,12 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
             } else {
                 LayoutParams lp = new LayoutParams(getWidth(), getHeight());
                 frameLayout.addView(gsyVideoPlayer, lp);
+
+//                if (getCurrentState() == CURRENT_STATE_AUTO_COMPLETE) {
+//
+//
+//                frameLayout.addView(viewMask);
+//                }
                 vp.addView(frameLayout, lpParent);
                 gsyVideoPlayer.setVisibility(INVISIBLE);
                 frameLayout.setVisibility(INVISIBLE);
@@ -700,6 +721,39 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
         return null;
     }
 
+    @Override
+    public void onAutoCompletion() {
+        super.onAutoCompletion();
+
+//        viewMask.setVisibility(VISIBLE);
+//        rMobileData = viewMask.findViewById(R.id.rl_mobile_data);
+//        playBtn = viewMask.findViewById(R.id.play_btn);
+//        playRetryBtn = viewMask.findViewById(R.id.playa_retry_btn);
+//        playRetryBtn = viewMask.findViewById(R.id.playa_retry_btn);
+//
+//
+//        tiptv = viewMask.findViewById(R.id.tip_data_tv);
+//        tiptv.setText(getResources().getString(R.string.played));
+//        playBtn.setText(getResources().getString(R.string.replay));
+//        playBtn.setVisibility(VISIBLE);
+//
+//        rMobileData.setVisibility(VISIBLE);
+//        playRetryBtn.setVisibility(GONE);
+//
+//
+//        rMobileData.setBackgroundColor(Color.parseColor("#66000000"));
+//        playBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//
+//                startPlayLogic();
+//
+//
+//            }
+//        });
+
+    }
 
     /**
      * 显示小窗口
