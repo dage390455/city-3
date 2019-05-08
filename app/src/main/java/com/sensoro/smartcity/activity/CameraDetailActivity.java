@@ -212,8 +212,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 //            imageView.setImageResource(R.mipmap.ic_launcher);
         }
-
-
         gsyVideoOption = new GSYVideoOptionBuilder();
         gsyVideoOption.setThumbImageView(imageView)
                 .setIsTouchWiget(true)

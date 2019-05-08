@@ -36,4 +36,6 @@ public interface ICameraListActivityView extends IToast, IProgressDialog, IActiv
     void showHistoryClearDialog();
 
     void setSearchButtonTextVisible(boolean isVisible);
+
+    void resetRefreshNoMoreData();
 }

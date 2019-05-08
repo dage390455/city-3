@@ -461,6 +461,13 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
     }
 
     @Override
+    public void resetRefreshNoMoreData() {
+        if (refreshLayout!= null) {
+            refreshLayout.setNoMoreData(false);
+        }
+    }
+
+    @Override
     public void showHistoryClearDialog() {
         if (historyClearDialog != null) {
             historyClearDialog.show();

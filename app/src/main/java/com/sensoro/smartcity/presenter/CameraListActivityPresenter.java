@@ -217,30 +217,55 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
 
         if (isAttachedView()) {
             getView().showProgressDialog();
+            getView().resetRefreshNoMoreData();
         }
-        RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(hashMap).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(this) {
+        RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(hashMap).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(this) {
             @Override
             public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
 
-
-                if (cur_page == 1) {
-                    deviceCameraInfos.clear();
-                }
                 List<DeviceCameraInfo> data = deviceCameraListRsp.getData();
-
-
-                if (directionDown == DIRECTION_DOWN && data.size() == 0) {
-                    if (isAttachedView()) {
-                        getView().toastShort(mContext.getString(R.string.no_more_data));
-                        getView().onPullRefreshCompleteNoMoreData();
+                if (data != null && data.size() > 0){
+                    if (cur_page == 1) {
+                        deviceCameraInfos.clear();
+                        deviceCameraInfos.addAll(data);
+                        if (isAttachedView()) {
+                            getView().updateDeviceCameraAdapter(deviceCameraInfos);
+                            getView().dismissProgressDialog();
+                        }
+                        return;
+                    }else {
+                        deviceCameraInfos.addAll(data);
+                        if (isAttachedView()) {
+                            getView().updateDeviceCameraAdapter(deviceCameraInfos);
+                            getView().dismissProgressDialog();
+                        }
+                    }
+                }else{
+                    if (cur_page == 1) {
+                        deviceCameraInfos.clear();
+                        deviceCameraInfos.addAll(data);
+                        if (isAttachedView()) {
+                            getView().updateDeviceCameraAdapter(deviceCameraInfos);
+                            getView().dismissProgressDialog();
+                        }
+                    }else{
+                        if (isAttachedView()) {
+                            getView().toastShort(mContext.getString(R.string.no_more_data));
+                            getView().dismissProgressDialog();
+                        }
                     }
                 }
-                if (data != null && data.size() > 0) {
-                    deviceCameraInfos.addAll(data);
-                }
-                getView().updateDeviceCameraAdapter(deviceCameraInfos);
-                getView().onPullRefreshComplete();
-                getView().dismissProgressDialog();
+
+
+
+//                if (directionDown == DIRECTION_DOWN && data.size() == 0) {
+//                    if (isAttachedView()) {
+//                        getView().toastShort(mContext.getString(R.string.no_more_data));
+//                        getView().onPullRefreshCompleteNoMoreData();
+//                    }
+//                }
+
 
 
             }
@@ -265,8 +290,6 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
             case DIRECTION_DOWN:
                 cur_page = 1;
                 hashMap.put("page", cur_page);
-
-
                 requestData(hashMap, DIRECTION_DOWN);
                 break;
             case DIRECTION_UP:
@@ -274,10 +297,8 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                 hashMap.put("page", cur_page);
 
                 requestData(hashMap, DIRECTION_UP);
-
                 break;
             default:
-
                 break;
         }
 
