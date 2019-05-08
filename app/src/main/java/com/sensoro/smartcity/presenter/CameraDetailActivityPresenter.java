@@ -62,8 +62,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
             getLastCoverImage(lastCover);
         }
 
-
-        getView().initVideoOption(url, TextUtils.isEmpty(mCameraName) ? "" : mCameraName);
+        doLive();
         getView().showProgressDialog();
         requestData(cid, Constants.DIRECTION_DOWN);
         mCalendarPopUtils = new CalendarPopUtils(mActivity);

@@ -71,6 +71,7 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
     //小窗口关闭按键
     protected View mSmallClose;
 
+
     //旋转工具类
     protected OrientationUtils mOrientationUtils;
 
@@ -985,4 +986,6 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
     public void setAutoFullWithSize(boolean autoFullWithSize) {
         this.mAutoFullWithSize = autoFullWithSize;
     }
+
+
 }

@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
@@ -130,6 +131,26 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
     public StandardGSYVideoPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
+        int dp48 = (int) (context.getResources().getDisplayMetrics().density * 48 + 0.5f);
+        if (attrs != null) {
+            TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.standard_view);
+            int titleTop = (int) ta.getDimension(R.styleable.standard_view_title_margin_top, dp48);
+            ta.recycle();
+
+            RelativeLayout.LayoutParams lpBack = (RelativeLayout.LayoutParams) mBackButton.getLayoutParams();
+            lpBack.topMargin = titleTop;
+            mBackButton.setLayoutParams(lpBack);
+
+            RelativeLayout.LayoutParams lpTitle = (RelativeLayout.LayoutParams) mTitleTextView.getLayoutParams();
+            lpTitle.topMargin = titleTop;
+            mTitleTextView.setLayoutParams(lpTitle);
+
+            RelativeLayout.LayoutParams lpState = (RelativeLayout.LayoutParams) mStateTv.getLayoutParams();
+            lpState.topMargin = titleTop;
+            mStateTv.setLayoutParams(lpState);
+
+        }
+
     }
 
 

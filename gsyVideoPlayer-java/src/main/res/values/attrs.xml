@@ -17,4 +17,9 @@
         <attr name="download_text_size" format="integer" />
     </declare-styleable>
 
+    <declare-styleable name="standard_view">
+        <attr name="title_margin_top" format="dimension" />
+    </declare-styleable>
+
+
 </resources>
