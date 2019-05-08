@@ -103,15 +103,13 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
     public void getFilterPopData() {
 
         getView().showProgressDialog();
-        RetrofitServiceHelper.getInstance().getCameraFilter().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<CameraFilterRsp>(null) {
+        RetrofitServiceHelper.getInstance().getCameraFilter().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<CameraFilterRsp>(this) {
             @Override
             public void onCompleted(CameraFilterRsp cameraFilterRsp) {
                 List<CameraFilterModel> data = cameraFilterRsp.getData();
-
-
-                getView().updateFilterPop(data);
-
-
+                if (data != null) {
+                    getView().updateFilterPop(data);
+                }
                 getView().dismissProgressDialog();
             }
 
@@ -137,7 +135,6 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
             public void onCompleted(DeviceCameraDetailRsp deviceCameraDetailRsp) {
                 DeviceCameraDetailInfo data = deviceCameraDetailRsp.getData();
                 if (data != null) {
-
                     String hls = data.getHls();
                     String name = data.getCamera().getName();
                     Intent intent = new Intent();
@@ -206,7 +203,6 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
         } else {
             filterHashMap.clear();
         }
-
         requestData(hashMap, DIRECTION_DOWN);
 
     }

@@ -505,7 +505,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 @Override
                 public void onClick(View v) {
                     gsyPlayerAcCameraDetail.changeBottomContainer(isLive ? View.INVISIBLE : VISIBLE);
-
                     gsyVideoOption.setUrl(url).build(getCurPlay());
                     getCurPlay().startPlayLogic();
 
@@ -728,6 +727,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 rvDeviceCameraAcCameraDetail.smoothScrollToPosition(0);
                 mReturnTopImageView.setVisibility(GONE);
                 refreshLayout.closeHeaderOrFooter();
+                break;
+            default:
                 break;
 
         }

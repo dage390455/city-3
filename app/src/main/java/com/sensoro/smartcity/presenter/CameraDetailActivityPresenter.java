@@ -48,14 +48,11 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     private String itemTitle;
     private String itemUrl;
     private ArrayList<DeviceCameraFacePic> mLists = new ArrayList<>();
-    ;
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
         Intent intent = mActivity.getIntent();
-
-
         url = Constants.LIVE_URL;
         if (intent != null) {
             cid = intent.getStringExtra("cid");
@@ -67,7 +64,6 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
             String deviceStatus = intent.getStringExtra("deviceStatus");
             if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
-
                 getView().offlineType(url);
             }
 
