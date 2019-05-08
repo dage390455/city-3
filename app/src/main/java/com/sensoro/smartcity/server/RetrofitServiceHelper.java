@@ -88,8 +88,9 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.sensoro.smartcity.server.RetrofitService.SCOPE_DEMO;
+import static com.sensoro.smartcity.server.RetrofitService.SCOPE_DEVELOPER;
 import static com.sensoro.smartcity.server.RetrofitService.SCOPE_MASTER;
-import static com.sensoro.smartcity.server.RetrofitService.SCOPE_MOCHA;
+import static com.sensoro.smartcity.server.RetrofitService.SCOPE_PRE;
 import static com.sensoro.smartcity.server.RetrofitService.SCOPE_TEST;
 
 public class RetrofitServiceHelper {
@@ -182,7 +183,11 @@ public class RetrofitServiceHelper {
                 BASE_URL = SCOPE_TEST;
                 break;
             case 3:
-                BASE_URL = SCOPE_MOCHA;
+                BASE_URL = SCOPE_PRE;
+                break;
+            case 4:
+                //开发环境
+                BASE_URL = SCOPE_DEVELOPER;
                 break;
             default:
                 BASE_URL = SCOPE_MASTER;
@@ -210,7 +215,10 @@ public class RetrofitServiceHelper {
                         BASE_URL = SCOPE_TEST;
                         break;
                     case 3:
-                        BASE_URL = SCOPE_MOCHA;
+                        BASE_URL = SCOPE_PRE;
+                        break;
+                    case 4:
+                        BASE_URL = SCOPE_DEVELOPER;
                         break;
                     default:
                         BASE_URL = SCOPE_MASTER;
