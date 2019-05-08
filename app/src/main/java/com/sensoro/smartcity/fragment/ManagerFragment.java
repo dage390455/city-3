@@ -81,6 +81,8 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     FrameLayout line6;
     @BindView(R.id.line7)
     FrameLayout line7;
+    @BindView(R.id.line8)
+    FrameLayout line8;
     @BindView(R.id.fg_main_manage_ll_camera)
     LinearLayout fgMainManageLlCamera;
     private ProgressUtils mProgressUtils;
@@ -395,6 +397,12 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     public void setSignalCheckVisible(boolean hasSignalCheck) {
         fgMainManageLlSignalCheck.setVisibility(hasSignalCheck ? View.VISIBLE : View.GONE);
         line6.setVisibility(hasSignalCheck ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setDeviceCameraVisible(boolean hasDeviceCamera) {
+        fgMainManageLlCamera.setVisibility(hasDeviceCamera ? View.VISIBLE : View.GONE);
+        line8.setVisibility(hasDeviceCamera ? View.VISIBLE : View.GONE);
     }
 
     @Override

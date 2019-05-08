@@ -30,8 +30,8 @@ import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
-import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
 import com.sensoro.smartcity.activity.CameraListActivity;
+import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
 import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapENActivity;
@@ -581,23 +581,26 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
                     }
                 }
-                String id = mDeviceInfo.getDeviceGroup();
-                if (!TextUtils.isEmpty(id)) {
-                    RetrofitServiceHelper.getInstance().getDeviceGroupCameraList(id, 10, 1, null).subscribeOn(Schedulers.io()).observeOn
-                            (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(MonitorPointElectricDetailActivityPresenter.this) {
-                        @Override
-                        public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
-                            deviceCameras = (ArrayList<DeviceCameraInfo>) deviceCameraListRsp.getData();
-                            if (deviceCameras != null && deviceCameras.size() > 0) {
-                                getView().setDeviceCamerasText(mContext.getString(R.string.device_detail_camera_has_camera) + deviceCameras.size() + mContext.getString(R.string.device_detail_camera_camera_count));
+                //加入摄像头权限检查
+                if (PreferencesHelper.getInstance().getUserData().hasDeviceCameraList && AppUtils.isChineseLanguage()) {
+                    String id = mDeviceInfo.getDeviceGroup();
+                    if (!TextUtils.isEmpty(id)) {
+                        RetrofitServiceHelper.getInstance().getDeviceGroupCameraList(id, 10, 1, null).subscribeOn(Schedulers.io()).observeOn
+                                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(MonitorPointElectricDetailActivityPresenter.this) {
+                            @Override
+                            public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
+                                deviceCameras = (ArrayList<DeviceCameraInfo>) deviceCameraListRsp.getData();
+                                if (deviceCameras != null && deviceCameras.size() > 0) {
+                                    getView().setDeviceCamerasText(mContext.getString(R.string.device_detail_camera_has_camera) + deviceCameras.size() + mContext.getString(R.string.device_detail_camera_camera_count));
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onErrorMsg(int errorCode, String errorMsg) {
-                            getView().toastShort(errorMsg);
-                        }
-                    });
+                            @Override
+                            public void onErrorMsg(int errorCode, String errorMsg) {
+                                getView().toastShort(errorMsg);
+                            }
+                        });
+                    }
                 }
                 refreshOperationStatus();
                 freshDeviceUpdateVersionInfo();
