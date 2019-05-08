@@ -60,15 +60,11 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
             mCameraName = intent.getStringExtra("cameraName");
             lastCover = intent.getStringExtra("lastCover");
             getLastCoverImage(lastCover);
-
-
             String deviceStatus = intent.getStringExtra("deviceStatus");
             if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
                 getView().offlineType(url);
             }
-
         }
-
         doLive();
         getView().showProgressDialog();
         requestData(cid, Constants.DIRECTION_DOWN);
@@ -102,15 +98,16 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
         String startTime;
         String endTime;
         if (startDateTime == 0 || endDateTime == 0) {
+            //后台存的人脸图片，只保留30天，所以这里请求30天的
             startTime = String.valueOf(currentTimeMillis - 24 * 60 * 60 * 30 * 1000L);
             endTime = String.valueOf(currentTimeMillis);
         } else {
             startTime = String.valueOf(startDateTime);
             endTime = String.valueOf(endDateTime);
         }
-
+        //获取图片是根绝minID向后推limit个条目，服务器做的限定
         RetrofitServiceHelper.getInstance().getDeviceCameraFaceList(strings, null, 20, minId, startTime, endTime)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraFacePicListRsp>(null) {
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraFacePicListRsp>(this) {
             @Override
             public void onCompleted(final DeviceCameraFacePicListRsp deviceCameraFacePicListRsp) {
                 List<DeviceCameraFacePic> data = deviceCameraFacePicListRsp.getData();
@@ -133,7 +130,6 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                     } else if (direction == Constants.DIRECTION_UP) {
                         if (isAttachedView()) {
                             getView().toastShort(mActivity.getString(R.string.no_more_data));
-                            getView().onPullRefreshCompleteNoMoreData();
                         }
                     }
 
@@ -148,6 +144,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 if (isAttachedView()) {
+                    getView().toastShort(errorMsg);
                     getView().dismissProgressDialog();
                 }
 
@@ -206,7 +203,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                 return;
             }
 
-            //7天以为没有视频，所以显示没有视频，
+            //7天以外没有视频，所以显示没有视频，
             if (System.currentTimeMillis() - 24 * 3600 * 1000 * 7L > time) {
                 getView().setGsyVideoNoVideo();
                 return;

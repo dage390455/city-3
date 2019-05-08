@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.CameraPersonDetailActivity;
 import com.sensoro.smartcity.activity.CameraPersonLocusActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -88,7 +89,7 @@ public class CameraPersonAvatarHistoryActivityPresenter extends BasePresenter<IC
                             }
 
                             if (isAttachedView()) {
-                                getView().onPullRefreshCompleteNoMoreData();
+                                getView().toastShort(mActivity.getString(R.string.no_more_data));
                             }
                         }
 
