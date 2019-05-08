@@ -30,7 +30,6 @@ import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
-import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.model.CameraFilterModel;
 import com.sensoro.smartcity.presenter.CameraListActivityPresenter;
 import com.sensoro.smartcity.server.bean.DeviceCameraInfo;
@@ -40,7 +39,6 @@ import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
-import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
 import com.sensoro.smartcity.widget.popup.CameraListFilterPopupWindow;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
@@ -52,7 +50,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CameraListActivity extends BaseActivity<ICameraListActivityView, CameraListActivityPresenter>
-        implements ICameraListActivityView, DeviceCameraContentAdapter.OnDeviceCameraContentClickListener, CalendarPopUtils.OnCalendarPopupCallbackListener, View.OnClickListener {
+        implements ICameraListActivityView, DeviceCameraContentAdapter.OnDeviceCameraContentClickListener, View.OnClickListener {
 
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
@@ -403,11 +401,6 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
     }
 
     @Override
-    public void onCalendarPopupCallback(CalendarDateModel calendarDateModel) {
-        mPresenter.onCalendarBack(calendarDateModel);
-    }
-
-    @Override
     public void showCalendar(long startTime, long endTime) {
 //        mCalendarPopUtils.show(includeImvTitleImvArrowsLeft, startTime, endTime);
     }
@@ -491,7 +484,6 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_alarm_log_date_close:
-                mPresenter.closeDateSearch();
                 break;
             case R.id.alarm_return_top:
                 acHistoryLogRcContent.smoothScrollToPosition(0);
@@ -504,10 +496,7 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
                 break;
 
             case R.id.camera_list_iv_filter:
-
-
                 if (mCameraFilterModelList.size() == 0) {
-
                     mPresenter.getFilterPopData();
                 } else {
                     if (!mCameraListFilterPopupWindow.isShowing()) {
