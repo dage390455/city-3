@@ -72,6 +72,8 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     View includeTextTitleDivider;
     @BindView(R.id.ac_deploy_record_detail_rc_deploy_pic)
     TouchRecycleView acDeployRecordDetailRcDeployPic;
+    @BindView(R.id.ac_deploy_record_detail_tv_deploy_staff)
+    TextView acDeployRecordDetailTvDeployStaff;
     @BindView(R.id.ac_deploy_device_detail_deploy_record_location_line)
     View acDeployDeviceDetailDeployRecordLocationLine;
     @BindView(R.id.ac_deploy_record_detail_tv_material)
@@ -339,6 +341,11 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
             tvAcDeployDeviceRecordDetailForceDeployReason.setVisibility(View.VISIBLE);
             tvAcDeployDeviceRecordDetailForceDeployReason.setText(reason);
         }
+    }
+
+    @Override
+    public void setDeployRecordDetailDeployStaff(String text) {
+        acDeployRecordDetailTvDeployStaff.setText(text);
     }
 
 

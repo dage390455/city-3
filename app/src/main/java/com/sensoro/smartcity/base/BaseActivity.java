@@ -18,6 +18,7 @@ import com.baidu.mobstat.StatService;
 import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.util.ActivityTaskManager;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.dialog.PermissionDialogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
@@ -98,6 +99,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         }
         onCreateInit(savedInstanceState);
         StatService.setDebugOn(true);
+        ActivityTaskManager.getInstance().pushActivity(this);
     }
 
     /**
@@ -138,6 +140,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         }
         mHandler.removeCallbacksAndMessages(null);
         super.onDestroy();
+        ActivityTaskManager.getInstance().popActivity(this);
     }
 
     @Override
@@ -253,6 +256,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.slide_out, R.anim.slide_right);
+        ActivityTaskManager.getInstance().popActivity(this);
     }
 
     @Override

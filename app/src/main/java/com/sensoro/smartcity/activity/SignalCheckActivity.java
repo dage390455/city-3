@@ -81,7 +81,7 @@ public class SignalCheckActivity extends BaseActivity<ISignalCheckActivityView, 
     private void initView() {
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         mProgressbuild = new ProgressUtils.Builder(mActivity);
-        mProgressUtils = new ProgressUtils(mProgressbuild.build().setCancelable(false));
+        mProgressUtils = new ProgressUtils(mProgressbuild.setCancelable(false).build());
         includeTextTitleTvTitle.setText(R.string.signal_test);
         includeTextTitleTvSubtitle.setText(R.string.frequency_random);
 

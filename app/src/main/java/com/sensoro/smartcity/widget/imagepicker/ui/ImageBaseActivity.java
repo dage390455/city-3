@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.util.ActivityTaskManager;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.view.SystemBarTintManager;
@@ -46,6 +47,7 @@ public class ImageBaseActivity extends AppCompatActivity {
         tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
         tintManager.setStatusBarTintResource(R.color.ip_color_primary_dark);  //设置上方状态栏的颜色
+        ActivityTaskManager.getInstance().pushActivity(this);
     }
 
     @TargetApi(19)
@@ -79,5 +81,17 @@ public class ImageBaseActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         ImagePicker.getInstance().saveInstanceState(outState);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        ActivityTaskManager.getInstance().popActivity(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityTaskManager.getInstance().popActivity(this);
     }
 }

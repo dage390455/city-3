@@ -39,4 +39,6 @@ public interface IDeployRecordDetailActivityView extends IToast, IActivityIntent
     void setDeployDeviceRecordDiameter(String diameter);
 
     void setForceDeployReason(String reason);
+
+    void setDeployRecordDetailDeployStaff(String text);
 }

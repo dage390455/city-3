@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.DeployCameraDetailActivity;
+import com.sensoro.smartcity.activity.DeployMonitorDetailActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.activity.InspectionActivity;
 import com.sensoro.smartcity.activity.InspectionExceptionDetailActivity;
@@ -358,8 +358,8 @@ public class DeployAnalyzerUtils {
                             deployAnalyzerModel.updatedTime = deployStationInfo.getUpdatedTime();
                             Intent intent = new Intent();
                             //TODO 测试
-//                            intent.setClass(activity, DeployMonitorCheckActivity.class);
-                            intent.setClass(activity, DeployCameraDetailActivity.class);
+//                            intent.setClass(activity, DeployCameraDetailActivity.class);
+                            intent.setClass(activity, DeployMonitorDetailActivity.class);
                             intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                             listener.onSuccess(intent);
                         } catch (Exception e) {
@@ -423,8 +423,8 @@ public class DeployAnalyzerUtils {
                                 }
                             }
                             Intent intent = new Intent();
-//                            intent.setClass(activity, DeployMonitorCheckActivity.class);
-                            intent.setClass(activity, DeployCameraDetailActivity.class);
+//                            intent.setClass(activity, DeployCameraDetailActivity.class);
+                            intent.setClass(activity, DeployMonitorDetailActivity.class);
                             intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                             listener.onSuccess(intent);
                         }
@@ -478,9 +478,9 @@ public class DeployAnalyzerUtils {
                             }
                         }
                         Intent intent = new Intent();
-//                        intent.setClass(activity, DeployMonitorCheckActivity.class);
                         //TODO
-                        intent.setClass(activity, DeployCameraDetailActivity.class);
+//                        intent.setClass(activity, DeployCameraDetailActivity.class);
+                        intent.setClass(activity, DeployMonitorDetailActivity.class);
                         intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                         listener.onSuccess(intent);
                     }
@@ -640,9 +640,8 @@ public class DeployAnalyzerUtils {
                                     deployAnalyzerModel.channelMask.addAll(channelMask);
                                 }
                                 Intent intent = new Intent();
-//                                intent.setClass(activity, DeployMonitorCheckActivity.class);
-                                intent.setClass(activity, DeployCameraDetailActivity.class);
-
+//                                intent.setClass(activity, DeployCameraDetailActivity.class);
+                                intent.setClass(activity, DeployMonitorDetailActivity.class);
                                 intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                                 listener.onSuccess(intent);
                             }

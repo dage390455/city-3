@@ -2,11 +2,12 @@ package com.sensoro.smartcity.imainviews;
 
 import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IToast;
+import com.sensoro.smartcity.model.DeployContactModel;
 
 import java.util.ArrayList;
 
 public interface IAlarmContactActivityView extends IToast, IActivityIntent {
-    void setNameAndPhone(String name, String phone);
+//    void setNameAndPhone(String name, String phone);
 
     void updateHistoryData(ArrayList<String> mHistoryKeywords);
 
@@ -14,7 +15,10 @@ public interface IAlarmContactActivityView extends IToast, IActivityIntent {
 
     void showHistoryClearDialog();
 
-    void setName(String name);
+//    void setName(String name);
+//
+//    void setPhone(String phone);
 
-    void setPhone(String phone);
+    void updateContactData(ArrayList<DeployContactModel> mdContactModelList);
+
 }

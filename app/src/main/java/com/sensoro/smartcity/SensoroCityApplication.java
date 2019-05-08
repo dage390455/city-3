@@ -314,16 +314,9 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     private final class CrashHandler extends CrashReport.CrashHandleCallback {
         @Override
         public synchronized byte[] onCrashHandleStart2GetExtraDatas(int crashType, String errorType, String errorMessage, String errorStack) {
-            if (pushHandler != null) {
-                pushHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        EventData eventData = new EventData();
-                        eventData.code = Constants.EVENT_DATA_SESSION_ID_OVERTIME;
-                        EventBus.getDefault().post(eventData);
-                    }
-                }, 1000);
-            }
+            EventData eventData = new EventData();
+            eventData.code = Constants.EVENT_DATA_SESSION_ID_OVERTIME;
+            EventBus.getDefault().post(eventData);
             return super.onCrashHandleStart2GetExtraDatas(crashType, errorType, errorMessage, errorStack);
         }
 

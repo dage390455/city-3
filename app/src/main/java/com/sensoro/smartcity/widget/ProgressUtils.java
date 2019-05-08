@@ -77,6 +77,7 @@ public class ProgressUtils {
         private String message;
         private TextView mTv;
         private ImageView mImv;
+        private boolean cancelable = true;
 
         public Builder(Activity ac) {
             activity = new WeakReference<>(ac);
@@ -88,6 +89,8 @@ public class ProgressUtils {
             mImv = view.findViewById(R.id.progress_imv);
             mTv = view.findViewById(R.id.progress_tv);
             progressDialog = new CustomCornerDialog(activity.get(), view);
+            progressDialog.setCancelable(cancelable);
+            progressDialog.setCanceledOnTouchOutside(cancelable);
             mTv.setText(message);
             Window window = progressDialog.getWindow();
             if (window != null) {
@@ -99,12 +102,17 @@ public class ProgressUtils {
 
         public Builder setMessage(String message) {
             this.message = message;
+            if (progressDialog != null) {
+                mTv.setText(message);
+            }
             return this;
         }
 
         public Builder setCancelable(boolean cancelable) {
+            this.cancelable = cancelable;
             if (progressDialog != null) {
                 progressDialog.setCancelable(cancelable);
+                progressDialog.setCanceledOnTouchOutside(cancelable);
             }
             return this;
         }

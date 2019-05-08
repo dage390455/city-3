@@ -2,9 +2,17 @@ package com.sensoro.smartcity.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -65,6 +73,8 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     TextView acDeployDeviceDetailTvDeployPic;
     @BindView(R.id.ac_deploy_device_detail_ll_deploy_pic)
     LinearLayout acDeployDeviceDetailLlDeployPic;
+    @BindView(R.id.line_deploy_pic)
+    View lineDeployPic;
     @BindView(R.id.ac_deploy_device_detail_tv_fixed_point_signal)
     TextView acDeployDeviceDetailTvFixedPointSignal;
     @BindView(R.id.ac_deploy_device_detail_tv_fixed_point_state)
@@ -97,6 +107,8 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     TextView acDeployDeviceDetailTvAlarmContactRequired;
     @BindView(R.id.line_deploy_detail_we_chat)
     View lineDeployDetailWeChat;
+    @BindView(R.id.ac_deploy_device_detail_tv_upload_tip)
+    TextView acDeployDeviceDetailTvUploadTip;
     private DeployDeviceDetailAlarmContactAdapter mAlarmContactAdapter;
     private TagAdapter mTagAdapter;
     private TextView mDialogTvConfirm;
@@ -124,7 +136,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         tipBleDialogUtils = new TipBleDialogUtils(mActivity);
         mLoadBleConfigDialogBuilder = new ProgressUtils.Builder(mActivity);
-        mLoadBleConfigDialog = new ProgressUtils(mLoadBleConfigDialogBuilder.setMessage(mActivity.getString(R.string.get_the_middle_profile)).build());
+        mLoadBleConfigDialog = new ProgressUtils(mLoadBleConfigDialogBuilder.setMessage(mActivity.getString(R.string.loading)).setCancelable(false).build());
         includeTextTitleTvTitle.setText(R.string.device_deployment);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
 //        updateUploadState(true);
@@ -183,7 +195,8 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
             case R.id.include_text_title_tv_subtitle:
                 break;
             case R.id.ac_deploy_device_detail_ll_name_location:
-                mPresenter.doNameAddress();
+//                mPresenter.doNameAddress();
+                int i = 1 / 0;
                 break;
             case R.id.ac_deploy_device_detail_rl_tag:
                 mPresenter.doTag();
@@ -227,6 +240,35 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 //        builder.setCancelable(false);
 //        mUploadDialog = builder.create();
         mUploadDialog = new CustomCornerDialog(mActivity, R.style.CustomCornerDialogStyle, view);
+    }
+
+
+    @NonNull
+    private CharSequence getClickableSpannable(String suggest, String instruction) {
+        if (TextUtils.isEmpty(instruction)) {
+            return suggest;
+        }
+        final String repairInstructionUrl = mPresenter.getRepairInstructionUrl();
+        if (TextUtils.isEmpty(repairInstructionUrl)) {
+            return suggest;
+        }
+        StringBuilder stringBuilder = new StringBuilder(suggest);
+        stringBuilder.append(instruction);
+        SpannableString sb = new SpannableString(stringBuilder);
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                ds.setColor(ds.linkColor);
+                ds.setUnderlineText(false);
+            }
+
+            @Override
+            public void onClick(@NonNull View widget) {
+                mPresenter.doInstruction(repairInstructionUrl);
+            }
+        };
+        sb.setSpan(clickableSpan, stringBuilder.length() - instruction.length(), stringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        return sb;
     }
 
     @Override
@@ -366,27 +408,28 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     }
 
     @Override
-    public void refreshSignal(boolean hasStation, String signal, int resSignalId, String locationInfo) {
+    public void refreshSignal(boolean hasStation, String signal, @NonNull Drawable drawable, String locationInfo) {
         if (hasStation) {
             //TODO 背景选择器
             acDeployDeviceDetailTvFixedPointSignal.setVisibility(View.GONE);
             acDeployDeviceDetailTvFixedPointState.setText(locationInfo);
-//        signalButton.setPadding(6, 10, 6, 10);
         } else {
             acDeployDeviceDetailTvFixedPointSignal.setVisibility(View.VISIBLE);
             //TODO 背景选择器
             acDeployDeviceDetailTvFixedPointSignal.setText(signal);
-            acDeployDeviceDetailTvFixedPointSignal.setBackground(getResources().getDrawable(resSignalId));
             acDeployDeviceDetailTvFixedPointState.setText(locationInfo);
-//        signalButton.setPadding(6, 10, 6, 10);
         }
 
         //定位信息是必填的情况下，颜色a6a6 其他2525
-        if (locationInfo.equals(mActivity.getString(R.string.required))) {
+        if (mActivity.getString(R.string.required).equals(locationInfo)) {
             acDeployDeviceDetailTvFixedPointState.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
         } else {
             acDeployDeviceDetailTvFixedPointState.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
         }
+        //
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        acDeployDeviceDetailTvFixedPointSignal.setText(signal);
+        acDeployDeviceDetailTvFixedPointSignal.setCompoundDrawables(drawable, null, null, null);
 
     }
 
@@ -408,6 +451,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     @Override
     public void setDeployPhotoVisible(boolean isVisible) {
         acDeployDeviceDetailLlDeployPic.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        lineDeployPic.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -445,29 +489,28 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     }
 
     @Override
-    public void showWarnDialog(boolean canForceUpload) {
+    public void showWarnDialog(boolean canForceUpload, String tipText, String instruction) {
         if (mUploadDialog == null) {
             initConfirmDialog();
-            setWarDialogStyle(canForceUpload);
-            mUploadDialog.show();
-        } else {
-            setWarDialogStyle(canForceUpload);
-            mUploadDialog.show();
         }
+        setWarDialogStyle(canForceUpload, tipText, instruction);
+        mUploadDialog.show();
     }
 
-    private void setWarDialogStyle(boolean canForceUpload) {
+    private void setWarDialogStyle(boolean canForceUpload, String tipText, String instruction) {
         if (canForceUpload) {
             line1.setVisibility(View.VISIBLE);
             mDialogTvCancel.setVisibility(View.VISIBLE);
-            mDialogTvTitle.setText(R.string.deploy_result_is_upload);
             mDialogTvConfirm.setBackgroundResource(R.drawable.selector_item_white_ee_corner_right);
         } else {
             line1.setVisibility(View.GONE);
             mDialogTvCancel.setVisibility(View.GONE);
-            mDialogTvTitle.setText(R.string.no_signal_can_not_uploaded);
             mDialogTvConfirm.setBackgroundResource(R.drawable.selector_item_white_corner_bottom);
         }
+        mDialogTvMsg.setVisibility(View.VISIBLE);
+        mDialogTvMsg.setText(getClickableSpannable(tipText, instruction));
+        mDialogTvMsg.setMovementMethod(LinkMovementMethod.getInstance());
+        mDialogTvMsg.setHighlightColor(Color.TRANSPARENT);
     }
 
     @Override
@@ -539,8 +582,14 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
     @Override
     public void setUploadBtnStatus(boolean isEnable) {
+        mPresenter.updateCheckTipText(isEnable);
         acDeployDeviceDetailTvUpload.setEnabled(isEnable);
         acDeployDeviceDetailTvUpload.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_solid_df_corner);
+    }
+
+    @Override
+    public void setDeployLocalCheckTipText(String tipText) {
+        acDeployDeviceDetailTvUploadTip.setText(tipText);
     }
 
     @Override
@@ -559,7 +608,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
                 break;
             case R.id.dialog_deploy_device_upload_tv_cancel:
                 mUploadDialog.dismiss();
-                mPresenter.requestUpload();
+                mPresenter.doForceUpload();
                 break;
         }
     }

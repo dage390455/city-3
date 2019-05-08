@@ -40,6 +40,7 @@ import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapt
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.analyzer.OperationCmdAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.smartcity.callback.OnConfigInfoObserver;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
@@ -1381,13 +1382,73 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         switch (type) {
             case MonitorPointOperationCode.ERASURE:
                 mOperationType = MonitorPointOperationCode.ERASURE_STR;
-                if (doBleMuteOperation()) {
+                if (doBleMuteOperation(new OnConfigInfoObserver() {
+                    @Override
+                    public void onStart(String msg) {
+                        if (isAttachedView()) {
+                            getView().dismissTipDialog();
+                            getView().showOperationTipLoadingDialog();
+                        }
+                    }
+
+                    @Override
+                    public void onSuccess(Object o) {
+                        if (isAttachedView()) {
+                            getView().dismissOperatingLoadingDialog();
+                            getView().showOperationSuccessToast();
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(String errorMsg) {
+                        if (isAttachedView()) {
+                            bleRequestCmd();
+                        }
+                    }
+
+                    @Override
+                    public void onOverTime(String overTimeMsg) {
+                        if (isAttachedView()) {
+                            bleRequestCmd();
+                        }
+                    }
+                })) {
                     return;
                 }
                 break;
             case MonitorPointOperationCode.ERASURE_LONG:
                 mOperationType = MonitorPointOperationCode.ERASURE_LONG_STR;
-                if (doBleMuteOperation()) {
+                if (doBleMuteOperation(new OnConfigInfoObserver() {
+                    @Override
+                    public void onStart(String msg) {
+                        if (isAttachedView()) {
+                            getView().dismissTipDialog();
+                            getView().showOperationTipLoadingDialog();
+                        }
+                    }
+
+                    @Override
+                    public void onSuccess(Object o) {
+                        if (isAttachedView()) {
+                            getView().dismissOperatingLoadingDialog();
+                            getView().showOperationSuccessToast();
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(String errorMsg) {
+                        if (isAttachedView()) {
+                            bleRequestCmd();
+                        }
+                    }
+
+                    @Override
+                    public void onOverTime(String overTimeMsg) {
+                        if (isAttachedView()) {
+                            bleRequestCmd();
+                        }
+                    }
+                })) {
                     return;
                 }
                 break;
@@ -1415,26 +1476,38 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         requestServerCmd();
     }
 
-    private boolean doBleMuteOperation() {
+    private boolean doBleMuteOperation(final OnConfigInfoObserver onConfigInfoObserver) {
         if (bleDeviceMap.containsKey(mDeviceInfo.getSn()) && !TextUtils.isEmpty(bleUpdateModel.blePassword)) {
             String macAddress = bleDeviceMap.get(mDeviceInfo.getSn()).getMacAddress();
             if (!TextUtils.isEmpty(macAddress)) {
                 if (sensoroDeviceConnection != null) {
                     sensoroDeviceConnection.disconnect();
                 }
-                getView().dismissTipDialog();
-                getView().showOperationTipLoadingDialog();
-                sensoroDeviceConnection = new SensoroDeviceConnection(mContext, macAddress);
-                try {
-                    final SensoroWriteCallback bleMuteOperationWriteCallback = new SensoroWriteCallback() {
-                        @Override
-                        public void onWriteSuccess(Object o, int cmd) {
+                final Runnable configOvertime = new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isAttachedView()) {
                             if (sensoroDeviceConnection != null) {
                                 sensoroDeviceConnection.disconnect();
                             }
+                            if (onConfigInfoObserver != null) {
+                                onConfigInfoObserver.onOverTime(mContext.getString(R.string.init_config_over_time));
+                            }
+                        }
+                    }
+                };
+                try {
+                    onConfigInfoObserver.onStart(null);
+                    sensoroDeviceConnection = new SensoroDeviceConnection(mContext, macAddress);
+                    final SensoroWriteCallback bleMuteOperationWriteCallback = new SensoroWriteCallback() {
+                        @Override
+                        public void onWriteSuccess(Object o, int cmd) {
                             if (isAttachedView()) {
-                                getView().dismissOperatingLoadingDialog();
-                                getView().showOperationSuccessToast();
+                                if (sensoroDeviceConnection != null) {
+                                    sensoroDeviceConnection.disconnect();
+                                }
+                                mHandler.removeCallbacks(configOvertime);
+                                onConfigInfoObserver.onSuccess(null);
                             }
 
                         }
@@ -1442,8 +1515,13 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         @Override
                         public void onWriteFailure(int errorCode, int cmd) {
                             if (isAttachedView()) {
-                                bleRequestCmd();
+                                if (sensoroDeviceConnection != null) {
+                                    sensoroDeviceConnection.disconnect();
+                                }
+                                mHandler.removeCallbacks(configOvertime);
+                                onConfigInfoObserver.onFailed("写入失败");
                             }
+
                         }
                     };
                     final SensoroConnectionCallback bleMuteOperationConnectionCallback = new SensoroConnectionCallback() {
@@ -1458,8 +1536,10 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         @Override
                         public void onConnectedFailure(int errorCode) {
                             if (isAttachedView()) {
-                                bleRequestCmd();
+                                mHandler.removeCallbacks(configOvertime);
+                                onConfigInfoObserver.onFailed("连接失败");
                             }
+
                         }
 
                         @Override
@@ -1468,9 +1548,11 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         }
                     };
                     sensoroDeviceConnection.connect(bleUpdateModel.blePassword, bleMuteOperationConnectionCallback);
+                    mHandler.postDelayed(configOvertime, 10 * 1000);
                     LogUtils.loge("--->>  蓝牙消音");
                 } catch (Throwable e) {
                     e.printStackTrace();
+                    mHandler.removeCallbacks(configOvertime);
                     bleRequestCmd();
                 }
                 return true;

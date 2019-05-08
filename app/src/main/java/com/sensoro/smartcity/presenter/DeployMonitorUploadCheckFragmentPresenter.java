@@ -593,10 +593,18 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
         deployResultModel.wxPhone = deployAnalyzerModel.weChatAccount;
         deployResultModel.settingData = deployAnalyzerModel.settingData;
         //TODO 新版联系人
+//        if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+//            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+//            deployResultModel.contact = deployContactModel.name;
+//            deployResultModel.phone = deployContactModel.phone;
+//        }
+
         if (deployAnalyzerModel.deployContactModelList.size() > 0) {
-            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
-            deployResultModel.contact = deployContactModel.name;
-            deployResultModel.phone = deployContactModel.phone;
+//            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+//            deployResultModel.contact = deployContactModel.name;
+//            deployResultModel.phone = deployContactModel.phone;
+
+            deployResultModel.deployContactModelList.addAll(deployAnalyzerModel.deployContactModelList);
         }
         deployResultModel.address = deployAnalyzerModel.address;
         deployResultModel.updateTime = deviceInfo.getUpdatedTime();
@@ -621,6 +629,9 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
         deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
         deployResultModel.scanType = deployAnalyzerModel.deployType;
         deployResultModel.address = deployAnalyzerModel.address;
+        if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+            deployResultModel.deployContactModelList.addAll(deployAnalyzerModel.deployContactModelList);
+        }
         deployResultModel.signal = deployAnalyzerModel.signal;
         intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
         getView().startAC(intent);
@@ -639,9 +650,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
         deployResultModel.wxPhone = deployAnalyzerModel.weChatAccount;
         deployResultModel.settingData = deployAnalyzerModel.settingData;
         if (deployAnalyzerModel.deployContactModelList.size() > 0) {
-            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
-            deployResultModel.contact = deployContactModel.name;
-            deployResultModel.phone = deployContactModel.phone;
+            deployResultModel.deployContactModelList.addAll(deployAnalyzerModel.deployContactModelList);
         }
         deployResultModel.address = deployAnalyzerModel.address;
         deployResultModel.updateTime = deployAnalyzerModel.updatedTime;
