@@ -1,16 +1,14 @@
 package com.shuyu.gsyvideoplayer.video;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
-import android.net.ConnectivityManager;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -46,7 +44,10 @@ import moe.codeest.enviews.ENPlayView;
 
 public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
+    private ImageView back_mask_tv;
+    private RelativeLayout maskLayoutTop;
 
+    private TextView maskTitleTv;
     private RelativeLayout rMobileData;
 
     private static int isLive;
@@ -231,6 +232,29 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
         playRetryBtn.setText(R.string.retry);
         tiptv.setText(getResources().getString(R.string.retry_play));
+        maskLayoutTop.setVisibility(VISIBLE);
+        maskTitleTv.setText(mTitle);
+
+
+    }
+
+
+    /**
+     * 离线
+     */
+    public void offlineType() {
+        rMobileData.setVisibility(VISIBLE);
+        playBtn.setVisibility(GONE);
+        playRetryBtn.setVisibility(VISIBLE);
+        rMobileData.setBackgroundResource(R.drawable.camera_detail_mask);
+        face_iv.setVisibility(GONE);
+
+        playRetryBtn.setText(R.string.retry);
+        tiptv.setText(getResources().getString(R.string.offline));
+        maskLayoutTop.setVisibility(VISIBLE);
+        maskTitleTv.setText(mTitle);
+
+
     }
 
     /**
@@ -244,9 +268,12 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         isMobile = true;
         rMobileData.setBackgroundColor(Color.TRANSPARENT);
 
+
+        maskTitleTv.setText(mTitle);
 //        rMobileData.setBackgroundColor(R.drawable.camera_detail_mask);
 
         tiptv.setText(getResources().getString(R.string.mobile_network));
+        maskLayoutTop.setVisibility(VISIBLE);
 
     }
 
@@ -280,6 +307,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         rMobileData.setBackgroundResource(R.drawable.camera_detail_mask);
 
         face_iv.setVisibility(GONE);
+        maskLayoutTop.setVisibility(VISIBLE);
 
     }
 
@@ -360,10 +388,21 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         playRetryBtn = findViewById(R.id.playa_retry_btn);
         playRetryBtn = findViewById(R.id.playa_retry_btn);
 
-
+        back_mask_tv = findViewById(R.id.mask_iv_back);
+        maskTitleTv = findViewById(R.id.mask_title_tv);
+        maskLayoutTop = findViewById(R.id.mask_layout_top);
         tiptv = findViewById(R.id.tip_data_tv);
 
+        back_mask_tv.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                if (getContext() instanceof Activity) {
+                    ((Activity) getContext()).finish();
+                }
+//                getContext().
+            }
+        });
         audioIv = findViewById(R.id.audio_iv);
         audioIv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -387,11 +426,6 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         if (mBottomShowProgressThumbDrawable != null) {
             mProgressBar.setThumb(mBottomShowProgressThumbDrawable);
         }
-
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Intent.ACTION_USER_PRESENT);
-        intentFilter.addAction(Intent.ACTION_LOCALE_CHANGED);
-        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
 
 
     }
@@ -1253,6 +1287,8 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
             });
         } else {
             rMobileData.setVisibility(GONE);
+            maskLayoutTop.setVisibility(View.GONE);
+
 
         }
 
@@ -1261,6 +1297,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         } else {
 
             rMobileData.setVisibility(View.GONE);
+            maskLayoutTop.setVisibility(View.GONE);
 
         }
 

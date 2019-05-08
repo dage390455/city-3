@@ -17,6 +17,7 @@
 
         </RelativeLayout>
 
+
         <RelativeLayout
             android:id="@+id/thumb"
             android:layout_width="match_parent"
@@ -237,6 +238,7 @@
                 android:layout_height="match_parent"
                 android:visibility="gone" />
 
+
             <LinearLayout
                 android:layout_width="wrap_content"
 
@@ -281,6 +283,38 @@
                     android:textSize="14sp"
                     android:visibility="invisible" />
             </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/mask_layout_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/video_title_bg"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:visibility="gone">
+
+
+                <ImageView
+                    android:id="@+id/mask_iv_back"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="48dp"
+                    android:paddingLeft="10dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/video_back" />
+
+                <TextView
+                    android:id="@+id/mask_title_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="48dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp" />
+
+
+            </RelativeLayout>
 
 
         </RelativeLayout>

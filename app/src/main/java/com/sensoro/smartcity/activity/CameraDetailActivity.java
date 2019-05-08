@@ -378,6 +378,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
         if (!NetworkUtils.isAvailable(this) || !NetworkUtils.isWifiConnected(this)) {
             orientationUtils.setEnable(false);
+            getCurPlay().onVideoPause();
+
             gsyPlayerAcCameraDetail.getPlayBtn().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -540,6 +542,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     public void doPlayLive(final String url, String cameraName, final boolean isLive) {
         if (!NetworkUtils.isAvailable(this) || !NetworkUtils.isWifiConnected(this)) {
             orientationUtils.setEnable(false);
+            getCurPlay().onVideoPause();
             gsyPlayerAcCameraDetail.getPlayBtn().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
