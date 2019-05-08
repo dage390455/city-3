@@ -50,20 +50,6 @@ public class CameraListFilterPopupWindow {
                 mLl.startAnimation(dismissTranslateAnimation);
 
 
-//                if (null != cameraListPopAdapter.getmStateCountList()) {
-//
-//
-//                    List<CameraFilterModel> list = cameraListPopAdapter.getmStateCountList();
-//
-//                    for (CameraFilterModel model : list) {
-//
-//                        for (CameraFilterModel.ListBean countModel : model.getList()) {
-//
-//                            countModel.setSelect(false);
-//
-//                        }
-//                    }
-//                }
             }
         });
 
@@ -76,15 +62,6 @@ public class CameraListFilterPopupWindow {
 
 
         mRcStateSelect.setLayoutParams(layoutParams);
-
-
-//        WindowManager wm = (WindowManager) mActivity.getSystemService(Context.WINDOW_SERVICE);
-//        int height = wm.getDefaultDisplay().getHeight();
-//
-//
-//        if (height - mRcStateSelect.getLayoutParams().height < 100) {
-//
-//        }
 
 
         mPopupWindow = new PopupWindow(activity);
@@ -110,7 +87,6 @@ public class CameraListFilterPopupWindow {
 
                         for (CameraFilterModel.ListBean countModel : model.getList()) {
 
-//                            countModel.setSelect(false);
                             countModel.setReset(true);
 
                         }
@@ -154,7 +130,6 @@ public class CameraListFilterPopupWindow {
                             }
                         }
                         if (!StringUtils.isEmpty(stringBuffer.toString())) {
-//                            stringBuffer.substring(0, stringBuffer.length() - 1);
                             stringBuffer.deleteCharAt(stringBuffer.length() - 1).toString();
                             hashMap.put(key, stringBuffer);
                         }
@@ -219,11 +194,28 @@ public class CameraListFilterPopupWindow {
 
             List<CameraFilterModel> list = cameraListPopAdapter.getmStateCountList();
 
+
+            List<CameraFilterModel.ListBean> beanList = list.get(0).getList();
+            boolean isSelect = false;
+            for (int i = 0; i < beanList.size(); i++) {
+                CameraFilterModel.ListBean listBean = beanList.get(i);
+                if (listBean.isSelect()) {
+                    isSelect = true;
+                    break;
+                }
+
+
+            }
+            if (!isSelect) {
+                beanList.get(0).setSelect(true);
+            }
+
             for (CameraFilterModel model : list) {
 
                 for (CameraFilterModel.ListBean countModel : model.getList()) {
 
                     countModel.setReset(false);
+
 
                 }
 

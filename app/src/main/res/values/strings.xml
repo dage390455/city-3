@@ -982,6 +982,7 @@
     <string name="deploy_camera_watch_live">Watch Live</string>
     <string name="deploy_camera_status_online">Online</string>
     <string name="deploy_camera_status_offline">Offline</string>
+    <string name="associated_camera_list">Device associated camera</string>
 
     <string name="deploy_device_detail_check_failed">Deploy Check Failed</string>
     <string name="deploy_device_detail_checking">Deploy Checking</string>
