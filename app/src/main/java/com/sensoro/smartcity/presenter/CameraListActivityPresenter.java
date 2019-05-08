@@ -183,13 +183,14 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                         deviceCameraInfos.addAll(data);
                         if (isAttachedView()) {
                             getView().updateDeviceCameraAdapter(deviceCameraInfos);
+                            getView().onPullRefreshComplete();
                             getView().dismissProgressDialog();
                         }
-                        return;
                     }else {
                         deviceCameraInfos.addAll(data);
                         if (isAttachedView()) {
                             getView().updateDeviceCameraAdapter(deviceCameraInfos);
+                            getView().onPullRefreshComplete();
                             getView().dismissProgressDialog();
                         }
                     }
@@ -199,11 +200,14 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                         deviceCameraInfos.addAll(data);
                         if (isAttachedView()) {
                             getView().updateDeviceCameraAdapter(deviceCameraInfos);
+                            getView().onPullRefreshComplete();
                             getView().dismissProgressDialog();
                         }
                     }else{
                         if (isAttachedView()) {
                             getView().toastShort(mContext.getString(R.string.no_more_data));
+                            getView().onPullRefreshComplete();
+                            getView().dismissProgressDialog();
                             getView().dismissProgressDialog();
                         }
                     }
