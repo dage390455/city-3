@@ -284,6 +284,19 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 //                .setCacheWithPlay(true)
                 .setVideoTitle(cameraName)
                 .setVideoAllCallBack(new GSYSampleCallBack() {
+                    @Override
+                    public void onPlayError(final String url, Object... objects) {
+                        orientationUtils.setEnable(false);
+
+                        gsyPlayerAcCameraDetail.changeRetryType();
+                        gsyPlayerAcCameraDetail.getPlayRetryBtn().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                gsyVideoOption.setUrl(url).build(getCurPlay());
+                                getCurPlay().startPlayLogic();
+                            }
+                        });
+                    }
 
                     @Override
                     public void onAutoComplete(final String url, Object... objects) {
