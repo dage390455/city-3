@@ -85,6 +85,10 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
 
     @BindView(R.id.btn_search_clear)
     ImageView btnSearchClear;
+    @BindView(R.id.camera_list_search_top)
+    LinearLayout cameraListSearchTop;
+    @BindView(R.id.associated_camera_list_tv)
+    TextView associatedCameraListTv;
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
     private DeviceCameraContentAdapter mDeviceCameraContentAdapter;
@@ -455,9 +459,17 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
 
     @Override
     public void resetRefreshNoMoreData() {
-        if (refreshLayout!= null) {
+        if (refreshLayout != null) {
             refreshLayout.setNoMoreData(false);
         }
+    }
+
+    @Override
+    public void setToptitleState() {
+        associatedCameraListTv.setVisibility(View.VISIBLE);
+        cameraListSearchTop.setVisibility(View.GONE);
+        cameraListIvFilter.setVisibility(View.INVISIBLE);
+
     }
 
     @Override
