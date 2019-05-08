@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -158,7 +159,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
     protected RelativeLayout mThumbImageViewLayout;
 
     //底部进度调
-//    protected ProgressBar mBottomProgressBar;
+    protected ProgressBar mBottomProgressBar;
 
     //进度定时器
     protected Timer updateProcessTimer;
@@ -206,7 +207,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
         mTotalTimeTextView = (TextView) findViewById(R.id.total);
         mBottomContainer = (ViewGroup) findViewById(R.id.layout_bottom);
         mTopContainer = (ViewGroup) findViewById(R.id.layout_top);
-//        mBottomProgressBar = (ProgressBar) findViewById(R.id.bottom_progressbar);
+        mBottomProgressBar = (ProgressBar) findViewById(R.id.bottom_progressbar);
         mThumbImageViewLayout = (RelativeLayout) findViewById(R.id.thumb);
         mLockScreen = (ImageView) findViewById(R.id.lock_screen);
 

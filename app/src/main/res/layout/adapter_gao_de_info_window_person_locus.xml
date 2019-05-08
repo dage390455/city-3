@@ -7,14 +7,15 @@
     android:layout_gravity="center"
     android:background="@color/white"
     android:orientation="vertical">
-    <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
+
+    <com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer
         android:id="@+id/detail_player_adapter_gao_de_person_locus"
         android:layout_width="320dp"
         android:layout_height="180dp"
         app:title_margin_top = "0dp"
         >
 
-    </com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer>
+    </com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer>
 
 
 

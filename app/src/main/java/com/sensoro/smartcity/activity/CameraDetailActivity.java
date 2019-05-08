@@ -36,7 +36,7 @@ import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
-import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
 import org.greenrobot.eventbus.EventBus;
@@ -62,7 +62,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
 
     @BindView(R.id.gsy_player_ac_camera_detail)
-    StandardGSYVideoPlayer gsyPlayerAcCameraDetail;
+    CityStandardGSYVideoPlayer gsyPlayerAcCameraDetail;
     @BindView(R.id.iv_live_ac_camera_detail)
     ImageView ivLiveAcCameraDetail;
     @BindView(R.id.tv_live_ac_camera_detail)
@@ -453,7 +453,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         orientationUtils.setEnable(false);
 //        orientationUtils.setEnable(false);
 
-        gsyPlayerAcCameraDetail.changeRetryType();
+        gsyPlayerAcCameraDetail.offlineType();
         gsyPlayerAcCameraDetail.getPlayRetryBtn().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
