@@ -125,7 +125,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
 
     }
 
-    public void onClickDeviceCamera(DeviceCameraInfo deviceCameraInfo) {
+    public void onClickDeviceCamera(final DeviceCameraInfo deviceCameraInfo) {
         String sn = deviceCameraInfo.getSn();
         final String cid = deviceCameraInfo.getCid();
 //        deviceCameraInfo.getInfo().
@@ -145,6 +145,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                     intent.putExtra("cid", cid);
                     intent.putExtra("hls", hls);
                     intent.putExtra("cameraName", name);
+                    intent.putExtra("deviceStatus", deviceCameraInfo.getDeviceStatus());
                     intent.putExtra("lastCover", data.getLastCover());
                     getView().startAC(intent);
                 } else {

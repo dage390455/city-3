@@ -40,6 +40,8 @@ public interface ICameraDetailActivityView extends IProgressDialog, IToast , IAc
     //播放失败
     void playError(int pos);
 
+    void offlineType(String url);
+
     void autoRefresh();
 
     ImageView getImageView();

@@ -447,6 +447,23 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         refreshLayout.finishLoadMoreWithNoMoreData();
     }
 
+
+    @Override
+    public void offlineType(final String url) {
+        orientationUtils.setEnable(false);
+//        orientationUtils.setEnable(false);
+
+        gsyPlayerAcCameraDetail.changeRetryType();
+        gsyPlayerAcCameraDetail.getPlayRetryBtn().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gsyVideoOption.setUrl(url).build(getCurPlay());
+                getCurPlay().startPlayLogic();
+            }
+        });
+
+    }
+
     @Override
     public void playError(final int pos) {
         orientationUtils.setEnable(false);

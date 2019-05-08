@@ -466,6 +466,8 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         prepareVideo();
         startDismissControlViewTimer();
 
+
+        maskLayoutTop.setVisibility(GONE);
         rMobileData.setVisibility(GONE);
     }
 

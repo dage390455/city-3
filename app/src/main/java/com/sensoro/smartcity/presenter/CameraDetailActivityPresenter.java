@@ -47,12 +47,15 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     private String mCameraName, lastCover;
     private String itemTitle;
     private String itemUrl;
-    private ArrayList<DeviceCameraFacePic> mLists  = new ArrayList<>();;
+    private ArrayList<DeviceCameraFacePic> mLists = new ArrayList<>();
+    ;
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
         Intent intent = mActivity.getIntent();
+
+
         url = Constants.LIVE_URL;
         if (intent != null) {
             cid = intent.getStringExtra("cid");
@@ -60,6 +63,14 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
             mCameraName = intent.getStringExtra("cameraName");
             lastCover = intent.getStringExtra("lastCover");
             getLastCoverImage(lastCover);
+
+
+            String deviceStatus = intent.getStringExtra("deviceStatus");
+            if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
+
+                getView().offlineType(url);
+            }
+
         }
 
         doLive();
@@ -83,7 +94,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     }
 
     private void requestData(String cid, final int direction) {
-        if(direction == Constants.DIRECTION_DOWN){
+        if (direction == Constants.DIRECTION_DOWN) {
             minId = null;
             getView().setLiveState(true);
             doLive();
@@ -94,36 +105,36 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
         long currentTimeMillis = System.currentTimeMillis();
         String startTime;
         String endTime;
-        if (startDateTime == 0|| endDateTime == 0) {
+        if (startDateTime == 0 || endDateTime == 0) {
             startTime = String.valueOf(currentTimeMillis - 24 * 60 * 60 * 30 * 1000L);
             endTime = String.valueOf(currentTimeMillis);
-        }else{
+        } else {
             startTime = String.valueOf(startDateTime);
             endTime = String.valueOf(endDateTime);
         }
 
-        RetrofitServiceHelper.getInstance().getDeviceCameraFaceList(strings, null, 20,minId,startTime, endTime)
+        RetrofitServiceHelper.getInstance().getDeviceCameraFaceList(strings, null, 20, minId, startTime, endTime)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraFacePicListRsp>(null) {
             @Override
             public void onCompleted(final DeviceCameraFacePicListRsp deviceCameraFacePicListRsp) {
                 List<DeviceCameraFacePic> data = deviceCameraFacePicListRsp.getData();
-                if (data != null ) {
-                    if(data.size() > 0){
-                        minId = data.get(data.size()-1).getId();
+                if (data != null) {
+                    if (data.size() > 0) {
+                        minId = data.get(data.size() - 1).getId();
                         if (direction == Constants.DIRECTION_DOWN) {
                             mLists.clear();
                             if (isAttachedView()) {
                                 getView().onPullRefreshComplete();
                                 getView().updateCameraList(data);
                             }
-                        }else{
+                        } else {
                             mLists.addAll(data);
                             if (isAttachedView()) {
                                 getView().onPullRefreshComplete();
                                 getView().updateCameraList(mLists);
                             }
                         }
-                    }else if(direction == Constants.DIRECTION_UP){
+                    } else if (direction == Constants.DIRECTION_UP) {
                         if (isAttachedView()) {
                             getView().toastShort(mActivity.getString(R.string.no_more_data));
                             getView().onPullRefreshCompleteNoMoreData();
@@ -149,7 +160,6 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     }
 
 
-
     private boolean isYesterday(String currentDate, String ymd) {
         String[] currentSplit = currentDate.split("-");
         String[] ymdSplit = ymd.split("-");
@@ -158,7 +168,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                 int currentInt = Integer.parseInt(currentSplit[2]);
                 int ymdInt = Integer.parseInt(ymdSplit[2]);
 
-                return currentInt - ymdInt == 1 && currentSplit[1].equals(ymdSplit[1] )&& currentSplit[0].equals(ymdSplit[0]);
+                return currentInt - ymdInt == 1 && currentSplit[1].equals(ymdSplit[1]) && currentSplit[0].equals(ymdSplit[0]);
 
             } catch (NumberFormatException e) {
                 e.printStackTrace();
@@ -175,12 +185,13 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     }
 
     private void setLastCover(DeviceCameraFacePic model) {
-        Glide.with(mActivity).load(Constants.CAMERA_BASE_URL+model.getSceneUrl())
+        Glide.with(mActivity).load(Constants.CAMERA_BASE_URL + model.getSceneUrl())
                 .asBitmap()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
                 .into(getView().getImageView());
 
     }
+
     public void onCameraItemClick(final int index) {
         List<DeviceCameraFacePic> rvListData = getView().getRvListData();
         if (rvListData != null) {
@@ -200,7 +211,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
             }
 
             //7天以为没有视频，所以显示没有视频，
-            if (System.currentTimeMillis() - 24*3600*1000*7L > time) {
+            if (System.currentTimeMillis() - 24 * 3600 * 1000 * 7L > time) {
                 getView().setGsyVideoNoVideo();
                 return;
             }
@@ -255,13 +266,12 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     }
 
 
-
     public void doRefresh() {
-        requestData(cid,Constants.DIRECTION_DOWN);
+        requestData(cid, Constants.DIRECTION_DOWN);
     }
 
     public void doLoadMore() {
-        requestData(cid,Constants.DIRECTION_UP);
+        requestData(cid, Constants.DIRECTION_UP);
     }
 
     public void doLive() {
@@ -280,21 +290,21 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
         endDateTime += 1000 * 60 * 60 * 24;
 
         getView().showProgressDialog();
-        requestData(cid,Constants.DIRECTION_DOWN);
+        requestData(cid, Constants.DIRECTION_DOWN);
     }
 
     public void doRequestData() {
         startDateTime = 0;
         endDateTime = 0;
         getView().showProgressDialog();
-        requestData(cid,Constants.DIRECTION_DOWN);
+        requestData(cid, Constants.DIRECTION_DOWN);
     }
 
     public void doPersonAvatarHistory(int position) {
         DeviceCameraFacePic model = getView().getItemData(position);
         Intent intent = new Intent();
-        intent.putExtra(Constants.EXTRA_PERSON_AVATAR_HISTORY_FACE_ID,model.getId());
-        intent.putExtra(Constants.EXTRA_CAMERA_PERSON_AVATAR_HISTORY_FACE_URL,model.getFaceUrl());
+        intent.putExtra(Constants.EXTRA_PERSON_AVATAR_HISTORY_FACE_ID, model.getId());
+        intent.putExtra(Constants.EXTRA_CAMERA_PERSON_AVATAR_HISTORY_FACE_URL, model.getFaceUrl());
         intent.setClass(mActivity, CameraPersonAvatarHistoryActivity.class);
         getView().startAC(intent);
 
@@ -303,7 +313,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     public void doOnRestart() {
         if (itemUrl == null) {
             doLive();
-        }else{
+        } else {
             getView().doPlayLive(itemUrl, TextUtils.isEmpty(itemTitle) ? "" : itemTitle, false);
         }
     }
