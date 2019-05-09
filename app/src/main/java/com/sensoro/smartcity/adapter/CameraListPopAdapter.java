@@ -46,10 +46,6 @@ public class CameraListPopAdapter extends RecyclerView.Adapter<CameraListPopAdap
     public void onBindViewHolder(InspectionTaskStateSelectHolder holder, int position) {
 
 
-        CameraFilterModel model = mStateCountList.get(position);
-
-//        if (!(holder.itemPopRvCamerListFilter.getTag() instanceof CameraListFilterAdapter)) {
-
 
         CameraListFilterAdapter cameraListFilterAdapter = new CameraListFilterAdapter(mContext);
         holder.itemPopRvCamerListFilter.setAdapter(cameraListFilterAdapter);
@@ -59,26 +55,12 @@ public class CameraListPopAdapter extends RecyclerView.Adapter<CameraListPopAdap
         holder.itemPopRvCamerListFilter.setAdapter(cameraListFilterAdapter);
 
 
-//            holder.itemPopRvCamerListFilter.addItemDecoration(new RecyclerItemDecoration(12, 3));
-        holder.itemPopTvCamerListFilterTitle.setText(model.getTitle().trim());
-
-        holder.itemPopRvCamerListFilter.setTag(cameraListFilterAdapter);
-
-
-        cameraListFilterAdapter.updateDeviceTypList(model.getList(), model.isMulti());
-
-        cameraListFilterAdapter.setOnItemClickListener(new RecycleViewItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-//                listener.onSelectDeviceTypeItemClick(view, position);
-
-            }
-        });
-//        } else {
-////            holder.itemPopRvCamerListFilter.addItemDecoration(null);
-//
-//
-//        }
+        if (null != mStateCountList.get(position)) {
+            CameraFilterModel model = mStateCountList.get(position);
+            holder.itemPopTvCamerListFilterTitle.setText(model.getTitle().trim());
+            holder.itemPopRvCamerListFilter.setTag(cameraListFilterAdapter);
+            cameraListFilterAdapter.updateDeviceTypList(model.getList(), model.isMulti());
+        }
     }
 
     public CameraFilterModel getItem(int position) {
