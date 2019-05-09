@@ -258,17 +258,6 @@
                     android:textColor="@color/white"
                     android:textSize="14sp" />
 
-                <Button
-                    android:id="@+id/play_btn"
-                    android:layout_width="68dp"
-                    android:layout_height="28dp"
-                    android:layout_below="@+id/tip_data_tv"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/shape_bg_corner_2dp_29c_shadow"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:visibility="invisible" />
 
                 <Button
                     android:id="@+id/playa_retry_btn"

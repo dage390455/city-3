@@ -14,7 +14,6 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
-import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
@@ -80,7 +79,7 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
     }
 
     public void initVideoOption(String url) {
-        player.changeBottomContainer(View.VISIBLE);
+        player.setIsLive(View.VISIBLE);
 
         //增加封面
         if (imageView == null) {
@@ -158,28 +157,29 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
     }
 
     public void startPlayLogic(final String url1) {
-        if (!NetworkUtils.isAvailable(mContext)) {
-            orientationUtils.setEnable(false);
-            return;
-        }
-
-        if (!NetworkUtils.isWifiConnected(mContext)) {
-            orientationUtils.setEnable(false);
-            player.getPlayBtn().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    gsyVideoOption.setUrl(url1).build(getCurPlay());
-                    getCurPlay().startPlayLogic();
-
-                }
-            });
-            return;
-        }
+//        if (!NetworkUtils.isAvailable(mContext)) {
+//            orientationUtils.setEnable(false);
+//            return;
+//        }
+//
+//        if (!NetworkUtils.isWifiConnected(mContext)) {
+//            orientationUtils.setEnable(false);
+//            player.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    gsyVideoOption.setUrl(url1).build(getCurPlay());
+//                    getCurPlay().startPlayLogic();
+//
+//                }
+//            });
+//            return;
+//        }
 
         gsyVideoOption.setUrl(url1).build(getCurPlay());
         getCurPlay().startPlayLogic();
         orientationUtils.setEnable(true);
-        player.changeBottomContainer(View.VISIBLE);
+        player.setIsLive(View.VISIBLE);
+        player.setIsShowMaskTopBack(false);
     }
 
     @Override
@@ -221,13 +221,13 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
         }
     }
 
-    public void setOnCloseClickListener(onVideoButtonClickListener listener){
+    public void setOnCloseClickListener(onVideoButtonClickListener listener) {
         mListener = listener;
     }
 
-    public  interface onVideoButtonClickListener {
-       void onCloseClick();
+    public interface onVideoButtonClickListener {
+        void onCloseClick();
 
-       void onFullScreenClick();
+        void onFullScreenClick();
     }
 }
