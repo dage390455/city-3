@@ -99,7 +99,7 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
                 .setShowFullAnimation(false)
                 .setNeedLockFull(true)
 //                .setUrl(url)
-                .setCacheWithPlay(true)
+                .setCacheWithPlay(false)
 //                .setVideoTitle("测试视频")
                 .setVideoAllCallBack(new GSYSampleCallBack() {
                     @Override
