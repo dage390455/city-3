@@ -23,7 +23,7 @@
         android:paddingBottom="10dp"
         android:text="@string/inspection_uploade_exception_uploade"
         android:textColor="@color/white"
-        android:textSize="16sp" />
+        android:textSize="16dp" />
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/ac_inspection_upload_exception_scroll_view"
@@ -54,7 +54,7 @@
                 android:layout_marginTop="20dp"
                 android:text="@string/inspection_exception_remark"
                 android:textColor="@color/c_252525"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -72,7 +72,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="12dp"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="12sp" />
+                    android:textSize="12dp" />
                 <com.sensoro.smartcity.widget.ScrollFrameLayout
                     android:id="@+id/ac_inspection_upload_exception_sf"
                     android:layout_width="match_parent"
@@ -94,7 +94,7 @@
                         android:maxLength="200"
                         android:textColor="@color/c_252525"
                         android:textColorHint="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
                 </com.sensoro.smartcity.widget.ScrollFrameLayout>
 
 
@@ -108,7 +108,7 @@
                 android:layout_marginTop="20dp"
                 android:text="@string/inspection_uploade_exception_live_photo_video"
                 android:textColor="@color/c_252525"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/ac_inspection_upload_exception_rc_pic"

@@ -74,7 +74,7 @@
                     android:textColor="@color/c_252525"
                     android:textColorHint="@color/c_a6a6a6"
                     android:textCursorDrawable="@drawable/my_cursor"
-                    android:textSize="12sp" />
+                    android:textSize="12dp" />
             </RelativeLayout>
 
             <TextView
@@ -119,7 +119,7 @@
                 android:drawablePadding="4dp"
                 android:text="@string/all_contracts"
                 android:textColor="@color/c_a6a6a6"
-                android:textSize="12sp"
+                android:textSize="12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/center_line"
                 app:layout_constraintStart_toStartOf="parent"
@@ -145,7 +145,7 @@
                 android:drawablePadding="4dp"
                 android:text="@string/all_states"
                 android:textColor="@color/c_a6a6a6"
-                android:textSize="12sp"
+                android:textSize="12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/center_line"
@@ -172,7 +172,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:textColor="@color/c_252525"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
 
             <ImageView
                 android:id="@+id/fg_main_warn_top_search_date_close"
@@ -233,7 +233,7 @@
                 android:drawablePadding="6dp"
                 android:text="@string/new_contract"
                 android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:textSize="16dp" />
         </RelativeLayout>
     </LinearLayout>
 

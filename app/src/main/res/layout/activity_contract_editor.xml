@@ -27,7 +27,7 @@
             android:paddingBottom="6dp"
             android:text="@string/contract_personal"
             android:textColor="@color/white"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <TextView
             android:id="@+id/ac_contract_editor_business_contract"
@@ -40,7 +40,7 @@
             android:paddingBottom="6dp"
             android:text="@string/contract_business"
             android:textColor="@color/c_a6a6a6"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
     </LinearLayout>
 
     <FrameLayout

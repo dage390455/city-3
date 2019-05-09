@@ -15,7 +15,7 @@
         android:padding="8dp"
         android:text="@string/ip_complete"
         android:textColor="@color/c_29c093"
-        android:textSize="14sp" />
+        android:textSize="14dp" />
 
     <View
         android:layout_width="match_parent"
@@ -41,7 +41,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/success"
             android:textColor="@color/c_29c093"
-            android:textSize="24sp" />
+            android:textSize="24dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -66,7 +66,7 @@
         android:paddingBottom="10dp"
         android:text="@string/contract_preview"
         android:textColor="@color/c_252525"
-        android:textSize="16sp" />
+        android:textSize="16dp" />
 
     <TextView
         android:id="@+id/ac_contract_creation_success_tv_create_qr_code"
@@ -82,6 +82,6 @@
         android:paddingBottom="10dp"
         android:text="@string/create_qr_code"
         android:textColor="@color/white"
-        android:textSize="16sp" />
+        android:textSize="16dp" />
 
 </LinearLayout>

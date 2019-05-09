@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:gravity="start"
         android:textColor="@color/c_252525"
-        android:textSize="16sp" />
+        android:textSize="16dp" />
 
 
     <TextView
@@ -26,7 +26,7 @@
         android:gravity="center"
         android:includeFontPadding="false"
         android:textColor="@color/c_1dbb99"
-        android:textSize="12sp" />
+        android:textSize="12dp" />
 
 
     <TextView
@@ -38,7 +38,7 @@
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/item_device_camera_tv_onlinestate"
         android:textColor="@color/c_a6a6a6"
-        android:textSize="12sp" />
+        android:textSize="12dp" />
 
 
     <LinearLayout
@@ -70,7 +70,7 @@
             android:paddingBottom="4dp"
             android:textColor="@color/c_252525"
 
-            android:textSize="10sp"
+            android:textSize="10dp"
             android:visibility="gone" />
 
         <TextView
@@ -88,7 +88,7 @@
             android:paddingBottom="4dp"
 
             android:textColor="@color/c_252525"
-            android:textSize="10sp"
+            android:textSize="10dp"
             android:visibility="gone" />
     </LinearLayout>
 </RelativeLayout>

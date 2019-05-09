@@ -120,7 +120,7 @@
         <item name="android:paddingBottom">4dp</item>
         <item name="android:drawablePadding">4dp</item>
         <item name="android:textColor">@color/selector_ac_main_text_color</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">12dp</item>
         <item name="android:gravity">center</item>
         <item name="android:background">@color/transparent</item>
     </style>
@@ -200,7 +200,7 @@
         <item name="android:layout_weight">1</item>
         <item name="android:drawablePadding">10dp</item>
         <item name="android:textColor">@color/c_252525</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">12dp</item>
         <item name="android:gravity">center</item>
     </style>
 

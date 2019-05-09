@@ -49,7 +49,7 @@
                     android:maxLines="1"
                     android:text="@string/ip_all_images"
                     android:textColor="#5D5D5D"
-                    android:textSize="16sp"/>
+                    android:textSize="16dp"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -75,7 +75,7 @@
                 android:text="@string/image_grid_preview"
                 android:textAllCaps="false"
                 android:textColor="#5D5D5D"
-                android:textSize="16sp"/>
+                android:textSize="16dp"/>
 
         </RelativeLayout>
     </RelativeLayout>

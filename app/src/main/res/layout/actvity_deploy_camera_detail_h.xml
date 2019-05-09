@@ -24,7 +24,7 @@
         android:paddingBottom="10dp"
         android:text="@string/deploy_device_detail_upload"
         android:textColor="@color/white"
-        android:textSize="16sp" />
+        android:textSize="16dp" />
 
     <TextView
         android:id="@+id/tv_ac_deploy_device_camera_upload_tip"
@@ -36,7 +36,7 @@
         android:layout_marginBottom="8dp"
         android:text="@string/deploy_device_detail_add_all_required"
         android:textColor="@color/c_a6a6a6"
-        android:textSize="14sp" />
+        android:textSize="14dp" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -63,7 +63,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/tv_ac_deploy_device_camera_device_type"
@@ -74,7 +74,7 @@
                     android:layout_marginEnd="20dp"
                     android:layout_marginBottom="20dp"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
             </RelativeLayout>
 
             <LinearLayout
@@ -100,7 +100,7 @@
                         android:layout_marginBottom="12dp"
                         android:text="@string/deploy_device_detail_name_address"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/tv_ac_deploy_device_camera_name_location"
@@ -113,7 +113,7 @@
                         android:gravity="end"
                         android:text="@string/required"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -149,7 +149,7 @@
                         android:layout_marginBottom="12dp"
                         android:text="@string/sensor_detail_tag"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <ImageView
                         android:id="@+id/imv_ac_deploy_device_camera_tag"
@@ -179,7 +179,7 @@
                             android:layout_centerVertical="true"
                             android:text="@string/optional"
                             android:textColor="@color/c_a6a6a6"
-                            android:textSize="14sp"
+                            android:textSize="14dp"
                             android:visibility="visible" />
 
                         <com.sensoro.smartcity.widget.TouchRecycleView
@@ -220,7 +220,7 @@
                         android:layout_weight="1"
                         android:text="@string/deploy_device_detail_deploy_photo"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/tv_ac_deploy_device_camera_deploy_pic"
@@ -266,7 +266,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/deploy_device_detail_deploy_location"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
 
                     <TextView
@@ -278,7 +278,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/required"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -316,7 +316,7 @@
                         android:layout_weight="1"
                         android:text="@string/deploy_camera_install_method"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/tv_ac_deploy_device_camera_deploy_method"
@@ -362,7 +362,7 @@
                         android:layout_weight="1"
                         android:text="@string/deploy_camera_sets_lens_orientation"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/tv_ac_deploy_device_camera_deploy_orientation"
@@ -410,7 +410,7 @@
                         android:drawableStart="@drawable/ic_deploy_camera_video"
                         android:drawablePadding="10dp"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/tv_ac_deploy_device_camera_deploy_live"
@@ -458,7 +458,7 @@
                     android:layout_marginEnd="20dp"
                     android:text="@string/deploy_sub_tip"
                     android:textColor="@color/c_f34a4a"
-                    android:textSize="12sp" />
+                    android:textSize="12dp" />
             </FrameLayout>
 
         </LinearLayout>

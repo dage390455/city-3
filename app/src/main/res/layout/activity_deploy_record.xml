@@ -74,7 +74,7 @@
                     android:singleLine="true"
                     android:textColor="@color/c_252525"
                     android:textColorHint="@color/c_a6a6a6"
-                    android:textSize="12sp" />
+                    android:textSize="12dp" />
             </RelativeLayout>
 
             <TextView
@@ -113,7 +113,7 @@
                 android:id="@+id/ac_deploy_record_tv_date_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:textSize="14dp"
                 android:layout_centerVertical="true"
                 android:textColor="@color/c_252525"/>
 
@@ -149,7 +149,7 @@
             android:drawablePadding="6dp"
             android:text="@string/deploy_record_new_device"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="16dp" />
     </RelativeLayout>
 
 

@@ -31,7 +31,7 @@
                 android:gravity="center"
                 android:text="1"
                 android:textColor="@color/white"
-                android:textSize="10sp" />
+                android:textSize="10dp" />
 
             <TextView
                 android:id="@+id/tv_deploy_check_title_step_1"
@@ -40,7 +40,7 @@
                 android:layout_marginStart="4dp"
                 android:text="@string/deploy_check_title_step_1"
                 android:textColor="@color/c_252525"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
         </LinearLayout>
 
 
@@ -68,7 +68,7 @@
                 android:gravity="center"
                 android:text="2"
                 android:textColor="@color/c_a6a6a6"
-                android:textSize="10sp" />
+                android:textSize="10dp" />
 
             <TextView
                 android:id="@+id/tv_deploy_check_title_step_2"
@@ -78,7 +78,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/deploy_check_title_step_2"
                 android:textColor="@color/c_a6a6a6"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
         </LinearLayout>
 
 
@@ -106,7 +106,7 @@
                 android:gravity="center"
                 android:text="3"
                 android:textColor="@color/c_a6a6a6"
-                android:textSize="10sp" />
+                android:textSize="10dp" />
 
             <TextView
                 android:id="@+id/tv_deploy_check_title_step_3"
@@ -116,7 +116,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/deploy_check_title_step_3"
                 android:textColor="@color/c_a6a6a6"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
         </LinearLayout>
 
     </LinearLayout>

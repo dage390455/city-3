@@ -45,7 +45,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/legal_representative"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
 
                     <EditText
@@ -62,7 +62,7 @@
                         android:cursorVisible="true"
                         android:textCursorDrawable="@drawable/my_cursor"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <ImageView
                         android:id="@+id/iv_contract_service_line1"
@@ -103,7 +103,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/phone_num"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
 
                     <EditText
@@ -119,7 +119,7 @@
                         android:cursorVisible="true"
                         android:textCursorDrawable="@drawable/my_cursor"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <ImageView
                         android:id="@+id/iv_contract_service_phone"
@@ -160,7 +160,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/company_name"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <EditText
                         android:id="@+id/et_contract_service_line2"
@@ -175,7 +175,7 @@
                         android:cursorVisible="true"
                         android:textCursorDrawable="@drawable/my_cursor"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/tv_show_contract_service_line2"
@@ -188,7 +188,7 @@
                         android:cropToPadding="true"
                         android:gravity="end"
                         android:textColor="@color/c_626262"
-                        android:textSize="14sp"
+                        android:textSize="14dp"
                         android:visibility="gone" />
 
                     <ImageView
@@ -229,7 +229,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/social_credit_code"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
 
                     <EditText
@@ -245,7 +245,7 @@
                         android:cursorVisible="true"
                         android:textCursorDrawable="@drawable/my_cursor"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <ImageView
                         android:id="@+id/iv_contract_service_line3"
@@ -286,7 +286,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/contract_info_registration_number"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
 
                     <EditText
@@ -302,7 +302,7 @@
                         android:cropToPadding="true"
                         android:gravity="end|center_vertical"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <ImageView
                         android:id="@+id/iv_contract_service_line4"
@@ -343,7 +343,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/address"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
 
                     <EditText
@@ -359,7 +359,7 @@
                         android:cropToPadding="true"
                         android:gravity="end|center_vertical"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <ImageView
                         android:id="@+id/iv_contract_service_line5"
@@ -400,7 +400,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/contract_info_validity_period"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
 
                     <EditText
@@ -416,7 +416,7 @@
                         android:cropToPadding="true"
                         android:gravity="end"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <ImageView
                         android:id="@+id/iv_contract_service_line6"
@@ -457,7 +457,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/contract_info_site_nature"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/tv_contract_service_place_type"
@@ -470,7 +470,7 @@
                         android:cropToPadding="true"
                         android:gravity="end"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -504,7 +504,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/contract_info_contract_service_life"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -521,7 +521,7 @@
                             android:gravity="center"
                             android:text="1年"
                             android:textColor="@color/c_252525"
-                            android:textSize="14sp" />
+                            android:textSize="14dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -555,7 +555,7 @@
                             android:padding="10dp"
                             android:text="1"
                             android:textColor="@color/c_626262"
-                            android:textSize="14sp" />
+                            android:textSize="14dp" />
 
                         <ImageView
                             android:id="@+id/iv_contract_age_add"
@@ -589,7 +589,7 @@
                         android:gravity="center_vertical"
                         android:text="首次付款"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -622,7 +622,7 @@
                             android:padding="10dp"
                             android:text="1"
                             android:textColor="@color/c_626262"
-                            android:textSize="14sp" />
+                            android:textSize="14dp" />
 
                         <ImageView
                             android:id="@+id/iv_contract_age_first_add"
@@ -656,7 +656,7 @@
                         android:gravity="center_vertical"
                         android:text="续费周期"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -689,7 +689,7 @@
                             android:padding="10dp"
                             android:text="1"
                             android:textColor="@color/c_626262"
-                            android:textSize="14sp" />
+                            android:textSize="14dp" />
 
                         <ImageView
                             android:id="@+id/iv_contract_age_period_add"

@@ -23,7 +23,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="12dp"
                 android:textColor="@color/c_a6a6a6"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
 
 
             <android.support.constraint.ConstraintLayout
@@ -41,7 +41,7 @@
                     android:id="@+id/ac_contract_detail_tv_contract_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
+                    android:textSize="16dp"
                     android:layout_marginTop="16dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -65,7 +65,7 @@
                     android:id="@+id/ac_contract_detail_tv_contract_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
+                    android:textSize="12dp"
                     android:layout_marginTop="8dp"
                     android:textColor="@color/c_252525"
                     app:layout_constraintStart_toStartOf="parent"
@@ -79,7 +79,7 @@
                     android:id="@+id/ac_contract_detail_tv_contract_more"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
+                    android:textSize="12dp"
                     android:textColor="@color/c_a6a6a6"
                     android:drawableEnd="@drawable/contract_expand_down"
                     android:drawablePadding="4dp"
@@ -135,7 +135,7 @@
                         android:id="@+id/ac_contract_detail_tv_contract_create_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="12sp"
+                        android:textSize="12dp"
                         android:textColor="@color/c_252525"/>
                     <View
                         android:id="@+id/ac_contract_detail_view_contract_pay_time"
@@ -148,7 +148,7 @@
                         android:id="@+id/ac_contract_detail_tv_contract_pay_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="12sp"
+                        android:textSize="12dp"
                         android:textColor="@color/c_a6a6a6"
                         android:layout_marginTop="12dp"
                         />
@@ -165,7 +165,7 @@
                 android:layout_marginTop="20dp"
                 android:text="@string/monitor_point_information"
                 android:textColor="@color/c_a6a6a6"
-                android:textSize="12sp"
+                android:textSize="12dp"
                />
 
             <LinearLayout
@@ -191,7 +191,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/party_a_customer_name"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/ac_contract_detail_tv_part_a"
@@ -200,7 +200,7 @@
                         android:layout_marginStart="12dp"
                         android:gravity="end"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
                 </LinearLayout>
 
                 <View
@@ -221,7 +221,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/owners_name"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/ac_contract_detail_tv_owner_name"
@@ -230,7 +230,7 @@
                         android:layout_marginStart="12dp"
                         android:gravity="end"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                 </LinearLayout>
 
@@ -251,7 +251,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/contract_contact_info"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/ac_contract_detail_tv_contact_info"
@@ -260,7 +260,7 @@
                         android:layout_marginStart="12dp"
                         android:gravity="end"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
                 </LinearLayout>
 
                 <View
@@ -281,7 +281,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/identification_number"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/ac_contract_detail_tv_id_card"
@@ -290,7 +290,7 @@
                         android:layout_marginStart="12dp"
                         android:gravity="end"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
                 </LinearLayout>
 
                 <View
@@ -311,7 +311,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/home_address"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/ac_contract_detail_tv_home_address"
@@ -320,7 +320,7 @@
                         android:layout_marginStart="12dp"
                         android:gravity="end"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
                 </LinearLayout>
 
                 <View
@@ -340,7 +340,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/contract_info_site_nature"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/ac_contract_detail_tv_site_nature"
@@ -349,7 +349,7 @@
                         android:layout_marginStart="12dp"
                         android:gravity="end"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -362,7 +362,7 @@
                 android:layout_marginBottom="12dp"
                 android:text="@string/order_info"
                 android:textColor="@color/c_a6a6a6"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/ac_contract_detail_rc_device"
@@ -380,7 +380,7 @@
                 android:layout_marginBottom="12dp"
                 android:text="@string/service_info"
                 android:textColor="@color/c_a6a6a6"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -401,7 +401,7 @@
                         <!--android:layout_marginStart="20dp"-->
                         <!--android:text="@string/contract_info_contract_status"-->
                         <!--android:textColor="@color/c_a6a6a6"-->
-                        <!--android:textSize="14sp" />-->
+                        <!--android:textSize="14dp" />-->
 
                     <!--<TextView-->
                         <!--android:id="@+id/ac_contract_detail_sign_status"-->
@@ -414,7 +414,7 @@
                         <!--android:paddingTop="4dp"-->
                         <!--android:paddingEnd="10dp"-->
                         <!--android:paddingBottom="4dp"-->
-                        <!--android:textSize="10sp" />-->
+                        <!--android:textSize="10dp" />-->
 
                 <!--</RelativeLayout>-->
 
@@ -439,7 +439,7 @@
                         android:layout_marginStart="20dp"
                         android:text="@string/contract_info_contract_service_life"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/ac_contract_detail_serve_life"
@@ -448,7 +448,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="20dp"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                 </RelativeLayout>
 
@@ -473,7 +473,7 @@
                         android:layout_marginStart="20dp"
                         android:text="@string/first_pay"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/ac_contract_detail_first_age"
@@ -482,7 +482,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="20dp"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                 </RelativeLayout>
 
@@ -507,7 +507,7 @@
                         android:layout_marginStart="20dp"
                         android:text="@string/period"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/ac_contract_detail_period_age"
@@ -516,7 +516,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="20dp"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                 </RelativeLayout>
 
@@ -535,7 +535,7 @@
                 android:paddingBottom="10dp"
                 android:text="@string/contract_preview"
                 android:textColor="@color/c_252525"
-                android:textSize="16sp" />
+                android:textSize="16dp" />
 
             <TextView
                 android:id="@+id/ac_contract_detail_tv_create_qr_code"
@@ -551,7 +551,7 @@
                 android:paddingBottom="10dp"
                 android:text="@string/view_contract_qr_code"
                 android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:textSize="16dp" />
 
 
         </LinearLayout>

@@ -41,7 +41,7 @@
                 android:layout_marginTop="4dp"
                 android:text="@string/deploy_pic_take_photo"
                 android:textColor="@color/c_252525"
-                android:textSize="10sp" />
+                android:textSize="10dp" />
 
         </LinearLayout>
 
@@ -83,7 +83,7 @@
             android:layout_marginEnd="12dp"
             android:text="@string/deploy_pic_device_pic"
             android:textColor="@color/c_252525"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <TextView
             android:id="@+id/tv_deploy_pic_description"
@@ -96,7 +96,7 @@
             android:layout_marginEnd="12dp"
             android:text="@string/deploy_pic_device_pic_tip"
             android:textColor="@color/c_a6a6a6"
-            android:textSize="12sp" />
+            android:textSize="12dp" />
 
 
     </RelativeLayout>

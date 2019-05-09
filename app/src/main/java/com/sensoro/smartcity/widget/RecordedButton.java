@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.media.TimedText;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -17,8 +16,6 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.util.AppUtils;
 
 import java.util.Locale;
-
-import static com.qiniu.android.collect.Config.isRecord;
 
 /**
  * 拍摄button的自定义view
@@ -88,7 +85,7 @@ public class RecordedButton extends View {
         textPaint.setAntiAlias(true);
         textPaint.setColor(Color.WHITE);
 //        textPaint.setStrokeWidth(AppUtils.sp2px(mContext,16));
-        textPaint.setTextSize(AppUtils.sp2px(mContext,16));
+        textPaint.setTextSize(AppUtils.dp2px(mContext,16));
         textPaint.setTextAlign(Paint.Align.CENTER);
 
         ringPaint = new Paint();

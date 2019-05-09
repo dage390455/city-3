@@ -21,7 +21,7 @@
         android:layout_marginTop="10dp"
         android:text="断电"
         android:textColor="@color/c_252525"
-        android:textSize="12sp" />
+        android:textSize="12dp" />
 
 
 </LinearLayout>

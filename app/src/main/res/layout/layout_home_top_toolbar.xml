@@ -31,7 +31,7 @@
             android:paddingBottom="12dp"
             android:text="@string/no_content"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="16dp" />
 
         <ImageView
             android:id="@+id/iv_header_title_right"

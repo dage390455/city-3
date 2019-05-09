@@ -51,7 +51,8 @@
                 style="@style/style_fg_home_dialog_tv"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/iv_main_home_menu_quick_deploy"
-                android:text="@string/quick_deploy" />
+                android:text="@string/quick_deploy"
+                android:textSize="15dp"/>
         </RelativeLayout>
 
 
@@ -83,6 +84,7 @@
                 android:layout_below="@id/line1"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/iv_main_home_menu_construction"
+                android:textSize="15dp"
                 android:text="@string/new_contract" />
         </RelativeLayout>
 
@@ -114,6 +116,7 @@
                 style="@style/style_fg_home_dialog_tv"
                 android:layout_below="@id/line2"
                 android:layout_centerVertical="true"
+                android:textSize="15dp"
                 android:layout_toEndOf="@id/iv_main_home_menu_scan_login"
                 android:text="@string/main_home_menu_scan_login" />
         </RelativeLayout>
