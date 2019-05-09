@@ -124,6 +124,10 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         if (isAttachedView()) {
             getView().setDeviceSn(deviceSN);
         }
+
+
+        getView().setCameraLiveCount(deviceAlarmLogInfo.getCameras());
+
         long createdTime = deviceAlarmLogInfo.getCreatedTime();
         String alarmTime = DateUtil.getStrTimeToday(mContext, createdTime, 1);
         long current = System.currentTimeMillis();
@@ -403,5 +407,13 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     @Override
     public void onCreate() {
         EventBus.getDefault().register(this);
+    }
+
+    public void doCameraVideo() {
+
+    }
+
+    public void doCameraLive() {
+
     }
 }

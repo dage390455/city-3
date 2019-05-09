@@ -3,6 +3,7 @@ package com.sensoro.smartcity.server.bean;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -19,6 +20,7 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
     private String unionType;
     private String deviceType;
     private String _updatedTime;
+    private List<String> cameras;
     private long updatedTime;
     private long createdTime;
     private AlarmInfo.RuleInfo[] rules;
@@ -190,6 +192,14 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
 
     public void setDeviceNotification(DeviceNotificationBean deviceNotification) {
         this.deviceNotification = deviceNotification;
+    }
+
+    public List<String> getCameras() {
+        return cameras;
+    }
+
+    public void setCameras(List<String> cameras) {
+        this.cameras = cameras;
     }
 
 

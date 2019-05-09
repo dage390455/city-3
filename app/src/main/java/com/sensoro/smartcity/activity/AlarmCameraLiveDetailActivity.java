@@ -1,0 +1,9 @@
+package com.sensoro.smartcity.activity;
+
+import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.smartcity.imainviews.IAlarmCameraLiveDetailActivityView;
+import com.sensoro.smartcity.presenter.AlarmCameraLiveDetailActivityPresenter;
+
+public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLiveDetailActivityView, AlarmCameraLiveDetailActivityPresenter>
+implements IAlarmCameraLiveDetailActivityView{
+}

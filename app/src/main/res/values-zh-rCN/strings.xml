@@ -977,5 +977,7 @@
     <string name="new_contact">新增联系人</string>
     <string name="delete_this">删除本条</string>
     <string name="deploy_record_deploy_staff">部署人员</string>
+    <string name="alarm_video">预警录像</string>
+    <string name="relation_camera">关联机位：</string>
 
 </resources>

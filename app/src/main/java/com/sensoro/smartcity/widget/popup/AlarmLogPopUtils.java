@@ -38,6 +38,7 @@ import com.sensoro.smartcity.widget.toast.SensoroToast;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,24 +55,18 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
     TextView acAlertLogTvName;
     @BindView(R.id.ac_alert_tv_sn)
     TextView acAlertTvSn;
-    @BindView(R.id.ac_alert_imv_alert_icon)
+    @BindView(R.id.iv_alarm_time_ac_alert)
     ImageView acAlertImvAlertIcon;
     @BindView(R.id.ac_alert_tv_alert_time)
     TextView acAlertTvAlertTime;
     @BindView(R.id.ac_alert_tv_alert_time_text)
     TextView acAlertTvAlertTimeText;
-    @BindView(R.id.ac_alert_ll_alert_time)
-    LinearLayout acAlertLlAlertTime;
-    @BindView(R.id.ac_alert_imv_alert_count_icon)
+    @BindView(R.id.iv_alarm_count_ac_alert)
     ImageView acAlertImvAlertCountIcon;
     @BindView(R.id.ac_alert_tv_alert_count)
     TextView acAlertTvAlertCount;
     @BindView(R.id.ac_alert_tv_alert_count_text)
     TextView acAlertTvAlertCountText;
-    @BindView(R.id.ac_alert_ll_alert_count)
-    LinearLayout acAlertLlAlertCount;
-    @BindView(R.id.ac_alert_ll_card)
-    LinearLayout acAlertLlCard;
     @BindView(R.id.ac_alert_rc_content)
     RecyclerView acAlertRcContent;
     @BindView(R.id.ac_alert_tv_contact_owner)
@@ -84,6 +79,14 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
     LinearLayout acAlertLlBottom;
     @BindView(R.id.alarm_log_close)
     ImageView alarmLogClose;
+    @BindView(R.id.tv_live_camera_count_ac_alert)
+    TextView tvLiveCameraCountAcAlert;
+    @BindView(R.id.ll_camera_live_ac_alert)
+    LinearLayout llCameraLiveAcAlert;
+    @BindView(R.id.tv_video_camera_count_ac_alert)
+    TextView tvVideoCameraCountAcAlert;
+    @BindView(R.id.ll_camera_video_ac_alert)
+    LinearLayout llCameraVideoAcAlert;
     private AlarmPopUtils mAlarmPopUtils;
     private List<AlarmInfo.RecordInfo> mList = new ArrayList<>();
     private AlertLogRcContentAdapter alertLogRcContentAdapter;
@@ -150,13 +153,22 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         String deviceSN = deviceAlarmLogInfo.getDeviceSN();
         if (TextUtils.isEmpty(deviceSN)) {
             deviceSN = mActivity.getString(R.string.device_number) + mActivity.getString(R.string.unknown);
-        }else{
+        } else {
             deviceSN = mActivity.getString(R.string.device_number) + deviceSN;
         }
         acAlertTvSn.setText(deviceSN);
 
+        List<String> cameras = deviceAlarmLogInfo.getCameras();
+        if (cameras != null && cameras.size() > 0) {
+            llCameraLiveAcAlert.setVisibility(View.VISIBLE);
+            tvLiveCameraCountAcAlert.setText(
+                    String.format(Locale.ROOT,"%s%d%s",mActivity.getString(R.string.relation_camera)
+                            ,cameras.size(),mActivity.getString(R.string.upload_photo_dialog_append_title3)));
+        }else{
+            llCameraLiveAcAlert.setVisibility(View.GONE);
+        }
 
-        acAlertTvAlertTime.setText(DateUtil.getStrTimeToday(mActivity,mDeviceAlarmLogInfo.getCreatedTime(), 1));
+        acAlertTvAlertTime.setText(DateUtil.getStrTimeToday(mActivity, mDeviceAlarmLogInfo.getCreatedTime(), 1));
 
         acAlertTvAlertCount.setText(mDeviceAlarmLogInfo.getDisplayStatus() + 10 + "");
 
