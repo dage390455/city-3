@@ -99,8 +99,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     private ImmersionBar immersionBar;
     private ImageView imageView;
     private Animation returnTopAnimation;
-    private TranslateAnimation upAnimation;
-    private TranslateAnimation downAnimation;
 
 
     /**
@@ -172,9 +170,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 Log.e("cxy",":::"+llLiveAcCameraDetail.getY());
             }
         });
-
-        upAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, -1f, Animation.RELATIVE_TO_SELF, 0);
-        downAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, -1);
 
 
         //外部辅助的旋转，帮助全屏
