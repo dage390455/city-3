@@ -164,14 +164,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
 
-        llLiveAcCameraDetail.post(new Runnable() {
-            @Override
-            public void run() {
-                Log.e("cxy",":::"+llLiveAcCameraDetail.getY());
-            }
-        });
-
-
         //外部辅助的旋转，帮助全屏
         orientationUtils = new OrientationUtils(this, gsyPlayerAcCameraDetail);
         //初始化不打开外部的旋转
