@@ -21,7 +21,6 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
-import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
@@ -72,7 +71,7 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
     private void initViewHeight() {
         int resourceId = this.getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
-            int  result = this.getResources().getDimensionPixelSize(resourceId);
+            int result = this.getResources().getDimensionPixelSize(resourceId);
             ViewGroup.LayoutParams lp = viewTopAcCameraPersonDetail.getLayoutParams();
             lp.height = result;
             viewTopAcCameraPersonDetail.setLayoutParams(lp);
@@ -114,7 +113,7 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
     }
 
     public void initVideoOption() {
-        gsyPlayerAcCameraPersonDetail.changeBottomContainer(View.VISIBLE);
+        gsyPlayerAcCameraPersonDetail.setIsLive(View.VISIBLE);
 
         //增加封面
         if (imageView == null) {
@@ -133,7 +132,7 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
                 .setShowFullAnimation(false)
                 .setNeedLockFull(true)
 //                .setUrl(url)
-                .setCacheWithPlay(false)
+                .setCacheWithPlay(true)
 //                .setVideoTitle("测试视频")
                 .setVideoAllCallBack(new GSYSampleCallBack() {
                     @Override
@@ -197,26 +196,10 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
 
     @Override
     public void startPlayLogic(final String url1) {
-        if (!NetworkUtils.isAvailable(this)) {
-            orientationUtils.setEnable(false);
-            return;
-        }
-
-        if (!NetworkUtils.isWifiConnected(this)) {
-            orientationUtils.setEnable(false);
-            gsyPlayerAcCameraPersonDetail.getPlayBtn().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    gsyVideoOption.setUrl(url1).build(getCurPlay());
-                    getCurPlay().startPlayLogic();
-
-                }
-            });
-            return;
-        }
 
         gsyVideoOption.setUrl(url1).build(getCurPlay());
-        gsyPlayerAcCameraPersonDetail.changeBottomContainer(View.VISIBLE);
+        gsyPlayerAcCameraPersonDetail.setIsLive(View.VISIBLE);
+        gsyPlayerAcCameraPersonDetail.setIsShowMaskTopBack(false);
         getCurPlay().startPlayLogic();
         orientationUtils.setEnable(true);
 
@@ -226,8 +209,8 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
     public void playError(String errorMsg) {
         orientationUtils.setEnable(false);
 
-        gsyPlayerAcCameraPersonDetail.changeRetryType();
-        gsyPlayerAcCameraPersonDetail.getPlayRetryBtn().setOnClickListener(new View.OnClickListener() {
+        gsyPlayerAcCameraPersonDetail.setCityPlayState(3);
+        gsyPlayerAcCameraPersonDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPresenter.doRetry();
