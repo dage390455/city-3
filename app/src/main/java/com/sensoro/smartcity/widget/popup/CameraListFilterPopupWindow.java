@@ -195,19 +195,20 @@ public class CameraListFilterPopupWindow {
             List<CameraFilterModel> list = cameraListPopAdapter.getmStateCountList();
 
 
-            List<CameraFilterModel.ListBean> beanList = list.get(0).getList();
-            boolean isSelect = false;
-            for (int i = 0; i < beanList.size(); i++) {
-                CameraFilterModel.ListBean listBean = beanList.get(i);
-                if (listBean.isSelect()) {
-                    isSelect = true;
-                    break;
+            if (null != list.get(0)) {
+
+                List<CameraFilterModel.ListBean> beanList = list.get(0).getList();
+                boolean isSelect = false;
+                for (int i = 0; i < beanList.size(); i++) {
+                    CameraFilterModel.ListBean listBean = beanList.get(i);
+                    if (listBean.isSelect()) {
+                        isSelect = true;
+                        break;
+                    }
                 }
-
-
-            }
-            if (!isSelect) {
-                beanList.get(0).setSelect(true);
+                if (!isSelect) {
+                    beanList.get(0).setSelect(true);
+                }
             }
 
             for (CameraFilterModel model : list) {

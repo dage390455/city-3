@@ -53,19 +53,23 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     public void initData(Context context) {
         mActivity = (Activity) context;
         Intent intent = mActivity.getIntent();
-        url = Constants.LIVE_URL;
         if (intent != null) {
             cid = intent.getStringExtra("cid");
             url = intent.getStringExtra("hls");
+            url = null;
             mCameraName = intent.getStringExtra("cameraName");
             lastCover = intent.getStringExtra("lastCover");
             getLastCoverImage(lastCover);
             String deviceStatus = intent.getStringExtra("deviceStatus");
             if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
                 getView().offlineType(url);
+            }else{
+                doLive();
             }
+        }else{
+            doLive();
         }
-        doLive();
+
         getView().showProgressDialog();
         requestData(cid, Constants.DIRECTION_DOWN);
         mCalendarPopUtils = new CalendarPopUtils(mActivity);

@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -353,19 +355,22 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     @Override
     public void setLiveState(boolean isLiveStream) {
-        if (isLiveStream) {
-            ivLiveAcCameraDetail.setImageResource(R.drawable.camera_live_normal);
-            tvLiveAcCameraDetail.setText(mActivity.getString(R.string.camera_living));
-            tvLiveAcCameraDetail.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
-            llLiveAcCameraDetail.setBackgroundResource(R.drawable.shape_bg_solid_ee_full_corner_4);
+//        if (isLiveStream) {
+////            ivLiveAcCameraDetail.setImageResource(R.drawable.camera_live_normal);
+////            tvLiveAcCameraDetail.setText(mActivity.getString(R.string.camera_living));
+////            tvLiveAcCameraDetail.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+////            llLiveAcCameraDetail.setBackgroundResource(R.drawable.shape_bg_solid_ee_full_corner_4);
+//
+//        } else {
+//            ivLiveAcCameraDetail.setImageResource(R.drawable.camera_live_rollback);
+//            tvLiveAcCameraDetail.setText(mActivity.getString(R.string.camera_back_live));
+//            tvLiveAcCameraDetail.setTextColor(mActivity.getResources().getColor(R.color.white));
+//            llLiveAcCameraDetail.setBackgroundResource(R.drawable.shape_bg_corner_29c_shadow);
+//
+//        }
 
-        } else {
-            ivLiveAcCameraDetail.setImageResource(R.drawable.camera_live_rollback);
-            tvLiveAcCameraDetail.setText(mActivity.getString(R.string.camera_back_live));
-            tvLiveAcCameraDetail.setTextColor(mActivity.getResources().getColor(R.color.white));
-            llLiveAcCameraDetail.setBackgroundResource(R.drawable.shape_bg_corner_29c_shadow);
-
-        }
+        llLiveAcCameraDetail.setVisibility(isLiveStream ? GONE : VISIBLE);
+//        llLiveAcCameraDetail.startAnimation(isLiveStream ? downAnimation : upAnimation);
     }
 
     @Override

@@ -158,7 +158,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
         } else {
             filterHashMap.clear();
         }
-        requestData(hashMap, DIRECTION_DOWN);
+        requestData(hashMap);
     }
 
     public void clearMap() {
@@ -167,7 +167,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
     }
 
 
-    public void requestData(final HashMap hashMap, final int directionDown) {
+    public void requestData(final HashMap hashMap) {
 
         if (isAttachedView()) {
             getView().showProgressDialog();
@@ -238,18 +238,16 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
         switch (direction) {
             case DIRECTION_DOWN:
                 cur_page = 1;
-                hashMap.put("page", cur_page);
-                requestData(hashMap, DIRECTION_DOWN);
                 break;
             case DIRECTION_UP:
                 cur_page++;
-                hashMap.put("page", cur_page);
-
-                requestData(hashMap, DIRECTION_UP);
                 break;
             default:
                 break;
+
         }
+        hashMap.put("page", cur_page);
+        requestData(hashMap);
 
 
     }
