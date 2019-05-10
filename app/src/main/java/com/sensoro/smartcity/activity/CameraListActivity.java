@@ -191,8 +191,15 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
         mCameraListFilterPopupWindow.setSelectModleListener(new CameraListFilterPopupWindow.SelectModleListener() {
             @Override
             public void selectedListener(HashMap hashMap) {
-                mPresenter.getSelectedHashMap().clear();
 
+                HashMap mPresenterSelectedHashMap = mPresenter.getSelectedHashMap();
+                String search = null;
+
+                if (mPresenterSelectedHashMap.containsKey("search")) {
+
+                    search = (String) mPresenterSelectedHashMap.get("search");
+                }
+                mPresenterSelectedHashMap.clear();
 
                 if (null != hashMap && hashMap.size() > 0) {
                     mPresenter.getSelectedHashMap().putAll(hashMap);
@@ -200,6 +207,11 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
                 } else {
 
                     cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
+                }
+
+
+                if (!TextUtils.isEmpty(search)) {
+                    mPresenterSelectedHashMap.put("search", search);
                 }
                 mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN);
             }
