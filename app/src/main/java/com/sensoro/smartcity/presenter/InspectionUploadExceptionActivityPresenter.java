@@ -26,7 +26,7 @@ import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
+import com.sensoro.smartcity.widget.popup.AlarmPopUtilsTest;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
 import com.sensoro.smartcity.widget.popup.UpLoadPhotosUtils;
 
@@ -202,7 +202,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
     }
 
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
-        AlarmPopUtils.handlePhotoIntent(requestCode, resultCode, data);
+        AlarmPopUtilsTest.handlePhotoIntent(requestCode, resultCode, data);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

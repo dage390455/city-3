@@ -297,7 +297,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         if (TextUtils.isEmpty(tempAddress)) {
             tempAddress = mContext.getString(R.string.unknown_street);
         }
-        final String tempData = "/pages/location?lon=" + mDeviceInfo.getLonlat().get(0) + "&lat=" + mDeviceInfo.getLonlat().get(1)
+        final String tempData = "/pages/place?lon=" + mDeviceInfo.getLonlat().get(0) + "&lat=" + mDeviceInfo.getLonlat().get(1)
                 + "&name=" + name + "&address=" + tempAddress + "&status=" + status + "&tags=" + tempTagStr + "&uptime=" +
                 updatedTime;
         miniProgramObj.path = tempData;            //小程序页面路径

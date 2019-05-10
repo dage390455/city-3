@@ -30,6 +30,10 @@ public interface Constants {
     String PREFERENCE_DEPLOY_CONTACT_HISTORY = "city_deploy_contact_history";
     String PREFERENCE_DEPLOY_CONTENT_HISTORY = "city_deploy_content_history";
     String PREFERENCE_KEY_DEVICE = "key_search_history_keyword";
+    //安全隐患，标签
+    String PREFERENCE_SECURITY_RISK_TAG = "preference_security_risk_tag";
+    String PREFERENCE_KEY_SECURITY_RISK_LOCATION = "preference_key_security_risk_location";
+    String PREFERENCE_KEY_SECURITY_RISK_BEHAVIOR = "preference_key_security_risk_behavior";
     //
     String PREFERENCE_KEY_DEPLOY_NAME = "preference_key_deploy_name";
     String PREFERENCE_KEY_DEPLOY_NAME_ADDRESS = "preference_key_deploy_name_address";
@@ -38,6 +42,7 @@ public interface Constants {
     String PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_NAME = "preference_key_deploy_alarm_contact_name";
     String PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_PHONE = "preference_key_deploy_alarm_contact_phone";
     String PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES = "preference_key_local_devices_mergetypes";
+    String PREFERENCE_KEY_LOCAL_ALARM_POPUP_DATA_BEAN = "preference_key_local_alarm_popup_data_bean";
     //
     String PREFERENCE_KEY_DEPLOY_PHONE = "preference_key_deploy_phone";
     //
@@ -267,6 +272,8 @@ public interface Constants {
     String EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE = "extra_inspection_instruction_device_type";
     int CONTRACT_ORIGIN_TYPE_EDIT = 0x200;
 
+    String EXTRA_SECURITY_RISK = "extra_security_risk";
+
     //合同相关
     String EXTRA_CONTRACT_TYPE = "extra_contract_type";
     String EXTRA_CONTRACT_ID = "extra_contract_id";
@@ -283,7 +290,8 @@ public interface Constants {
     String EXTRA_CONTRACT_RESULT_TYPE = "extra_contract_result_type";
     //
     String PREFERENCE_LOGIN_ID = "preference_login_id";
-    String PREFERENCE_LOCAL_DEVICES_MERGETYPES = "preference_local_devices_mergetypes";
+    String PREFERENCE_LOCAL_DEVICES_MERGE_TYPES = "preference_local_devices_mergetypes";
+    String PREFERENCE_LOCAL_ALARM_POPUP_DATA_BEAN = "preference_local_alarm_popup_data_bean";
     String PREFERENCE_LOGIN_NAME_PWD = "preference_login_name_pwd";
     String PREFERENCE_SPLASH_LOGIN_DATA = "preference_main_login";
     String PREFERENCE_KEY_NAME = "preference_key_name";
@@ -389,6 +397,9 @@ public interface Constants {
     int EVENT_DATA__CONTRACT_EDIT_REFRESH_CODE = 0x45;
     int EVENT_DATA_DEPLOY_INIT_CONFIG_CODE = 0x47;
 
+    int EVENT_DATA_SECURITY_RISK_TAG_MANAGER = 0x57;
+    int EVENT_DATA_SECURITY_RISK_TAG = 0x58;
+
 
     int TYPE_SCAN_DEPLOY_DEVICE = 0x29;
     int TYPE_SCAN_DEPLOY_STATION = 0x39;
@@ -486,5 +497,8 @@ public interface Constants {
     String LIVE_URL = "http://wdquan-space.b0.upaiyun.com/VIDEO/2018/11/22/ae0645396048_hls_time10.m3u8";
     String EXTRA_CAMERA_PERSON_DETAIL = "extra_camera_person_detail";
     String EXTRA_CAMERA_PERSON_AVATAR_HISTORY_FACE_URL = "EXTRA_CAMERA_PERSON_AVATAR_HISTORY_FACE_URL";
+
+
+
 }
 

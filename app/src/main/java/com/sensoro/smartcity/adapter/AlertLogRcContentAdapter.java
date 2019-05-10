@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.model.SecurityRisksAdapterModel;
+import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
@@ -79,6 +81,15 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.contact_icon);
             String source = recordInfo.getSource();
             String confirm_text = null;
+            Integer displayStatus = recordInfo.getDisplayStatus();
+            String reasonStr = "";
+            try {
+                if (displayStatus != null) {
+                    reasonStr = mContext.getString(confirmStatusArray[displayStatus]);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             if ("auto".equals(source)) {
                 int day = 2;
                 try {
@@ -94,74 +105,116 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 temp = mContext.getString(R.string.test_patrol);
                 changTextColor(confirm_text, temp, spannableString, R.color.c_8058a5);
                 holder.itemAlertContentTvContent.setText(spannableString);
-            } else {
-                int resId = confirmStatusArray[recordInfo.getDisplayStatus()];
-                int color = confirmStatusTextColorArray[recordInfo.getDisplayStatus()];
-                if ("app".equals(source)) {
-                    confirm_text = mContext.getString(R.string.contact) + " [" + recordInfo.getName() + "] " + mContext.getString(R.string.confirm_that_the_alert_type_app_is) + ":\n" +
-                            mContext.getString(resId);
-                    //用span改变字体颜色,换行 用\n
-                    //            String content = "联系人[高鹏]通过 平台 确认本次预警类型为：\n安全隐患";
-                    SpannableString spannableString = new SpannableString(confirm_text);
-                    // 改变高鹏 颜色
-                    String temp = "[" + recordInfo.getName() + "]";
-                    changTextColor(confirm_text, temp, spannableString, R.color.c_131313);
-                    //改变安全隐患颜色
-                    temp = mContext.getString(resId);
-                    changTextColor(confirm_text, temp, spannableString, color);
-
-                    holder.itemAlertContentTvContent.setText(spannableString);
-                } else if ("platform".equals(source)) {
-                    confirm_text = mContext.getString(R.string.contact) + " [" + recordInfo.getName() + "]" + mContext.getString(R.string.confirm_that_the_alert_type_web_is) + ":\n" +
-                            mContext.getString(resId);
-                    //用span改变字体颜色,换行 用\n
-                    //            String content = "联系人[高鹏]通过 平台 确认本次预警类型为：\n安全隐患";
-                    SpannableString spannableString = new SpannableString(confirm_text);
-                    // 改变高鹏 颜色
-                    String temp = "[" + recordInfo.getName() + "]";
-                    changTextColor(confirm_text, temp, spannableString, R.color.c_252525);
-                    //改变安全隐患颜色
-                    temp = mContext.getString(resId);
-                    changTextColor(confirm_text, temp, spannableString, color);
-
-                    holder.itemAlertContentTvContent.setText(spannableString);
+            } else if ("app".equals(source)) {
+                //TODO 状态兼容
+                confirm_text = mContext.getString(R.string.contact) + " [" + recordInfo.getName() + "] " + mContext.getString(R.string.confirm_that_the_alert_type_app_is) + ":\n" +
+                        reasonStr;
+                //用span改变字体颜色,换行 用\n
+//            String content = "联系人[高鹏]通过 平台 确认本次预警类型为：\n安全隐患";
+                SpannableString spannableString = new SpannableString(confirm_text);
+                // 改变高鹏 颜色
+                String temp = "[" + recordInfo.getName() + "]";
+                changTextColor(confirm_text, temp, spannableString, R.color.c_131313);
+                //改变安全隐患颜色
+                //TODO 状态兼容
+                temp = reasonStr;
+                try {
+                    if (displayStatus != null) {
+                        changTextColor(confirm_text, temp, spannableString, confirmStatusTextColorArray[displayStatus]);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+                holder.itemAlertContentTvContent.setText(spannableString);
+            } else if ("platform".equals(source)) {
+                //TODO 状态兼容
+                confirm_text = mContext.getString(R.string.contact) + " [" + recordInfo.getName() + "]" + mContext.getString(R.string.confirm_that_the_alert_type_web_is) + ":\n" +
+                        reasonStr;
+                SpannableString spannableString = new SpannableString(confirm_text);
+                // 改变高鹏 颜色
+                String temp = "[" + recordInfo.getName() + "]";
+                changTextColor(confirm_text, temp, spannableString, R.color.c_252525);
+                //改变安全隐患颜色
+                temp = reasonStr;
+                //TODO 状态兼容
+                try {
+                    if (displayStatus != null) {
+                        changTextColor(confirm_text, temp, spannableString, confirmStatusTextColorArray[displayStatus]);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                holder.itemAlertContentTvContent.setText(spannableString);
             }
 
             //
             holder.llConfirm.setVisibility(View.VISIBLE);
             //预警结果
-            int displayStatus = recordInfo.getDisplayStatus();
+            //TODO 状态问题
             StringBuilder stringBuilder = new StringBuilder();
-            String string = mContext.getString(confirmStatusArray[displayStatus]);
-            String confirmAlarmResultInfo = mContext.getString(confirmAlarmResultInfoArray[displayStatus]);
-            holder.itemAlarmDetailChildAlarmResult.setText(stringBuilder.append(string).append("(").append(confirmAlarmResultInfo).append(")").toString());
+            String desc = "";
+            try {
+                if (displayStatus != null) {
+                    desc = mContext.getString(confirmAlarmResultInfoArray[displayStatus]);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            holder.itemAlarmDetailChildAlarmResult.setText(stringBuilder.append(reasonStr).append("(").append(desc).append(")").toString());
             //预警成因
-            int reason = recordInfo.getReason();
-            int resIdAlarmType = R.string.the_ohter;
-            try {
-                resIdAlarmType = confirmAlarmTypeArray[reason];
-            } catch (Exception e) {
-                e.printStackTrace();
+            Integer reason = recordInfo.getReason();
+            if (reason != null) {
+                holder.llItemAlarmDetailChildAlarmType.setVisibility(View.VISIBLE);
+                //TODO model配置
+                holder.itemAlarmDetailChildAlarmType.setText(AlarmPopupConfigAnalyzer.gerAlarmPopModelName("reason", reason, mContext));
+            } else {
+                holder.llItemAlarmDetailChildAlarmType.setVisibility(View.GONE);
             }
-            holder.itemAlarmDetailChildAlarmType.setText(resIdAlarmType);
             //预警场所
-            int place = recordInfo.getPlace();
-            int resIdAlarmPlace = R.string.the_ohter;
-            try {
-                resIdAlarmPlace = confirmAlarmPlaceArray[place];
-            } catch (Exception e) {
-                e.printStackTrace();
+            Integer place = recordInfo.getPlace();
+            if (place != null) {
+                holder.llItemAlarmDetailChildAlarmPlace.setVisibility(View.VISIBLE);
+                holder.itemAlarmDetailChildAlarmPlace.setText(AlarmPopupConfigAnalyzer.gerAlarmPopModelName("place", place, mContext));
+            } else {
+                holder.llItemAlarmDetailChildAlarmPlace.setVisibility(View.GONE);
             }
-            holder.itemAlarmDetailChildAlarmPlace.setText(resIdAlarmPlace);
+            Integer firePhase = recordInfo.getFirePhase();
+            if (firePhase != null) {
+                holder.llItemAlarmDetailChildAlarmFirePhase.setVisibility(View.VISIBLE);
+                holder.itemAlarmDetailChildAlarmFirePhase.setText(AlarmPopupConfigAnalyzer.gerAlarmPopModelName("firePhase", firePhase, mContext));
+            } else {
+                holder.llItemAlarmDetailChildAlarmFirePhase.setVisibility(View.GONE);
+            }
+            Integer fireType = recordInfo.getFireType();
+            if (fireType != null) {
+                holder.llItemAlarmDetailChildAlarmFireType.setVisibility(View.VISIBLE);
+                holder.itemAlarmDetailChildAlarmFireType.setText(AlarmPopupConfigAnalyzer.gerAlarmPopModelName("fireType", fireType, mContext));
+            } else {
+                holder.llItemAlarmDetailChildAlarmFireType.setVisibility(View.GONE);
+            }
+            List<SecurityRisksAdapterModel> danger = recordInfo.getDanger();
+            if (danger != null && danger.size() > 0) {
+                holder.llItemAlarmDetailChildAlarmRisk.setVisibility(View.VISIBLE);
+                String securityRisksText = AlarmPopupConfigAnalyzer.getSecurityRisksText(danger);
+                if (TextUtils.isEmpty(securityRisksText)) {
+                    holder.itemAlarmDetailChildAlarmRisk.setText(mContext.getString(R.string.unknown));
+                } else {
+                    holder.itemAlarmDetailChildAlarmRisk.setText(securityRisksText);
+                }
+            } else {
+                holder.llItemAlarmDetailChildAlarmRisk.setVisibility(View.GONE);
+            }
             //备注说明
             String remark = recordInfo.getRemark();
             if (!TextUtils.isEmpty(remark)) {
                 holder.itemAlarmDetailChildAlarmRemarks.setText(remark);
+            }else {
+                holder.itemAlarmDetailChildAlarmRemarks.setText("");
             }
             final List<ScenesData> scenes = recordInfo.getScenes();
             if (scenes != null && scenes.size() > 0) {
                 //TODO 防止数据错误清除
+                holder.rvAlarmPhoto.setVisibility(View.VISIBLE);
                 if (holder.rvAlarmPhoto.getTag() instanceof AlarmDetailPhotoAdapter) {
                     holder.rvAlarmPhoto.removeAllViews();
                 }
@@ -190,6 +243,8 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 adapter.setImages(scenes);
                 //TODO 防止数据错误打标签
                 holder.rvAlarmPhoto.setTag(adapter);
+            }else {
+                holder.rvAlarmPhoto.setVisibility(View.GONE);
             }
 
 
@@ -415,10 +470,26 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         TextView itemAlertContentTvTime;
         @BindView(R.id.item_alarm_detail_child_alarm_result)
         TextView itemAlarmDetailChildAlarmResult;
+        @BindView(R.id.ll_item_alarm_detail_child_alarm_type)
+        LinearLayout llItemAlarmDetailChildAlarmType;
         @BindView(R.id.item_alarm_detail_child_alarm_type)
         TextView itemAlarmDetailChildAlarmType;
+        @BindView(R.id.ll_item_alarm_detail_child_alarm_fire_phase)
+        LinearLayout llItemAlarmDetailChildAlarmFirePhase;
+        @BindView(R.id.item_alarm_detail_child_alarm_fire_phase)
+        TextView itemAlarmDetailChildAlarmFirePhase;
+        @BindView(R.id.ll_item_alarm_detail_child_alarm_place)
+        LinearLayout llItemAlarmDetailChildAlarmPlace;
         @BindView(R.id.item_alarm_detail_child_alarm_place)
         TextView itemAlarmDetailChildAlarmPlace;
+        @BindView(R.id.ll_item_alarm_detail_child_alarm_fire_type)
+        LinearLayout llItemAlarmDetailChildAlarmFireType;
+        @BindView(R.id.item_alarm_detail_child_alarm_fire_type)
+        TextView itemAlarmDetailChildAlarmFireType;
+        @BindView(R.id.ll_item_alarm_detail_child_alarm_risk)
+        LinearLayout llItemAlarmDetailChildAlarmRisk;
+        @BindView(R.id.item_alarm_detail_child_alarm_risk)
+        TextView itemAlarmDetailChildAlarmRisk;
         @BindView(R.id.item_alarm_detail_child_alarm_remarks)
         TextView itemAlarmDetailChildAlarmRemarks;
         @BindView(R.id.rv_alarm_photo)

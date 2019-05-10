@@ -15,12 +15,13 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.AlertLogRcContentAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IAlarmDetailLogActivityView;
+import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.presenter.AlarmDetailLogActivityPresenter;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.popup.AlarmPopUtilsTest;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     @BindView(R.id.ac_alert_rc_content)
     RecyclerView acAlertRcContent;
     private AlertLogRcContentAdapter alertLogRcContentAdapter;
-    private AlarmPopUtils mAlarmPopUtils;
+    private AlarmPopUtilsTest mAlarmPopUtils;
     private ProgressUtils mProgressUtils;
 
     @Override
@@ -78,7 +79,7 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
 
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        mAlarmPopUtils = new AlarmPopUtils(mActivity);
+        mAlarmPopUtils = new AlarmPopUtilsTest(mActivity);
         mAlarmPopUtils.setOnPopupCallbackListener(mPresenter);
         initRcContent();
     }
@@ -100,7 +101,7 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mPresenter.handlerActivityResult(requestCode, resultCode, data);
+        AlarmPopUtilsTest.handlePhotoIntent(requestCode,resultCode,data);
     }
 
     @Override
@@ -162,7 +163,7 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
                 mPresenter.doNavigation();
                 break;
             case R.id.ac_alert_tv_alert_confirm:
-                showAlarmPopupView();
+                mPresenter.showAlarmPopupView();
                 break;
             case R.id.include_text_title_imv_arrows_left:
                 mPresenter.doBack();
@@ -213,8 +214,8 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     }
 
     @Override
-    public void showAlarmPopupView() {
-        mAlarmPopUtils.show();
+    public void showAlarmPopupView(AlarmPopupModel alarmPopupModel) {
+        mAlarmPopUtils.show(alarmPopupModel);
     }
 
     @Override
