@@ -138,6 +138,9 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
             RelativeLayout.LayoutParams lpState = (RelativeLayout.LayoutParams) mStateTv.getLayoutParams();
             lpState.topMargin = titleTop;
             mStateTv.setLayoutParams(lpState);
+            RelativeLayout.LayoutParams mStatEmpty = (RelativeLayout.LayoutParams) mStatEmptyIv.getLayoutParams();
+            mStatEmpty.topMargin = titleTop;
+            mStatEmptyIv.setLayoutParams(mStatEmpty);
 
         }
 
