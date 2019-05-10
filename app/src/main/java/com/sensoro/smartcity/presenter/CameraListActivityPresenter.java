@@ -107,7 +107,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
     }
 
     public void onClickDeviceCamera(final DeviceCameraInfo deviceCameraInfo) {
-        String sn = deviceCameraInfo.getSn();
+        final String sn = deviceCameraInfo.getSn();
         final String cid = deviceCameraInfo.getCid();
         getView().showProgressDialog();
         RetrofitServiceHelper.getInstance().getDeviceCamera(sn).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraDetailRsp>(this) {
@@ -122,12 +122,13 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                     intent.setClass(mContext, CameraDetailActivity.class);
                     intent.putExtra("cid", cid);
                     intent.putExtra("hls", hls);
+                    intent.putExtra("sn", sn);
                     if (camera != null) {
                         String name = camera.getName();
                         intent.putExtra("cameraName", name);
                     }
                     intent.putExtra("lastCover", lastCover);
-                    intent.putExtra("deviceStatus", deviceCameraInfo.getDeviceStatus());
+                    intent.putExtra("deviceStatus", data.getDeviceStatus());
                     getView().startAC(intent);
                 } else {
                     getView().toastShort(mContext.getString(R.string.camera_info_get_failed));

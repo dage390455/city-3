@@ -48,7 +48,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     private ImageView backMaskTv;
     private RelativeLayout maskLayoutTop;
 
-    private TextView maskTitleTv;
+    public TextView maskTitleTv;
     private RelativeLayout rMobileData;
 
     private static int isLive;
@@ -213,6 +213,13 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
                 tiptv.setText(getResources().getString(R.string.retry_play));
                 maskLayoutTop.setVisibility(VISIBLE);
                 maskTitleTv.setText(mTitle);
+
+                playAndRetryBtn.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startPlayLogic();
+                    }
+                });
                 break;
             case 4:
 
@@ -1224,6 +1231,14 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     }
 
+    @Override
+    public void onError(int what, int extra) {
+        super.onError(what, extra);
+
+
+        setCityPlayState(3);
+
+    }
 
     @Override
     protected void releaseVideos() {
