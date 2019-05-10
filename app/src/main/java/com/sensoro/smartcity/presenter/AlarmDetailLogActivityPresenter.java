@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.AlarmCameraLiveDetailActivity;
 import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -38,6 +39,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -414,6 +417,10 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     }
 
     public void doCameraLive() {
-
+        Intent intent = new Intent(mContext, AlarmCameraLiveDetailActivity.class);
+        List<String> cameras1 = deviceAlarmLogInfo.getCameras();
+        String[] cameras = cameras1.toArray(new String[cameras1.size()]);
+        intent.putExtra(Constants.EXTRA_ALARM_CAMERAS,cameras);
+        getView().startAC(intent);
     }
 }

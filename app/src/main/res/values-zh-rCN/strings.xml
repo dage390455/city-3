@@ -979,5 +979,6 @@
     <string name="deploy_record_deploy_staff">部署人员</string>
     <string name="alarm_video">预警录像</string>
     <string name="relation_camera">关联机位：</string>
+    <string name="watching">观看中</string>
 
 </resources>

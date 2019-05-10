@@ -3,6 +3,7 @@ package com.sensoro.smartcity.server.bean;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.AlarmCameraLiveDetailActivity;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.adapter.AlertLogRcContentAdapter;
 import com.sensoro.smartcity.constant.Constants;
@@ -232,7 +233,8 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         alertLogRcContentAdapter.notifyDataSetChanged();
     }
 
-    @OnClick({R.id.alarm_log_close, R.id.ac_alert_tv_contact_owner, R.id.ac_alert_tv_quick_navigation, R.id.ac_alert_tv_alert_confirm})
+    @OnClick({R.id.alarm_log_close, R.id.ac_alert_tv_contact_owner, R.id.ac_alert_tv_quick_navigation,
+            R.id.ac_alert_tv_alert_confirm,R.id.ll_camera_video_ac_alert,R.id.ll_camera_live_ac_alert})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.alarm_log_close:
@@ -247,7 +249,25 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
             case R.id.ac_alert_tv_alert_confirm:
                 doConfirm();
                 break;
+            case R.id.ll_camera_video_ac_alert:
+                doVideo();
+                break;
+            case R.id.ll_camera_live_ac_alert:
+                doLive();
+                break;
         }
+    }
+
+    private void doLive() {
+        Intent intent = new Intent(mActivity, AlarmCameraLiveDetailActivity.class);
+        List<String> cameras1 = mDeviceAlarmLogInfo.getCameras();
+        String[] cameras = cameras1.toArray(new String[cameras1.size()]);
+        intent.putExtra(Constants.EXTRA_ALARM_CAMERAS,cameras);
+       mActivity.startActivity(intent);
+    }
+
+    private void doVideo() {
+
     }
 
     public void doContactOwner() {

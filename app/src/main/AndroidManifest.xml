@@ -377,6 +377,8 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             />
         <activity android:name=".activity.DeployCameraDetailActivity" />
+        <activity android:name=".activity.AlarmCameraLiveDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"
