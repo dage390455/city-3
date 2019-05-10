@@ -18,6 +18,7 @@ import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
 import com.baidu.ocr.sdk.exception.OCRError;
 import com.baidu.ocr.sdk.model.AccessToken;
+import com.baidu.ocr.ui.camera.CameraActivity;
 import com.github.moduth.blockcanary.BlockCanary;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.qiniu.android.common.FixedZone;
@@ -60,7 +61,6 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.File;
 import java.util.Locale;
 
-import cat.ereza.customactivityoncrash.activity.DefaultErrorActivity;
 import me.jessyan.autosize.AutoSizeConfig;
 import me.jessyan.autosize.external.ExternalAdaptInfo;
 import me.jessyan.autosize.external.ExternalAdaptManager;
@@ -295,7 +295,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
                 //即使在不改三方库源码的情况下也可以完美适配三方库的页面, 这就是 AndroidAutoSize 的优势
                 //但前提是三方库页面的布局使用的是 dp 和 sp, 如果布局全部使用的 px, 那 AndroidAutoSize 也将无能为力
                 //经过测试 DefaultErrorActivity 的设计图宽度在 380dp - 400dp 显示效果都是比较舒服的
-                .addExternalAdaptInfoOfActivity(DefaultErrorActivity.class, new ExternalAdaptInfo(true, 375));
+                .addExternalAdaptInfoOfActivity(CameraActivity.class, new ExternalAdaptInfo(true, 375));
     }
     private void initVc() {
         VIDEO_PATH += "SensoroCity";

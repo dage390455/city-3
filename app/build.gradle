@@ -274,7 +274,6 @@ dependencies {
     api(project(':simplescanner')) {
         exclude group: "com.amap.api"
     }
-    implementation 'cat.ereza:customactivityoncrash:2.2.0'
     implementation files('libs/player.jar')
     implementation project(path: ':gsyVideoPlayer-base')
     implementation project(path: ':gsyVideoPlayer-proxy_cache')

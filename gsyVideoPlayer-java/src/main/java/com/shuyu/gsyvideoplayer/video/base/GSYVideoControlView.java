@@ -151,6 +151,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
     //title
     protected TextView mTitleTextView;
     protected TextView mStateTv;//直播，录像
+    protected ImageView mStatEmptyIv;
 
     //顶部和底部区域
     protected ViewGroup mTopContainer, mBottomContainer;
@@ -200,6 +201,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
         mStartButton = findViewById(R.id.play_pause_iv);
         mTitleTextView = (TextView) findViewById(R.id.title);
         mStateTv = (TextView) findViewById(R.id.state_tv);
+        mStatEmptyIv = (ImageView) findViewById(R.id.state_empty_iv);
         mBackButton = (ImageView) findViewById(R.id.back);
         mFullscreenButton = (ImageView) findViewById(R.id.fullscreen);
         mProgressBar = (SeekBar) findViewById(R.id.progress);
@@ -1375,7 +1377,6 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
     public void setGSYVideoProgressListener(GSYVideoProgressListener videoProgressListener) {
         this.mGSYVideoProgressListener = videoProgressListener;
     }
-
 
 
 }
