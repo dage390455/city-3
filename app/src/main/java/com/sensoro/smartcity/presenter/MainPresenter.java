@@ -108,7 +108,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                         } catch (Throwable throwable) {
                             throwable.printStackTrace();
                         }
-                        reLogin();
+                        reLogin(false);
                         break;
                     case CONNECTIVITY_ACTION:
                         boolean netCanUse = false;
@@ -203,17 +203,21 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     /**
      * 检测到语言变化重新登录
      */
-    private void reLogin() {
-        RetrofitServiceHelper.getInstance().cancelAllRsp();
-        RetrofitServiceHelper.getInstance().clearLoginDataSessionId();
-        Intent intent = new Intent(mContext, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        ActivityTaskManager.getInstance().AppExit(mContext);
-        mContext.startActivity(intent);
-        // 杀掉进程
-//        android.os.Process.killProcess(android.os.Process.myPid());
-//        System.exit(0);
-
+    private void reLogin(boolean isCrash) {
+        if (isAttachedView()) {
+            RetrofitServiceHelper.getInstance().cancelAllRsp();
+            RetrofitServiceHelper.getInstance().clearLoginDataSessionId();
+            Intent intent = new Intent(mContext, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            if (isCrash) {
+                // 杀掉进程
+                ActivityTaskManager.getInstance().AppExit(mContext);
+            } else {
+                // 清除activity
+                ActivityTaskManager.getInstance().finishAllActivity();
+            }
+            mContext.startActivity(intent);
+        }
     }
 
     @Override
@@ -556,6 +560,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             });
             mHandler.postDelayed(mNetWorkTaskRunnable, 30 * 1000);
         }
+
     }
 
     private void createSocket() {
@@ -717,13 +722,16 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         Object data = eventData.data;
         switch (code) {
             case EVENT_DATA_SESSION_ID_OVERTIME:
+                reLogin(false);
+                break;
+            case EVENT_DATA_APP_CRASH:
+                //APP 崩溃
                 try {
-                    LogUtils.loge("app crash ------>>>> EVENT_DATA_SESSION_ID_OVERTIME");
+                    LogUtils.loge("app crash ------>>>> EVENT_DATA_APP_CRASH");
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }
-                RetrofitServiceHelper.getInstance().cancelAllRsp();
-                reLogin();
+                reLogin(true);
                 break;
             case EVENT_DATA_DEPLOY_RESULT_FINISH:
                 getView().setBottomBarSelected(0);
