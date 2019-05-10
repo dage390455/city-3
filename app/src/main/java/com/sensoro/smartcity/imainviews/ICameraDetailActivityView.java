@@ -10,7 +10,7 @@ import com.sensoro.smartcity.server.bean.DeviceCameraFacePic;
 
 import java.util.List;
 
-public interface ICameraDetailActivityView extends IProgressDialog, IToast , IActivityIntent {
+public interface ICameraDetailActivityView extends IProgressDialog, IToast, IActivityIntent {
 
     void updateCameraList(List<DeviceCameraFacePic> data);
 
@@ -37,10 +37,11 @@ public interface ICameraDetailActivityView extends IProgressDialog, IToast , IAc
     void setSelectedDateSearchText(String s);
 
     void onPullRefreshCompleteNoMoreData();
+
     //播放失败
     void playError(int pos);
 
-    void offlineType(String url);
+    void offlineType(String mCameraName);
 
     void autoRefresh();
 
