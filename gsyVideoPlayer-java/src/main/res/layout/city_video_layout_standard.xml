@@ -35,8 +35,10 @@
             android:id="@+id/layout_bottom"
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:background="@drawable/video_bottom_bg"
             android:layout_alignParentBottom="true"
             android:gravity="center_vertical"
+
 
             android:orientation="horizontal">
 
@@ -99,7 +101,7 @@
                 android:layout_height="22dp"
 
                 android:layout_gravity="center"
-                android:layout_marginRight="16dp"
+                android:layout_marginRight="20dp"
                 android:background="@color/transparent"
                 android:button="@drawable/toggle_button"
                 android:checked="false"
@@ -199,13 +201,13 @@
 
         </RelativeLayout>
 
-        <moe.codeest.enviews.ENDownloadView
+        <moe.codeest.enviews.CityENDownloadView
             android:id="@+id/loading"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:visibility="invisible" />
+            android:visibility="visible" />
 
         <moe.codeest.enviews.ENPlayView
             android:layout_width="60dp"
@@ -281,7 +283,7 @@
                     android:layout_width="68dp"
                     android:layout_height="28dp"
                     android:layout_below="@+id/tip_data_tv"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="12dp"
                     android:background="@drawable/shape_bg_corner_2dp_29c_shadow"
                     android:text="@string/retry"
                     android:textColor="@color/white"
