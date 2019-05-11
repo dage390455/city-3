@@ -364,6 +364,7 @@
         <activity android:name=".temp.CameraTest" />
         <activity android:name=".temp.RecyclerViewActivity" />
         <activity android:name=".activity.CameraListActivity" />
+        <activity android:name=".activity.BaseStationListActivity" />
         <activity
             android:name=".activity.CameraDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -373,9 +374,9 @@
             android:name=".activity.CameraPersonLocusActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".activity.CameraPersonAvatarHistoryActivity" />
-        <activity android:name=".activity.CameraPersonDetailActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            />
+        <activity
+            android:name=".activity.CameraPersonDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".activity.DeployCameraDetailActivity" />
 
         <provider

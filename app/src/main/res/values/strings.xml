@@ -497,6 +497,7 @@
     <string name="manager_fragment_exit_account">Sign Out</string>
     //warn framgen
     <string name="warn_fragment_search_tip">Name/SN/Mobile</string>
+    <string name="basestation_search_tip">BaseStation Name/SN/TAG</string>
 
     //
     <string name="top_bar_image">Image</string>
@@ -960,7 +961,8 @@
     <string name="retry_play">"Video loading failed, please try again"</string>
 
     <string name="mobile_network">"You are now using mobile network,\n please mind your data usage."</string>
-    <string name="camera_manager">摄像机管理</string>
+    <string name="camera_manager">Camera Manager</string>
+    <string name="basestation_manager">Basestation Manager</string>
     <string name="camera_living">直播中</string>
     <string name="click_select_date">点击选择日期</string>
     <string name="time_parse_error">时间解析错误</string>
