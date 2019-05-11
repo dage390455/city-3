@@ -33,9 +33,27 @@ import io.reactivex.schedulers.Schedulers;
 public class CameraListActivityPresenter extends BasePresenter<ICameraListActivityView> implements Constants {
     private Activity mContext;
     private volatile int cur_page = 1;
+
+
     private final List<DeviceCameraInfo> deviceCameraInfos = new ArrayList<>();
     private final List<String> mSearchHistoryList = new ArrayList<>();
-    private HashMap filterHashMap = new HashMap();
+
+    public List<CameraFilterModel> getCameraFilterModelList() {
+        return cameraFilterModelList;
+    }
+
+    private final List<CameraFilterModel> cameraFilterModelList = new ArrayList<>();
+
+
+    private volatile HashMap selectedHashMap = new HashMap();
+
+    public HashMap getSelectedHashMap() {
+        if (null == selectedHashMap) {
+            selectedHashMap = new HashMap();
+        }
+        return selectedHashMap;
+    }
+
 
     @Override
     public void initData(Context context) {
@@ -64,10 +82,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
         if (TextUtils.isEmpty(text)) {
             return;
         }
-//        mSearchHistoryList.remove(text);
-//        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
         List<String> warnList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST, text);
-//        mSearchHistoryList.add(0, text);
         mSearchHistoryList.clear();
         mSearchHistoryList.addAll(warnList);
         getView().updateSearchHistoryList(mSearchHistoryList);
@@ -92,6 +107,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
             public void onCompleted(CameraFilterRsp cameraFilterRsp) {
                 List<CameraFilterModel> data = cameraFilterRsp.getData();
                 if (data != null) {
+                    cameraFilterModelList.addAll(data);
                     getView().updateFilterPop(data);
                 }
                 getView().dismissProgressDialog();
@@ -148,32 +164,15 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
     }
 
 
-    public void getDeviceCameraListByFilter(HashMap map) {
-        cur_page = 1;
-        HashMap hashMap = new HashMap();
-        hashMap.put("pageSize", 20);
-        hashMap.put("page", cur_page);
-        if (null != map) {
-            filterHashMap = map;
-            hashMap.putAll(map);
-        } else {
-            filterHashMap.clear();
-        }
-        requestData(hashMap);
-    }
-
-    public void clearMap() {
-
-        filterHashMap.clear();
-    }
+    public void requestData() {
 
 
-    public void requestData(final HashMap hashMap) {
-
+        selectedHashMap.put("pageSize", 20);
+        selectedHashMap.put("page", cur_page);
         if (isAttachedView()) {
             getView().showProgressDialog();
         }
-        RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(hashMap).subscribeOn(Schedulers.io())
+        RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(selectedHashMap).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(this) {
             @Override
             public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
@@ -231,11 +230,6 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
     }
 
     public void requestDataByFilter(final int direction) {
-        HashMap hashMap = new HashMap(16);
-        hashMap.put("pageSize", 20);
-        if (filterHashMap.size() > 0) {
-            hashMap.putAll(filterHashMap);
-        }
         switch (direction) {
             case DIRECTION_DOWN:
                 cur_page = 1;
@@ -247,8 +241,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                 break;
 
         }
-        hashMap.put("page", cur_page);
-        requestData(hashMap);
+        requestData();
 
 
     }

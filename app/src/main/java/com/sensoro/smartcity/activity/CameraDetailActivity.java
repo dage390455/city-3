@@ -234,6 +234,14 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                     @Override
                     public void onPlayError(final String url, Object... objects) {
 
+                        gsyPlayerAcCameraDetail.setCityPlayState(3);
+                        gsyPlayerAcCameraDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                gsyVideoOption.setUrl(url).build(getCurPlay());
+                                getCurPlay().startPlayLogic();
+                            }
+                        });
                     }
 
                     @Override
