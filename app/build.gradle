@@ -275,7 +275,6 @@ dependencies {
     api(project(':simplescanner')) {
         exclude group: "com.amap.api"
     }
-
     implementation files('libs/player.jar')
     implementation project(path: ':gsyVideoPlayer-base')
     implementation project(path: ':gsyVideoPlayer-proxy_cache')

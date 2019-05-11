@@ -58,7 +58,7 @@
             android:shadowRadius="2"
             android:padding="8dp"
             android:textColor="@color/white"
-            android:textSize="16sp"
+            android:textSize="16dp"
             android:visibility="gone"/>
     </RelativeLayout>
 
@@ -77,7 +77,7 @@
             android:shadowDy="2"
             android:shadowRadius="2"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/tv_hint"
@@ -91,7 +91,7 @@
             android:shadowDy="2"
             android:shadowRadius="2"
             android:visibility="gone"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <ImageView
             android:id="@+id/imv_back"

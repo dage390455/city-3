@@ -45,7 +45,7 @@
                     android:layout_weight="1"
                     android:text="@string/name_address_history_record"
                     android:textColor="@color/c_252525"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <ImageView
                     android:id="@+id/iv_ac_name_address_delete_tag"

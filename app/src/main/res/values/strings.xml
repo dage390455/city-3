@@ -995,4 +995,6 @@
     <string name="alarm_video">预警录像</string>
     <string name="relation_camera">关联机位：</string>
     <string name="watching">观看中</string>
+    <string name="alarm_camera_live">直播</string>
+    <string name="recording_time">录制时间：</string>
 </resources>

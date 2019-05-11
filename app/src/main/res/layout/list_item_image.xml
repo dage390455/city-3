@@ -39,7 +39,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/camera_photo"
             android:textColor="@color/c_252525"
-            android:textSize="10sp" />
+            android:textSize="10dp" />
     </LinearLayout>
 
     <ImageView

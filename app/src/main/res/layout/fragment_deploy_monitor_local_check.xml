@@ -20,7 +20,7 @@
         android:paddingBottom="10dp"
         android:text="@string/start_installation_test"
         android:textColor="@color/white"
-        android:textSize="16sp" />
+        android:textSize="16dp" />
 
     <TextView
         android:id="@+id/tv_fg_deploy_local_check_tip"
@@ -33,7 +33,7 @@
         android:layout_marginBottom="12dp"
         android:text="@string/deploy_device_detail_add_all_required"
         android:textColor="@color/c_252525"
-        android:textSize="12sp" />
+        android:textSize="12dp" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -58,14 +58,14 @@
                     android:layout_marginEnd="12dp"
                     android:layout_weight="1"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/tv_fg_deploy_local_check_device_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -87,7 +87,7 @@
                     android:layout_gravity="center_vertical"
                     android:text="@string/deploy_check_deploy_position"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/tv_fg_deploy_local_check_location"
@@ -101,7 +101,7 @@
                     android:gravity="end"
                     android:text="@string/required"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -150,7 +150,7 @@
                         android:layout_gravity="center_vertical"
                         android:text="@string/air_rated_current"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <EditText
                         android:id="@+id/et_fg_deploy_local_check_switch_spec"
@@ -166,7 +166,7 @@
                         android:gravity="end"
                         android:inputType="number"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                 </LinearLayout>
 
@@ -192,7 +192,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/diameter_material"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/tv_fg_deploy_local_check_wire_material"
@@ -228,7 +228,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/wire_diameter"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/tv_fg_deploy_local_check_wire_diameter"
@@ -259,7 +259,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/actual_overcurrent_threshold"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <ImageView
                         android:id="@+id/iv_deploy_local_check_current_info"
@@ -278,7 +278,7 @@
                         android:gravity="end"
                         android:text="-"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -296,7 +296,7 @@
                     android:layout_marginEnd="20dp"
                     android:text="@string/deploy_sub_tip"
                     android:textColor="@color/c_f34a4a"
-                    android:textSize="12sp" />
+                    android:textSize="12dp" />
             </FrameLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

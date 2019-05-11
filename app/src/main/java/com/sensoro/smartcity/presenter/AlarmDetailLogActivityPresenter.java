@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmCameraLiveDetailActivity;
+import com.sensoro.smartcity.activity.AlarmCameraVideoDetailActivity;
 import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -413,13 +414,13 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     }
 
     public void doCameraVideo() {
-
+        Intent intent = new Intent(mContext, AlarmCameraVideoDetailActivity.class);
+        getView().startAC(intent);
     }
 
     public void doCameraLive() {
         Intent intent = new Intent(mContext, AlarmCameraLiveDetailActivity.class);
-        List<String> cameras1 = deviceAlarmLogInfo.getCameras();
-        String[] cameras = cameras1.toArray(new String[cameras1.size()]);
+        ArrayList<String> cameras = new ArrayList<>(deviceAlarmLogInfo.getCameras());
         intent.putExtra(Constants.EXTRA_ALARM_CAMERAS,cameras);
         getView().startAC(intent);
     }

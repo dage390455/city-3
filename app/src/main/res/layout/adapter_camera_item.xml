@@ -16,6 +16,6 @@
         android:gravity="center"
         android:text="@string/image_preview_camera"
         android:textColor="#CDCECE"
-        android:textSize="14sp"/>
+        android:textSize="14dp"/>
 
 </RelativeLayout>

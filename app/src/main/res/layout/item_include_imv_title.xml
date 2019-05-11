@@ -28,7 +28,7 @@
         android:layout_height="21dp"
         android:layout_marginStart="5dp"
         android:text="@string/alert_log"
-        android:textSize="18sp"
+        android:textSize="18dp"
         android:textColor="@color/c_252525"
         app:layout_constraintBottom_toBottomOf="@id/include_imv_title_imv_arrows_left"
         app:layout_constraintEnd_toEndOf="parent"

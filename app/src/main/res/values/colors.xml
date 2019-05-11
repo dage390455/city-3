@@ -104,5 +104,7 @@
     <color name="c_383838">#383838</color>
     <color name="c_CC383838">#CC383838</color>
     <color name="c_1dbb99">#1DBB99</color>
+    <color name="c_08000000">#08000000</color>
+    <color name="c_f48f57">#F48F57</color>
 
 </resources>

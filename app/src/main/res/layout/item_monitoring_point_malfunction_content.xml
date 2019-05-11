@@ -13,7 +13,7 @@
         android:layout_marginStart="16dp"
         android:text="@string/malfunction_cause_detail"
         android:textColor="@color/c_987823"
-        android:textSize="16sp" />
+        android:textSize="16dp" />
 
     <TextView
         android:id="@+id/item_monitoring_point_malfunction_content_tv_content"
@@ -28,7 +28,7 @@
         android:layout_marginBottom="12dp"
         android:gravity="end"
         android:textColor="@color/c_987823"
-        android:textSize="16sp" />
+        android:textSize="16dp" />
 
 
 </RelativeLayout>

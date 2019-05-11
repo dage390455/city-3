@@ -28,7 +28,7 @@
         android:lineSpacingExtra="4dp"
         android:text="@string/alarm_log_alarm_call"
         android:textColor="@color/c_a6a6a6"
-        android:textSize="14sp"
+        android:textSize="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/item_malfunction_detail_content_imv_icon"
         app:layout_constraintTop_toTopOf="@id/item_malfunction_detail_content_imv_icon" />
@@ -79,7 +79,7 @@
         android:layout_marginTop="6dp"
         android:text="今天 10：14：28"
         android:textColor="@color/c_a6a6a6"
-        android:textSize="12sp"
+        android:textSize="12dp"
         app:layout_constraintStart_toStartOf="@id/item_malfunction_detail_content_tv_content"
         app:layout_constraintTop_toBottomOf="@id/ll_confirm" />
 

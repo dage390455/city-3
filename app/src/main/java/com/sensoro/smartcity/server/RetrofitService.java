@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.server;
 
 
+import com.sensoro.smartcity.server.response.AlarmCameraLiveRsp;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
 import com.sensoro.smartcity.server.response.CameraFilterRsp;
@@ -354,6 +355,8 @@ public interface RetrofitService {
     @GET("cameras")
     Observable<DeviceCameraListRsp> getDeviceCameraList(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search);
 
+
+
     /**
      * 获取用户下全量摄像头列表
      *
@@ -361,6 +364,9 @@ public interface RetrofitService {
      */
     @GET("cameras/map")
     Observable<ResponseBase> getDeviceCameraMapList();
+
+    @GET("cameras/detail")
+    Observable<AlarmCameraLiveRsp> getAlarmCamerasDetail(@Query("sn") String sn);
 
     @POST("picture/faceList")
     Observable<DeviceCameraFacePicListRsp> getDeviceCameraFaceList(@Body RequestBody requestBody);

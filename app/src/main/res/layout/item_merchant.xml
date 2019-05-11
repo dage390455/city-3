@@ -23,7 +23,7 @@
         android:layout_marginBottom="16dp"
         android:text="123"
         android:textColor="@color/c_252525"
-        android:textSize="16sp" />
+        android:textSize="16dp" />
 
     <TextView
         android:id="@+id/item_merchant_phone"

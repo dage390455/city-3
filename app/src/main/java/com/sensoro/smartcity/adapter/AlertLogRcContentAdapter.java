@@ -94,34 +94,38 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 temp = mContext.getString(R.string.test_patrol);
                 changTextColor(confirm_text, temp, spannableString, R.color.c_8058a5);
                 holder.itemAlertContentTvContent.setText(spannableString);
-            } else if ("app".equals(source)) {
-                confirm_text = mContext.getString(R.string.contact) + " [" + recordInfo.getName() + "] " + mContext.getString(R.string.confirm_that_the_alert_type_app_is) + ":\n" +
-                        mContext.getString(confirmStatusArray[recordInfo.getDisplayStatus()]);
-                //用span改变字体颜色,换行 用\n
-//            String content = "联系人[高鹏]通过 平台 确认本次预警类型为：\n安全隐患";
-                SpannableString spannableString = new SpannableString(confirm_text);
-                // 改变高鹏 颜色
-                String temp = "[" + recordInfo.getName() + "]";
-                changTextColor(confirm_text, temp, spannableString, R.color.c_131313);
-                //改变安全隐患颜色
-                temp = mContext.getString(confirmStatusArray[recordInfo.getDisplayStatus()]);
-                changTextColor(confirm_text, temp, spannableString, confirmStatusTextColorArray[recordInfo.getDisplayStatus()]);
+            } else {
+                int resId = confirmStatusArray[recordInfo.getDisplayStatus()];
+                int color = confirmStatusTextColorArray[recordInfo.getDisplayStatus()];
+                if ("app".equals(source)) {
+                    confirm_text = mContext.getString(R.string.contact) + " [" + recordInfo.getName() + "] " + mContext.getString(R.string.confirm_that_the_alert_type_app_is) + ":\n" +
+                            mContext.getString(resId);
+                    //用span改变字体颜色,换行 用\n
+                    //            String content = "联系人[高鹏]通过 平台 确认本次预警类型为：\n安全隐患";
+                    SpannableString spannableString = new SpannableString(confirm_text);
+                    // 改变高鹏 颜色
+                    String temp = "[" + recordInfo.getName() + "]";
+                    changTextColor(confirm_text, temp, spannableString, R.color.c_131313);
+                    //改变安全隐患颜色
+                    temp = mContext.getString(resId);
+                    changTextColor(confirm_text, temp, spannableString, color);
 
-                holder.itemAlertContentTvContent.setText(spannableString);
-            } else if ("platform".equals(source)) {
-                confirm_text = mContext.getString(R.string.contact) + " [" + recordInfo.getName() + "]" + mContext.getString(R.string.confirm_that_the_alert_type_web_is) + ":\n" +
-                        mContext.getString(confirmStatusArray[recordInfo.getDisplayStatus()]);
-                //用span改变字体颜色,换行 用\n
-//            String content = "联系人[高鹏]通过 平台 确认本次预警类型为：\n安全隐患";
-                SpannableString spannableString = new SpannableString(confirm_text);
-                // 改变高鹏 颜色
-                String temp = "[" + recordInfo.getName() + "]";
-                changTextColor(confirm_text, temp, spannableString, R.color.c_252525);
-                //改变安全隐患颜色
-                temp = mContext.getString(confirmStatusArray[recordInfo.getDisplayStatus()]);
-                changTextColor(confirm_text, temp, spannableString, confirmStatusTextColorArray[recordInfo.getDisplayStatus()]);
+                    holder.itemAlertContentTvContent.setText(spannableString);
+                } else if ("platform".equals(source)) {
+                    confirm_text = mContext.getString(R.string.contact) + " [" + recordInfo.getName() + "]" + mContext.getString(R.string.confirm_that_the_alert_type_web_is) + ":\n" +
+                            mContext.getString(resId);
+                    //用span改变字体颜色,换行 用\n
+                    //            String content = "联系人[高鹏]通过 平台 确认本次预警类型为：\n安全隐患";
+                    SpannableString spannableString = new SpannableString(confirm_text);
+                    // 改变高鹏 颜色
+                    String temp = "[" + recordInfo.getName() + "]";
+                    changTextColor(confirm_text, temp, spannableString, R.color.c_252525);
+                    //改变安全隐患颜色
+                    temp = mContext.getString(resId);
+                    changTextColor(confirm_text, temp, spannableString, color);
 
-                holder.itemAlertContentTvContent.setText(spannableString);
+                    holder.itemAlertContentTvContent.setText(spannableString);
+                }
             }
 
             //
@@ -129,13 +133,27 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             //预警结果
             int displayStatus = recordInfo.getDisplayStatus();
             StringBuilder stringBuilder = new StringBuilder();
-            holder.itemAlarmDetailChildAlarmResult.setText(stringBuilder.append(mContext.getString(confirmStatusArray[displayStatus])).append("(").append(mContext.getString(confirmAlarmResultInfoArray[displayStatus])).append(")").toString());
+            String string = mContext.getString(confirmStatusArray[displayStatus]);
+            String confirmAlarmResultInfo = mContext.getString(confirmAlarmResultInfoArray[displayStatus]);
+            holder.itemAlarmDetailChildAlarmResult.setText(stringBuilder.append(string).append("(").append(confirmAlarmResultInfo).append(")").toString());
             //预警成因
             int reason = recordInfo.getReason();
-            holder.itemAlarmDetailChildAlarmType.setText(confirmAlarmTypeArray[reason]);
+            int resIdAlarmType = R.string.the_ohter;
+            try {
+                resIdAlarmType = confirmAlarmTypeArray[reason];
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            holder.itemAlarmDetailChildAlarmType.setText(resIdAlarmType);
             //预警场所
             int place = recordInfo.getPlace();
-            holder.itemAlarmDetailChildAlarmPlace.setText(confirmAlarmPlaceArray[place]);
+            int resIdAlarmPlace = R.string.the_ohter;
+            try {
+                resIdAlarmPlace = confirmAlarmPlaceArray[place];
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            holder.itemAlarmDetailChildAlarmPlace.setText(resIdAlarmPlace);
             //备注说明
             String remark = recordInfo.getRemark();
             if (!TextUtils.isEmpty(remark)) {

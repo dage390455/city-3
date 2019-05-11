@@ -14,7 +14,7 @@
             android:layout_marginStart="20dp"
             android:text="@string/monitor_point_information"
             android:textColor="@color/c_a6a6a6"
-            android:textSize="12sp" />
+            android:textSize="12dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/party_a_customer_name"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <EditText
                     android:id="@+id/fg_personal_contract_et_part_a"
@@ -49,7 +49,7 @@
                     android:cursorVisible="true"
                     android:textCursorDrawable="@drawable/my_cursor"
                     android:background="@null"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
             </LinearLayout>
 
             <View
@@ -72,7 +72,7 @@
                     android:text="@string/owners_name"
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <EditText
                     android:id="@+id/fg_personal_contract_et_owner_name"
@@ -87,7 +87,7 @@
                     android:layout_gravity="center_vertical"
                     android:background="@null"
                     android:textColor="@color/c_252525"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <View
                     android:layout_width="1dp"
@@ -131,7 +131,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/contract_contact_info"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <EditText
                     android:id="@+id/fg_personal_contract_et_contact_info"
@@ -145,7 +145,7 @@
                     android:inputType="number"
                     android:singleLine="true"
                     android:textColor="@color/c_252525"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
             </LinearLayout>
 
             <View
@@ -169,7 +169,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/identification_number"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <EditText
                     android:id="@+id/fg_personal_contract_et_id_card"
@@ -182,7 +182,7 @@
                     android:gravity="end"
                     android:singleLine="true"
                     android:textColor="@color/c_252525"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
             </LinearLayout>
 
             <View
@@ -206,7 +206,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/home_address"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <EditText
                     android:id="@+id/fg_personal_contract_et_home_address"
@@ -218,7 +218,7 @@
                     android:textCursorDrawable="@drawable/my_cursor"
                     android:gravity="end"
                     android:textColor="@color/c_252525"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
             </LinearLayout>
 
             <View
@@ -242,7 +242,7 @@
                     android:layout_marginStart="20dp"
                     android:text="@string/contract_info_site_nature"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/fg_personal_contract_tv_site_nature"
@@ -253,7 +253,7 @@
                     android:layout_weight="1"
                     android:gravity="end"
                     android:textColor="@color/c_252525"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -269,7 +269,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:text="@string/order_info"
-            android:textSize="12sp"
+            android:textSize="12dp"
             android:textColor="@color/c_a6a6a6"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="12dp"
@@ -288,7 +288,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:text="@string/service_info"
-            android:textSize="12sp"
+            android:textSize="12dp"
             android:textColor="@color/c_a6a6a6"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="12dp"
@@ -314,7 +314,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/contract_info_contract_service_life"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
 
                 <LinearLayout
@@ -352,7 +352,7 @@
                         android:paddingTop="2dp"
                         android:paddingBottom="2dp"
                         android:textColor="@color/c_29c093"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <ImageView
                         android:id="@+id/iv_contract_age_add"
@@ -386,7 +386,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/first_pay"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -422,7 +422,7 @@
                         android:paddingBottom="2dp"
                         android:text="1"
                         android:textColor="@color/c_29c093"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <ImageView
                         android:id="@+id/iv_contract_age_first_add"
@@ -456,7 +456,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/period"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -492,7 +492,7 @@
                         android:paddingBottom="2dp"
                         android:text="1"
                         android:textColor="@color/c_29c093"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <ImageView
                         android:id="@+id/iv_contract_age_period_add"
@@ -518,6 +518,6 @@
             android:paddingBottom="10dp"
             android:text="@string/commit"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="16dp" />
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

@@ -15,6 +15,7 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.smartcity.server.response.AlarmCameraLiveRsp;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
 import com.sensoro.smartcity.server.response.CameraFilterRsp;
@@ -1589,6 +1590,19 @@ public class RetrofitServiceHelper {
         }
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
         return retrofitService.getDeviceCameraFaceList(body);
+    }
+
+    public Observable<AlarmCameraLiveRsp> getAlarmCamerasDetail(List<String> cameraIds){
+        StringBuilder sb = new StringBuilder();
+        if (cameraIds != null&& cameraIds.size() > 0) {
+            for (String cameraId : cameraIds) {
+                sb.append(cameraId).append(",");
+            }
+
+            sb.deleteCharAt(sb.length() -1);
+        }
+        return retrofitService.getAlarmCamerasDetail(sb.toString());
+
     }
 
     public Observable<DeviceCameraHistoryRsp> getDeviceCameraPlayHistoryAddress(String cid, String beginTime, String endTime, String mediaType) {

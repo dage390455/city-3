@@ -24,7 +24,7 @@
         android:layout_marginEnd="20dp"
         android:text="@string/unknown"
         android:textColor="@color/c_252525"
-        android:textSize="20sp"
+        android:textSize="20dp"
         app:layout_constraintBottom_toTopOf="@+id/ac_alert_tv_sn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +38,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="20dp"
         android:textColor="@color/c_a6a6a6"
-        android:textSize="14sp"
+        android:textSize="14dp"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/ac_alert_tv_alert_time_text"
         app:layout_constraintEnd_toEndOf="parent"
@@ -271,7 +271,7 @@
             android:paddingBottom="12dp"
             android:text="@string/alarm_log_alarm_contact_owner"
             android:textColor="@color/c_252525"
-            android:textSize="12sp" />
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/ac_alert_tv_quick_navigation"
@@ -287,7 +287,7 @@
             android:paddingBottom="12dp"
             android:text="@string/alarm_log_alarm_quick_navigation"
             android:textColor="@color/c_252525"
-            android:textSize="12sp" />
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/ac_alert_tv_alert_confirm"
@@ -303,7 +303,7 @@
             android:paddingBottom="12dp"
             android:text="@string/alarm_log_alarm_warn_confirm"
             android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:textSize="12dp" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

@@ -138,21 +138,21 @@
             android:layout_marginTop="6dp"
             android:visibility="gone" />
 
+
         <RelativeLayout
             android:id="@+id/layout_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/video_title_bg"
-            android:gravity="center_vertical"
-            >
+            android:gravity="center_vertical">
 
             <ImageView
                 android:id="@+id/back"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_centerVertical="true"
-                android:paddingLeft="10dp"
                 android:layout_marginTop="48dp"
+                android:paddingLeft="10dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/video_back" />
 
@@ -165,14 +165,30 @@
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
 
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/state_empty_iv"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="48dp" />
+
             <TextView
                 android:id="@+id/state_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="20dp"
                 android:layout_marginTop="48dp"
+                android:layout_marginRight="20dp"
                 android:gravity="center_vertical"
                 android:paddingLeft="4dp"
                 android:paddingTop="2dp"
@@ -180,6 +196,7 @@
                 android:paddingBottom="2dp"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
+
         </RelativeLayout>
 
         <moe.codeest.enviews.ENDownloadView
@@ -258,17 +275,6 @@
                     android:textColor="@color/white"
                     android:textSize="14sp" />
 
-                <Button
-                    android:id="@+id/play_btn"
-                    android:layout_width="68dp"
-                    android:layout_height="28dp"
-                    android:layout_below="@+id/tip_data_tv"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/shape_bg_corner_2dp_29c_shadow"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:visibility="invisible" />
 
                 <Button
                     android:id="@+id/playa_retry_btn"

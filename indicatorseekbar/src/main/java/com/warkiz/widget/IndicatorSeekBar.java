@@ -1353,7 +1353,7 @@ public class IndicatorSeekBar extends View implements ViewTreeObserver.OnGlobalL
          * @return Builder
          */
         public Builder setTextSize(int textSize) {
-            p.mTextSize = IndicatorUtils.sp2px(p.mContext, textSize);
+            p.mTextSize = IndicatorUtils.dp2px(p.mContext, textSize);
             return this;
         }
 
@@ -1730,7 +1730,7 @@ public class IndicatorSeekBar extends View implements ViewTreeObserver.OnGlobalL
          * @return Builder
          */
         public Builder setIndicatorTextSize(int indicatorTextSize) {
-            p.mIndicatorTextSize = IndicatorUtils.sp2px(p.mContext, indicatorTextSize);
+            p.mIndicatorTextSize = IndicatorUtils.dp2px(p.mContext, indicatorTextSize);
             return this;
         }
 

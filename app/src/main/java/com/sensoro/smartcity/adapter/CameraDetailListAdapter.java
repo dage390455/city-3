@@ -17,14 +17,13 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.DeviceCameraFacePic;
 import com.sensoro.smartcity.util.DateUtil;
-import com.sensoro.smartcity.widget.GlideRoundTransform;
+import com.sensoro.smartcity.widget.GlideCircleTransform;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnItemClick;
 
 public class CameraDetailListAdapter extends RecyclerView.Adapter<CameraDetailListAdapter.CameraDetailListViewHolder> {
 
@@ -81,7 +80,7 @@ public class CameraDetailListAdapter extends RecyclerView.Adapter<CameraDetailLi
         DeviceCameraFacePic model = mList.get(position);
         Glide.with(mContext)                             //配置上下文
                 .load(Constants.CAMERA_BASE_URL + model.getFaceUrl())
-                .bitmapTransform(new GlideRoundTransform(mContext))
+                .bitmapTransform(new GlideCircleTransform(mContext))
 //                    .thumbnail(0.01f)//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
                 .error(R.drawable.person_locus_placeholder)           //设置错误图片
                 .placeholder(R.drawable.person_locus_placeholder)//设置占位图片

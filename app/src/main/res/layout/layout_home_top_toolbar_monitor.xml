@@ -17,7 +17,7 @@
             android:layout_centerVertical="true"
             android:text="@string/monitor_point_number"
             android:textColor="@color/c_a6a6a6"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <ImageButton
             android:id="@+id/fg_main_home_imb_add"

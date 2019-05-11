@@ -42,42 +42,41 @@ public class CameraListFilterAdapter extends RecyclerView.Adapter<CameraListFilt
     @Override
     public void onBindViewHolder(final InspectionTaskStateSelectHolder holder, int position) {
         Resources resources = mContext.getResources();
-        final CameraFilterModel.ListBean ic = mStateCountList.get(position);
-
-        if (!TextUtils.isEmpty(ic.getName())) {
-
-            String name = ic.getName().replace("（", "(").replace("）", ")");
-            holder.itemPopTvSelectState.setText(name);
-        }
 
 
-        boolean select = ic.isSelect() && !ic.isReset();
-        holder.itemPopSelectLlRoot.setBackgroundResource(!select ? R.drawable.shape_bg_solid_ff_corner
-                : R.drawable.shape_bg_corner_1dbb99_shadow);
+        if (null != mStateCountList.get(position)) {
+            final CameraFilterModel.ListBean ic = mStateCountList.get(position);
 
-        holder.itemPopTvSelectState.setTextColor(resources.getColor(!select ? R.color.c_252525 : R.color.white));
+            if (!TextUtils.isEmpty(ic.getName())) {
 
-        holder.itemPopSelectLlRoot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                String name = ic.getName().replace("（", "(").replace("）", ")");
+                holder.itemPopTvSelectState.setText(name);
+            }
+            boolean select = ic.isSelect() && !ic.isReset();
+            holder.itemPopSelectLlRoot.setBackgroundResource(!select ? R.drawable.shape_bg_solid_ff_corner
+                    : R.drawable.shape_bg_corner_1dbb99_shadow);
 
-                if (!isMutilSelect) {
-                    for (int i = 0; i < mStateCountList.size(); i++) {
-                        mStateCountList.get(i).setSelect(false);
+            holder.itemPopTvSelectState.setTextColor(resources.getColor(!select ? R.color.c_252525 : R.color.white));
+
+            holder.itemPopSelectLlRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (!isMutilSelect) {
+                        for (int i = 0; i < mStateCountList.size(); i++) {
+                            mStateCountList.get(i).setSelect(false);
+                        }
+
                     }
 
+                    ic.setReset(false);
+                    ic.setSelect(!ic.isSelect());
+                    notifyDataSetChanged();
+
+
                 }
-
-                ic.setReset(false);
-                ic.setSelect(!ic.isSelect());
-                notifyDataSetChanged();
-
-//                if (mListener != null) {
-//                    mListener.onItemClick(v, selectPosition);
-//                }
-
-            }
-        });
+            });
+        }
 
 
     }

@@ -3,7 +3,6 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,12 +30,11 @@ import com.sensoro.smartcity.server.response.DeviceCameraHistoryRsp;
 import com.sensoro.smartcity.server.response.DeviceCameraPersonFaceRsp;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
-import com.sensoro.smartcity.widget.GlideRoundTransform;
+import com.sensoro.smartcity.widget.GlideCircleTransform;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -229,7 +227,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                 .asBitmap()
                 .thumbnail(0.1f)
 //                .override(size,size)
-                .transform(new GlideRoundTransform(mActivity,dp24))
+                .transform(new GlideCircleTransform(mActivity,dp24))
                 .error(R.drawable.deploy_pic_placeholder)           //设置错误图片
                 .placeholder(R.drawable.ic_default_cround_image)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

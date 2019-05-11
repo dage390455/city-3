@@ -20,8 +20,10 @@ import com.sensoro.smartcity.imainviews.ICameraDetailActivityView;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.DeviceCameraDetailInfo;
 import com.sensoro.smartcity.server.bean.DeviceCameraFacePic;
 import com.sensoro.smartcity.server.bean.DeviceCameraHistoryBean;
+import com.sensoro.smartcity.server.response.DeviceCameraDetailRsp;
 import com.sensoro.smartcity.server.response.DeviceCameraFacePicListRsp;
 import com.sensoro.smartcity.server.response.DeviceCameraHistoryRsp;
 import com.sensoro.smartcity.util.DateUtil;
@@ -47,25 +49,28 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     private String mCameraName, lastCover;
     private String itemTitle;
     private String itemUrl;
+    /**
+     * 摄像机是否在线
+     */
+    private String deviceStatus;
+    private String sn;
     private ArrayList<DeviceCameraFacePic> mLists = new ArrayList<>();
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
         Intent intent = mActivity.getIntent();
-        url = Constants.LIVE_URL;
         if (intent != null) {
             cid = intent.getStringExtra("cid");
             url = intent.getStringExtra("hls");
             mCameraName = intent.getStringExtra("cameraName");
             lastCover = intent.getStringExtra("lastCover");
             getLastCoverImage(lastCover);
-            String deviceStatus = intent.getStringExtra("deviceStatus");
-            if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
-                getView().offlineType(url);
-            }
+            deviceStatus = intent.getStringExtra("deviceStatus");
+            sn = intent.getStringExtra("sn");
+
         }
-        doLive();
+
         getView().showProgressDialog();
         requestData(cid, Constants.DIRECTION_DOWN);
         mCalendarPopUtils = new CalendarPopUtils(mActivity);
@@ -152,26 +157,6 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
         });
     }
 
-
-    private boolean isYesterday(String currentDate, String ymd) {
-        String[] currentSplit = currentDate.split("-");
-        String[] ymdSplit = ymd.split("-");
-        if (currentSplit.length == 3 && ymdSplit.length == 3) {
-            try {
-                int currentInt = Integer.parseInt(currentSplit[2]);
-                int ymdInt = Integer.parseInt(ymdSplit[2]);
-
-                return currentInt - ymdInt == 1 && currentSplit[1].equals(ymdSplit[1]) && currentSplit[0].equals(ymdSplit[0]);
-
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-                return false;
-            }
-
-        }
-
-        return false;
-    }
 
     @Override
     public void onDestroy() {
@@ -268,9 +253,14 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     }
 
     public void doLive() {
-        getView().doPlayLive(url, TextUtils.isEmpty(mCameraName) ? "" : mCameraName, true);
-        itemUrl = null;
-        itemTitle = null;
+
+        if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
+            getView().offlineType(mCameraName);
+        } else {
+            getView().doPlayLive(url, TextUtils.isEmpty(mCameraName) ? "" : mCameraName, true);
+            itemUrl = null;
+            itemTitle = null;
+        }
     }
 
     @Override
@@ -310,4 +300,45 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
             getView().doPlayLive(itemUrl, TextUtils.isEmpty(itemTitle) ? "" : itemTitle, false);
         }
     }
+
+    /**
+     * 重新获取摄像头状态
+     */
+    public void regainGetCameraState() {
+        getView().showProgressDialog();
+        RetrofitServiceHelper.getInstance().getDeviceCamera(sn).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraDetailRsp>(this) {
+            @Override
+            public void onCompleted(DeviceCameraDetailRsp deviceCameraDetailRsp) {
+                DeviceCameraDetailInfo data = deviceCameraDetailRsp.getData();
+                if (data != null) {
+                    String hls = data.getHls();
+                    String lastCover = data.getLastCover();
+
+                    url = hls;
+                    getLastCoverImage(lastCover);
+                    deviceStatus = data.getDeviceStatus();
+                    if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
+                        getView().offlineType(mCameraName);
+                    } else {
+                        doLive();
+                    }
+
+                } else {
+                    getView().toastShort(mActivity.getString(R.string.camera_info_get_failed));
+
+                }
+                getView().dismissProgressDialog();
+
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().dismissProgressDialog();
+                getView().toastShort(errorMsg);
+            }
+        });
+
+    }
+
+
 }

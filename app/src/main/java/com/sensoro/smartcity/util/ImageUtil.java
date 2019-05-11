@@ -113,7 +113,7 @@ public class ImageUtil {
         paint.setColor(color);
         //设置加粗
         paint.setTypeface(Typeface.DEFAULT_BOLD);
-        paint.setTextSize(AppUtils.sp2px(context, size));
+        paint.setTextSize(AppUtils.dp2px(context, size));
         Rect bounds = new Rect();
         paint.getTextBounds(text, 0, text.length(), bounds);
 //        return drawTextToBitmap(context, bitmap, text, paint, bounds,

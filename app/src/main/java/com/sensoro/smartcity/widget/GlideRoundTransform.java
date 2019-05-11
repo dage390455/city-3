@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.widget;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
@@ -8,7 +9,6 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.graphics.Shader;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.Transformation;
@@ -16,155 +16,34 @@ import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapResource;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
-import com.sensoro.smartcity.util.AppUtils;
 
-import java.nio.ByteBuffer;
-
-
-/**
- * 圆角图片
- */
-
-public class GlideRoundTransform implements Transformation<Bitmap> {
-    private  int radius = -1;
-
-//    private final float radius;
-
-//    public GlideRoundTransform(Context context) {
-//        super(context);
-////        radius = AppUtils.dp2px(context,1000);
-//    }
-
-//    @Override
-//    protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
-//        return roundCrop(pool, toTransform);
-//    }
-//
-//    private Bitmap roundCrop(BitmapPool pool, Bitmap source) {
-//        if (source == null) return null;
-//
-//        Bitmap result = pool.get(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
-//        if (result == null) {
-//            result = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
-//        }
-//
-//        Canvas canvas = new Canvas(result);
-//        Paint paint = new Paint();
-//        paint.setShader(new BitmapShader(source, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
-//        paint.setAntiAlias(true);
-//        RectF rectF = new RectF(0f, 0f, source.getWidth(), source.getWidth());
-////        canvas.drawRoundRect(rectF, radius, radius, paint);
-//        canvas.drawOval(rectF,paint);
-////        int cx = source.getWidth() / 2;
-////        canvas.drawCircle(cx,cx,cx,paint);
-//
-//        return result;
-//
-//    }
-
-    private BitmapPool mBitmapPool;
-
+public class GlideRoundTransform extends BitmapTransformation {
+    private static float radius = 0f;
     public GlideRoundTransform(Context context) {
-        this(Glide.get(context).getBitmapPool());
+        this(context, 4);
     }
-
-    public GlideRoundTransform(Context context,int radius) {
-        this(Glide.get(context).getBitmapPool());
-        this.radius = radius;
+    public GlideRoundTransform(Context context, int dp) {
+        super(context);
+        radius = dp;
     }
-
-    public GlideRoundTransform(BitmapPool pool) {
-        this.mBitmapPool = pool;
+    @Override protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
+        return roundCrop(pool, toTransform);
     }
-    @Override
-    public Resource<Bitmap> transform(Resource<Bitmap> resource, int outWidth, int outHeight) {
-        Bitmap source = resource.get();
-        int size;
-        if(radius == -1){
-            size = Math.min(source.getWidth(), source.getHeight());
-        }else{
-            size = radius*2;
-            int width = source.getWidth();
-            int height = source.getHeight();
-
-            float scaleWidth = (float)size / width;
-            float scaleHeight = (float)size / height;
-
-            float min = Math.max(scaleHeight, scaleWidth);
-            Matrix matrix = new Matrix();
-            matrix.postScale(scaleWidth,scaleHeight);
-            source = Bitmap.createBitmap(source,0,0,width,height,matrix,true);
-////            BitmapFactory.
-//            BitmapFactory.Options options = new BitmapFactory.Options();
-//            options.inJustDecodeBounds = true;
-//            ByteBuffer allocate = ByteBuffer.allocate(source.getByteCount());
-//            byte[] array = allocate.array();
-////            BitmapFactory.decodeByteArray(array,0,array.length,options);
-//
-//            options.inSampleSize = calculateInSampleSize(options,size,size);
-//            options.inJustDecodeBounds = false;
-//            source = BitmapFactory.decodeByteArray(array, 0, array.length, options);
-
-
+    private static Bitmap roundCrop(BitmapPool pool, Bitmap source) {
+        if (source == null) return null;
+        Bitmap result = pool.get(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
+        if (result == null) {
+            result = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
         }
-
-
-        int width = (source.getWidth() - size) / 2;
-        int height = (source.getHeight() - size) / 2;
-
-        Bitmap bitmap = mBitmapPool.get(size, size, Bitmap.Config.ARGB_8888);
-        if (bitmap == null) {
-            bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
-        }
-
-        Canvas canvas = new Canvas(bitmap);
+        Canvas canvas = new Canvas(result);
         Paint paint = new Paint();
-        BitmapShader shader =
-                new BitmapShader(source, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP);
-        if (width != 0 || height != 0) {
-            // source isn't square, move viewport to center
-            Matrix matrix = new Matrix();
-            matrix.setTranslate(-width, -height);
-            shader.setLocalMatrix(matrix);
-        }
-        paint.setShader(shader);
+        paint.setShader(new BitmapShader(source, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
         paint.setAntiAlias(true);
-
-        float r = size / 2f;
-//        if (radius == -1) {
-//            canvas.drawCircle(r, r, r, paint);
-//        }else{
-//            canvas.drawCircle(r, radius, radius, paint);
-//        }
-        canvas.drawCircle(r, r, r, paint);
-
-
-        return BitmapResource.obtain(bitmap, mBitmapPool);
+        RectF rectF = new RectF(0f, 0f, source.getWidth(), source.getHeight());
+        canvas.drawRoundRect(rectF, radius, radius, paint);
+        return result;
     }
-
-    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) >= reqHeight
-                    && (halfWidth / inSampleSize) >= reqWidth) {
-                inSampleSize *= 2;
-            }
-        }
-
-        return inSampleSize;
-    }
-    @Override
-    public String getId() {
-        return getClass().getName() + "";
+    @Override public String getId() {
+        return getClass().getName() + Math.round(radius);
     }
 }

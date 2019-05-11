@@ -21,7 +21,7 @@
         android:paddingBottom="6dp"
         android:text="摄像机状态"
         android:textColor="@color/c_6a6a6a"
-        android:textSize="14sp" />
+        android:textSize="14dp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/item_pop_rv_camer_list_filter"

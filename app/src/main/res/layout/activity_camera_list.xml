@@ -72,7 +72,7 @@
                         android:textColor="@color/c_252525"
                         android:textColorHint="@color/c_a6a6a6"
                         android:textCursorDrawable="@drawable/my_cursor"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                     <ImageView
                         android:id="@+id/camera_list_iv_search_clear"
@@ -96,7 +96,7 @@
                     android:gravity="center"
                     android:text="@string/associated_camera_list"
                     android:textColor="@color/c_252525"
-                    android:textSize="18sp"
+                    android:textSize="18dp"
                     android:visibility="gone" />
             </RelativeLayout>
 
@@ -143,7 +143,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:textColor="@color/c_252525"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
 
             <ImageView
                 android:id="@+id/iv_alarm_log_date_close"

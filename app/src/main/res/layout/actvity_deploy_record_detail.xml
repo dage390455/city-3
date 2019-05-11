@@ -17,7 +17,7 @@
         android:paddingEnd="20dp"
         android:paddingBottom="12dp"
         android:textColor="@color/c_987823"
-        android:textSize="14sp"
+        android:textSize="14dp"
         android:visibility="gone" />
 
     <android.support.v4.widget.NestedScrollView
@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/ac_deploy_device_record_detail_tv_device_type"
@@ -49,7 +49,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
             </LinearLayout>
 
 
@@ -73,7 +73,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/deploy_record_name_address"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/ac_deploy_record_detail_tv_name"
@@ -106,7 +106,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/sensor_detail_tag"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <RelativeLayout
                         android:layout_width="0dp"
@@ -146,7 +146,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/deploy_record_detail_alert_contact"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <RelativeLayout
                         android:layout_width="0dp"
@@ -188,7 +188,7 @@
                         android:paddingEnd="20dp"
                         android:text="@string/deploy_device_detail_deploy_photo"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <RelativeLayout
                         android:layout_width="0dp"
@@ -230,7 +230,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/deploy_record_deploy_we_chat"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/ac_deploy_record_detail_tv_we_chat"
@@ -266,7 +266,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/deploy_record_deploy_staff"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/ac_deploy_record_detail_tv_deploy_staff"
@@ -304,7 +304,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/deploy_device_detail_deploy_location"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/ac_deploy_record_detail_tv_fixed_point_state"
@@ -315,7 +315,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/not_positioned"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -351,7 +351,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/monitor_material"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/ac_deploy_record_detail_tv_material"
@@ -387,7 +387,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/diameter"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/ac_deploy_record_detail_tv_diameter"
@@ -423,7 +423,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/air_rated_current"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/ac_deploy_record_detail_tv_rated_current"
@@ -458,7 +458,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/deploy_record_deploy_time"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/ac_deploy_record_detail_tv_time"

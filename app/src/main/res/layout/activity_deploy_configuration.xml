@@ -36,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/rated_current"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/ac_deploy_configuration_tv_near"
@@ -51,7 +51,7 @@
                     android:paddingBottom="4dp"
                     android:text="@string/signal_check_near"
                     android:textColor="@color/white"
-                    android:textSize="10sp"
+                    android:textSize="10dp"
                     android:visibility="gone" />
 
                 <EditText
@@ -65,7 +65,7 @@
                     android:textCursorDrawable="@drawable/my_cursor"
                     android:inputType="number"
                     android:textColor="@color/c_252525"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
             </LinearLayout>
 
             <TextView
@@ -77,7 +77,7 @@
                 android:layout_marginEnd="20dp"
                 android:text="@string/deploy_configuration_enter_tip"
                 android:textColor="@color/c_a6a6a6"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
         </LinearLayout>
 
         <TextView
@@ -113,7 +113,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/diameter_material"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/ac_deploy_configuration_tv_wire_material"
@@ -125,7 +125,7 @@
                     android:gravity="end"
                     android:text="@string/cu"
                     android:textColor="@color/c_252525"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
             </LinearLayout>
 
             <View
@@ -150,7 +150,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/wire_diameter"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/ac_deploy_configuration_tv_diameter"
@@ -162,7 +162,7 @@
                     android:gravity="end"
                     android:text="16"
                     android:textColor="@color/c_252525"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -184,7 +184,7 @@
             android:layout_height="wrap_content"
             android:text="@string/actual_overcurrent_threshold"
             android:textColor="@color/c_252525"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <ImageView
             android:id="@+id/iv_current_info"
@@ -201,7 +201,7 @@
             android:gravity="end"
             android:layout_height="wrap_content"
             android:textColor="@color/c_252525"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
     </LinearLayout>
 
     <TextView
@@ -219,5 +219,5 @@
         android:paddingBottom="10dp"
         android:text="@string/save"
         android:textColor="@color/white"
-        android:textSize="16sp" />
+        android:textSize="16dp" />
 </LinearLayout>

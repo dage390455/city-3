@@ -107,7 +107,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
     }
 
     public void onClickDeviceCamera(final DeviceCameraInfo deviceCameraInfo) {
-        String sn = deviceCameraInfo.getSn();
+        final String sn = deviceCameraInfo.getSn();
         final String cid = deviceCameraInfo.getCid();
         getView().showProgressDialog();
         RetrofitServiceHelper.getInstance().getDeviceCamera(sn).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraDetailRsp>(this) {
@@ -122,12 +122,13 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                     intent.setClass(mContext, CameraDetailActivity.class);
                     intent.putExtra("cid", cid);
                     intent.putExtra("hls", hls);
+                    intent.putExtra("sn", sn);
                     if (camera != null) {
                         String name = camera.getName();
                         intent.putExtra("cameraName", name);
                     }
                     intent.putExtra("lastCover", lastCover);
-                    intent.putExtra("deviceStatus", deviceCameraInfo.getDeviceStatus());
+                    intent.putExtra("deviceStatus", data.getDeviceStatus());
                     getView().startAC(intent);
                 } else {
                     getView().toastShort(mContext.getString(R.string.camera_info_get_failed));
@@ -158,7 +159,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
         } else {
             filterHashMap.clear();
         }
-        requestData(hashMap, DIRECTION_DOWN);
+        requestData(hashMap);
     }
 
     public void clearMap() {
@@ -167,7 +168,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
     }
 
 
-    public void requestData(final HashMap hashMap, final int directionDown) {
+    public void requestData(final HashMap hashMap) {
 
         if (isAttachedView()) {
             getView().showProgressDialog();
@@ -238,18 +239,16 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
         switch (direction) {
             case DIRECTION_DOWN:
                 cur_page = 1;
-                hashMap.put("page", cur_page);
-                requestData(hashMap, DIRECTION_DOWN);
                 break;
             case DIRECTION_UP:
                 cur_page++;
-                hashMap.put("page", cur_page);
-
-                requestData(hashMap, DIRECTION_UP);
                 break;
             default:
                 break;
+
         }
+        hashMap.put("page", cur_page);
+        requestData(hashMap);
 
 
     }

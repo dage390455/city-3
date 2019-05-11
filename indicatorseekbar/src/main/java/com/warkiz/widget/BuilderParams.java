@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -65,11 +64,11 @@ class BuilderParams {
 
     BuilderParams(Context context) {
         this.mContext = context;
-        this.mIndicatorTextSize = IndicatorUtils.sp2px(mContext, 13);
+        this.mIndicatorTextSize = IndicatorUtils.dp2px(mContext, 13);
         this.mBackgroundTrackSize = IndicatorUtils.dp2px(mContext, 2);
         this.mProgressTrackSize = IndicatorUtils.dp2px(mContext, 2);
         this.mTickSize = IndicatorUtils.dp2px(mContext, 10);
-        this.mTextSize = IndicatorUtils.sp2px(mContext, 13);
+        this.mTextSize = IndicatorUtils.dp2px(mContext, 13);
         this.mThumbSize = IndicatorUtils.dp2px(mContext, 14);
     }
 

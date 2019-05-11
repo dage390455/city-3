@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmCameraLiveDetailActivity;
+import com.sensoro.smartcity.activity.AlarmCameraVideoDetailActivity;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.adapter.AlertLogRcContentAdapter;
 import com.sensoro.smartcity.constant.Constants;
@@ -260,14 +261,14 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
 
     private void doLive() {
         Intent intent = new Intent(mActivity, AlarmCameraLiveDetailActivity.class);
-        List<String> cameras1 = mDeviceAlarmLogInfo.getCameras();
-        String[] cameras = cameras1.toArray(new String[cameras1.size()]);
+        ArrayList<String> cameras = new ArrayList<>(mDeviceAlarmLogInfo.getCameras());
         intent.putExtra(Constants.EXTRA_ALARM_CAMERAS,cameras);
        mActivity.startActivity(intent);
     }
 
     private void doVideo() {
-
+        Intent intent = new Intent(mActivity, AlarmCameraVideoDetailActivity.class);
+        mActivity.startActivity(intent);
     }
 
     public void doContactOwner() {
