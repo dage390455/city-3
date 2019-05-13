@@ -20,6 +20,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -63,6 +64,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
 
     private Button playAndRetryBtn;
+    private LinearLayout layoutBottomControlLl;
     private ImageView maskFaceIv;
 
     private TextView tiptv;
@@ -352,6 +354,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         super.init(context);
 
         maskFaceIv = findViewById(R.id.face_iv);
+        layoutBottomControlLl = findViewById(R.id.layout_bottom_control_ll);
         rMobileData = findViewById(R.id.rl_mobile_data);
         playAndRetryBtn = findViewById(R.id.playa_retry_btn);
 
@@ -800,12 +803,57 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
             initFullUI(gsyVideoPlayer);
             //比如你自定义了返回案件，但是因为返回按键底层已经设置了返回事件，所以你需要在这里重新增加的逻辑
         }
+
+//        int dp24 = (int) (getContext().getResources().getDisplayMetrics().density * 24 + 0.5f);
+//
+//
+//        LinearLayout.LayoutParams audioIvlayoutParams = (LinearLayout.LayoutParams) audioIv.getLayoutParams();
+//        LinearLayout.LayoutParams mStartButtonlayoutParams = (LinearLayout.LayoutParams) mStartButton.getLayoutParams();
+//        LinearLayout.LayoutParams mFullscreenButtonlayoutParams = (LinearLayout.LayoutParams) audioIv.getLayoutParams();
+//
+//
+//        audioIvlayoutParams.width = dp24;
+//        audioIvlayoutParams.height = dp24;
+//        mStartButtonlayoutParams.width = dp24;
+//        mStartButtonlayoutParams.height = dp24;
+//        mFullscreenButtonlayoutParams.width = dp24;
+//        mFullscreenButtonlayoutParams.height = dp24;
+//
+//
+//        audioIv.setLayoutParams(audioIvlayoutParams);
+//        mStartButton.setLayoutParams(mStartButtonlayoutParams);
+//        mFullscreenButton.setLayoutParams(mFullscreenButtonlayoutParams);
+
+
+//        全屏下，左右间距40px，上下间距32px
+//        半屏上下间距24px，左右间距：32px
         return gsyBaseVideoPlayer;
     }
 
     @Override
     protected void resolveNormalVideoShow(View oldF, ViewGroup vp, GSYVideoPlayer gsyVideoPlayer) {
         super.resolveNormalVideoShow(oldF, vp, gsyVideoPlayer);
+        int dp20 = (int) (getContext().getResources().getDisplayMetrics().density * 20 + 0.5f);
+
+//        LinearLayout.LayoutParams mBottomContainerlayoutParams = (LinearLayout.LayoutParams) mBottomContainer.getLayoutParams();
+//        LinearLayout.LayoutParams audioIvlayoutParams = (LinearLayout.LayoutParams) audioIv.getLayoutParams();
+//        LinearLayout.LayoutParams mStartButtonlayoutParams = (LinearLayout.LayoutParams) mStartButton.getLayoutParams();
+//        LinearLayout.LayoutParams mFullscreenButtonlayoutParams = (LinearLayout.LayoutParams) audioIv.getLayoutParams();
+//
+//
+////        mBottomContainerlayoutParams.
+//
+//        audioIvlayoutParams.width = dp20;
+//        audioIvlayoutParams.height = dp20;
+//        mStartButtonlayoutParams.width = dp20;
+//        mStartButtonlayoutParams.height = dp20;
+//        mFullscreenButtonlayoutParams.width = dp20;
+//        mFullscreenButtonlayoutParams.height = dp20;
+//
+//
+//        audioIv.setLayoutParams(audioIvlayoutParams);
+//        mStartButton.setLayoutParams(mStartButtonlayoutParams);
+//        mFullscreenButton.setLayoutParams(mFullscreenButtonlayoutParams);
 
 
     }
@@ -1345,6 +1393,67 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
         setCityPlayState(cityPlayState);
 
+
+        //横竖屏切换，icon大小和间距动态调整
+
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            int dp24 = (int) (getContext().getResources().getDisplayMetrics().density * 20 + 0.5f);
+            int dp16 = (int) (getContext().getResources().getDisplayMetrics().density * 16 + 0.5f);
+            int dp12 = (int) (getContext().getResources().getDisplayMetrics().density * 12 + 0.5f);
+
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) layoutBottomControlLl.getLayoutParams();
+            lp.setMargins(dp16, dp12, dp16, dp12);
+
+            layoutBottomControlLl.setLayoutParams(lp);
+
+
+            LinearLayout.LayoutParams audioIvlayoutParams = (LinearLayout.LayoutParams) audioIv.getLayoutParams();
+            LinearLayout.LayoutParams mStartButtonlayoutParams = (LinearLayout.LayoutParams) mStartButton.getLayoutParams();
+            LinearLayout.LayoutParams mFullscreenButtonlayoutParams = (LinearLayout.LayoutParams) mFullscreenButton.getLayoutParams();
+
+
+            audioIvlayoutParams.width = dp24;
+            audioIvlayoutParams.height = dp24;
+            mStartButtonlayoutParams.width = dp24;
+            mStartButtonlayoutParams.height = dp24;
+            mFullscreenButtonlayoutParams.width = dp24;
+            mFullscreenButtonlayoutParams.height = dp24;
+
+
+            audioIv.setLayoutParams(audioIvlayoutParams);
+            mStartButton.setLayoutParams(mStartButtonlayoutParams);
+            mFullscreenButton.setLayoutParams(mFullscreenButtonlayoutParams);
+        } else {
+
+            int dp24 = (int) (getContext().getResources().getDisplayMetrics().density * 24 + 0.5f);
+
+
+            int dp20 = (int) (getContext().getResources().getDisplayMetrics().density * 20 + 0.5f);
+            int dp16 = (int) (getContext().getResources().getDisplayMetrics().density * 16 + 0.5f);
+
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) layoutBottomControlLl.getLayoutParams();
+            lp.setMargins(dp20, dp16, dp20, dp16);
+
+            layoutBottomControlLl.setLayoutParams(lp);
+//
+//
+            LinearLayout.LayoutParams audioIvlayoutParams = (LinearLayout.LayoutParams) audioIv.getLayoutParams();
+            LinearLayout.LayoutParams mStartButtonlayoutParams = (LinearLayout.LayoutParams) mStartButton.getLayoutParams();
+            LinearLayout.LayoutParams mFullscreenButtonlayoutParams = (LinearLayout.LayoutParams) mFullscreenButton.getLayoutParams();
+
+
+            audioIvlayoutParams.width = dp24;
+            audioIvlayoutParams.height = dp24;
+            mStartButtonlayoutParams.width = dp24;
+            mStartButtonlayoutParams.height = dp24;
+            mFullscreenButtonlayoutParams.width = dp24;
+            mFullscreenButtonlayoutParams.height = dp24;
+
+
+            audioIv.setLayoutParams(audioIvlayoutParams);
+            mStartButton.setLayoutParams(mStartButtonlayoutParams);
+            mFullscreenButton.setLayoutParams(mFullscreenButtonlayoutParams);
+        }
 
     }
 

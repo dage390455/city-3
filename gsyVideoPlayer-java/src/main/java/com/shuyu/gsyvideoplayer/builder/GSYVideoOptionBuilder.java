@@ -42,7 +42,7 @@ public class GSYVideoOptionBuilder {
     protected int mDialogProgressNormalColor = -11;
 
     //触摸隐藏等待时间
-    protected int mDismissControlTime = 2500;
+    protected int mDismissControlTime = 5000;
 
     //从哪个开始播放
     protected long mSeekOnStart = -1;
