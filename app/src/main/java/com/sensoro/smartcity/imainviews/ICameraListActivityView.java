@@ -39,5 +39,5 @@ public interface ICameraListActivityView extends IToast, IProgressDialog, IActiv
 
     void resetRefreshNoMoreData();
 
-    void setToptitleState();
+    void setTopTitleState();
 }
