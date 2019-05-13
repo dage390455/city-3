@@ -15,11 +15,11 @@
     <string name="tips_not_wifi_cancel">停止播放</string>
     <string name="no_url">播放地址无效</string>
     <string name="jump_ad">跳过</string>
-    <string name="played">"录像已播放完毕"</string>
+    <string name="played">"录像播放完毕"</string>
     <string name="replay">"重播"</string>
     <string name="gsy_video">"录像"</string>
     <string name="live">"直播"</string>
-    <string name="offline">"摄像机离线"</string>
+    <string name="offline">"摄像机已离线"</string>
 
     <string name="no_vido">视频已过期，服务器仅保留7天内视频</string>
 </resources>

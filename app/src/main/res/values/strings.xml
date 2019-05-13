@@ -1030,4 +1030,7 @@
     <string name="deploy_device_detail_check_tip_press_the_sensor">Please press the sensor self-test button</string>
     <string name="new_contact">New contact</string>
     <string name="delete_this">Delete this</string>
+
+
+    <string name="app_crash_tips">System error, please log in again</string>
 </resources>

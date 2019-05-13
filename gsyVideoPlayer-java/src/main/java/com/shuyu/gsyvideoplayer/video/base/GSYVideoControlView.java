@@ -535,6 +535,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
 
                     Debuger.printfLog(GSYVideoControlView.this.hashCode() + "------------------------------ progress ACTION_UP");
                     startProgressTimer();
+                    dismissProgressDialog();
                     ViewParent vpup = getParent();
                     while (vpup != null) {
                         vpup.requestDisallowInterceptTouchEvent(false);

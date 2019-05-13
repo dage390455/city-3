@@ -8,11 +8,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -235,7 +233,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 .setVideoAllCallBack(new GSYSampleCallBack() {
                     @Override
                     public void onPlayError(final String url, Object... objects) {
-                        orientationUtils.setEnable(false);
 
                         gsyPlayerAcCameraDetail.setCityPlayState(3);
                         gsyPlayerAcCameraDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
@@ -424,15 +421,19 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
 
     @Override
-    public void offlineType(final String url) {
+    public void offlineType(String mCameraName) {
         orientationUtils.setEnable(false);
 
+        gsyPlayerAcCameraDetail.maskTitleTv.setText(mCameraName);
         gsyPlayerAcCameraDetail.setCityPlayState(5);
         gsyPlayerAcCameraDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gsyVideoOption.setUrl(url).build(getCurPlay());
-                getCurPlay().startPlayLogic();
+
+
+                mPresenter.regainGetCameraState();
+//                gsyVideoOption.setUrl(url).build(getCurPlay());
+//                getCurPlay().startPlayLogic();
             }
         });
 
@@ -475,7 +476,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         gsyVideoOption.setUrl(url).setVideoTitle(cameraName).build(getCurPlay());
         gsyPlayerAcCameraDetail.setIsLive(isLive ? View.INVISIBLE : VISIBLE);
         getCurPlay().startPlayLogic();
-
 
 
     }
@@ -640,7 +640,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     @Override
     public boolean setMyCurrentActivityTheme() {
-        setTheme(R.style.Theme_AppCompat_Translucent);
+        setTheme(R.style.Theme_AppCompat_Full);
         return true;
     }
 

@@ -1016,4 +1016,6 @@
     <string name="new_contact">新增联系人</string>
     <string name="delete_this">删除本条</string>
 
+    <string name="app_crash_tips">系统出错了，请重新登录</string>
+
 </resources>
