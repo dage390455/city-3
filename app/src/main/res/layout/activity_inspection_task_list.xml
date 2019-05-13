@@ -34,7 +34,7 @@
                 android:paddingTop="8dp"
                 android:text="@string/inspection_task_list_undone"
                 android:textColor="@drawable/selector_contract_title_text_select"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
 
             <RadioButton
                 android:id="@+id/ac_inspection_task_list_rb_history"
@@ -49,7 +49,7 @@
                 android:paddingTop="8dp"
                 android:text="@string/inspection_task_list_complete"
                 android:textColor="@drawable/selector_contract_title_text_select"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
         </RadioGroup>
 
         <ImageView
@@ -75,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:textSize="14sp"
+            android:textSize="14dp"
             android:layout_centerVertical="true"
             android:textColor="@color/c_252525"/>
 

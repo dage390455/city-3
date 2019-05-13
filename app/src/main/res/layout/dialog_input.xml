@@ -12,7 +12,7 @@
         android:gravity="center"
         android:padding="10dp"
         android:text="@string/prompt"
-        android:textSize="18sp" />
+        android:textSize="18dp" />
 
     <EditText
         android:id="@+id/dialog_edit"

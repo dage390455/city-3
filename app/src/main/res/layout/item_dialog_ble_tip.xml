@@ -13,7 +13,7 @@
         android:layout_marginTop="24dp"
         android:text="@string/open_ble_contact_device"
         android:textColor="@color/c_25292d"
-        android:textSize="18sp" />
+        android:textSize="18dp" />
 
     <TextView
         android:id="@+id/dialog_tip_ble_tv_message"
@@ -23,7 +23,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/open_ble_to_location"
         android:textColor="@color/c_a6a6a6"
-        android:textSize="14sp" />
+        android:textSize="14dp" />
 
     <View
         android:layout_width="match_parent"
@@ -47,7 +47,7 @@
             android:paddingBottom="16dp"
             android:text="@string/ok_one"
             android:textColor="@color/c_a6a6a6"
-            android:textSize="16sp" />
+            android:textSize="16dp" />
 
         <View
             android:layout_width="@dimen/view_divider_width"
@@ -65,7 +65,7 @@
             android:paddingBottom="16dp"
             android:text="@string/setting"
             android:textColor="@color/c_29c093"
-            android:textSize="16sp" />
+            android:textSize="16dp" />
 
     </LinearLayout>
 </LinearLayout>

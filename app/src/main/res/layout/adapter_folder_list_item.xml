@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:text="@string/ip_all_images"
             android:textColor="#212121"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <TextView
             android:id="@+id/tv_image_count"
@@ -46,7 +46,7 @@
             android:layout_marginTop="4dp"
             android:text="@string/folder_list_zero"
             android:textColor="#999999"
-            android:textSize="12sp" />
+            android:textSize="12dp" />
     </LinearLayout>
 
     <ImageView

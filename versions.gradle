@@ -25,13 +25,16 @@ versions.leakcanary = "1.5.4"
 versions.blockcanary = "1.5.0"
 versions.bga_qrcode = "1.3.6"
 versions.protobuf = "2.5.0"
-versions.protobuf_format= "1.4"
+versions.protobuf_format = "1.4"
 versions.autosize = "1.1.2"
 versions.smartrefresh = "1.1.0-alpha-14"
 versions.dfu = "1.0.0"
 versions.mapbox = "5.5.3"
 versions.photoview = "1.2.4"
 versions.immersionbar = "2.3.2-beta01"
+versions.ijkplayer = '0.8.8'
+versions.transitionseverywhere = '1.7.0'
+versions.MPAndroidChart = '3.1.0'
 //Arouter
 versions.arouter_compiler = "1.1.4"
 versions.arouter_api = "1.3.1"
@@ -84,7 +87,16 @@ deps.mapbox = "com.mapbox.mapboxsdk:mapbox-android-sdk:$versions.mapbox"
 deps.photoview = "com.github.chrisbanes.photoview:library:$versions.photoview"
 deps.immersionbar = "com.gyf.immersionbar:immersionbar:$versions.immersionbar"
 deps.protobuf_java_format = "com.googlecode.protobuf-java-format:protobuf-java-format:$versions.protobuf_format"
-
+deps.ijkplayer_java = "tv.danmaku.ijk.media:ijkplayer-java:${versions.ijkplayer}"
+deps.ijkplayer_armv7a = "tv.danmaku.ijk.media:ijkplayer-armv7a:${versions.ijkplayer}"
+deps.ijkplayer_armv5 = "tv.danmaku.ijk.media:ijkplayer-armv5:${versions.ijkplayer}"
+deps.ijkplayer_arm64 = "tv.danmaku.ijk.media:ijkplayer-arm64:${versions.ijkplayer}"
+deps.ijkplayer_x86_64 = "tv.danmaku.ijk.media:ijkplayer-x86_64:${versions.ijkplayer}"
+deps.ijkplayer_x86 = "tv.danmaku.ijk.media:ijkplayer-x86:${versions.ijkplayer}"
+deps.ijkplayer_exo = "tv.danmaku.ijk.media:ijkplayer-exo:${versions.ijkplayer}"
+deps.MPAndroidChart = "com.github.PhilJay:MPAndroidChart:v${versions.MPAndroidChart}"
+//
+deps.transitionseverywhere = "com.andkulikov:transitionseverywhere:${versions.transitionseverywhere}"
 //other
 deps.glide = "com.github.bumptech.glide:glide:$versions.glide"
 deps.event_bus = "org.greenrobot:eventbus:$versions.event_bus"

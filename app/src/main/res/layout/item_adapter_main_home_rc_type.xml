@@ -42,7 +42,7 @@
                     android:layout_marginTop="26.5dp"
                     android:text="0"
                     android:textColor="@color/white"
-                    android:textSize="44sp" />
+                    android:textSize="44dp" />
 
                 <TextView
                     android:id="@+id/main_rc_type_tv_state_txt"
@@ -52,7 +52,7 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/normal_monitor"
                     android:textColor="@color/white"
-                    android:textSize="12sp" />
+                    android:textSize="12dp" />
             </LinearLayout>
 
             <ImageView

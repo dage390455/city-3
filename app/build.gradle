@@ -167,9 +167,9 @@ android {
             println runTasks[i]
         }
 
-        if (':app:assembleBaiDuDebug' in runTasks) {
-            buildCode++
-        }
+//        if (':app:assembleBaiDuDebug' in runTasks) {
+//            buildCode++
+//        }
 
         if ('build' in runTasks) {
             verCode++
@@ -273,9 +273,7 @@ dependencies {
     implementation project(':bottomnavigation')
     //Calendar view
     implementation project(':calendarview')
-    api(project(':simplescanner')) {
-        exclude group: "com.amap.api"
-    }
+    //
     implementation project(path: ':lib_common')
     implementation project(path: ':pickerview')
 
@@ -292,8 +290,34 @@ dependencies {
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'
     implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
+    implementation project(':indicatorseekbar')
+
+    implementation('com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.3') {
+        transitive = true
+    }
+    //    compile 'com.hjq:toast:5.2'
+    api(project(':simplescanner')) {
+        exclude group: "com.amap.api"
+    }
+    implementation files('libs/player.jar')
+    implementation project(path: ':gsyVideoPlayer-base')
+    implementation project(path: ':gsyVideoPlayer-proxy_cache')
+    implementation project(path: ':gsyVideoPlayer-java')
+    implementation project(path: ':gsyVideoPlayer-armv7a')
+    //mp表格组件
+    implementation deps.MPAndroidChart
+
+//    implementation androidDependencies.appcompat_v7
+//
+//    def viewDependencies = rootProject.ext.viewDependencies
+//    api viewDependencies.ijkplayer_java
+////    api viewDependencies.ijkplayer_exo
+//    api viewDependencies.transitionseverywhere
+//    implementation 'com.shuyu:GSYVideoPlayer:6.0.3'
+//    implementation 'com.shuyu:gsyVideoPlayer-java:6.0.3'
+//    implementation 'com.shuyu:gsyVideoPlayer-armv7a:6.0.3'
 }
 //获取编译时间
 static def releaseTime() {
-    return new Date().format("MM-dd hh:mm:ss", TimeZone.getTimeZone("UTC"))
+    return new Date().format("MM_dd_hh_mm_ss", TimeZone.getTimeZone("UTC"))
 }

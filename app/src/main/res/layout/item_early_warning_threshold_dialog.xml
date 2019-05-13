@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/c_a6a6a6"
-        android:textSize="14sp" />
+        android:textSize="14dp" />
 
     <TextView
         android:id="@+id/tv_threshold_content"
@@ -22,5 +22,5 @@
         android:layout_height="wrap_content"
         android:textColor="@color/c_252525"
         android:lineSpacingExtra="7dp"
-        android:textSize="14sp" />
+        android:textSize="14dp" />
 </LinearLayout>

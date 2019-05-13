@@ -30,6 +30,7 @@ import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
+import com.sensoro.smartcity.activity.CameraListActivity;
 import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
 import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapActivity;
@@ -57,6 +58,7 @@ import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeployControlSettingData;
+import com.sensoro.smartcity.server.bean.DeviceCameraInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
 import com.sensoro.smartcity.server.bean.DeviceUpdateFirmwareData;
@@ -70,6 +72,7 @@ import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraListRsp;
 import com.sensoro.smartcity.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.smartcity.server.response.MonitorPointOperationRequestRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
@@ -146,6 +149,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     private SensoroDeviceConnection sensoroDeviceConnection;
     private String mOperationType;
     private volatile int deviceDemoMode = DEVICE_DEMO_MODE_NOT_SUPPORT;
+    private ArrayList<DeviceCameraInfo> deviceCameras;
 
     @Override
     public void initData(Context context) {
@@ -418,7 +422,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     }
 
     private void requestDeviceRecentLog() {
-        String sn = mDeviceInfo.getSn();
         getView().showProgressDialog();
         requestBlePassword();
         //合并请求
@@ -579,9 +582,29 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
                     }
                 }
+                //加入摄像头权限检查
+                if (PreferencesHelper.getInstance().getUserData().hasDeviceCameraList && AppUtils.isChineseLanguage()) {
+                    String id = mDeviceInfo.getDeviceGroup();
+                    if (!TextUtils.isEmpty(id)) {
+                        RetrofitServiceHelper.getInstance().getDeviceGroupCameraList(id, 10, 1, null).subscribeOn(Schedulers.io()).observeOn
+                                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(MonitorPointElectricDetailActivityPresenter.this) {
+                            @Override
+                            public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
+                                deviceCameras = (ArrayList<DeviceCameraInfo>) deviceCameraListRsp.getData();
+                                if (deviceCameras != null && deviceCameras.size() > 0) {
+                                    getView().setDeviceCamerasText(mContext.getString(R.string.device_detail_camera_has_camera) + deviceCameras.size() + mContext.getString(R.string.device_detail_camera_camera_count));
+                                }
+                            }
+
+                            @Override
+                            public void onErrorMsg(int errorCode, String errorMsg) {
+                                getView().toastShort(errorMsg);
+                            }
+                        });
+                    }
+                }
                 refreshOperationStatus();
                 freshDeviceUpdateVersionInfo();
-
                 freshLocationDeviceInfo();
                 handleDeployInfo();
                 handleDeviceModeInfo();
@@ -2049,6 +2072,18 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 getView().toastShort(mContext.getString(R.string.device_is_not_nearby));
             }
 
+        }
+    }
+
+    public void doDeviceGroupCameras() {
+        if (deviceCameras != null && deviceCameras.size() > 0) {
+            //TODO 去摄像头列表
+            Intent intent = new Intent();
+            intent.putExtra(EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST, deviceCameras);
+            intent.setClass(mContext, CameraListActivity.class);
+            getView().startAC(intent);
+        } else {
+            getView().setDeviceCamerasText(mContext.getString(R.string.device_detail_camera_no_camera));
         }
     }
 }

@@ -140,7 +140,9 @@ public class MalfunctionHistoryActivity extends BaseActivity<IMalfunctionHistory
             }
         });
         mCalendarPopUtils = new CalendarPopUtils(mActivity);
-        mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
+        mCalendarPopUtils
+                .setMonthStatus(1)
+                .setOnCalendarPopupCallbackListener(this);
         includeImvTitleImvSubtitle.setOnClickListener(this);
         ivMalfunctionHistoryDateClose.setOnClickListener(this);
         includeImvTitleImvArrowsLeft.setOnClickListener(this);

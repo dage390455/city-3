@@ -18,8 +18,8 @@
         android:id="@+id/rl_monitor_demo_mode_tip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:background="@color/c_dff6ef">
+        android:background="@color/c_dff6ef"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
@@ -30,7 +30,7 @@
             android:layout_marginBottom="12dp"
             android:text="@string/monitor_top_demo_mode_tips"
             android:textColor="@color/c_197358"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <ImageView
             android:id="@+id/iv_demo_mode_tip"
@@ -84,7 +84,7 @@
                         android:layout_weight="1"
                         android:lineSpacingMultiplier="1.5"
                         android:textColor="@color/c_252525"
-                        android:textSize="20sp" />
+                        android:textSize="20dp" />
 
                     <ImageView
                         android:id="@+id/ac_monitoring_point_imv_detail"
@@ -111,7 +111,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/ac_monitoring_point_tv_type_time"
@@ -119,7 +119,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/ac_monitoring_point_tv_status"
@@ -127,7 +127,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <ImageView
                         android:id="@+id/iv_monitor_signal"
@@ -141,7 +141,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
                         android:textColor="@color/c_5d5d5d"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
                 </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
@@ -166,7 +166,7 @@
                         android:layout_marginStart="20dp"
                         android:text="@string/monitor_point_detail_monitor_parameter"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                     <ImageView
                         android:id="@+id/elect_info"
@@ -193,7 +193,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/unknown"
-                        android:textSize="36sp" />
+                        android:textSize="36dp" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -207,7 +207,7 @@
                             android:layout_marginTop="4dp"
                             android:text="@string/unknown"
                             android:textColor="@color/c_252525"
-                            android:textSize="14sp" />
+                            android:textSize="14dp" />
 
                         <LinearLayout
                             android:id="@+id/ll_elect_more"
@@ -233,7 +233,7 @@
                                 android:layout_marginStart="4dp"
                                 android:text="@string/more_data"
                                 android:textColor="@color/c_a6a6a6"
-                                android:textSize="12sp" />
+                                android:textSize="12dp" />
 
                             <ImageView
                                 android:id="@+id/iv_arrow_elect"
@@ -301,7 +301,7 @@
                                 android:gravity="center"
                                 android:text="@string/unknown"
                                 android:textColor="@color/c_252525"
-                                android:textSize="12sp" />
+                                android:textSize="12dp" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -310,7 +310,7 @@
                                 android:gravity="center"
                                 android:text="@string/unknown"
                                 android:textColor="@color/c_252525"
-                                android:textSize="12sp" />
+                                android:textSize="12dp" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -319,7 +319,7 @@
                                 android:gravity="center"
                                 android:text="@string/unknown"
                                 android:textColor="@color/c_252525"
-                                android:textSize="12sp" />
+                                android:textSize="12dp" />
                         </TableRow>
 
                         <TableRow
@@ -333,7 +333,7 @@
                                 android:paddingBottom="5dp"
                                 android:text="@string/unknown"
                                 android:textColor="@color/c_252525"
-                                android:textSize="12sp" />
+                                android:textSize="12dp" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -347,7 +347,7 @@
                                 android:paddingBottom="5dp"
                                 android:text="-"
                                 android:textColor="@color/c_197358"
-                                android:textSize="14sp" />
+                                android:textSize="14dp" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -361,7 +361,7 @@
                                 android:paddingBottom="5dp"
                                 android:text="-"
                                 android:textColor="@color/c_197358"
-                                android:textSize="14sp" />
+                                android:textSize="14dp" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -375,7 +375,7 @@
                                 android:paddingBottom="5dp"
                                 android:text="-"
                                 android:textColor="@color/c_197358"
-                                android:textSize="14sp" />
+                                android:textSize="14dp" />
                         </TableRow>
 
                         <TableRow
@@ -390,7 +390,7 @@
                                 android:paddingBottom="5dp"
                                 android:text="@string/unknown"
                                 android:textColor="@color/c_252525"
-                                android:textSize="12sp" />
+                                android:textSize="12dp" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -404,7 +404,7 @@
                                 android:paddingBottom="5dp"
                                 android:text="-"
                                 android:textColor="@color/c_197358"
-                                android:textSize="14sp" />
+                                android:textSize="14dp" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -418,7 +418,7 @@
                                 android:paddingBottom="5dp"
                                 android:text="-"
                                 android:textColor="@color/c_197358"
-                                android:textSize="14sp" />
+                                android:textSize="14dp" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -432,7 +432,7 @@
                                 android:paddingBottom="5dp"
                                 android:text="-"
                                 android:textColor="@color/c_197358"
-                                android:textSize="14sp" />
+                                android:textSize="14dp" />
                         </TableRow>
 
                         <TableRow
@@ -446,7 +446,7 @@
                                 android:paddingBottom="5dp"
                                 android:text="@string/unknown"
                                 android:textColor="@color/c_252525"
-                                android:textSize="12sp" />
+                                android:textSize="12dp" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -460,7 +460,7 @@
                                 android:paddingBottom="5dp"
                                 android:text="-"
                                 android:textColor="@color/c_197358"
-                                android:textSize="14sp" />
+                                android:textSize="14dp" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -474,7 +474,7 @@
                                 android:paddingBottom="5dp"
                                 android:text="-"
                                 android:textColor="@color/c_197358"
-                                android:textSize="14sp" />
+                                android:textSize="14dp" />
 
                             <TextView
                                 android:layout_width="0dp"
@@ -488,7 +488,7 @@
                                 android:paddingBottom="5dp"
                                 android:text="-"
                                 android:textColor="@color/c_197358"
-                                android:textSize="14sp" />
+                                android:textSize="14dp" />
                         </TableRow>
                     </TableLayout>
                 </LinearLayout>
@@ -516,7 +516,7 @@
                         android:layout_marginTop="16dp"
                         android:text="@string/alert_contact"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="12sp"
+                        android:textSize="12dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -528,7 +528,7 @@
                         android:layout_marginTop="12dp"
                         android:layout_marginBottom="8dp"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp"
+                        android:textSize="14dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/ac_monitoring_point_tv_alert_contact" />
@@ -550,7 +550,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="12dp"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp"
+                        android:textSize="14dp"
                         app:layout_constraintBottom_toBottomOf="@id/ac_monitoring_point_tv_alert_contact_name"
                         app:layout_constraintStart_toStartOf="@id/ac_monitoring_point_view" />
 
@@ -600,8 +600,9 @@
                         android:layout_marginStart="20dp"
                         android:text="@string/location_navigation"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="12sp"
+                        android:textSize="12dp"
                         app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
 
                         />
 
@@ -626,7 +627,7 @@
                         android:layout_marginBottom="16dp"
                         android:lineSpacingMultiplier="1.5"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp"
+                        android:textSize="14dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/ac_monitoring_point_imv_location"
                         app:layout_constraintStart_toStartOf="parent"
@@ -656,7 +657,7 @@
                         android:layout_marginBottom="16dp"
                         android:text="@string/deploy_device_detail_deploy_photo"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                     <RelativeLayout
                         android:layout_width="0dp"
@@ -695,7 +696,7 @@
                         android:layout_marginBottom="16dp"
                         android:text="@string/deploy_record_deploy_time"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                     <TextView
                         android:id="@+id/monitor_detail_tv_deploy_time"
@@ -704,10 +705,47 @@
                         android:layout_marginStart="20dp"
                         android:layout_marginEnd="20dp"
                         android:layout_marginBottom="16dp"
-                        android:text="2019-01-13 12:56"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp"
+                        android:textSize="14dp"
                         android:visibility="gone" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/line_monitor_deploy_cameras"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_divider_width"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/c_dfdfdf"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/ll_monitor_deploy_cameras"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginBottom="16dp"
+                        android:text="@string/deploy_detail_camera_group"
+                        android:textColor="@color/c_a6a6a6"
+                        android:textSize="12dp" />
+
+                    <TextView
+                        android:id="@+id/monitor_detail_tv_deploy_cameras"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginBottom="16dp"
+                        android:textColor="@color/c_252525"
+                        android:textSize="14dp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -732,7 +770,7 @@
                     android:paddingEnd="24dp"
                     android:text="@string/monitor_point_detail_operation"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="12sp" />
+                    android:textSize="12dp" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/ac_monitoring_point_rc_operation"
@@ -762,7 +800,7 @@
                     android:layout_marginTop="12dp"
                     android:text="@string/monitor_point_information"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="12sp"
+                    android:textSize="12dp"
                     app:layout_constraintStart_toStartOf="parent"
 
                     />
@@ -782,7 +820,7 @@
                         android:layout_alignParentStart="true"
                         android:text="@string/sensor_detail_sn"
                         android:textColor="@color/c_252525"
-                        android:textSize="16sp" />
+                        android:textSize="16dp" />
 
 
                     <TextView
@@ -793,7 +831,7 @@
                         android:layout_marginEnd="20dp"
                         android:singleLine="true"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
                 </RelativeLayout>
 
                 <ImageView
@@ -819,7 +857,7 @@
                         android:layout_alignParentStart="true"
                         android:text="@string/device_category"
                         android:textColor="@color/c_252525"
-                        android:textSize="16sp" />
+                        android:textSize="16dp" />
 
 
                     <TextView
@@ -830,7 +868,7 @@
                         android:layout_marginEnd="20dp"
                         android:singleLine="true"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
                 </RelativeLayout>
 
                 <ImageView
@@ -855,7 +893,7 @@
                         android:layout_marginStart="20dp"
                         android:text="@string/sensor_detail_tag"
                         android:textColor="@color/c_252525"
-                        android:textSize="16sp" />
+                        android:textSize="16dp" />
 
                     <RelativeLayout
                         android:layout_width="0dp"
@@ -900,7 +938,7 @@
                         android:layout_marginStart="20dp"
                         android:text="@string/monitor_material"
                         android:textColor="@color/c_252525"
-                        android:textSize="16sp" />
+                        android:textSize="16dp" />
 
 
                     <TextView
@@ -914,7 +952,7 @@
                         android:maxEms="8"
                         android:singleLine="true"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                 </RelativeLayout>
 
@@ -943,7 +981,7 @@
                         android:layout_marginStart="20dp"
                         android:text="@string/diameter"
                         android:textColor="@color/c_252525"
-                        android:textSize="16sp" />
+                        android:textSize="16dp" />
 
 
                     <TextView
@@ -957,7 +995,7 @@
                         android:maxEms="8"
                         android:singleLine="true"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                 </RelativeLayout>
 
@@ -986,7 +1024,7 @@
                         android:layout_marginStart="20dp"
                         android:text="@string/air_rated_current"
                         android:textColor="@color/c_252525"
-                        android:textSize="16sp" />
+                        android:textSize="16dp" />
 
 
                     <TextView
@@ -1000,7 +1038,7 @@
                         android:maxEms="8"
                         android:singleLine="true"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                 </RelativeLayout>
 
@@ -1026,7 +1064,7 @@
                         android:layout_marginStart="20dp"
                         android:text="@string/sensor_detail_battery"
                         android:textColor="@color/c_252525"
-                        android:textSize="16sp" />
+                        android:textSize="16dp" />
 
 
                     <TextView
@@ -1040,7 +1078,7 @@
                         android:maxEms="8"
                         android:singleLine="true"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                 </RelativeLayout>
 
@@ -1066,7 +1104,7 @@
                         android:layout_marginStart="20dp"
                         android:text="@string/sensor_detail_interval"
                         android:textColor="@color/c_252525"
-                        android:textSize="16sp" />
+                        android:textSize="16dp" />
 
 
                     <TextView
@@ -1080,7 +1118,7 @@
                         android:maxEms="8"
                         android:singleLine="true"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                 </RelativeLayout>
 
@@ -1109,7 +1147,7 @@
                         android:layout_marginStart="20dp"
                         android:text="@string/elect_pwd"
                         android:textColor="@color/c_252525"
-                        android:textSize="16sp" />
+                        android:textSize="16dp" />
 
 
                     <TextView
@@ -1123,7 +1161,7 @@
                         android:maxEms="8"
                         android:singleLine="true"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                 </RelativeLayout>
 
@@ -1152,7 +1190,7 @@
                         android:layout_marginStart="20dp"
                         android:text="@string/firmware_version"
                         android:textColor="@color/c_252525"
-                        android:textSize="16sp" />
+                        android:textSize="16dp" />
 
                     <ImageView
                         android:id="@+id/iv_monitor_device_version"
@@ -1176,7 +1214,7 @@
                         android:singleLine="true"
                         android:text="-"
                         android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
 
                     <ImageView
                         android:id="@+id/iv_has_new_version"
@@ -1214,7 +1252,7 @@
                         android:layout_marginStart="20dp"
                         android:text="@string/device_demo_mode"
                         android:textColor="@color/c_252525"
-                        android:textSize="16sp" />
+                        android:textSize="16dp" />
 
                     <ImageView
                         android:id="@+id/iv_monitor_device_demo"
@@ -1237,7 +1275,7 @@
                         android:singleLine="true"
                         android:text="@string/has_close"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="14sp"
+                        android:textSize="14dp"
                         android:visibility="gone" />
 
                 </RelativeLayout>

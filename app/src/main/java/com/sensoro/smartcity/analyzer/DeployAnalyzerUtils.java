@@ -357,6 +357,8 @@ public class DeployAnalyzerUtils {
                             }
                             deployAnalyzerModel.updatedTime = deployStationInfo.getUpdatedTime();
                             Intent intent = new Intent();
+                            //TODO 测试
+//                            intent.setClass(activity, DeployCameraDetailActivity.class);
                             intent.setClass(activity, DeployMonitorDetailActivity.class);
                             intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                             listener.onSuccess(intent);
@@ -421,6 +423,7 @@ public class DeployAnalyzerUtils {
                                 }
                             }
                             Intent intent = new Intent();
+//                            intent.setClass(activity, DeployCameraDetailActivity.class);
                             intent.setClass(activity, DeployMonitorDetailActivity.class);
                             intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                             listener.onSuccess(intent);
@@ -475,6 +478,8 @@ public class DeployAnalyzerUtils {
                             }
                         }
                         Intent intent = new Intent();
+                        //TODO
+//                        intent.setClass(activity, DeployCameraDetailActivity.class);
                         intent.setClass(activity, DeployMonitorDetailActivity.class);
                         intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                         listener.onSuccess(intent);
@@ -635,6 +640,7 @@ public class DeployAnalyzerUtils {
                                     deployAnalyzerModel.channelMask.addAll(channelMask);
                                 }
                                 Intent intent = new Intent();
+//                                intent.setClass(activity, DeployCameraDetailActivity.class);
                                 intent.setClass(activity, DeployMonitorDetailActivity.class);
                                 intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                                 listener.onSuccess(intent);

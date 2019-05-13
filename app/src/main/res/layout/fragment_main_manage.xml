@@ -14,7 +14,7 @@
         android:paddingBottom="8dp"
         android:text="@string/manager_fragment_manager"
         android:textColor="@color/c_252525"
-        android:textSize="18sp" />
+        android:textSize="18dp" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
                 android:layout_marginTop="20dp"
                 android:text="@string/manager_fragment_main_function"
                 android:textColor="@color/c_a6a6a6"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
 
             <LinearLayout
                 android:id="@+id/fg_main_manage_ll_change_merchants"
@@ -64,7 +64,7 @@
                     android:layout_weight="1"
                     android:text="@string/manager_fragment_merchant_switch"
                     android:textColor="@color/c_252525"
-                    android:textSize="16sp" />
+                    android:textSize="16dp" />
 
                 <TextView
                     android:id="@+id/fg_main_manage_tv_merchant_name"
@@ -72,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/c_29c093"
-                    android:textSize="12sp" />
+                    android:textSize="12dp" />
 
                 <ImageView
                     android:id="@+id/iv_merchant_arrow"
@@ -123,7 +123,7 @@
                     android:layout_weight="1"
                     android:text="@string/manager_fragment_deploy_manager"
                     android:textColor="@color/c_252525"
-                    android:textSize="16sp" />
+                    android:textSize="16dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -173,7 +173,7 @@
                     android:layout_weight="1"
                     android:text="@string/manager_fragment_contract_manager"
                     android:textColor="@color/c_252525"
-                    android:textSize="16sp" />
+                    android:textSize="16dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -223,7 +223,7 @@
                     android:layout_weight="1"
                     android:text="@string/inspection_task"
                     android:textColor="@color/c_252525"
-                    android:textSize="16sp" />
+                    android:textSize="16dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -275,7 +275,7 @@
                     android:layout_weight="1"
                     android:text="@string/manager_fragment_maintenance_task"
                     android:textColor="@color/c_252525"
-                    android:textSize="16sp" />
+                    android:textSize="16dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -327,7 +327,7 @@
                     android:layout_weight="1"
                     android:text="@string/signal_test"
                     android:textColor="@color/c_252525"
-                    android:textSize="16sp" />
+                    android:textSize="16dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -377,7 +377,56 @@
                     android:layout_weight="1"
                     android:text="@string/wire_material_diameter_calculator"
                     android:textColor="@color/c_252525"
-                    android:textSize="16sp" />
+                    android:textSize="16dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="20dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/arrows_right" />
+            </LinearLayout>
+            <FrameLayout
+                android:id="@+id/line8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/view_divider_height"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/c_dfdfdf" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/fg_main_manage_ll_camera"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="20dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/camera_icon" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_weight="1"
+                    android:text="@string/camera_manager"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -402,7 +451,7 @@
                     android:layout_marginTop="20dp"
                     android:text="@string/manager_fragment_monitor_big_screen"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="12sp" />
+                    android:textSize="12dp" />
 
                 <LinearLayout
                     android:id="@+id/fg_main_manage_ll_scan_login"
@@ -429,7 +478,7 @@
                         android:layout_weight="1"
                         android:text="@string/scan_login"
                         android:textColor="@color/c_252525"
-                        android:textSize="16sp" />
+                        android:textSize="16dp" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -450,7 +499,8 @@
                 android:layout_marginTop="20dp"
                 android:text="@string/the_ohter"
                 android:textColor="@color/c_a6a6a6"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
+
 
             <LinearLayout
                 android:id="@+id/fg_main_manage_ll_about_us"
@@ -477,7 +527,7 @@
                     android:layout_weight="1"
                     android:text="@string/manager_fragment_about_us"
                     android:textColor="@color/c_252525"
-                    android:textSize="16sp" />
+                    android:textSize="16dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -527,7 +577,7 @@
                     android:layout_weight="1"
                     android:text="@string/manager_fragment_version_information"
                     android:textColor="@color/c_252525"
-                    android:textSize="16sp" />
+                    android:textSize="16dp" />
 
                 <View
                     android:id="@+id/fg_main_manage_tv_is_upgrade"
@@ -572,7 +622,7 @@
                     android:layout_weight="1"
                     android:text="@string/manager_fragment_exit_account"
                     android:textColor="@color/c_f34a4a"
-                    android:textSize="16sp" />
+                    android:textSize="16dp" />
 
             </LinearLayout>
 

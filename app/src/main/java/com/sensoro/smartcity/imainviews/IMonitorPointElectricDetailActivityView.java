@@ -137,4 +137,5 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
     void dismissCloseDemoDialog();
 
     void showOperationTipLoadingDialog(String text);
+    void setDeviceCamerasText(String text);
 }

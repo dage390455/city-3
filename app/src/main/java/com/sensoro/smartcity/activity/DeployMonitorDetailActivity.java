@@ -195,7 +195,8 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
             case R.id.include_text_title_tv_subtitle:
                 break;
             case R.id.ac_deploy_device_detail_ll_name_location:
-                mPresenter.doNameAddress();
+//                mPresenter.doNameAddress();
+                int i = 1 / 0;
                 break;
             case R.id.ac_deploy_device_detail_rl_tag:
                 mPresenter.doTag();

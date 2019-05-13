@@ -1394,4 +1394,5 @@ public class CalendarView extends FrameLayout {
 
         void onCalendarInterceptClick(Calendar calendar, boolean isClick);
     }
+
 }

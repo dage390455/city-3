@@ -35,7 +35,7 @@
             android:paddingRight="10dp"
             android:visibility="gone"
             android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:textSize="12dp" />
         <ImageView
             android:id="@+id/iv_deploy_map_location"
             android:layout_width="wrap_content"

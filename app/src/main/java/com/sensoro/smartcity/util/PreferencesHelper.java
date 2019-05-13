@@ -84,6 +84,7 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_FIRMWARE_UPDATE, eventLoginData.hasDeviceFirmwareUpdate);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_DEMO_MODE, eventLoginData.hasDeviceDemoMode);
         editor.putBoolean(EXTRA_GRANTS_HAS_CONTROLLER_AID, eventLoginData.hasControllerAid);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_CAMERA_LIST, eventLoginData.hasDeviceCameraList);
         //
         editor.apply();
     }
@@ -126,6 +127,7 @@ public final class PreferencesHelper implements Constants {
             boolean hasDeviceFirmUpdate = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_FIRMWARE_UPDATE, false);
             boolean hasDeviceDemoMode = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_DEMO_MODE, false);
             boolean hasControllerAid = sp.getBoolean(EXTRA_GRANTS_HAS_CONTROLLER_AID, false);
+            boolean hasDeviceCameraList = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_CAMERA_LIST, false);
             final EventLoginData eventLoginData = new EventLoginData();
             eventLoginData.phoneId = phoneId;
             eventLoginData.userId = userId;
@@ -158,6 +160,7 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasDeviceFirmwareUpdate = hasDeviceFirmUpdate;
             eventLoginData.hasDeviceDemoMode = hasDeviceDemoMode;
             eventLoginData.hasControllerAid = hasControllerAid;
+            eventLoginData.hasDeviceCameraList = hasDeviceCameraList;
             mEventLoginData = eventLoginData;
         }
         return mEventLoginData;
@@ -377,6 +380,10 @@ public final class PreferencesHelper implements Constants {
     private String getSearchHistoryFileName(int type) {
         String spFileName = null;
         switch (type) {
+
+            case SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST:
+                spFileName = SearchHistoryTypeConstants.SP_FILE_SEARCH_CAMERALIST;
+                break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN:
                 spFileName = SearchHistoryTypeConstants.SP_FILE_WARN;
                 break;

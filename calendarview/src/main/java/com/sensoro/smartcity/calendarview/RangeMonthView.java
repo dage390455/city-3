@@ -177,10 +177,12 @@ public abstract class RangeMonthView extends BaseMonthView {
             } else if (mDelegate.mSelectedEndRangeCalendar == null) {
                 int compare = calendar.compareTo(mDelegate.mSelectedStartRangeCalendar);
                 if (compare <= 0) {
-                    mDelegate.mSelectedEndRangeCalendar = mDelegate.mSelectedStartRangeCalendar;
+//                    mDelegate.mSelectedEndRangeCalendar = mDelegate.mSelectedStartRangeCalendar;
+//                    mDelegate.mSelectedStartRangeCalendar = calendar;
                     mDelegate.mSelectedStartRangeCalendar = calendar;
+                    mDelegate.mSelectedEndRangeCalendar = null;
                     //回调两次
-                    isSmall = 1;
+//                    isSmall = 1;
 
                 } else {
                     mDelegate.mSelectedEndRangeCalendar = calendar;

@@ -26,7 +26,7 @@
             android:text="@string/sensoro_city"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="36dp"
-            android:textSize="20sp"
+            android:textSize="20dp"
             android:textColor="@color/c_252525"
             />
         <TextView
@@ -36,7 +36,7 @@
             android:text="@string/login_tip"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="4dp"
-            android:textSize="12sp"
+            android:textSize="12dp"
             android:textColor="@color/c_252525"
             />
 
@@ -71,8 +71,9 @@
                 android:cursorVisible="true"
                 android:textCursorDrawable="@drawable/my_cursor"
                 android:hint="@string/login_input_account_tip"
+                android:singleLine="true"
                 android:layout_gravity="center_vertical"
-                android:textSize="14sp"
+                android:textSize="14dp"
                 android:textColorHint="@color/c_a6a6a6"
                 android:textColor="@color/c_252525"
                 android:layout_marginStart="16dp"/>
@@ -121,9 +122,10 @@
                 android:cursorVisible="true"
                 android:textCursorDrawable="@drawable/my_cursor"
                 android:hint="@string/login_input_password_tip"
+                android:singleLine="true"
                 android:inputType="textPassword"
                 android:layout_gravity="center_vertical"
-                android:textSize="14sp"
+                android:textSize="14dp"
                 android:textColorHint="@color/c_a6a6a6"
                 android:textColor="@color/c_252525"
                 android:layout_marginStart="16dp"/>

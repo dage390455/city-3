@@ -16,7 +16,7 @@
         android:gravity="center"
         android:padding="10dip"
         android:textColor="#5D5D5D"
-        android:textSize="18sp"
+        android:textSize="18dp"
         android:visibility="gone" />
 
     <ListView
@@ -38,6 +38,6 @@
         android:gravity="center"
         android:text="@string/cancel"
         android:textColor="#5D5D5D"
-        android:textSize="18sp" />
+        android:textSize="18dp" />
 
 </LinearLayout>

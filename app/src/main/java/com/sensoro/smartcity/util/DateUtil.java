@@ -398,8 +398,8 @@ public class DateUtil {
         return new SimpleDateFormat("MM/dd HH:mm:ss", Locale.ROOT).format(new Date(time));
     }
 
-    public static String getMothDayFormatDate(long time) {
-        return new SimpleDateFormat("MM/dd", Locale.ROOT).format(new Date(time));
+    public static String getMothDayHourMinuteFormatDate(long time) {
+        return new SimpleDateFormat("MM/dd HH:mm", Locale.ROOT).format(new Date(time));
     }
 
     public static String getCalendarYearMothDayFormatDate(long time) {
@@ -524,6 +524,11 @@ public class DateUtil {
 
     public static String getStrTime_yy(long time) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy", Locale.ROOT);
+        return simpleDateFormat.format(new Date(time));
+    }
+
+    public static String getStrTime_MM_dd_hms(long time) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM.dd HH:mm:ss", Locale.ROOT);
         return simpleDateFormat.format(new Date(time));
     }
 }

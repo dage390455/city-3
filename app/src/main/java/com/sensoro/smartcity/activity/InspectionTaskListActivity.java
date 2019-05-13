@@ -101,7 +101,9 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
 
     private void initCalendarPop() {
         mCalendarPopUtils = new CalendarPopUtils(mActivity);
-        mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
+        mCalendarPopUtils
+                .setMonthStatus(1)
+                .setOnCalendarPopupCallbackListener(this);
     }
 
     private void initRcContent() {

@@ -15,7 +15,7 @@
         android:layout_marginEnd="24dp"
         android:text="@string/open_ble_contact_device"
         android:textColor="@color/c_25292d"
-        android:textSize="18sp" />
+        android:textSize="18dp" />
 
     <TextView
         android:id="@+id/dialog_tip_operation_tv_message"
@@ -28,7 +28,7 @@
         android:gravity="center"
         android:text="@string/open_ble_to_location"
         android:textColor="@color/c_a6a6a6"
-        android:textSize="14sp" />
+        android:textSize="14dp" />
 
     <LinearLayout
         android:id="@+id/dialog_operation_ll_et_root"
@@ -48,7 +48,7 @@
             android:padding="12dp"
             android:text="@string/electric_current"
             android:textColor="@color/c_a6a6a6"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <EditText
             android:id="@+id/dialog_operation_et"
@@ -61,7 +61,7 @@
             android:cursorVisible="true"
             android:textCursorDrawable="@drawable/my_cursor"
             android:textColor="@color/c_252525"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -72,7 +72,7 @@
             android:paddingBottom="12dp"
             android:text="A"
             android:textColor="@color/c_a6a6a6"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
     </LinearLayout>
 
@@ -94,7 +94,7 @@
             android:padding="12dp"
             android:text="@string/diameter"
             android:textColor="@color/c_a6a6a6"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <EditText
             android:id="@+id/dialog_operation_et_diameter"
@@ -108,7 +108,7 @@
             android:textCursorDrawable="@drawable/my_cursor"
             android:inputType="number|numberDecimal"
             android:textColor="@color/c_252525"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -119,7 +119,7 @@
             android:paddingBottom="12dp"
             android:text="m㎡"
             android:textColor="@color/c_a6a6a6"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
     </LinearLayout>
 
@@ -146,7 +146,7 @@
             android:paddingBottom="16dp"
             android:text="@string/ok_one"
             android:textColor="@color/c_a6a6a6"
-            android:textSize="16sp" />
+            android:textSize="16dp" />
 
         <View
             android:layout_width="@dimen/view_divider_width"
@@ -164,7 +164,7 @@
             android:paddingBottom="16dp"
             android:text="@string/setting"
             android:textColor="@color/c_29c093"
-            android:textSize="16sp" />
+            android:textSize="16dp" />
 
     </LinearLayout>
 </LinearLayout>

@@ -48,7 +48,8 @@ public class DeviceInfo implements Serializable, Comparable {
     private Long deployTime;
     private DeployControlSettingData config;
     private Integer demoMode;
-
+//    private DeviceGroup deviceGroup;
+    private String deviceGroup;
 
     private String appId;
     private String hardwareVersion;
@@ -643,10 +644,56 @@ public class DeviceInfo implements Serializable, Comparable {
         this.firmwareVersion = firmwareVersion;
     }
 
-    public static class OtherBean implements Serializable{
+    public String getDeviceGroup() {
+        return deviceGroup;
     }
 
-    public static class ErrorBean implements Serializable{
+    public void setDeviceGroup(String deviceGroup) {
+        this.deviceGroup = deviceGroup;
+    }
+
+//    public DeviceGroup getDeviceGroup() {
+//        return deviceGroup;
+//    }
+//
+//    public void setDeviceGroup(DeviceGroup deviceGroup) {
+//        this.deviceGroup = deviceGroup;
+//    }
+
+    public static class OtherBean implements Serializable {
+    }
+
+    public static class DeviceGroup implements Serializable {
+        private String _id;
+        private String id;
+        private String groupName;
+
+        public String get_id() {
+            return _id;
+        }
+
+        public void set_id(String _id) {
+            this._id = _id;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getGroupName() {
+            return groupName;
+        }
+
+        public void setGroupName(String groupName) {
+            this.groupName = groupName;
+        }
+    }
+
+    public static class ErrorBean implements Serializable {
         /**
          * status : false
          */

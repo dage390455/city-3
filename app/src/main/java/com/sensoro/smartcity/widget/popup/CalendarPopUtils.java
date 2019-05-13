@@ -18,10 +18,13 @@ import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.calendarview.CalendarView;
+import com.sensoro.smartcity.calendarview.customview.CustomCircleRangeMonthView;
+import com.sensoro.smartcity.calendarview.customview.CustomRangeMonthView;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.widget.MapContainer;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.Calendar;
@@ -82,11 +85,32 @@ public class CalendarPopUtils implements
     private TranslateAnimation dismissTranslateAnimation;
     private AlphaAnimation showAlphaAnimation;
     private AlphaAnimation dismissAlphaAnimation;
+    private int monthStatus;
+    private boolean isDefaultSelectedCurDay = true;
+    private int rangeStatus;
 
     public CalendarPopUtils(Activity activity) {
         mActivity = activity;
     }
 
+    /**
+     * 指定日期当天有个小绿点
+     * @param monthStatus
+     * @return
+     */
+    public CalendarPopUtils setMonthStatus(int monthStatus) {
+       this.monthStatus = monthStatus;
+       return this;
+    }
+    public CalendarPopUtils setRangeStatus(int rangeStatus) {
+        this.rangeStatus = rangeStatus;
+        return this;
+    }
+
+    public CalendarPopUtils isDefaultSelectedCurDay(boolean isDefaultSelectedCurDay) {
+        this.isDefaultSelectedCurDay = isDefaultSelectedCurDay;
+        return this;
+    }
     private void init() {
         mPopupWindow = new PopupWindow(mActivity);
         view = LayoutInflater.from(mActivity).inflate(R.layout.activity_calendar_test, null);
@@ -108,17 +132,29 @@ public class CalendarPopUtils implements
     }
 
     private void initView() {
-//        calendarView.setCalendarOrientation(OrientationHelper.HORIZONTAL);
-//        calendarView.setSelectionType(SelectionType.RANGE);
-//        calendarView.setOnDayRangeSelectedListener(this);
-//        calendarView.setOnDayClickListener(this);
-//        calendarView.setRange(calendarView.getCurYear(), calendarView.getCurMonth(), calendarView.getCurDay(),
-//                calendarView.getCurYear() + 2, 12, 31);
+        switch (monthStatus){
+            case 1:
+                calendarView.setMonthView(CustomCircleRangeMonthView.class);
+                break;
+            default:
+                calendarView.setMonthView(CustomRangeMonthView.class);
+                break;
+
+        }
+
+       switch (rangeStatus){
+           case 1:
+               calendarView.setRange(2004,1,1,calendarView.getCurYear(),calendarView.getCurMonth(),calendarView.getCurDay());
+               break;
+            default:
+                break;
+
+        }
         calendarView.setOnCalendarRangeSelectListener(this);
         calendarView.setOnMonthChangeListener(this);
-        setMonthYearText(calendarView.getCurYear(), calendarView.getCurMonth());
+
+        setMonthYearText(calendarView.getCurMonth());
         initAnimation();
-//        calendarView.scrollToCalendar(2019,2,1);
     }
 
     private void initAnimation() {
@@ -149,9 +185,8 @@ public class CalendarPopUtils implements
         });
 
     }
-    private void setMonthYearText(int year, int month) {
-        acCalendarTvMonthYear.setText(String.format(Locale.CHINA, "%s %d",
-                mActivity.getString(Constants.MONTHS[month - 1]), year));
+    private void setMonthYearText(int month) {
+        acCalendarTvMonthYear.setText(mActivity.getString(Constants.MONTHS[month - 1]));
     }
 
     private void setSelectTime(long startTime, long endTime) {
@@ -163,7 +198,18 @@ public class CalendarPopUtils implements
     private void showHistory() {
         try {
             if (startTime == -1 || endTime == -1) {
-                calendarView.setSelectedCalendar(calendarView.getCurYear(),calendarView.getCurMonth(),calendarView.getCurDay(),true);
+                if(isDefaultSelectedCurDay){
+                    calendarView.setSelectedCalendar(calendarView.getCurYear(),calendarView.getCurMonth(),calendarView.getCurDay(),true);
+                    if (AppUtils.isChineseLanguage()) {
+                        setStartDate(calendarView.getCurMonth() + "月" + calendarView.getCurDay()+"日", String.valueOf(calendarView.getCurYear()));
+                    }else{
+                        setStartDate(calendarView.getCurMonth() + "." + calendarView.getCurDay(), String.valueOf(calendarView.getCurYear()));
+                    }
+
+                }else{
+                    calendarView.clearSelectRange();
+                    setStartDate("-","");
+                }
                 return;
             }
 
@@ -197,6 +243,16 @@ public class CalendarPopUtils implements
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void setChineseStartDate(String monthDay, String year) {
+        acCalendarLlEndMonth.setVisibility(View.GONE);
+        acCalendarImvArrows.setVisibility(View.GONE);
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) acCalendarLlStartMonth.getLayoutParams();
+        layoutParams.setMarginEnd(AppUtils.dp2px(mActivity,0));
+        acCalendarLlStartMonth.setLayoutParams(layoutParams);
+        acCalendarTvStartMonth.setText(monthDay);
+        acCalendarTvStartYear.setText(year);
     }
 
 
@@ -276,7 +332,7 @@ public class CalendarPopUtils implements
         acCalendarLlEndMonth.setVisibility(View.VISIBLE);
         acCalendarImvArrows.setVisibility(View.VISIBLE);
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) acCalendarLlStartMonth.getLayoutParams();
-        layoutParams.setMarginEnd(AppUtils.dp2px(mActivity,40));
+        layoutParams.setMarginEnd(AppUtils.dp2px(mActivity,18));
         acCalendarLlStartMonth.setLayoutParams(layoutParams);
         acCalendarTvEndMonth.setText(monthDay);
         acCalendarTvEndYear.setText(year);
@@ -337,17 +393,26 @@ public class CalendarPopUtils implements
 
         if (isEnd) {
             endDate = calendar.getYear() + "/" + calendar.getMonth() + "/" + calendar.getDay();
-            setEndDate(calendar.getMonth() + "." + calendar.getDay(), String.valueOf(calendar.getYear()));
+            if (AppUtils.isChineseLanguage()) {
+                setEndDate(calendar.getMonth() + "月" + calendar.getDay()+"日", String.valueOf(calendar.getYear()));
+            }else{
+                setEndDate(calendar.getMonth() + "." + calendar.getDay(), String.valueOf(calendar.getYear()));
+            }
         } else {
             startDate = calendar.getYear() + "/" + calendar.getMonth() + "/" + calendar.getDay();
             endDate = startDate;
-            setStartDate(calendar.getMonth() + "." + calendar.getDay(), String.valueOf(calendar.getYear()));
+            if (AppUtils.isChineseLanguage()) {
+                setStartDate(calendar.getMonth() + "月" + calendar.getDay()+"日", String.valueOf(calendar.getYear()));
+            }else{
+                setStartDate(calendar.getMonth() + "." + calendar.getDay(), String.valueOf(calendar.getYear()));
+            }
+
         }
     }
 
     @Override
     public void onMonthChange(int year, int month) {
-        setMonthYearText(year, month);
+        setMonthYearText(month);
 
     }
 

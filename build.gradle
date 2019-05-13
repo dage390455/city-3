@@ -35,4 +35,3 @@ configurations.all { resolutionStrategy.force 'com.android.support:multidex:1.0.
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-

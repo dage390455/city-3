@@ -60,6 +60,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
             getView().setMerchantVisible(userData.hasSubMerchant || userData.hasControllerAid);
             getView().changeMerchantTitle(userData.hasSubMerchant);
             getView().setSignalCheckVisible(userData.hasSignalCheck);
+            getView().setDeviceCameraVisible(userData.hasDeviceCameraList && chineseLanguage);
         }
     }
 
@@ -211,7 +212,8 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         } else {
             AppUtils.openNetPage(mContext, "https://www.sensoro.com/en/about.html");
         }
-
+//        Intent intent = new Intent(mContext, LineChartActivity2.class);
+//        getView().startAC(intent);
     }
 
     public void doVersionInfo() {

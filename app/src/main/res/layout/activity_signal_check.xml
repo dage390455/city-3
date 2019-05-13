@@ -32,7 +32,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:textColor="@color/c_252525"
-                android:textSize="16sp" />
+                android:textSize="16dp" />
             <TextView
                 android:id="@+id/ac_signal_check_tv_near"
                 android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
                 android:visibility="gone"
                 android:textColor="@color/white"
                 android:background="@drawable/shape_bg_solid_29c_full_corner"
-                android:textSize="10sp" />
+                android:textSize="10dp" />
             <TextView
                 android:id="@+id/ac_signal_check_tv_state"
                 android:layout_width="wrap_content"
@@ -55,7 +55,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="10dp"
                 android:drawablePadding="4dp"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
 
             <TextView
                 android:id="@+id/ac_signal_check_tv_time"
@@ -64,7 +64,7 @@
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/c_5d5d5d"
                 android:layout_marginStart="16dp"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
         </LinearLayout>
 
         <TextView
@@ -75,7 +75,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="20dp"
             android:textColor="@color/c_252525"
-            android:textSize="14sp"
+            android:textSize="14dp"
             />
 
         <View
@@ -126,7 +126,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:textSize="12sp"
+                android:textSize="12dp"
                 android:layout_marginTop="20dp"
                 android:textColor="@color/c_252525"
                 />
@@ -162,7 +162,7 @@
                android:text="@string/signal_check_test"
                android:layout_marginTop="12dp"
                android:layout_gravity="center_horizontal"
-               android:textSize="14sp"
+               android:textSize="14dp"
                android:textColor="@color/c_5d5d5d"/>
        </LinearLayout>
     </RelativeLayout>

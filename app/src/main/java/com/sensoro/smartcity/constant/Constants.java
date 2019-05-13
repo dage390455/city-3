@@ -61,7 +61,7 @@ public interface Constants {
     int[] DEVICE_STATUS_ARRAY = {R.string.main_page_warn, R.string.normal, R.string.status_lost, R.string.status_inactive, R.string.status_malfunction};
     int[] DEVICE_STATUS_COLOR_ARRAY = {R.color.c_f34a4a, R.color.c_29c093, R.color.c_5d5d5d, R.color.c_b6b6b6, R.color.c_fdc83b};
     int[] STATION_STATUS_ARRAY = {R.string.status_inactive, R.string.normal, R.string.status_alarm_true, R.string.status_emergency_alarm, R.string.status_timeout_not_reported, R.string.status_offline, R.string.status_malfunction};
-    int[] STATION_STATUS_COLOR_ARRAY = {R.color.c_b6b6b6, R.color.c_29c093, R.color.c_f34a4a, R.color.c_f34a4a, R.color.c_5d5d5d,R.color.c_5d5d5d,R.color.c_fdc83b};
+    int[] STATION_STATUS_COLOR_ARRAY = {R.color.c_b6b6b6, R.color.c_29c093, R.color.c_f34a4a, R.color.c_f34a4a, R.color.c_5d5d5d, R.color.c_5d5d5d, R.color.c_fdc83b};
     String[] INDEX_STATUS_ARRAY = {"全部状态", "预警", "正常", "失联", "未激活"};
     int[] INDEX_STATUS_VALUES = {0, 1, 2, 3};
     //    String[] INDEX_TYPE_ARRAY = {
@@ -208,6 +208,7 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_DEVICE_MUTE_LONG = "extra_grants_has_device_mute_long";
     String EXTRA_GRANTS_HAS_DEVICE_FIRMWARE_UPDATE = "extra_grants_has_device_firmware_update";
     String EXTRA_GRANTS_HAS_DEVICE_DEMO_MODE = "extra_grants_has_device_demo_mode";
+    String EXTRA_GRANTS_HAS_DEVICE_CAMERA_LIST = "extra_grants_has_device_camera_list";
     String EXTRA_DEVICE_INFO = "extra_device_info";
     String EXTRA_DEPLOY_ANALYZER_MODEL = "extra_deploy_analyzer_model";
     String EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA = "extra_deploy_configuration_setting_data";
@@ -428,6 +429,11 @@ public interface Constants {
     int DEVICE_DEMO_MODE_CLOSE = 3;
 
 
+    int NetworkInfo = 0X55;
+
+    int EVENT_DATA_APP_CRASH = 0x56;
+
+
     List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{
         add("elec_fire");
         add("smoke");
@@ -474,4 +480,13 @@ public interface Constants {
 
         }
     };
+    //camera
+    String EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST = "extra_device_camera_detail_info_list";
+    String EXTRA_PERSON_AVATAR_HISTORY_FACE_ID = "extra_person_avatar_history_face_id";
+    String EXTRA_PERSON_LOCUS_FACE_ID = "extra_person_locus_face_id";
+    String CAMERA_BASE_URL = "https://scpub-eye.antelopecloud.cn";
+    String LIVE_URL = "http://wdquan-space.b0.upaiyun.com/VIDEO/2018/11/22/ae0645396048_hls_time10.m3u8";
+    String EXTRA_CAMERA_PERSON_DETAIL = "extra_camera_person_detail";
+    String EXTRA_CAMERA_PERSON_AVATAR_HISTORY_FACE_URL = "EXTRA_CAMERA_PERSON_AVATAR_HISTORY_FACE_URL";
 }
+
