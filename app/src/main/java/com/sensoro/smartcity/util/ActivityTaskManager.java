@@ -149,6 +149,7 @@ public final class ActivityTaskManager {
             if (activityMgr != null) {
                 activityMgr.restartPackage(context.getPackageName());
             }
+            android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(0);
         } catch (Exception e) {
             e.printStackTrace();
