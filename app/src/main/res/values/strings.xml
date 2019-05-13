@@ -992,9 +992,10 @@
     <string name="new_contact">New contact</string>
     <string name="delete_this">Delete this</string>
     <string name="deploy_record_deploy_staff">Deploy Staff</string>
-    <string name="alarm_video">预警录像</string>
     <string name="relation_camera">关联机位：</string>
+    <string name="alarm_video">预警录像</string>
     <string name="watching">观看中</string>
     <string name="alarm_camera_live">直播</string>
     <string name="recording_time">录制时间：</string>
+    <string name="app_crash_tips">System error, please log in again</string>
 </resources>

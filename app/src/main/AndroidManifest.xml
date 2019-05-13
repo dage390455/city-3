@@ -379,7 +379,9 @@
         <activity android:name=".activity.DeployCameraDetailActivity" />
         <activity android:name=".activity.AlarmCameraLiveDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
-        <activity android:name=".activity.AlarmCameraVideoDetailActivity" />
+        <activity android:name=".activity.AlarmCameraVideoDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity android:name=".temp.LineChartActivity2" />
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"
