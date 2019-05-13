@@ -268,8 +268,13 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
         getView().setSelectedDateLayoutVisible(true);
         startDateTime = DateUtil.strToDate(calendarDateModel.startDate).getTime();
         endDateTime = DateUtil.strToDate(calendarDateModel.endDate).getTime();
-        getView().setSelectedDateSearchText(DateUtil.getCalendarYearMothDayFormatDate(startDateTime) + " ~ " + DateUtil
-                .getCalendarYearMothDayFormatDate(endDateTime));
+        if (startDateTime == endDateTime) {
+            getView().setSelectedDateSearchText(DateUtil.getCalendarYearMothDayFormatDate(startDateTime));
+        }else{
+            getView().setSelectedDateSearchText(DateUtil.getCalendarYearMothDayFormatDate(startDateTime) + " ~ " + DateUtil
+                    .getCalendarYearMothDayFormatDate(endDateTime));
+        }
+
         endDateTime += 1000 * 60 * 60 * 24;
 
         getView().showProgressDialog();
