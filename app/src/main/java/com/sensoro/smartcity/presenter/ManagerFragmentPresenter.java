@@ -23,6 +23,7 @@ import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.response.ResponseBase;
+import com.sensoro.smartcity.temp.LineChartActivity2;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -207,12 +208,13 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     }
 
     public void doAboutUs() {
-        if (AppUtils.isChineseLanguage()) {
-            AppUtils.openNetPage(mContext, "https://www.sensoro.com/zh/about.html");
-        } else {
-            AppUtils.openNetPage(mContext, "https://www.sensoro.com/en/about.html");
-        }
-
+//        if (AppUtils.isChineseLanguage()) {
+//            AppUtils.openNetPage(mContext, "https://www.sensoro.com/zh/about.html");
+//        } else {
+//            AppUtils.openNetPage(mContext, "https://www.sensoro.com/en/about.html");
+//        }
+        Intent intent = new Intent(mContext, LineChartActivity2.class);
+        getView().startAC(intent);
     }
 
     public void doVersionInfo() {
