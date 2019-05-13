@@ -15,14 +15,14 @@ import com.sensoro.smartcity.activity.InspectionUploadExceptionActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionActivityView;
-import com.sensoro.smartcity.iwidget.IOnCreate;
-import com.sensoro.smartcity.iwidget.IOnStart;
+import com.sensoro.common.iwidget.IOnCreate;
+import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.smartcity.server.response.ResponseBase;
-import com.sensoro.smartcity.util.BleObserver;
+import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import org.greenrobot.eventbus.EventBus;

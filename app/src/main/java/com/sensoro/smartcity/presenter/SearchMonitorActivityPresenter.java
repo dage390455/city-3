@@ -11,7 +11,7 @@ import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
-import com.sensoro.smartcity.iwidget.IOnStart;
+import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.smartcity.model.AlarmPopModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.push.ThreadPoolManager;

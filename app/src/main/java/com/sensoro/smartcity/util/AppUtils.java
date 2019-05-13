@@ -18,7 +18,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.RemoteException;
 import android.provider.ContactsContract;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -29,6 +28,7 @@ import android.widget.EditText;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
+import com.sensoro.common.utils.GPSUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.push.ThreadPoolManager;

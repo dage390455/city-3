@@ -619,7 +619,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     @Override
     public boolean isActivityOverrideStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
-        immersionBar.transparentBar().navigationBarColor(R.color.c_000000).init();
+        immersionBar.navigationBarColor(R.color.c_000000).init();
         return true;
     }
 

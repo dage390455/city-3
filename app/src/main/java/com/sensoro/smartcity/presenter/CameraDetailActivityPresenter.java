@@ -257,7 +257,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
         if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
             getView().offlineType(mCameraName);
         } else {
-            getView().doPlayLive("http://vjs.zencdn.net/v/oceans.mp4", TextUtils.isEmpty(mCameraName) ? "" : mCameraName, true);
+            getView().doPlayLive(url, TextUtils.isEmpty(mCameraName) ? "" : mCameraName, true);
             itemUrl = null;
             itemTitle = null;
         }
