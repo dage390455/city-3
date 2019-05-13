@@ -22,12 +22,14 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.shuyu.gsyvideoplayer.R;
 import com.shuyu.gsyvideoplayer.listener.GSYVideoShotListener;
 import com.shuyu.gsyvideoplayer.listener.GSYVideoShotSaveListener;
+import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
@@ -35,7 +37,7 @@ import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
 import java.io.File;
 
-import moe.codeest.enviews.ENDownloadView;
+import moe.codeest.enviews.CityENDownloadView;
 import moe.codeest.enviews.ENPlayView;
 
 /**
@@ -75,6 +77,10 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     //触摸进度dialog
     protected Dialog mProgressDialog;
+    //seekbar和触摸进度dialog
+    protected Dialog mSeekProgressDialog;
+
+    protected TextView seekDialogTv;
 
     //触摸进度条的progress
     protected ProgressBar mDialogProgressBar;
@@ -232,6 +238,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
                 rMobileData.setBackground(null);
 
+                setViewShowState(mBottomContainer, GONE);
                 rMobileData.setBackgroundColor(Color.parseColor("#66000000"));
                 playAndRetryBtn.setOnClickListener(new OnClickListener() {
                     @Override
@@ -464,6 +471,76 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         builder.create().show();
     }
 
+//    private boolean isSeekTouch;
+//
+//    @Override
+//    public boolean onTouch(View v, MotionEvent event) {
+//        int id = v.getId();
+//        if (id == R.id.progress) {
+//            switch (event.getAction()) {
+//                case MotionEvent.ACTION_DOWN:
+//                    isSeekTouch = true;
+//
+//                    break;
+//                case MotionEvent.ACTION_UP:
+//                    isSeekTouch = false;
+//                    break;
+//            }
+//        }
+//        return super.onTouch(v, event);
+//    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        super.onProgressChanged(seekBar, progress, fromUser);
+        if (fromUser) {
+            int time = seekBar.getProgress() * getDuration() / 100;
+            String seekTime = CommonUtil.stringForTime(time);
+
+            showCityProgressDiallog(seekTime, time);
+
+
+        }
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        super.onStopTrackingTouch(seekBar);
+//        int time = seekBar.getProgress() * getDuration() / 100;
+//        String seekTime = CommonUtil.stringForTime(time);
+//
+//        showCityProgressDiallog(seekTime);
+
+//        if (mSeekProgressDialog == null) {
+//            View localView = LayoutInflater.from(getActivityContext()).inflate(R.layout.city_seek_dilog, null);
+//
+//            seekDialogTv = localView.findViewById(R.id.city_seek_dialog_tv);
+//            mSeekProgressDialog = new Dialog(getActivityContext(), R.style.video_style_dialog_progress);
+//            mSeekProgressDialog.setContentView(localView);
+//            mSeekProgressDialog.getWindow().addFlags(Window.FEATURE_ACTION_BAR);
+//            mSeekProgressDialog.getWindow().addFlags(32);
+//            mSeekProgressDialog.getWindow().addFlags(16);
+//            mSeekProgressDialog.getWindow().setLayout(getWidth(), getHeight());
+//            WindowManager.LayoutParams localLayoutParams = mSeekProgressDialog.getWindow().getAttributes();
+//            localLayoutParams.gravity = Gravity.TOP;
+//            localLayoutParams.width = getWidth();
+//            localLayoutParams.height = getHeight();
+//            int location[] = new int[2];
+//            getLocationOnScreen(location);
+//            localLayoutParams.x = location[0];
+//            localLayoutParams.y = location[1];
+//            mSeekProgressDialog.getWindow().setAttributes(localLayoutParams);
+//        }
+//        if (!mSeekProgressDialog.isShowing()) {
+//            mSeekProgressDialog.show();
+//        }
+//        if (null != seekDialogTv) {
+//            seekDialogTv.setText(seekTime);
+//        }
+
+    }
+
     /**
      * 触摸显示滑动进度dialog，如需要自定义继承重写即可，记得重写dismissProgressDialog
      */
@@ -471,36 +548,91 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     @SuppressWarnings("ResourceType")
     protected void showProgressDialog(float deltaX, String seekTime,
                                       int seekTimePosition, String totalTime, int totalTimeDuration) {
-        if (mProgressDialog == null) {
-            View localView = LayoutInflater.from(getActivityContext()).inflate(getProgressDialogLayoutId(), null);
-            if (localView.findViewById(getProgressDialogProgressId()) instanceof ProgressBar) {
-                mDialogProgressBar = ((ProgressBar) localView.findViewById(getProgressDialogProgressId()));
-                if (mDialogProgressBarDrawable != null) {
-                    mDialogProgressBar.setProgressDrawable(mDialogProgressBarDrawable);
-                }
-            }
-            if (localView.findViewById(getProgressDialogCurrentDurationTextId()) instanceof TextView) {
-                mDialogSeekTime = ((TextView) localView.findViewById(getProgressDialogCurrentDurationTextId()));
-            }
-            if (localView.findViewById(getProgressDialogAllDurationTextId()) instanceof TextView) {
-                mDialogTotalTime = ((TextView) localView.findViewById(getProgressDialogAllDurationTextId()));
-            }
-            if (localView.findViewById(getProgressDialogImageId()) instanceof ImageView) {
-                mDialogIcon = ((ImageView) localView.findViewById(getProgressDialogImageId()));
-            }
-            mProgressDialog = new Dialog(getActivityContext(), R.style.video_style_dialog_progress);
-            mProgressDialog.setContentView(localView);
-            mProgressDialog.getWindow().addFlags(Window.FEATURE_ACTION_BAR);
-            mProgressDialog.getWindow().addFlags(32);
-            mProgressDialog.getWindow().addFlags(16);
-            mProgressDialog.getWindow().setLayout(getWidth(), getHeight());
-            if (mDialogProgressNormalColor != -11 && mDialogTotalTime != null) {
-                mDialogTotalTime.setTextColor(mDialogProgressNormalColor);
-            }
-            if (mDialogProgressHighLightColor != -11 && mDialogSeekTime != null) {
-                mDialogSeekTime.setTextColor(mDialogProgressHighLightColor);
-            }
-            WindowManager.LayoutParams localLayoutParams = mProgressDialog.getWindow().getAttributes();
+
+        showCityProgressDiallog(seekTime, seekTimePosition);
+//        if (mProgressDialog == null) {
+//            View localView = LayoutInflater.from(getActivityContext()).inflate(getProgressDialogLayoutId(), null);
+//            if (localView.findViewById(getProgressDialogProgressId()) instanceof ProgressBar) {
+//                mDialogProgressBar = ((ProgressBar) localView.findViewById(getProgressDialogProgressId()));
+//                if (mDialogProgressBarDrawable != null) {
+//                    mDialogProgressBar.setProgressDrawable(mDialogProgressBarDrawable);
+//                }
+//            }
+//            if (localView.findViewById(getProgressDialogCurrentDurationTextId()) instanceof TextView) {
+//                mDialogSeekTime = ((TextView) localView.findViewById(getProgressDialogCurrentDurationTextId()));
+//            }
+//            if (localView.findViewById(getProgressDialogAllDurationTextId()) instanceof TextView) {
+//                mDialogTotalTime = ((TextView) localView.findViewById(getProgressDialogAllDurationTextId()));
+//            }
+//            if (localView.findViewById(getProgressDialogImageId()) instanceof ImageView) {
+//                mDialogIcon = ((ImageView) localView.findViewById(getProgressDialogImageId()));
+//            }
+//            mProgressDialog = new Dialog(getActivityContext(), R.style.video_style_dialog_progress);
+//            mProgressDialog.setContentView(localView);
+//            mProgressDialog.getWindow().addFlags(Window.FEATURE_ACTION_BAR);
+//            mProgressDialog.getWindow().addFlags(32);
+//            mProgressDialog.getWindow().addFlags(16);
+//            mProgressDialog.getWindow().setLayout(getWidth(), getHeight());
+//            if (mDialogProgressNormalColor != -11 && mDialogTotalTime != null) {
+//                mDialogTotalTime.setTextColor(mDialogProgressNormalColor);
+//            }
+//            if (mDialogProgressHighLightColor != -11 && mDialogSeekTime != null) {
+//                mDialogSeekTime.setTextColor(mDialogProgressHighLightColor);
+//            }
+//            WindowManager.LayoutParams localLayoutParams = mProgressDialog.getWindow().getAttributes();
+//            localLayoutParams.gravity = Gravity.TOP;
+//            localLayoutParams.width = getWidth();
+//            localLayoutParams.height = getHeight();
+//            int location[] = new int[2];
+//            getLocationOnScreen(location);
+//            localLayoutParams.x = location[0];
+//            localLayoutParams.y = location[1];
+//            mProgressDialog.getWindow().setAttributes(localLayoutParams);
+//        }
+//        if (!mProgressDialog.isShowing()) {
+//            mProgressDialog.show();
+//        }
+//        if (mDialogSeekTime != null) {
+//            mDialogSeekTime.setText(seekTime);
+//        }
+//        if (mDialogTotalTime != null) {
+//            mDialogTotalTime.setText(" / " + totalTime);
+//        }
+//        if (totalTimeDuration > 0)
+//            if (mDialogProgressBar != null) {
+//                mDialogProgressBar.setProgress(seekTimePosition * 100 / totalTimeDuration);
+//            }
+//        if (deltaX > 0) {
+//            if (mDialogIcon != null) {
+//                mDialogIcon.setBackgroundResource(R.drawable.video_forward_icon);
+//            }
+//        } else {
+//            if (mDialogIcon != null) {
+//                mDialogIcon.setBackgroundResource(R.drawable.video_backward_icon);
+//            }
+//        }
+
+    }
+
+    /**
+     * 显示气泡dialog
+     *
+     * @param seekTime
+     */
+
+    private void showCityProgressDiallog(String seekTime, int seekTimePosition) {
+
+        if (mSeekProgressDialog == null) {
+            View localView = LayoutInflater.from(getActivityContext()).inflate(R.layout.city_seek_dilog, null);
+
+            seekDialogTv = localView.findViewById(R.id.city_seek_dialog_tv);
+            mSeekProgressDialog = new Dialog(getActivityContext(), R.style.video_style_dialog_progress);
+            mSeekProgressDialog.setContentView(localView);
+            mSeekProgressDialog.getWindow().addFlags(Window.FEATURE_ACTION_BAR);
+            mSeekProgressDialog.getWindow().addFlags(32);
+            mSeekProgressDialog.getWindow().addFlags(16);
+            mSeekProgressDialog.getWindow().setLayout(getWidth(), getHeight());
+            WindowManager.LayoutParams localLayoutParams = mSeekProgressDialog.getWindow().getAttributes();
             localLayoutParams.gravity = Gravity.TOP;
             localLayoutParams.width = getWidth();
             localLayoutParams.height = getHeight();
@@ -508,30 +640,24 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
             getLocationOnScreen(location);
             localLayoutParams.x = location[0];
             localLayoutParams.y = location[1];
-            mProgressDialog.getWindow().setAttributes(localLayoutParams);
+            mSeekProgressDialog.getWindow().setAttributes(localLayoutParams);
         }
-        if (!mProgressDialog.isShowing()) {
-            mProgressDialog.show();
+        if (!mSeekProgressDialog.isShowing()) {
+            mSeekProgressDialog.show();
         }
-        if (mDialogSeekTime != null) {
-            mDialogSeekTime.setText(seekTime);
+        if (null != seekDialogTv) {
+            seekDialogTv.setText(seekTime);
         }
-        if (mDialogTotalTime != null) {
-            mDialogTotalTime.setText(" / " + totalTime);
-        }
-        if (totalTimeDuration > 0)
-            if (mDialogProgressBar != null) {
-                mDialogProgressBar.setProgress(seekTimePosition * 100 / totalTimeDuration);
-            }
-        if (deltaX > 0) {
-            if (mDialogIcon != null) {
-                mDialogIcon.setBackgroundResource(R.drawable.video_forward_icon);
-            }
-        } else {
-            if (mDialogIcon != null) {
-                mDialogIcon.setBackgroundResource(R.drawable.video_backward_icon);
-            }
-        }
+
+
+        /**
+         * 重播时候拖动
+         */
+//        if (cityPlayState == 4) {
+//            setCityPlayState(-1);
+////            startPlayLogic();
+////            getCurrentPlayer().getGSYVideoManager().seekTo(seekTimePosition);
+//        }
 
     }
 
@@ -541,6 +667,12 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
             mProgressDialog.dismiss();
             mProgressDialog = null;
         }
+
+        if (mSeekProgressDialog != null) {
+            mSeekProgressDialog.dismiss();
+            mSeekProgressDialog = null;
+        }
+
     }
 
     /**
@@ -750,8 +882,8 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && mNeedLockFull) ? VISIBLE : GONE);
 
         updateStartImage();
-        if (mLoadingProgressBar instanceof ENDownloadView) {
-            ((ENDownloadView) mLoadingProgressBar).reset();
+        if (mLoadingProgressBar instanceof CityENDownloadView) {
+            ((CityENDownloadView) mLoadingProgressBar).reset();
         }
     }
 
@@ -767,11 +899,11 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 //        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, GONE);
 
-        if (mLoadingProgressBar instanceof ENDownloadView) {
-            ENDownloadView enDownloadView = (ENDownloadView) mLoadingProgressBar;
-            if (enDownloadView.getCurrentState() == ENDownloadView.STATE_PRE) {
-                ((ENDownloadView) mLoadingProgressBar).start();
-            }
+        if (mLoadingProgressBar instanceof CityENDownloadView) {
+            CityENDownloadView enDownloadView = (CityENDownloadView) mLoadingProgressBar;
+//            if (enDownloadView.getCurrentState() == ENDownloadView.STATE_PRE) {
+            ((CityENDownloadView) mLoadingProgressBar).start();
+//            }
         }
     }
 
@@ -787,8 +919,8 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 //        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && mNeedLockFull) ? VISIBLE : GONE);
 
-        if (mLoadingProgressBar instanceof ENDownloadView) {
-            ((ENDownloadView) mLoadingProgressBar).reset();
+        if (mLoadingProgressBar instanceof CityENDownloadView) {
+            ((CityENDownloadView) mLoadingProgressBar).reset();
         }
         updateStartImage();
 
@@ -807,8 +939,8 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 //        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && mNeedLockFull) ? VISIBLE : GONE);
 
-        if (mLoadingProgressBar instanceof ENDownloadView) {
-            ((ENDownloadView) mLoadingProgressBar).reset();
+        if (mLoadingProgressBar instanceof CityENDownloadView) {
+            ((CityENDownloadView) mLoadingProgressBar).reset();
         }
         updateStartImage();
         updatePauseCover();
@@ -827,11 +959,11 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 //        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, GONE);
 
-        if (mLoadingProgressBar instanceof ENDownloadView) {
-            ENDownloadView enDownloadView = (ENDownloadView) mLoadingProgressBar;
-            if (enDownloadView.getCurrentState() == ENDownloadView.STATE_PRE) {
-                ((ENDownloadView) mLoadingProgressBar).start();
-            }
+        if (mLoadingProgressBar instanceof CityENDownloadView) {
+            CityENDownloadView enDownloadView = (CityENDownloadView) mLoadingProgressBar;
+//            if (enDownloadView.getCurrentState() == ENDownloadView.STATE_PRE) {
+            ((CityENDownloadView) mLoadingProgressBar).start();
+//            }
         }
         hide();
 
@@ -849,8 +981,8 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 //        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && mNeedLockFull) ? VISIBLE : GONE);
 
-        if (mLoadingProgressBar instanceof ENDownloadView) {
-            ((ENDownloadView) mLoadingProgressBar).reset();
+        if (mLoadingProgressBar instanceof CityENDownloadView) {
+            ((CityENDownloadView) mLoadingProgressBar).reset();
         }
         updateStartImage();
         hide();
@@ -869,8 +1001,8 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 //        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && mNeedLockFull) ? VISIBLE : GONE);
 
-        if (mLoadingProgressBar instanceof ENDownloadView) {
-            ((ENDownloadView) mLoadingProgressBar).reset();
+        if (mLoadingProgressBar instanceof CityENDownloadView) {
+            ((CityENDownloadView) mLoadingProgressBar).reset();
         }
         updateStartImage();
     }
@@ -968,8 +1100,8 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 //        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, GONE);
 
-        if (mLoadingProgressBar instanceof ENDownloadView) {
-            ((ENDownloadView) mLoadingProgressBar).reset();
+        if (mLoadingProgressBar instanceof CityENDownloadView) {
+            ((CityENDownloadView) mLoadingProgressBar).reset();
         }
     }
 
@@ -997,11 +1129,11 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 //        setViewShowState(mBottomProgressBar, VISIBLE);
         setViewShowState(mLockScreen, GONE);
 
-        if (mLoadingProgressBar instanceof ENDownloadView) {
-            ENDownloadView enDownloadView = (ENDownloadView) mLoadingProgressBar;
-            if (enDownloadView.getCurrentState() == ENDownloadView.STATE_PRE) {
-                ((ENDownloadView) mLoadingProgressBar).start();
-            }
+        if (mLoadingProgressBar instanceof CityENDownloadView) {
+//            CityENDownloadView enDownloadView = (CityENDownloadView) mLoadingProgressBar;
+//            if (enDownloadView.getCurrentState() == ENDownloadView.STATE_PRE) {
+            ((CityENDownloadView) mLoadingProgressBar).start();
+//            }
         }
         updateStartImage();
     }
@@ -1017,8 +1149,8 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 //        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, GONE);
 
-        if (mLoadingProgressBar instanceof ENDownloadView) {
-            ((ENDownloadView) mLoadingProgressBar).reset();
+        if (mLoadingProgressBar instanceof CityENDownloadView) {
+            ((CityENDownloadView) mLoadingProgressBar).reset();
         }
     }
 
@@ -1033,8 +1165,8 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 //        setViewShowState(mBottomProgressBar, VISIBLE);
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && mNeedLockFull) ? VISIBLE : GONE);
 
-        if (mLoadingProgressBar instanceof ENDownloadView) {
-            ((ENDownloadView) mLoadingProgressBar).reset();
+        if (mLoadingProgressBar instanceof CityENDownloadView) {
+            ((CityENDownloadView) mLoadingProgressBar).reset();
         }
         updateStartImage();
     }
