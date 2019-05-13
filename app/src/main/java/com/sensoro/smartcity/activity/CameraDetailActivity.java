@@ -137,7 +137,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 case -1:
                     gsyPlayerAcCameraDetail.setCityPlayState(1);
 
-
                     break;
 
 
@@ -168,9 +167,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         orientationUtils.setEnable(false);
 
         initVideoOption();
-
-
-        ivCalendarAcCameraDetail.setColorFilter(mActivity.getResources().getColor(R.color.c_a6a6a6));
 
         initRefreshLayout();
 
@@ -397,14 +393,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     @Override
     public void setSelectedDateLayoutVisible(boolean isVisible) {
-        ivCalendarAcCameraDetail.setColorFilter(mActivity.getResources().
-                getColor(isVisible ? R.color.c_252525 : R.color.c_a6a6a6));
         ivTimeCloseAcCameraDetail.setVisibility(isVisible ? VISIBLE : GONE);
-
-        if (isVisible) {
-            tvSelectTimeAcCameraDetail.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
-        } else {
-            tvSelectTimeAcCameraDetail.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+        if (!isVisible) {
             tvSelectTimeAcCameraDetail.setText(mActivity.getString(R.string.click_select_date));
         }
     }

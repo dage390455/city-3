@@ -1744,8 +1744,8 @@ public class RetrofitServiceHelper {
         return retrofitService.getCameraFilter();
     }
 
-    public Observable<DeviceCameraListRsp> getDeviceCameraListByFilter(Map<String, String> map) {
-        return retrofitService.getDeviceCameraListByFilter(map);
+    public Observable<DeviceCameraListRsp> getDeviceCameraListByFilter(Integer pageSize, Integer page, String search, Map<String, String> mapFilter) {
+        return retrofitService.getDeviceCameraListByFilter(pageSize, page, search, mapFilter);
     }
 
     /**

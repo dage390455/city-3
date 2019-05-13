@@ -386,7 +386,7 @@ public interface RetrofitService {
 
 
     @GET("cameras")
-    Observable<DeviceCameraListRsp> getDeviceCameraListByFilter(@QueryMap Map<String, String> map);
+    Observable<DeviceCameraListRsp> getDeviceCameraListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
 
     @GET(GET_DEVICES_ALARM_POPUP_CONFIG)
 //    Observable<DevicesMergeTypesRsp> getDevicesMergeTypes(@Header("x-session-id") String sessionId);

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.baidu.mobstat.StatService;
 import com.gyf.barlibrary.ImmersionBar;
-import com.sensoro.smartcity.iwidget.IOnFragmentStart;
+import com.sensoro.common.iwidget.IOnFragmentStart;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 

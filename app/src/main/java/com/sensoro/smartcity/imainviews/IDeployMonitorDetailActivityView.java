@@ -3,9 +3,9 @@ package com.sensoro.smartcity.imainviews;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 
-import com.sensoro.smartcity.iwidget.IActivityIntent;
-import com.sensoro.smartcity.iwidget.IProgressDialog;
-import com.sensoro.smartcity.iwidget.IToast;
+import com.sensoro.common.iwidget.IActivityIntent;
+import com.sensoro.common.iwidget.IProgressDialog;
+import com.sensoro.common.iwidget.IToast;
 import com.sensoro.smartcity.model.DeployContactModel;
 
 import java.util.List;

@@ -2,7 +2,7 @@ package com.sensoro.smartcity.base;
 
 import android.content.Context;
 
-import com.sensoro.smartcity.iwidget.IOnDestroy;
+import com.sensoro.common.iwidget.IOnDestroy;
 
 import java.lang.ref.WeakReference;
 
