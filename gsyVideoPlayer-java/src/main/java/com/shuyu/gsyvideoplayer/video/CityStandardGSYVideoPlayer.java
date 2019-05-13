@@ -441,6 +441,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         setViewShowState(mProgressBar, isLive);
 
         setViewShowState(mTotalTimeTextView, isLive);
+        setViewShowState(mCurrentTimeTextView, isLive);
 
     }
 
