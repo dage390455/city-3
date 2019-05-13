@@ -983,4 +983,6 @@
     <string name="delete_this">删除本条</string>
     <string name="deploy_record_deploy_staff">部署人员</string>
 
+    <string name="app_crash_tips">系统出错了，请重新登录</string>
+
 </resources>

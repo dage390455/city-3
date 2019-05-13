@@ -224,13 +224,23 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     }
 
     private void initAutoSize() {
-        AutoSizeConfig.getInstance()
+        /**
+         * 给外部的三方库 {@link Activity} 自定义适配参数, 因为三方库的 {@link Activity} 并不能通过实现
+         * {@link CustomAdapt} 接口的方式来提供自定义适配参数 (因为远程依赖改不了源码)
+         * 所以使用 {@link ExternalAdaptManager} 来替代实现接口的方式, 来提供自定义适配参数
+         */
+        /**
+         * {@link ExternalAdaptManager} 是一个管理外部三方库的适配信息和状态的管理类, 详细介绍请看 {@link ExternalAdaptManager} 的类注释
+         */
+        AutoSizeConfig autoSizeConfig = AutoSizeConfig.getInstance()
                 //是否让框架支持自定义 Fragment 的适配参数, 由于这个需求是比较少见的, 所以须要使用者手动开启
                 //如果没有这个需求建议不开启
 //                .setCustomFragment(true)
                 //是否屏蔽系统字体大小对 AndroidAutoSize 的影响, 如果为 true, App 内的字体的大小将不会跟随系统设置中字体大小的改变
                 //如果为 false, 则会跟随系统设置中字体大小的改变, 默认为 false
                 .setExcludeFontScale(true)
+                .setDesignWidthInDp(375)
+                .setDesignHeightInDp(667)
                 //屏幕适配监听器
                 .setOnAdaptListener(new onAdaptListener() {
                     @Override
@@ -256,31 +266,16 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
                     }
                 })
 
-        //是否打印 AutoSize 的内部日志, 默认为 true, 如果您不想 AutoSize 打印日志, 则请设置为 false
-                .setLog(false)
-        //是否使用设备的实际尺寸做适配, 默认为 false, 如果设置为 false, 在以屏幕高度为基准进行适配时
-        //AutoSize 会将屏幕总高度减去状态栏高度来做适配
-        //设置为 true 则使用设备的实际屏幕高度, 不会减去状态栏高度
+                //是否打印 AutoSize 的内部日志, 默认为 true, 如果您不想 AutoSize 打印日志, 则请设置为 false
+                .setLog(false);//是否使用设备的实际尺寸做适配, 默认为 false, 如果设置为 false, 在以屏幕高度为基准进行适配时
+//AutoSize 会将屏幕总高度减去状态栏高度来做适配
+//设置为 true 则使用设备的实际屏幕高度, 不会减去状态栏高度
 //                .setUseDeviceSize(true)
-
-        //是否全局按照宽度进行等比例适配, 默认为 true, 如果设置为 false, AutoSize 会全局按照高度进行适配
+//是否全局按照宽度进行等比例适配, 默认为 true, 如果设置为 false, AutoSize 会全局按照高度进行适配
 //                .setBaseOnWidth(false)
-
-        //设置屏幕适配逻辑策略类, 一般不用设置, 使用框架默认的就好
+//设置屏幕适配逻辑策略类, 一般不用设置, 使用框架默认的就好
 //                .setAutoAdaptStrategy(new AutoAdaptStrategy())
-        ;
-        customAdaptForExternal();
-    }
-    /**
-     * 给外部的三方库 {@link Activity} 自定义适配参数, 因为三方库的 {@link Activity} 并不能通过实现
-     * {@link CustomAdapt} 接口的方式来提供自定义适配参数 (因为远程依赖改不了源码)
-     * 所以使用 {@link ExternalAdaptManager} 来替代实现接口的方式, 来提供自定义适配参数
-     */
-    private void customAdaptForExternal() {
-        /**
-         * {@link ExternalAdaptManager} 是一个管理外部三方库的适配信息和状态的管理类, 详细介绍请看 {@link ExternalAdaptManager} 的类注释
-         */
-        AutoSizeConfig.getInstance().getExternalAdaptManager()
+        autoSizeConfig.getExternalAdaptManager()
 
                 //加入的 Activity 将会放弃屏幕适配, 一般用于三方库的 Activity, 详情请看方法注释
                 //如果不想放弃三方库页面的适配, 请用 addExternalAdaptInfoOfActivity 方法, 建议对三方库页面进行适配, 让自己的 App 更完美一点
@@ -297,6 +292,8 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
                 //经过测试 DefaultErrorActivity 的设计图宽度在 380dp - 400dp 显示效果都是比较舒服的
                 .addExternalAdaptInfoOfActivity(CameraActivity.class, new ExternalAdaptInfo(true, 375));
     }
+
+
     private void initVc() {
         VIDEO_PATH += "SensoroCity";
         File file = new File(VIDEO_PATH);
@@ -399,8 +396,14 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         @Override
         public synchronized byte[] onCrashHandleStart2GetExtraDatas(int crashType, String errorType, String errorMessage, String errorStack) {
             EventData eventData = new EventData();
-            eventData.code = Constants.EVENT_DATA_SESSION_ID_OVERTIME;
+            eventData.code = Constants.EVENT_DATA_APP_CRASH;
+            //
             EventBus.getDefault().post(eventData);
+            try {
+                LogUtils.loge("app crash ------>>>> crashType = " + crashType + "，errorType = " + errorType + "，errorMessage = " + errorMessage + "，errorStack = " + errorStack);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             return super.onCrashHandleStart2GetExtraDatas(crashType, errorType, errorMessage, errorStack);
         }
 

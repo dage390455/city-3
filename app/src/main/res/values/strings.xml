@@ -994,4 +994,7 @@
     <string name="new_contact">New contact</string>
     <string name="delete_this">Delete this</string>
     <string name="deploy_record_deploy_staff">Deploy Staff</string>
+
+
+    <string name="app_crash_tips">System error, please log in again</string>
 </resources>
