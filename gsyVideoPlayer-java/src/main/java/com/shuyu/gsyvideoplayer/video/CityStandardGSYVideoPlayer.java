@@ -238,6 +238,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
                 rMobileData.setBackground(null);
 
+                setViewShowState(mBottomContainer, GONE);
                 rMobileData.setBackgroundColor(Color.parseColor("#66000000"));
                 playAndRetryBtn.setOnClickListener(new OnClickListener() {
                     @Override
@@ -496,7 +497,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
             int time = seekBar.getProgress() * getDuration() / 100;
             String seekTime = CommonUtil.stringForTime(time);
 
-            showCityProgressDiallog(seekTime);
+            showCityProgressDiallog(seekTime, time);
 
 
         }
@@ -548,7 +549,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     protected void showProgressDialog(float deltaX, String seekTime,
                                       int seekTimePosition, String totalTime, int totalTimeDuration) {
 
-        showCityProgressDiallog(seekTime);
+        showCityProgressDiallog(seekTime, seekTimePosition);
 //        if (mProgressDialog == null) {
 //            View localView = LayoutInflater.from(getActivityContext()).inflate(getProgressDialogLayoutId(), null);
 //            if (localView.findViewById(getProgressDialogProgressId()) instanceof ProgressBar) {
@@ -619,7 +620,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
      * @param seekTime
      */
 
-    private void showCityProgressDiallog(String seekTime) {
+    private void showCityProgressDiallog(String seekTime, int seekTimePosition) {
 
         if (mSeekProgressDialog == null) {
             View localView = LayoutInflater.from(getActivityContext()).inflate(R.layout.city_seek_dilog, null);
@@ -647,6 +648,17 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         if (null != seekDialogTv) {
             seekDialogTv.setText(seekTime);
         }
+
+
+        /**
+         * 重播时候拖动
+         */
+//        if (cityPlayState == 4) {
+//            setCityPlayState(-1);
+////            startPlayLogic();
+////            getCurrentPlayer().getGSYVideoManager().seekTo(seekTimePosition);
+//        }
+
     }
 
     @Override
