@@ -24,6 +24,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.widget.MapContainer;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.Calendar;
@@ -206,6 +207,7 @@ public class CalendarPopUtils implements
                     }
 
                 }else{
+                    calendarView.clearSelectRange();
                     setStartDate("-","");
                 }
                 return;
