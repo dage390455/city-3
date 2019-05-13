@@ -5,7 +5,9 @@
     android:background="@color/white"
     android:orientation="horizontal"
     android:paddingTop="16dp"
-    android:paddingBottom="16dp">
+    android:paddingBottom="16dp"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp">
 
     <TextView
         android:id="@+id/item_device_camera_tv_device_name"

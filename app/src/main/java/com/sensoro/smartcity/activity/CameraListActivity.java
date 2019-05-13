@@ -39,6 +39,8 @@ import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
+import com.sensoro.smartcity.widget.divider.BottomNoDividerItemDecoration;
+import com.sensoro.smartcity.widget.divider.CustomDivider;
 import com.sensoro.smartcity.widget.popup.CameraListFilterPopupWindow;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
@@ -118,7 +120,7 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         acHistoryLogRcContent.setLayoutManager(linearLayoutManager);
         acHistoryLogRcContent.setAdapter(mDeviceCameraContentAdapter);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL);
+        CustomDivider dividerItemDecoration = new CustomDivider(mActivity, DividerItemDecoration.VERTICAL);
         acHistoryLogRcContent.addItemDecoration(dividerItemDecoration);
         //
         returnTopAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.return_top_in_anim);

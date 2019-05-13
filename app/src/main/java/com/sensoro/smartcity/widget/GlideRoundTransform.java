@@ -90,7 +90,6 @@ public class GlideRoundTransform implements Transformation<Bitmap> {
             float scaleWidth = (float)size / width;
             float scaleHeight = (float)size / height;
 
-            float min = Math.max(scaleHeight, scaleWidth);
             Matrix matrix = new Matrix();
             matrix.postScale(scaleWidth,scaleHeight);
             source = Bitmap.createBitmap(source,0,0,width,height,matrix,true);

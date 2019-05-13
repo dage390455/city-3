@@ -56,4 +56,6 @@ public interface ICameraPersonLocusActivityView extends IToast , IActivityIntent
     void setSeekBarVisible(boolean isVisible);
 
     void clearDisplayNormalLine();
+
+    void setSeekBarTimeVisible(boolean isVisible);
 }

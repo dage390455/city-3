@@ -113,6 +113,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     protected int mDialogProgressHighLightColor = -11;
 
     protected int mDialogProgressNormalColor = -11;
+    private boolean mHideActionBar = false;
 
     /**
      * 1.5.0开始加入，如果需要不同布局区分功能，需要重载
@@ -150,6 +151,10 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
         }
 
+    }
+
+    public void setHideActionBar(boolean isHide){
+        mHideActionBar = isHide;
     }
 
 
@@ -868,6 +873,9 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     protected void hideAllWidget() {
         setViewShowState(mBottomContainer, INVISIBLE);
         setViewShowState(mTopContainer, INVISIBLE);
+        if (mHideActionBar) {
+            CommonUtil.hideSupportActionBar(mContext,true,true);
+        }
     }
 
 
@@ -881,7 +889,9 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         setViewShowState(mLoadingProgressBar, INVISIBLE);
         setViewShowState(mThumbImageViewLayout, VISIBLE);
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && mNeedLockFull) ? VISIBLE : GONE);
-
+        if (mHideActionBar) {
+            CommonUtil.showSupportActionBar(mContext,true,true);
+        }
         updateStartImage();
         if (mLoadingProgressBar instanceof CityENDownloadView) {
             ((CityENDownloadView) mLoadingProgressBar).reset();
@@ -899,7 +909,9 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         setViewShowState(mThumbImageViewLayout, INVISIBLE);
 //        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, GONE);
-
+        if (mHideActionBar) {
+            CommonUtil.showSupportActionBar(mContext,true,true);
+        }
         if (mLoadingProgressBar instanceof CityENDownloadView) {
             CityENDownloadView enDownloadView = (CityENDownloadView) mLoadingProgressBar;
 //            if (enDownloadView.getCurrentState() == ENDownloadView.STATE_PRE) {
@@ -919,7 +931,9 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         setViewShowState(mThumbImageViewLayout, INVISIBLE);
 //        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && mNeedLockFull) ? VISIBLE : GONE);
-
+        if (mHideActionBar) {
+            CommonUtil.showSupportActionBar(mContext,true,true);
+        }
         if (mLoadingProgressBar instanceof CityENDownloadView) {
             ((CityENDownloadView) mLoadingProgressBar).reset();
         }
@@ -939,7 +953,9 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         setViewShowState(mThumbImageViewLayout, INVISIBLE);
 //        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && mNeedLockFull) ? VISIBLE : GONE);
-
+        if (mHideActionBar) {
+            CommonUtil.showSupportActionBar(mContext,true,true);
+        }
         if (mLoadingProgressBar instanceof CityENDownloadView) {
             ((CityENDownloadView) mLoadingProgressBar).reset();
         }
@@ -959,7 +975,9 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         setViewShowState(mThumbImageViewLayout, INVISIBLE);
 //        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, GONE);
-
+        if (mHideActionBar) {
+            CommonUtil.showSupportActionBar(mContext,true,true);
+        }
         if (mLoadingProgressBar instanceof CityENDownloadView) {
             CityENDownloadView enDownloadView = (CityENDownloadView) mLoadingProgressBar;
 //            if (enDownloadView.getCurrentState() == ENDownloadView.STATE_PRE) {
@@ -981,7 +999,9 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         setViewShowState(mThumbImageViewLayout, VISIBLE);
 //        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && mNeedLockFull) ? VISIBLE : GONE);
-
+        if (mHideActionBar) {
+            CommonUtil.showSupportActionBar(mContext,true,true);
+        }
         if (mLoadingProgressBar instanceof CityENDownloadView) {
             ((CityENDownloadView) mLoadingProgressBar).reset();
         }
@@ -1001,7 +1021,9 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         setViewShowState(mThumbImageViewLayout, INVISIBLE);
 //        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && mNeedLockFull) ? VISIBLE : GONE);
-
+        if (mHideActionBar) {
+            CommonUtil.hideSupportActionBar(mContext,true,true);
+        }
         if (mLoadingProgressBar instanceof CityENDownloadView) {
             ((CityENDownloadView) mLoadingProgressBar).reset();
         }
@@ -1100,7 +1122,9 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         setViewShowState(mThumbImageViewLayout, INVISIBLE);
 //        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, GONE);
-
+        if (mHideActionBar) {
+            CommonUtil.hideSupportActionBar(mContext,true,true);
+        }
         if (mLoadingProgressBar instanceof CityENDownloadView) {
             ((CityENDownloadView) mLoadingProgressBar).reset();
         }
@@ -1129,7 +1153,9 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         setViewShowState(mThumbImageViewLayout, INVISIBLE);
 //        setViewShowState(mBottomProgressBar, VISIBLE);
         setViewShowState(mLockScreen, GONE);
-
+        if (mHideActionBar) {
+            CommonUtil.hideSupportActionBar(mContext,true,true);
+        }
         if (mLoadingProgressBar instanceof CityENDownloadView) {
 //            CityENDownloadView enDownloadView = (CityENDownloadView) mLoadingProgressBar;
 //            if (enDownloadView.getCurrentState() == ENDownloadView.STATE_PRE) {
@@ -1149,7 +1175,9 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         setViewShowState(mThumbImageViewLayout, INVISIBLE);
 //        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, GONE);
-
+        if (mHideActionBar) {
+            CommonUtil.hideSupportActionBar(mContext,true,true);
+        }
         if (mLoadingProgressBar instanceof CityENDownloadView) {
             ((CityENDownloadView) mLoadingProgressBar).reset();
         }
@@ -1165,7 +1193,9 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         setViewShowState(mThumbImageViewLayout, VISIBLE);
 //        setViewShowState(mBottomProgressBar, VISIBLE);
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && mNeedLockFull) ? VISIBLE : GONE);
-
+        if (mHideActionBar) {
+            CommonUtil.hideSupportActionBar(mContext,true,true);
+        }
         if (mLoadingProgressBar instanceof CityENDownloadView) {
             ((CityENDownloadView) mLoadingProgressBar).reset();
         }

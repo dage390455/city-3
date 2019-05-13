@@ -35,7 +35,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-
                 android:layout_weight="1">
 
 
@@ -45,8 +44,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="8dp"
-                    android:layout_marginEnd="20dp"
-
                     android:background="@drawable/shape_bg_full_corner"
                     android:orientation="horizontal">
 
@@ -66,7 +63,7 @@
                         android:cursorVisible="true"
                         android:drawableStart="@drawable/main_search"
                         android:drawablePadding="8dp"
-                        android:hint="@string/warn_fragment_search_tip"
+                        android:hint="@string/camera_name_sn"
                         android:imeOptions="actionSearch"
                         android:singleLine="true"
                         android:textColor="@color/c_252525"
@@ -106,7 +103,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
                 android:padding="8dp"
                 android:text="@string/cancel"
                 android:textColor="@color/c_252525"
@@ -162,7 +158,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="12dp"
-            android:background="@color/white">
+            android:background="@color/c_f4f4f4">
 
             <include layout="@layout/item_no_content" />
 
@@ -175,9 +171,7 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/fg_history_log_rc_content"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp" />
+                    android:layout_height="match_parent"/>
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
             <include layout="@layout/item_include_search_history_rv" />
