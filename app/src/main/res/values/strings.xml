@@ -998,4 +998,5 @@
     <string name="alarm_camera_live">直播</string>
     <string name="recording_time">录制时间：</string>
     <string name="app_crash_tips">System error, please log in again</string>
+    <string name="download_video_to_album">下载录像到手机相册</string>
 </resources>

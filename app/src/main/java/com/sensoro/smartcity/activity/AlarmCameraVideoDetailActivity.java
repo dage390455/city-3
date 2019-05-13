@@ -22,11 +22,13 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.AlarmCameraLiveDetailAdapter;
+import com.sensoro.smartcity.adapter.AlarmCameraVideoDetailAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IAlarmCameraVideoDetailActivityView;
 import com.sensoro.smartcity.presenter.AlarmCameraVideoDetailActivityPresenter;
 import com.sensoro.smartcity.server.response.AlarmCameraLiveRsp;
 import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.dialog.VideoDownloadDialogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
@@ -77,12 +79,13 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     ImageView returnTopInclude;
     private ProgressUtils mProgressUtils;
     private Animation returnTopAnimation;
-    private AlarmCameraLiveDetailAdapter mListAdapter;
+    private AlarmCameraVideoDetailAdapter mListAdapter;
     private OrientationUtils orientationUtils;
     private ImageView ivGsyCover;
     private GSYVideoOptionBuilder gsyVideoOption;
     private boolean isPlay;
     private boolean isPause;
+    private VideoDownloadDialogUtils mDownloadUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -94,6 +97,7 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
 
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+        mDownloadUtils = new VideoDownloadDialogUtils(mActivity);
 
         includeImvTitleTvTitle.setText(mActivity.getString(R.string.alarm_video));
         includeImvTitleImvSubtitle.setVisibility(GONE);
@@ -229,11 +233,19 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     }
 
     private void initRvList() {
-        mListAdapter = new AlarmCameraLiveDetailAdapter(mActivity);
-        mListAdapter.setOnAlarmCameraLiveItemClickListener(new AlarmCameraLiveDetailAdapter.AlarmCameraLiveItemClickListener() {
+        mListAdapter = new AlarmCameraVideoDetailAdapter(mActivity);
+        mListAdapter.setOnAlarmCameraVideoItemClickListener(new AlarmCameraVideoDetailAdapter.AlarmCameraVideoClickListener() {
+
             @Override
-            public void OnAlarmCameraLiveItemClick(int position) {
-                mPresenter.doItemClick(position);
+            public void OnAlarmCameraVideoItemClick(int position) {
+
+            }
+
+            @Override
+            public void onAlarmCameraVideoDownloadClick() {
+                if (mDownloadUtils != null) {
+                    mDownloadUtils.show();
+                }
             }
         });
         LinearLayoutManager manager = new LinearLayoutManager(mActivity);

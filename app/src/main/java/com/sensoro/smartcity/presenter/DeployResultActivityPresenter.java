@@ -169,7 +169,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
             case TYPE_SCAN_DEPLOY_STATION:
                 getView().setResultImageView(R.drawable.deploy_succeed);
                 getView().setStateTextView(mContext.getString(R.string.success));
-                getView().setDeployResultTvStateTextColor(R.color.c_29c093);
+                getView().setDeployResultTvStateTextColor(R.color.c_1dbb99);
                 getView().setTipsTextView(mContext.getResources().getString(R.string
                         .tips_deploy_station_success));
                 if (!TextUtils.isEmpty(deployResultModel.sn)) {
@@ -205,7 +205,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 //TODO 巡检设备更换
                 getView().setResultImageView(R.drawable.deploy_succeed);
                 getView().setStateTextView(mContext.getString(R.string.success));
-                getView().setDeployResultTvStateTextColor(R.color.c_29c093);
+                getView().setDeployResultTvStateTextColor(R.color.c_1dbb99);
                 getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_success));
                 if (!TextUtils.isEmpty(deployResultModel.sn)) {
                     getView().setSnTextView(deployResultModel.sn);
@@ -254,7 +254,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                             mContext.getResources().getColor(Constants.DEVICE_STATUS_COLOR_ARRAY[deployResultModel.deviceStatus]));
                 } else {
                     getView().setStatusTextView(mContext.getString(R.string.normal),
-                            mContext.getResources().getColor(R.color.c_29c093));
+                            mContext.getResources().getColor(R.color.c_1dbb99));
                 }
                 if (deployResultModel.deployTime == null) {
                     getView().setUpdateTextView(DateUtil.getStrTimeToday(mContext, System.currentTimeMillis(), 0));
@@ -378,7 +378,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                             mContext.getResources().getColor(Constants.DEVICE_STATUS_COLOR_ARRAY[deployResultModel.deviceStatus]));
                 } else {
                     getView().setStatusTextView(mContext.getString(R.string.normal),
-                            mContext.getResources().getColor(R.color.c_29c093));
+                            mContext.getResources().getColor(R.color.c_1dbb99));
                 }
                 getView().refreshSignal(deployResultModel.updateTime, deployResultModel.signal);
                 //TODO 当前的部署时间需要更换

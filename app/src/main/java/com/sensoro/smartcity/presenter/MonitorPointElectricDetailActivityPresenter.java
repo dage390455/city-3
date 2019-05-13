@@ -235,7 +235,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 statusText = mContext.getString(R.string.main_page_warn);
                 break;
             case SENSOR_STATUS_NORMAL:
-                textColor = mContext.getResources().getColor(R.color.c_29c093);
+                textColor = mContext.getResources().getColor(R.color.c_1dbb99);
                 statusText = mContext.getString(R.string.normal);
                 break;
             case SENSOR_STATUS_LOST:
@@ -251,7 +251,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 statusText = mContext.getString(R.string.status_malfunction);
                 break;
             default:
-                textColor = mContext.getResources().getColor(R.color.c_29c093);
+                textColor = mContext.getResources().getColor(R.color.c_1dbb99);
                 statusText = mContext.getString(R.string.normal);
                 break;
         }
@@ -1679,10 +1679,10 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 getView().showTipDialog(false, null, mContext.getString(R.string.is_device_psd), mContext.getString(R.string.device_psd_tip_message), R.color.c_a6a6a6, mContext.getString(R.string.modify), R.color.c_f34a4a, MonitorPointOperationCode.PSD);
                 break;
             case MonitorPointOperationCode.QUERY:
-                getView().showTipDialog(false, null, mContext.getString(R.string.is_device_query), mContext.getString(R.string.device_query_tip_message), R.color.c_a6a6a6, mContext.getString(R.string.monitor_point_detail_query), R.color.c_29c093, MonitorPointOperationCode.QUERY);
+                getView().showTipDialog(false, null, mContext.getString(R.string.is_device_query), mContext.getString(R.string.device_query_tip_message), R.color.c_a6a6a6, mContext.getString(R.string.monitor_point_detail_query), R.color.c_1dbb99, MonitorPointOperationCode.QUERY);
                 break;
             case MonitorPointOperationCode.SELF_CHECK:
-                getView().showTipDialog(false, null, mContext.getString(R.string.is_device_self_check), mContext.getString(R.string.device_self_check_tip_message), R.color.c_a6a6a6, mContext.getString(R.string.self_check), R.color.c_29c093, MonitorPointOperationCode.SELF_CHECK);
+                getView().showTipDialog(false, null, mContext.getString(R.string.is_device_self_check), mContext.getString(R.string.device_self_check_tip_message), R.color.c_a6a6a6, mContext.getString(R.string.self_check), R.color.c_1dbb99, MonitorPointOperationCode.SELF_CHECK);
                 break;
             case MonitorPointOperationCode.AIR_SWITCH_CONFIG:
                 Intent intent = new Intent(mContext, DeployMonitorConfigurationActivity.class);

@@ -419,7 +419,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     }
 
     public void doCameraLive() {
-        Intent intent = new Intent(mContext, AlarmCameraLiveDetailActivity.class);
+        Intent intent = new Intent(mContext, AlarmCameraVideoDetailActivity.class);
         ArrayList<String> cameras = new ArrayList<>(deviceAlarmLogInfo.getCameras());
         intent.putExtra(Constants.EXTRA_ALARM_CAMERAS,cameras);
         getView().startAC(intent);

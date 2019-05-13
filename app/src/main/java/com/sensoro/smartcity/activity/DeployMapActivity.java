@@ -54,7 +54,7 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
         includeTextTitleTvTitle.setText(R.string.deploy_location);
         includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
         includeTextTitleTvSubtitle.setText(mActivity.getString(R.string.save));
-        includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_29c093));
+        includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_1dbb99));
 
         mActivity.getWindow().getDecorView().postInvalidate();
     }

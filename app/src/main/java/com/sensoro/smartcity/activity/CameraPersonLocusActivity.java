@@ -283,13 +283,13 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
     @Override
     public void setMoveLeftClickable(boolean clickable) {
         ivMoveLeftAcPersonLocus.setEnabled(clickable);
-        ivMoveLeftAcPersonLocus.setColorFilter(mActivity.getResources().getColor(clickable ? R.color.c_29c093 : R.color.c_a6a6a6));
+        ivMoveLeftAcPersonLocus.setColorFilter(mActivity.getResources().getColor(clickable ? R.color.c_1dbb99 : R.color.c_a6a6a6));
     }
 
     @Override
     public void setMoveRightClickable(boolean clickable) {
         ivMoveRightAcPersonLocus.setClickable(clickable);
-        ivMoveRightAcPersonLocus.setColorFilter(mActivity.getResources().getColor(clickable ? R.color.c_29c093 : R.color.c_a6a6a6));
+        ivMoveRightAcPersonLocus.setColorFilter(mActivity.getResources().getColor(clickable ? R.color.c_1dbb99 : R.color.c_a6a6a6));
     }
 
     @Override
@@ -392,13 +392,13 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
     @Override
     public void setSelectDayBg(int day) {
 
-        tvOneDayAcPersonLocus.setBackgroundColor(mActivity.getResources().getColor(day == 1 ? R.color.c_29c093 : R.color.white));
+        tvOneDayAcPersonLocus.setBackgroundColor(mActivity.getResources().getColor(day == 1 ? R.color.c_1dbb99 : R.color.white));
         tvOneDayAcPersonLocus.setTextColor(mActivity.getResources().getColor(day == 1 ? R.color.white : R.color.c_252525));
 
-        tvThreeDayAcPersonLocus.setBackgroundColor(mActivity.getResources().getColor(day == 3 ? R.color.c_29c093 : R.color.white));
+        tvThreeDayAcPersonLocus.setBackgroundColor(mActivity.getResources().getColor(day == 3 ? R.color.c_1dbb99 : R.color.white));
         tvThreeDayAcPersonLocus.setTextColor(mActivity.getResources().getColor(day == 3 ? R.color.white : R.color.c_252525));
 
-        tvSevenDayAcPersonLocus.setBackgroundColor(mActivity.getResources().getColor(day == 7 ? R.color.c_29c093 : R.color.white));
+        tvSevenDayAcPersonLocus.setBackgroundColor(mActivity.getResources().getColor(day == 7 ? R.color.c_1dbb99 : R.color.white));
         tvSevenDayAcPersonLocus.setTextColor(mActivity.getResources().getColor(day == 7 ? R.color.white : R.color.c_252525));
     }
 

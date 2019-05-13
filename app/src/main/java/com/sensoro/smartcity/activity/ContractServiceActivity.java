@@ -1,6 +1,5 @@
 package com.sensoro.smartcity.activity;
 
-import android.animation.TypeEvaluator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -242,7 +240,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
             try {
                 int i = Integer.parseInt(text);
                 if (i > 0) {
-                    editText.setTextColor(mActivity.getResources().getColor(R.color.c_29c093));
+                    editText.setTextColor(mActivity.getResources().getColor(R.color.c_1dbb99));
                 } else {
                     editText.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
                 }

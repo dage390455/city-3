@@ -30,7 +30,7 @@ public class AlarmCameraVideoDetailAdapter extends RecyclerView.Adapter<AlarmCam
     private final Context mContext;
 
     List<AlarmCameraLiveRsp.DataBean> mList = new ArrayList();
-    private AlarmCameraLiveItemClickListener mListener;
+    private AlarmCameraVideoClickListener mListener;
     private Integer mClickPosition = 0;
     private final int dp4;
     private RoundedBitmapDrawable roundedBitmapDrawable;
@@ -68,7 +68,7 @@ public class AlarmCameraVideoDetailAdapter extends RecyclerView.Adapter<AlarmCam
                 notifyItemChanged(mClickPosition);
 
                 if (mListener != null) {
-                    mListener.OnAlarmCameraLiveItemClick(position);
+                    mListener.OnAlarmCameraVideoItemClick(position);
                 }
             }
         });
@@ -77,6 +77,9 @@ public class AlarmCameraVideoDetailAdapter extends RecyclerView.Adapter<AlarmCam
             @Override
             public void onClick(View v) {
                 Integer position = (Integer) holder.ivDownloadItemAdapterAlarmCameraVideoDetail.getTag();
+                if (mListener !=  null) {
+                    mListener.onAlarmCameraVideoDownloadClick();
+                }
             }
         });
 
@@ -97,17 +100,17 @@ public class AlarmCameraVideoDetailAdapter extends RecyclerView.Adapter<AlarmCam
             holder.tvWatchStateItemAdapterAlarmCameraVideoDetail.setVisibility(View.GONE);
         }
 
-        AlarmCameraLiveRsp.DataBean dataBean = mList.get(position);
-        if (dataBean != null) {
-            Glide.with(mContext)
-                    .load(dataBean.getLastCover())
-                    .error(R.drawable.camera_placeholder)
-//                    .bitmapTransform(new GlideRoundTransform(mContext,dp4))
-                    .placeholder(R.drawable.camera_placeholder)
-                    .into(holder.ivPicItemAdapterAlarmCameraVideoDetail);
-            holder.tvNameItemAdapterAlarmCameraVideoDetail.setText(dataBean.getDeviceName());
-
-        }
+//        AlarmCameraLiveRsp.DataBean dataBean = mList.get(position);
+//        if (dataBean != null) {
+//            Glide.with(mContext)
+//                    .load(dataBean.getLastCover())
+//                    .error(R.drawable.camera_placeholder)
+////                    .bitmapTransform(new GlideRoundTransform(mContext,dp4))
+//                    .placeholder(R.drawable.camera_placeholder)
+//                    .into(holder.ivPicItemAdapterAlarmCameraVideoDetail);
+//            holder.tvNameItemAdapterAlarmCameraVideoDetail.setText(dataBean.getDeviceName());
+//
+//        }
 
 
     }
@@ -119,17 +122,19 @@ public class AlarmCameraVideoDetailAdapter extends RecyclerView.Adapter<AlarmCam
         notifyDataSetChanged();
     }
 
-    public void setOnAlarmCameraLiveItemClickListener(AlarmCameraLiveItemClickListener listener) {
+    public void setOnAlarmCameraVideoItemClickListener(AlarmCameraVideoClickListener listener) {
         mListener = listener;
     }
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        return mList.size()+1;
     }
 
-    public interface AlarmCameraLiveItemClickListener {
-        void OnAlarmCameraLiveItemClick(int position);
+    public interface AlarmCameraVideoClickListener {
+        void OnAlarmCameraVideoItemClick(int position);
+
+        void onAlarmCameraVideoDownloadClick();
     }
 
     class CameraLiveDetailViewHolder extends RecyclerView.ViewHolder {
