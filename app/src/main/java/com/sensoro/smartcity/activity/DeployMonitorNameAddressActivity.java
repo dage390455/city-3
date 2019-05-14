@@ -186,7 +186,7 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
                 AppUtils.dismissInputMethodManager(mActivity, acNameAddressEt);
-                String text = acNameAddressEt.getText().toString();
+                String text = acNameAddressEt.getText().toString().trim();
                 mPresenter.doChoose(text);
                 break;
             case R.id.include_text_title_tv_cancel:
