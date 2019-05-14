@@ -23,7 +23,6 @@ import com.sensoro.smartcity.adapter.CameraListPopAdapter;
 import com.sensoro.smartcity.model.CameraFilterModel;
 import com.yixia.camera.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,13 +40,6 @@ public class CameraListFilterPopupWindow {
     private SelectModleListener mSelectModleListener;
     private DismissListener dismissListener;
 
-
-    //记录保存后的数据
-//    private List<CameraFilterModel> selectedList = new ArrayList<>();
-
-
-    //记录原始的数据
-    private List<CameraFilterModel> mList = new ArrayList<>();
     HashMap<String, String> hashMap = new HashMap();
 
 
@@ -136,6 +128,7 @@ public class CameraListFilterPopupWindow {
                 if (null != cameraListPopAdapter.getmStateCountList()) {
 
                     List<CameraFilterModel> list = cameraListPopAdapter.getmStateCountList();
+                    hashMap.clear();
 
                     for (CameraFilterModel model : list) {
 
@@ -154,7 +147,6 @@ public class CameraListFilterPopupWindow {
                         }
                         if (!StringUtils.isEmpty(stringBuffer.toString())) {
                             stringBuffer.deleteCharAt(stringBuffer.length() - 1).toString();
-                            hashMap.clear();
                             hashMap.put(key, stringBuffer.toString());
                         }
 
@@ -201,10 +193,7 @@ public class CameraListFilterPopupWindow {
     }
 
     public void updateSelectDeviceStatusList(List<CameraFilterModel> list) {
-
-
-        mList.clear();
-        mList.addAll(list);
+        cameraListPopAdapter.updateDeviceTypList(list);
     }
 
 
@@ -213,47 +202,47 @@ public class CameraListFilterPopupWindow {
      */
     public void showAsDropDown(View view) {
 
+        if (null != cameraListPopAdapter.getmStateCountList()) {
 
-        for (CameraFilterModel model : mList) {
-            for (CameraFilterModel.ListBean listBean : model.getList()) {
-                listBean.setSelect(false);
+            List<CameraFilterModel> mList = cameraListPopAdapter.getmStateCountList();
+            for (CameraFilterModel model : mList) {
+                for (CameraFilterModel.ListBean listBean : model.getList()) {
+                    listBean.setSelect(false);
 
+                }
             }
-        }
-        for (CameraFilterModel model : mList) {
+            for (CameraFilterModel model : mList) {
 
-            if (null != hashMap && hashMap.size() > 0) {
-                for (Map.Entry<String, String> entry : hashMap.entrySet()) {
+                if (null != hashMap && hashMap.size() > 0) {
+                    for (Map.Entry<String, String> entry : hashMap.entrySet()) {
 
-                    String value = entry.getValue();
-                    String[] split = value.split(",");
-
-
-                    for (CameraFilterModel.ListBean listBean : model.getList()) {
-
-                        for (String vue : split) {
+                        String value = entry.getValue();
+                        String[] split = value.split(",");
 
 
-                            if (listBean.getCode().equals(vue)) {
+                        for (CameraFilterModel.ListBean listBean : model.getList()) {
 
-                                listBean.setSelect(true);
+                            for (String vue : split) {
+
+
+                                if (listBean.getCode().equals(vue)) {
+
+                                    listBean.setSelect(true);
+
+                                }
 
                             }
 
                         }
 
+
                     }
-
-
                 }
+
+
             }
-
-
+            cameraListPopAdapter.notifyDataSetChanged();
         }
-
-        cameraListPopAdapter.updateDeviceTypList(mList);
-
-//        }
 
 
         if (Build.VERSION.SDK_INT < 24) {
