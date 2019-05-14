@@ -11,6 +11,11 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
 
     }
 
@@ -29,4 +34,6 @@ dependencies {
     implementation deps.support.app_compat
     testImplementation deps.junit
     androidTestImplementation deps.support.test_espresso
+    implementation deps.arouter_api
+    annotationProcessor deps.arouter_compiler
 }

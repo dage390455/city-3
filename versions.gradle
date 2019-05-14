@@ -36,8 +36,8 @@ versions.ijkplayer = '0.8.8'
 versions.transitionseverywhere = '1.7.0'
 versions.MPAndroidChart = '3.1.0'
 //Arouter
-versions.arouter_compiler = "1.1.4"
-versions.arouter_api = "1.3.1"
+versions.arouter_compiler = "1.2.2"
+versions.arouter_api = "1.5.0"
 
 
 def deps = [:]
