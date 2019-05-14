@@ -119,11 +119,21 @@ ext.build_versions = build_versions
 def addRepos(RepositoryHandler handler) {
 //    handler.jcenter()
     handler.jcenter { "http://jcenter.bintray.com/" }
+//    handler.jcenter { "https://maven.aliyun.com/repository/jcenter" }
     //Add the JitPack repository
     handler.maven { url "https://jitpack.io" }
-    handler.maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
     handler.mavenCentral()
+//    handler.maven { url 'https://maven.aliyun.com/repository/google' }
+//    handler.maven { url 'https://maven.aliyun.com/repository/central'}
+//    handler.maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+//    handler.maven { url 'https://maven.aliyun.com/repository/public' }
     handler.google()
+
+//    handler.maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+//    handler.maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+//    handler.maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
+//    handler.maven { url 'http://maven.aliyun.com/nexus/content/repositories/gradle-plugin' }
+
 }
 
 ext.addRepos = this.&addRepos
