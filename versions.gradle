@@ -117,14 +117,13 @@ ext.build_versions = build_versions
 
 
 def addRepos(RepositoryHandler handler) {
-    handler.google()
 //    handler.jcenter()
     handler.jcenter { "http://jcenter.bintray.com/" }
-    handler.mavenCentral()
     //Add the JitPack repository
     handler.maven { url "https://jitpack.io" }
     handler.maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
     handler.mavenCentral()
+    handler.google()
 }
 
 ext.addRepos = this.&addRepos
