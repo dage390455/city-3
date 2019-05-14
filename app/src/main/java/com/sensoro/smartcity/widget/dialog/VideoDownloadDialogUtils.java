@@ -98,6 +98,12 @@ public class VideoDownloadDialogUtils {
         this.listener = listener;
     }
 
+    public void setDownloadState() {
+        mTvTip.setText(R.string.downloading);
+        mPb.setProgress(0);
+        mPb.setVisibility(View.VISIBLE);
+    }
+
     public interface TipDialogUtilsClickListener {
         void onCancelClick();
 

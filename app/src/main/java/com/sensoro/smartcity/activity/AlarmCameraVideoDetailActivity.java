@@ -48,7 +48,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVideoDetailActivityView,
-        AlarmCameraVideoDetailActivityPresenter> implements IAlarmCameraVideoDetailActivityView{
+        AlarmCameraVideoDetailActivityPresenter> implements IAlarmCameraVideoDetailActivityView, VideoDownloadDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.view_top_ac_alarm_camera_video_detail)
     View viewTopAcAlarmCameraVideoDetail;
     @BindView(R.id.include_imv_title_imv_arrows_left)
@@ -97,7 +97,9 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
 
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+
         mDownloadUtils = new VideoDownloadDialogUtils(mActivity);
+        mDownloadUtils.setTipDialogUtilsClickListener(this);
 
         includeImvTitleTvTitle.setText(mActivity.getString(R.string.alarm_video));
         includeImvTitleImvSubtitle.setVisibility(GONE);
@@ -327,6 +329,11 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     }
 
     @Override
+    public void setDownloadState() {
+        mDownloadUtils.setDownloadState();
+    }
+
+    @Override
     public void updateData(ArrayList<AlarmCameraLiveRsp.DataBean> mList) {
         mListAdapter.updateData(mList);
         setNoContentVisible(mList == null || mList.size() < 1);
@@ -422,5 +429,17 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     @Override
     public void toastLong(String msg) {
         SensoroToast.getInstance().makeText(msg, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onCancelClick() {
+        if (mDownloadUtils != null) {
+            mDownloadUtils.dismiss();
+        }
+    }
+
+    @Override
+    public void onConfirmClick() {
+        mPresenter.doDownload();
     }
 }

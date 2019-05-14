@@ -1497,6 +1497,7 @@ public class RetrofitServiceHelper {
                     }
                     outputStream.write(fileReader, 0, read);
                     fileSizeDownloaded += read;
+
                     try {
                         LogUtils.loge("writeResponseBodyToDisk-->> file download: " + fileSizeDownloaded + " of " + fileSize);
                     } catch (Throwable throwable) {

@@ -19,4 +19,6 @@ public interface IAlarmCameraVideoDetailActivityView extends IToast, IProgressDi
     void onPullRefreshComplete();
 
     void setImage(Drawable bitmapDrawable);
+
+    void setDownloadState();
 }
