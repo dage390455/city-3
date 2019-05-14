@@ -136,14 +136,14 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
                 isShowDialog = false;
-                mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN);
+                mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN, getSearchText());
             }
         });
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
                 isShowDialog = false;
-                mPresenter.requestDataByFilter(Constants.DIRECTION_UP);
+                mPresenter.requestDataByFilter(Constants.DIRECTION_UP, getSearchText());
             }
         });
         //
@@ -179,7 +179,7 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
             public void dismiss() {
 
 
-                if (mPresenter.getSelectedHashMap() == null || mPresenter.getSelectedHashMap().size() == 0) {
+                if (mPresenter.selectedHashMap == null || mPresenter.selectedHashMap.size() == 0) {
                     cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
 
                 }
@@ -190,7 +190,7 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
             @Override
             public void selectedListener(HashMap hashMap) {
 
-                HashMap mPresenterSelectedHashMap = mPresenter.getSelectedHashMap();
+                HashMap mPresenterSelectedHashMap = mPresenter.selectedHashMap;
                 String search = null;
 
                 if (mPresenterSelectedHashMap.containsKey("search")) {
@@ -200,7 +200,7 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
                 mPresenterSelectedHashMap.clear();
 
                 if (null != hashMap && hashMap.size() > 0) {
-                    mPresenter.getSelectedHashMap().putAll(hashMap);
+                    mPresenter.selectedHashMap.putAll(hashMap);
                     cameraListIvFilter.setImageResource(R.drawable.camera_filter_selected);
                 } else {
 
@@ -211,7 +211,7 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
                 if (!TextUtils.isEmpty(search)) {
                     mPresenterSelectedHashMap.put("search", search);
                 }
-                mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN);
+                mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN, getSearchText());
             }
         });
 
@@ -226,8 +226,7 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
 
                     cameraListEtSearch.clearFocus();
 
-                    mPresenter.getSelectedHashMap().put("search", text);
-                    mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN);
+                    mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN, text);
                     AppUtils.dismissInputMethodManager(BaseStationListActivity.this, cameraListEtSearch);
                     setSearchHistoryVisible(false);
 
@@ -310,18 +309,19 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
+                        String searchText = null;
                         String text = mSearchHistoryAdapter.getSearchHistoryList().get(position);
                         if (!TextUtils.isEmpty(text)) {
-                            mPresenter.getSelectedHashMap().put("search", text);
-                            cameraListEtSearch.setText(text);
+                            searchText = text;
+                            cameraListEtSearch.setText(searchText);
                             cameraListEtSearch.setSelection(cameraListEtSearch.getText().toString().length());
                         }
                         cameraListIvSearchClear.setVisibility(View.VISIBLE);
                         cameraListEtSearch.clearFocus();
                         AppUtils.dismissInputMethodManager(BaseStationListActivity.this, cameraListEtSearch);
                         setSearchHistoryVisible(false);
-                        mPresenter.save(text);
-                        mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN);
+                        mPresenter.save(searchText);
+                        mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN, searchText);
 
                     }
                 });
@@ -461,9 +461,10 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
     }
 
     @Override
-    public void setToptitleState() {
+    public void setTopTitleState() {
 
     }
+
 
     @Override
     public void showHistoryClearDialog() {
@@ -553,8 +554,7 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
                 if (cameraListTvSearchCancel.getVisibility() == View.VISIBLE) {
                     cameraListEtSearch.getText().clear();
                 }
-                mPresenter.getSelectedHashMap().remove("search");
-                mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN);
+                mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN, null);
                 setSearchHistoryVisible(false);
                 AppUtils.dismissInputMethodManager(BaseStationListActivity.this, cameraListEtSearch);
                 break;
@@ -595,6 +595,14 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
             super.onBackPressed();
         }
 
+    }
+
+    private String getSearchText() {
+        String text = cameraListEtSearch.getText().toString();
+        if (TextUtils.isEmpty(text)) {
+            return null;
+        }
+        return text;
     }
 
 
