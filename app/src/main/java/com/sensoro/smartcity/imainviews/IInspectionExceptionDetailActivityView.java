@@ -2,12 +2,11 @@ package com.sensoro.smartcity.imainviews;
 
 import android.support.annotation.ColorRes;
 
-import com.sensoro.smartcity.iwidget.IActivityIntent;
-import com.sensoro.smartcity.iwidget.IProgressDialog;
-import com.sensoro.smartcity.iwidget.IToast;
+import com.sensoro.common.iwidget.IActivityIntent;
+import com.sensoro.common.iwidget.IProgressDialog;
+import com.sensoro.common.iwidget.IToast;
 import com.sensoro.smartcity.server.bean.ScenesData;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface IInspectionExceptionDetailActivityView extends IToast,IActivityIntent,IProgressDialog{

@@ -9,6 +9,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.sensoro.common.iwidget.IOnCreate;
+import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
 import com.sensoro.smartcity.activity.DeployMapActivity;
@@ -19,8 +21,6 @@ import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployCameraDetailActivityView;
-import com.sensoro.smartcity.iwidget.IOnCreate;
-import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.model.DeployResultModel;

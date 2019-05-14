@@ -15,7 +15,7 @@ import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.QiNiuToken;
-import com.sensoro.smartcity.util.AESUtil;
+import com.sensoro.common.utils.AESUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.luban.CompressionPredicate;
 import com.sensoro.smartcity.util.luban.Luban;

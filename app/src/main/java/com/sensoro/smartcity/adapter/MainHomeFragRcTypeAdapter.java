@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.iwidget.IOnDestroy;
+import com.sensoro.common.iwidget.IOnDestroy;
 import com.sensoro.smartcity.model.HomeTopModel;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;

@@ -12,7 +12,7 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IMalfunctionFragmentView;
-import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;

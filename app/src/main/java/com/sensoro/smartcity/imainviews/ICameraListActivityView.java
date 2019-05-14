@@ -1,8 +1,8 @@
 package com.sensoro.smartcity.imainviews;
 
-import com.sensoro.smartcity.iwidget.IActivityIntent;
-import com.sensoro.smartcity.iwidget.IProgressDialog;
-import com.sensoro.smartcity.iwidget.IToast;
+import com.sensoro.common.iwidget.IActivityIntent;
+import com.sensoro.common.iwidget.IProgressDialog;
+import com.sensoro.common.iwidget.IToast;
 import com.sensoro.smartcity.model.CameraFilterModel;
 import com.sensoro.smartcity.server.bean.DeviceCameraInfo;
 
@@ -39,5 +39,5 @@ public interface ICameraListActivityView extends IToast, IProgressDialog, IActiv
 
     void resetRefreshNoMoreData();
 
-    void setToptitleState();
+    void setTopTitleState();
 }
