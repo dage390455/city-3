@@ -46,9 +46,9 @@ public class CameraPersonAvatarHistoryActivityPresenter extends BasePresenter<IC
 
     private void requestData(String faceId, final int direction) {
         if(direction == Constants.DIRECTION_DOWN){
-            curPage++;
+            curPage = 0;
         }else{
-            curPage--;
+            curPage++;
         }
 
         if(curPage < 0){
@@ -85,7 +85,7 @@ public class CameraPersonAvatarHistoryActivityPresenter extends BasePresenter<IC
                             }
                         }else{
                             if(direction == Constants.DIRECTION_UP){
-                                curPage++;
+                                curPage--;
                             }
 
                             if (isAttachedView()) {
@@ -94,13 +94,16 @@ public class CameraPersonAvatarHistoryActivityPresenter extends BasePresenter<IC
                         }
 
                         if (isAttachedView()) {
+                            getView().onPullRefreshComplete();
                             getView().dismissProgressDialog();
                         }
                     }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
-
+                        if(direction == Constants.DIRECTION_UP){
+                            curPage--;
+                        }
                         if (isAttachedView()) {
                             getView().dismissProgressDialog();
                             getView().toastShort(errorMsg);

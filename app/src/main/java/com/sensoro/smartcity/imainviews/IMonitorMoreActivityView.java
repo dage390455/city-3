@@ -1,7 +1,7 @@
 package com.sensoro.smartcity.imainviews;
 
-import com.sensoro.smartcity.iwidget.IProgressDialog;
-import com.sensoro.smartcity.iwidget.IToast;
+import com.sensoro.common.iwidget.IProgressDialog;
+import com.sensoro.common.iwidget.IToast;
 
 import java.util.List;
 

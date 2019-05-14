@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.util.DpUtils;
+import com.sensoro.common.utils.DpUtils;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -27,6 +27,7 @@ import com.sensoro.smartcity.imainviews.ICameraPersonAvatarHistoryActivityView;
 import com.sensoro.smartcity.presenter.CameraPersonAvatarHistoryActivityPresenter;
 import com.sensoro.smartcity.server.response.DeviceCameraPersonFaceRsp;
 import com.sensoro.smartcity.widget.GlideCircleTransform;
+import com.sensoro.smartcity.widget.GlideRoundTransform;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
@@ -254,8 +255,8 @@ implements ICameraPersonAvatarHistoryActivityView{
     public void loadTitleAvatar(String faceUrl) {
         Glide.with(mActivity).load(Constants.CAMERA_BASE_URL+faceUrl)
                 .bitmapTransform(new GlideCircleTransform(mActivity))
-                .placeholder(R.drawable.ic_default_image)
-                .error(R.drawable.ic_default_image)
+                .placeholder(R.drawable.person_locus_placeholder)
+                .error(R.drawable.person_locus_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(ivTitleAvatarAcCameraPersonAvatarHistory);
     }

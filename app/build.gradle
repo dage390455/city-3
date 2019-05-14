@@ -1,5 +1,12 @@
 apply plugin: 'com.android.application'
 //apply plugin: 'android-apt'
+// Create a variable called keystorePropertiesFile, and initialize it to your
+// keystore.properties file, in the rootProject folder.
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+// Initialize a new Properties() object called keystoreProperties.
+def keystoreProperties = new Properties()
+// Load your keystore.properties file into the keystoreProperties object.
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 android {
     def verName = "3.3.1"
     def verCode = 1
@@ -10,25 +17,25 @@ android {
 
     signingConfigs {
         release {
-            keyAlias 'sensoro'
-            keyPassword 'sensoro'
-            storeFile file('/Users/sensoro/Work/AppKey/sensoro.keystore')
-            storePassword 'sensoro'
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
         }
         debug {
-            keyAlias 'sensoro'
-            keyPassword 'sensoro'
-            storeFile file('/Users/sensoro/Work/AppKey/sensoro.keystore')
-            storePassword 'sensoro'
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
         }
     }
-    compileSdkVersion 27
+    compileSdkVersion build_versions.compile_sdk
     //    useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.sensoro.smartcity"
-        minSdkVersion 21
+        minSdkVersion build_versions.min_sdk
         //考虑到vcamera库只能在23以下
-        targetSdkVersion 21
+        targetSdkVersion build_versions.target_sdk
         versionCode verCode
         versionName verName + connector + buildCode
 //         Enabling multidex support.
@@ -80,8 +87,13 @@ android {
 //            ]
         }
         release {
+            //是否zip对齐
+            zipAlignEnabled true
+            // 缩减resource文件
+            shrinkResources false
+            //Proguard
             minifyEnabled false
-//            shrinkResources true
+            //
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
             debuggable false
@@ -192,86 +204,98 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2', {
+    androidTestImplementation(deps.support.test_espresso, {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     //
-    implementation 'com.android.support:design:27.1.1'
     //    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
     //
     //    compile 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     //    compile project(':cosmocalendar')
-    implementation files('libs/Baidu_Mtj_3.8.2.1.jar')
-    implementation 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    implementation('io.socket:socket.io-client:1.0.0') {
+    implementation deps.support.design
+    implementation deps.support.multidex
+    implementation deps.support.cardview
+    implementation deps.support.constraint_layout
+    implementation deps.support.app_compat
+    implementation deps.support.recyclerview
+
+    implementation deps.butterknife
+    annotationProcessor deps.butterknife_compiler
+    implementation(deps.socket_io) {
         exclude group: 'org.json', module: 'json'
     }
-    implementation 'de.hdodenhof:circleimageview:2.1.0'
-    implementation 'com.android.support:multidex:1.0.3'
+//    implementation 'de.hdodenhof:circleimageview:2.1.0'
+
     //    compile 'com.squareup.okio:okio:1.5.0'
-    testImplementation 'junit:junit:4.12'
+    testImplementation deps.junit
     //    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.1.2'
     //    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
-    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
-    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+
+    debugImplementation deps.leakcanary_debug
+    releaseImplementation deps.leakcanary_release
     //
-    implementation files('libs/GetuiSDK2.12.4.0.jar')
+
     //  更改扫描二维码为maven库
-    implementation 'cn.bingoogolapple:bga-qrcode-zxing:1.3.6'
-    //    implementation 'cn.bingoogolapple:bga-qrcode-zbar:1.3.6'
+    implementation deps.bga_qrcode_zxing
+//    implementation 'cn.bingoogolapple:bga-qrcode-zbar:1.3.6'
     //
     //    compile project(':imagepicker')
-    implementation 'com.github.bumptech.glide:glide:3.7.0'
-    implementation 'com.qiniu:qiniu-android-sdk:7.3.+'
-    implementation files('libs/ocr-sdk.jar')
-    implementation project(':ocr_ui')
-    implementation 'me.jessyan:autosize:1.1.2'
-    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
-    implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
+    implementation deps.glide
     //网络组件
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
-    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.8'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation deps.okhttp3_logging
+    implementation deps.okhttp3
+    implementation deps.retrofit.runtime
+    implementation deps.retrofit.gson
+    implementation deps.retrofit.adapter
+    implementation deps.rxjava2
+    implementation deps.rx_android
     //消息组件
-    implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
-    implementation 'com.android.support:cardview-v7:27.1.1'
-    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
-    implementation files('libs/AMap3DMap_6.4.1_AMapSearch_6.1.0_AMapLocation_4.2.0_20180906.jar')
-    implementation project(':sensor-kit')
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation deps.event_bus
+
     //    compile 'com.gyf.immersionbar:immersionbar:2.3.2-beta01'
     //protobuf
-    implementation 'com.google.protobuf:protobuf-java:2.5.0'
-    implementation 'no.nordicsemi.android:dfu:1.0.0'
-    implementation 'com.googlecode.protobuf-java-format:protobuf-java-format:1.4'
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.github.chrisbanes.photoview:library:1.2.4'
-    implementation('com.gyf.immersionbar:immersionbar:2.3.2-beta01') {
-        exclude group: 'com.android.support', module: 'appcompat-v7'
-    }
+    implementation deps.protobuf
+
     //bottom bar
+    implementation deps.autosize
+    implementation deps.permission
+    implementation deps.smartrefresh
+    implementation deps.dfu
+    debugImplementation deps.blockcanary_debug
+    releaseImplementation deps.blockcanary_release
+    //    compile 'com.hjq:toast:5.2'
+    implementation files('libs/Baidu_Mtj_3.8.2.1.jar')
+    implementation files('libs/ocr-sdk.jar')
+    implementation project(':ocr_ui')
+    implementation files('libs/GetuiSDK2.12.4.0.jar')
+    implementation files('libs/AMap3DMap_6.4.1_AMapSearch_6.1.0_AMapLocation_4.2.0_20180906.jar')
+    implementation project(':sensor-kit')
     implementation project(':bottomnavigation')
     //Calendar view
     implementation project(':calendarview')
+    //
+    implementation project(path: ':lib_common')
+    implementation project(path: ':pickerview')
+
+    implementation(deps.mapbox) {
+        transitive = true
+    }
+    implementation deps.protobuf_java_format
+    implementation deps.photoview
+    implementation(deps.immersionbar) {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+    }
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
+    implementation 'com.qiniu:qiniu-android-sdk:7.3.+'
+    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
+    implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
     implementation project(':indicatorseekbar')
 
     implementation('com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.3') {
         transitive = true
     }
-    implementation project(path: ':pickerview')
-    implementation 'com.yanzhenjie:permission:2.0.0-rc12'
     //    compile 'com.hjq:toast:5.2'
-    debugImplementation 'com.github.markzhai:blockcanary-android:1.5.0'
-    releaseImplementation 'com.github.markzhai:blockcanary-no-op:1.5.0'
     api(project(':simplescanner')) {
         exclude group: "com.amap.api"
     }
@@ -281,7 +305,7 @@ dependencies {
     implementation project(path: ':gsyVideoPlayer-java')
     implementation project(path: ':gsyVideoPlayer-armv7a')
     //mp表格组件
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation deps.MPAndroidChart
 
 //    implementation androidDependencies.appcompat_v7
 //

@@ -2,17 +2,16 @@ package com.sensoro.smartcity.imainviews;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.widget.ImageView;
 
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.PolylineOptions;
-import com.sensoro.smartcity.iwidget.IActivityIntent;
-import com.sensoro.smartcity.iwidget.IProgressDialog;
-import com.sensoro.smartcity.iwidget.IToast;
+import com.sensoro.common.iwidget.IActivityIntent;
+import com.sensoro.common.iwidget.IProgressDialog;
+import com.sensoro.common.iwidget.IToast;
 
-public interface ICameraPersonLocusActivityView extends IToast , IActivityIntent, IProgressDialog {
+public interface ICameraPersonLocusActivityView extends IToast, IActivityIntent, IProgressDialog {
     void setMapCenter(CameraUpdate cameraUpdate);
 
     void addMarker(MarkerOptions markerOptions, int tag);
@@ -56,4 +55,6 @@ public interface ICameraPersonLocusActivityView extends IToast , IActivityIntent
     void setSeekBarVisible(boolean isVisible);
 
     void clearDisplayNormalLine();
+
+    void setSeekBarTimeVisible(boolean isVisible);
 }

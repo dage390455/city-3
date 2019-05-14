@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -42,7 +43,6 @@ import io.reactivex.schedulers.Schedulers;
 public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPersonLocusActivityView> {
     private Activity mActivity;
     private int index = 0;
-    private int size;
     private List<DeviceCameraPersonFaceRsp.DataBean> data;
     private int index1;
     private DeviceCameraPersonFaceRsp.DataBean preBean;
@@ -56,14 +56,21 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
     private int day = 1;
     private float mMapZoom = 18f;
     private Bitmap mAvatarPlaceholder;
+    private Handler mHandler;
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            getView().setSeekBarTimeVisible(false);
+        }
+    };
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
         faceId = mActivity.getIntent().getStringExtra(Constants.EXTRA_PERSON_LOCUS_FACE_ID);
-        size = AppUtils.dp2px(mActivity, 58);
         dp24 = AppUtils.dp2px(mActivity, 24);
         initMarkerImageView();
+        mHandler = new Handler();
         requestData(faceId);
 
 
@@ -134,7 +141,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                                 DeviceCameraPersonFaceRsp.DataBean dataBean = data.get(0);
                                 preBean = dataBean;
 
-                                setAddressTime(dataBean);
+                                setAddressTime(dataBean, true);
 
                                 final LatLng latLng = new LatLng(dataBean.getLatitude(), dataBean.getLongitude());
 
@@ -242,7 +249,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
 //                            .icon(BitmapDescriptorFactory.fromView(resource))
                             .icon(BitmapDescriptorFactory.fromBitmap(viewBitmap))
                             .anchor(0.5f,0.96f)
-                            .draggable(false).title("dd").snippet("ddd")
+                            .draggable(false).title("").snippet("")
                     .zIndex(10f);
                     if (isAttachedView()) {
                         mActivity.runOnUiThread(new Runnable() {
@@ -318,7 +325,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                 getView().addPolyLine(polylineOptions, true);
             }
 
-            setAddressTime(bean);
+            setAddressTime(bean, true);
             preBean = bean;
 
         }
@@ -326,7 +333,9 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
         checkLeftRightStatus();
     }
 
-    private void setAddressTime(DeviceCameraPersonFaceRsp.DataBean bean) {
+    private void setAddressTime(DeviceCameraPersonFaceRsp.DataBean bean, boolean isDelayed) {
+
+
         try {
             String captureTime = bean.getCaptureTime();
             long l = Long.parseLong(captureTime);
@@ -337,6 +346,11 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
             e.printStackTrace();
         }
         getView().setMarkerAddress(bean.getAddress());
+
+        mHandler.removeCallbacksAndMessages(null);
+        if (isDelayed) {
+            mHandler.postDelayed(runnable,1000);
+        }
     }
 
     private void checkLeftRightStatus() {
@@ -374,7 +388,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                 getView().addPolyLine(polylineOptions, true);
             }
 
-            setAddressTime(bean);
+            setAddressTime(bean, true);
 
             preBean = bean;
         }
@@ -424,7 +438,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                 .color(mActivity.getResources().getColor(R.color.c_119f82));
         getView().addPolyLine(polylineOptions, true);
         preBean = bean;
-        setAddressTime(bean);
+        setAddressTime(bean,false);
         checkLeftRightStatus();
     }
 

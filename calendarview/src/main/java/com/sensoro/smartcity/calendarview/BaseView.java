@@ -277,7 +277,7 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
         this.mSelectedPaint.setColor(delegate.getSelectedThemeColor());
 
         this.mSelectedLastPaint.setStyle(Paint.Style.FILL);
-        this.mSelectedLastPaint.setColor(Color.parseColor("#29C093"));
+        this.mSelectedLastPaint.setColor(Color.parseColor("#1DBB99"));
 
         updateItemHeight();
     }

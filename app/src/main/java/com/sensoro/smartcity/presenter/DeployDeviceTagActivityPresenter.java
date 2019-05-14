@@ -12,7 +12,7 @@ import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IDeployDeviceTagActivityView;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.util.PreferencesHelper;
-import com.sensoro.smartcity.util.ResourceUtils;
+import com.sensoro.common.utils.ResourceUtils;
 
 import org.greenrobot.eventbus.EventBus;
 

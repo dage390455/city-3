@@ -11,7 +11,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.factory.UserPermissionFactory;
 import com.sensoro.smartcity.imainviews.IMerchantSwitchActivityView;
-import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.CityObserver;

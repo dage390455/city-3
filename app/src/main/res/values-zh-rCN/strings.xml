@@ -985,5 +985,6 @@
 
     <string name="app_crash_tips">系统出错了，请重新登录</string>
     <string name="download_video_to_album">下载录像到手机相册</string>
+    <string name="camera_name_sn">摄像机名称/设备号</string>
 
 </resources>

@@ -1,2 +1,1 @@
-//include ':app', ':ocr_ui', ':bottomnavigation','sensor-kit',':calendarview',':pickerview', ':wheelview',"core",  "zbar", "zbar-sample"
-include ':app', ':ocr_ui', ':bottomnavigation','sensor-kit',':calendarview',':pickerview', ':wheelview',':simplescanner',':indicatorseekbar',':gsyVideoPlayer-java', ':gsyVideoPlayer-armv7a',  ':gsyVideoPlayer-proxy_cache', ':gsyVideoPlayer-base'
+include ':app', ':ocr_ui', ':bottomnavigation', ':lib_common', 'sensor-kit', ':calendarview', ':pickerview', ':wheelview', ':simplescanner', ':indicatorseekbar', ':gsyVideoPlayer-java', ':gsyVideoPlayer-armv7a', ':gsyVideoPlayer-proxy_cache', ':gsyVideoPlayer-base','lib_common'
