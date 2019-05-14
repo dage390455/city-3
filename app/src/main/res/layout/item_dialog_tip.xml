@@ -53,7 +53,7 @@
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
             android:background="@drawable/selector_item_white_ee_corner_right"
-            android:textColor="@color/c_29c093"
+            android:textColor="@color/c_1dbb99"
             android:gravity="center"/>
 
     </LinearLayout>

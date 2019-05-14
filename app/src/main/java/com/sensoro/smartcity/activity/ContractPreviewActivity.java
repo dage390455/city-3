@@ -92,7 +92,7 @@ public class ContractPreviewActivity extends BaseActivity<IContractPreviewActivi
 
         //不显示webview缩放按钮
         webSettings.setDisplayZoomControls(false);
-        ClipDrawable clipDrawable = new ClipDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_29c093)), Gravity.LEFT, ClipDrawable.HORIZONTAL);
+        ClipDrawable clipDrawable = new ClipDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_1dbb99)), Gravity.LEFT, ClipDrawable.HORIZONTAL);
         pbPreview.setProgressDrawable(clipDrawable);
         //添加进来
         flContainer.addView(wvPreview);

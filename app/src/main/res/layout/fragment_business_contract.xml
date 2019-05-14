@@ -351,7 +351,7 @@
                         android:paddingTop="2dp"
                         android:paddingBottom="2dp"
                         android:text="6"
-                        android:textColor="@color/c_29c093"
+                        android:textColor="@color/c_1dbb99"
                         android:textSize="14dp" />
 
                     <ImageView
@@ -421,7 +421,7 @@
                         android:paddingTop="2dp"
                         android:paddingBottom="2dp"
                         android:text="1"
-                        android:textColor="@color/c_29c093"
+                        android:textColor="@color/c_1dbb99"
                         android:textSize="14dp" />
 
                     <ImageView
@@ -491,7 +491,7 @@
                         android:paddingTop="2dp"
                         android:paddingBottom="2dp"
                         android:text="1"
-                        android:textColor="@color/c_29c093"
+                        android:textColor="@color/c_1dbb99"
                         android:textSize="14dp" />
 
                     <ImageView

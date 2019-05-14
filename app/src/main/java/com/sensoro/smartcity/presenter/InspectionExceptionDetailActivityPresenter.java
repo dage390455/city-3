@@ -53,7 +53,7 @@ public class InspectionExceptionDetailActivityPresenter extends BasePresenter<II
 
                 switch (taskDevice.getStatus()) {
                     case 1:
-                        getView().setTvStatus(R.color.c_29c093, mContext.getString(R.string.normal_inspection));
+                        getView().setTvStatus(R.color.c_1dbb99, mContext.getString(R.string.normal_inspection));
                         break;
                     case 2:
                         getView().setTvStatus(R.color.c_ff8d34, mContext.getString(R.string.inspection_abnormality));

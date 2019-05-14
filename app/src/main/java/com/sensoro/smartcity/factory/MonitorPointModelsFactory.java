@@ -149,18 +149,18 @@ public class MonitorPointModelsFactory {
                         monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_lost;
                         break;
                     case SENSOR_STATUS_NORMAL:
-                        monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
+                        monitoringPointRcContentAdapterModel.statusColorId = R.color.c_1dbb99;
                         break;
                     case SENSOR_STATUS_MALFUNCTION:
                         monitoringPointRcContentAdapterModel.statusColorId = R.color.c_fdc83b;
                         break;
                     default:
-                        monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
+                        monitoringPointRcContentAdapterModel.statusColorId = R.color.c_1dbb99;
                         break;
                 }
                 //针对预警特殊处理
                 if (SENSOR_STATUS_ALARM == status) {
-                    monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
+                    monitoringPointRcContentAdapterModel.statusColorId = R.color.c_1dbb99;
                     List<DeviceAlarmsRecord> alarmsRecords = deviceInfo.getAlarmsRecords();
                     if (alarmsRecords != null) {
                         for (DeviceAlarmsRecord deviceAlarmsRecord : alarmsRecords) {
@@ -169,7 +169,7 @@ public class MonitorPointModelsFactory {
                                 int alarmStatus = deviceAlarmsRecord.getAlarmStatus();
                                 switch (alarmStatus) {
                                     case 1:
-                                        monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
+                                        monitoringPointRcContentAdapterModel.statusColorId = R.color.c_1dbb99;
                                         break;
                                     case 2:
                                         monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_alarm;
