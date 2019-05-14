@@ -71,7 +71,7 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
         mCreateContractDialog.setTipTitleText(mActivity.getString(R.string.create_contract));
         mCreateContractDialog.setTipMessageText(mActivity.getString(R.string.create_contract_tip_message));
         mCreateContractDialog.setTipCancelText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_a6a6a6));
-        mCreateContractDialog.setTipConfirmText(mActivity.getString(R.string.dialog_input_confirm), mActivity.getResources().getColor(R.color.c_29c093));
+        mCreateContractDialog.setTipConfirmText(mActivity.getString(R.string.dialog_input_confirm), mActivity.getResources().getColor(R.color.c_1dbb99));
         mCreateContractDialog.setTipDialogUtilsClickListener(this);
     }
 

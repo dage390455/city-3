@@ -81,7 +81,7 @@ public class InspectionActivity extends BaseActivity<IInspectionActivityView, In
         mNormalDialog = new TipDialogUtils(mActivity);
         mNormalDialog.setTipMessageText(mActivity.getString(R.string.confirm_that_the_monitoring_point_is_normal));
         mNormalDialog.setTipCacnleText(mActivity.getString(R.string.i_will_see_again), mActivity.getResources().getColor(R.color.c_a6a6a6));
-        mNormalDialog.setTipConfirmText(mActivity.getString(R.string.normal), mActivity.getResources().getColor(R.color.c_29c093));
+        mNormalDialog.setTipConfirmText(mActivity.getString(R.string.normal), mActivity.getResources().getColor(R.color.c_1dbb99));
         mNormalDialog.setTipDialogUtilsClickListener(this);
     }
 

@@ -111,7 +111,7 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     @Override
     public void updateSaveStatus(boolean isEnable) {
         includeTextTitleTvSubtitle.setEnabled(isEnable);
-        includeTextTitleTvSubtitle.setTextColor(isEnable ? getResources().getColor(R.color.c_29c093) : getResources().getColor(R.color.c_dfdfdf));
+        includeTextTitleTvSubtitle.setTextColor(isEnable ? getResources().getColor(R.color.c_1dbb99) : getResources().getColor(R.color.c_dfdfdf));
 
     }
 

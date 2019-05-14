@@ -137,7 +137,7 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
             try {
                 int i = Integer.parseInt(text);
                 if (i > 0) {
-                    editText.setTextColor(mRootFragment.getResources().getColor(R.color.c_29c093));
+                    editText.setTextColor(mRootFragment.getResources().getColor(R.color.c_1dbb99));
                 } else {
                     editText.setTextColor(mRootFragment.getResources().getColor(R.color.c_252525));
                 }

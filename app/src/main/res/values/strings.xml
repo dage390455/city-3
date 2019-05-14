@@ -995,4 +995,5 @@
 
 
     <string name="app_crash_tips">System error, please log in again</string>
+    <string name="camera_name_sn">摄像机名称/设备号</string>
 </resources>
