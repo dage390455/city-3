@@ -23,9 +23,9 @@ import com.sensoro.smartcity.adapter.CameraListPopAdapter;
 import com.sensoro.smartcity.model.CameraFilterModel;
 import com.yixia.camera.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CameraListFilterPopupWindow {
     private final Activity mActivity;
@@ -40,15 +40,7 @@ public class CameraListFilterPopupWindow {
     private SelectModleListener mSelectModleListener;
     private DismissListener dismissListener;
 
-
-//    private boolean clickSave, clickReset;
-
-    //记录保存后的数据
-    private List<CameraFilterModel> selectedList = new ArrayList<>();
-
-
-    //记录原始的数据
-    private List<CameraFilterModel> mList = new ArrayList<>();
+    HashMap<String, String> hashMap = new HashMap();
 
 
     public CameraListFilterPopupWindow(final Activity activity) {
@@ -114,12 +106,14 @@ public class CameraListFilterPopupWindow {
 
                     }
 
+                    hashMap.clear();
+                    cameraListPopAdapter.notifyDataSetChanged();
+
+                    dismiss();
                     if (mSelectModleListener != null) {
 
-                        selectedList.clear();
                         mSelectModleListener.selectedListener(null);
                     }
-                    cameraListPopAdapter.notifyDataSetChanged();
                 }
 
 
@@ -132,9 +126,9 @@ public class CameraListFilterPopupWindow {
             @Override
             public void onClick(View v) {
                 if (null != cameraListPopAdapter.getmStateCountList()) {
-                    HashMap hashMap = new HashMap();
 
                     List<CameraFilterModel> list = cameraListPopAdapter.getmStateCountList();
+                    hashMap.clear();
 
                     for (CameraFilterModel model : list) {
 
@@ -153,9 +147,7 @@ public class CameraListFilterPopupWindow {
                         }
                         if (!StringUtils.isEmpty(stringBuffer.toString())) {
                             stringBuffer.deleteCharAt(stringBuffer.length() - 1).toString();
-                            hashMap.put(key, stringBuffer);
-                            selectedList.clear();
-                            selectedList.addAll(list);
+                            hashMap.put(key, stringBuffer.toString());
                         }
 
                     }
@@ -186,6 +178,7 @@ public class CameraListFilterPopupWindow {
             public void onAnimationEnd(Animation animation) {
                 mPopupWindow.dismiss();
 
+
                 if (null != dismissListener) {
                     dismissListener.dismiss();
                 }
@@ -200,8 +193,6 @@ public class CameraListFilterPopupWindow {
     }
 
     public void updateSelectDeviceStatusList(List<CameraFilterModel> list) {
-        mList.clear();
-        mList.addAll(list);
         cameraListPopAdapter.updateDeviceTypList(list);
     }
 
@@ -211,16 +202,47 @@ public class CameraListFilterPopupWindow {
      */
     public void showAsDropDown(View view) {
 
+        if (null != cameraListPopAdapter.getmStateCountList()) {
 
-        if (null != selectedList && selectedList.size() > 0) {
+            List<CameraFilterModel> mList = cameraListPopAdapter.getmStateCountList();
+            for (CameraFilterModel model : mList) {
+                for (CameraFilterModel.ListBean listBean : model.getList()) {
+                    listBean.setSelect(false);
 
-            updateSelectDeviceStatusList(selectedList);
-        } else {
+                }
+            }
+            for (CameraFilterModel model : mList) {
 
-            updateSelectDeviceStatusList(mList);
+                if (null != hashMap && hashMap.size() > 0) {
+                    for (Map.Entry<String, String> entry : hashMap.entrySet()) {
+
+                        String value = entry.getValue();
+                        String[] split = value.split(",");
+
+
+                        for (CameraFilterModel.ListBean listBean : model.getList()) {
+
+                            for (String vue : split) {
+
+
+                                if (listBean.getCode().equals(vue)) {
+
+                                    listBean.setSelect(true);
+
+                                }
+
+                            }
+
+                        }
+
+
+                    }
+                }
+
+
+            }
+            cameraListPopAdapter.notifyDataSetChanged();
         }
-
-        cameraListPopAdapter.notifyDataSetChanged();
 
 
         if (Build.VERSION.SDK_INT < 24) {
