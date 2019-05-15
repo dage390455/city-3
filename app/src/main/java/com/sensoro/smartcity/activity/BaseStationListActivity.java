@@ -69,6 +69,8 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
     @BindView(R.id.camera_list_et_search)
     EditText cameraListEtSearch;
     @BindView(R.id.camera_list_tv_search_cancel)
+
+
     TextView cameraListTvSearchCancel;
     @BindView(R.id.camera_list_iv_filter)
     ImageView cameraListIvFilter;
