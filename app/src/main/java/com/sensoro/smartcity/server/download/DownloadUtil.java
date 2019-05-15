@@ -64,11 +64,23 @@ public class DownloadUtil {
                     responseBodyCall = api.downloadWithDynamicUrl(rUrl);
                     Response<ResponseBody> result = responseBodyCall.execute();
                     final File file = writeFile(filePath, result.body().byteStream());
+                    final boolean isSuccess = file.length() == result.body().contentLength();
+
                     if (listener != null){
                         executor.execute(new Runnable() {
                             @Override
                             public void run() {
-                                listener.onFinish(file);
+                                if (isSuccess) {
+                                    listener.onFinish(file);
+                                }else{
+                                    try {
+                                        LogUtils.loge("未下载完完成，失败");
+                                    } catch (Throwable throwable) {
+                                        throwable.printStackTrace();
+                                    }
+                                    listener.onFailed("未下载完成");
+                                }
+
                             }
                         });
                     }

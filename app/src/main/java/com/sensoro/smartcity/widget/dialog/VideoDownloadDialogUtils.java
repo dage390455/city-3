@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.widget.dialog;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.support.annotation.ColorInt;
 import android.util.MonthDisplayHelper;
 import android.view.View;
@@ -20,9 +21,12 @@ public class VideoDownloadDialogUtils {
     private final TextView mTvTip;
     private final ProgressBar mPb;
     private final Activity mActivity;
+    private final int colorGray;
     private TipDialogUtilsClickListener listener;
     private CustomCornerDialog mDialog;
     private final String cancelStr;
+    private final int colorGreen;
+    private final int colorRed;
 
     public VideoDownloadDialogUtils(Activity activity) {
         mActivity = activity;
@@ -34,6 +38,10 @@ public class VideoDownloadDialogUtils {
         mTvTip = view.findViewById(R.id.tv_tip_item_dialog_video_download);
         mPb = view.findViewById(R.id.pb_download_item_dialog_video_download);
 
+        Resources resources = mActivity.getResources();
+        colorGreen = resources.getColor(R.color.c_1dbb99);
+        colorGray = resources.getColor(R.color.c_a6a6a6);
+        colorRed = mActivity.getResources().getColor(R.color.c_f34a4a);
 //        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 //        builder.setView(view);
 //        builder.setCancelable(false);
@@ -97,7 +105,7 @@ public class VideoDownloadDialogUtils {
         mPb.setProgress(0);
         mPb.setVisibility(View.INVISIBLE);
         mTvTip.setText("");
-        mTvTip.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+        mTvTip.setTextColor(colorGray);
         mTvConfirm.setText(R.string.download);
     }
 
@@ -121,23 +129,26 @@ public class VideoDownloadDialogUtils {
     public void setDownloadStartState() {
         mPb.setProgress(0);
         mPb.setVisibility(View.VISIBLE);
+        mTvTip.setTextColor(colorGray);
+        mTvTip.setText("开始下载");
         mTvConfirm.setVisibility(View.GONE);
     }
 
     public void updateDownLoadProgress(int progress, String totalBytesRead, String fileSize) {
         mTvTip.setText(String.format(Locale.ROOT,"%sM/%sM",totalBytesRead,fileSize));
+        mTvTip.setTextColor(colorGray);
         mPb.setProgress(progress);
     }
 
     public void doDownloadFinish() {
         mTvTip.setText(mActivity.getString(R.string.download_finish));
-        mTvTip.setTextColor(mActivity.getResources().getColor(R.color.c_1dbb99));
+        mTvTip.setTextColor(colorGreen);
         mTvCancel.setText(mActivity.getString(R.string.ok));
     }
 
     public void setDownloadErrorState() {
         mTvTip.setText(R.string.download_failed);
-        mTvTip.setTextColor(mActivity.getResources().getColor(R.color.c_f34a4a));
+        mTvTip.setTextColor(colorRed);
         mPb.setProgress(0);
         mTvConfirm.setText(R.string.redownload);
         mTvConfirm.setVisibility(View.VISIBLE);
