@@ -71,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:textColor="@color/c_29c093"
+                    android:textColor="@color/c_1dbb99"
                     android:textSize="12dp" />
 
                 <ImageView

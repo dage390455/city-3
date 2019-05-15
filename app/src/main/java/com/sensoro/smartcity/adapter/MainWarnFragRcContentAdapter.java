@@ -167,7 +167,7 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
             holder.mainWarnRcContentTvState.setTextColor(mContext.getResources().getColor(R.color.c_f34a4a));
         } else {
             holder.mainWarnRcContentTvState.setText(R.string.normal);
-            holder.mainWarnRcContentTvState.setTextColor(mContext.getResources().getColor(R.color.c_29c093));
+            holder.mainWarnRcContentTvState.setTextColor(mContext.getResources().getColor(R.color.c_1dbb99));
         }
         final Boolean finalIsReConfirm = isReConfirm;
         holder.itemView.setOnClickListener(new View.OnClickListener() {

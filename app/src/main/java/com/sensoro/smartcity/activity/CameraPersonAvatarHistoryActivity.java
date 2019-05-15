@@ -254,8 +254,8 @@ implements ICameraPersonAvatarHistoryActivityView{
     public void loadTitleAvatar(String faceUrl) {
         Glide.with(mActivity).load(Constants.CAMERA_BASE_URL+faceUrl)
                 .bitmapTransform(new GlideRoundTransform(mActivity))
-                .placeholder(R.drawable.ic_default_image)
-                .error(R.drawable.ic_default_image)
+                .placeholder(R.drawable.person_locus_placeholder)
+                .error(R.drawable.person_locus_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(ivTitleAvatarAcCameraPersonAvatarHistory);
     }

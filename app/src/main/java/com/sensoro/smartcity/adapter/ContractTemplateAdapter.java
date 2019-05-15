@@ -108,7 +108,7 @@ public class ContractTemplateAdapter extends RecyclerView.Adapter<ContractTempla
                             mList.get(position).setQuantity(i);
                         }
                         if (i>0){
-                            holder.etContractItemNum.setTextColor(mContext.getResources().getColor(R.color.c_29c093));
+                            holder.etContractItemNum.setTextColor(mContext.getResources().getColor(R.color.c_1dbb99));
                         }else {
                             holder.etContractItemNum.setTextColor(mContext.getResources().getColor(R.color.c_252525));
                         }

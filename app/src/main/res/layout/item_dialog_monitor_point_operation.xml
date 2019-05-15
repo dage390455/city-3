@@ -163,7 +163,7 @@
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
             android:text="@string/setting"
-            android:textColor="@color/c_29c093"
+            android:textColor="@color/c_1dbb99"
             android:textSize="16dp" />
 
     </LinearLayout>
