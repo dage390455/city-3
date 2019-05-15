@@ -4,7 +4,6 @@ import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -21,7 +20,6 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.AlarmCameraLiveDetailAdapter;
 import com.sensoro.smartcity.adapter.AlarmCameraVideoDetailAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IAlarmCameraVideoDetailActivityView;
@@ -100,6 +98,7 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
 
         mDownloadUtils = new VideoDownloadDialogUtils(mActivity);
         mDownloadUtils.setTipDialogUtilsClickListener(this);
+
 
         includeImvTitleTvTitle.setText(mActivity.getString(R.string.alarm_video));
         includeImvTitleImvSubtitle.setVisibility(GONE);
@@ -329,8 +328,31 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     }
 
     @Override
-    public void setDownloadState() {
-        mDownloadUtils.setDownloadState();
+    public void setDownloadStartState() {
+        if (mDownloadUtils.isShowing()) {
+            mDownloadUtils.setDownloadStartState();
+        }
+    }
+
+    @Override
+    public void updateDownLoadProgress(int progress, String totalBytesRead, String fileSize) {
+        if (mDownloadUtils.isShowing()) {
+            mDownloadUtils.updateDownLoadProgress(progress,totalBytesRead,fileSize);
+        }
+    }
+
+    @Override
+    public void doDownloadFinish() {
+        if (mDownloadUtils.isShowing()) {
+            mDownloadUtils.doDownloadFinish();
+        }
+    }
+
+    @Override
+    public void setDownloadErrorState() {
+        if (mDownloadUtils.isShowing()) {
+            mDownloadUtils.setDownloadErrorState();
+        }
     }
 
     @Override
@@ -389,6 +411,10 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
             mProgressUtils.destroyProgress();
         }
 
+        if (mDownloadUtils != null) {
+            mDownloadUtils.destory();
+        }
+
         if (isPlay) {
             getCurPlay().release();
         }
@@ -432,9 +458,13 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     }
 
     @Override
-    public void onCancelClick() {
+    public void onCancelClick(boolean isCancelDownload) {
         if (mDownloadUtils != null) {
             mDownloadUtils.dismiss();
+            if (isCancelDownload) {
+                mPresenter.doDownloadCancel();
+            }
+
         }
     }
 

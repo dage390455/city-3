@@ -2,11 +2,14 @@ package com.sensoro.smartcity.widget.dialog;
 
 import android.app.Activity;
 import android.support.annotation.ColorInt;
+import android.util.MonthDisplayHelper;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
+
+import java.util.Locale;
 
 public class VideoDownloadDialogUtils {
 
@@ -16,10 +19,14 @@ public class VideoDownloadDialogUtils {
     private final TextView mTvConfirm;
     private final TextView mTvTip;
     private final ProgressBar mPb;
+    private final Activity mActivity;
     private TipDialogUtilsClickListener listener;
     private CustomCornerDialog mDialog;
+    private final String cancelStr;
 
     public VideoDownloadDialogUtils(Activity activity) {
+        mActivity = activity;
+        cancelStr = mActivity.getString(R.string.cancel);
         View view = View.inflate(activity, R.layout.item_dialog_video_download, null);
         mTvMessage = view.findViewById(R.id.tv_title_item_dialog_video_download);
         mTvCancel = view.findViewById(R.id.tv_cancel_item_dialog_video_download);
@@ -37,12 +44,13 @@ public class VideoDownloadDialogUtils {
 //        }
 
         mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle,view);
+        mDialog.setCancelable(false);
 
         mTvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (listener != null) {
-                    listener.onCancelClick();
+                    listener.onCancelClick(mTvConfirm.getVisibility() != View.VISIBLE && cancelStr.equals(mTvCancel.getText().toString()));
                 }
             }
         });
@@ -73,12 +81,24 @@ public class VideoDownloadDialogUtils {
     public void show(){
         if (mDialog != null) {
             mDialog.show();
+
+            reset();
 //            WindowManager m = mDialog.getWindow().getWindowManager();
 //            Display d = m.getDefaultDisplay();
 //            WindowManager.LayoutParams p = mDialog.getWindow().getAttributes();
 //            p.width = d.getWidth() - 100;
 //            mDialog.getWindow().setAttributes(p);
         }
+    }
+
+    private void reset() {
+        mTvCancel.setText(cancelStr);
+        mTvConfirm.setVisibility(View.VISIBLE);
+        mPb.setProgress(0);
+        mPb.setVisibility(View.INVISIBLE);
+        mTvTip.setText("");
+        mTvTip.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+        mTvConfirm.setText(R.string.download);
     }
 
     public void dismiss(){
@@ -98,14 +118,37 @@ public class VideoDownloadDialogUtils {
         this.listener = listener;
     }
 
-    public void setDownloadState() {
-        mTvTip.setText(R.string.downloading);
+    public void setDownloadStartState() {
         mPb.setProgress(0);
         mPb.setVisibility(View.VISIBLE);
+        mTvConfirm.setVisibility(View.GONE);
+    }
+
+    public void updateDownLoadProgress(int progress, String totalBytesRead, String fileSize) {
+        mTvTip.setText(String.format(Locale.ROOT,"%sM/%sM",totalBytesRead,fileSize));
+        mPb.setProgress(progress);
+    }
+
+    public void doDownloadFinish() {
+        mTvTip.setText(mActivity.getString(R.string.download_finish));
+        mTvTip.setTextColor(mActivity.getResources().getColor(R.color.c_1dbb99));
+        mTvCancel.setText(mActivity.getString(R.string.ok));
+    }
+
+    public void setDownloadErrorState() {
+        mTvTip.setText(R.string.download_failed);
+        mTvTip.setTextColor(mActivity.getResources().getColor(R.color.c_f34a4a));
+        mPb.setProgress(0);
+        mTvConfirm.setText(R.string.redownload);
+        mTvConfirm.setVisibility(View.VISIBLE);
+    }
+
+    public boolean isShowing() {
+        return mDialog.isShowing();
     }
 
     public interface TipDialogUtilsClickListener {
-        void onCancelClick();
+        void onCancelClick(boolean isCancelDownload);
 
         void onConfirmClick();
     }

@@ -1001,4 +1001,8 @@
     <string name="download_video_to_album">下载录像到手机相册</string>
     <string name="camera_name_sn">摄像机名称/设备号</string>
     <string name="downloading">下载中</string>
+    <string name="download_finish">下载完成</string>
+    <string name="download">下载</string>
+    <string name="download_failed">下载失败</string>
+    <string name="redownload">重新下载</string>
 </resources>
