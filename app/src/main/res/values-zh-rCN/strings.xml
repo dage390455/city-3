@@ -925,8 +925,8 @@
     <string name="delete_this_group">删除本组</string>
     <string name="not_matched_current_transformer">暂无推荐，请联系升哲研发人员确认</string>
     <string name="air_open_arguments">空开参数</string>
-    <string name="air_open_rated_current">空开标注额定电流/A (1&#8211;560A)</string>
-    <string name="diameter_arguments_tip">电线参数，请根据现场实际情况进行选择</string>
+    <string name="air_open_rated_current">空开标注额定电流/A (1&#8211;560)</string>
+    <string name="diameter_arguments_tip">电线参数  请根据现场实际情况进行选择</string>
     <string name="match_result">匹配结果</string>
     <string name="look_detail">查看详情</string>
     <string name="in_line_total_current">进线总额定电流：</string>
@@ -980,5 +980,7 @@
 
     <string name="app_crash_tips">系统出错了，请重新登录</string>
     <string name="camera_name_sn">摄像机名称/设备号</string>
+    <string name="cannot_be_all_spaces">不能全部为空格</string>
+
 
 </resources>

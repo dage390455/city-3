@@ -935,8 +935,8 @@
     <string name="delete_this_group">Delete</string>
     <string name="not_matched_current_transformer">No recommendation, please contact Sensoro R &amp; D personnel to confirm</string>
     <string name="air_open_arguments">Parameter</string>
-    <string name="air_open_rated_current">Rated current/A (0&#8211;560A)</string>
-    <string name="diameter_arguments_tip">Wire parameters, please choose according to the actual situation on site</string>
+    <string name="air_open_rated_current">Rated current/A (0&#8211;560)</string>
+    <string name="diameter_arguments_tip">Wire parameters  please choose according to the actual situation on site</string>
     <string name="match_result">Result</string>
     <string name="look_detail">Detail</string>
     <string name="in_line_total_current">Total Value of Input:&#160;</string>
@@ -996,4 +996,5 @@
 
     <string name="app_crash_tips">System error, please log in again</string>
     <string name="camera_name_sn">摄像机名称/设备号</string>
+    <string name="cannot_be_all_spaces">Cannot be all spaces</string>
 </resources>

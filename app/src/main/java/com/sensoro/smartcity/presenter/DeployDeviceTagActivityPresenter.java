@@ -80,6 +80,9 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
                         mTagList.add(trim);
                     }
                     getView().updateTags(mTagList);
+                } else {
+                    getView().toastShort(mContext.getString(R.string.cannot_be_all_spaces));
+                    return;
                 }
             }
         }
@@ -186,6 +189,9 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
                 return;
             }
             mTagList.set(position, text);
+        } else {
+            getView().toastShort(mContext.getString(R.string.cannot_be_all_spaces));
+            return;
         }
         getView().updateTags(mTagList);
         getView().dismissDialog();
