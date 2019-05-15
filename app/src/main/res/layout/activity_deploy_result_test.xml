@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/ac_deploy_result_title"
@@ -21,57 +22,22 @@
         android:id="@+id/ac_deploy_result_line"
         android:layout_width="match_parent"
         android:layout_height="@dimen/view_divider_height"
-        android:layout_below="@id/ac_deploy_result_title"
         android:background="@color/c_dfdfdf" />
-
-    <LinearLayout
-        android:id="@+id/ac_deploy_result_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp">
-
-        <TextView
-            android:id="@+id/ac_deploy_result_tv_back_home"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/shape_bg_solid_fa_stroke_df_corner_4dp"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@string/deploy_result_back_home"
-            android:textColor="@color/c_252525"
-            android:textSize="16dp" />
-
-        <TextView
-            android:id="@+id/ac_deploy_result_tv_continue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_weight="1"
-            android:background="@drawable/shape_bg_corner_29c_shadow"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@string/deploy_result_continue"
-            android:textColor="@color/white"
-            android:textSize="16dp" />
-    </LinearLayout>
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/ac_deploy_result_bottom"
-        android:layout_below="@id/ac_deploy_result_line"
-        android:layout_centerHorizontal="true">
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="24dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp">
 
             <ImageView
                 android:id="@+id/ac_deploy_result_imv_icon"
@@ -359,5 +325,39 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-</RelativeLayout>
+    <LinearLayout
+        android:id="@+id/ac_deploy_result_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="20dp">
+
+        <TextView
+            android:id="@+id/ac_deploy_result_tv_back_home"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/shape_bg_solid_fa_stroke_df_corner_4dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/deploy_result_back_home"
+            android:textColor="@color/c_252525"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/ac_deploy_result_tv_continue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_bg_corner_29c_shadow"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/deploy_result_continue"
+            android:textColor="@color/white"
+            android:textSize="16dp" />
+    </LinearLayout>
+</LinearLayout>
 
