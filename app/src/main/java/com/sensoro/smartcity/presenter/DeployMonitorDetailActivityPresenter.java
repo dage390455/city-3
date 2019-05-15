@@ -602,7 +602,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deployResultModel.address = deployAnalyzerModel.address;
         deployResultModel.updateTime = deviceInfo.getUpdatedTime();
         deployResultModel.deployTime = deviceInfo.getDeployTime();
-        deployResultModel.deviceStatus = deviceInfo.getStatus();
+        deployResultModel.deviceStatus = deployAnalyzerModel.status;
         deployResultModel.signal = deviceInfo.getSignal();
         deployResultModel.name = deployAnalyzerModel.nameAndAddress;
         intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
