@@ -338,6 +338,7 @@
                     android:contentDescription="@null"
                     android:src="@drawable/arrows_right" />
             </LinearLayout>
+
             <FrameLayout
                 android:id="@+id/line7"
                 android:layout_width="match_parent"
@@ -388,6 +389,7 @@
                     android:contentDescription="@null"
                     android:src="@drawable/arrows_right" />
             </LinearLayout>
+
             <FrameLayout
                 android:id="@+id/line8"
                 android:layout_width="match_parent"
@@ -465,7 +467,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="20dp"
                     android:contentDescription="@null"
-                    android:src="@drawable/camera_icon" />
+                    android:src="@drawable/basestation_icon" />
 
                 <TextView
                     android:layout_width="0dp"

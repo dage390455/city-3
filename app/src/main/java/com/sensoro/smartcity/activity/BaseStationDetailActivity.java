@@ -1,16 +1,14 @@
-
 package com.sensoro.smartcity.activity;
 
-import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -22,10 +20,14 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.temp.DemoBase;
+import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.smartcity.imainviews.IBaseStationDetailActivityView;
+import com.sensoro.smartcity.presenter.BaseStationDetailActivityPresenter;
+import com.sensoro.smartcity.widget.TouchRecycleView;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -34,28 +36,134 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 import static android.graphics.Typeface.DEFAULT_BOLD;
 
 /**
  * 基站详情
  */
-public class BaseStationDetailActivity extends DemoBase implements OnSeekBarChangeListener,
-        OnChartValueSelectedListener {
+public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailActivityView, BaseStationDetailActivityPresenter> implements OnChartValueSelectedListener {
 
+    @BindView(R.id.include_text_title_imv_arrows_left)
+    ImageView includeTextTitleImvArrowsLeft;
+    @BindView(R.id.include_text_title_tv_title)
+    TextView includeTextTitleTvTitle;
+    @BindView(R.id.include_text_title_tv_subtitle)
+    TextView includeTextTitleTvSubtitle;
+    @BindView(R.id.include_text_title_divider)
+    View includeTextTitleDivider;
+    @BindView(R.id.include_text_title_cl_root)
+    ConstraintLayout includeTextTitleClRoot;
+    @BindView(R.id.v_top_margin)
+    View vTopMargin;
+    @BindView(R.id.ac_basestation_tv_name)
+    TextView acBasestationTvName;
+    @BindView(R.id.ac_basestation_tv_typetime)
+    TextView acBasestationTvTypetime;
+    @BindView(R.id.ac_basestation_tv_state)
+    TextView acBasestationTvState;
+    @BindView(R.id.ac_basestation_tv_netdelay_title)
+    TextView acBasestationTvNetdelayTitle;
+    @BindView(R.id.ac_basestation_tv_netdelay)
+    TextView acBasestationTvNetdelay;
+    @BindView(R.id.ac_monitoring_point_line)
+    View acMonitoringPointLine;
+    @BindView(R.id.ac_basestation_tv_channel_title)
+    TextView acBasestationTvChannelTitle;
+    @BindView(R.id.ac_basestation_tv_channel)
+    TextView acBasestationTvChannel;
+    @BindView(R.id.ac_basestation_rl_channel)
+    RelativeLayout acBasestationRlChannel;
+    @BindView(R.id.ac_basestation_rl_channel_line)
+    View acBasestationRlChannelLine;
+    @BindView(R.id.ac_basestation_rl_name_line)
+    View acBasestationRlNameLine;
+    @BindView(R.id.chartname_ll)
+    LinearLayout chartnameLl;
+    @BindView(R.id.chart1)
+    LineChart chart1;
+    @BindView(R.id.time_tv)
+    TextView timeTv;
+    @BindView(R.id.in_tv)
+    TextView inTv;
+    @BindView(R.id.chart_top_state_ll)
+    LinearLayout chartTopStateLl;
+    @BindView(R.id.out_tv)
+    TextView outTv;
+    @BindView(R.id.chart_bottom_state_ll)
+    LinearLayout chartBottomStateLl;
+    @BindView(R.id.top_state_rl)
+    RelativeLayout topStateRl;
+    @BindView(R.id.ac_basestation_tv_today)
+    TextView acBasestationTvToday;
+    @BindView(R.id.ac_basestation_tv_week)
+    TextView acBasestationTvWeek;
+    @BindView(R.id.ac_basestation_tv_location_navigation)
+    TextView acBasestationTvLocationNavigation;
+    @BindView(R.id.ac_basestation_imv_location)
+    ImageView acBasestationImvLocation;
+    @BindView(R.id.ac_monitoring_point_tv_location)
+    TextView acMonitoringPointTvLocation;
+    @BindView(R.id.ac_monitor_deploy_photo)
+    TouchRecycleView acMonitorDeployPhoto;
+    @BindView(R.id.tv_sn)
+    TextView tvSn;
+    @BindView(R.id.layout_sn)
+    RelativeLayout layoutSn;
+    @BindView(R.id.tv_tag)
+    TextView tvTag;
+    @BindView(R.id.rc_tag)
+    TouchRecycleView rcTag;
+    @BindView(R.id.tv_device_vision)
+    TextView tvDeviceVision;
+    @BindView(R.id.rl_device_version)
+    RelativeLayout rlDeviceVersion;
+    @BindView(R.id.rl_network_information)
+    RelativeLayout rlNetworkInformation;
+    @BindView(R.id.rl_self_check_state)
+    RelativeLayout rlSelfCheckState;
     private LineChart chart;
-    private SeekBar seekBarX, seekBarY;
-    private TextView tvX, tvY, out_tv, in_tv, time_tv;
+    private TextView out_tv, in_tv, time_tv;
     private DecimalFormat decimalFormat = new DecimalFormat(".00");
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd HH:mm:ss");
 
-    public static String stampToDate(String stap) {
-
+    public String stampToDate(String stap) {
+//        Float.toString(e.getX()
         String time;
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd HH:mm:ss");
         long lt = Float.valueOf(stap).longValue();
         Date date = new Date(lt);
         time = simpleDateFormat.format(date);
+
+        Log.d("stampToDate", "----->stampToDate: " + time + "=====" + lt);
+
         return time;
     }
+
+
+    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_basestation_rl_channel, R.id.ac_basestation_tv_today, R.id.ac_basestation_tv_week, R.id.rl_network_information, R.id.rl_self_check_state})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.include_text_title_imv_arrows_left:
+                break;
+            case R.id.ac_basestation_rl_channel:
+                break;
+            case R.id.ac_basestation_tv_today:
+                break;
+            case R.id.ac_basestation_tv_week:
+                break;
+            case R.id.rl_network_information:
+                break;
+            case R.id.rl_self_check_state:
+                break;
+
+            default:
+                break;
+        }
+    }
+
 
     public class MyXFormatter extends ValueFormatter {
 
@@ -114,27 +222,23 @@ public class BaseStationDetailActivity extends DemoBase implements OnSeekBarChan
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_linechart);
+    protected BaseStationDetailActivityPresenter createPresenter() {
+        return new BaseStationDetailActivityPresenter();
+    }
+
+    @Override
+    protected void onCreateInit(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_basestation_detail);
+        ButterKnife.bind(this);
 
         setTitle("LineChartActivity2");
 
-        tvX = findViewById(R.id.tvXMax);
-        tvY = findViewById(R.id.tvYMax);
         out_tv = findViewById(R.id.out_tv);
         in_tv = findViewById(R.id.in_tv);
         time_tv = findViewById(R.id.time_tv);
 
-        seekBarX = findViewById(R.id.seekBar1);
-        seekBarX.setOnSeekBarChangeListener(this);
-
-        seekBarY = findViewById(R.id.seekBar2);
-        seekBarY.setOnSeekBarChangeListener(this);
 
         chart = findViewById(R.id.chart1);
         chart.setOnChartValueSelectedListener(this);
@@ -155,19 +259,15 @@ public class BaseStationDetailActivity extends DemoBase implements OnSeekBarChan
         chart.setHighlightPerDragEnabled(true);
 
         // if disabled, scaling can be done on x- and y-axis separately
-        chart.setPinchZoom(true);
 
         // set an alternative background color
         chart.setBackgroundColor(Color.WHITE);
 
-        // add data
-        seekBarX.setProgress(20);
-        seekBarY.setProgress(30);
-
         chart.animateX(1500);
 
-//        chart.setScaleYEnabled(false);
-//        chart.setScaleXEnabled(false);
+        chart.setPinchZoom(false);
+        chart.setScaleYEnabled(false);
+        chart.setScaleXEnabled(false);
 
 
         // get the legend (only possible after setting data)
@@ -222,38 +322,114 @@ public class BaseStationDetailActivity extends DemoBase implements OnSeekBarChan
         // redraw
         chart.invalidate();
 
-        chart.setOnTouchListener(new View.OnTouchListener() {
+//        chart.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//
+//                final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+//                final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
+//                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//
+//
+//                    set1.setDrawVerticalHighlightIndicator(true);
+//
+//
+//                    set2.setDrawVerticalHighlightIndicator(true);
+//                } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
+//
+//                    chart.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            set1.setDrawHighlightIndicators(false);
+//                            set2.setDrawHighlightIndicators(false);
+//                            chart.invalidate();
+//                        }
+//                    }, 100);
+//
+//                }
+//
+//                return false;
+//            }
+//        });
+        chart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
-                final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
-
-                    set1.setDrawVerticalHighlightIndicator(true);
-
-
-                    set2.setDrawVerticalHighlightIndicator(true);
-                } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
-
-                    chart.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            set1.setDrawHighlightIndicators(false);
-                            set2.setDrawHighlightIndicators(false);
-                            chart.invalidate();
-                        }
-                    }, 100);
-
+            public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+//                final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+//                final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
+//                if (me.getAction() == MotionEvent.ACTION_DOWN) {
+//
+//
+//                    set1.setDrawVerticalHighlightIndicator(true);
+//
+//
+//                    set2.setDrawVerticalHighlightIndicator(true);
+//                }
+                if (topStateRl.getVisibility() == View.GONE) {
+                    topStateRl.setVisibility(View.VISIBLE);
                 }
 
-                return false;
+            }
+
+            @Override
+            public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+//                final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+//                final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
+//
+//                if (me.getAction() == MotionEvent.ACTION_UP || me.getAction() == MotionEvent.ACTION_CANCEL) {
+////
+////                    chart.postDelayed(new Runnable() {
+////                        @Override
+////                        public void run() {
+//                    set1.setDrawHighlightIndicators(false);
+//                    set2.setDrawHighlightIndicators(false);
+////                        }
+////                    }, 100);
+//
+//                }
+
+                if (topStateRl.getVisibility() == View.VISIBLE) {
+                    topStateRl.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onChartLongPressed(MotionEvent me) {
+                Log.i("====onChartLongPressed", "=====" + me.getAction());
+
+            }
+
+            @Override
+            public void onChartDoubleTapped(MotionEvent me) {
+
+            }
+
+            @Override
+            public void onChartSingleTapped(MotionEvent me) {
+
+            }
+
+            @Override
+            public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX,
+                                     float velocityY) {
+                Log.i("====onChartFling", "=====" + me1.getAction());
+
+            }
+
+            @Override
+            public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+                Log.i("====onChartScale", "=====" + scaleX);
+
+            }
+
+            @Override
+            public void onChartTranslate(MotionEvent me, float dX, float dY) {
+                Log.i("====onChartTranslate", "=====" + me.getAction());
+
             }
         });
 
-
     }
+
 
     private void setData() {
 
@@ -264,14 +440,14 @@ public class BaseStationDetailActivity extends DemoBase implements OnSeekBarChan
         Random rand = new Random();
 
 
-        for (int i = 0; i < 60; i++) {
+        for (int i = 0; i < 30; i++) {
             float val = rand.nextInt(70 - 50 + 1) + 50;
 
             values1.add(new Entry(1557901082 + i * 100, val));
 
         }
 
-        for (int i = 0; i < 60; i++) {
+        for (int i = 0; i < 30; i++) {
             float val = rand.nextInt(40 - 15 + 1) + 15;
             values2.add(new Entry(1557901082 + i * 100, val));
         }
@@ -346,33 +522,12 @@ public class BaseStationDetailActivity extends DemoBase implements OnSeekBarChan
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.line, menu);
-        return true;
-    }
-
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-        tvX.setText(String.valueOf(seekBarX.getProgress()));
-        tvY.setText(String.valueOf(seekBarY.getProgress()));
-
-//        setData(seekBarX.getProgress(), seekBarY.getProgress());
-//
-//        // redraw
-//        chart.invalidate();
-    }
-
-    @Override
-    protected void saveToGallery() {
-        saveToGallery(chart, "LineChartActivity2");
-    }
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
         Log.i("e=====Entry selected", e.toString());
+
+
         Log.i("h=====Entry selected", h.toString());
 
 
@@ -384,13 +539,45 @@ public class BaseStationDetailActivity extends DemoBase implements OnSeekBarChan
 //
 //        Log.i("list===Entry selected", dataSetByIndex1.toString());
 
-        time_tv.setText(stampToDate(e.getX() + ""));
+        time_tv.setText(stampToDate(Float.toString(e.getX())));
 
         int dataSetIndex = h.getDataSetIndex();
 
+//        e.setIcon(getResources().getDrawable(R.drawable.fade_red));
+
         float first = 0, second = 0;
         if (dataSetIndex == 0) {
-            ILineDataSet dataSetByIndex = chart.getData().getDataSetByIndex(1);
+            LineDataSet dataSetByIndex = (LineDataSet) chart.getData().getDataSetByIndex(1);
+
+            LineDataSet dataSetByIndex0 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+
+
+//            if (chart.getScaleX() == 1) {
+
+
+            for (int i = 0; i < dataSetByIndex0.getValues().size(); i++) {
+                dataSetByIndex0.getValues().get(i).setIcon(null);
+            }
+            for (int i = 0; i < dataSetByIndex.getValues().size(); i++) {
+                Entry entry = dataSetByIndex.getValues().get(i);
+                if (e.getX() != entry.getX()) {
+                    entry.setIcon(null);
+                } else {
+                    entry.setIcon(getResources().getDrawable(R.drawable.item_device_offline));
+                }
+            }
+
+//            } else {
+//                for (int i = 0; i < dataSetByIndex0.getValues().size(); i++) {
+//                    dataSetByIndex0.getValues().get(i).setIcon(null);
+//
+//
+//                }
+//                for (int i = 0; i < dataSetByIndex.getValues().size(); i++) {
+//                    Entry entry = dataSetByIndex.getValues().get(i);
+//                    entry.setIcon(null);
+//                }
+//            }
             first = e.getY();
             List<Entry> entriesForXValue = dataSetByIndex.getEntriesForXValue(h.getX());
 
@@ -398,13 +585,52 @@ public class BaseStationDetailActivity extends DemoBase implements OnSeekBarChan
 
 
         } else if (dataSetIndex == 1) {
-            ILineDataSet dataSetByIndex = chart.getData().getDataSetByIndex(0);
+            LineDataSet dataSetByIndex = (LineDataSet) chart.getData().getDataSetByIndex(0);
+
+
+//            if (chart.getScaleX() == 1) {
+
+
+            for (int i = 0; i < dataSetByIndex.getValues().size(); i++) {
+                Entry entry = dataSetByIndex.getValues().get(i);
+                if (e.getX() != entry.getX()) {
+                    entry.setIcon(null);
+                } else {
+                    entry.setIcon(getResources().getDrawable(R.drawable.item_device_offline));
+
+
+                }
+            }
+
+
+            LineDataSet dataSetByIndex1 = (LineDataSet) chart.getData().getDataSetByIndex(1);
+            for (int i = 0; i < dataSetByIndex1.getValues().size(); i++) {
+                dataSetByIndex1.getValues().get(i).setIcon(null);
+            }
+
+//            } else {
+//                for (int i = 0; i < dataSetByIndex.getValues().size(); i++) {
+//                    Entry entry = dataSetByIndex.getValues().get(i);
+//                    entry.setIcon(null);
+//                }
+//
+//
+//                LineDataSet dataSetByIndex1 = (LineDataSet) chart.getData().getDataSetByIndex(1);
+//                for (int i = 0; i < dataSetByIndex1.getValues().size(); i++) {
+//                    dataSetByIndex1.getValues().get(i).setIcon(null);
+//                }
+//            }
             second = e.getY();
             List<Entry> entriesForXValue = dataSetByIndex.getEntriesForXValue(h.getX());
 
             first = entriesForXValue.get(entriesForXValue.size() - 1).getY();
 
         }
+//        if (chart.getScaleX() == 1) {
+
+
+        e.setIcon(getResources().getDrawable(R.drawable.item_device_offline));
+//        }
 
         out_tv.setText(decimalFormat.format(second) + "\u2103");
         in_tv.setText(decimalFormat.format(first) + "\u2103");
@@ -413,15 +639,7 @@ public class BaseStationDetailActivity extends DemoBase implements OnSeekBarChan
 
     @Override
     public void onNothingSelected() {
-        Log.i("Nothing selected", "Nothing selected.");
-    }
 
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
     }
 
 
