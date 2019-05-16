@@ -999,4 +999,6 @@
     <string name="app_crash_tips">System error, please log in again</string>
     <string name="camera_name_sn">摄像机名称/设备号</string>
     <string name="cannot_be_all_spaces">Cannot be all spaces</string>
+    <string name="The_network_information">The network information</string>
+    <string name="Self_check_state">Self-check state</string>
 </resources>

@@ -987,5 +987,8 @@
     <string name="camera_name_sn">摄像机名称/设备号</string>
     <string name="cannot_be_all_spaces">不能全部为空格</string>
 
+    <string name="The_network_information">网络信息</string>
+    <string name="Self_check_state">自检状态</string>
+
 
 </resources>
