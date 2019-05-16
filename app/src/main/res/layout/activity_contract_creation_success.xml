@@ -14,7 +14,7 @@
         android:layout_marginBottom="10dp"
         android:padding="8dp"
         android:text="@string/ip_complete"
-        android:textColor="@color/c_29c093"
+        android:textColor="@color/c_1dbb99"
         android:textSize="14dp" />
 
     <View
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/success"
-            android:textColor="@color/c_29c093"
+            android:textColor="@color/c_1dbb99"
             android:textSize="24dp" />
 
         <TextView

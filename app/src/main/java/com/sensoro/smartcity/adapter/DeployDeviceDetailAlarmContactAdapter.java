@@ -40,8 +40,9 @@ public class DeployDeviceDetailAlarmContactAdapter extends RecyclerView.
 
     @Override
     public void onBindViewHolder(DeployDeviceDetailAlarmContactHolder holder, int position) {
-        holder.itemDeployDeviceAlarmContactName.setText(deployContactModels.get(position).name);
-        holder.itemDeployDeviceAlarmContactPhone.setText(deployContactModels.get(position).phone);
+        String name = deployContactModels.get(position).name;
+        String phone = deployContactModels.get(position).phone;
+        holder.itemDeployDeviceAlarmContact.setText(name + " : " + phone);
     }
 
     @Override
@@ -50,10 +51,8 @@ public class DeployDeviceDetailAlarmContactAdapter extends RecyclerView.
     }
 
     class DeployDeviceDetailAlarmContactHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_deploy_device_alarm_contact_name)
-        TextView itemDeployDeviceAlarmContactName;
-        @BindView(R.id.item_deploy_device_alarm_contact_phone)
-        TextView itemDeployDeviceAlarmContactPhone;
+        @BindView(R.id.item_deploy_device_alarm_contact)
+        TextView itemDeployDeviceAlarmContact;
 
         DeployDeviceDetailAlarmContactHolder(View itemView) {
             super(itemView);

@@ -682,6 +682,13 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
         mFirstTouch = true;
     }
 
+    /**
+     * 亮度和声音进行了注释
+     *
+     * @param deltaX
+     * @param deltaY
+     * @param y
+     */
     protected void touchSurfaceMove(float deltaX, float deltaY, float y) {
 
         int curWidth = CommonUtil.getCurrentScreenLand((Activity) getActivityContext()) ? mScreenHeight : mScreenWidth;
@@ -696,19 +703,19 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
             String totalTime = CommonUtil.stringForTime(totalTimeDuration);
             showProgressDialog(deltaX, seekTime, mSeekTimePosition, totalTime, totalTimeDuration);
         } else if (mChangeVolume) {
-            deltaY = -deltaY;
-            int max = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-            int deltaV = (int) (max * deltaY * 3 / curHeight);
-            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mGestureDownVolume + deltaV, 0);
-            int volumePercent = (int) (mGestureDownVolume * 100 / max + deltaY * 3 * 100 / curHeight);
+//            deltaY = -deltaY;
+//            int max = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+//            int deltaV = (int) (max * deltaY * 3 / curHeight);
+//            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, mGestureDownVolume + deltaV, 0);
+//            int volumePercent = (int) (mGestureDownVolume * 100 / max + deltaY * 3 * 100 / curHeight);
 
-            showVolumeDialog(-deltaY, volumePercent);
+//            showVolumeDialog(-deltaY, volumePercent);
         } else if (!mChangePosition && mBrightness) {
-            if (Math.abs(deltaY) > mThreshold) {
-                float percent = (-deltaY / curHeight);
-                onBrightnessSlide(percent);
-                mDownY = y;
-            }
+//            if (Math.abs(deltaY) > mThreshold) {
+//                float percent = (-deltaY / curHeight);
+//                onBrightnessSlide(percent);
+//                mDownY = y;
+//            }
         }
     }
 

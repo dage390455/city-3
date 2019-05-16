@@ -21,10 +21,10 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISignalCheckActivityView;
-import com.sensoro.smartcity.iwidget.IOnStart;
+import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.SignalData;
-import com.sensoro.smartcity.util.BleObserver;
+import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
@@ -68,7 +68,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
                 statusText = mActivity.getString(R.string.main_page_warn);
                 break;
             case SENSOR_STATUS_NORMAL:
-                textColor = R.color.c_29c093;
+                textColor = R.color.c_1dbb99;
                 statusText = mActivity.getString(R.string.normal);
                 break;
             case SENSOR_STATUS_LOST:
@@ -84,7 +84,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
                 statusText = mActivity.getString(R.string.status_malfunction);
                 break;
             default:
-                textColor = R.color.c_29c093;
+                textColor = R.color.c_1dbb99;
                 statusText = mActivity.getString(R.string.normal);
                 break;
         }

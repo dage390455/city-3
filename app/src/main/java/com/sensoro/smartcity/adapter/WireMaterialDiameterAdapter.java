@@ -2,8 +2,6 @@ package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -11,14 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.model.WireMaterialDiameterModel;
 
 import java.util.ArrayList;
-import java.util.IllegalFormatCodePointException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +35,7 @@ public class WireMaterialDiameterAdapter extends RecyclerView.Adapter<WireMateri
         Resources resources = mContext.getResources();
         bgDrawable = resources.getDrawable(R.drawable.select_wire_diameter_stroke_fafa_ee);
         noClickBgDrawable = resources.getDrawable(R.drawable.shape_bg_solid_df_corner_2);
-        flBgGreenColor = resources.getColor(R.color.c_29c093);
+        flBgGreenColor = resources.getColor(R.color.c_1dbb99);
         flBgWhiteColor = resources.getColor(R.color.white);
         flBgBlackColor = resources.getColor(R.color.c_252525);
 

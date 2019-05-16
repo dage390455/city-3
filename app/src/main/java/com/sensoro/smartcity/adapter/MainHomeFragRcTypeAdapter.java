@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.iwidget.IOnDestroy;
+import com.sensoro.common.iwidget.IOnDestroy;
 import com.sensoro.smartcity.model.HomeTopModel;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
@@ -156,7 +156,7 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
     }
 
     private void freshType(MyViewHolder holder, int type, int position) {
-        int currentColor = R.color.c_29c093;
+        int currentColor = R.color.c_1dbb99;
         switch (type) {
             case 0:
                 currentColor = R.color.c_f34a4a;
@@ -165,7 +165,7 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
                 holder.ivHomeStatusCard.setImageResource(R.drawable.home_status_alarm);
                 break;
             case 1:
-                currentColor = R.color.c_29c093;
+                currentColor = R.color.c_1dbb99;
                 holder.mainRcTypeTvStateTxt.setText(R.string.normal_monitoring_point);
                 holder.mainRcTypeImvState.setImageResource(R.drawable.main_type_normal);
                 holder.ivHomeStatusCard.setImageResource(R.drawable.home_status_normal);

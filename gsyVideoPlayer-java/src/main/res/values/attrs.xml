@@ -19,6 +19,7 @@
 
     <declare-styleable name="standard_view">
         <attr name="title_margin_top" format="dimension" />
+        <attr name="synchronize_hide_action_bar" format="boolean" />
     </declare-styleable>
 
 

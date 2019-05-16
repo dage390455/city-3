@@ -45,9 +45,9 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IMonitorPointElectricDetailActivityView;
-import com.sensoro.smartcity.iwidget.IOnCreate;
-import com.sensoro.smartcity.iwidget.IOnResume;
-import com.sensoro.smartcity.iwidget.IOnStart;
+import com.sensoro.common.iwidget.IOnCreate;
+import com.sensoro.common.iwidget.IOnResume;
+import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.smartcity.model.BleUpdateModel;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.Elect3DetailModel;
@@ -77,7 +77,7 @@ import com.sensoro.smartcity.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.smartcity.server.response.MonitorPointOperationRequestRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.smartcity.util.BleObserver;
+import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -235,7 +235,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 statusText = mContext.getString(R.string.main_page_warn);
                 break;
             case SENSOR_STATUS_NORMAL:
-                textColor = mContext.getResources().getColor(R.color.c_29c093);
+                textColor = mContext.getResources().getColor(R.color.c_1dbb99);
                 statusText = mContext.getString(R.string.normal);
                 break;
             case SENSOR_STATUS_LOST:
@@ -251,7 +251,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 statusText = mContext.getString(R.string.status_malfunction);
                 break;
             default:
-                textColor = mContext.getResources().getColor(R.color.c_29c093);
+                textColor = mContext.getResources().getColor(R.color.c_1dbb99);
                 statusText = mContext.getString(R.string.normal);
                 break;
         }
@@ -1679,10 +1679,10 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 getView().showTipDialog(false, null, mContext.getString(R.string.is_device_psd), mContext.getString(R.string.device_psd_tip_message), R.color.c_a6a6a6, mContext.getString(R.string.modify), R.color.c_f34a4a, MonitorPointOperationCode.PSD);
                 break;
             case MonitorPointOperationCode.QUERY:
-                getView().showTipDialog(false, null, mContext.getString(R.string.is_device_query), mContext.getString(R.string.device_query_tip_message), R.color.c_a6a6a6, mContext.getString(R.string.monitor_point_detail_query), R.color.c_29c093, MonitorPointOperationCode.QUERY);
+                getView().showTipDialog(false, null, mContext.getString(R.string.is_device_query), mContext.getString(R.string.device_query_tip_message), R.color.c_a6a6a6, mContext.getString(R.string.monitor_point_detail_query), R.color.c_1dbb99, MonitorPointOperationCode.QUERY);
                 break;
             case MonitorPointOperationCode.SELF_CHECK:
-                getView().showTipDialog(false, null, mContext.getString(R.string.is_device_self_check), mContext.getString(R.string.device_self_check_tip_message), R.color.c_a6a6a6, mContext.getString(R.string.self_check), R.color.c_29c093, MonitorPointOperationCode.SELF_CHECK);
+                getView().showTipDialog(false, null, mContext.getString(R.string.is_device_self_check), mContext.getString(R.string.device_self_check_tip_message), R.color.c_a6a6a6, mContext.getString(R.string.self_check), R.color.c_1dbb99, MonitorPointOperationCode.SELF_CHECK);
                 break;
             case MonitorPointOperationCode.AIR_SWITCH_CONFIG:
                 Intent intent = new Intent(mContext, DeployMonitorConfigurationActivity.class);

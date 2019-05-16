@@ -67,7 +67,7 @@ public class CameraFilterModel {
         private String code;
         private String name;
         private boolean isSelect;
-        private boolean isReset;
+//        private boolean isReset;
 
         public String getCode() {
             return code;
@@ -94,12 +94,12 @@ public class CameraFilterModel {
             isSelect = select;
         }
 
-        public boolean isReset() {
-            return isReset;
-        }
-
-        public void setReset(boolean reset) {
-            isReset = reset;
-        }
+//        public boolean isReset() {
+//            return isReset;
+//        }
+//
+//        public void setReset(boolean reset) {
+//            isReset = reset;
+//        }
     }
 }

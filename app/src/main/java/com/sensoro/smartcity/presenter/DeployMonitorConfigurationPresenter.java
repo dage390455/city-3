@@ -13,7 +13,7 @@ import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorConfigurationView;
-import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;

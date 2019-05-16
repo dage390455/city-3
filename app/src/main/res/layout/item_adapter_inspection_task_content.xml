@@ -41,7 +41,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:text="@string/signal_check_near"
-                android:textColor="@color/c_29c093"
+                android:textColor="@color/c_1dbb99"
                 android:textSize="12dp" />
 
         </LinearLayout>

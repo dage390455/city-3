@@ -14,7 +14,7 @@ import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISplashActivityView;
-import com.sensoro.smartcity.iwidget.IOnStart;
+import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.push.SensoroPushIntentService;
 import com.sensoro.smartcity.push.SensoroPushService;

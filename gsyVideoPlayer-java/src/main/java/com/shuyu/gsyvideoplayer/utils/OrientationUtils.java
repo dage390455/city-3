@@ -50,8 +50,12 @@ public class OrientationUtils {
                 if (gsyVideoPlayer != null && gsyVideoPlayer.isVerticalFullByVideoSize()) {
                     return;
                 }
+
+                if(rotation == -1){
+                    return;
+                }
                 // 设置竖屏
-                if (((rotation >= -1) && (rotation <= 60)) || (rotation >= 300)) {
+                if (((rotation > -1) && (rotation <= 60)) || (rotation >= 300)) {
                     if (mClick) {
                         if (mIsLand > 0 && !mClickLand) {
                             return;

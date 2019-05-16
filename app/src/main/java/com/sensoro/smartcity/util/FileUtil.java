@@ -6,6 +6,7 @@ import android.os.StatFs;
 import android.util.Log;
 
 import com.fengmap.android.data.FMDataManager;
+import com.sensoro.common.utils.ZipUtils;
 
 import java.io.Closeable;
 import java.io.File;
