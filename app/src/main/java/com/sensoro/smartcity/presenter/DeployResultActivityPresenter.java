@@ -37,6 +37,8 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 getView().setDeployResultBackHomeText(mContext.getString(R.string.deploy_result_back_home));
                 break;
             case DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED:
+                getView().setTitleText(mContext.getString(R.string.scan_code_failed));
+                getView().setStateTextViewVisible(false);
                 switch (deployResultModel.scanType) {
                     case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
                         getView().setDeployResultContinueText(mContext.getString(R.string.continue_to_replace));
@@ -48,16 +50,17 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                         getView().setDeployResultBackHomeText(mContext.getString(R.string.back));
                         break;
                     case TYPE_SCAN_SIGNAL_CHECK:
-                        getView().setStateTextViewVisible(false);
                         getView().setDeployResultContinueText(mContext.getString(R.string.rescan_code));
-                        getView().setTitleText(mContext.getString(R.string.scan_code_failed));
                         break;
                 }
                 break;
             case DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT:
                 //失败
+                getView().setTitleText(mContext.getString(R.string.scan_code_failed));
+                getView().setStateTextViewVisible(false);
                 switch (deployResultModel.scanType) {
                     case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+
                         getView().setDeployResultContinueText(mContext.getString(R.string.continue_to_replace));
                         getView().setDeployResultBackHomeText(mContext.getString(R.string.continue_inspection));
                         break;
@@ -67,7 +70,6 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                         getView().setDeployResultBackHomeText(mContext.getString(R.string.back));
                         break;
                     case TYPE_SCAN_SIGNAL_CHECK:
-                        getView().setStateTextViewVisible(false);
                         getView().setDeployResultContinueText(mContext.getString(R.string.rescan_code));
                         getView().setTitleText(mContext.getString(R.string.scan_code_failed));
                         break;
