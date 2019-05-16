@@ -449,15 +449,15 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         Random rand = new Random();
 
 
-        for (int i = 0; i < 30; i++) {
-            float val = rand.nextInt(70 - 50 + 1) + 50;
+        for (int i = 0; i < 15; i++) {
+            float val = rand.nextInt(68 - 45 + 1) + 45;
 
             values1.add(new Entry(1557901082 + i * 100, val));
 
         }
 
-        for (int i = 0; i < 30; i++) {
-            float val = rand.nextInt(40 - 15 + 1) + 15;
+        for (int i = 0; i < 15; i++) {
+            float val = rand.nextInt(38 - 10 + 1) + 10;
             values2.add(new Entry(1557901082 + i * 100, val));
         }
 
