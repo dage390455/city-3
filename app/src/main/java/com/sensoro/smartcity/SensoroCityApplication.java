@@ -214,7 +214,6 @@ public class SensoroCityApplication extends BaseApplication implements Repause
     }
 
 
-
     private void initVc() {
         VIDEO_PATH += "SensoroCity";
         File file = new File(VIDEO_PATH);

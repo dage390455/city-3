@@ -43,6 +43,7 @@ public class BaseApplication extends MultiDexApplication {
         }
         initAutoSize();
 
+
     }
 
     @Override
@@ -69,6 +70,7 @@ public class BaseApplication extends MultiDexApplication {
             delegate.onTrimMemory(level);
         }
     }
+
     private void initAutoSize() {
         /**
          * 给外部的三方库 {@link Activity} 自定义适配参数, 因为三方库的 {@link Activity} 并不能通过实现
