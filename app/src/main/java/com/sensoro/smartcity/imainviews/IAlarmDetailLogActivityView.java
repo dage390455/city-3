@@ -29,4 +29,6 @@ public interface IAlarmDetailLogActivityView extends IToast, IProgressDialog, IA
     void setDeviceSn(String deviceSN);
 
     void setCameraLiveCount(List<String> liveCount);
+
+    void setLlVideoSize(int size);
 }

@@ -489,5 +489,6 @@ public interface Constants {
     String EXTRA_CAMERA_PERSON_DETAIL = "extra_camera_person_detail";
     String EXTRA_CAMERA_PERSON_AVATAR_HISTORY_FACE_URL = "EXTRA_CAMERA_PERSON_AVATAR_HISTORY_FACE_URL";
     String EXTRA_ALARM_CAMERAS = "extra_alarm_cameras";
+    String EXTRA_ALARM_CAMERA_VIDEO = "extra_alarm_camera_video";
 }
 

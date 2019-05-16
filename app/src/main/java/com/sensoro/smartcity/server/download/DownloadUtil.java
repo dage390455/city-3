@@ -3,9 +3,11 @@ package com.sensoro.smartcity.server.download;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.sensoro.smartcity.push.ThreadPoolManager;
+import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.util.LogUtils;
 
 import java.io.File;
@@ -20,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 import cn.szx.simplescanner.zbar.Result;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -44,8 +47,9 @@ public class DownloadUtil {
                 .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .build();
         api = new Retrofit.Builder()
-                .baseUrl("http://vjs.zencdn.net/v/")
                 .client(client)
+//                .baseUrl("https://city-video-cdn.sensoro.com/")
+                .baseUrl(RetrofitServiceHelper.getInstance().BASE_URL)
                 .build()
                 .create(DownloadService.class);
     }
@@ -63,10 +67,21 @@ public class DownloadUtil {
                 try {
                     responseBodyCall = api.downloadWithDynamicUrl(rUrl);
                     Response<ResponseBody> result = responseBodyCall.execute();
-                    final File file = writeFile(filePath, result.body().byteStream());
-                    final boolean isSuccess = file.length() == result.body().contentLength();
-
+                    ResponseBody body = result.body();
+                    if (body == null) {
+                        if (listener != null) {
+                            try {
+                                LogUtils.loge("response为空");
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+                            listener.onFailed("response为空");
+                        }
+                        return;
+                    }
+                    final File file = writeFile(filePath, body.byteStream());
                     if (listener != null){
+                        final boolean isSuccess = file.length() == body.contentLength();
                         executor.execute(new Runnable() {
                             @Override
                             public void run() {
@@ -144,7 +159,7 @@ public class DownloadUtil {
     }
 
     private class DownloadException extends RuntimeException {
-        public DownloadException(String message, Throwable cause) {
+         DownloadException(String message, Throwable cause) {
             super(message, cause);
         }
     }
@@ -154,7 +169,7 @@ public class DownloadUtil {
         private final Handler handler = new Handler(Looper.getMainLooper());
 
         @Override
-        public void execute(Runnable r)
+        public void execute(@NonNull Runnable r)
         {
             handler.post(r);
         }

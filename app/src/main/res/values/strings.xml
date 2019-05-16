@@ -1005,4 +1005,7 @@
     <string name="download">下载</string>
     <string name="download_failed">下载失败</string>
     <string name="redownload">重新下载</string>
+    <string name="video_unit_duan"></string>
+    <string name="alarm_camera_video">Video:</string>
+    <string name="video_size">录像大小</string>
 </resources>

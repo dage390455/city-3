@@ -25,12 +25,14 @@ import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.smartcity.server.response.AlarmCloudVideoRsp;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
@@ -96,6 +98,7 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
     private LatLng destPosition;
     private boolean isReConfirm = false;
     private ProgressUtils mProgressUtils;
+    private AlarmCloudVideoRsp.DataBean mVideoBean;
 
     public AlarmLogPopUtils(Activity activity) {
         mActivity = activity;
@@ -160,15 +163,21 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         }
         acAlertTvSn.setText(deviceSN);
 
-        List<String> cameras = deviceAlarmLogInfo.getCameras();
-        if (cameras != null && cameras.size() > 0) {
-            llCameraLiveAcAlert.setVisibility(View.VISIBLE);
-            tvLiveCameraCountAcAlert.setText(
-                    String.format(Locale.ROOT,"%s%d%s",mActivity.getString(R.string.relation_camera)
-                            ,cameras.size(),mActivity.getString(R.string.upload_photo_dialog_append_title3)));
+        if (PreferencesHelper.getInstance().getUserData().hasDeviceCameraList) {
+            List<String> cameras = deviceAlarmLogInfo.getCameras();
+            if (cameras != null && cameras.size() > 0) {
+                llCameraLiveAcAlert.setVisibility(View.VISIBLE);
+                tvLiveCameraCountAcAlert.setText(
+                        String.format(Locale.ROOT,"%s%d%s",mActivity.getString(R.string.relation_camera)
+                                ,cameras.size(),mActivity.getString(R.string.upload_photo_dialog_append_title3)));
+            }else{
+                llCameraLiveAcAlert.setVisibility(View.GONE);
+            }
+
         }else{
-            llCameraLiveAcAlert.setVisibility(View.GONE);
+            llCameraVideoAcAlert.setVisibility(View.GONE);
         }
+
 
         acAlertTvAlertTime.setText(DateUtil.getStrTimeToday(mActivity, mDeviceAlarmLogInfo.getCreatedTime(), 1));
 
@@ -211,22 +220,62 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
             }
         }
         long current = System.currentTimeMillis();
-        mProgressUtils.showProgress();
-        RetrofitServiceHelper.getInstance().getAlarmCount(current - 3600 * 24 * 180 * 1000L, current, null, mDeviceAlarmLogInfo.getDeviceSN()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>(null) {
+
+        getCloudVideo();
+
+        RetrofitServiceHelper.getInstance()
+                .getAlarmCount(current - 3600 * 24 * 180 * 1000L, current, null,
+                        mDeviceAlarmLogInfo.getDeviceSN())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CityObserver<AlarmCountRsp>(null) {
             @Override
             public void onCompleted(AlarmCountRsp alarmCountRsp) {
                 int count = alarmCountRsp.getCount();
                 acAlertTvAlertCount.setText(count + "");
-                mProgressUtils.dismissProgress();
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 SensoroToast.getInstance().makeText(errorMsg, Toast.LENGTH_SHORT).show();
-                mProgressUtils.dismissProgress();
             }
         });
         updateAlertLogContentAdapter(mList);
+    }
+
+    private void getCloudVideo() {
+        if (!PreferencesHelper.getInstance().getUserData().hasDeviceCameraList) {
+            llCameraVideoAcAlert.setVisibility(View.GONE);
+            return;
+        }
+        String[] eventIds = {mDeviceAlarmLogInfo.get_id()};
+        RetrofitServiceHelper.getInstance().getCloudVideo(eventIds)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CityObserver<AlarmCloudVideoRsp>(null) {
+                    @Override
+                    public void onCompleted(AlarmCloudVideoRsp response) {
+                        List<AlarmCloudVideoRsp.DataBean> data = response.getData();
+                        if (data != null && data.size() > 0) {
+                            mVideoBean = data.get(0);
+                            List<AlarmCloudVideoRsp.DataBean.MediasBean> mMedias = mVideoBean.getMedias();
+                            if ( mMedias != null && mMedias.size() > 0) {
+                                tvVideoCameraCountAcAlert.setText(String.format(Locale.ROOT,"%s%d%s",
+                                        mActivity.getString(R.string.alarm_camera_video),
+                                        mMedias.size(),mActivity.getString(R.string.video_unit_duan)));
+                                llCameraVideoAcAlert.setVisibility(View.VISIBLE);
+                            }else{
+                               llCameraVideoAcAlert.setVisibility(View.GONE);
+                            }
+                        }else{
+                            llCameraVideoAcAlert.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        llCameraVideoAcAlert.setVisibility(View.GONE);
+                    }
+                });
     }
 
     private void updateAlertLogContentAdapter(List<AlarmInfo.RecordInfo> recordInfoList) {
@@ -268,6 +317,7 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
 
     private void doVideo() {
         Intent intent = new Intent(mActivity, AlarmCameraVideoDetailActivity.class);
+        intent.putExtra(Constants.EXTRA_ALARM_CAMERA_VIDEO,mVideoBean);
         mActivity.startActivity(intent);
     }
 

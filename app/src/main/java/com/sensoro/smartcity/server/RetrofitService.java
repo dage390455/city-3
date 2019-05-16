@@ -2,6 +2,7 @@ package com.sensoro.smartcity.server;
 
 
 import com.sensoro.smartcity.server.response.AlarmCameraLiveRsp;
+import com.sensoro.smartcity.server.response.AlarmCloudVideoRsp;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
 import com.sensoro.smartcity.server.response.CameraFilterRsp;
@@ -43,6 +44,9 @@ import com.sensoro.smartcity.server.response.UpdateRsp;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
 
+import org.json.JSONArray;
+
+import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -391,6 +395,9 @@ public interface RetrofitService {
 
     @GET("cameras")
     Observable<DeviceCameraListRsp> getDeviceCameraListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
+
+    @POST("qiniu/getCloudMediaByEventId")
+    Observable<AlarmCloudVideoRsp> getCloudVideo(@Body RequestBody requestBody);
 
 }
 

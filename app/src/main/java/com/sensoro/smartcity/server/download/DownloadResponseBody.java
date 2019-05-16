@@ -64,7 +64,7 @@ public class DownloadResponseBody extends ResponseBody {
                         double l = fileSize / divisor;
                         double l1 = totalBytesRead /divisor;
 
-                        final DecimalFormat decimalFormat = new DecimalFormat("0.0");
+                        final DecimalFormat decimalFormat = new DecimalFormat("0.00");
                         final String downloadSize = decimalFormat.format(l1);
                         final String fileSizeStr = decimalFormat.format(l);
                         if (executor != null) {

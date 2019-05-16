@@ -138,7 +138,6 @@ public class AlarmInfo implements Serializable {
     }
 
     public class RecordInfo implements Serializable {
-
         private String type;
         private String sensorType;
         private int thresholds;

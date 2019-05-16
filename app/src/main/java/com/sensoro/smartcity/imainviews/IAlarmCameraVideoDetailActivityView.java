@@ -4,7 +4,7 @@ import android.graphics.drawable.Drawable;
 
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
-import com.sensoro.smartcity.server.response.AlarmCameraLiveRsp;
+import com.sensoro.smartcity.server.response.AlarmCloudVideoRsp;
 
 
 import java.util.ArrayList;
@@ -12,19 +12,19 @@ import java.util.ArrayList;
 public interface IAlarmCameraVideoDetailActivityView extends IToast, IProgressDialog {
     void doPlayLive(final String url);
 
-    void offlineType(String url, String sn);
-
-    void updateData(ArrayList<AlarmCameraLiveRsp.DataBean> mList);
+    void updateData(ArrayList<AlarmCloudVideoRsp.DataBean.MediasBean> mList);
 
     void onPullRefreshComplete();
 
     void setImage(Drawable bitmapDrawable);
 
-    void setDownloadStartState();
+    void setDownloadStartState(String videoSize);
 
     void updateDownLoadProgress(int progress, String totalBytesRead, String fileSize);
 
     void doDownloadFinish();
 
     void setDownloadErrorState();
+
+    void setPlayVideoTime(String s);
 }

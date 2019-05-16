@@ -23,12 +23,14 @@ import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.smartcity.server.response.AlarmCloudVideoRsp;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
@@ -40,8 +42,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -55,13 +55,54 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     private boolean isReConfirm = false;
     private Activity mContext;
     private LatLng destPosition = null;
+    private AlarmCloudVideoRsp.DataBean mVideoBean;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
         deviceAlarmLogInfo = (DeviceAlarmLogInfo) mContext.getIntent().getSerializableExtra(EXTRA_ALARM_INFO);
+
+        getAlarmCount();
+
+        getCloudVideo();
+
         refreshData(true);
+
+    }
+
+    private void getCloudVideo() {
+
+        if (!PreferencesHelper.getInstance().getUserData().hasDeviceCameraList) {
+            getView().setLlVideoSize(-1);
+            return;
+        }
+
+        String[] eventIds = {deviceAlarmLogInfo.get_id()};
+        RetrofitServiceHelper.getInstance().getCloudVideo(eventIds)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new CityObserver<AlarmCloudVideoRsp>(this) {
+            @Override
+            public void onCompleted(AlarmCloudVideoRsp response) {
+                List<AlarmCloudVideoRsp.DataBean> data = response.getData();
+                if (data != null && data.size() > 0) {
+                    mVideoBean = data.get(0);
+                     List<AlarmCloudVideoRsp.DataBean.MediasBean> mMedias = mVideoBean.getMedias();
+                    if ( mMedias != null && mMedias.size() > 0) {
+                        getView().setLlVideoSize(mMedias.size());
+                    }else{
+                        getView().setLlVideoSize(-1);
+                    }
+                }else{
+                    getView().setLlVideoSize(-1);
+                }
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().setLlVideoSize(-1);
+            }
+        });
     }
 
     public void doBack() {
@@ -129,35 +170,19 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
             getView().setDeviceSn(deviceSN);
         }
 
-
-        getView().setCameraLiveCount(deviceAlarmLogInfo.getCameras());
+        if (PreferencesHelper.getInstance().getUserData().hasDeviceCameraList) {
+            getView().setCameraLiveCount(deviceAlarmLogInfo.getCameras());
+        }else{
+            getView().setCameraLiveCount(null);
+        }
 
         long createdTime = deviceAlarmLogInfo.getCreatedTime();
         String alarmTime = DateUtil.getStrTimeToday(mContext, createdTime, 1);
-        long current = System.currentTimeMillis();
         if (isInit) {
             if (isAttachedView()) {
                 getView().showProgressDialog();
             }
         }
-        RetrofitServiceHelper.getInstance().getAlarmCount(current - 3600 * 24 * 180 * 1000L, current, null, deviceAlarmLogInfo.getDeviceSN()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>(this) {
-            @Override
-            public void onCompleted(AlarmCountRsp alarmCountRsp) {
-                int count = alarmCountRsp.getCount();
-                if (isAttachedView()) {
-                    getView().setAlarmCount(count + "");
-                    getView().dismissProgressDialog();
-                }
-            }
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-                if (isAttachedView()) {
-                    getView().dismissProgressDialog();
-                    getView().toastShort(errorMsg);
-                }
-            }
-        });
 //        getView().setDisplayStatus(deviceAlarmLogInfo.getDisplayStatus());
 //        getView().setSensoroIv(deviceAlarmLogInfo.getSensorType());
         AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
@@ -205,6 +230,31 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         }
 
 
+    }
+
+    private void getAlarmCount() {
+        long current = System.currentTimeMillis();
+        RetrofitServiceHelper.getInstance().getAlarmCount(current - 3600 * 24 * 180 * 1000L, current,
+                null, deviceAlarmLogInfo.getDeviceSN())
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CityObserver<AlarmCountRsp>(this) {
+            @Override
+            public void onCompleted(AlarmCountRsp alarmCountRsp) {
+                int count = alarmCountRsp.getCount();
+                if (isAttachedView()) {
+                    getView().setAlarmCount(count + "");
+                    getView().dismissProgressDialog();
+                }
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                if (isAttachedView()) {
+                    getView().dismissProgressDialog();
+                    getView().toastShort(errorMsg);
+                }
+            }
+        });
     }
 
     public void clickPhotoItem(int position, List<ScenesData> scenesDataList) {
@@ -415,11 +465,12 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
 
     public void doCameraVideo() {
         Intent intent = new Intent(mContext, AlarmCameraVideoDetailActivity.class);
+        intent.putExtra(Constants.EXTRA_ALARM_CAMERA_VIDEO,mVideoBean);
         getView().startAC(intent);
     }
 
     public void doCameraLive() {
-        Intent intent = new Intent(mContext, AlarmCameraVideoDetailActivity.class);
+        Intent intent = new Intent(mContext, AlarmCameraLiveDetailActivity.class);
         ArrayList<String> cameras = new ArrayList<>(deviceAlarmLogInfo.getCameras());
         intent.putExtra(Constants.EXTRA_ALARM_CAMERAS,cameras);
         getView().startAC(intent);

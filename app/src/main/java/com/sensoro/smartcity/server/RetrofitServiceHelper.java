@@ -16,6 +16,7 @@ import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.AlarmCameraLiveRsp;
+import com.sensoro.smartcity.server.response.AlarmCloudVideoRsp;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
 import com.sensoro.smartcity.server.response.CameraFilterRsp;
@@ -1667,6 +1668,7 @@ public class RetrofitServiceHelper {
                 for (String cameraId : cameraIds) {
                     jsonArray.put(cameraId);
                 }
+                jsonObject.put("cameraIds",jsonArray);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1689,5 +1691,22 @@ public class RetrofitServiceHelper {
         return retrofitService.getDeviceCameraListByFilter(pageSize, page, search, mapFilter);
     }
 
+    public Observable<AlarmCloudVideoRsp> getCloudVideo(String[] eventIds){
+        JSONObject jsonObject = new JSONObject();
+        if (eventIds != null && eventIds.length >0) {
+            try {
+                JSONArray jsonArray = new JSONArray();
+
+                for (int i = 0; i < eventIds.length; i++) {
+                    jsonArray.put(eventIds[i]);
+                }
+                jsonObject.put("eventIds",jsonArray);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.getCloudVideo(requestBody);
+    }
 
 }

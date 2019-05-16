@@ -202,7 +202,7 @@
         android:paddingTop="12dp"
         app:layout_goneMarginTop="12dp"
         android:paddingBottom="12dp"
-        android:visibility="gone"
+        android:visibility="visible"
         android:background="@drawable/shape_bg_corner_f4f4f4_shadow"
         app:layout_constraintBottom_toTopOf="@id/ac_alert_rc_content"
         app:layout_constraintEnd_toEndOf="parent"

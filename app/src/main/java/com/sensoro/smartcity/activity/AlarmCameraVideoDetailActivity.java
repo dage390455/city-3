@@ -24,7 +24,7 @@ import com.sensoro.smartcity.adapter.AlarmCameraVideoDetailAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IAlarmCameraVideoDetailActivityView;
 import com.sensoro.smartcity.presenter.AlarmCameraVideoDetailActivityPresenter;
-import com.sensoro.smartcity.server.response.AlarmCameraLiveRsp;
+import com.sensoro.smartcity.server.response.AlarmCloudVideoRsp;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.dialog.VideoDownloadDialogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
@@ -126,6 +126,7 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
             }
         });
 
+
     }
 
     private void initGsyPlayer() {
@@ -201,6 +202,7 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
             }
         });
 
+        gsyPlayerAcAlarmCameraVideoDetail.setIsLive(VISIBLE);
         getCurPlay().setEnlargeImageRes(R.drawable.ic_camera_full_screen);
 
         getCurPlay().setShrinkImageRes(R.drawable.video_shrink);
@@ -238,23 +240,49 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
         mListAdapter.setOnAlarmCameraVideoItemClickListener(new AlarmCameraVideoDetailAdapter.AlarmCameraVideoClickListener() {
 
             @Override
-            public void OnAlarmCameraVideoItemClick(int position) {
-
+            public void OnAlarmCameraVideoItemClick(AlarmCloudVideoRsp.DataBean.MediasBean bean) {
+                mPresenter.doItemClick(bean);
             }
 
             @Override
-            public void onAlarmCameraVideoDownloadClick() {
+            public void onAlarmCameraVideoDownloadClick(AlarmCloudVideoRsp.DataBean.MediasBean bean) {
                 if (mDownloadUtils != null) {
-                    mDownloadUtils.show();
+                    mPresenter.setDownloadBean(bean);
+                    mDownloadUtils.show(bean.getVideoSize());
                 }
             }
         });
-        LinearLayoutManager manager = new LinearLayoutManager(mActivity);
+        final LinearLayoutManager manager = new LinearLayoutManager(mActivity);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
-//        MarginBottomNoDividerItemDecoration dividerItemDecoration = new MarginBottomNoDividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL);
-//        rvListInclude.addItemDecoration(dividerItemDecoration);
         rvListInclude.setLayoutManager(manager);
         rvListInclude.setAdapter(mListAdapter);
+
+        rvListInclude.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+//
+
+                if (manager.findFirstVisibleItemPosition() > 4) {
+                    if (newState == 0) {
+                        returnTopInclude.setVisibility(VISIBLE);
+                        if (returnTopAnimation != null && returnTopAnimation.hasEnded()) {
+                            returnTopInclude.startAnimation(returnTopAnimation);
+                        }
+                    } else {
+                        returnTopInclude.setVisibility(GONE);
+                    }
+                } else {
+                    returnTopInclude.setVisibility(GONE);
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+            }
+        });
 
     }
 
@@ -294,21 +322,6 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
 
 
     @Override
-    public void offlineType(final String url, final String sn) {
-        orientationUtils.setEnable(false);
-        gsyPlayerAcAlarmCameraVideoDetail.setCityPlayState(5);
-        gsyPlayerAcAlarmCameraVideoDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPresenter.regainGetCameraState(sn);
-                gsyVideoOption.setUrl(url).build(getCurPlay());
-                getCurPlay().startPlayLogic();
-            }
-        });
-
-    }
-
-    @Override
     public void onPullRefreshComplete() {
         refreshLayoutInclude.finishRefresh();
         refreshLayoutInclude.finishLoadMore();
@@ -328,9 +341,9 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     }
 
     @Override
-    public void setDownloadStartState() {
+    public void setDownloadStartState(String videoSize) {
         if (mDownloadUtils.isShowing()) {
-            mDownloadUtils.setDownloadStartState();
+            mDownloadUtils.setDownloadStartState(videoSize);
         }
     }
 
@@ -356,7 +369,12 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     }
 
     @Override
-    public void updateData(ArrayList<AlarmCameraLiveRsp.DataBean> mList) {
+    public void setPlayVideoTime(String s) {
+        tvTimeAcAlarmCameraVideoDetail.setText(s);
+    }
+
+    @Override
+    public void updateData(ArrayList<AlarmCloudVideoRsp.DataBean.MediasBean> mList) {
         mListAdapter.updateData(mList);
         setNoContentVisible(mList == null || mList.size() < 1);
     }
@@ -365,22 +383,6 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
         icNoContent.setVisibility(isVisible ? VISIBLE : GONE);
         rvListInclude.setVisibility(isVisible ? GONE : VISIBLE);
     }
-////
-//
-////    @Override
-//    public void playError(final int pos) {
-//        orientationUtils.setEnable(false);
-//
-//        gsyPlayerAcAlarmCameraLiveDetail.changeRetryType();
-//        gsyPlayerAcAlarmCameraLiveDetail.getPlayRetryBtn().setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                mPresenter.onCameraItemClick(pos);
-//
-//
-//            }
-//        });
-//    }
 
     @Override
     public void doPlayLive(final String url) {
@@ -429,8 +431,19 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
         isPause = false;
     }
 
-    @OnClick(R.id.include_imv_title_imv_arrows_left)
-    public void onViewClicked() {
+    @OnClick({R.id.include_imv_title_imv_arrows_left,R.id.return_top_include})
+    public void onViewClicked(View view) {
+        switch (view.getId()){
+            case R.id.include_imv_title_imv_arrows_left:
+                mActivity.finish();
+                break;
+            case R.id.return_top_include:
+                rvListInclude.smoothScrollToPosition(0);
+                returnTopInclude.setVisibility(GONE);
+                refreshLayoutInclude.closeHeaderOrFooter();
+                break;
+        }
+
     }
 
     @Override

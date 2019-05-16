@@ -3,6 +3,7 @@ package com.sensoro.smartcity.widget.dialog;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.support.annotation.ColorInt;
+import android.text.TextUtils;
 import android.util.MonthDisplayHelper;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -27,6 +28,7 @@ public class VideoDownloadDialogUtils {
     private final String cancelStr;
     private final int colorGreen;
     private final int colorRed;
+    private String mVideoSize;
 
     public VideoDownloadDialogUtils(Activity activity) {
         mActivity = activity;
@@ -86,11 +88,11 @@ public class VideoDownloadDialogUtils {
         mTvConfirm.setTextColor(color);
     }
 
-    public void show(){
+    public void show(String videoSize){
         if (mDialog != null) {
             mDialog.show();
-
-            reset();
+            mVideoSize = videoSize;
+            reset(videoSize);
 //            WindowManager m = mDialog.getWindow().getWindowManager();
 //            Display d = m.getDefaultDisplay();
 //            WindowManager.LayoutParams p = mDialog.getWindow().getAttributes();
@@ -99,12 +101,12 @@ public class VideoDownloadDialogUtils {
         }
     }
 
-    private void reset() {
+    private void reset(String videoSize) {
         mTvCancel.setText(cancelStr);
         mTvConfirm.setVisibility(View.VISIBLE);
         mPb.setProgress(0);
         mPb.setVisibility(View.INVISIBLE);
-        mTvTip.setText("");
+        mTvTip.setText(String.format(Locale.ROOT,"%s%s",mActivity.getString(R.string.video_size),videoSize));
         mTvTip.setTextColor(colorGray);
         mTvConfirm.setText(R.string.download);
     }
@@ -126,16 +128,22 @@ public class VideoDownloadDialogUtils {
         this.listener = listener;
     }
 
-    public void setDownloadStartState() {
+    public void setDownloadStartState(String videoSize) {
         mPb.setProgress(0);
         mPb.setVisibility(View.VISIBLE);
         mTvTip.setTextColor(colorGray);
-        mTvTip.setText("开始下载");
+        if (!TextUtils.isEmpty(mVideoSize)) {
+            mTvTip.setText(String.format(Locale.ROOT,"%sMB/%s","0",mVideoSize));
+        }
         mTvConfirm.setVisibility(View.GONE);
     }
 
     public void updateDownLoadProgress(int progress, String totalBytesRead, String fileSize) {
-        mTvTip.setText(String.format(Locale.ROOT,"%sM/%sM",totalBytesRead,fileSize));
+        if (TextUtils.isEmpty(mVideoSize)) {
+            mTvTip.setText(String.format(Locale.ROOT,"%sMB/%sMB",totalBytesRead,fileSize));
+        }else{
+            mTvTip.setText(String.format(Locale.ROOT,"%sMB/%s",totalBytesRead,mVideoSize));
+        }
         mTvTip.setTextColor(colorGray);
         mPb.setProgress(progress);
     }

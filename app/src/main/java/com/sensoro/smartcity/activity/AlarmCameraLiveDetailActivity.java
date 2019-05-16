@@ -123,12 +123,40 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
                 mPresenter.doItemClick(position);
             }
         });
-        LinearLayoutManager manager = new LinearLayoutManager(mActivity);
+        final LinearLayoutManager manager = new LinearLayoutManager(mActivity);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
 //        MarginBottomNoDividerItemDecoration dividerItemDecoration = new MarginBottomNoDividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL);
 //        rvListInclude.addItemDecoration(dividerItemDecoration);
         rvListInclude.setLayoutManager(manager);
         rvListInclude.setAdapter(mListAdapter);
+
+
+        rvListInclude.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+//
+
+                if (manager.findFirstVisibleItemPosition() > 4) {
+                    if (newState == 0) {
+                        returnTopInclude.setVisibility(VISIBLE);
+                        if (returnTopAnimation != null && returnTopAnimation.hasEnded()) {
+                            returnTopInclude.startAnimation(returnTopAnimation);
+                        }
+                    } else {
+                        returnTopInclude.setVisibility(GONE);
+                    }
+                } else {
+                    returnTopInclude.setVisibility(GONE);
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+            }
+        });
 
     }
 
