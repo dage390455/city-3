@@ -15,12 +15,12 @@ import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.ContractTemplateShowAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IContractDetailView;
 import com.sensoro.smartcity.presenter.ContractDetailPresenter;
-import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
+import com.sensoro.common.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.List;
 
@@ -108,7 +108,7 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeTextTitleTvTitle.setText(mActivity.getString(R.string.contract_detail));
         includeTextTitleTvSubtitle.setText(mActivity.getString(R.string.title_edit));
-        includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_29c093));
+        includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_1dbb99));
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
 
         initRCDevices();
@@ -218,7 +218,7 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
     @Override
     public void setSignStatus(boolean isSigned) {
         acContractDetailTvContractStatus.setText(isSigned ? R.string.signed : R.string.not_signed);
-        acContractDetailTvContractStatus.setTextColor(isSigned ? getResources().getColor(R.color.c_29c093) :
+        acContractDetailTvContractStatus.setTextColor(isSigned ? getResources().getColor(R.color.c_1dbb99) :
                 getResources().getColor(R.color.c_ff8d34));
         acContractDetailLlContractLookQrCode.setVisibility(isSigned ? View.GONE : View.VISIBLE);
         acContractDetailTvContractMore.setVisibility(isSigned ? View.VISIBLE : View.GONE);

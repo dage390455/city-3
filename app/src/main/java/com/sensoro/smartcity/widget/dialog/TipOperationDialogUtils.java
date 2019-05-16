@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.smartcity.R;
 
 public class TipOperationDialogUtils {

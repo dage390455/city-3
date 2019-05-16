@@ -8,14 +8,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAuthActivityView;
 import com.sensoro.smartcity.presenter.AuthActivityPresenter;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.NumKeyboard;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.List;
 

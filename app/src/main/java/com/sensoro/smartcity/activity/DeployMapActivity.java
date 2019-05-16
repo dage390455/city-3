@@ -10,11 +10,11 @@ import android.widget.Toast;
 
 import com.amap.api.maps.TextureMapView;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMapActivityView;
 import com.sensoro.smartcity.presenter.DeployMapActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,7 +54,7 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
         includeTextTitleTvTitle.setText(R.string.deploy_location);
         includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
         includeTextTitleTvSubtitle.setText(mActivity.getString(R.string.save));
-        includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_29c093));
+        includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_1dbb99));
 
         mActivity.getWindow().getDecorView().postInvalidate();
     }

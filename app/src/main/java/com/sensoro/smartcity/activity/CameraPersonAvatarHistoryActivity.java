@@ -21,15 +21,15 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.PersonAvatarHistoryAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraPersonAvatarHistoryActivityView;
 import com.sensoro.smartcity.presenter.CameraPersonAvatarHistoryActivityPresenter;
-import com.sensoro.smartcity.server.response.DeviceCameraPersonFaceRsp;
+import com.sensoro.common.server.response.DeviceCameraPersonFaceRsp;
 import com.sensoro.smartcity.widget.GlideRoundTransform;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.List;
 
@@ -254,8 +254,8 @@ implements ICameraPersonAvatarHistoryActivityView{
     public void loadTitleAvatar(String faceUrl) {
         Glide.with(mActivity).load(Constants.CAMERA_BASE_URL+faceUrl)
                 .bitmapTransform(new GlideRoundTransform(mActivity))
-                .placeholder(R.drawable.ic_default_image)
-                .error(R.drawable.ic_default_image)
+                .placeholder(R.drawable.person_locus_placeholder)
+                .error(R.drawable.person_locus_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(ivTitleAvatarAcCameraPersonAvatarHistory);
     }

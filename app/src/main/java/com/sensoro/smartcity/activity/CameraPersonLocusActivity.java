@@ -25,11 +25,11 @@ import com.amap.api.maps.model.PolylineOptions;
 import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.PersonLocusCameraGaoDeAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ICameraPersonLocusActivityView;
 import com.sensoro.smartcity.presenter.CameraPersonLocusActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.SensoroToast;
 import com.warkiz.widget.IndicatorSeekBar;
 
 import java.util.List;
@@ -95,12 +95,14 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
         setMoveLeftClickable(false);
         includeTextTitleTvTitle.setText(getString(R.string.move_locus));
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
+        //seekbar默认时间气泡是不显示的，如果修改，在IndicatorSeekBar.java的onmearsure中
         seekBarTrackAcPersonLocus.setOnSeekChangeListener(new IndicatorSeekBar.OnSeekBarChangeListener() {
             private int mSeekBarProgres;
 
             @Override
             public void onProgressChanged(IndicatorSeekBar seekBar, final int progress, float progressFloat, boolean fromUserTouch) {
                 mSeekBarProgres = progress;
+                seekBarTrackAcPersonLocus.setIndicatorVisible(true);
             }
 
             @Override
@@ -116,6 +118,8 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
             @Override
             public void onStopTrackingTouch(IndicatorSeekBar seekBar) {
                 mPresenter.doSeekBarTouch(mSeekBarProgres);
+                seekBarTrackAcPersonLocus.setIndicatorVisible(false);
+
             }
         });
 
@@ -283,13 +287,13 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
     @Override
     public void setMoveLeftClickable(boolean clickable) {
         ivMoveLeftAcPersonLocus.setEnabled(clickable);
-        ivMoveLeftAcPersonLocus.setColorFilter(mActivity.getResources().getColor(clickable ? R.color.c_29c093 : R.color.c_a6a6a6));
+        ivMoveLeftAcPersonLocus.setColorFilter(mActivity.getResources().getColor(clickable ? R.color.c_1dbb99 : R.color.c_dfdfdf));
     }
 
     @Override
     public void setMoveRightClickable(boolean clickable) {
         ivMoveRightAcPersonLocus.setClickable(clickable);
-        ivMoveRightAcPersonLocus.setColorFilter(mActivity.getResources().getColor(clickable ? R.color.c_29c093 : R.color.c_a6a6a6));
+        ivMoveRightAcPersonLocus.setColorFilter(mActivity.getResources().getColor(clickable ? R.color.c_1dbb99 : R.color.c_dfdfdf));
     }
 
     @Override
@@ -342,7 +346,7 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
     @Override
     public boolean isActivityOverrideStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
-        immersionBar.transparentStatusBar().init();
+        immersionBar.transparentStatusBar().statusBarDarkFont(true).init();
         return true;
     }
 
@@ -392,13 +396,13 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
     @Override
     public void setSelectDayBg(int day) {
 
-        tvOneDayAcPersonLocus.setBackgroundColor(mActivity.getResources().getColor(day == 1 ? R.color.c_29c093 : R.color.white));
+        tvOneDayAcPersonLocus.setBackgroundColor(mActivity.getResources().getColor(day == 1 ? R.color.c_1dbb99 : R.color.white));
         tvOneDayAcPersonLocus.setTextColor(mActivity.getResources().getColor(day == 1 ? R.color.white : R.color.c_252525));
 
-        tvThreeDayAcPersonLocus.setBackgroundColor(mActivity.getResources().getColor(day == 3 ? R.color.c_29c093 : R.color.white));
+        tvThreeDayAcPersonLocus.setBackgroundColor(mActivity.getResources().getColor(day == 3 ? R.color.c_1dbb99 : R.color.white));
         tvThreeDayAcPersonLocus.setTextColor(mActivity.getResources().getColor(day == 3 ? R.color.white : R.color.c_252525));
 
-        tvSevenDayAcPersonLocus.setBackgroundColor(mActivity.getResources().getColor(day == 7 ? R.color.c_29c093 : R.color.white));
+        tvSevenDayAcPersonLocus.setBackgroundColor(mActivity.getResources().getColor(day == 7 ? R.color.c_1dbb99 : R.color.white));
         tvSevenDayAcPersonLocus.setTextColor(mActivity.getResources().getColor(day == 7 ? R.color.white : R.color.c_252525));
     }
 
@@ -431,6 +435,11 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
         if (mDisplayNormalLine != null) {
             mDisplayNormalLine.remove();
         }
+    }
+
+    @Override
+    public void setSeekBarTimeVisible(boolean isVisible) {
+        seekBarTrackAcPersonLocus.setIndicatorVisible(isVisible);
     }
 
     @Override

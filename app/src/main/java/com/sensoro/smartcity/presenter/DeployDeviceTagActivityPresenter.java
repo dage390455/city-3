@@ -4,15 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.model.EventData;
+import com.sensoro.common.utils.ResourceUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
-import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IDeployDeviceTagActivityView;
-import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.util.PreferencesHelper;
-import com.sensoro.common.utils.ResourceUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -80,6 +80,9 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
                         mTagList.add(trim);
                     }
                     getView().updateTags(mTagList);
+                } else {
+                    getView().toastShort(mContext.getString(R.string.cannot_be_all_spaces));
+                    return;
                 }
             }
         }
@@ -186,6 +189,9 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
                 return;
             }
             mTagList.set(position, text);
+        } else {
+            getView().toastShort(mContext.getString(R.string.cannot_be_all_spaces));
+            return;
         }
         getView().updateTags(mTagList);
         getView().dismissDialog();

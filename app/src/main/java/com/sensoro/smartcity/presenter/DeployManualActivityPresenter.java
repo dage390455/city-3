@@ -7,13 +7,13 @@ import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.analyzer.DeployAnalyzerUtils;
-import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.common.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployManualActivityView;
 import com.sensoro.common.iwidget.IOnCreate;
-import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
-import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
+import com.sensoro.common.model.EventData;
+import com.sensoro.common.server.bean.InspectionIndexTaskInfo;
+import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:bnbActiveColor="@color/c_29c093"
+        app:bnbActiveColor="@color/c_1dbb99"
         app:bnbBackgroundStyle="background_style_static"
         app:bnbInactiveColor="@color/c_a6a6a6"
         app:bnbMode="mode_fixed" />

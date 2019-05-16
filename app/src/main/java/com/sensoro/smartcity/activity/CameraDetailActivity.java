@@ -23,13 +23,13 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.CameraDetailListAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ICameraDetailActivityView;
-import com.sensoro.smartcity.model.EventData;
+import com.sensoro.common.model.EventData;
 import com.sensoro.smartcity.presenter.CameraDetailActivityPresenter;
-import com.sensoro.smartcity.server.bean.DeviceCameraFacePic;
+import com.sensoro.common.server.bean.DeviceCameraFacePic;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.SensoroToast;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
@@ -208,7 +208,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     public void initVideoOption() {
         gsyPlayerAcCameraDetail.setIsLive(View.INVISIBLE);
-
+        gsyPlayerAcCameraDetail.setHideActionBar(true);
         //增加封面
         if (imageView == null) {
             imageView = new ImageView(this);
@@ -223,6 +223,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                 .setAutoFullWithSize(false)
                 .setShowFullAnimation(false)
                 .setNeedLockFull(true)
+                .setHideKey(false)
 //                .setUrl(url)
                 .setCacheWithPlay(false)
 //                .setVideoTitle(cameraName)
@@ -617,7 +618,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     @Override
     public boolean isActivityOverrideStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
-        immersionBar.transparentBar().init();
+        immersionBar.navigationBarColor(R.color.c_000000).init();
         return true;
     }
 
@@ -630,7 +631,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     @Override
     public boolean setMyCurrentActivityTheme() {
-        setTheme(R.style.Theme_AppCompat_Full);
+        setTheme(R.style.Theme_AppCompat_Translucent);
         return true;
     }
 

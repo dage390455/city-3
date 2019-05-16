@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
-import com.sensoro.smartcity.server.bean.DeviceCameraFacePic;
+import com.sensoro.common.server.bean.DeviceCameraFacePic;
 
 import java.util.List;
 

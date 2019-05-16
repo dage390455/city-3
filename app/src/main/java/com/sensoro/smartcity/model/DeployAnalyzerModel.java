@@ -1,9 +1,9 @@
 package com.sensoro.smartcity.model;
 
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.server.bean.DeployControlSettingData;
-import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.common.server.bean.DeployControlSettingData;
+import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
+import com.sensoro.common.model.ImageItem;
 
 import java.io.Serializable;
 import java.util.ArrayList;

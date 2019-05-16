@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.model.CameraFilterModel;
+import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class CameraListFilterAdapter extends RecyclerView.Adapter<CameraListFilt
                 String name = ic.getName().replace("（", "(").replace("）", ")");
                 holder.itemPopTvSelectState.setText(name);
             }
-            boolean select = ic.isSelect() && !ic.isReset();
+            boolean select = ic.isSelect();
             holder.itemPopSelectLlRoot.setBackgroundResource(!select ? R.drawable.shape_bg_solid_ff_corner
                     : R.drawable.shape_bg_corner_1dbb99_shadow);
 
@@ -69,7 +69,6 @@ public class CameraListFilterAdapter extends RecyclerView.Adapter<CameraListFilt
 
                     }
 
-                    ic.setReset(false);
                     ic.setSelect(!ic.isSelect());
                     notifyDataSetChanged();
 

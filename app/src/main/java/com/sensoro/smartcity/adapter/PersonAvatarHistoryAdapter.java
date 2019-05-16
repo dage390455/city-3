@@ -12,10 +12,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.sensoro.common.server.response.DeviceCameraPersonFaceRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.server.response.DeviceCameraPersonFaceRsp;
-import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.widget.GlideRoundTransform;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
@@ -60,7 +60,7 @@ public class PersonAvatarHistoryAdapter extends RecyclerView.Adapter<PersonAvata
                 .load(Constants.CAMERA_BASE_URL + dataBean.getFaceUrl())
                 .bitmapTransform(new GlideRoundTransform(mContext))
 //                    .thumbnail(0.01f)//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-                .error(R.drawable.deploy_pic_placeholder)           //设置错误图片
+                .error(R.drawable.person_locus_placeholder)           //设置错误图片
                 .placeholder(R.drawable.person_locus_placeholder)//设置占位图片
                 .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
                 .into(holder.ivAvatarItemAdapterPersonAvatarHistory);

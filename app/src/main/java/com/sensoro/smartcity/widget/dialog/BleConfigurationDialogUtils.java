@@ -9,6 +9,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.smartcity.R;
 
 public class BleConfigurationDialogUtils {

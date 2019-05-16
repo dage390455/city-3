@@ -8,11 +8,11 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IContractIndexActivityView;
 import com.sensoro.smartcity.presenter.ContractIndexActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

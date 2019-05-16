@@ -30,7 +30,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapterHorizontal;
 import com.sensoro.smartcity.adapter.MainHomeFragRcTypeAdapter;
-import com.sensoro.smartcity.base.BaseFragment;
+import com.sensoro.common.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IHomeFragmentView;
 import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.model.HomeTopModel;
@@ -43,7 +43,7 @@ import com.sensoro.smartcity.widget.calendar.cardgallery.BannerAlphaHelper;
 import com.sensoro.smartcity.widget.calendar.cardgallery.BannerRecyclerView;
 import com.sensoro.smartcity.widget.calendar.cardgallery.BannerScaleHelper;
 import com.sensoro.smartcity.widget.popup.SelectDeviceTypePopUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.List;
 import java.util.Objects;

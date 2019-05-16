@@ -20,6 +20,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sensoro.common.model.EventData;
+import com.sensoro.common.model.ImageItem;
+import com.sensoro.common.server.bean.ScenesData;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.TakeRecordActivity;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
@@ -27,14 +31,10 @@ import com.sensoro.smartcity.adapter.ImagePickerAdapter;
 import com.sensoro.smartcity.adapter.NothingSelectedSpinnerAdapter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.AlarmPopModel;
-import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

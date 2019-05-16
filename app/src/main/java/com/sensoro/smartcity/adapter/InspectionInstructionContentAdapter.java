@@ -11,8 +11,8 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.server.bean.InspectionTaskInstructionModel;
-import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.common.server.bean.InspectionTaskInstructionModel;
+import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.divider.TopSpaceItemDecoration;
 

@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.server.bean.DeviceCameraInfo;
+import com.sensoro.common.server.bean.DeviceCameraInfo;
 
 import java.util.ArrayList;
 import java.util.List;

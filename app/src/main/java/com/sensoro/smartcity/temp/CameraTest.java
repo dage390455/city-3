@@ -31,11 +31,11 @@ import com.antelope.sdk.streamer.ACStreamerFactory;
 import com.antelope.sdk.utils.WorkThreadExecutor;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.response.DeviceCameraListRsp;
+import com.sensoro.common.server.response.ResponseBase;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.response.DeviceCameraListRsp;
-import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.temp.entity.DeviceDetailEntity;
 import com.sensoro.smartcity.temp.entity.LmBaseResponseEntity;
 

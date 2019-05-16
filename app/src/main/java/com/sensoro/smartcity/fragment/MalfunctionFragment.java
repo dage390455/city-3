@@ -28,10 +28,10 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainMalfunctionFragRcContentAdapter;
 import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
-import com.sensoro.smartcity.base.BaseFragment;
+import com.sensoro.common.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IMalfunctionFragmentView;
 import com.sensoro.smartcity.presenter.MalfunctionFragmentPresenter;
-import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
+import com.sensoro.common.server.bean.MalfunctionListInfo;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
@@ -39,7 +39,7 @@ import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.List;
 import java.util.Objects;
@@ -170,7 +170,7 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
         historyClearDialog = new TipOperationDialogUtils(mRootFragment.getActivity(), true);
         historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
         historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
-        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_1dbb99));
         historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
         historyClearDialog.setTipDialogUtilsClickListener(this);
     }

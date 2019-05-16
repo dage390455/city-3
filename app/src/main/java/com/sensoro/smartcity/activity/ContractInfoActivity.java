@@ -15,12 +15,12 @@ import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.ContractTemplateShowAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IContractInfoActivityView;
 import com.sensoro.smartcity.presenter.ContractInfoActivityPresenter;
-import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
+import com.sensoro.common.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.List;
 
@@ -153,7 +153,7 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
     private void initView() {
         includeTextTitleTvTitle.setText(mActivity.getString(R.string.contract_info_title));
         includeTextTitleTvSubtitle.setText(mActivity.getString(R.string.title_edit));
-        includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_29c093));
+        includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_1dbb99));
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         contractTemplateShowAdapter = new ContractTemplateShowAdapter(mActivity);
@@ -361,7 +361,7 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
         ivLine8.setVisibility(View.VISIBLE);
         rlServiceInfoStatus.setVisibility(View.VISIBLE);
         tvContractStatus.setText(confirmed ? R.string.signed : R.string.not_signed);
-        tvContractStatus.setTextColor(confirmed ? getResources().getColor(R.color.c_29c093) :
+        tvContractStatus.setTextColor(confirmed ? getResources().getColor(R.color.c_1dbb99) :
                 getResources().getColor(R.color.c_ff8d34));
         tvContractStatus.setBackgroundResource(confirmed ? R.drawable.shape_bg_stroke_1_29c_full_corner :
                 R.drawable.shape_bg_stroke_1_ff8d_full_corner);

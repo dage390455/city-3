@@ -9,8 +9,8 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageFolder;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.common.model.ImageFolder;
+import com.sensoro.common.model.ImageItem;
 
 import java.io.File;
 import java.util.ArrayList;

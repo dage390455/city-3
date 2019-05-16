@@ -3,8 +3,8 @@ package com.sensoro.smartcity.util;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 
+import com.sensoro.common.base.ContextUtils;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
 
 import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
@@ -36,7 +36,7 @@ public class DynamicTimeFormat extends SimpleDateFormat {
 
     public DynamicTimeFormat(String yearFormat, String dateFormat, String timeFormat) {
         super(String.format(locale, "%s %s %s", yearFormat, dateFormat, timeFormat), locale);
-        Resources resources = SensoroCityApplication.getInstance().getResources();
+        Resources resources = ContextUtils.getContext().getResources();
         weeks = new String[]{resources.getString(R.string.sunday), resources.getString(R.string.monday), resources.getString(R.string.tuesday), resources.getString(R.string.wednesday), resources.getString(R.string.thursday), resources.getString(R.string.friday), resources.getString(R.string.saturday)};
         moments = new String[]{resources.getString(R.string.noon), resources.getString(R.string.early_morning), resources.getString(R.string.morning), resources.getString(R.string.pm), resources.getString(R.string.night)};
     }
@@ -73,11 +73,11 @@ public class DynamicTimeFormat extends SimpleDateFormat {
                         toAppendTo.append(timeFormat);
                         break;
                     case 1:
-                        toAppendTo.append(SensoroCityApplication.getInstance().getResources().getString(R.string.yesterday));
+                        toAppendTo.append(ContextUtils.getContext().getResources().getString(R.string.yesterday));
                         toAppendTo.append(timeFormat);
                         break;
                     case 2:
-                        toAppendTo.append(SensoroCityApplication.getInstance().getResources().getString(R.string.before_yesterday));
+                        toAppendTo.append(ContextUtils.getContext().getResources().getString(R.string.before_yesterday));
                         toAppendTo.append(timeFormat);
                         break;
                     case 3:

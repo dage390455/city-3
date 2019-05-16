@@ -13,16 +13,16 @@ import android.widget.Toast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.CameraListActivity;
-import com.sensoro.smartcity.base.BaseFragment;
+import com.sensoro.common.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
 import com.sensoro.smartcity.presenter.ManagerFragmentPresenter;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.dialog.PermissionDialogUtils;
+import com.sensoro.common.widgets.PermissionDialogUtils;
 import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
 import com.sensoro.smartcity.widget.dialog.TipDialogUtils;
 import com.sensoro.smartcity.widget.dialog.VersionDialogUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.Objects;
 
@@ -327,7 +327,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
 //                            }
 //                        })
 //                        .start();
-//                if (PermissionUtils.checkHasLocationPermission(mRootFragment.getActivity()) && SensoroCityApplication.getInstance().bleDeviceManager.isBluetoothEnabled()) {
+//                if (PermissionUtils.checkHasLocationPermission(mRootFragment.getActivity()) && ContextUtils.getContext().bleDeviceManager.isBluetoothEnabled()) {
 //                    mPresenter.doSignalCheck();
 //                } else {
 //                    showBleTips();

@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.fragment.BusinessContractFragment;
 import com.sensoro.smartcity.fragment.PersonalContractFragment;
 import com.sensoro.smartcity.imainviews.IContractEditorView;
@@ -71,7 +71,7 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
         mCreateContractDialog.setTipTitleText(mActivity.getString(R.string.create_contract));
         mCreateContractDialog.setTipMessageText(mActivity.getString(R.string.create_contract_tip_message));
         mCreateContractDialog.setTipCancelText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_a6a6a6));
-        mCreateContractDialog.setTipConfirmText(mActivity.getString(R.string.dialog_input_confirm), mActivity.getResources().getColor(R.color.c_29c093));
+        mCreateContractDialog.setTipConfirmText(mActivity.getString(R.string.dialog_input_confirm), mActivity.getResources().getColor(R.color.c_1dbb99));
         mCreateContractDialog.setTipDialogUtilsClickListener(this);
     }
 

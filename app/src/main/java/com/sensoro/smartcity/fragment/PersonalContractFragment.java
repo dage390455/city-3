@@ -17,15 +17,15 @@ import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.ContractTemplateAdapter;
-import com.sensoro.smartcity.base.BaseFragment;
+import com.sensoro.common.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IPersonalContractView;
 import com.sensoro.smartcity.presenter.PersonalContractPresenter;
-import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
+import com.sensoro.common.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
 import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -137,7 +137,7 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
             try {
                 int i = Integer.parseInt(text);
                 if (i > 0) {
-                    editText.setTextColor(mRootFragment.getResources().getColor(R.color.c_29c093));
+                    editText.setTextColor(mRootFragment.getResources().getColor(R.color.c_1dbb99));
                 } else {
                     editText.setTextColor(mRootFragment.getResources().getColor(R.color.c_252525));
                 }

@@ -4,15 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.common.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMalfunctionHistoryActivityView;
 import com.sensoro.smartcity.model.CalendarDateModel;
-import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
-import com.sensoro.smartcity.server.response.MalfunctionListRsp;
-import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.MalfunctionListInfo;
+import com.sensoro.common.server.response.MalfunctionListRsp;
+import com.sensoro.common.utils.DateUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;

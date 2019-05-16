@@ -11,10 +11,10 @@ import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ISplashActivityView;
 import com.sensoro.smartcity.presenter.SplashActivityPresenter;
-import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.common.utils.DateUtil;
 
 import java.util.Locale;
 

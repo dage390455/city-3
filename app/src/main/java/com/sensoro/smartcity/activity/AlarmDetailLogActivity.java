@@ -13,13 +13,13 @@ import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.AlertLogRcContentAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IAlarmDetailLogActivityView;
 import com.sensoro.smartcity.presenter.AlarmDetailLogActivityPresenter;
-import com.sensoro.smartcity.server.bean.AlarmInfo;
-import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.common.server.bean.AlarmInfo;
+import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import java.util.List;

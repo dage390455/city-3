@@ -8,18 +8,18 @@ import android.text.TextUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMapENActivity;
-import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.common.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
-import com.sensoro.smartcity.server.bean.DeployControlSettingData;
-import com.sensoro.smartcity.server.bean.DeployRecordInfo;
-import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.common.server.bean.DeployControlSettingData;
+import com.sensoro.common.server.bean.DeployRecordInfo;
+import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
 
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
                         forceReasonStr = mActivity.getString(R.string.deploy_check_record_reason_nearby) + mActivity.getString(R.string.deploy_check_record_force_tip);
                         break;
                     case "config":
-                        forceReasonStr = mActivity.getString(R.string.deploy_check_record_reason_nearby) + mActivity.getString(R.string.deploy_check_record_force_tip);
+                        forceReasonStr = mActivity.getString(R.string.deploy_check_record_reason_config) + mActivity.getString(R.string.deploy_check_record_force_tip);
                         break;
                     case "signalQuality":
                         if ("bad".equals(signalQuality)) {

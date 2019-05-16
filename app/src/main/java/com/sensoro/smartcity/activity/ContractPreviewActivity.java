@@ -24,11 +24,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IContractPreviewActivityView;
 import com.sensoro.smartcity.presenter.ContractPreviewActivityPresenter;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -92,7 +92,7 @@ public class ContractPreviewActivity extends BaseActivity<IContractPreviewActivi
 
         //不显示webview缩放按钮
         webSettings.setDisplayZoomControls(false);
-        ClipDrawable clipDrawable = new ClipDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_29c093)), Gravity.LEFT, ClipDrawable.HORIZONTAL);
+        ClipDrawable clipDrawable = new ClipDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_1dbb99)), Gravity.LEFT, ClipDrawable.HORIZONTAL);
         pbPreview.setProgressDrawable(clipDrawable);
         //添加进来
         flContainer.addView(wvPreview);

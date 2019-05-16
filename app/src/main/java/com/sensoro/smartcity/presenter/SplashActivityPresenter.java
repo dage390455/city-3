@@ -7,23 +7,23 @@ import android.os.Handler;
 import android.text.TextUtils;
 
 import com.igexin.sdk.PushManager;
+import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.base.ContextUtils;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.iwidget.IOnStart;
+import com.sensoro.common.model.EventLoginData;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.widgets.PermissionDialogUtils;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.MainActivity;
-import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISplashActivityView;
-import com.sensoro.common.iwidget.IOnStart;
-import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.push.SensoroPushIntentService;
 import com.sensoro.smartcity.push.SensoroPushService;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.MyPermissionManager;
-import com.sensoro.smartcity.util.PreferencesHelper;
-import com.sensoro.smartcity.widget.dialog.PermissionDialogUtils;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
@@ -127,16 +127,16 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
     }
 
     private void initPushSDK() {
-        PushManager.getInstance().initialize(SensoroCityApplication.getInstance(), SensoroPushService.class);
+        PushManager.getInstance().initialize(ContextUtils.getContext(), SensoroPushService.class);
         // 注册 intentService 后 PushDemoReceiver 无效, sdk 会使用 DemoIntentService 传递数据,
         // AndroidManifest 对应保留一个即可(如果注册 DemoIntentService, 可以去掉 PushDemoReceiver, 如果注册了
         // IntentService, 必须在 AndroidManifest 中声明)
-        PushManager.getInstance().registerPushIntentService(SensoroCityApplication.getInstance(),
+        PushManager.getInstance().registerPushIntentService(ContextUtils.getContext(),
                 SensoroPushIntentService.class);
-        if (PushManager.getInstance().getClientid(SensoroCityApplication.getInstance()) == null) {
-            PushManager.getInstance().turnOffPush(SensoroCityApplication.getInstance());
+        if (PushManager.getInstance().getClientid(ContextUtils.getContext()) == null) {
+            PushManager.getInstance().turnOffPush(ContextUtils.getContext());
         } else {
-            PushManager.getInstance().turnOnPush(SensoroCityApplication.getInstance());
+            PushManager.getInstance().turnOnPush(ContextUtils.getContext());
         }
     }
 

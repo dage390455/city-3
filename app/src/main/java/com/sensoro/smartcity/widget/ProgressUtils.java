@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.widget.dialog.CustomCornerDialog;
+import com.sensoro.common.widgets.CustomCornerDialog;
 
 import java.lang.ref.WeakReference;
 

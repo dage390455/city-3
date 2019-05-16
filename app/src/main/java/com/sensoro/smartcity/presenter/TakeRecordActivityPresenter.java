@@ -8,15 +8,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
-import android.view.View;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.common.base.BasePresenter;
 import com.sensoro.smartcity.imainviews.ITakeRecordActivityView;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.RecordedButton;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.common.model.ImageItem;
 import com.yixia.camera.MediaRecorderBase;
 import com.yixia.camera.MediaRecorderNative;
 import com.yixia.camera.VCamera;

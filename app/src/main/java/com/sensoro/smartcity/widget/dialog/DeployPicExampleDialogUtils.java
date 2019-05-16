@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.FixedAspectRationImageView;

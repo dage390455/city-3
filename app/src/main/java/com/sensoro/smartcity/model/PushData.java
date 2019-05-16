@@ -1,6 +1,6 @@
 package com.sensoro.smartcity.model;
 
-import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.common.server.bean.DeviceInfo;
 
 import java.util.List;
 

@@ -9,12 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.server.bean.MalfunctionListInfo;
+import com.sensoro.common.server.bean.MalfunctionTypeStyles;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
-import com.sensoro.smartcity.server.bean.MalfunctionTypeStyles;
-import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
@@ -65,7 +65,7 @@ public class MainMalfunctionFragRcContentAdapter extends RecyclerView.Adapter<Ma
         switch (malfunctionListInfo.getMalfunctionStatus()) {
             case 1:
                 holder.mainMalfunctionRcContentTvState.setText(mContext.getString(R.string.fg_malfunction_back_to_normal));
-                setTextColor(holder, R.color.c_29c093);
+                setTextColor(holder, R.color.c_1dbb99);
                 break;
             case 2:
                 holder.mainMalfunctionRcContentTvState.setText(mContext.getString(R.string.fg_malfunction_malfunctioning));

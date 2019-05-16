@@ -5,9 +5,9 @@ import android.text.TextUtils;
 
 import com.github.moduth.blockcanary.BlockCanaryContext;
 import com.github.moduth.blockcanary.internal.BlockInfo;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.server.NetWorkUtils;
 import com.sensoro.smartcity.BuildConfig;
-import com.sensoro.smartcity.server.NetWorkUtils;
-import com.sensoro.smartcity.util.PreferencesHelper;
 
 import java.io.File;
 import java.util.LinkedList;

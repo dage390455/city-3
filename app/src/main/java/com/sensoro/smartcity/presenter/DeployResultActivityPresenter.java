@@ -4,18 +4,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.model.EventData;
+import com.sensoro.common.server.bean.DeployControlSettingData;
+import com.sensoro.common.server.bean.DeviceTypeStyles;
+import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployResultActivityView;
 import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.model.DeployResultModel;
-import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.server.bean.DeployControlSettingData;
-import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
-import com.sensoro.smartcity.server.bean.MergeTypeStyles;
-import com.sensoro.smartcity.util.DateUtil;
-import com.sensoro.smartcity.util.PreferencesHelper;
+import com.sensoro.common.utils.DateUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -37,6 +37,8 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 getView().setDeployResultBackHomeText(mContext.getString(R.string.deploy_result_back_home));
                 break;
             case DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED:
+                getView().setTitleText(mContext.getString(R.string.scan_code_failed));
+                getView().setStateTextViewVisible(false);
                 switch (deployResultModel.scanType) {
                     case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
                         getView().setDeployResultContinueText(mContext.getString(R.string.continue_to_replace));
@@ -48,16 +50,17 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                         getView().setDeployResultBackHomeText(mContext.getString(R.string.back));
                         break;
                     case TYPE_SCAN_SIGNAL_CHECK:
-                        getView().setStateTextViewVisible(false);
                         getView().setDeployResultContinueText(mContext.getString(R.string.rescan_code));
-                        getView().setTitleText(mContext.getString(R.string.scan_code_failed));
                         break;
                 }
                 break;
             case DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT:
                 //失败
+                getView().setTitleText(mContext.getString(R.string.scan_code_failed));
+                getView().setStateTextViewVisible(false);
                 switch (deployResultModel.scanType) {
                     case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+
                         getView().setDeployResultContinueText(mContext.getString(R.string.continue_to_replace));
                         getView().setDeployResultBackHomeText(mContext.getString(R.string.continue_inspection));
                         break;
@@ -67,7 +70,6 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                         getView().setDeployResultBackHomeText(mContext.getString(R.string.back));
                         break;
                     case TYPE_SCAN_SIGNAL_CHECK:
-                        getView().setStateTextViewVisible(false);
                         getView().setDeployResultContinueText(mContext.getString(R.string.rescan_code));
                         getView().setTitleText(mContext.getString(R.string.scan_code_failed));
                         break;
@@ -169,7 +171,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
             case TYPE_SCAN_DEPLOY_STATION:
                 getView().setResultImageView(R.drawable.deploy_succeed);
                 getView().setStateTextView(mContext.getString(R.string.success));
-                getView().setDeployResultTvStateTextColor(R.color.c_29c093);
+                getView().setDeployResultTvStateTextColor(R.color.c_1dbb99);
                 getView().setTipsTextView(mContext.getResources().getString(R.string
                         .tips_deploy_station_success));
                 if (!TextUtils.isEmpty(deployResultModel.sn)) {
@@ -205,7 +207,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 //TODO 巡检设备更换
                 getView().setResultImageView(R.drawable.deploy_succeed);
                 getView().setStateTextView(mContext.getString(R.string.success));
-                getView().setDeployResultTvStateTextColor(R.color.c_29c093);
+                getView().setDeployResultTvStateTextColor(R.color.c_1dbb99);
                 getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_success));
                 if (!TextUtils.isEmpty(deployResultModel.sn)) {
                     getView().setSnTextView(deployResultModel.sn);
@@ -254,7 +256,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                             mContext.getResources().getColor(Constants.DEVICE_STATUS_COLOR_ARRAY[deployResultModel.deviceStatus]));
                 } else {
                     getView().setStatusTextView(mContext.getString(R.string.normal),
-                            mContext.getResources().getColor(R.color.c_29c093));
+                            mContext.getResources().getColor(R.color.c_1dbb99));
                 }
                 if (deployResultModel.deployTime == null) {
                     getView().setUpdateTextView(DateUtil.getStrTimeToday(mContext, System.currentTimeMillis(), 0));
@@ -378,7 +380,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                             mContext.getResources().getColor(Constants.DEVICE_STATUS_COLOR_ARRAY[deployResultModel.deviceStatus]));
                 } else {
                     getView().setStatusTextView(mContext.getString(R.string.normal),
-                            mContext.getResources().getColor(R.color.c_29c093));
+                            mContext.getResources().getColor(R.color.c_1dbb99));
                 }
                 getView().refreshSignal(deployResultModel.updateTime, deployResultModel.signal);
                 //TODO 当前的部署时间需要更换

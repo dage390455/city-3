@@ -27,7 +27,7 @@ import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
-import com.sensoro.smartcity.base.BaseFragment;
+import com.sensoro.common.base.BaseFragment;
 import com.sensoro.smartcity.constant.DeoloyCheckPointConstants;
 import com.sensoro.smartcity.constant.DeployCheckStateEnum;
 import com.sensoro.smartcity.imainviews.IDeployMonitorLocalCheckFragmentView;
@@ -37,7 +37,7 @@ import com.sensoro.smartcity.widget.dialog.DeployMonitorCheckDialogUtils;
 import com.sensoro.smartcity.widget.dialog.EarlyWarningThresholdDialogUtils;
 import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.ArrayList;
 import java.util.List;

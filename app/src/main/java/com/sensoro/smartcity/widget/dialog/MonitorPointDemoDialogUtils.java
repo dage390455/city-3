@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.smartcity.R;
 
 public class MonitorPointDemoDialogUtils {

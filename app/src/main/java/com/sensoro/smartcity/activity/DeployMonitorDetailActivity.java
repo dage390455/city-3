@@ -24,7 +24,7 @@ import android.widget.Toast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeployDeviceDetailAlarmContactAdapter;
 import com.sensoro.smartcity.adapter.TagAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
 import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.presenter.DeployMonitorDetailActivityPresenter;
@@ -33,9 +33,9 @@ import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.TouchRecycleView;
-import com.sensoro.smartcity.widget.dialog.CustomCornerDialog;
+import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.List;
 
@@ -195,8 +195,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
             case R.id.include_text_title_tv_subtitle:
                 break;
             case R.id.ac_deploy_device_detail_ll_name_location:
-//                mPresenter.doNameAddress();
-                int i = 1 / 0;
+                mPresenter.doNameAddress();
                 break;
             case R.id.ac_deploy_device_detail_rl_tag:
                 mPresenter.doTag();

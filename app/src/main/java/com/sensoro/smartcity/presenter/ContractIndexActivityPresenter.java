@@ -14,14 +14,14 @@ import com.baidu.ocr.sdk.model.Word;
 import com.baidu.ocr.ui.camera.CameraActivity;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.ContractServiceActivity;
-import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.common.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractIndexActivityView;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.BusinessLicenseData;
-import com.sensoro.smartcity.model.EventData;
+import com.sensoro.common.model.EventData;
 import com.sensoro.smartcity.push.RecognizeService;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.util.FileUtil;
 import com.sensoro.smartcity.util.LogUtils;
 

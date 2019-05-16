@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.fragment.DeployMonitorLocalCheckFragment;
 import com.sensoro.smartcity.fragment.DeployMonitorUploadCheckFragment;
 import com.sensoro.smartcity.imainviews.IDeployMonitorCheckActivityView;

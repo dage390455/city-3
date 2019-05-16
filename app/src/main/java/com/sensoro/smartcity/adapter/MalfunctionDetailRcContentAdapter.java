@@ -14,12 +14,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.server.bean.MalfunctionListInfo;
+import com.sensoro.common.server.bean.MalfunctionTypeStyles;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
-import com.sensoro.smartcity.server.bean.MalfunctionTypeStyles;
-import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.PreferencesHelper;
 
 import java.util.ArrayList;
 import java.util.List;

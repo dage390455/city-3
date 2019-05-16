@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.NameAddressHistoryAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorNameAddressActivityView;
 import com.sensoro.smartcity.presenter.DeployMonitorNameAddressActivityPresenter;
 import com.sensoro.smartcity.util.AppUtils;
@@ -25,7 +25,7 @@ import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.List;
 
@@ -75,7 +75,7 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
         historyClearDialog = new TipOperationDialogUtils(mActivity, true);
         historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
         historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record), R.color.c_a6a6a6);
-        historyClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_29c093));
+        historyClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_1dbb99));
         historyClearDialog.setTipConfirmText(getString(R.string.clear), getResources().getColor(R.color.c_a6a6a6));
         historyClearDialog.setTipDialogUtilsClickListener(this);
     }
@@ -102,7 +102,7 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
     @Override
     public void updateSaveStatus(boolean isEnable) {
         includeTextTitleTvSubtitle.setEnabled(isEnable);
-        includeTextTitleTvSubtitle.setTextColor(isEnable ? getResources().getColor(R.color.c_29c093) : getResources().getColor(R.color.c_dfdfdf));
+        includeTextTitleTvSubtitle.setTextColor(isEnable ? getResources().getColor(R.color.c_1dbb99) : getResources().getColor(R.color.c_dfdfdf));
 
     }
 
@@ -186,7 +186,7 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
                 AppUtils.dismissInputMethodManager(mActivity, acNameAddressEt);
-                String text = acNameAddressEt.getText().toString();
+                String text = acNameAddressEt.getText().toString().trim();
                 mPresenter.doChoose(text);
                 break;
             case R.id.include_text_title_tv_cancel:

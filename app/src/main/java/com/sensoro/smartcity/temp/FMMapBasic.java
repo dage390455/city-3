@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.baidu.mobstat.StatService;
 import com.fengmap.android.FMErrorMsg;
 import com.fengmap.android.data.OnFMDownloadProgressListener;
 import com.fengmap.android.map.FMMap;
@@ -44,8 +43,6 @@ public class FMMapBasic extends AppCompatActivity implements OnFMMapInitListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_basic);
-        StatService.setDebugOn(true);
-        StatService.start(this);
         openMapByPath();
     }
 
@@ -130,7 +127,6 @@ public class FMMapBasic extends AppCompatActivity implements OnFMMapInitListener
     @Override
     protected void onResume() {
         super.onResume();
-        StatService.onResume(this);
         mMap.onResume();
     }
 
@@ -158,7 +154,6 @@ public class FMMapBasic extends AppCompatActivity implements OnFMMapInitListener
     @Override
     protected void onPause() {
         super.onPause();
-        StatService.onPause(this);
     }
 
     /**

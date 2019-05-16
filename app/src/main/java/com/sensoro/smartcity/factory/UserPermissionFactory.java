@@ -2,9 +2,9 @@ package com.sensoro.smartcity.factory;
 
 import android.text.TextUtils;
 
-import com.sensoro.smartcity.model.EventLoginData;
-import com.sensoro.smartcity.server.bean.GrantsInfo;
-import com.sensoro.smartcity.server.bean.UserInfo;
+import com.sensoro.common.model.EventLoginData;
+import com.sensoro.common.server.bean.GrantsInfo;
+import com.sensoro.common.server.bean.UserInfo;
 import com.sensoro.smartcity.util.LogUtils;
 
 import java.util.List;

@@ -15,13 +15,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.server.bean.DeviceInfo;
+import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.bean.MergeTypeStyles;
-import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.ArrayList;
@@ -194,7 +194,7 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
                 holder.ivItemAlarm.setVisibility(View.GONE);
                 break;
             case SENSOR_STATUS_NORMAL:
-                color = R.color.c_29c093;
+                color = R.color.c_1dbb99;
                 holder.ivItemAlarm.setVisibility(View.GONE);
                 break;
             case SENSOR_STATUS_MALFUNCTION:

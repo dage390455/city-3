@@ -13,8 +13,8 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.util.ActivityTaskManager;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.manger.ActivityTaskManager;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.view.SystemBarTintManager;
 

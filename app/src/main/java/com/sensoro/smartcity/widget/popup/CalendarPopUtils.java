@@ -23,12 +23,10 @@ import com.sensoro.smartcity.calendarview.customview.CustomRangeMonthView;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.smartcity.util.DateUtil;
-import com.sensoro.smartcity.widget.MapContainer;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.Calendar;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

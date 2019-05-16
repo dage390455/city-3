@@ -11,15 +11,15 @@ import com.sensoro.bottomnavigation.BadgeItem;
 import com.sensoro.bottomnavigation.BottomNavigationBar;
 import com.sensoro.bottomnavigation.BottomNavigationItem;
 import com.sensoro.bottomnavigation.TextBadgeItem;
+import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainFragmentPageAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.presenter.MainPresenter;
-import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.widget.HomeViewPager;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
 
