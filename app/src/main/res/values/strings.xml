@@ -996,7 +996,7 @@
     <string name="alarm_video">预警录像</string>
     <string name="watching">观看中</string>
     <string name="alarm_camera_live">直播</string>
-    <string name="recording_time">录制时间：</string>
+    <string name="recording_time">预警时间：</string>
     <string name="app_crash_tips">System error, please log in again</string>
     <string name="download_video_to_album">下载录像到手机相册</string>
     <string name="camera_name_sn">摄像机名称/设备号</string>
