@@ -7,12 +7,12 @@
     android:orientation="vertical">
 
 
-    <include
-        layout="@layout/item_include_text_title" />
+    <include layout="@layout/item_include_text_title" />
 
 
     <android.support.v4.widget.NestedScrollView
 
+        android:id="@+id/ac_basestation_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -224,11 +224,11 @@
                     android:layout_above="@+id/chartname_ll"
 
 
-                    android:visibility="gone"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:background="#bf000000"
-                    android:padding="8dp">
+                    android:padding="8dp"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/time_tv"
@@ -314,14 +314,14 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:textColor="@color/c_25292d"
                     android:background="@drawable/shape_bg_top"
+                    android:textColor="@color/c_25292d"
                     android:textSize="14dp" />
 
                 <View
                     android:layout_width="0.5dp"
-                    android:background="@color/c_fafafa"
-                    android:layout_height="match_parent"></View>
+                    android:layout_height="match_parent"
+                    android:background="@color/c_fafafa"></View>
 
                 <TextView
                     android:id="@+id/ac_basestation_tv_week"

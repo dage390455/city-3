@@ -3,6 +3,7 @@ package com.sensoro.smartcity.activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -51,6 +52,8 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
+    @BindView(R.id.ac_basestation_scroll)
+    NestedScrollView scrollView;
     @BindView(R.id.include_text_title_tv_title)
     TextView includeTextTitleTvTitle;
     @BindView(R.id.include_text_title_tv_subtitle)
@@ -318,11 +321,13 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
         chart.getAxisRight().setEnabled(false);
 
+//        chart.setOnTouchListener(touchListener);
 
         setData();
 
         // redraw
         chart.invalidate();
+
 
 //        chart.setOnTouchListener(new View.OnTouchListener() {
 //            @Override
@@ -439,6 +444,29 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
     }
 
+    View.OnTouchListener touchListener = new View.OnTouchListener() {
+        float ratio = 1.8f; //水平和竖直方向滑动的灵敏度,偏大是水平方向灵敏
+        float x0 = 0f;
+        float y0 = 0f;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    x0 = event.getX();
+                    y0 = event.getY();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    float dx = Math.abs(event.getX() - x0);
+                    float dy = Math.abs(event.getY() - y0);
+                    x0 = event.getX();
+                    y0 = event.getY();
+                    scrollView.requestDisallowInterceptTouchEvent(dx * ratio > dy);
+                    break;
+            }
+            return false;
+        }
+    };
 
     private void setData() {
 
