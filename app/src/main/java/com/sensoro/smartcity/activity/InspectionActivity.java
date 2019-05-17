@@ -15,9 +15,9 @@ import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IInspectionActivityView;
 import com.sensoro.smartcity.presenter.InspectionActivityPresenter;
 import com.sensoro.common.widgets.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.widgets.SensoroToast;
-import com.sensoro.smartcity.widget.SpacesItemDecoration;
+import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.dialog.TipDialogUtils;
 
 import java.util.List;

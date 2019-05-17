@@ -16,7 +16,7 @@ import com.sensoro.smartcity.fragment.BusinessContractFragment;
 import com.sensoro.smartcity.fragment.PersonalContractFragment;
 import com.sensoro.smartcity.imainviews.IContractEditorView;
 import com.sensoro.smartcity.presenter.ContractEditorPresenter;
-import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
+import com.sensoro.common.widgets.TipOperationDialogUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

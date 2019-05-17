@@ -3,7 +3,6 @@ package com.sensoro.nameplate.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -24,24 +23,21 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.constant.Constants;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.server.bean.DeviceCameraInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.common.widgets.SpacesItemDecoration;
+import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.nameplate.IMainViews.INameplateListActivityView;
 import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.presenter.NameplateListActivityPresenter;
-import com.sensoro.smartcity.adapter.DeviceCameraContentAdapter;
-import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
-import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
-import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.SpacesItemDecoration;
-import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
-import com.sensoro.smartcity.widget.divider.CustomDivider;
-import com.sensoro.smartcity.widget.popup.CameraListFilterPopupWindowTest;
 
 import java.util.List;
 
@@ -112,14 +108,14 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
 
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        mDeviceCameraContentAdapter = new DeviceCameraContentAdapter(mActivity);
-        mDeviceCameraContentAdapter.setOnAlarmHistoryLogConfirmListener(this);
+//        mDeviceCameraContentAdapter = new DeviceCameraContentAdapter(mActivity);
+//        mDeviceCameraContentAdapter.setOnAlarmHistoryLogConfirmListener(this);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         acHistoryLogRcContent.setLayoutManager(linearLayoutManager);
-        acHistoryLogRcContent.setAdapter(mDeviceCameraContentAdapter);
-        CustomDivider dividerItemDecoration = new CustomDivider(mActivity, DividerItemDecoration.VERTICAL);
-        acHistoryLogRcContent.addItemDecoration(dividerItemDecoration);
+//        acHistoryLogRcContent.setAdapter(mDeviceCameraContentAdapter);
+//        CustomDivider dividerItemDecoration = new CustomDivider(mActivity, DividerItemDecoration.VERTICAL);
+//        acHistoryLogRcContent.addItemDecoration(dividerItemDecoration);
         //
         returnTopAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.return_top_in_anim);
         mReturnTopImageView.setAnimation(returnTopAnimation);
@@ -173,8 +169,8 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
 
             }
         });
-        mCameraListFilterPopupWindow = new CameraListFilterPopupWindowTest(mActivity);
-        mCameraListFilterPopupWindow.setOnCameraListFilterPopupWindowListener(this);
+//        mCameraListFilterPopupWindow = new CameraListFilterPopupWindowTest(mActivity);
+//        mCameraListFilterPopupWindow.setOnCameraListFilterPopupWindowListener(this);
 
         cameraListEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -186,7 +182,7 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
                         mPresenter.save(text);
                     }
                     mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN, text);
-                    AppUtils.dismissInputMethodManager(CameraListActivity.this, cameraListEtSearch);
+                    AppUtils.dismissInputMethodManager(NameplateListActivity.this, cameraListEtSearch);
                     setSearchHistoryVisible(false);
 
                     return true;
@@ -229,7 +225,7 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
     }
 
     private void initClearHistoryDialog() {
-        historyClearDialog = new TipOperationDialogUtils(CameraListActivity.this, true);
+        historyClearDialog = new TipOperationDialogUtils(NameplateListActivity.this, true);
         historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
         historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record), R.color.c_a6a6a6);
         historyClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_1dbb99));
@@ -250,7 +246,7 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
     }
 
     private void initRcSearchHistory() {
-        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(CameraListActivity.this) {
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(NameplateListActivity.this) {
             @Override
             public boolean canScrollVertically() {
                 return false;
@@ -263,8 +259,8 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
         };
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rvSearchHistory.setLayoutManager(layoutManager);
-        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(CameraListActivity.this, 6)));
-        mSearchHistoryAdapter = new SearchHistoryAdapter(CameraListActivity.this, new
+        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(NameplateListActivity.this, 6)));
+        mSearchHistoryAdapter = new SearchHistoryAdapter(NameplateListActivity.this, new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -277,7 +273,7 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
                         }
                         cameraListIvSearchClear.setVisibility(View.VISIBLE);
                         cameraListEtSearch.clearFocus();
-                        AppUtils.dismissInputMethodManager(CameraListActivity.this, cameraListEtSearch);
+                        AppUtils.dismissInputMethodManager(NameplateListActivity.this, cameraListEtSearch);
                         setSearchHistoryVisible(false);
                         mPresenter.save(searchText);
                         mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN, searchText);
@@ -354,17 +350,17 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
 
     }
 
-    @Override
-    public void onItemClick(View v, int position) {
-        DeviceCameraInfo deviceCameraInfo = mDeviceCameraContentAdapter.getData().get(position);
-        mPresenter.onClickDeviceCamera(deviceCameraInfo);
-    }
+//    @Override
+//    public void onItemClick(View v, int position) {
+//        DeviceCameraInfo deviceCameraInfo = mDeviceCameraContentAdapter.getData().get(position);
+//        mPresenter.onClickDeviceCamera(deviceCameraInfo);
+//    }
 
     @Override
     public void updateDeviceCameraAdapter(List<DeviceCameraInfo> data) {
-        if (data != null && data.size() > 0) {
-            mDeviceCameraContentAdapter.updateAdapter(data);
-        }
+//        if (data != null && data.size() > 0) {
+//            mDeviceCameraContentAdapter.updateAdapter(data);
+//        }
         setNoContentVisible(data == null || data.size() < 1);
     }
 
@@ -425,29 +421,26 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
 
     @Override
     public void showCameraListFilterPopupWindow(List<CameraFilterModel> data) {
-        if (!mCameraListFilterPopupWindow.isShowing()) {
-            mCameraListFilterPopupWindow.showAsDropDown(cameraListLlTopSearch, data);
-        }
+
     }
 
     @Override
     public void dismissCameraListFilterPopupWindow() {
-        mCameraListFilterPopupWindow.dismiss();
 
     }
 
     @Override
     public void updateCameraListFilterPopupWindowStatusList(List<CameraFilterModel> list) {
-        mCameraListFilterPopupWindow.updateSelectDeviceStatusList(list);
+
     }
 
     @Override
     public void setCameraListFilterPopupWindowSelectState(boolean hasSelect) {
-        if (hasSelect) {
-            cameraListIvFilter.setImageResource(R.drawable.camera_filter_selected);
-        } else {
-            cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
-        }
+//        if (hasSelect) {
+//            cameraListIvFilter.setImageResource(R.drawable.camera_filter_selected);
+//        } else {
+//            cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
+//        }
     }
 
     @Override
@@ -493,15 +486,15 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
                 break;
 
             case R.id.camera_list_iv_filter:
-                mPresenter.doShowCameraListFilterPopupWindow(mCameraListFilterPopupWindow.isShowing());
+//                mPresenter.doShowCameraListFilterPopupWindow(mCameraListFilterPopupWindow.isShowing());
                 break;
             case R.id.camera_list_et_search:
 
-                if (mCameraListFilterPopupWindow.isShowing()) {
-
-                    mCameraListFilterPopupWindow.dismiss();
-
-                }
+//                if (mCameraListFilterPopupWindow.isShowing()) {
+//
+//                    mCameraListFilterPopupWindow.dismiss();
+//
+//                }
                 cameraListEtSearch.requestFocus();
                 cameraListEtSearch.setCursorVisible(true);
                 setSearchHistoryVisible(true);
@@ -510,7 +503,7 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
             case R.id.camera_list_iv_search_clear:
                 cameraListEtSearch.setText("");
                 cameraListEtSearch.requestFocus();
-                AppUtils.openInputMethodManager(CameraListActivity.this, cameraListEtSearch);
+                AppUtils.openInputMethodManager(NameplateListActivity.this, cameraListEtSearch);
                 setSearchHistoryVisible(true);
                 break;
 
@@ -522,7 +515,7 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
                 }
                 mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN, null);
                 setSearchHistoryVisible(false);
-                AppUtils.dismissInputMethodManager(CameraListActivity.this, cameraListEtSearch);
+                AppUtils.dismissInputMethodManager(NameplateListActivity.this, cameraListEtSearch);
                 break;
 
             case R.id.btn_search_clear:
@@ -539,11 +532,11 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
 
     @Override
     public void onBackPressed() {
-        if (mCameraListFilterPopupWindow.isShowing()) {
-            mPresenter.onCameraListFilterPopupWindowDismiss();
-        } else {
-            super.onBackPressed();
-        }
+//        if (mCameraListFilterPopupWindow.isShowing()) {
+//            mPresenter.onCameraListFilterPopupWindowDismiss();
+//        } else {
+//            super.onBackPressed();
+//        }
 
     }
 
@@ -556,18 +549,18 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
     }
 
 
-    @Override
-    public void onSave(List<CameraFilterModel> list) {
-        mPresenter.onSaveCameraListFilterPopupWindowDismiss(list, getSearchText());
-    }
-
-    @Override
-    public void onDismiss() {
-        mPresenter.onCameraListFilterPopupWindowDismiss();
-    }
-
-    @Override
-    public void onReset() {
-        mPresenter.onResetCameraListFilterPopupWindowDismiss(getSearchText());
-    }
+//    @Override
+//    public void onSave(List<CameraFilterModel> list) {
+//        mPresenter.onSaveCameraListFilterPopupWindowDismiss(list, getSearchText());
+//    }
+//
+//    @Override
+//    public void onDismiss() {
+//        mPresenter.onCameraListFilterPopupWindowDismiss();
+//    }
+//
+//    @Override
+//    public void onReset() {
+//        mPresenter.onResetCameraListFilterPopupWindowDismiss(getSearchText());
+//    }
 }

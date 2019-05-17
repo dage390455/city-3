@@ -21,9 +21,9 @@ import com.sensoro.smartcity.model.SignalData;
 import com.sensoro.smartcity.presenter.SignalCheckActivityPresenter;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.common.widgets.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.widgets.SensoroToast;
-import com.sensoro.smartcity.widget.SpacesItemDecoration;
+import com.sensoro.common.widgets.SpacesItemDecoration;
 
 import java.util.List;
 

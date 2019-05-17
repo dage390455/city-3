@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/camera_list_ll_root"
+    android:id="@+id/nameplate_list_ll_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/c_f4f4f4">
@@ -12,14 +12,14 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/camera_list_ll_top_search"
+            android:id="@+id/nameplate_list_ll_top_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/camera_list_iv_top_back"
+                android:id="@+id/nameplate_list_iv_top_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -40,7 +40,7 @@
 
 
                 <LinearLayout
-                    android:id="@+id/camera_list_search_top"
+                    android:id="@+id/nameplate_list_search_top"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -50,7 +50,7 @@
 
 
                     <EditText
-                        android:id="@+id/camera_list_et_search"
+                        android:id="@+id/nameplate_list_et_search"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -58,13 +58,12 @@
                         android:layout_marginStart="12dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
-                        android:layout_toStartOf="@id/fg_main_top_search_imv_clear"
                         android:layout_weight="1"
                         android:background="@null"
                         android:cursorVisible="true"
                         android:drawableStart="@mipmap/main_search"
                         android:drawablePadding="8dp"
-                        android:hint="@string/camera_name_sn"
+                        android:hint="@string/nameplate_name_sn"
                         android:imeOptions="actionSearch"
                         android:singleLine="true"
                         android:textColor="@color/c_252525"
@@ -73,7 +72,7 @@
                         android:textSize="12dp" />
 
                     <ImageView
-                        android:id="@+id/camera_list_iv_search_clear"
+                        android:id="@+id/nameplate_list_iv_search_clear"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_alignParentEnd="true"
@@ -87,19 +86,19 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/associated_camera_list_tv"
+                    android:id="@+id/associated_nameplate_list_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:gravity="center"
-                    android:text="@string/associated_camera_list"
+                    android:text="@string/associated_nameplate_list"
                     android:textColor="@color/c_252525"
                     android:textSize="18dp"
                     android:visibility="gone" />
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/camera_list_tv_search_cancel"
+                android:id="@+id/nameplate_list_tv_search_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -109,14 +108,23 @@
                 android:visibility="gone" />
 
             <ImageView
-                android:id="@+id/camera_list_iv_filter"
+                android:id="@+id/nameplate_list_iv_filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="8dp"
                 android:contentDescription="@null"
                 android:padding="8dp"
-                android:src="@drawable/camera_filter_unselected" />
+                android:src="@mipmap/camera_filter_unselected" />
+            <ImageView
+                android:id="@+id/nameplate_list_iv_scan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@null"
+                android:padding="8dp"
+                android:src="@mipmap/camera_filter_unselected" />
 
         </LinearLayout>
 

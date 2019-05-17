@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.widget.dialog;
+package com.sensoro.nameplate.widget;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -9,9 +9,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sensoro.common.widgets.CustomCornerDialog;
-import com.sensoro.smartcity.R;
+import com.sensoro.nameplate.R;
 
-public class TipOperationDialogUtils {
+public class TipDeleteNameplateDialogUtils {
 
     //    private AlertDialog mDialog;
     private final TextView mTvMessage;
@@ -27,14 +27,14 @@ public class TipOperationDialogUtils {
     private Activity mActivity;
     public static final int REQUEST_CODE_BLUETOOTH_ON = 0x222;
 
-    public TipOperationDialogUtils(Activity activity, boolean cancelable) {
+    public TipDeleteNameplateDialogUtils(Activity activity, boolean cancelable) {
         this(activity);
         mDialog.setCancelable(cancelable);
     }
 
-    public TipOperationDialogUtils(Activity activity) {
+    public TipDeleteNameplateDialogUtils(Activity activity) {
         mActivity = activity;
-        final View view = View.inflate(activity, R.layout.item_dialog_monitor_point_operation, null);
+        final View view = View.inflate(activity, R.layout.item_dialog_delete_nameplate, null);
         mTvTitle = view.findViewById(R.id.dialog_tip_operation_tv_title);
         mTvMessage = view.findViewById(R.id.dialog_tip_operation_tv_message);
         mTvCancel = view.findViewById(R.id.dialog_tip_operation_tv_cancel);

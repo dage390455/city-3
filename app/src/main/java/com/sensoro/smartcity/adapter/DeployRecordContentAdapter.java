@@ -14,8 +14,8 @@ import com.sensoro.common.server.bean.DeployRecordInfo;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
-import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.SpacesItemDecoration;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.TouchRecycleView;
 
 import java.util.ArrayList;

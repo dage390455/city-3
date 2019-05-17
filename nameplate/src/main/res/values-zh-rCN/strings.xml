@@ -1,5 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Nameplate</string>
     <string name="nameplate_name_sn">铭牌名称/编号/标签</string>
     <string name="associated_nameplate_list">取消</string>
 </resources>

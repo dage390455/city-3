@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.sensoro.common.R;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
-import com.sensoro.smartcity.R;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -35,10 +35,10 @@ import com.sensoro.common.server.bean.MalfunctionListInfo;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
-import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
-import com.sensoro.smartcity.widget.SpacesItemDecoration;
-import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
+import com.sensoro.common.widgets.SpacesItemDecoration;
+import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.List;

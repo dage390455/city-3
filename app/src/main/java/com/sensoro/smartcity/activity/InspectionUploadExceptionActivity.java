@@ -26,7 +26,7 @@ import com.sensoro.smartcity.imainviews.IInspectionUploadExceptionActivityView;
 import com.sensoro.smartcity.presenter.InspectionUploadExceptionActivityPresenter;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.smartcity.widget.ScrollFrameLayout;
-import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.common.model.ImageItem;

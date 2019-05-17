@@ -21,8 +21,8 @@ import com.sensoro.smartcity.imainviews.IDeployMonitorUploadCheckFragmentView;
 import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.presenter.DeployMonitorUploadCheckFragmentPresenter;
 import com.sensoro.common.widgets.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.SpacesItemDecoration;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.TouchRecycleView;
 import com.sensoro.common.widgets.SensoroToast;
 
