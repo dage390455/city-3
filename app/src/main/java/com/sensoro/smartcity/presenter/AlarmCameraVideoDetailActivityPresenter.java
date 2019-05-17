@@ -66,6 +66,7 @@ implements DownloadListener{
     }
 
     private void setCreateTime(String createTime)  {
+        //这里的时间是格林尼治时间，而不是时间戳，原因是，后端说做了转发，不太容易转成时间戳
         try {
             getView().setPlayVideoTime(DateUtil.parseUTC(createTime));
         } catch (ParseException e) {
