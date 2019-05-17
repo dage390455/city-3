@@ -11,18 +11,11 @@ import java.util.List;
 public interface INameplateListActivityView extends IToast, IProgressDialog, IActivityIntent {
     void updateDeviceCameraAdapter(List<DeviceCameraInfo> data);
 
-    void onPullRefreshCompleteNoMoreData();
-
     void onPullRefreshComplete();
-
-    void setDateSelectVisible(boolean isVisible);
-
-    void setDateSelectText(String text);
 
     void setNoContentVisible(boolean isVisible);
 
     void setSmartRefreshEnable(boolean enable);
-
 
     void setSearchClearImvVisible(boolean isVisible);
 
@@ -33,10 +26,6 @@ public interface INameplateListActivityView extends IToast, IProgressDialog, IAc
     void showHistoryClearDialog();
 
     void setSearchButtonTextVisible(boolean isVisible);
-
-    void resetRefreshNoMoreData();
-
-    void setTopTitleState();
 
     void showCameraListFilterPopupWindow(List<CameraFilterModel> data);
 

@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-
+//apply plugin: 'com.jakewharton.butterknife'
 android {
     compileSdkVersion build_versions.compile_sdk
 
@@ -40,8 +40,8 @@ dependencies {
     implementation deps.support.app_compat
     implementation deps.support.recyclerview
     //
-    implementation deps.butterknife
-    annotationProcessor deps.butterknife_compiler
+//    implementation deps.butterknife
+//    annotationProcessor deps.butterknife_compiler
     //
     testImplementation deps.junit
     //

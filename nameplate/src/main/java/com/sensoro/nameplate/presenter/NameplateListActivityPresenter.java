@@ -53,7 +53,6 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
             getView().updateDeviceCameraAdapter(deviceCameraInfos);
             getView().onPullRefreshComplete();
             getView().dismissProgressDialog();
-            getView().setTopTitleState();
         } else {
             requestDataByFilter(DIRECTION_DOWN, null);
         }

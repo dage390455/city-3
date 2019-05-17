@@ -8,6 +8,7 @@ import android.util.Log;
 public class UtilityAdapter {
 	static {
 		System.loadLibrary("utility");
+//		System.loadLibrary("ffmpeg");
 	}
 
 	/** 初始化底层库 */

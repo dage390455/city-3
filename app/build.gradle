@@ -306,6 +306,8 @@ dependencies {
     implementation project(path: ':gsyVideoPlayer-proxy_cache')
     implementation project(path: ':gsyVideoPlayer-java')
     implementation project(path: ':gsyVideoPlayer-armv7a')
+    //
+    implementation project(':nameplate')
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     //    compile 'com.hjq:toast:5.2'

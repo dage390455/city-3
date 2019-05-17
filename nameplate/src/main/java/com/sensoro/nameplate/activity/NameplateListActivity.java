@@ -16,6 +16,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,62 +42,41 @@ import com.sensoro.nameplate.presenter.NameplateListActivityPresenter;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class NameplateListActivity extends BaseActivity<INameplateListActivityView, NameplateListActivityPresenter>
         implements INameplateListActivityView, View.OnClickListener {
 
-    @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
-    @BindView(R.id.fg_history_log_rc_content)
-    RecyclerView acHistoryLogRcContent;
-    @BindView(R.id.alarm_return_top)
-    ImageView mReturnTopImageView;
-    @BindView(R.id.no_content)
-    ImageView imv_content;
-    @BindView(R.id.ic_no_content)
-    LinearLayout icNoContent;
-    @BindView(R.id.camera_list_ll_top_search)
-    LinearLayout cameraListLlTopSearch;
-    @BindView(R.id.camera_list_iv_top_back)
-    ImageView cameraListIvTopBack;
-    @BindView(R.id.camera_list_iv_search_clear)
-    ImageView cameraListIvSearchClear;
-    @BindView(R.id.camera_list_et_search)
-    EditText cameraListEtSearch;
-    @BindView(R.id.camera_list_tv_search_cancel)
-    TextView cameraListTvSearchCancel;
-    @BindView(R.id.camera_list_iv_filter)
-    ImageView cameraListIvFilter;
-    @BindView(R.id.no_content_tip)
-    TextView noContentTip;
-    @BindView(R.id.rv_search_history)
-    RecyclerView rvSearchHistory;
-    @BindView(R.id.camera_list_ll_root)
-    View mRootView;
-    @BindView(R.id.ll_search_history)
-    LinearLayout llSearchHistory;
 
-    @BindView(R.id.btn_search_clear)
+    ImageView ivNameplateListTopBack;
+    EditText etNameplateListSearch;
+    ImageView ivNameplateListSearchClear;
+    LinearLayout llNameplateListSearchTop;
+    TextView tvNameplateListSearchCancel;
+    ImageView ivNameplateListFilter;
+    ImageView ivNameplateListScan;
+    LinearLayout llNameplateListTopSearch;
+    ImageView noContent;
+    TextView noContentTip;
+    LinearLayout icNoContent;
+    RecyclerView rvNameplateContent;
+    SmartRefreshLayout refreshLayout;
+    TextView tvSearchClear;
     ImageView btnSearchClear;
-    @BindView(R.id.camera_list_search_top)
-    LinearLayout cameraListSearchTop;
-    @BindView(R.id.associated_camera_list_tv)
-    TextView associatedCameraListTv;
+    RecyclerView rvSearchHistory;
+    LinearLayout llSearchHistory;
+    ImageView ivReturnTop;
+    RelativeLayout llNameplateListRoot;
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
-//    private DeviceCameraContentAdapter mDeviceCameraContentAdapter;
+    //    private DeviceCameraContentAdapter mDeviceCameraContentAdapter;
     private Animation returnTopAnimation;
 
-//    private CameraListFilterPopupWindowTest mCameraListFilterPopupWindow;
+    //    private CameraListFilterPopupWindowTest mCameraListFilterPopupWindow;
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private TipOperationDialogUtils historyClearDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_nameplate_list);
-        ButterKnife.bind(mActivity);
         initView();
         mPresenter.initData(mActivity);
     }
@@ -107,26 +87,49 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
     }
 
     private void initView() {
+        ivNameplateListTopBack = findViewById(R.id.iv_nameplate_list_top_back);
+        etNameplateListSearch = findViewById(R.id.et_nameplate_list_search);
+        ivNameplateListSearchClear = findViewById(R.id.iv_nameplate_list_search_clear);
+        llNameplateListSearchTop = findViewById(R.id.ll_nameplate_list_search_top);
+        tvNameplateListSearchCancel = findViewById(R.id.tv_nameplate_list_search_cancel);
+        ivNameplateListFilter = findViewById(R.id.iv_nameplate_list_filter);
+        ivNameplateListScan = findViewById(R.id.iv_nameplate_list_scan);
+        llNameplateListTopSearch = findViewById(R.id.ll_nameplate_list_top_search);
+        noContent = findViewById(R.id.no_content);
+        noContentTip = findViewById(R.id.no_content_tip);
+        icNoContent = findViewById(R.id.ic_no_content);
+        rvNameplateContent = findViewById(R.id.rv_nameplate_content);
+        refreshLayout = findViewById(R.id.refreshLayout);
+        tvSearchClear = findViewById(R.id.tv_search_clear);
+        btnSearchClear = findViewById(R.id.btn_search_clear);
+        rvSearchHistory = findViewById(R.id.rv_search_history);
+        llSearchHistory = findViewById(R.id.ll_search_history);
+        ivReturnTop = findViewById(R.id.iv_return_top);
+        llNameplateListRoot = findViewById(R.id.ll_nameplate_list_root);
+        //
+        ivNameplateListTopBack.setOnClickListener(this);
+        etNameplateListSearch.setOnClickListener(this);
+        ivNameplateListSearchClear.setOnClickListener(this);
+        tvNameplateListSearchCancel.setOnClickListener(this);
+        ivNameplateListFilter.setOnClickListener(this);
+        ivNameplateListScan.setOnClickListener(this);
+        btnSearchClear.setOnClickListener(this);
+        ivReturnTop.setOnClickListener(this);
+
+        //
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 //        mDeviceCameraContentAdapter = new DeviceCameraContentAdapter(mActivity);
 //        mDeviceCameraContentAdapter.setOnAlarmHistoryLogConfirmListener(this);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        acHistoryLogRcContent.setLayoutManager(linearLayoutManager);
+        rvNameplateContent.setLayoutManager(linearLayoutManager);
 //        acHistoryLogRcContent.setAdapter(mDeviceCameraContentAdapter);
 //        CustomDivider dividerItemDecoration = new CustomDivider(mActivity, DividerItemDecoration.VERTICAL);
 //        acHistoryLogRcContent.addItemDecoration(dividerItemDecoration);
         //
         returnTopAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.return_top_in_anim);
-        mReturnTopImageView.setAnimation(returnTopAnimation);
-        mReturnTopImageView.setVisibility(View.GONE);
-        mReturnTopImageView.setOnClickListener(this);
-        cameraListIvFilter.setOnClickListener(this);
-        cameraListIvSearchClear.setOnClickListener(this);
-        cameraListEtSearch.setOnClickListener(this);
-        cameraListTvSearchCancel.setOnClickListener(this);
-        btnSearchClear.setOnClickListener(this);
-        cameraListIvTopBack.setOnClickListener(this);
+        ivReturnTop.setAnimation(returnTopAnimation);
+        ivReturnTop.setVisibility(View.GONE);
         //
         //新控件
         refreshLayout.setEnableAutoLoadMore(false);//开启自动加载功能（非必须）
@@ -145,21 +148,21 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
             }
         });
         //
-        acHistoryLogRcContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        rvNameplateContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (linearLayoutManager.findFirstVisibleItemPosition() > 4) {
                     if (newState == 0) {
-                        mReturnTopImageView.setVisibility(View.VISIBLE);
+                        ivReturnTop.setVisibility(View.VISIBLE);
                         if (returnTopAnimation != null && returnTopAnimation.hasEnded()) {
-                            mReturnTopImageView.startAnimation(returnTopAnimation);
+                            ivReturnTop.startAnimation(returnTopAnimation);
                         }
                     } else {
-                        mReturnTopImageView.setVisibility(View.GONE);
+                        ivReturnTop.setVisibility(View.GONE);
                     }
                 } else {
-                    mReturnTopImageView.setVisibility(View.GONE);
+                    ivReturnTop.setVisibility(View.GONE);
                 }
             }
 
@@ -172,17 +175,17 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
 //        mCameraListFilterPopupWindow = new CameraListFilterPopupWindowTest(mActivity);
 //        mCameraListFilterPopupWindow.setOnCameraListFilterPopupWindowListener(this);
 
-        cameraListEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        etNameplateListSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     String text = getSearchText();
-                    cameraListEtSearch.clearFocus();
+                    etNameplateListSearch.clearFocus();
                     if (!TextUtils.isEmpty(text)) {
                         mPresenter.save(text);
                     }
                     mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN, text);
-                    AppUtils.dismissInputMethodManager(NameplateListActivity.this, cameraListEtSearch);
+                    AppUtils.dismissInputMethodManager(NameplateListActivity.this, etNameplateListSearch);
                     setSearchHistoryVisible(false);
 
                     return true;
@@ -190,7 +193,7 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
                 return false;
             }
         });
-        cameraListEtSearch.addTextChangedListener(new TextWatcher() {
+        etNameplateListSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -207,15 +210,15 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
             }
         });
 
-        AppUtils.getInputSoftStatus(mRootView, new AppUtils.InputSoftStatusListener() {
+        AppUtils.getInputSoftStatus(llNameplateListRoot, new AppUtils.InputSoftStatusListener() {
             @Override
             public void onKeyBoardClose() {
-                cameraListEtSearch.setCursorVisible(false);
+                etNameplateListSearch.setCursorVisible(false);
             }
 
             @Override
             public void onKeyBoardOpen() {
-                cameraListEtSearch.setCursorVisible(true);
+                etNameplateListSearch.setCursorVisible(true);
             }
         });
 
@@ -268,12 +271,12 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
                         String text = mSearchHistoryAdapter.getSearchHistoryList().get(position);
                         if (!TextUtils.isEmpty(text)) {
                             searchText = text;
-                            cameraListEtSearch.setText(searchText);
-                            cameraListEtSearch.setSelection(cameraListEtSearch.getText().toString().length());
+                            etNameplateListSearch.setText(searchText);
+                            etNameplateListSearch.setSelection(etNameplateListSearch.getText().toString().length());
                         }
-                        cameraListIvSearchClear.setVisibility(View.VISIBLE);
-                        cameraListEtSearch.clearFocus();
-                        AppUtils.dismissInputMethodManager(NameplateListActivity.this, cameraListEtSearch);
+                        ivNameplateListSearchClear.setVisibility(View.VISIBLE);
+                        etNameplateListSearch.clearFocus();
+                        AppUtils.dismissInputMethodManager(NameplateListActivity.this, etNameplateListSearch);
                         setSearchHistoryVisible(false);
                         mPresenter.save(searchText);
                         mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN, searchText);
@@ -294,7 +297,7 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
 
     @Override
     public void setSearchClearImvVisible(boolean isVisible) {
-        cameraListIvSearchClear.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        ivNameplateListSearchClear.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -368,7 +371,7 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
     @Override
     public void setNoContentVisible(boolean isVisible) {
         icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        acHistoryLogRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        rvNameplateContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -394,28 +397,13 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
     @Override
     public void setSearchButtonTextVisible(boolean isVisible) {
         if (isVisible) {
-            cameraListTvSearchCancel.setVisibility(View.VISIBLE);
+            tvNameplateListSearchCancel.setVisibility(View.VISIBLE);
 //            setEditTextState(false);
 //            AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), fgMainWarnEtSearch);
-        } else if (TextUtils.isEmpty(cameraListEtSearch.getText().toString())) {
-            cameraListTvSearchCancel.setVisibility(View.GONE);
+        } else if (TextUtils.isEmpty(etNameplateListSearch.getText().toString())) {
+            etNameplateListSearch.setVisibility(View.GONE);
 //            setEditTextState(true);
         }
-
-    }
-
-    @Override
-    public void resetRefreshNoMoreData() {
-        if (refreshLayout != null) {
-            refreshLayout.setNoMoreData(false);
-        }
-    }
-
-    @Override
-    public void setTopTitleState() {
-        associatedCameraListTv.setVisibility(View.VISIBLE);
-        cameraListSearchTop.setVisibility(View.GONE);
-        cameraListIvFilter.setVisibility(View.INVISIBLE);
 
     }
 
@@ -451,82 +439,9 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
     }
 
     @Override
-    public void onPullRefreshCompleteNoMoreData() {
-        refreshLayout.finishLoadMoreWithNoMoreData();
-    }
-
-    @Override
     public void onPullRefreshComplete() {
         refreshLayout.finishLoadMore();
         refreshLayout.finishRefresh();
-    }
-
-    @Override
-    public void setDateSelectVisible(boolean isVisible) {
-    }
-
-    @Override
-    public void setDateSelectText(String text) {
-//        tvAlarmLogDateEdit.setText(text);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.iv_alarm_log_date_close:
-                break;
-            case R.id.alarm_return_top:
-                acHistoryLogRcContent.smoothScrollToPosition(0);
-                mReturnTopImageView.setVisibility(View.GONE);
-                refreshLayout.closeHeaderOrFooter();
-                break;
-            case R.id.camera_list_iv_top_back:
-                finishAc();
-                AppUtils.dismissInputMethodManager(mActivity, cameraListEtSearch);
-                break;
-
-            case R.id.camera_list_iv_filter:
-//                mPresenter.doShowCameraListFilterPopupWindow(mCameraListFilterPopupWindow.isShowing());
-                break;
-            case R.id.camera_list_et_search:
-
-//                if (mCameraListFilterPopupWindow.isShowing()) {
-//
-//                    mCameraListFilterPopupWindow.dismiss();
-//
-//                }
-                cameraListEtSearch.requestFocus();
-                cameraListEtSearch.setCursorVisible(true);
-                setSearchHistoryVisible(true);
-//                forceOpenSoftKeyboard();
-                break;
-            case R.id.camera_list_iv_search_clear:
-                cameraListEtSearch.setText("");
-                cameraListEtSearch.requestFocus();
-                AppUtils.openInputMethodManager(NameplateListActivity.this, cameraListEtSearch);
-                setSearchHistoryVisible(true);
-                break;
-
-
-            case R.id.camera_list_tv_search_cancel:
-
-                if (cameraListTvSearchCancel.getVisibility() == View.VISIBLE) {
-                    cameraListEtSearch.getText().clear();
-                }
-                mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN, null);
-                setSearchHistoryVisible(false);
-                AppUtils.dismissInputMethodManager(NameplateListActivity.this, cameraListEtSearch);
-                break;
-
-            case R.id.btn_search_clear:
-                showHistoryClearDialog();
-                break;
-
-            default:
-                break;
-        }
-
-
     }
 
 
@@ -541,11 +456,43 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
     }
 
     private String getSearchText() {
-        String text = cameraListEtSearch.getText().toString();
+        String text = etNameplateListSearch.getText().toString();
         if (TextUtils.isEmpty(text)) {
             return null;
         }
         return text;
+    }
+
+    @Override
+    public void onClick(View v) {
+        int i = v.getId();
+        if (i == R.id.iv_nameplate_list_top_back) {
+            finishAc();
+            AppUtils.dismissInputMethodManager(mActivity, etNameplateListSearch);
+        } else if (i == R.id.et_nameplate_list_search) {
+            etNameplateListSearch.requestFocus();
+            etNameplateListSearch.setCursorVisible(true);
+            setSearchHistoryVisible(true);
+        } else if (i == R.id.iv_nameplate_list_search_clear) {
+            etNameplateListSearch.setText("");
+            etNameplateListSearch.requestFocus();
+            AppUtils.openInputMethodManager(NameplateListActivity.this, etNameplateListSearch);
+            setSearchHistoryVisible(true);
+        } else if (i == R.id.tv_nameplate_list_search_cancel) {
+            if (tvNameplateListSearchCancel.getVisibility() == View.VISIBLE) {
+                etNameplateListSearch.getText().clear();
+            }
+            mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN, null);
+            setSearchHistoryVisible(false);
+            AppUtils.dismissInputMethodManager(NameplateListActivity.this, etNameplateListSearch);
+        } else if (i == R.id.iv_nameplate_list_filter) {
+        } else if (i == R.id.iv_nameplate_list_scan) {
+        } else if (i == R.id.btn_search_clear) {//
+        } else if (i == R.id.iv_return_top) {
+            rvNameplateContent.smoothScrollToPosition(0);
+            ivReturnTop.setVisibility(View.GONE);
+            refreshLayout.closeHeaderOrFooter();
+        }
     }
 
 
