@@ -63,6 +63,7 @@ import com.sensoro.smartcity.server.bean.MalfunctionTypeStyles;
 import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.bean.SensorStruct;
+import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.util.AppUtils;
@@ -398,14 +399,14 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             public void onFailed(String errorMsg) {
                 tempForceReason = "config";
                 getView().dismissBleConfigDialog();
-                getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.installation_config_failed) + errorMsg + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
+                getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_device_detail_check_config_failed) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
             }
 
             @Override
             public void onOverTime(String overTimeMsg) {
                 tempForceReason = "config";
                 getView().dismissBleConfigDialog();
-                getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.installation_config_failed) + overTimeMsg + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
+                getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_device_detail_check_config_failed) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
             }
         };
         if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
@@ -1474,7 +1475,12 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             for (String sensoroType : sensoroTypes) {
                 MonitoringPointRcContentAdapterModel model = MonitorPointModelsFactory.createMonitoringPointRcContentAdapterModel(mContext, deviceInfo, sensoroDetails, sensoroType);
                 if (model != null && model.hasAlarmStatus()) {
-                    sb.append(model.name).append(" ").append(model.content);
+                    SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensoroType);
+                    if (sensorTypeStyles != null && sensorTypeStyles.isBool()) {
+                        sb.append(model.content);
+                    } else {
+                        sb.append(model.name).append(" ").append(model.content);
+                    }
                     if (!TextUtils.isEmpty(model.unit)) {
                         sb.append(model.unit);
                     }
