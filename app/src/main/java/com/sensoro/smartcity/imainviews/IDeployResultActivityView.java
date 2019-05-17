@@ -11,7 +11,7 @@ public interface IDeployResultActivityView extends IToast, IActivityIntent {
 
     void setResultImageView(int resId);
 
-    void setTipsTextView(String text);
+    void setTipsTextView(String text,int resId);
 
     void setSnTextView(String sn);
 
@@ -26,8 +26,6 @@ public interface IDeployResultActivityView extends IToast, IActivityIntent {
     void setUpdateTextView(String update);
 
     void setAddressTextView(String address);
-
-    void setDeployResultErrorInfo(String errorInfo);
 
     void setUpdateTextViewVisible(boolean isVisible);
 
