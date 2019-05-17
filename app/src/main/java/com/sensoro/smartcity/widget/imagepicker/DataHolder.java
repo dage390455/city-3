@@ -1,6 +1,6 @@
 package com.sensoro.smartcity.widget.imagepicker;
 
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.common.model.ImageItem;
 
 import java.util.HashMap;
 import java.util.List;

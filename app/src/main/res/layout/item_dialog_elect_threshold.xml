@@ -48,7 +48,7 @@
                     android:layout_marginTop="8dp"
                     android:contentDescription="@null"
                     android:padding="18dp"
-                    android:src="@drawable/no_content"
+                    android:src="@mipmap/no_content"
                     android:visibility="gone" />
             </RelativeLayout>
 

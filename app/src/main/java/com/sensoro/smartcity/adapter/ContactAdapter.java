@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.server.bean.DeployRecordInfo;
+import com.sensoro.common.server.bean.DeployRecordInfo;
 
 import java.util.ArrayList;
 import java.util.List;

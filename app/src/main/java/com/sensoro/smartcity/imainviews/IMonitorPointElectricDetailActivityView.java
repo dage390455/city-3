@@ -10,7 +10,7 @@ import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
 import com.sensoro.smartcity.model.Elect3DetailModel;
 import com.sensoro.smartcity.model.TaskOptionModel;
-import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.common.server.bean.ScenesData;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -15,13 +15,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.server.bean.AlarmInfo;
+import com.sensoro.common.server.bean.ScenesData;
+import com.sensoro.common.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.server.bean.AlarmInfo;
-import com.sensoro.smartcity.server.bean.ScenesData;
-import com.sensoro.smartcity.server.bean.SensorTypeStyles;
-import com.sensoro.smartcity.util.DateUtil;
-import com.sensoro.smartcity.util.PreferencesHelper;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.ArrayList;

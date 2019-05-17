@@ -62,7 +62,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:cursorVisible="true"
-                        android:drawableStart="@drawable/main_search"
+                        android:drawableStart="@mipmap/main_search"
                         android:drawablePadding="8dp"
                         android:hint="@string/camera_name_sn"
                         android:imeOptions="actionSearch"
@@ -82,7 +82,7 @@
                         android:contentDescription="@null"
                         android:padding="7dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/search_monitor_clear_search"
+                        android:src="@mipmap/search_monitor_clear_search"
                         android:visibility="gone" />
                 </LinearLayout>
 
@@ -189,6 +189,6 @@
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="14.5dp"
         android:contentDescription="@null"
-        android:src="@drawable/ic_return_to_top"
+        android:src="@mipmap/ic_return_to_top"
         android:visibility="gone" />
 </RelativeLayout>

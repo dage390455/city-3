@@ -8,22 +8,22 @@ import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
-import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.common.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
 import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.smartcity.model.AlarmPopModel;
-import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.push.ThreadPoolManager;
-import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
-import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
-import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
+import com.sensoro.common.model.EventData;
+import com.sensoro.common.manger.ThreadPoolManager;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
+import com.sensoro.common.server.bean.DeviceInfo;
+import com.sensoro.common.server.response.DeviceAlarmLogRsp;
+import com.sensoro.common.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -60,7 +60,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-//        originHistoryList.addAll(SensoroCityApplication.getInstance().getData());
+//        originHistoryList.addAll(ContextUtils.getContext().getData());
         currentList.addAll(originHistoryList);
         mPref = mContext.getSharedPreferences(PREFERENCE_DEVICE_HISTORY, Activity.MODE_PRIVATE);
         mEditor = mPref.edit();

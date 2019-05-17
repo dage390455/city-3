@@ -12,13 +12,13 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.InspectionInstructionContentAdapter;
 import com.sensoro.smartcity.adapter.InspectionInstructionTabAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IInspectionInstructionActivityView;
 import com.sensoro.smartcity.presenter.InspectionInstructionActivityPresenter;
-import com.sensoro.smartcity.server.bean.InspectionTaskInstructionModel;
-import com.sensoro.smartcity.server.bean.ScenesData;
-import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
+import com.sensoro.common.server.bean.InspectionTaskInstructionModel;
+import com.sensoro.common.server.bean.ScenesData;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
 
 import java.util.List;
 

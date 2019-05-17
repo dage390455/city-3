@@ -25,11 +25,11 @@ import com.amap.api.maps.model.PolylineOptions;
 import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.PersonLocusCameraGaoDeAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ICameraPersonLocusActivityView;
 import com.sensoro.smartcity.presenter.CameraPersonLocusActivityPresenter;
-import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
 import com.warkiz.widget.IndicatorSeekBar;
 
 import java.util.List;

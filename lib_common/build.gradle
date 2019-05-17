@@ -11,6 +11,11 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
 
     }
 
@@ -25,8 +30,36 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    implementation deps.support.app_compat
+    //
     testImplementation deps.junit
+    //
+    implementation deps.support.app_compat
+    implementation deps.support.multidex
+    implementation deps.support.recyclerview
+    //
     androidTestImplementation deps.support.test_espresso
+    //
+    implementation deps.butterknife
+    annotationProcessor deps.butterknife_compiler
+    //
+    implementation deps.autosize
+    //
+    implementation deps.arouter_api
+    annotationProcessor deps.arouter_compiler
+    //
+    implementation deps.okhttp3_logging
+    implementation deps.okhttp3
+    implementation deps.retrofit.runtime
+    implementation deps.retrofit.gson
+    implementation deps.retrofit.adapter
+    implementation deps.rxjava2
+    implementation deps.rx_android
+    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
+    //消息组件
+    implementation deps.event_bus
+
+    implementation(deps.immersionbar) {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+    }
+    implementation 'com.baidu.mobstat:mtj-sdk-circle:latest.integration'
 }

@@ -20,9 +20,8 @@ import android.widget.RelativeLayout;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.InspectionTaskStateSelectAdapter;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
 
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 public class InspectionTaskStatePopUtils {

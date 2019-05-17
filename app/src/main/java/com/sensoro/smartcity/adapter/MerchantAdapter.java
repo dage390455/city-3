@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.server.bean.UserInfo;
+import com.sensoro.common.server.bean.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;

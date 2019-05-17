@@ -15,8 +15,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.server.bean.DeviceCameraFacePic;
-import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.common.server.bean.DeviceCameraFacePic;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.widget.GlideRoundTransform;
 
 import java.util.ArrayList;

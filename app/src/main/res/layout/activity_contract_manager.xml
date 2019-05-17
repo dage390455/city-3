@@ -52,7 +52,7 @@
                     android:contentDescription="@null"
                     android:padding="7dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/search_monitor_clear_search"
+                    android:src="@mipmap/search_monitor_clear_search"
                     android:visibility="gone" />
 
                 <EditText
@@ -66,7 +66,7 @@
                     android:layout_toStartOf="@id/ac_contract_record_search_imv_clear"
                     android:background="@null"
                     android:cursorVisible="true"
-                    android:drawableStart="@drawable/main_search"
+                    android:drawableStart="@mipmap/main_search"
                     android:drawablePadding="8dp"
                     android:hint="@string/legal_representative_name"
                     android:imeOptions="actionSearch"
@@ -250,7 +250,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="14.5dp"
-            android:src="@drawable/ic_return_to_top"
+            android:src="@mipmap/ic_return_to_top"
             android:visibility="gone" />
     </LinearLayout>
 

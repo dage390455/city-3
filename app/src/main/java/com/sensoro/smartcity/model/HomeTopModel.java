@@ -1,7 +1,7 @@
 package com.sensoro.smartcity.model;
 
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
-import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.common.server.bean.DeviceInfo;
 
 import java.io.Serializable;
 import java.util.ArrayList;

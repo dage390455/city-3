@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.fragment.BusinessContractFragment;
 import com.sensoro.smartcity.fragment.PersonalContractFragment;
 import com.sensoro.smartcity.imainviews.IContractEditorView;

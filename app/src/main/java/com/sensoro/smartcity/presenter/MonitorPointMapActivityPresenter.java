@@ -20,22 +20,22 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.iwidget.IOnCreate;
+import com.sensoro.common.model.EventData;
+import com.sensoro.common.model.EventLoginData;
+import com.sensoro.common.server.bean.DeviceInfo;
+import com.sensoro.common.utils.ImageFactory;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.DeployMapActivity;
-import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMonitorPointMapActivityView;
-import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.DeployContactModel;
-import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.model.EventLoginData;
-import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.common.utils.ImageFactory;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.PreferencesHelper;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXMiniProgramObject;
@@ -259,7 +259,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
     public void doDetailShare() {
         boolean wxAppInstalled = SensoroCityApplication.getInstance().api.isWXAppInstalled();
         if (wxAppInstalled) {
-//            boolean wxAppSupportAPI = SensoroCityApplication.getInstance().api.isWXAppSupportAPI();
+//            boolean wxAppSupportAPI = ContextUtils.getContext().api.isWXAppSupportAPI();
 //            if (wxAppSupportAPI) {
             toShareWeChat();
 //            } else {

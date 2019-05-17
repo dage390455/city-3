@@ -56,7 +56,7 @@
                     android:contentDescription="@null"
                     android:paddingStart="8dp"
                     android:paddingEnd="12dp"
-                    android:src="@drawable/tag_delete"
+                    android:src="@mipmap/tag_delete"
                     android:visibility="gone" />
             </LinearLayout>
 

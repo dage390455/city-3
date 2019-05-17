@@ -12,16 +12,16 @@ import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.InspectionInstructionActivity;
 import com.sensoro.smartcity.activity.InspectionUploadExceptionActivity;
-import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.common.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionActivityView;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnStart;
-import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
-import com.sensoro.smartcity.server.response.ResponseBase;
+import com.sensoro.common.model.EventData;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
+import com.sensoro.common.server.response.ResponseBase;
 import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.util.WidgetUtil;
 
@@ -167,11 +167,11 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
     @Override
     public void onStart() {
         //todo 两个几面跳转 暂时去掉
-//        SensoroCityApplication.getInstance().bleDeviceManager.startScan();
+//        ContextUtils.getContext().bleDeviceManager.startScan();
     }
 
     @Override
     public void onStop() {
-//        SensoroCityApplication.getInstance().bleDeviceManager.stopScan();
+//        ContextUtils.getContext().bleDeviceManager.stopScan();
     }
 }

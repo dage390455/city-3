@@ -3,7 +3,7 @@ package com.sensoro.smartcity.activity;
 import android.os.Bundle;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IEarlyWarningThresholdSettingActivityView;
 import com.sensoro.smartcity.presenter.EarlyWarningThresholdSettingActivityPresenter;
 

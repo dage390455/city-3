@@ -18,7 +18,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.smartcity.util.AppUtils;
 
 import java.io.ByteArrayOutputStream;

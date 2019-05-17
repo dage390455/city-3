@@ -107,7 +107,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
 
-            android:drawableLeft="@drawable/tag_delete"
+            android:drawableLeft="@mipmap/tag_delete"
             android:drawablePadding="5dp"
             android:gravity="center"
 

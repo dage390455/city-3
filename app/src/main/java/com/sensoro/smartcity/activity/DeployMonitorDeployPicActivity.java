@@ -15,16 +15,16 @@ import android.widget.Toast;
 import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.server.bean.DeployPicInfo;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeployPicAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDeployPicView;
 import com.sensoro.smartcity.presenter.DeployMonitorDeployPicPresenter;
-import com.sensoro.smartcity.server.bean.DeployPicInfo;
 import com.sensoro.smartcity.widget.dialog.DeployPicExampleDialogUtils;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
 

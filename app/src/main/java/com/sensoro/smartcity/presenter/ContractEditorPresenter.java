@@ -5,11 +5,11 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.common.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractEditorView;
-import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.server.bean.ContractListInfo;
+import com.sensoro.common.model.EventData;
+import com.sensoro.common.server.bean.ContractListInfo;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

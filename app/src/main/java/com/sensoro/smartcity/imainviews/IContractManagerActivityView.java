@@ -4,7 +4,7 @@ import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
-import com.sensoro.smartcity.server.bean.ContractListInfo;
+import com.sensoro.common.server.bean.ContractListInfo;
 
 import java.util.List;
 

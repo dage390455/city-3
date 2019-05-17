@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
-import com.sensoro.smartcity.base.IMyBaseRecyclerView;
+import com.sensoro.common.base.IMyBaseRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -10,16 +10,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.server.bean.ScenesData;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.InspectionExceptionThumbnailAdapter;
 import com.sensoro.smartcity.adapter.TagAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IInspectionExceptionDetailActivityView;
 import com.sensoro.smartcity.presenter.InspectionExceptionDetailActivityPresenter;
-import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.ProgressUtils;
 
 import java.util.List;
 

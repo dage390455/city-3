@@ -17,10 +17,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.gyf.barlibrary.ImmersionBar;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.model.EventLoginData;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.smartcity.util.PreferencesHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

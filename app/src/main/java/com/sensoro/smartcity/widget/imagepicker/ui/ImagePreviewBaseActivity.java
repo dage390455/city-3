@@ -12,7 +12,7 @@ import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.widget.imagepicker.DataHolder;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.adapter.ImagePageAdapter;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.util.Utils;
 import com.sensoro.smartcity.widget.imagepicker.view.ViewPagerFixed;
 

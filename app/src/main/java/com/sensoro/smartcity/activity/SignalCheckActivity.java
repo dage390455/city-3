@@ -15,14 +15,14 @@ import android.widget.Toast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.SignalCheckContentAdapter;
 import com.sensoro.smartcity.adapter.TagAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ISignalCheckActivityView;
 import com.sensoro.smartcity.model.SignalData;
 import com.sensoro.smartcity.presenter.SignalCheckActivityPresenter;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 
 import java.util.List;

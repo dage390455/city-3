@@ -3,8 +3,8 @@ package com.sensoro.smartcity.imainviews;
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
-import com.sensoro.smartcity.server.bean.DeployRecordInfo;
-import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.common.server.bean.DeployRecordInfo;
+import com.sensoro.common.server.bean.ScenesData;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -28,11 +28,11 @@ import android.widget.EditText;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
+import com.sensoro.common.manger.ThreadPoolManager;
+import com.sensoro.common.server.bean.AlarmInfo;
 import com.sensoro.common.utils.GPSUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.push.ThreadPoolManager;
-import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
 
 import java.io.BufferedReader;

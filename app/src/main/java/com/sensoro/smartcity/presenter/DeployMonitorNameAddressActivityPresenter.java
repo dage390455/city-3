@@ -3,17 +3,15 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
-import android.view.View;
 
+import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.model.EventData;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
-import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorNameAddressActivityView;
-import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.util.PreferencesHelper;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -21,7 +19,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDeployMonitorNameAddressActivityView> implements Constants {
     private Activity mContext;

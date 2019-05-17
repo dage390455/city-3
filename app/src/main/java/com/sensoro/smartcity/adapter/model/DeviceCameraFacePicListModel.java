@@ -1,6 +1,6 @@
 package com.sensoro.smartcity.adapter.model;
 
-import com.sensoro.smartcity.server.bean.DeviceCameraFacePic;
+import com.sensoro.common.server.bean.DeviceCameraFacePic;
 
 import java.util.ArrayList;
 

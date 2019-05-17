@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.model.CameraFilterModel;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
+import com.sensoro.common.model.CameraFilterModel;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;

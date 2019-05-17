@@ -9,18 +9,18 @@ import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UpProgressHandler;
 import com.qiniu.android.storage.UploadOptions;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.ScenesData;
+import com.sensoro.common.server.response.QiNiuToken;
+import com.sensoro.common.utils.AESUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.ScenesData;
-import com.sensoro.smartcity.server.response.QiNiuToken;
-import com.sensoro.common.utils.AESUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.luban.CompressionPredicate;
 import com.sensoro.smartcity.util.luban.Luban;
 import com.sensoro.smartcity.util.luban.OnCompressListener;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.common.model.ImageItem;
 
 import org.json.JSONObject;
 

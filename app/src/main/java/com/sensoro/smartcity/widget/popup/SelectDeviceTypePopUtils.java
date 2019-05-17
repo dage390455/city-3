@@ -22,7 +22,7 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.TypeSelectAdapter;
 import com.sensoro.smartcity.model.DeviceTypeModel;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
 
 import java.util.List;
 

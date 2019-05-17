@@ -7,11 +7,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IScanLoginResultActivityView;
 import com.sensoro.smartcity.presenter.ScanLoginResultActivityPresenter;
-import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
