@@ -402,6 +402,9 @@ public final class PreferencesHelper implements Constants {
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_RECORD:
                 spFileName = SearchHistoryTypeConstants.SP_FILE_DEPLOY_RECORD;
                 break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_NAMEPLATE_NAME:
+                spFileName = SearchHistoryTypeConstants.SP_FILE_DEPLOY_NAMEPLATE_NAME;
+                break;
         }
         return spFileName;
     }

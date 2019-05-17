@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_top_search_ac_deploy_nameplate_sensor_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingEnd="20dp">
+
+        <ImageView
+            android:id="@+id/iv_arrow_left_ac_deploy_nameplate_sensor_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="@null"
+            android:padding="8dp"
+            android:src="@drawable/arrows_left" />
+
+
+        <LinearLayout
+            android:id="@+id/ll_search_ac_deploy_nameplate_sensor_list"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_bg_full_corner"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/et_search_ac_deploy_nameplate_sensor_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@null"
+                android:cursorVisible="true"
+                android:drawableStart="@drawable/main_search"
+                android:drawablePadding="8dp"
+                android:hint="@string/sensor_name_sn_tag"
+                android:imeOptions="actionSearch"
+                android:singleLine="true"
+                android:textColor="@color/c_252525"
+                android:textColorHint="@color/c_a6a6a6"
+                android:textCursorDrawable="@drawable/my_cursor"
+                android:textSize="12dp" />
+
+            <ImageView
+                android:id="@+id/iv_clear_ac_deploy_nameplate_sensor_list"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="6dp"
+                android:contentDescription="@null"
+                android:padding="7dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/search_monitor_clear_search"
+                android:visibility="gone" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tv_search_cancel_ac_deploy_nameplate_sensor_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:padding="8dp"
+            android:text="@string/cancel"
+            android:textColor="@color/c_252525"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:gravity="center_vertical">
+
+            <RadioButton
+                android:id="@+id/rb_select_all_ac_deploy_nameplate_sensor_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/selector_radio_button_oval_1dbb99"
+                android:checked="true"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:textSize="16dp"
+                android:textColor="@color/c_252525"
+                android:text="@string/select_all" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:layout_height="wrap_content"
+                android:text="@string/selected"
+                android:textSize="14dp"
+                android:textColor="@color/c_a6a6a6"
+                />
+            <TextView
+                android:id="@+id/tv_selected_count_ac_deploy_nameplate_sensor_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14dp"
+                android:textColor="@color/c_1dbb99"/>
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_list_ac_deploy_nameplate_sensor_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/tv_add_ac_deploy_nameplate_sensor_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/c_1dbb99"
+        android:gravity="center"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:text="@string/add"
+        android:textColor="@color/white"
+        android:textSize="16dp"
+        />
+
+
+
+</LinearLayout>
