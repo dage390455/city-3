@@ -308,6 +308,9 @@ dependencies {
     implementation project(path: ':gsyVideoPlayer-armv7a')
     //
     implementation project(':nameplate')
+    implementation "com.afollestad.material-dialogs:core:0.9.1.0"
+    implementation project(path: ':RecordVideo')
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     //    compile 'com.hjq:toast:5.2'
@@ -326,6 +329,8 @@ dependencies {
     //
     //    compile 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     //    compile project(':cosmocalendar')
+    //
+
 //    implementation androidDependencies.appcompat_v7
 //
 //    def viewDependencies = rootProject.ext.viewDependencies

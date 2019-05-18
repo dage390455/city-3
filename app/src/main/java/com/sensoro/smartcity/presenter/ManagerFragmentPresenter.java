@@ -24,6 +24,9 @@ import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.activity.WireMaterialDiameterCalculatorActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
+import com.sensoro.common.iwidget.IOnCreate;
+import com.sensoro.common.iwidget.IOnFragmentStart;
+import com.sensoro.smartcity.temp.TestRecordActivity;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.tencent.bugly.beta.Beta;
@@ -217,11 +220,13 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     }
 
     public void doVersionInfo() {
-        if (hasNewVersion()) {
-            Beta.checkUpgrade();
-        } else {
-            getView().showVersionDialog();
-        }
+        Intent intent = new Intent(mContext, TestRecordActivity.class);
+        getView().startAC(intent);
+//        if (hasNewVersion()) {
+//            Beta.checkUpgrade();
+//        } else {
+//            getView().showVersionDialog();
+//        }
     }
 
     @Override

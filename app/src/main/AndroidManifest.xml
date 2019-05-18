@@ -379,6 +379,16 @@
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".activity.DeployCameraDetailActivity" />
         <activity android:name=".temp.LineChartActivity2" />
+        <activity android:name=".temp.TestRecordActivity" />
+        <activity android:name="com.afollestad.materialcamera.internal.PlayActivity"/>
+        <activity
+            android:name="com.afollestad.materialcamera.CaptureActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MaterialCamera.CaptureActivity" />
+        <activity
+            android:name="com.afollestad.materialcamera.CaptureActivity2"
+            android:screenOrientation="portrait"
+            android:theme="@style/MaterialCamera.CaptureActivity" />
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"

@@ -80,8 +80,8 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     View viewAcDeployResultDivider;
     @BindView(R.id.ac_deploy_result_bottom)
     LinearLayout acDeployResultBottom;
-    @BindView(R.id.ac_deploy_result_tv_error_msg)
-    TextView acDeployResultTvErrorMsg;
+//    @BindView(R.id.ac_deploy_result_tv_error_msg)
+//    TextView acDeployResultTvErrorMsg;
     @BindView(R.id.rl_ac_deploy_result_setting)
     RelativeLayout acDeployResultRlSetting;
     @BindView(R.id.ac_deploy_result_tv_setting)
@@ -148,7 +148,8 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     }
 
     @Override
-    public void setTipsTextView(String text) {
+    public void setTipsTextView(String text,int resId) {
+        acDeployResultTvStateMsg.setTextColor(mActivity.getResources().getColor(resId));
         acDeployResultTvStateMsg.setText(text);
     }
 
@@ -208,12 +209,6 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     }
 
     @Override
-    public void setDeployResultErrorInfo(String errorInfo) {
-        acDeployResultTvStateMsg.setVisibility(View.VISIBLE);
-        acDeployResultTvStateMsg.setText(errorInfo);
-    }
-
-    @Override
     public void setUpdateTextViewVisible(boolean isVisible) {
         acDeployResultRlRecentUploadTime.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         if (isVisible && viewAcDeployResultDivider.getVisibility() != View.VISIBLE) {
@@ -250,7 +245,7 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
 
     @Override
     public void setStateTextViewVisible(boolean isVisible) {
-        acDeployResultTvState.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        acDeployResultTvState.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
