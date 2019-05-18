@@ -306,6 +306,9 @@ dependencies {
     //mp表格组件
     implementation deps.MPAndroidChart
 
+    //
+    implementation "com.afollestad.material-dialogs:core:0.9.1.0"
+    implementation project(path: ':RecordVideo')
 //    implementation androidDependencies.appcompat_v7
 //
 //    def viewDependencies = rootProject.ext.viewDependencies
