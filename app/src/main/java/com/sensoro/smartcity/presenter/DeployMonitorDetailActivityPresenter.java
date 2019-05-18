@@ -23,6 +23,7 @@ import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.common.model.EventData;
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.RetryWithDelay;
@@ -35,6 +36,7 @@ import com.sensoro.common.server.bean.MalfunctionTypeStyles;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.bean.SensorStruct;
+import com.sensoro.common.server.bean.SensorTypeStyles;
 import com.sensoro.common.server.response.DeployStationInfoRsp;
 import com.sensoro.common.server.response.DeviceDeployRsp;
 import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
@@ -70,7 +72,6 @@ import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.widget.popup.UpLoadPhotosUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -398,14 +399,14 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             public void onFailed(String errorMsg) {
                 tempForceReason = "config";
                 getView().dismissBleConfigDialog();
-                getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.installation_config_failed) + errorMsg + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
+                getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_device_detail_check_config_failed) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
             }
 
             @Override
             public void onOverTime(String overTimeMsg) {
                 tempForceReason = "config";
                 getView().dismissBleConfigDialog();
-                getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.installation_config_failed) + overTimeMsg + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
+                getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_device_detail_check_config_failed) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
             }
         };
         if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
@@ -1474,7 +1475,12 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             for (String sensoroType : sensoroTypes) {
                 MonitoringPointRcContentAdapterModel model = MonitorPointModelsFactory.createMonitoringPointRcContentAdapterModel(mContext, deviceInfo, sensoroDetails, sensoroType);
                 if (model != null && model.hasAlarmStatus()) {
-                    sb.append(model.name).append(" ").append(model.content);
+                    SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensoroType);
+                    if (sensorTypeStyles != null && sensorTypeStyles.isBool()) {
+                        sb.append(model.content);
+                    } else {
+                        sb.append(model.name).append(" ").append(model.content);
+                    }
                     if (!TextUtils.isEmpty(model.unit)) {
                         sb.append(model.unit);
                     }
