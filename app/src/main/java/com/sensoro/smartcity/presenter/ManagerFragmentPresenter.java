@@ -23,6 +23,7 @@ import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.response.ResponseBase;
+import com.sensoro.smartcity.temp.TestRecordActivity;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -217,11 +218,13 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     }
 
     public void doVersionInfo() {
-        if (hasNewVersion()) {
-            Beta.checkUpgrade();
-        } else {
-            getView().showVersionDialog();
-        }
+        Intent intent = new Intent(mContext, TestRecordActivity.class);
+        getView().startAC(intent);
+//        if (hasNewVersion()) {
+//            Beta.checkUpgrade();
+//        } else {
+//            getView().showVersionDialog();
+//        }
     }
 
     @Override

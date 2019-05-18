@@ -1,0 +1,37 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion build_versions.compile_sdk
+
+    defaultConfig {
+        minSdkVersion build_versions.min_sdk
+//        targetSdkVersion build_versions.target_sdk
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
+    }
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+//repositories {
+//    jcenter()
+//    maven { url "https://dl.bintray.com/drummer-aidan/maven" }
+//}
+
+dependencies {
+    implementation deps.support.app_compat
+//    compile "com.afollestad:easyvideoplayer:$VIDEO_PLAYER_VERSION"
+    implementation "com.afollestad.material-dialogs:core:0.9.1.0"
+}
+
+//apply from: 'https://raw.githubusercontent.com/afollestad/aidanfollestad.com/master/android-lib-release.gradle'
