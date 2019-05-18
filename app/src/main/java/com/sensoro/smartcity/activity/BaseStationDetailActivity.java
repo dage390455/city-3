@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -152,16 +153,22 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
+                finish();
                 break;
             case R.id.ac_basestation_rl_channel:
+
+
+                startActivity(new Intent(mActivity, FrequencyPointActivity.class));
                 break;
             case R.id.ac_basestation_tv_today:
                 break;
             case R.id.ac_basestation_tv_week:
                 break;
             case R.id.rl_network_information:
+                startActivity(new Intent(mActivity, NetWorkInfoActivity.class));
                 break;
             case R.id.rl_self_check_state:
+                startActivity(new Intent(mActivity, SelfCheckActivity.class));
                 break;
 
             default:
@@ -237,6 +244,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_basestation_detail);
         ButterKnife.bind(this);
+        includeTextTitleTvSubtitle.setVisibility(View.GONE);
 
         setTitle("LineChartActivity2");
 

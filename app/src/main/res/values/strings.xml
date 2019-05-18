@@ -1001,4 +1001,15 @@
     <string name="cannot_be_all_spaces">Cannot be all spaces</string>
     <string name="The_network_information">The network information</string>
     <string name="Self_check_state">Self-check state</string>
+    <string name="networking_mode">Networking Mode</string>
+    <string name="network_info">Networking Info</string>
+    <string name="ip">Ip</string>
+    <string name="gateway">GateWay</string>
+    <string name="subnet_mask">Subnet Mask</string>
+    <string name="primary_dns">Primary DNS</string>
+    <string name="secondary_dns">Secondary DNS</string>
+    <string name="vpn">VPN</string>
+    <string name="frequency_poin_info">Frequency Poin Info</string>
+
+
 </resources>

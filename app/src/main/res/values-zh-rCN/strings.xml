@@ -989,6 +989,15 @@
 
     <string name="The_network_information">网络信息</string>
     <string name="Self_check_state">自检状态</string>
+    <string name="networking_mode">联网方式</string>
+    <string name="ip">Ip</string>
+    <string name="gateway">网关</string>
+    <string name="subnet_mask">子网掩码</string>
+    <string name="primary_dns">主DNS</string>
+    <string name="secondary_dns">从DNS</string>
+    <string name="vpn">VPN</string>
+    <string name="network_info">网络信息</string>
+    <string name="frequency_poin_info">频点信息</string>
 
 
 </resources>
