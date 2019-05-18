@@ -2,11 +2,13 @@ package com.sensoro.smartcity.activity;
 
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.SelfCheckAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
@@ -30,6 +32,8 @@ public class SelfCheckActivity extends BaseActivity<ISelfCheckActivityView, Self
     ConstraintLayout includeTextTitleClRoot;
     @BindView(R.id.ac_self_check_rc)
     RecyclerView acSelfCheckRc;
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout refreshLayout;
 
     SelfCheckAdapter selfCheckAdapter;
 
@@ -39,6 +43,13 @@ public class SelfCheckActivity extends BaseActivity<ISelfCheckActivityView, Self
         ButterKnife.bind(this);
         includeTextTitleTvTitle.setText(R.string.Self_check_state);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
+        selfCheckAdapter = new SelfCheckAdapter(this);
+
+
+        acSelfCheckRc.setLayoutManager(new LinearLayoutManager(this));
+        acSelfCheckRc.setAdapter(selfCheckAdapter);
+
+//        refreshLayout.setEnabled(false);
 
     }
 

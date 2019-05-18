@@ -162,7 +162,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="12dp"
-            android:background="@color/white">
+            android:background="@color/white"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
             <include layout="@layout/item_no_content" />
 
@@ -175,9 +177,7 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/fg_history_log_rc_content"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp" />
+                    android:layout_height="match_parent" />
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
             <include layout="@layout/item_include_search_history_rv" />

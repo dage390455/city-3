@@ -48,14 +48,14 @@ public class SelfCheckAdapter extends RecyclerView.Adapter<SelfCheckAdapter.Self
     @Override
     public void onBindViewHolder(final SelfCheckHolder holder, final int position) {
 
-        DeviceCameraInfo deviceCameraInfo = mData.get(position);
+//        DeviceCameraInfo deviceCameraInfo = mData.get(position);
 
 
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return 4;
     }
 
     class SelfCheckHolder extends RecyclerView.ViewHolder {

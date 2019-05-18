@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="46dp"
     android:background="@color/white"
     android:gravity="center_vertical"
+
     android:orientation="horizontal">
 
     <ImageView
@@ -19,6 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
         android:gravity="start"
+        android:singleLine="true"
         android:text="E2021-蜂窝网联网成功"
         android:textColor="@color/c_252525"
         android:textSize="16dp" />

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="horizontal"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp">
+
+    <TextView
+        android:id="@+id/item_device_camera_tv_device_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:textColor="@color/c_252525"
+        android:textSize="16dp" />
+
+
+    <TextView
+        android:id="@+id/item_device_camera_tv_onlinestate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_device_camera_tv_device_name"
+        android:layout_marginTop="8dp"
+        android:drawablePadding="5dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textColor="@color/c_1dbb99"
+        android:textSize="12dp" />
+
+
+    <TextView
+        android:id="@+id/item_device_camera_tv_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/item_device_camera_tv_onlinestate"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@+id/item_device_camera_tv_onlinestate"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="12dp" />
+
+
+    <LinearLayout
+        android:id="@+id/item_device_camera_ll_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_device_camera_tv_onlinestate"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="4dp"
+
+        android:gravity="right"
+        android:orientation="horizontal"
+
+
+        >
+
+        <TextView
+            android:id="@+id/orientation_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="4dp"
+            android:background="@drawable/shape_bg_solid_fa_stroke_df_full_corner"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:paddingLeft="10dp"
+            android:paddingTop="4dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="4dp"
+            android:textColor="@color/c_252525"
+
+            android:textSize="10dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/installationmode_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="4dp"
+            android:background="@drawable/shape_bg_solid_fa_stroke_df_full_corner"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:paddingLeft="10dp"
+            android:paddingTop="4dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="4dp"
+
+            android:textColor="@color/c_252525"
+            android:textSize="10dp"
+            android:visibility="gone" />
+    </LinearLayout>
+</RelativeLayout>

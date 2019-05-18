@@ -31,6 +31,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IBaseStationDetailActivityView;
 import com.sensoro.smartcity.presenter.BaseStationDetailActivityPresenter;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.TouchRecycleView;
 
 import java.text.DecimalFormat;
@@ -149,9 +150,42 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     }
 
 
-    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_basestation_rl_channel, R.id.ac_basestation_tv_today, R.id.ac_basestation_tv_week, R.id.rl_network_information, R.id.rl_self_check_state})
+    //    public void doNavigation() {
+//        List<Double> lonlat = mDeviceInfo.getLonlat();
+//        if (lonlat.size() == 2) {
+//            double v = lonlat.get(1);
+//            double v1 = lonlat.get(0);
+//            if (v == 0 || v1 == 0) {
+//                getView().toastShort(mContext.getString(R.string.location_information_not_set));
+//                return;
+//            }
+//        } else {
+//            getView().toastShort(mContext.getString(R.string.location_information_not_set));
+//            return;
+//        }
+//        Intent intent = new Intent();
+//        if (AppUtils.isChineseLanguage()) {
+//            intent.setClass(mContext, MonitorPointMapActivity.class);
+//        } else {
+//            intent.setClass(mContext, MonitorPointMapENActivity.class);
+//        }
+//        intent.putExtra(EXTRA_DEVICE_INFO, mDeviceInfo);
+//        getView().startAC(intent);
+//    }
+    @OnClick({R.id.navigation_cl, R.id.include_text_title_imv_arrows_left, R.id.ac_basestation_rl_channel, R.id.ac_basestation_tv_today, R.id.ac_basestation_tv_week, R.id.rl_network_information, R.id.rl_self_check_state})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+
+            case R.id.navigation_cl:
+                Intent intent = new Intent();
+                if (AppUtils.isChineseLanguage()) {
+                    intent.setClass(mActivity, MonitorPointMapActivity.class);
+                } else {
+                    intent.setClass(mActivity, MonitorPointMapENActivity.class);
+                }
+
+                break;
+
             case R.id.include_text_title_imv_arrows_left:
                 finish();
                 break;
