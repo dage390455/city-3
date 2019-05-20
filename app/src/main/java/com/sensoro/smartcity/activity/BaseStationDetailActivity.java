@@ -280,8 +280,8 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
         // enable scaling and dragging
         chart.getLegend().setEnabled(false);
-        chart.setDragEnabled(true);
-        chart.setScaleEnabled(true);
+        chart.setDragEnabled(false);
+        chart.setScaleEnabled(false);
         chart.setDrawGridBackground(false);
         chart.setHighlightPerDragEnabled(true);
 
@@ -296,20 +296,6 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         chart.setScaleYEnabled(false);
         chart.setScaleXEnabled(false);
 
-
-        // get the legend (only possible after setting data)
-//        Legend l = chart.getLegend();
-//
-//        // modify the legend ...
-//        l.setForm(LegendForm.LINE);
-//        l.setTypeface(tfLight);
-//        l.setTextSize(11f);
-//        l.setTextColor(Color.WHITE);
-//        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-//        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
-//        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-//        l.setDrawInside(false);
-//        l.setYOffset(11f);
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setTypeface(DEFAULT_BOLD);
@@ -643,6 +629,15 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
     public void fadeIn(final View view, final float startAlpha, final float endAlpha, final long duration) {
 
+
+        if (view.getVisibility() == View.VISIBLE) return;
+
+
+        view.setVisibility(View.VISIBLE);
+        Animation animation = new AlphaAnimation(startAlpha, endAlpha);
+        animation.setDuration(duration);
+        view.startAnimation(animation);
+
         final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
         final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
         set1.setDrawVerticalHighlightIndicator(true);
@@ -651,13 +646,6 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         set2.setDrawVerticalHighlightIndicator(true);
 
         chart.invalidate();
-        if (view.getVisibility() == View.VISIBLE) return;
-
-
-        view.setVisibility(View.VISIBLE);
-        Animation animation = new AlphaAnimation(startAlpha, endAlpha);
-        animation.setDuration(duration);
-        view.startAnimation(animation);
 
 
     }
