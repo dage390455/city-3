@@ -975,6 +975,7 @@
     <string name="associated_camera_list">设备关联摄像头</string>
 
     <string name="deploy_device_detail_check_failed">安装检测失败</string>
+    <string name="deploy_device_detail_check_config_failed">初始配置失败</string>
     <string name="deploy_device_detail_checking">安装检测中</string>
     <string name="deploy_device_detail_check_not_nearby">设备位置检测失败，请开启手机蓝牙并确保在设备附近</string>
     <string name="deploy_device_detail_check_tip_is_powered_on">请确保设备通电</string>
