@@ -3,6 +3,7 @@ package com.sensoro.nameplate.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -32,12 +33,14 @@ import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.server.bean.DeviceCameraInfo;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.widgets.CustomDivider;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.nameplate.IMainViews.INameplateListActivityView;
 import com.sensoro.nameplate.R;
+import com.sensoro.nameplate.adapter.NameplateListAdapter;
 import com.sensoro.nameplate.presenter.NameplateListActivityPresenter;
 
 import java.util.List;
@@ -73,6 +76,8 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
     //    private CameraListFilterPopupWindowTest mCameraListFilterPopupWindow;
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private TipOperationDialogUtils historyClearDialog;
+    //
+    private NameplateListAdapter nameplateListAdapter;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -148,6 +153,27 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
             }
         });
         //
+        nameplateListAdapter = new NameplateListAdapter(mActivity);
+        final LinearLayoutManager manager = new LinearLayoutManager(mActivity);
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        CustomDivider dividerItemDecoration = new CustomDivider(mActivity, DividerItemDecoration.VERTICAL);
+        rvNameplateContent.addItemDecoration(dividerItemDecoration);
+        rvNameplateContent.setLayoutManager(manager);
+        rvNameplateContent.setAdapter(nameplateListAdapter);
+
+        returnTopAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.return_top_in_anim);
+
+        nameplateListAdapter.setOnClickListener(new NameplateListAdapter.OnNameplateListAdapterClickListener() {
+            @Override
+            public void onClick(View v, int position) {
+                //点击
+            }
+
+            @Override
+            public void onDelete(int position) {
+                //删除
+            }
+        });
         rvNameplateContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {

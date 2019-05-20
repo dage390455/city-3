@@ -39,7 +39,7 @@ import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
-import com.sensoro.smartcity.widget.divider.CustomDivider;
+import com.sensoro.common.widgets.CustomDivider;
 import com.sensoro.smartcity.widget.popup.CameraListFilterPopupWindowTest;
 import com.sensoro.common.widgets.SensoroToast;
 

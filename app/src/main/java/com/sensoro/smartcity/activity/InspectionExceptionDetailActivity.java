@@ -15,7 +15,7 @@ import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.InspectionExceptionThumbnailAdapter;
-import com.sensoro.smartcity.adapter.TagAdapter;
+import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.smartcity.imainviews.IInspectionExceptionDetailActivityView;
 import com.sensoro.smartcity.presenter.InspectionExceptionDetailActivityPresenter;
 import com.sensoro.smartcity.util.WidgetUtil;

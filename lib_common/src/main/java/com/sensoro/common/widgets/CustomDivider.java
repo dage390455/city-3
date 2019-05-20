@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.widget.divider;
+package com.sensoro.common.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -12,7 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 
 /**
  * recyclerview 不通屏的分割线边距20dp,最后一条没有分割线，且只限竖直方向的recyclerview，

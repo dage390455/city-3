@@ -15,14 +15,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.TagAdapter;
+import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployCameraDetailActivityView;
 import com.sensoro.smartcity.presenter.DeployCameraDetailActivityPresenter;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.widgets.SpacesItemDecoration;
-import com.sensoro.smartcity.widget.TouchRecycleView;
+import com.sensoro.common.widgets.TouchRecycleView;
 import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.common.widgets.SensoroToast;
 

@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.adapter;
+package com.sensoro.common.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -10,14 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sensoro.smartcity.R;
+import com.sensoro.common.R;
 import com.sensoro.common.utils.DpUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class TagAdapter extends RecyclerView.
         Adapter<TagAdapter.TagHolder> {
@@ -70,12 +67,11 @@ public class TagAdapter extends RecyclerView.
     }
 
     class TagHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_adapter_tv)
         TextView itemAdapterTv;
 
         TagHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            itemAdapterTv.findViewById(R.id.item_adapter_tv);
         }
     }
 }

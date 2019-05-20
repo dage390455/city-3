@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.SignalCheckContentAdapter;
-import com.sensoro.smartcity.adapter.TagAdapter;
+import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ISignalCheckActivityView;
 import com.sensoro.smartcity.model.SignalData;

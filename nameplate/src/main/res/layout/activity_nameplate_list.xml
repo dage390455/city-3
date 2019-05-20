@@ -115,7 +115,7 @@
                 android:layout_marginEnd="8dp"
                 android:contentDescription="@null"
                 android:padding="8dp"
-                android:src="@mipmap/camera_filter_unselected" />
+                android:src="@mipmap/nameplate_scan" />
 
         </LinearLayout>
 

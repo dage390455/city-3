@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.ContactAdapter;
 import com.sensoro.smartcity.adapter.MonitorDeployDetailPhotoAdapter;
-import com.sensoro.smartcity.adapter.TagAdapter;
+import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
 import com.sensoro.smartcity.presenter.DeployRecordDetailActivityPresenter;
@@ -24,7 +24,7 @@ import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.widgets.SpacesItemDecoration;
-import com.sensoro.smartcity.widget.TouchRecycleView;
+import com.sensoro.common.widgets.TouchRecycleView;
 import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.ArrayList;
