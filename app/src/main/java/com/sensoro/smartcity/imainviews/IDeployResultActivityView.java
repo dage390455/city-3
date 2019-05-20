@@ -3,15 +3,15 @@ package com.sensoro.smartcity.imainviews;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 
-import com.sensoro.smartcity.iwidget.IActivityIntent;
-import com.sensoro.smartcity.iwidget.IToast;
+import com.sensoro.common.iwidget.IActivityIntent;
+import com.sensoro.common.iwidget.IToast;
 
 public interface IDeployResultActivityView extends IToast, IActivityIntent {
     void refreshSignal(long updateTime, String signal);
 
     void setResultImageView(int resId);
 
-    void setTipsTextView(String text);
+    void setTipsTextView(String text,int resId);
 
     void setSnTextView(String sn);
 
@@ -26,8 +26,6 @@ public interface IDeployResultActivityView extends IToast, IActivityIntent {
     void setUpdateTextView(String update);
 
     void setAddressTextView(String address);
-
-    void setDeployResultErrorInfo(String errorInfo);
 
     void setUpdateTextViewVisible(boolean isVisible);
 

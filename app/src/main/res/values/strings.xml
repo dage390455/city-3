@@ -900,7 +900,6 @@
     <string name="installation_config_failed">Initial configuration failed, fix description，Reason:</string>
 
 
-
     <string name="deploy_check_dialog_quality_bad_signal">Poor signal quality, fix description</string>
     <string name="device_is_malfunction">The device is faulting，</string>
     <string name="device_is_alarm">The device is faulting，</string>
@@ -975,8 +974,8 @@
     <string name="delete_this_group">Delete</string>
     <string name="not_matched_current_transformer">No recommendation, please contact Sensoro R &amp; D personnel to confirm</string>
     <string name="air_open_arguments">Parameter</string>
-    <string name="air_open_rated_current">Rated current/A (0&#8211;560A)</string>
-    <string name="diameter_arguments_tip">Wire parameters, please choose according to the actual situation on site</string>
+    <string name="air_open_rated_current">Rated current/A (0&#8211;560)</string>
+    <string name="diameter_arguments_tip">Wire parameters  please choose according to the actual situation on site</string>
     <string name="match_result">Result</string>
     <string name="look_detail">Detail</string>
     <string name="in_line_total_current">Total Value of Input:&#160;</string>
@@ -985,5 +984,56 @@
     <string name="add_wire">Add</string>
     <string name="diameter_mm">Diameter/mm²</string>
     <string name="please_input_air_rated_current">Please enter the rated current</string>
-    <string name="rated_current_colon" >Rated current:&#160;</string>
+    <string name="rated_current_colon">Rated current:&#160;</string>
+
+    <string name="deploy_detail_camera_group">关联摄像头</string>
+    <string name="device_detail_camera_no_camera">No Camera</string>
+    <string name="device_detail_camera_has_camera">Has</string>
+    <string name="device_detail_camera_camera_count">Camera</string>
+    <string name="not_obtain_face_id">Failed to get image id</string>
+
+    <string name="online_tip">"Network connection failed,\nplease check your network settings"</string>
+
+    <string name="play">"Play"</string>
+    <string name="retry">"Retry"</string>
+    <string name="retry_play">"Video loading failed, please try again"</string>
+
+    <string name="mobile_network">"You are now using mobile network,\n please mind your data usage."</string>
+    <string name="camera_manager">摄像机管理</string>
+    <string name="camera_living">直播中</string>
+    <string name="click_select_date">点击选择日期</string>
+    <string name="time_parse_error">时间解析错误</string>
+    <string name="camera_back_live">回到直播</string>
+    <string name="move_locus">移动轨迹</string>
+    <string name="person_avatar_history">人脸记录</string>
+    <string name="person_avatar_video">人脸视频</string>
+    <string name="obtain_video_fail">获取视频失败</string>
+    <string name="one_day">1天内</string>
+    <string name="three_day">3天内</string>
+    <string name="seven_day">7天内</string>
+    <string name="camera_name_device_number">camera name or device number</string>
+
+    <string name="reset_filter">reset</string>
+    <string name="camera_info_get_failed">摄像机信息获取失败</string>
+
+    <string name="deploy_camera_install_method">Install Method</string>
+    <string name="deploy_camera_sets_lens_orientation">Set lens orientation</string>
+    <string name="deploy_camera_watch_live">Watch Live</string>
+    <string name="deploy_camera_status_online">Online</string>
+    <string name="deploy_camera_status_offline">Offline</string>
+    <string name="associated_camera_list">Device associated camera</string>
+
+    <string name="deploy_device_detail_check_failed">Deploy Check Failed</string>
+    <string name="deploy_device_detail_checking">Deploy Checking</string>
+    <string name="deploy_device_detail_check_config_failed">初始配置失败</string>
+    <string name="deploy_device_detail_check_not_nearby">设备位置检测失败，请开启手机蓝牙并确保在设备附近</string>
+    <string name="deploy_device_detail_check_tip_is_powered_on">Please make sure the device is powered on</string>
+    <string name="deploy_device_detail_check_tip_press_the_sensor">Please press the sensor self-test button</string>
+    <string name="new_contact">New contact</string>
+    <string name="delete_this">Delete this</string>
+
+
+    <string name="app_crash_tips">System error, please log in again</string>
+    <string name="camera_name_sn">摄像机名称/设备号</string>
+    <string name="cannot_be_all_spaces">Cannot be all spaces</string>
 </resources>

@@ -12,7 +12,7 @@
         android:layout_marginTop="24dp"
         android:text="@string/confirm_monitor_point_exception"
         android:textColor="@color/c_25292d"
-        android:textSize="18sp" />
+        android:textSize="18dp" />
 
     <View
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
         android:paddingTop="14dp"
         android:text="@string/inspection_exception"
         android:textColor="@color/c_ff8d34"
-        android:textSize="16sp" />
+        android:textSize="16dp" />
 
     <View
         android:layout_width="match_parent"
@@ -45,7 +45,7 @@
         android:paddingTop="14dp"
         android:text="@string/uploade_exception_change_device"
         android:textColor="@color/c_ff8d34"
-        android:textSize="16sp" />
+        android:textSize="16dp" />
 
     <View
         android:layout_width="match_parent"
@@ -62,7 +62,7 @@
         android:paddingTop="14dp"
         android:text="@string/i_will_see_again"
         android:textColor="@color/c_a6a6a6"
-        android:textSize="16sp" />
+        android:textSize="16dp" />
 
 
 </LinearLayout>

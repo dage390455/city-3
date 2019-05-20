@@ -1,9 +1,9 @@
 package com.sensoro.smartcity.imainviews;
 
+import com.sensoro.common.iwidget.IActivityIntent;
+import com.sensoro.common.iwidget.IToast;
 import com.sensoro.smartcity.adapter.model.SecurityRisksAdapterModel;
 import com.sensoro.smartcity.adapter.model.SecurityRisksTagModel;
-import com.sensoro.smartcity.iwidget.IActivityIntent;
-import com.sensoro.smartcity.iwidget.IToast;
 
 import java.util.ArrayList;
 import java.util.List;

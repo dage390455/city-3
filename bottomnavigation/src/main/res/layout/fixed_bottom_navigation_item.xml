@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/fixed_bottom_navigation_icon"
             android:layout_gravity="top|end"
-            android:textSize="10sp"
+            android:textSize="10dp"
             android:gravity="center" />
     </RelativeLayout>
 

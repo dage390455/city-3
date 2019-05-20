@@ -26,14 +26,14 @@ import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMonitorPointMapActivityView;
-import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.smartcity.util.ImageFactory;
+import com.sensoro.common.utils.ImageFactory;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
@@ -52,7 +52,8 @@ import java.util.List;
 
 import static com.amap.api.maps.AMap.MAP_TYPE_NORMAL;
 
-public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPointMapActivityView> implements Constants, AMap.OnMapLoadedListener, IOnCreate {
+public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPointMapActivityView> implements Constants,
+        AMap.OnMapLoadedListener, IOnCreate {
 
     private Activity mContext;
     private AMap aMap;
@@ -340,8 +341,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 
     public void backToCurrentLocation() {
         List<Double> lonlat = mDeviceInfo.getLonlat();
-
-        if (lonlat != null && lonlat.size() > 2 && lonlat.get(0) != 0 && lonlat.get(1) != 0) {
+        if (lonlat != null && lonlat.size() == 2 && lonlat.get(0) != 0 && lonlat.get(1) != 0) {
             double lat = lonlat.get(1);//获取纬度
             double lon = lonlat.get(0);//获取经度
             LatLng latLng = new LatLng(lat, lon);
@@ -350,6 +350,8 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
                 CameraUpdate update = CameraUpdateFactory
                         .newCameraPosition(new CameraPosition(latLng, 15, 0, 30));
                 aMap.moveCamera(update);
+            } else {
+                getView().toastShort(mContext.getString(R.string.tips_data_error));
             }
         }
     }

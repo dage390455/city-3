@@ -147,7 +147,9 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
             }
         });
         mCalendarPopUtils = new CalendarPopUtils(mActivity);
-        mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
+        mCalendarPopUtils
+                .setMonthStatus(1)
+                .setOnCalendarPopupCallbackListener(this);
         includeImvTitleImvSubtitle.setOnClickListener(this);
         ivAlarmLogDateClose.setOnClickListener(this);
         includeImvTitleImvArrowsLeft.setOnClickListener(this);

@@ -20,7 +20,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:textColor="@color/c_252525"
-            android:textSize="12sp" />
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/ac_inspection_task_tv_inspection_count"
@@ -31,7 +31,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="8dp"
             android:textColor="@color/c_252525"
-            android:textSize="12sp" />
+            android:textSize="12dp" />
 
     </RelativeLayout>
 
@@ -108,7 +108,7 @@
                         android:singleLine="true"
                         android:textColor="@color/c_252525"
                         android:textColorHint="@color/c_a6a6a6"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
                 </RelativeLayout>
 
                 <TextView
@@ -165,7 +165,7 @@
                         android:paddingStart="43dp"
                         android:paddingEnd="43dp"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="12sp"
+                        android:textSize="12dp"
 
                         />
 
@@ -186,7 +186,7 @@
                         android:layout_alignStart="@id/view"
                         android:text="@string/all_types"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="12sp"
+                        android:textSize="12dp"
 
                         />
 

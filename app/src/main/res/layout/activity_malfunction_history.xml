@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:textColor="@color/c_252525"
-                android:textSize="14sp"
+                android:textSize="14dp"
                 />
 
             <ImageView

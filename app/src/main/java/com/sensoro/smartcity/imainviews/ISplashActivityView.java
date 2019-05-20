@@ -1,6 +1,6 @@
 package com.sensoro.smartcity.imainviews;
 
-import com.sensoro.smartcity.iwidget.IActivityIntent;
+import com.sensoro.common.iwidget.IActivityIntent;
 
 public interface ISplashActivityView extends IActivityIntent {
 }

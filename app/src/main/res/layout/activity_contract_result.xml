@@ -39,7 +39,7 @@
             android:paddingStart="50dp"
             android:paddingEnd="50dp"
             android:text="@string/contract_result_share"
-            android:textColor="@color/c_29c093"
+            android:textColor="@color/c_1dbb99"
             android:textSize="@dimen/city_btn_text_size" />
     </LinearLayout>
 

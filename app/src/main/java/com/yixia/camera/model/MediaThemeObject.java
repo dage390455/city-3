@@ -26,7 +26,7 @@ public class MediaThemeObject {
     /** 变声主题名称 */
     public String mSpeedThemeName;
 
-    // ~~~ 静音
+    // ~~~ audio_on
     /** 主题静音 */
     public boolean mThemeMute;
     /** 原声静音 */

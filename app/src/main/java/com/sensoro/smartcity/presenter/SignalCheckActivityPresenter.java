@@ -21,10 +21,10 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISignalCheckActivityView;
-import com.sensoro.smartcity.iwidget.IOnStart;
+import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.SignalData;
-import com.sensoro.smartcity.util.BleObserver;
+import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActivityView>
-        implements Constants, Runnable, BLEDeviceListener<BLEDevice>, SensoroConnectionCallback, SensoroWriteCallback ,IOnStart {
+        implements Constants, Runnable, BLEDeviceListener<BLEDevice>, IOnStart {
     private Activity mActivity;
     private Handler mHandler;
     private boolean bleHasOpen;
@@ -68,7 +68,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
                 statusText = mActivity.getString(R.string.main_page_warn);
                 break;
             case SENSOR_STATUS_NORMAL:
-                textColor = R.color.c_29c093;
+                textColor = R.color.c_1dbb99;
                 statusText = mActivity.getString(R.string.normal);
                 break;
             case SENSOR_STATUS_LOST:
@@ -84,7 +84,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
                 statusText = mActivity.getString(R.string.status_malfunction);
                 break;
             default:
-                textColor = R.color.c_29c093;
+                textColor = R.color.c_1dbb99;
                 statusText = mActivity.getString(R.string.normal);
                 break;
         }
@@ -205,11 +205,73 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
     }
 
     private void connectDevice() {
+        final Runnable connectOvertime = new Runnable() {
+            @Override
+            public void run() {
+                if (isAttachedView()) {
+                    if (mConnection != null) {
+                        mConnection.disconnect();
+                    }
+                    if (isAttachedView()) {
+                        getView().dismissProgressDialog();
+                        getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
+                        getView().toastShort(mActivity.getString(R.string.ble_connect_failed));
+                        getView().setSubTitleVisible(true);
+                    }
+                }
+            }
+        };
         mConnection = new SensoroDeviceConnection(mActivity, bleAddress, true);
         try {
-            mConnection.connect(deployAnalyzerModel.blePassword, SignalCheckActivityPresenter.this);
+            final SensoroConnectionCallback sensoroConnectionCallback = new SensoroConnectionCallback() {
+                @Override
+                public void onConnectedSuccess(final BLEDevice bleDevice, int cmd) {
+                    isConnected = true;
+                    if (isAttachedView()) {
+                        mHandler.removeCallbacks(connectOvertime);
+                        try {
+                            Thread.sleep(50);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        if (isAttachedView()) {
+                            getView().updateProgressDialogMessage(mActivity.getString(R.string.ble_send_data));
+                            getView().showProgressDialog();
+                            getView().setLlTestVisible(false);
+                            getView().setLlDetailVisible(true);
+                            getView().setSubTitleVisible(false);
+                            sendDetectionCmd((SensoroDevice) bleDevice);
+                        }
+                    }
+                    sendCount = 0;
+                    receiveCount = 0;
+                }
+
+                @Override
+                public void onConnectedFailure(final int errorCode) {
+                    isConnected = false;
+                    if (isAttachedView()) {
+                        mHandler.removeCallbacks(connectOvertime);
+                        getView().dismissProgressDialog();
+                        getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
+                        getView().toastShort(ResultCode.errCodeToMsg(errorCode));
+                        getView().setSubTitleVisible(true);
+                    }
+                }
+
+                @Override
+                public void onDisconnected() {
+                    if (isAttachedView()) {
+                        mHandler.removeCallbacks(connectOvertime);
+                        getView().setSubTitleVisible(true);
+//                        getView().toastShort(mActivity.getString(R.string.ble_device_disconnected));
+                    }
+                }
+            };
+            mConnection.connect(deployAnalyzerModel.blePassword, sensoroConnectionCallback);
             getView().updateProgressDialogMessage(mActivity.getString(R.string.connecting));
             getView().showProgressDialog();
+            mHandler.postDelayed(connectOvertime, 10 * 1000);
 //            stopScanService();
         } catch (Exception e) {
             e.printStackTrace();
@@ -221,72 +283,9 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
 
     private void sendDetectionCmd(SensoroDevice sensoroDevice) {
         //暂时不写入dr等信息
-        mConnection.writeSignalData(selectedFreq, 0, 0, 0, this);
-
-    }
-
-    private void stopScanService() {
-        SensoroCityApplication.getInstance().bleDeviceManager.stopService();
-    }
-
-    @Override
-    public void onConnectedSuccess(final BLEDevice bleDevice, int cmd) {
-        isConnected = true;
-        mActivity.runOnUiThread(new Runnable() {
+        final SensoroWriteCallback writeCallback = new SensoroWriteCallback() {
             @Override
-            public void run() {
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (isAttachedView()) {
-                    getView().updateProgressDialogMessage(mActivity.getString(R.string.ble_send_data));
-                    getView().showProgressDialog();
-                    getView().setLlTestVisible(false);
-                    getView().setLlDetailVisible(true);
-                    getView().setSubTitleVisible(false);
-                    sendDetectionCmd((SensoroDevice) bleDevice);
-                }
-                sendCount = 0;
-                receiveCount = 0;
-            }
-        });
-
-
-    }
-
-    @Override
-    public void onConnectedFailure(final int errorCode) {
-        isConnected = false;
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (isAttachedView()) {
-                    getView().dismissProgressDialog();
-                    getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
-                    getView().toastShort(ResultCode.errCodeToMsg(errorCode));
-                    getView().setSubTitleVisible(true);
-                }
-
-            }
-        });
-    }
-
-    @Override
-    public void onDisconnected() {
-        if (getView() != null) {
-            getView().setSubTitleVisible(true);
-            getView().toastShort(mActivity.getString(R.string.ble_device_disconnected));
-        }
-
-    }
-
-    @Override
-    public void onWriteSuccess(final Object o, final int cmd) {
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+            public void onWriteSuccess(final Object o, final int cmd) {
                 if (isAttachedView()) {
                     getView().dismissProgressDialog();
                     if (cmd == CmdType.CMD_SIGNAL) {
@@ -296,11 +295,28 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
                             ProtoMsgTest1U1.MsgTest msgTest = (ProtoMsgTest1U1.MsgTest) o;
                             refresh(msgTest);
                         }
-
                     }
                 }
+
             }
-        });
+
+            @Override
+            public void onWriteFailure(final int errorCode, int cmd) {
+                if (isAttachedView()) {
+                    getView().dismissProgressDialog();
+                    getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
+                    mConnection.disconnect();
+                    getView().toastShort(ResultCode.errCodeToMsg(errorCode));
+                }
+
+            }
+        };
+        mConnection.writeSignalData(selectedFreq, 0, 0, 0, writeCallback);
+
+    }
+
+    private void stopScanService() {
+        SensoroCityApplication.getInstance().bleDeviceManager.stopService();
     }
 
     private void refresh(ProtoMsgTest1U1.MsgTest msgTest) {
@@ -330,23 +346,6 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         String text = mActivity.getString(R.string.send) + "：" + sendCount + "  " + mActivity.getString(R.string.receive) + "：" + receiveCount + "  " + mActivity.getString(R.string.success_rate) + "：" + rateString + "%";
         getView().updateSignalStatusText(text);
         getView().updateContentAdapter(signalData);
-    }
-
-    @Override
-    public void onWriteFailure(final int errorCode, int cmd) {
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (isAttachedView()) {
-                    getView().dismissProgressDialog();
-                    getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
-                    mConnection.disconnect();
-
-                    getView().toastShort(ResultCode.errCodeToMsg(errorCode));
-                }
-
-            }
-        });
     }
 
     public String[] getLoraBandText(Context context) {

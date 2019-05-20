@@ -695,7 +695,7 @@
     <string name="had_setting">配置成功</string>
     <string name="optional">选填</string>
     <string name="required">必填</string>
-    <string name="deploy_device_detail_add_all_required">请补充完必填项后上传</string>
+    <string name="deploy_device_detail_add_all_required">请先补充完必填项</string>
     <string name="deploy_configuration_not_discover_device">未搜索到需要配置的设备，请稍后重试</string>
     <string name="malfunction_cause_detail">故障成因</string>
     <string name="update_from">更新于</string>
@@ -863,7 +863,7 @@
     <string name="name_address_no_contain_brackets">名称中不能包含中括号</string>
     <string name="please_deploy_upload_all_pic">请选择必须上传的图片</string>
     <string name="contact_name_length_to_long">联系人名字最长不能超过12个汉字或36个字符</string>
-    <string name="mini_program_description">如遗忘，可邀请业主微信扫码或搜索SensoroCity进入微信查看</string>
+    <string name="mini_program_description">如遗忘，可邀请业主微信扫码或搜索SensoroCity进入查看</string>
     <string name="history_clear_all">清空</string>
     <string name="confirm_clear_history_record">确定清空输入记录</string>
     <string name="deploy_result_device_number_sn">设备号</string>
@@ -964,8 +964,8 @@
     <string name="delete_this_group">删除本组</string>
     <string name="not_matched_current_transformer">暂无推荐，请联系升哲研发人员确认</string>
     <string name="air_open_arguments">空开参数</string>
-    <string name="air_open_rated_current">空开标注额定电流/A (1&#8211;560A)</string>
-    <string name="diameter_arguments_tip">电线参数，请根据现场实际情况进行选择</string>
+    <string name="air_open_rated_current">空开标注额定电流/A (1&#8211;560)</string>
+    <string name="diameter_arguments_tip">电线参数  请根据现场实际情况进行选择</string>
     <string name="match_result">匹配结果</string>
     <string name="look_detail">查看详情</string>
     <string name="in_line_total_current">进线总额定电流：</string>
@@ -974,6 +974,52 @@
     <string name="add_wire">添加</string>
     <string name="diameter_mm">线径/mm²</string>
     <string name="please_input_air_rated_current">请输入空开额定电流</string>
-    <string name="rated_current_colon" >空开额定电流：</string>
+    <string name="rated_current_colon">空开额定电流：</string>
+
+    <string name="deploy_detail_camera_group">关联摄像头</string>
+    <string name="device_detail_camera_no_camera">未关联摄像头</string>
+    <string name="device_detail_camera_has_camera">已关联摄像头机位</string>
+    <string name="device_detail_camera_camera_count">个</string>
+    <string name="not_obtain_face_id">获取图片ID失败</string>
+
+    <string name="play">"播放"</string>
+    <string name="retry">"重试"</string>
+
+    <string name="online_tip">"连接网络失败，请检查网络环境"</string>
+    <string name="retry_play">"视频加载失败，请重试"</string>
+
+    <string name="mobile_network">"您正在使用移动网络，请注意您的数据使用。"</string>
+    <string name="camera_manager">摄像机管理</string>
+    <string name="camera_living">直播中</string>
+    <string name="click_select_date">点击选择日期</string>
+    <string name="time_parse_error">时间解析错误</string>
+    <string name="camera_back_live">回到直播</string>
+    <string name="move_locus">移动轨迹</string>
+    <string name="person_avatar_history">人脸记录</string>
+    <string name="person_avatar_video">人脸视频</string>
+    <string name="obtain_video_fail">获取视频失败</string>
+    <string name="camera_name_device_number">摄像机名称/设备号</string>
+    <string name="reset_filter">重置</string>
+    <string name="camera_info_get_failed">摄像机信息获取失败</string>
+    <string name="deploy_camera_install_method">安装方式</string>
+    <string name="deploy_camera_sets_lens_orientation">设置镜头朝向</string>
+    <string name="deploy_camera_watch_live">观看直播</string>
+    <string name="deploy_camera_status_online">在线</string>
+    <string name="deploy_camera_status_offline">离线</string>
+    <string name="associated_camera_list">设备关联摄像头</string>
+
+    <string name="deploy_device_detail_check_failed">安装检测失败</string>
+    <string name="deploy_device_detail_check_config_failed">初始配置失败</string>
+    <string name="deploy_device_detail_checking">安装检测中</string>
+    <string name="deploy_device_detail_check_not_nearby">设备位置检测失败，请开启手机蓝牙并确保在设备附近</string>
+    <string name="deploy_device_detail_check_tip_is_powered_on">请确保设备通电</string>
+    <string name="deploy_device_detail_check_tip_press_the_sensor">请按下设备自检按钮</string>
+    <string name="new_contact">新增联系人</string>
+    <string name="delete_this">删除本条</string>
+
+    <string name="app_crash_tips">系统出错了，请重新登录</string>
+    <string name="camera_name_sn">摄像机名称/设备号</string>
+    <string name="cannot_be_all_spaces">不能全部为空格</string>
+
 
 </resources>

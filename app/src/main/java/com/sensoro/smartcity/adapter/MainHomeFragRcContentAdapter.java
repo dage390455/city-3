@@ -194,7 +194,7 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
                 holder.ivItemAlarm.setVisibility(View.GONE);
                 break;
             case SENSOR_STATUS_NORMAL:
-                color = R.color.c_29c093;
+                color = R.color.c_1dbb99;
                 holder.ivItemAlarm.setVisibility(View.GONE);
                 break;
             case SENSOR_STATUS_MALFUNCTION:

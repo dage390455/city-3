@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="style_color">#29C093</color><!--主题色-->
+    <color name="bottom_container_bg">#99000000</color><!--主题色-->
+    <color name="c_1dbb99">#29C093</color>
+    <color name="c_5d5d5d">#5d5d5d</color>
+    <color name="white">#FFFFFF</color>
+    <color name="c_afb4bb">#AFB4BB</color>
+    <color name="c_1DBB99">#1DBB99</color>
+    <color name="transparent">#0000000</color>
+    <color name="c_F48F57">#F48F57</color>
+    <color name="c_66000000">#66000000</color>
+
+</resources>

@@ -2,7 +2,6 @@ package com.sensoro.smartcity.analyzer;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.SensoroCityApplication;
@@ -11,7 +10,6 @@ import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.util.PreferencesHelper;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -89,6 +87,11 @@ public class PreferencesSaveAnalyzer {
 
     private static void savePreferences(int status, String content) {
         switch (status) {
+
+            case SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST:
+                SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_SEARCH_CAMERALIST, Context
+                        .MODE_PRIVATE).edit().putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, content).apply();
+                break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN:
                 SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_WARN, Context
                         .MODE_PRIVATE).edit().putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, content).apply();
@@ -132,6 +135,10 @@ public class PreferencesSaveAnalyzer {
     private static String obtainOldText(int status) {
         String oldText = null;
         switch (status) {
+            case SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST:
+                oldText = SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_SEARCH_CAMERALIST, Context
+                        .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
+                break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN:
                 oldText = SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_WARN, Context
                         .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
@@ -181,6 +188,11 @@ public class PreferencesSaveAnalyzer {
      */
     public static void clearAllData(int status) {
         switch (status) {
+
+            case SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST:
+                SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_SEARCH_CAMERALIST, Activity.MODE_PRIVATE)
+                        .edit().clear().apply();
+                break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN:
                 SensoroCityApplication.getInstance().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_WARN, Activity.MODE_PRIVATE)
                         .edit().clear().apply();

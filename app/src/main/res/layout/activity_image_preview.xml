@@ -84,7 +84,7 @@
                 android:paddingRight="16.0dp"
                 android:text="@string/image_preview_finish"
                 android:textColor="#fff"
-                android:textSize="14sp"/>
+                android:textSize="14dp"/>
 
             <com.sensoro.smartcity.widget.imagepicker.view.SuperCheckBox
                 android:id="@+id/cb_check"

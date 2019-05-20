@@ -3,6 +3,7 @@ package com.sensoro.smartcity.server;
 
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
+import com.sensoro.smartcity.server.response.CameraFilterRsp;
 import com.sensoro.smartcity.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractInfoRsp;
@@ -14,6 +15,11 @@ import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmTimeRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraDetailRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraFacePicListRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraHistoryRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraListRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraPersonFaceRsp;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
@@ -37,6 +43,8 @@ import com.sensoro.smartcity.server.response.UpdateRsp;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
 
+import java.util.Map;
+
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -50,6 +58,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 
@@ -330,5 +339,57 @@ public interface RetrofitService {
     @GET(GET_DEVICES_ALARM_POPUP_CONFIG)
 //    Observable<DevicesMergeTypesRsp> getDevicesMergeTypes(@Header("x-session-id") String sessionId);
     Observable<DevicesAlarmPopupConfigRsp> getDevicesAlarmPopupConfig();
+    /**
+     * 通过sn获取摄像头详情
+     *
+     * @param sn
+     * @return
+     */
+    @GET("camera")
+    Observable<DeviceCameraDetailRsp> getDeviceCamera(@Query("sn") String sn);
+
+    /**
+     * 获取用户下摄像头列表
+     *
+     * @param pageSize
+     * @param page
+     * @param search
+     * @return
+     */
+    @GET("cameras")
+    Observable<DeviceCameraListRsp> getDeviceCameraList(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search);
+
+    /**
+     * 获取用户下全量摄像头列表
+     *
+     * @return
+     */
+    @GET("cameras/map")
+    Observable<ResponseBase> getDeviceCameraMapList();
+
+    @POST("picture/faceList")
+    Observable<DeviceCameraFacePicListRsp> getDeviceCameraFaceList(@Body RequestBody requestBody);
+
+    @POST("video/queryHistoryAddress")
+    Observable<DeviceCameraHistoryRsp> getDeviceCameraPlayHistoryAddress(@Body RequestBody requestBody);
+
+    @GET("cameras/group/bind")
+    Observable<DeviceCameraListRsp> getDeviceGroupCameraList(@Query("_id") String _id, @Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search);
+
+    @POST("picture/getFaceListById")
+    Observable<DeviceCameraPersonFaceRsp> getDeviceCameraPersonFace(@Body RequestBody requestBody);
+
+    /**
+     * 100_camera - 100.026 获取安装方式和朝向选择字典
+     *
+     * @return
+     */
+    @GET("query-dict")
+    Observable<CameraFilterRsp> getCameraFilter();
+
+
+    @GET("cameras")
+    Observable<DeviceCameraListRsp> getDeviceCameraListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
+
 }
 

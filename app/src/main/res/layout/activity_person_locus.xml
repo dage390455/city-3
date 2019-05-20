@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:background="@color/white" />
+
+    <include
+        layout="@layout/item_include_text_title"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <com.amap.api.maps.MapView
+            android:id="@+id/mv_ac_person_locus"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+        </com.amap.api.maps.MapView>
+
+        <LinearLayout
+            android:id="@+id/ll_bottom_ac_person_locus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#CFFF"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:layout_alignParentBottom="true">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iv_move_left_ac_person_locus"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="bottom"
+                    android:scaleType="centerInside"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_move_left"
+                    />
+
+                <com.warkiz.widget.IndicatorSeekBar
+                    android:id="@+id/seek_bar_track_ac_person_locus"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    app:isb_indicator_custom_layout="@layout/layout_seekbar_indicator"
+                    app:isb_indicator_stay="true"
+                    app:isb_show_indicator ="true"
+                    app:isb_indicator_type="custom"
+                    app:isb_thumb_drawable="@drawable/seekbar_thumb"
+                    app:isb_thumb_width="20dp"
+                    app:isb_track_background_bar_color="#DBDBDB"
+                    app:isb_track_background_bar_size="2dp"
+                    app:isb_track_progress_bar_color="#119F82"
+                    app:isb_track_progress_bar_size="3dp"
+                    android:visibility="visible"
+                    />
+
+
+                <ImageView
+                    android:id="@+id/iv_move_right_ac_person_locus"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="bottom"
+                    android:scaleType="centerInside"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_move_right"/>
+            </LinearLayout>
+            <TextView
+                android:id="@+id/tv_address_right_ac_person_locus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:textSize="14dp"
+                android:singleLine="true"
+                android:ellipsize="start"
+                android:textColor="@color/c_252525"
+                android:drawableStart="@drawable/person_locus_location_address"
+                android:drawablePadding="18dp"
+                />
+            <TextView
+                android:id="@+id/tv_time_right_ac_person_locus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="58dp"
+                android:textSize="12dp"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/c_a6a6a6"
+                />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_monitor_map_location_ac_person_locus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="6dp"
+            android:layout_marginEnd="6dp"
+            android:padding="10dp"
+            android:visibility="visible"
+            android:contentDescription="@null"
+            android:layout_above="@id/ll_bottom_ac_person_locus"
+            android:src="@drawable/person_locus_location" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="14dp">
+            <TextView
+                android:id="@+id/tv_one_day_ac_person_locus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/one_day"
+                android:textSize="10dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/view_divider_width"
+                android:background="@color/c_dfdfdf"
+                />
+            <TextView
+                android:id="@+id/tv_three_day_ac_person_locus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/three_day"
+                android:textSize="10dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/view_divider_width"
+                android:background="@color/c_dfdfdf"
+                />
+            <TextView
+                android:id="@+id/tv_seven_day_ac_person_locus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/seven_day"
+                android:textSize="10dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/view_divider_width"
+                android:background="@color/c_dfdfdf"
+                />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+
+
+
+
+</LinearLayout>

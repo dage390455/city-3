@@ -37,7 +37,7 @@
                 android:layout_marginLeft="24dp"
                 android:text="@string/alarm_result_type"
                 android:textColor="@color/c_a6a6a6"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
 
             <Spinner
                 android:id="@+id/spinner_result"
@@ -70,7 +70,7 @@
                 android:layout_marginTop="12dp"
                 android:text="@string/alarm_cause_type"
                 android:textColor="@color/c_a6a6a6"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
 
             <Spinner
                 android:id="@+id/spinner_type"
@@ -92,7 +92,7 @@
                 android:layout_marginTop="12dp"
                 android:text="@string/alarm_place"
                 android:textColor="@color/c_a6a6a6"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
 
             <Spinner
                 android:id="@+id/spinner_place"
@@ -121,7 +121,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/remarks"
                     android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <EditText
                     android:id="@+id/alarm_popup_remark"
@@ -139,7 +139,7 @@
                     android:scrollbars="vertical"
                     android:textColor="@color/c_626262"
                     android:textCursorDrawable="@drawable/my_cursor"
-                    android:textSize="14sp" />
+                    android:textSize="14dp" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"

@@ -108,7 +108,7 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeTextTitleTvTitle.setText(mActivity.getString(R.string.contract_detail));
         includeTextTitleTvSubtitle.setText(mActivity.getString(R.string.title_edit));
-        includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_29c093));
+        includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_1dbb99));
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
 
         initRCDevices();
@@ -218,7 +218,7 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
     @Override
     public void setSignStatus(boolean isSigned) {
         acContractDetailTvContractStatus.setText(isSigned ? R.string.signed : R.string.not_signed);
-        acContractDetailTvContractStatus.setTextColor(isSigned ? getResources().getColor(R.color.c_29c093) :
+        acContractDetailTvContractStatus.setTextColor(isSigned ? getResources().getColor(R.color.c_1dbb99) :
                 getResources().getColor(R.color.c_ff8d34));
         acContractDetailLlContractLookQrCode.setVisibility(isSigned ? View.GONE : View.VISIBLE);
         acContractDetailTvContractMore.setVisibility(isSigned ? View.VISIBLE : View.GONE);

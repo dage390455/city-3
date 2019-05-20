@@ -69,7 +69,7 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
                         forceReasonStr = mActivity.getString(R.string.deploy_check_record_reason_nearby) + mActivity.getString(R.string.deploy_check_record_force_tip);
                         break;
                     case "config":
-                        forceReasonStr = mActivity.getString(R.string.deploy_check_record_reason_nearby) + mActivity.getString(R.string.deploy_check_record_force_tip);
+                        forceReasonStr = mActivity.getString(R.string.deploy_check_record_reason_config) + mActivity.getString(R.string.deploy_check_record_force_tip);
                         break;
                     case "signalQuality":
                         if ("bad".equals(signalQuality)) {

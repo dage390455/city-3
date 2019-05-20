@@ -16,8 +16,8 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IWarnFragmentView;
-import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.AlarmPopupModel;
+import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
 import com.sensoro.smartcity.model.EventData;
@@ -85,7 +85,9 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         mContext = (Activity) context;
         onCreate();
         mCalendarPopUtils = new CalendarPopUtils(mContext);
-        mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
+        mCalendarPopUtils
+                .setMonthStatus(1)
+                .setOnCalendarPopupCallbackListener(this);
         if (PreferencesHelper.getInstance().getUserData().hasAlarmInfo) {
             requestSearchData(DIRECTION_DOWN, null);
             mHandler.post(this);

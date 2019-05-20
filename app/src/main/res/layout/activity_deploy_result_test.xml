@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <com.sensoro.smartcity.widget.BoldTextView
         android:id="@+id/ac_deploy_result_title"
@@ -14,64 +15,29 @@
         android:paddingBottom="16dp"
         android:text="@string/deploy_result_confirm_information"
         android:textColor="@color/c_252525"
-        android:textSize="18sp" />
+        android:textSize="18dp" />
 
 
     <View
         android:id="@+id/ac_deploy_result_line"
         android:layout_width="match_parent"
         android:layout_height="@dimen/view_divider_height"
-        android:layout_below="@id/ac_deploy_result_title"
         android:background="@color/c_dfdfdf" />
-
-    <LinearLayout
-        android:id="@+id/ac_deploy_result_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp">
-
-        <TextView
-            android:id="@+id/ac_deploy_result_tv_back_home"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/shape_bg_solid_fa_stroke_df_corner_4dp"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@string/deploy_result_back_home"
-            android:textColor="@color/c_252525"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/ac_deploy_result_tv_continue"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_weight="1"
-            android:background="@drawable/shape_bg_corner_29c_shadow"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@string/deploy_result_continue"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
-    </LinearLayout>
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/ac_deploy_result_bottom"
-        android:layout_below="@id/ac_deploy_result_line"
-        android:layout_centerHorizontal="true">
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="24dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp">
 
             <ImageView
                 android:id="@+id/ac_deploy_result_imv_icon"
@@ -86,8 +52,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="12dp"
-                android:textColor="@color/c_29c093"
-                android:textSize="24sp" />
+                android:textColor="@color/c_1dbb99"
+                android:textSize="24dp" />
 
             <TextView
                 android:id="@+id/ac_deploy_result_tv_state_msg"
@@ -98,22 +64,23 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="20dp"
                 android:gravity="center"
+                android:text="1111"
                 android:textColor="@color/c_a6a6a6"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
 
-            <TextView
-                android:id="@+id/ac_deploy_result_tv_error_msg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="20dp"
-                android:gravity="center"
-                android:text="@string/deploy_result_successed"
-                android:textColor="@color/c_a6a6a6"
-                android:textSize="14sp"
-                android:visibility="gone" />
+            <!--<TextView-->
+                <!--android:id="@+id/ac_deploy_result_tv_error_msg"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:layout_marginStart="20dp"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:layout_marginEnd="20dp"-->
+                <!--android:gravity="center"-->
+                <!--android:text="@string/deploy_result_successed"-->
+                <!--android:textColor="@color/c_a6a6a6"-->
+                <!--android:textSize="14dp"-->
+                <!--android:visibility="gone" />-->
 
             <LinearLayout
                 android:id="@+id/ac_deploy_result_ll_content"
@@ -137,7 +104,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/deploy_result_device_number_sn"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                     <TextView
                         android:id="@+id/ac_deploy_result_tv_sn"
@@ -146,7 +113,7 @@
                         android:layout_marginStart="80dp"
                         android:text="@string/unknown"
                         android:textColor="@color/c_252525"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                 </RelativeLayout>
 
@@ -162,7 +129,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/deploy_result_name"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                     <TextView
                         android:id="@+id/ac_deploy_result_tv_name"
@@ -171,7 +138,7 @@
                         android:layout_marginStart="80dp"
                         android:text="@string/unknown"
                         android:textColor="@color/c_252525"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -186,7 +153,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/deploy_result_contract"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                     <TextView
                         android:id="@+id/ac_deploy_result_tv_contact"
@@ -195,7 +162,7 @@
                         android:layout_marginStart="80dp"
                         android:text="@string/unknown"
                         android:textColor="@color/c_252525"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                 </RelativeLayout>
 
@@ -211,7 +178,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/deploy_record_deploy_we_chat"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                     <TextView
                         android:id="@+id/ac_deploy_result_tv_we_chat"
@@ -220,7 +187,7 @@
                         android:layout_marginStart="80dp"
                         android:text="@string/unknown"
                         android:textColor="@color/c_252525"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                 </RelativeLayout>
 
@@ -244,7 +211,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/deploy_device_detail_deploy_location"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                     <TextView
                         android:id="@+id/ac_deploy_result_tv_address"
@@ -253,7 +220,7 @@
                         android:layout_marginStart="80dp"
                         android:text="@string/unknown"
                         android:textColor="@color/c_252525"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                 </RelativeLayout>
 
@@ -271,7 +238,7 @@
                         android:layout_gravity="center_vertical"
                         android:text="@string/deploy_result_status"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -287,7 +254,7 @@
                             android:layout_gravity="center_vertical"
                             android:drawablePadding="4dp"
                             android:textColor="@color/c_252525"
-                            android:textSize="12sp" />
+                            android:textSize="12dp" />
 
                         <TextView
                             android:id="@+id/ac_deploy_result_tv_status"
@@ -296,8 +263,8 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="12dp"
                             android:text="@string/unknown"
-                            android:textColor="@color/c_29c093"
-                            android:textSize="12sp" />
+                            android:textColor="@color/c_1dbb99"
+                            android:textSize="12dp" />
                     </LinearLayout>
 
 
@@ -315,7 +282,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/initial_configuration"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                     <TextView
                         android:id="@+id/ac_deploy_result_tv_setting"
@@ -324,7 +291,7 @@
                         android:layout_marginStart="80dp"
                         android:text="@string/had_setting_detail"
                         android:textColor="@color/c_252525"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                 </RelativeLayout>
 
@@ -340,7 +307,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/deploy_record_deploy_time"
                         android:textColor="@color/c_a6a6a6"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                     <TextView
                         android:id="@+id/ac_deploy_result_tv_recent_upload_time"
@@ -349,7 +316,7 @@
                         android:layout_marginStart="80dp"
                         android:text="@string/unknown"
                         android:textColor="@color/c_252525"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                 </RelativeLayout>
             </LinearLayout>
@@ -359,5 +326,39 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-</RelativeLayout>
+    <LinearLayout
+        android:id="@+id/ac_deploy_result_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="20dp">
+
+        <TextView
+            android:id="@+id/ac_deploy_result_tv_back_home"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/shape_bg_solid_fa_stroke_df_corner_4dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/deploy_result_back_home"
+            android:textColor="@color/c_252525"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/ac_deploy_result_tv_continue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_bg_corner_29c_shadow"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/deploy_result_continue"
+            android:textColor="@color/white"
+            android:textSize="16dp" />
+    </LinearLayout>
+</LinearLayout>
 

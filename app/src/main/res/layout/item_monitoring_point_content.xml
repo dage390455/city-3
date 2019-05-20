@@ -12,8 +12,8 @@
         android:layout_marginTop="15dp"
         android:layout_marginBottom="15dp"
         android:gravity="bottom"
-        android:textColor="@color/c_29c093"
-        android:textSize="24sp" />
+        android:textColor="@color/c_1dbb99"
+        android:textSize="24dp" />
 
     <TextView
         android:id="@+id/item_monitoring_point_content_tv_name"
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:textColor="@color/c_252525"
-        android:textSize="14sp" />
+        android:textSize="14dp" />
 
     <TextView
         android:id="@+id/item_monitoring_point_content_tv_content"
@@ -35,8 +35,8 @@
         android:layout_toStartOf="@id/item_monitoring_point_content_tv_unit"
         android:layout_toEndOf="@id/item_monitoring_point_content_tv_name"
         android:gravity="end"
-        android:textColor="@color/c_29c093"
-        android:textSize="24sp" />
+        android:textColor="@color/c_1dbb99"
+        android:textSize="24dp" />
 
 
 </RelativeLayout>

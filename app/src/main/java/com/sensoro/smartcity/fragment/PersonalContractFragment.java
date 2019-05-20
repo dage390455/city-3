@@ -81,7 +81,7 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
     @Override
     protected void initData(Context activity) {
         initView();
-        mPresenter.initData(activity,getArguments());
+        mPresenter.initData(activity, getArguments());
     }
 
     private void initView() {
@@ -131,12 +131,13 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
             }
         });
     }
+
     private void handleAgeText(String text, EditText editText) {
         if (!TextUtils.isEmpty(text)) {
             try {
                 int i = Integer.parseInt(text);
                 if (i > 0) {
-                    editText.setTextColor(mRootFragment.getResources().getColor(R.color.c_29c093));
+                    editText.setTextColor(mRootFragment.getResources().getColor(R.color.c_1dbb99));
                 } else {
                     editText.setTextColor(mRootFragment.getResources().getColor(R.color.c_252525));
                 }
@@ -168,7 +169,7 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-        Objects.requireNonNull(mRootFragment.getActivity()).startActivityForResult(intent,requestCode);
+        Objects.requireNonNull(mRootFragment.getActivity()).startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -235,7 +236,7 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
                 mPresenter.doTakePhoto();
                 break;
             case R.id.fg_personal_contract_ll_site_nature:
-                AppUtils.showDialog(mRootFragment.getActivity(),new SelectDialog.SelectDialogListener() {
+                AppUtils.showDialog(mRootFragment.getActivity(), new SelectDialog.SelectDialogListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         setSiteNature(sites.get(position));
@@ -243,22 +244,22 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
                 }, sites);
                 break;
             case R.id.iv_contract_age_del:
-                contractAgeAddOrSubtract(etContractAge,false);
+                contractAgeAddOrSubtract(etContractAge, false);
                 break;
             case R.id.iv_contract_age_add:
-                contractAgeAddOrSubtract(etContractAge,true);
+                contractAgeAddOrSubtract(etContractAge, true);
                 break;
             case R.id.iv_contract_age_first_del:
-                contractAgeAddOrSubtract(etContractAgeFirst,false);
+                contractAgeAddOrSubtract(etContractAgeFirst, false);
                 break;
             case R.id.iv_contract_age_first_add:
-                contractAgeAddOrSubtract(etContractAgeFirst,true);
+                contractAgeAddOrSubtract(etContractAgeFirst, true);
                 break;
             case R.id.iv_contract_age_period_del:
-                contractAgeAddOrSubtract(etContractAgePeriod,false);
+                contractAgeAddOrSubtract(etContractAgePeriod, false);
                 break;
             case R.id.iv_contract_age_period_add:
-                contractAgeAddOrSubtract(etContractAgePeriod,true);
+                contractAgeAddOrSubtract(etContractAgePeriod, true);
                 break;
             case R.id.fg_personal_contract_tv_submit:
                 String partA = fgPersonalContractEtPartA.getText().toString();
@@ -277,21 +278,20 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
         }
     }
 
-    private void contractAgeAddOrSubtract(EditText editText,boolean isAdd) {
+    private void contractAgeAddOrSubtract(EditText editText, boolean isAdd) {
         String contractAgeAdd = editText.getText().toString();
         if (!TextUtils.isEmpty(contractAgeAdd)) {
             int i = Integer.parseInt(contractAgeAdd);
-            if(isAdd){
+            if (isAdd) {
                 if (i >= 1) {
                     i++;
                 }
-            }else{
+            } else {
                 if (i > 1) {
                     i--;
                 }
             }
             editText.setText(String.valueOf(i));
-
         } else {
             editText.setText(String.valueOf(1));
         }
@@ -360,7 +360,7 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
 
     @Override
     public void showSaveSuccessToast() {
-        SensoroSuccessToast.getInstance().showToast(mRootFragment.getActivity(),Toast.LENGTH_SHORT,mRootFragment.getString(R.string.save_success));
+        SensoroSuccessToast.getInstance().showToast(mRootFragment.getActivity(), Toast.LENGTH_SHORT, mRootFragment.getString(R.string.save_success));
     }
 
     @Override

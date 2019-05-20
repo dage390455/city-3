@@ -16,8 +16,8 @@ import com.sensoro.smartcity.activity.WireMaterialDiameterCalculatorActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
-import com.sensoro.smartcity.iwidget.IOnCreate;
-import com.sensoro.smartcity.iwidget.IOnFragmentStart;
+import com.sensoro.common.iwidget.IOnCreate;
+import com.sensoro.common.iwidget.IOnFragmentStart;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.CityObserver;
@@ -60,6 +60,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
             getView().setMerchantVisible(userData.hasSubMerchant || userData.hasControllerAid);
             getView().changeMerchantTitle(userData.hasSubMerchant);
             getView().setSignalCheckVisible(userData.hasSignalCheck);
+            getView().setDeviceCameraVisible(userData.hasDeviceCameraList && chineseLanguage);
         }
     }
 
@@ -211,7 +212,8 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         } else {
             AppUtils.openNetPage(mContext, "https://www.sensoro.com/en/about.html");
         }
-
+//        Intent intent = new Intent(mContext, LineChartActivity2.class);
+//        getView().startAC(intent);
     }
 
     public void doVersionInfo() {

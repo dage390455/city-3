@@ -13,7 +13,7 @@ import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorConfigurationView;
-import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
@@ -141,6 +141,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         int materialValue = 0;
         double diameterValue = 0;
         Integer mEnterValue;
+        Integer inputValue;
         try {
             if (TextUtils.isEmpty(inputCurrent)) {
                 getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.enter_the_correct_number_format));
@@ -151,8 +152,8 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                 return;
             }
             try {
-                int tempValue = Integer.parseInt(inputCurrent);
-                if (tempValue < mMinMaxValue[0] || tempValue > mMinMaxValue[1]) {
+                inputValue = Integer.parseInt(inputCurrent);
+                if (inputValue < mMinMaxValue[0] || inputValue > mMinMaxValue[1]) {
                     getView().toastShort(mActivity.getString(R.string.empty_open_rated_current_is_out_of_range));
                     return;
                 }
@@ -222,6 +223,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                 deployControlSettingData.setSwitchSpec(mEnterValue);
                 deployControlSettingData.setWireDiameter(diameterValue);
                 deployControlSettingData.setWireMaterial(materialValue);
+                deployControlSettingData.setInputValue(inputValue);
                 eventData.data = deployControlSettingData;
                 EventBus.getDefault().post(eventData);
                 getView().finishAc();

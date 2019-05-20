@@ -201,6 +201,12 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     ImageView ivDemoModeTip;
     @BindView(R.id.v_top_margin)
     View vTopMargin;
+    @BindView(R.id.ll_monitor_deploy_cameras)
+    LinearLayout llMonitorDeployCameras;
+    @BindView(R.id.monitor_detail_tv_deploy_cameras)
+    TextView monitorDetailTvDeployCameras;
+    @BindView(R.id.line_monitor_deploy_cameras)
+    View lineMonitorDeployCameras;
     private boolean showDetail = false;
     private MonitoringPointRcContentAdapter mContentAdapter;
     private MonitoringPointRcMalfunctionContentAdapter mContentMalfunctionAdapter;
@@ -684,6 +690,13 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     @Override
+    public void setDeviceCamerasText(String text) {
+        llMonitorDeployCameras.setVisibility(View.VISIBLE);
+        lineMonitorDeployCameras.setVisibility(View.VISIBLE);
+        monitorDetailTvDeployCameras.setText(text);
+    }
+
+    @Override
     public void dismissTipDialog() {
         if (mTipUtils != null) {
             mTipUtils.dismiss();
@@ -856,7 +869,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
 
 
     @OnClick({R.id.include_text_title_tv_subtitle, R.id.ac_monitoring_point_cl_alert_contact, R.id.ac_monitoring_point_imv_location, R.id.ac_monitoring_point_cl_location_navigation,
-            R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left, R.id.ll_elect_more, R.id.ll_all_info, R.id.rl_monitor_device_update, R.id.iv_monitor_device_demo, R.id.rl_monitor_demo_mode_tip})
+            R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left, R.id.ll_elect_more, R.id.ll_all_info, R.id.rl_monitor_device_update, R.id.iv_monitor_device_demo, R.id.rl_monitor_demo_mode_tip, R.id.ll_monitor_deploy_cameras})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
@@ -892,6 +905,9 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             case R.id.iv_monitor_device_demo:
             case R.id.rl_monitor_demo_mode_tip:
                 mPresenter.showDemoModeDialog();
+                break;
+            case R.id.ll_monitor_deploy_cameras:
+                mPresenter.doDeviceGroupCameras();
                 break;
         }
     }

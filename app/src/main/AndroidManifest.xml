@@ -24,6 +24,7 @@
     <uses-permission-sdk-23 android:name="android.permission.INTERNET" />
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission
         android:name="android.permission.CHANGE_CONFIGURATION"
         tools:ignore="ProtectedPermissions" />
@@ -214,7 +215,9 @@
         <activity android:name=".activity.ScanActivity" />
         <activity android:name=".activity.ContractManagerActivity" />
         <activity android:name=".activity.MerchantSwitchActivity" />
-        <activity android:name=".activity.DeployMonitorAlarmContactActivity" />
+        <activity
+            android:name=".activity.DeployMonitorAlarmContactActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activity.DeployMonitorNameAddressActivity" />
         <activity android:name=".activity.DeployResultActivity" />
         <activity android:name=".activity.SearchMonitorActivity" />
@@ -315,7 +318,7 @@
         <!-- <action android:name="com.tencent.mm.plugin.openapi.Intent.ACTION_REFRESH_WXAPP" /> -->
         <!-- </intent-filter> -->
         <!-- </receiver> -->
-        <activity android:name=".activity.DeployRecordActivity"/>
+        <activity android:name=".activity.DeployRecordActivity" />
         <activity android:name=".activity.DeployRecordDetailActivity" />
         <activity android:name=".activity.SignalCheckActivity" />
         <activity android:name=".widget.imagepicker.ui.ImageBaseActivity" />
@@ -359,7 +362,24 @@
         <activity android:name=".activity.DeployRepairInstructionActivity" />
         <activity android:name=".activity.SecurityRisksActivity" />
         <activity android:name=".activity.SecurityRiskTagManagerActivity" />
+        <activity android:name=".temp.CameraTest" />
+        <activity android:name=".temp.RecyclerViewActivity" />
+        <activity android:name=".activity.CameraListActivity" />
+        <activity
+            android:name=".activity.CameraDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+
         <activity android:name=".activity.WireMaterialDiameterCalculatorActivity" />
+        <activity
+            android:name=".activity.CameraPersonLocusActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity android:name=".activity.CameraPersonAvatarHistoryActivity" />
+        <activity
+            android:name=".activity.CameraPersonDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity android:name=".activity.DeployCameraDetailActivity" />
+        <activity android:name=".temp.LineChartActivity2" />
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"

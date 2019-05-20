@@ -2,6 +2,7 @@ package com.sensoro.smartcity.base;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.baidu.mobstat.StatService;
 import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.util.ActivityTaskManager;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.dialog.PermissionDialogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
@@ -37,10 +39,10 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         public void run() {
             boolean hasNo = NotificationManagerCompat.from(mActivity).areNotificationsEnabled();
 //        final NotificationManagerCompat manager = NotificationManagerCompat.from(mActivity);
-//        boolean isOpened = manager.areNotificationsEnabled();
-//        if (!isNotificationEnabled(mActivity) && !isOpened) {
-//            showRationaleDialog();
-//        }
+////        boolean isOpened = manager.areNotificationsEnabled();
+////        if (!isNotificationEnabled(mActivity) && !isOpened) {
+////            showRationaleDialog();
+////        }
             if (!hasNo) {
                 showRationaleDialog();
             }
@@ -75,7 +77,9 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
             mActivity = this;
         }
         permissionDialogUtils = new PermissionDialogUtils(mActivity);
-        setTheme(R.style.MyTheme);
+        if (!setMyCurrentActivityTheme()) {
+            setTheme(R.style.MyTheme);
+        }
         //取消bar
         ActionBar supportActionBar = mActivity.getSupportActionBar();
         if (supportActionBar != null) {
@@ -95,6 +99,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         }
         onCreateInit(savedInstanceState);
         StatService.setDebugOn(true);
+        ActivityTaskManager.getInstance().pushActivity(this);
     }
 
     /**
@@ -103,6 +108,10 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
      * @return
      */
     public boolean isActivityOverrideStatusBar() {
+        return false;
+    }
+
+    public boolean setMyCurrentActivityTheme() {
         return false;
     }
 
@@ -131,6 +140,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         }
         mHandler.removeCallbacksAndMessages(null);
         super.onDestroy();
+        ActivityTaskManager.getInstance().popActivity(this);
     }
 
     @Override
@@ -246,6 +256,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.slide_out, R.anim.slide_right);
+        ActivityTaskManager.getInstance().popActivity(this);
     }
 
     @Override
@@ -258,5 +269,10 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
     public void startActivityForResult(Intent intent, int requestCode) {
         super.startActivityForResult(intent, requestCode);
         overridePendingTransition(R.anim.slide_left, R.anim.slide_out);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 }

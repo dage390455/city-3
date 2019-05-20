@@ -1,219 +1,208 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/c_f4f4f4"
-    >
+    android:background="@color/c_f4f4f4">
+
     <include
         android:id="@+id/ac_inspection_detail_title"
-        layout="@layout/item_include_text_title"/>
+        layout="@layout/item_include_text_title" />
 
     <TextView
         android:id="@+id/ac_inspection_detail_btn_start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:text="@string/inspection_task_detail_start_inspection"
-        android:textSize="16sp"
         android:layout_alignParentBottom="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/shape_bg_corner_29c_shadow"
         android:gravity="center"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        />
+        android:text="@string/inspection_task_detail_start_inspection"
+        android:textColor="@color/white"
+        android:textSize="16dp" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/ac_inspection_detail_title"
         android:layout_above="@id/ac_inspection_detail_btn_start"
-        >
+        android:layout_below="@id/ac_inspection_detail_title"
+        android:layout_marginTop="12dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/white"
             android:layout_below="@id/ac_inspection_detail_title"
-            android:layout_marginTop="12dp">
+            android:background="@color/white"
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                >
+                android:paddingEnd="20dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/inspection_task_detail_task_number"
-                    android:textSize="16sp"
-                    android:textColor="@color/c_252525"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
-                    />
+                    android:text="@string/inspection_task_detail_task_number"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16dp" />
 
                 <TextView
                     android:id="@+id/ac_inspection_detail_task_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:textColor="@color/c_a6a6a6"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    />
+                    android:textColor="@color/c_a6a6a6"
+                    android:textSize="12dp" />
             </RelativeLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_divider_height"
-                android:background="@color/c_dfdfdf"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                />
+                android:background="@color/c_dfdfdf" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                >
+                android:paddingEnd="20dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/inspection_task_detail_inspection_established"
-                    android:textSize="16sp"
-                    android:textColor="@color/c_252525"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
-                    />
+                    android:text="@string/inspection_task_detail_inspection_established"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16dp" />
 
                 <TextView
                     android:id="@+id/ac_inspection_detail_task_tv_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:textColor="@color/c_a6a6a6"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    />
+                    android:textColor="@color/c_a6a6a6"
+                    android:textSize="12dp" />
             </RelativeLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_divider_height"
-                android:background="@color/c_dfdfdf"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                />
+                android:background="@color/c_dfdfdf" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                >
+                android:paddingEnd="20dp">
+
                 <TextView
                     android:id="@+id/ac_inspection_detail_task_tv_device_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/inspection_task_detail_device_counts"
-                    android:textSize="16sp"
-                    android:textColor="@color/c_252525"
                     android:layout_marginTop="16dp"
-
                     android:layout_marginBottom="16dp"
-                    />
+                    android:text="@string/inspection_task_detail_device_counts"
+                    android:textColor="@color/c_252525"
+
+                    android:textSize="16dp" />
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_toEndOf="@id/ac_inspection_detail_task_tv_device_count"
-                    android:layout_marginStart="8dp">
+                    android:layout_marginStart="8dp"
+                    android:layout_toEndOf="@id/ac_inspection_detail_task_tv_device_count">
+
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/ac_inspection_detail_task_rc_device_count_tag"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        >
+                        android:layout_alignParentEnd="true">
 
                     </android.support.v7.widget.RecyclerView>
                 </RelativeLayout>
             </RelativeLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_divider_height"
-                android:background="@color/c_dfdfdf"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                />
+                android:background="@color/c_dfdfdf" />
 
             <RelativeLayout
                 android:id="@+id/ac_inspection_detail_task_rl_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                >
+                android:paddingEnd="20dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/inspection_content"
-                    android:textSize="16sp"
-                    android:textColor="@color/c_252525"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
-                    />
+                    android:text="@string/inspection_content"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/arrows_right"
                     android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:contentDescription="@null"
-                    />
+                    android:src="@drawable/arrows_right" />
             </RelativeLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_divider_height"
-                android:background="@color/c_dfdfdf"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                />
+                android:background="@color/c_dfdfdf" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                >
+                android:paddingEnd="20dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/inspection_task_detail_status"
-                    android:textSize="16sp"
-                    android:textColor="@color/c_252525"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
-                    />
+                    android:text="@string/inspection_task_detail_status"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16dp" />
 
                 <TextView
                     android:id="@+id/ac_inspection_detail_task_tv_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:textColor="@color/c_a6a6a6"
-                    android:drawablePadding="6dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    />
+                    android:drawablePadding="6dp"
+                    android:textColor="@color/c_a6a6a6"
+                    android:textSize="12dp" />
             </RelativeLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
-
 
 
 </RelativeLayout>

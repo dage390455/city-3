@@ -12,7 +12,7 @@
         android:background="@drawable/drawable_dayview_text_bg"
         android:gravity="center"
         android:textColor="@color/color_dayview_text_selector"
-        android:textSize="16sp"
+        android:textSize="16dp"
         tools:text="30" />
 
 </FrameLayout>

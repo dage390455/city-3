@@ -13,10 +13,12 @@ public interface SearchHistoryTypeConstants {
     int TYPE_SEARCH_HISTORY_DEPLOY_ALARM_CONTRACT_NAME = 9;
     int TYPE_SEARCH_HISTORY_DEPLOY_ALARM_CONTRACT_PHONE = 10;
     int TYPE_SEARCH_HISTORY_DEPLOY_TAG = 11;
+    int TYPE_SEARCH_CAMERALIST = 12;
 
     String SEARCH_HISTORY_KEY = "search_history_key";
 
     String SP_FILE_WARN = "search_history_warn";
+    String SP_FILE_SEARCH_CAMERALIST = "search_search_cameralist";
     String SP_FILE_MALFUNCTION = "search_history_malfunction";
     String SP_FILE_INSPECTION = "search_history_inspection";
     String SP_FILE_CONTRACT = "search_history_contract";

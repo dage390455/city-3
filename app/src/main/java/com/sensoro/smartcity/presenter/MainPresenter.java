@@ -23,7 +23,7 @@ import com.sensoro.smartcity.fragment.MalfunctionFragment;
 import com.sensoro.smartcity.fragment.ManagerFragment;
 import com.sensoro.smartcity.fragment.WarnFragment;
 import com.sensoro.smartcity.imainviews.IMainView;
-import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.AlarmDeviceCountsBean;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
 import com.sensoro.smartcity.model.EventData;
@@ -40,6 +40,7 @@ import com.sensoro.smartcity.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.DevicesAlarmPopupConfigRsp;
 import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
+import com.sensoro.smartcity.util.ActivityTaskManager;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -108,16 +109,20 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                         } catch (Throwable throwable) {
                             throwable.printStackTrace();
                         }
-                        reLogin();
+                        reLogin(false);
                         break;
                     case CONNECTIVITY_ACTION:
                         boolean netCanUse = false;
                         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
                         if (manager != null) {
+                            EventData netCanUseData = new EventData();
+                            netCanUseData.code = NetworkInfo;
                             NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
                             if (activeNetwork != null) {
                                 if (activeNetwork.isConnected()) {
                                     if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                                        netCanUseData.data = ConnectivityManager.TYPE_WIFI;
+
                                         netCanUse = true;
                                         try {
                                             LogUtils.loge("CONNECTIVITY_ACTION--->>当前WiFi连接可用 ");
@@ -126,6 +131,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                                         }
                                     } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
                                         netCanUse = true;
+                                        netCanUseData.data = ConnectivityManager.TYPE_MOBILE;
+
                                         try {
                                             LogUtils.loge("CONNECTIVITY_ACTION--->>当前移动网络连接可用 ");
                                         } catch (Throwable throwable) {
@@ -133,6 +140,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                                         }
                                     }
                                 } else {
+                                    netCanUseData.data = -1;
+
                                     try {
                                         LogUtils.loge("CONNECTIVITY_ACTION--->>当前没有网络连接，请确保你已经打开网络 ");
                                         LogUtils.loge("CONNECTIVITY_ACTION--->>info.getTypeName()" + activeNetwork.getTypeName());
@@ -148,13 +157,17 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                                 }
 
                             } else {   // not connected to the internet
+                                netCanUseData.data = -1;
+
                                 try {
                                     LogUtils.loge("CONNECTIVITY_ACTION--->>当前没有网络连接，请确保你已经打开网络 ");
                                 } catch (Throwable throwable) {
                                     throwable.printStackTrace();
                                 }
                             }
+                            EventBus.getDefault().post(netCanUseData);
                         }
+
                         if (netCanUse) {
                             if (!isFirst) {
                                 ThreadPoolManager.getInstance().execute(new Runnable() {
@@ -191,16 +204,21 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     /**
      * 检测到语言变化重新登录
      */
-    private void reLogin() {
-        RetrofitServiceHelper.getInstance().cancelAllRsp();
-        RetrofitServiceHelper.getInstance().clearLoginDataSessionId();
-        Intent intent = new Intent(mContext, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        mContext.startActivity(intent);
-        // 杀掉进程
-        android.os.Process.killProcess(android.os.Process.myPid());
-        System.exit(0);
-
+    private void reLogin(boolean isCrash) {
+        if (isAttachedView()) {
+            RetrofitServiceHelper.getInstance().cancelAllRsp();
+            RetrofitServiceHelper.getInstance().clearLoginDataSessionId();
+            Intent intent = new Intent(mContext, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            if (isCrash) {
+                // 杀掉进程
+                ActivityTaskManager.getInstance().AppExit(mContext);
+            } else {
+                // 清除activity
+                ActivityTaskManager.getInstance().finishAllActivity();
+            }
+            mContext.startActivity(intent);
+        }
     }
 
     @Override
@@ -214,6 +232,13 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         }
         //保存一遍当前的版本信息
         PreferencesHelper.getInstance().saveCurrentVersionCode(AppUtils.getVersionCode(mContext));
+//        if (true){
+//            Intent intent = new Intent(mContext, RecyclerViewActivity.class);
+//            getView().startAC(intent);
+//            getView().finishAc();
+//            return;
+//        }
+        //
         initViewPager();
         mHandler.postDelayed(new Runnable() {
             @Override
@@ -548,6 +573,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             });
             mHandler.postDelayed(mNetWorkTaskRunnable, 30 * 1000);
         }
+
     }
 
     private void createSocket() {
@@ -709,8 +735,16 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         Object data = eventData.data;
         switch (code) {
             case EVENT_DATA_SESSION_ID_OVERTIME:
-                RetrofitServiceHelper.getInstance().cancelAllRsp();
-                reLogin();
+                reLogin(false);
+                break;
+            case EVENT_DATA_APP_CRASH:
+                //APP 崩溃
+                try {
+                    LogUtils.loge("app crash ------>>>> EVENT_DATA_APP_CRASH");
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+                reLogin(true);
                 break;
             case EVENT_DATA_DEPLOY_RESULT_FINISH:
                 getView().setBottomBarSelected(0);

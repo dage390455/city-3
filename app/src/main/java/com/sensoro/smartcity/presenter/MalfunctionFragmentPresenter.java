@@ -12,7 +12,7 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IMalfunctionFragmentView;
-import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
@@ -49,7 +49,8 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
         mContext = (Activity) context;
         onCreate();
         mCalendarPopUtils = new CalendarPopUtils(mContext);
-        mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
+        mCalendarPopUtils.setMonthStatus(1)
+                .setOnCalendarPopupCallbackListener(this);
         List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION);
         if (list != null) {
             mSearchHistoryList.addAll(list);

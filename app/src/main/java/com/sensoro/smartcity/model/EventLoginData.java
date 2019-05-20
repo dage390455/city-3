@@ -33,6 +33,7 @@ public final class EventLoginData implements Serializable {
     public boolean hasDeviceDemoMode = false;
     public boolean needAuth = false;
     public boolean hasControllerAid = false;
+    public boolean hasDeviceCameraList = false;
 
     @Override
     public String toString() {
@@ -67,6 +68,7 @@ public final class EventLoginData implements Serializable {
                 ", hasDeviceDemoMode=" + hasDeviceDemoMode +
                 ", needAuth=" + needAuth +
                 ", hasControllerAid=" + hasControllerAid +
+                ", hasDeviceCameraList=" + hasDeviceCameraList +
                 '}';
     }
 }

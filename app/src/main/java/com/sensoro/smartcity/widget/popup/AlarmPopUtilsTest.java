@@ -393,7 +393,7 @@ public class AlarmPopUtilsTest implements Constants,
         tvAlarmPopupDeviceType.setText(type);
         tvAlarmPopupDate.setText(DateUtil.getStrTimeTodayByDevice(mActivity, mAlarmPopupModel.updateTime));
         if (1 == mAlarmPopupModel.alarmStatus) {
-            tvAlarmPopupStatus.setTextColor(mActivity.getResources().getColor(R.color.c_29c093));
+            tvAlarmPopupStatus.setTextColor(mActivity.getResources().getColor(R.color.c_1dbb99));
             tvAlarmPopupStatus.setText(mActivity.getString(R.string.normal));
         } else {
             tvAlarmPopupStatus.setTextColor(mActivity.getResources().getColor(R.color.color_alarm_pup_red));

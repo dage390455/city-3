@@ -44,13 +44,16 @@ public class UserPermissionFactory {
         eventLoginData.hasMalfunction = getHasMalfunction(grants);
         eventLoginData.hasDeviceBrief = getHasDeviceBriefList(grants);
         eventLoginData.hasSignalCheck = getHasSignalCheck(grants);
-        eventLoginData.hasSignalConfig = getHasSignalConfig(grants);
+        //TODO 统一去掉信号配置
+//        eventLoginData.hasSignalConfig = getHasSignalConfig(grants);
+        eventLoginData.hasSignalConfig = false;
         eventLoginData.hasBadSignalUpload = getHasBadSignalUpload(grants);
         eventLoginData.hasDevicePositionCalibration = getHasDevicePositionCalibration(grants);
         eventLoginData.hasDeviceMuteShort = getHasMuteShort(grants);
         eventLoginData.hasDeviceMuteLong = getHasMuteLong(grants);
         eventLoginData.hasDeviceFirmwareUpdate = getHasDeviceFirmUpdate(grants);
         eventLoginData.hasDeviceDemoMode = getHasDeviceDemoMode(grants);
+        eventLoginData.hasDeviceCameraList = getHasDeviceCameraList(grants);
         String controllerAid = userInfo.getControllerAid();
         //通过controllerAid来判断是否可以返回主账户
         eventLoginData.hasControllerAid = !TextUtils.isEmpty(controllerAid);
@@ -429,6 +432,22 @@ public class UserPermissionFactory {
             List<String> grantsDevice = grants.getDevice();
             if (grantsDevice != null) {
                 return grantsDevice.contains("demo");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 用户是否有摄像头list权限
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasDeviceCameraList(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsCamera = grants.getCamera();
+            if (grantsCamera != null) {
+                return grantsCamera.contains("list");
             }
         }
         return false;

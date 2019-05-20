@@ -18,6 +18,7 @@ import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
+import com.sensoro.smartcity.server.response.CameraFilterRsp;
 import com.sensoro.smartcity.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractInfoRsp;
@@ -29,6 +30,11 @@ import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmTimeRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraDetailRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraFacePicListRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraHistoryRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraListRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraPersonFaceRsp;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
@@ -1593,6 +1599,161 @@ public class RetrofitServiceHelper {
      */
     public Observable<DevicesAlarmPopupConfigRsp> getDevicesAlarmPopupConfig() {
         return retrofitService.getDevicesAlarmPopupConfig();
+    }
+
+    /**
+     * 通过sn获取摄像头详情
+     *
+     * @param sn
+     * @return
+     */
+    public Observable<DeviceCameraDetailRsp> getDeviceCamera(String sn) {
+        return retrofitService.getDeviceCamera(sn);
+    }
+
+    /**
+     * 获取用户下摄像头列表
+     *
+     * @param pageSize
+     * @param page
+     * @param search
+     * @return
+     */
+    public Observable<DeviceCameraListRsp> getDeviceCameraList(Integer pageSize, Integer page, String search) {
+        return retrofitService.getDeviceCameraList(pageSize, page, search);
+    }
+
+    /**
+     * 获取用户下全量摄像头列表
+     *
+     * @return
+     */
+    public Observable<ResponseBase> getDeviceCameraMapList() {
+        return retrofitService.getDeviceCameraMapList();
+    }
+
+    /**
+     * 获取摄像头详情
+     *
+     * @param pageSize
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    public Observable<DeviceCameraFacePicListRsp> getDeviceCameraFaceList(List<String> cids, Integer pageSize, Integer limit, String minID, String startTime, String endTime) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (cids != null && cids.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (String cid : cids) {
+                    jsonArray.put(cid);
+                }
+                jsonObject.put("cids", jsonArray);
+            }
+            if (pageSize != null) {
+                jsonObject.put("pageSize", pageSize);
+            }
+            if (limit != null) {
+                jsonObject.put("limit", limit);
+            }
+            if (minID != null) {
+                jsonObject.put("minId", minID);
+            }
+
+            if (!TextUtils.isEmpty(startTime)) {
+                jsonObject.put("startTime", startTime);
+            }
+            if (!TextUtils.isEmpty(endTime)) {
+                jsonObject.put("endTime", endTime);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.getDeviceCameraFaceList(body);
+    }
+
+    public Observable<DeviceCameraHistoryRsp> getDeviceCameraPlayHistoryAddress(String cid, String beginTime, String endTime, String mediaType) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(cid)) {
+                jsonObject.put("cid", cid);
+            }
+
+            if (!TextUtils.isEmpty(beginTime)) {
+                jsonObject.put("beginTime", beginTime);
+            }
+            if (!TextUtils.isEmpty(endTime)) {
+                jsonObject.put("endTime", endTime);
+            }
+            if (!TextUtils.isEmpty(mediaType)) {
+                jsonObject.put("mediaType", mediaType);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.getDeviceCameraPlayHistoryAddress(body);
+    }
+
+    public Observable<DeviceCameraListRsp> getDeviceGroupCameraList(String _id, Integer pageSize, Integer page, String search) {
+        return retrofitService.getDeviceGroupCameraList(_id, pageSize, page, search);
+    }
+
+    public Observable<DeviceCameraPersonFaceRsp> getDeviceCameraPersonFace(String id,
+                                                                           Long startTime, Long endTime,
+                                                                           Integer score, Integer offset, Integer limit, List<String> cameraIds) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(id)) {
+                jsonObject.put("id", id);
+            }
+
+            if (startTime != null) {
+                jsonObject.put("startTime", startTime);
+            }
+
+            if (endTime != null) {
+                jsonObject.put("endTime", endTime);
+            }
+
+            if (offset != null) {
+                jsonObject.put("offset", offset);
+            }
+
+            if (limit != null) {
+                jsonObject.put("limit", limit);
+            }
+
+            if (score != null) {
+                jsonObject.put("score", score);
+            }
+
+            if (cameraIds != null && cameraIds.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (String cameraId : cameraIds) {
+                    jsonArray.put(cameraId);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.getDeviceCameraPersonFace(requestBody);
+
+    }
+
+    /**
+     * 100.026 获取安装方式和朝向选择字典
+     *
+     * @return
+     */
+    public Observable<CameraFilterRsp> getCameraFilter() {
+        return retrofitService.getCameraFilter();
+    }
+
+    public Observable<DeviceCameraListRsp> getDeviceCameraListByFilter(Integer pageSize, Integer page, String search, Map<String, String> mapFilter) {
+        return retrofitService.getDeviceCameraListByFilter(pageSize, page, search, mapFilter);
     }
 
 

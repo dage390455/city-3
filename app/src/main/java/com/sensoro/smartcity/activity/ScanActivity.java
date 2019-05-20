@@ -74,8 +74,10 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
         viewFinderView = new ViewFinderView(mActivity);
         zBarScannerView = new ZBarScannerView(mActivity, viewFinderView, this);
         scanQrViewRoot.addView(zBarScannerView);
-        ArrayList<BarcodeFormat> formats = new ArrayList<>(1);
+        ArrayList<BarcodeFormat> formats = new ArrayList<>(2);
         formats.add(BarcodeFormat.QRCODE);
+        //支持code39的条形码扫描
+        formats.add(BarcodeFormat.CODE39);
         zBarScannerView.setFormats(formats);
 
     }
