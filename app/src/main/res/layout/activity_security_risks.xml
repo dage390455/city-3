@@ -88,7 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/main_page_manage"
-            android:textColor="@color/c_29c093"
+            android:textColor="@color/c_1dbb99"
             android:textSize="14sp"
             app:layout_constraintTop_toTopOf="@id/tv_name_ac_security_risks"
             app:layout_constraintBottom_toBottomOf="@id/tv_name_ac_security_risks"

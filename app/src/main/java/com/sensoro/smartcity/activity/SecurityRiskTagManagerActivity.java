@@ -50,7 +50,7 @@ public class SecurityRiskTagManagerActivity extends BaseActivity<ISecurityRiskTa
 
     private void initView() {
         includeTextTitleTvSubtitle.setText(mActivity.getString(R.string.save));
-        includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_29c093));
+        includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_1dbb99));
 
         initLocationAdapter();
 

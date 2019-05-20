@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:text="@string/determine"
-            android:textColor="@color/c_29c093"
+            android:textColor="@color/c_1dbb99"
             android:textSize="14dp"
             android:padding="12dp"
             />

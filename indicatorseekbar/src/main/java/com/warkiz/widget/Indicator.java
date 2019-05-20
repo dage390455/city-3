@@ -266,7 +266,10 @@ public class Indicator {
 //        mIndicatorText.getParent().setVisibility(visible);
 //        mIndicator.dismiss();
 //        forceHide();
-        mIndicatorView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        if (mIndicatorView!= null) {
+            mIndicatorView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+
+        }
 
     }
 

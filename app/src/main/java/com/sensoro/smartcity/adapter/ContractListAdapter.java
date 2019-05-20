@@ -98,7 +98,7 @@ public class ContractListAdapter extends RecyclerView.Adapter<ContractListAdapte
 
         if (contractListInfo.isConfirmed()) {
             holder.tvContactsMangerStatus.setText(R.string.signed);
-            holder.tvContactsMangerStatus.setTextColor(mContext.getResources().getColor(R.color.c_29c093));
+            holder.tvContactsMangerStatus.setTextColor(mContext.getResources().getColor(R.color.c_1dbb99));
             holder.tvContactsMangerStatus.setBackgroundResource(R.drawable.shape_bg_stroke_1_29c_full_corner);
             holder.tvContactsMangerTime.setText(R.string.contract_signed_time);
             String confirmTime = contractListInfo.getConfirmTime();

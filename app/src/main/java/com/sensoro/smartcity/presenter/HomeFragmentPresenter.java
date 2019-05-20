@@ -1050,7 +1050,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 case 0:
                     return R.color.c_f34a4a;
                 case 1:
-                    return R.color.c_29c093;
+                    return R.color.c_1dbb99;
                 case 2:
                     return R.color.c_5d5d5d;
                 case 3:
@@ -1061,6 +1061,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return R.color.c_29c093;
+        return R.color.c_1dbb99;
     }
 }

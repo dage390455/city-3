@@ -9,11 +9,7 @@ import com.sensoro.smartcity.server.bean.DeviceCameraInfo;
 import java.util.List;
 
 public interface ICameraListActivityView extends IToast, IProgressDialog, IActivityIntent {
-    void showCalendar(long startTime, long endTime);
-
     void updateDeviceCameraAdapter(List<DeviceCameraInfo> data);
-
-    void updateFilterPop(List<CameraFilterModel> data);
 
     void onPullRefreshCompleteNoMoreData();
 
@@ -24,6 +20,7 @@ public interface ICameraListActivityView extends IToast, IProgressDialog, IActiv
     void setDateSelectText(String text);
 
     void setNoContentVisible(boolean isVisible);
+
     void setSmartRefreshEnable(boolean enable);
 
 
@@ -40,4 +37,12 @@ public interface ICameraListActivityView extends IToast, IProgressDialog, IActiv
     void resetRefreshNoMoreData();
 
     void setTopTitleState();
+
+    void showCameraListFilterPopupWindow(List<CameraFilterModel> data);
+
+    void dismissCameraListFilterPopupWindow();
+
+    void updateCameraListFilterPopupWindowStatusList(List<CameraFilterModel> list);
+
+    void setCameraListFilterPopupWindowSelectState(boolean hasSelect);
 }

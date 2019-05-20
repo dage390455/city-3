@@ -37,6 +37,8 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 getView().setDeployResultBackHomeText(mContext.getString(R.string.deploy_result_back_home));
                 break;
             case DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED:
+                getView().setTitleText(mContext.getString(R.string.scan_code_failed));
+                getView().setStateTextViewVisible(false);
                 switch (deployResultModel.scanType) {
                     case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
                         getView().setDeployResultContinueText(mContext.getString(R.string.continue_to_replace));
@@ -48,16 +50,17 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                         getView().setDeployResultBackHomeText(mContext.getString(R.string.back));
                         break;
                     case TYPE_SCAN_SIGNAL_CHECK:
-                        getView().setStateTextViewVisible(false);
                         getView().setDeployResultContinueText(mContext.getString(R.string.rescan_code));
-                        getView().setTitleText(mContext.getString(R.string.scan_code_failed));
                         break;
                 }
                 break;
             case DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT:
                 //失败
+                getView().setTitleText(mContext.getString(R.string.scan_code_failed));
+                getView().setStateTextViewVisible(false);
                 switch (deployResultModel.scanType) {
                     case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+
                         getView().setDeployResultContinueText(mContext.getString(R.string.continue_to_replace));
                         getView().setDeployResultBackHomeText(mContext.getString(R.string.continue_inspection));
                         break;
@@ -67,7 +70,6 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                         getView().setDeployResultBackHomeText(mContext.getString(R.string.back));
                         break;
                     case TYPE_SCAN_SIGNAL_CHECK:
-                        getView().setStateTextViewVisible(false);
                         getView().setDeployResultContinueText(mContext.getString(R.string.rescan_code));
                         getView().setTitleText(mContext.getString(R.string.scan_code_failed));
                         break;
@@ -120,7 +122,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                                     .tips_deploy_not_exist);
                             break;
                     }
-                    getView().setTipsTextView(text);
+                    getView().setTipsTextView(text, R.color.c_252525);
                     break;
                 case DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED:
                     getView().setResultImageView(R.drawable.deploy_fail);
@@ -130,7 +132,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                     if (!TextUtils.isEmpty(deployResultModel.sn)) {
                         getView().setSnTextView(deployResultModel.sn);
                     }
-                    getView().setTipsTextView(deployResultModel.errorMsg);
+                    getView().setTipsTextView(deployResultModel.errorMsg, R.color.c_a6a6a6);
                     break;
                 case DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS:
                     //成功
@@ -144,7 +146,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                     if (!TextUtils.isEmpty(deployResultModel.sn)) {
                         getView().setSnTextView(deployResultModel.sn);
                     }
-                    getView().setTipsTextView(mContext.getResources().getString(R.string.unknown_error));
+                    getView().setTipsTextView(mContext.getResources().getString(R.string.unknown_error), R.color.c_a6a6a6);
                     break;
             }
 
@@ -158,7 +160,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
             if (!TextUtils.isEmpty(deployResultModel.sn)) {
                 getView().setSnTextView(deployResultModel.sn);
             }
-            getView().setTipsTextView(mContext.getResources().getString(R.string.tips_data_error));
+            getView().setTipsTextView(mContext.getResources().getString(R.string.tips_data_error),R.color.c_a6a6a6);
         }
 
     }
@@ -169,9 +171,9 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
             case TYPE_SCAN_DEPLOY_STATION:
                 getView().setResultImageView(R.drawable.deploy_succeed);
                 getView().setStateTextView(mContext.getString(R.string.success));
-                getView().setDeployResultTvStateTextColor(R.color.c_29c093);
+                getView().setDeployResultTvStateTextColor(R.color.c_1dbb99);
                 getView().setTipsTextView(mContext.getResources().getString(R.string
-                        .tips_deploy_station_success));
+                        .tips_deploy_station_success), R.color.c_a6a6a6);
                 if (!TextUtils.isEmpty(deployResultModel.sn)) {
                     getView().setSnTextView(deployResultModel.sn);
                 }
@@ -205,8 +207,8 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 //TODO 巡检设备更换
                 getView().setResultImageView(R.drawable.deploy_succeed);
                 getView().setStateTextView(mContext.getString(R.string.success));
-                getView().setDeployResultTvStateTextColor(R.color.c_29c093);
-                getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_success));
+                getView().setDeployResultTvStateTextColor(R.color.c_1dbb99);
+                getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_success),R.color.c_a6a6a6);
                 if (!TextUtils.isEmpty(deployResultModel.sn)) {
                     getView().setSnTextView(deployResultModel.sn);
                 }
@@ -254,7 +256,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                             mContext.getResources().getColor(Constants.DEVICE_STATUS_COLOR_ARRAY[deployResultModel.deviceStatus]));
                 } else {
                     getView().setStatusTextView(mContext.getString(R.string.normal),
-                            mContext.getResources().getColor(R.color.c_29c093));
+                            mContext.getResources().getColor(R.color.c_1dbb99));
                 }
                 if (deployResultModel.deployTime == null) {
                     getView().setUpdateTextView(DateUtil.getStrTimeToday(mContext, System.currentTimeMillis(), 0));
@@ -289,14 +291,14 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
             case TYPE_SCAN_DEPLOY_STATION:
                 getView().setResultImageView(R.drawable.deploy_fail);
                 getView().setTipsTextView(mContext.getResources().getString(R.string
-                        .tips_deploy_station_failed));
+                        .tips_deploy_station_failed),R.color.c_a6a6a6);
                 getView().setStateTextView(mContext.getString(R.string.failed));
                 getView().setDeployResultTvStateTextColor(R.color.c_f34a4a);
                 if (!TextUtils.isEmpty(deployResultModel.sn)) {
                     getView().setSnTextView(deployResultModel.sn);
                 }
                 if (!TextUtils.isEmpty(deployResultModel.errorMsg)) {
-                    getView().setDeployResultErrorInfo(mContext.getString(R.string.reason) + "：" + deployResultModel.errorMsg);
+                    getView().setTipsTextView(mContext.getString(R.string.reason) + "：" + deployResultModel.errorMsg,R.color.c_a6a6a6);
                 }
                 if (!TextUtils.isEmpty(deployResultModel.name)) {
                     getView().setNameTextView(deployResultModel.name);
@@ -327,12 +329,12 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 getView().setResultImageView(R.drawable.deploy_fail);
                 getView().setStateTextView(mContext.getString(R.string.failed));
                 getView().setDeployResultTvStateTextColor(R.color.c_f34a4a);
-                getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_failed));
+                getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_failed),R.color.c_a6a6a6);
                 if (!TextUtils.isEmpty(deployResultModel.sn)) {
                     getView().setSnTextView(deployResultModel.sn);
                 }
                 if (!TextUtils.isEmpty(deployResultModel.errorMsg)) {
-                    getView().setDeployResultErrorInfo(mContext.getString(R.string.reason) + "：" + deployResultModel.errorMsg);
+                    getView().setTipsTextView(mContext.getString(R.string.reason) + "：" + deployResultModel.errorMsg,R.color.c_a6a6a6);
                 }
                 if (!TextUtils.isEmpty(deployResultModel.name)) {
                     getView().setNameTextView(deployResultModel.name);
@@ -378,7 +380,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                             mContext.getResources().getColor(Constants.DEVICE_STATUS_COLOR_ARRAY[deployResultModel.deviceStatus]));
                 } else {
                     getView().setStatusTextView(mContext.getString(R.string.normal),
-                            mContext.getResources().getColor(R.color.c_29c093));
+                            mContext.getResources().getColor(R.color.c_1dbb99));
                 }
                 getView().refreshSignal(deployResultModel.updateTime, deployResultModel.signal);
                 //TODO 当前的部署时间需要更换

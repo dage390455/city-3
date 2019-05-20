@@ -83,7 +83,7 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
     private void initView() {
         includeTextTitleTvTitle.setText(mActivity.getString(R.string.security_risks));
         includeTextTitleTvSubtitle.setText(mActivity.getString(R.string.save));
-        includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_29c093));
+        includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_1dbb99));
 
         tagDialogUtils = new TagDialogUtils(mActivity);
         tagDialogUtils.registerListener(mPresenter);

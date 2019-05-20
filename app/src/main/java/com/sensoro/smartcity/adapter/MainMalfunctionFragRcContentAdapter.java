@@ -65,7 +65,7 @@ public class MainMalfunctionFragRcContentAdapter extends RecyclerView.Adapter<Ma
         switch (malfunctionListInfo.getMalfunctionStatus()) {
             case 1:
                 holder.mainMalfunctionRcContentTvState.setText(mContext.getString(R.string.fg_malfunction_back_to_normal));
-                setTextColor(holder, R.color.c_29c093);
+                setTextColor(holder, R.color.c_1dbb99);
                 break;
             case 2:
                 holder.mainMalfunctionRcContentTvState.setText(mContext.getString(R.string.fg_malfunction_malfunctioning));

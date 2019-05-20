@@ -64,9 +64,9 @@ public interface Constants {
 //    //
 //    int LEFT_MENU_ICON_UNSELECT_SUPPER = R.mipmap.ic_menu_switch;
     int[] DEVICE_STATUS_ARRAY = {R.string.main_page_warn, R.string.normal, R.string.status_lost, R.string.status_inactive, R.string.status_malfunction};
-    int[] DEVICE_STATUS_COLOR_ARRAY = {R.color.c_f34a4a, R.color.c_29c093, R.color.c_5d5d5d, R.color.c_b6b6b6, R.color.c_fdc83b};
+    int[] DEVICE_STATUS_COLOR_ARRAY = {R.color.c_f34a4a, R.color.c_1dbb99, R.color.c_5d5d5d, R.color.c_b6b6b6, R.color.c_fdc83b};
     int[] STATION_STATUS_ARRAY = {R.string.status_inactive, R.string.normal, R.string.status_alarm_true, R.string.status_emergency_alarm, R.string.status_timeout_not_reported, R.string.status_offline, R.string.status_malfunction};
-    int[] STATION_STATUS_COLOR_ARRAY = {R.color.c_b6b6b6, R.color.c_29c093, R.color.c_f34a4a, R.color.c_f34a4a, R.color.c_5d5d5d, R.color.c_5d5d5d, R.color.c_fdc83b};
+    int[] STATION_STATUS_COLOR_ARRAY = {R.color.c_b6b6b6, R.color.c_1dbb99, R.color.c_f34a4a, R.color.c_f34a4a, R.color.c_5d5d5d, R.color.c_5d5d5d, R.color.c_fdc83b};
     String[] INDEX_STATUS_ARRAY = {"全部状态", "预警", "正常", "失联", "未激活"};
     int[] INDEX_STATUS_VALUES = {0, 1, 2, 3};
     //    String[] INDEX_TYPE_ARRAY = {
@@ -176,7 +176,7 @@ public interface Constants {
     //巡检任务异常标签
     int[] INSPECTION_EXCEPTION_TAGS = {R.string.inspection_exception_tag_equipment_disassembly, R.string.inspection_exception_tag_low_battery, R.string.inspection_exception_tag_device_exception, R.string.inspection_exception_tag_sensor_anomaly, R.string.inspection_exception_tag_damaged_indicator, R.string.inspection_exception_tag_screen_damage, R.string.inspection_exception_tag_button_damage, R.string.inspection_exception_tag_appearance_damage, R.string.inspection_exception_tag_device_lost, R.string.inspection_exception_tag_bluetooth_exception, R.string.inspection_exception_tag_loose_equipment};
     //巡检任务状态颜色值及对应文本
-    int[] INSPECTION_STATUS_COLORS = {R.color.c_8058a5, R.color.c_3aa7f0, R.color.c_ff8d34, R.color.c_29c093, R.color.c_a6a6a6};
+    int[] INSPECTION_STATUS_COLORS = {R.color.c_8058a5, R.color.c_3aa7f0, R.color.c_ff8d34, R.color.c_1dbb99, R.color.c_a6a6a6};
     int[] INSPECTION_STATUS_TEXTS = {R.string.inspection_status_text_pending_execution, R.string.inspection_status_text_executing, R.string.inspection_status_text_timeout_not_completed, R.string.inspection_status_text_completed, R.string.inspection_status_text_timeout_completed};
     //
     String EXTRA_USER_ID = "extra_user_id";
