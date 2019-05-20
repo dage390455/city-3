@@ -660,7 +660,8 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         if (view.getVisibility() != View.VISIBLE) return;
 
 
-        //选中的高亮和顶部同时消失
+        //选中的高亮和顶部同时消失，高亮没有复位。只是位置消失了，LineChartRenderer  drawHighlightLines
+
         view.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -691,7 +692,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
 
             }
-        }, 1000);
+        }, 500);
 
     }
 
