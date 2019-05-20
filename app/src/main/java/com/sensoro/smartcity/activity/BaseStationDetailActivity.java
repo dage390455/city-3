@@ -144,7 +144,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         Date date = new Date(lt);
         time = simpleDateFormat.format(date);
 
-        Log.d("stampToDate", "----->stampToDate: " + time + "=====" + lt);
+//        Log.d("stampToDate", "----->stampToDate: " + time + "=====" + lt);
 
         return time;
     }
@@ -383,20 +383,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         chart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
             public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-                final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
-                final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
-//                if (me.getAction() == MotionEvent.ACTION_DOWN) {
-//
-//
-//                    set1.setDrawVerticalHighlightIndicator(true);
-//
-//
-//                    set2.setDrawVerticalHighlightIndicator(true);
-//                }
-//                if (topStateRl.getVisibility() == View.GONE) {
-//                    topStateRl.setVisibility(View.VISIBLE);
-//
-//                }
+                Log.i("====onChartGestureStart", "=====" + me.getAction());
 
 
                 fadeIn(topStateRl);
@@ -405,22 +392,9 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
             @Override
             public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-                final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
-                final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
-
-//                if (me.getAction() == MotionEvent.ACTION_UP || me.getAction() == MotionEvent.ACTION_CANCEL) {
-////
-//                    set1.setDrawHighlightIndicators(false);
-//                    set2.setDrawHighlightIndicators(false);
-//
-//                }
-
+                Log.i("====onChartGestureEnd", "=====" + me.getAction());
 
                 fadeOut(topStateRl);
-
-//                if (topStateRl.getVisibility() == View.VISIBLE) {
-//                    topStateRl.setVisibility(View.GONE);
-//                }
             }
 
             @Override
@@ -431,11 +405,13 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
             @Override
             public void onChartDoubleTapped(MotionEvent me) {
+                Log.i("====onChartDoubleTapped", "=====" + me.getAction());
 
             }
 
             @Override
             public void onChartSingleTapped(MotionEvent me) {
+                Log.i("====onChartSingleTapped", "=====" + me.getAction());
 
             }
 
@@ -536,14 +512,9 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
             set1.setDrawVerticalHighlightIndicator(true);
             set1.setDrawHorizontalHighlightIndicator(false);
-            //set1.setFillFormatter(new MyFillFormatter(0f));
-            //set1.setDrawHorizontalHighlightIndicator(false);
-            //set1.setVisible(false);
-            //set1.setCircleHoleColor(Color.WHITE);
 
             // create a dataset and give it a type
             set2 = new LineDataSet(values2, "DataSet 2");
-//            set2.setAxisDependency(AxisDependency.RIGHT);
             set2.setLineWidth(2f);
             set2.setFillAlpha(65);
             set2.setHighLightColor(Color.BLACK);
@@ -579,19 +550,15 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
-        Log.i("e=====Entry selected", e.toString());
-
-
-        Log.i("h=====Entry selected", h.toString());
+//        Log.i("e=====Entry selected", e.toString());
+//
+//
+//        Log.i("h=====Entry selected", h.toString());
 
 
         chart.centerViewToAnimated(e.getX(), e.getY(), chart.getData().getDataSetByIndex(h.getDataSetIndex())
                 .getAxisDependency(), 500);
 
-
-//        ILineDataSet dataSetByIndex1 = chart.getData().getDataSetByIndex(h.getDataSetIndex());
-//
-//        Log.i("list===Entry selected", dataSetByIndex1.toString());
 
         time_tv.setText(stampToDate(Float.toString(e.getX())));
 
@@ -630,6 +597,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
         } else if (dataSetIndex == 1) {
             LineDataSet dataSetByIndex = (LineDataSet) chart.getData().getDataSetByIndex(0);
+            //防止多个相同的x坐标黑点绘制多次
             boolean setIcon = false;
 
 
@@ -674,8 +642,6 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     }
 
     public void fadeIn(final View view, final float startAlpha, final float endAlpha, final long duration) {
-        if (view.getVisibility() == View.VISIBLE) return;
-
 
         final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
         final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
@@ -683,6 +649,11 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 //
 //
         set2.setDrawVerticalHighlightIndicator(true);
+
+        chart.invalidate();
+        if (view.getVisibility() == View.VISIBLE) return;
+
+
         view.setVisibility(View.VISIBLE);
         Animation animation = new AlphaAnimation(startAlpha, endAlpha);
         animation.setDuration(duration);
@@ -694,16 +665,14 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     public void fadeIn(View view) {
         fadeIn(view, 0F, 1F, 400);
 
-        // We disabled the button in fadeOut(), so enable it here.
         view.setEnabled(true);
     }
 
     public void fadeOut(final View view) {
         if (view.getVisibility() != View.VISIBLE) return;
 
-        // Since the button is still clickable before fade-out animation
-        // ends, we disable the button first to block click.
 
+        //选中的高亮和顶部同时消失
         view.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -724,6 +693,8 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
                 for (int i = 0; i < set2.getValues().size(); i++) {
                     set2.getValues().get(i).setIcon(null);
                 }
+
+                chart.invalidate();
                 view.setEnabled(false);
                 Animation animation = new AlphaAnimation(1F, 0F);
                 animation.setDuration(400);
@@ -732,7 +703,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
 
             }
-        }, 500);
+        }, 1000);
 
     }
 
