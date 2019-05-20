@@ -291,6 +291,7 @@ dependencies {
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'
     implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
     implementation project(':indicatorseekbar')
+
     implementation('com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.3') {
         transitive = true
     }

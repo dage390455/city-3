@@ -1593,7 +1593,15 @@ public class RetrofitServiceHelper {
     }
 
     /**
-     * <<<<<<< HEAD
+     * 获取预警确认弹窗的配置文件
+     *
+     * @return
+     */
+    public Observable<DevicesAlarmPopupConfigRsp> getDevicesAlarmPopupConfig() {
+        return retrofitService.getDevicesAlarmPopupConfig();
+    }
+
+    /**
      * 通过sn获取摄像头详情
      *
      * @param sn
@@ -1747,15 +1755,5 @@ public class RetrofitServiceHelper {
     public Observable<DeviceCameraListRsp> getDeviceCameraListByFilter(Integer pageSize, Integer page, String search, Map<String, String> mapFilter) {
         return retrofitService.getDeviceCameraListByFilter(pageSize, page, search, mapFilter);
     }
-
-    /**
-     * 获取预警确认弹窗的配置文件
-     *
-     * @return
-     */
-    public Observable<DevicesAlarmPopupConfigRsp> getDevicesAlarmPopupConfig() {
-        return retrofitService.getDevicesAlarmPopupConfig();
-    }
-
 
 }

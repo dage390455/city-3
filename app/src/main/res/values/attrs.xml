@@ -57,6 +57,11 @@
         </attr>
     </declare-styleable>
 
+    //自定义view最小高度
+    <declare-styleable name="MinHeightView">
+        <attr name="ViewMinHeight" format="dimension" />
+    </declare-styleable>
+
     <!--任务轨迹seekbar-->
     <declare-styleable name="IndicatorSeekBar">
         //seekBar
@@ -123,10 +128,5 @@
             <enum name="sans" value="2" />
             <enum name="serif" value="3" />
         </attr>
-    </declare-styleable>
-
-    //自定义view最小高度
-    <declare-styleable name="MinHeightView">
-        <attr name="ViewMinHeight" format="dimension" />
     </declare-styleable>
 </resources>

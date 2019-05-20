@@ -101,10 +101,12 @@
     <color name="c_4dffffff">#66FFFFFF</color>
     <color name="c_03ffffff">#33FFFFFF</color>
 
+    <color name="color_alarm_pup_red">#FFF35A58</color>
+
+
     <color name="c_119f82">#119F82</color>
     <color name="c_383838">#383838</color>
     <color name="c_CC383838">#CC383838</color>
 
-    <color name="color_alarm_pup_red">#FFF35A58</color>
 
 </resources>
