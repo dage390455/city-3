@@ -280,8 +280,8 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
         // enable scaling and dragging
         chart.getLegend().setEnabled(false);
-        chart.setDragEnabled(false);
-        chart.setScaleEnabled(false);
+        chart.setDragEnabled(true);
+        chart.setScaleEnabled(true);
         chart.setDrawGridBackground(false);
         chart.setHighlightPerDragEnabled(true);
 
@@ -336,6 +336,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         // redraw
         chart.invalidate();
 
+        chart.setOnTouchListener(touchListener);
 
 //        chart.setOnTouchListener(new View.OnTouchListener() {
 //            @Override
@@ -371,7 +372,12 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
             public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
                 Log.i("====onChartGestureStart", "=====" + me.getAction());
 
-
+                final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+                final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
+                set1.setDrawVerticalHighlightIndicator(true);
+//
+//
+                set2.setDrawVerticalHighlightIndicator(true);
                 fadeIn(topStateRl);
 
             }
@@ -638,12 +644,6 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         animation.setDuration(duration);
         view.startAnimation(animation);
 
-        final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
-        final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
-        set1.setDrawVerticalHighlightIndicator(true);
-//
-//
-        set2.setDrawVerticalHighlightIndicator(true);
 
         chart.invalidate();
 
