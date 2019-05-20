@@ -150,28 +150,6 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     }
 
 
-    //    public void doNavigation() {
-//        List<Double> lonlat = mDeviceInfo.getLonlat();
-//        if (lonlat.size() == 2) {
-//            double v = lonlat.get(1);
-//            double v1 = lonlat.get(0);
-//            if (v == 0 || v1 == 0) {
-//                getView().toastShort(mContext.getString(R.string.location_information_not_set));
-//                return;
-//            }
-//        } else {
-//            getView().toastShort(mContext.getString(R.string.location_information_not_set));
-//            return;
-//        }
-//        Intent intent = new Intent();
-//        if (AppUtils.isChineseLanguage()) {
-//            intent.setClass(mContext, MonitorPointMapActivity.class);
-//        } else {
-//            intent.setClass(mContext, MonitorPointMapENActivity.class);
-//        }
-//        intent.putExtra(EXTRA_DEVICE_INFO, mDeviceInfo);
-//        getView().startAC(intent);
-//    }
     @OnClick({R.id.navigation_cl, R.id.include_text_title_imv_arrows_left, R.id.ac_basestation_rl_channel, R.id.ac_basestation_tv_today, R.id.ac_basestation_tv_week, R.id.rl_network_information, R.id.rl_self_check_state})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -195,6 +173,8 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
                 startActivity(new Intent(mActivity, FrequencyPointActivity.class));
                 break;
             case R.id.ac_basestation_tv_today:
+
+                mPresenter.switchCharType();
                 break;
             case R.id.ac_basestation_tv_week:
                 break;
@@ -403,8 +383,8 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         chart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
             public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-//                final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
-//                final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
+                final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+                final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
 //                if (me.getAction() == MotionEvent.ACTION_DOWN) {
 //
 //
@@ -425,18 +405,13 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
             @Override
             public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-//                final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
-//                final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
-//
+                final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+                final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
+
 //                if (me.getAction() == MotionEvent.ACTION_UP || me.getAction() == MotionEvent.ACTION_CANCEL) {
 ////
-////                    chart.postDelayed(new Runnable() {
-////                        @Override
-////                        public void run() {
 //                    set1.setDrawHighlightIndicators(false);
 //                    set2.setDrawHighlightIndicators(false);
-////                        }
-////                    }, 100);
 //
 //                }
 
@@ -622,7 +597,6 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
         int dataSetIndex = h.getDataSetIndex();
 
-//        e.setIcon(getResources().getDrawable(R.drawable.fade_red));
 
         float first = 0, second = 0;
         if (dataSetIndex == 0) {
@@ -631,9 +605,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
             LineDataSet dataSetByIndex0 = (LineDataSet) chart.getData().getDataSetByIndex(0);
 
 
-//            if (chart.getScaleX() == 1) {
-
-
+            boolean setIcon = false;
             for (int i = 0; i < dataSetByIndex0.getValues().size(); i++) {
                 dataSetByIndex0.getValues().get(i).setIcon(null);
             }
@@ -642,21 +614,14 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
                 if (e.getX() != entry.getX()) {
                     entry.setIcon(null);
                 } else {
-                    entry.setIcon(getResources().getDrawable(R.drawable.item_device_offline));
+
+                    if (!setIcon) {
+                        entry.setIcon(getResources().getDrawable(R.drawable.chart_black_dot));
+                        setIcon = true;
+                    }
                 }
             }
 
-//            } else {
-//                for (int i = 0; i < dataSetByIndex0.getValues().size(); i++) {
-//                    dataSetByIndex0.getValues().get(i).setIcon(null);
-//
-//
-//                }
-//                for (int i = 0; i < dataSetByIndex.getValues().size(); i++) {
-//                    Entry entry = dataSetByIndex.getValues().get(i);
-//                    entry.setIcon(null);
-//                }
-//            }
             first = e.getY();
             List<Entry> entriesForXValue = dataSetByIndex.getEntriesForXValue(h.getX());
 
@@ -665,9 +630,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
         } else if (dataSetIndex == 1) {
             LineDataSet dataSetByIndex = (LineDataSet) chart.getData().getDataSetByIndex(0);
-
-
-//            if (chart.getScaleX() == 1) {
+            boolean setIcon = false;
 
 
             for (int i = 0; i < dataSetByIndex.getValues().size(); i++) {
@@ -675,7 +638,10 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
                 if (e.getX() != entry.getX()) {
                     entry.setIcon(null);
                 } else {
-                    entry.setIcon(getResources().getDrawable(R.drawable.item_device_offline));
+                    if (!setIcon) {
+                        entry.setIcon(getResources().getDrawable(R.drawable.chart_black_dot));
+                        setIcon = true;
+                    }
 
 
                 }
@@ -687,29 +653,15 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
                 dataSetByIndex1.getValues().get(i).setIcon(null);
             }
 
-//            } else {
-//                for (int i = 0; i < dataSetByIndex.getValues().size(); i++) {
-//                    Entry entry = dataSetByIndex.getValues().get(i);
-//                    entry.setIcon(null);
-//                }
-//
-//
-//                LineDataSet dataSetByIndex1 = (LineDataSet) chart.getData().getDataSetByIndex(1);
-//                for (int i = 0; i < dataSetByIndex1.getValues().size(); i++) {
-//                    dataSetByIndex1.getValues().get(i).setIcon(null);
-//                }
-//            }
             second = e.getY();
             List<Entry> entriesForXValue = dataSetByIndex.getEntriesForXValue(h.getX());
 
             first = entriesForXValue.get(entriesForXValue.size() - 1).getY();
 
         }
-//        if (chart.getScaleX() == 1) {
 
 
-        e.setIcon(getResources().getDrawable(R.drawable.item_device_offline));
-//        }
+        e.setIcon(getResources().getDrawable(R.drawable.chart_black_dot));
 
         out_tv.setText(decimalFormat.format(second) + "\u2103");
         in_tv.setText(decimalFormat.format(first) + "\u2103");
@@ -721,32 +673,67 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
     }
 
-    public static void fadeIn(View view, float startAlpha, float endAlpha, long duration) {
+    public void fadeIn(final View view, final float startAlpha, final float endAlpha, final long duration) {
         if (view.getVisibility() == View.VISIBLE) return;
 
+
+        final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+        final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
+        set1.setDrawVerticalHighlightIndicator(true);
+//
+//
+        set2.setDrawVerticalHighlightIndicator(true);
         view.setVisibility(View.VISIBLE);
         Animation animation = new AlphaAnimation(startAlpha, endAlpha);
         animation.setDuration(duration);
         view.startAnimation(animation);
+
+
     }
 
-    public static void fadeIn(View view) {
+    public void fadeIn(View view) {
         fadeIn(view, 0F, 1F, 400);
 
         // We disabled the button in fadeOut(), so enable it here.
         view.setEnabled(true);
     }
 
-    public static void fadeOut(View view) {
+    public void fadeOut(final View view) {
         if (view.getVisibility() != View.VISIBLE) return;
 
         // Since the button is still clickable before fade-out animation
         // ends, we disable the button first to block click.
-        view.setEnabled(false);
-        Animation animation = new AlphaAnimation(1F, 0F);
-        animation.setDuration(400);
-        view.startAnimation(animation);
-        view.setVisibility(View.GONE);
+
+        view.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+                final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
+
+
+                set1.setDrawVerticalHighlightIndicator(false);
+//
+//
+                set2.setDrawVerticalHighlightIndicator(false);
+
+
+                for (int i = 0; i < set1.getValues().size(); i++) {
+                    set1.getValues().get(i).setIcon(null);
+                }
+                for (int i = 0; i < set2.getValues().size(); i++) {
+                    set2.getValues().get(i).setIcon(null);
+                }
+                view.setEnabled(false);
+                Animation animation = new AlphaAnimation(1F, 0F);
+                animation.setDuration(400);
+                view.startAnimation(animation);
+                view.setVisibility(View.GONE);
+
+
+            }
+        }, 500);
+
     }
 
 
