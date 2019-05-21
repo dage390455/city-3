@@ -87,7 +87,7 @@
 
         <com.sensoro.common.widgets.TouchRecycleView
             android:id="@+id/rv_item_adapter_nameplate_tag"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="8dp"

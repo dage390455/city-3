@@ -71,7 +71,7 @@ public class TagAdapter extends RecyclerView.
 
         TagHolder(View itemView) {
             super(itemView);
-            itemAdapterTv.findViewById(R.id.item_adapter_tv);
+            itemAdapterTv = itemView.findViewById(R.id.item_adapter_tv);
         }
     }
 }

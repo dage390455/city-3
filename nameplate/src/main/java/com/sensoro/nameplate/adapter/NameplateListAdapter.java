@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
-import com.sensoro.common.server.bean.ContractListInfo;
+import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TouchRecycleView;
 import com.sensoro.nameplate.R;
 
@@ -27,19 +27,21 @@ public class NameplateListAdapter extends RecyclerView.Adapter<NameplateListAdap
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private final List<ContractListInfo> mList = new ArrayList<>();
+    private final List<String> mList = new ArrayList<>();
 
     public NameplateListAdapter(Context context) {
         this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
     }
 
-    public void setData(List<ContractListInfo> list) {
+    public void updateData(List<String> list) {
         this.mList.clear();
         this.mList.addAll(list);
+        notifyDataSetChanged();
+
     }
 
-    public List<ContractListInfo> getData() {
+    public List<String> getData() {
         return mList;
     }
 
@@ -70,7 +72,7 @@ public class NameplateListAdapter extends RecyclerView.Adapter<NameplateListAdap
             }
         });
         holder.tvNameplateAssociated.setText("已关联");
-        holder.tvNameplateName.setText("name");
+        holder.tvNameplateName.setText(mList.get(position));
         holder.tvNameplateSensorCount.setText("传感器：5");
         holder.tvNameplateSn.setText("sn");
         //
@@ -78,7 +80,8 @@ public class NameplateListAdapter extends RecyclerView.Adapter<NameplateListAdap
         SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mContext, false);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         holder.rvItemAdapterNameplateTag.setLayoutManager(layoutManager);
-
+//        int spacingInPixels = mContext.getResources().getDimensionPixelSize(R.dimen.x10);
+//        holder.rvItemAdapterNameplateTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
         holder.rvItemAdapterNameplateTag.setAdapter(tagAdapter);
         ArrayList<String> strings = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
@@ -111,6 +114,9 @@ public class NameplateListAdapter extends RecyclerView.Adapter<NameplateListAdap
             tvNameplateName = itemView.findViewById(R.id.tv_nameplate_name);
             tvNameplateSn = itemView.findViewById(R.id.tv_nameplate_sn);
             rvItemAdapterNameplateTag = itemView.findViewById(R.id.rv_item_adapter_nameplate_tag);
+            int spacingInPixels = mContext.getResources().getDimensionPixelSize(R.dimen.x10);
+            rvItemAdapterNameplateTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
+            rvItemAdapterNameplateTag.setIntercept(true);
 
         }
     }

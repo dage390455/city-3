@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sensoro.nameplate.activity.NameplateListActivity;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.CameraListActivity;
@@ -85,6 +86,10 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     FrameLayout line8;
     @BindView(R.id.fg_main_manage_ll_camera)
     LinearLayout fgMainManageLlCamera;
+    @BindView(R.id.fg_main_manage_ll_nameplate)
+    LinearLayout fgMainManageLlNameplate;
+    @BindView(R.id.line9)
+    FrameLayout line9;
     private ProgressUtils mProgressUtils;
     private TipDialogUtils mExitDialog;
     private VersionDialogUtils mVersionDialog;
@@ -223,7 +228,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
             R.id.fg_main_manage_ll_contract_management, R.id.fg_main_manage_ll_polling_mission,
             R.id.fg_main_manage_ll_maintenance_mission, R.id.fg_main_manage_ll_scan_login,
             R.id.fg_main_manage_ll_about_us, R.id.fg_main_manage_ll_version_info,
-            R.id.fg_main_manage_ll_exit, R.id.fg_main_manage_ll_signal_check, R.id.fg_main_manage_ll_wire_material_diameter, R.id.fg_main_manage_ll_camera})
+            R.id.fg_main_manage_ll_exit, R.id.fg_main_manage_ll_signal_check, R.id.fg_main_manage_ll_wire_material_diameter, R.id.fg_main_manage_ll_camera,R.id.fg_main_manage_ll_nameplate})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fg_main_manage_ll_change_merchants:
@@ -343,6 +348,9 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 break;
             case R.id.fg_main_manage_ll_camera:
                 startAC(new Intent(mRootFragment.getActivity(), CameraListActivity.class));
+                break;
+            case R.id.fg_main_manage_ll_nameplate:
+                startAC(new Intent(mRootFragment.getActivity(), NameplateListActivity.class));
                 break;
         }
     }

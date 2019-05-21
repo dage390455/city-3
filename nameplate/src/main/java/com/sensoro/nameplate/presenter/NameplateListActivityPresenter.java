@@ -21,6 +21,7 @@ import com.sensoro.common.server.response.DeviceCameraListRsp;
 import com.sensoro.common.utils.StringUtils;
 import com.sensoro.nameplate.IMainViews.INameplateListActivityView;
 import com.sensoro.nameplate.R;
+import com.sensoro.nameplate.activity.NameplateDetailActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -366,5 +367,9 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
             }
         }
         return hashMap;
+    }
+
+    public void doNameplateDetail(int position) {
+        getView().startAC(new Intent(mContext, NameplateDetailActivity.class));
     }
 }

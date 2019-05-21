@@ -951,6 +951,7 @@
 
     <string name="mobile_network">"您正在使用移动网络，请注意您的数据使用。"</string>
     <string name="camera_manager">摄像机管理</string>
+    <string name="camera_nameplate">铭牌管理</string>
     <string name="camera_living">直播中</string>
     <string name="click_select_date">点击选择日期</string>
     <string name="time_parse_error">时间解析错误</string>
