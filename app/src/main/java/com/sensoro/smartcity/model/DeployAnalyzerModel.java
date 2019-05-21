@@ -19,10 +19,17 @@ public class DeployAnalyzerModel implements Serializable {
     public String weChatAccount;
     public boolean notOwn;
     public int status;
+    public String cameraStatus;
+    public String cameraLatitude;
+    public String cameraLongitude;
     public String blePassword;
     public String deviceType;
     public int mapSourceType = 1;
+    public String hls;
+    public String installationMode;
+    public String orientation;
     public DeployControlSettingData settingData;
+
     //
     public final List<Double> latLng = new ArrayList<>();
     //
