@@ -64,21 +64,35 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
             }
 
         } else {
-            DeployPicInfo deployPicInfo1 = new DeployPicInfo();
-            deployPicInfo1.title = mActivity.getString(R.string.deploy_pic_device_pic);
-            deployPicInfo1.isRequired = true;
-            deployPicInfo1.description = mActivity.getString(R.string.deploy_pic_device_pic_tip);
-            DeployPicInfo deployPicInfo2 = new DeployPicInfo();
-            deployPicInfo2.isRequired = true;
-            deployPicInfo2.title = mActivity.getString(R.string.deploy_pic_installation_site);
+            //这里自定义了一个类型认为是部署摄像机
+            if ("deploy_camera".equals(deviceType)) {
+                DeployPicInfo deployPicInfo1 = new DeployPicInfo();
+                deployPicInfo1.title = "设备图";
+                deployPicInfo1.isRequired = true;
+                deployPicInfo1.description = "需拍产品机身及看清设备号";
+                DeployPicInfo deployPicInfo2 = new DeployPicInfo();
+                deployPicInfo2.isRequired = true;
+                deployPicInfo2.title = "安装环境";
+                deployPicInfo2.description = "需拍摄产品安装位置及周边环境";
+                deployPicInfos.add(deployPicInfo1);
+                deployPicInfos.add(deployPicInfo2);
+            } else {
+                DeployPicInfo deployPicInfo1 = new DeployPicInfo();
+                deployPicInfo1.title = mActivity.getString(R.string.deploy_pic_device_pic);
+                deployPicInfo1.isRequired = true;
+                deployPicInfo1.description = mActivity.getString(R.string.deploy_pic_device_pic_tip);
+                DeployPicInfo deployPicInfo2 = new DeployPicInfo();
+                deployPicInfo2.isRequired = true;
+                deployPicInfo2.title = mActivity.getString(R.string.deploy_pic_installation_site);
 
-            DeployPicInfo deployPicInfo3 = new DeployPicInfo();
-            deployPicInfo3.title = mActivity.getString(R.string.deploy_pic_shop_pic);
-            deployPicInfo3.description = mActivity.getString(R.string.if_it_is_a_store_please_upload);
-            deployPicInfo3.isRequired = false;
-            deployPicInfos.add(deployPicInfo1);
-            deployPicInfos.add(deployPicInfo2);
-            deployPicInfos.add(deployPicInfo3);
+                DeployPicInfo deployPicInfo3 = new DeployPicInfo();
+                deployPicInfo3.title = mActivity.getString(R.string.deploy_pic_shop_pic);
+                deployPicInfo3.description = mActivity.getString(R.string.if_it_is_a_store_please_upload);
+                deployPicInfo3.isRequired = false;
+                deployPicInfos.add(deployPicInfo1);
+                deployPicInfos.add(deployPicInfo2);
+                deployPicInfos.add(deployPicInfo3);
+            }
             if (imageList != null && imageList.size() > 0 && imageList.size() < 4) {
                 for (int i = 0; i < imageList.size(); i++) {
                     try {
@@ -89,6 +103,7 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
 
                 }
             }
+
         }
         getView().updateData(deployPicInfos);
         checkCanSave();

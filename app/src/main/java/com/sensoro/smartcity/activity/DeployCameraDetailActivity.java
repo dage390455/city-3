@@ -155,6 +155,7 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
         mDialogTvConfirm = view.findViewById(R.id.dialog_deploy_device_upload_tv_confirm);
         mDialogTvTitle = view.findViewById(R.id.dialog_deploy_device_upload_tv_title);
         mDialogTvMsg = view.findViewById(R.id.dialog_deploy_device_upload_tv_msg);
+        mDialogTvMsg.setText("摄像机离线");
         line1 = view.findViewById(R.id.line1);
 
         mDialogTvConfirm.setOnClickListener(this);

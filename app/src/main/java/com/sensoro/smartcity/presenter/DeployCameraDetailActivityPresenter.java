@@ -32,20 +32,17 @@ import com.sensoro.smartcity.imainviews.IDeployCameraDetailActivityView;
 import com.sensoro.smartcity.model.CameraFilterModel;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.DeployCameraConfigModel;
-import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.model.DeployResultModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.DeployControlSettingData;
-import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.server.bean.DeployCameraUploadInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.CameraFilterRsp;
-import com.sensoro.smartcity.server.response.DeviceDeployRsp;
+import com.sensoro.smartcity.server.response.DeployCameraUploadRsp;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
-import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
 import com.sensoro.smartcity.widget.popup.UpLoadPhotosUtils;
@@ -276,7 +273,7 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
     public void requestUpload() {
         final double lon = deployAnalyzerModel.latLng.get(0);
         final double lan = deployAnalyzerModel.latLng.get(1);
-        //TODO 直接上传
+        doUploadImages(lon, lan);
     }
 
 
@@ -348,154 +345,68 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
 
     private void doDeployResult(double lon, double lan, List<String> imgUrls) {
         //TODO 上传接口
-
-        DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
-        switch (deployAnalyzerModel.deployType) {
-            case TYPE_SCAN_DEPLOY_DEVICE:
-                //设备部署
-                getView().showProgressDialog();
-                //TODO 暂时不支持添加wx电话
-                //TODO 添加电气火灾配置支持
-//                deployAnalyzerModel.weChatAccount = null;
-                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
-                //暂时添加 后续可以删除
-                DeployControlSettingData settingData = null;
-                if (isFire) {
-                    settingData = deployAnalyzerModel.settingData;
-                }
-                RetrofitServiceHelper.getInstance().doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, settingData, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new CityObserver<DeviceDeployRsp>(this) {
-                            @Override
-                            public void onErrorMsg(int errorCode, String errorMsg) {
-                                getView().dismissProgressDialog();
-                                getView().updateUploadState(true);
-                                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
-                                    getView().toastShort(errorMsg);
-                                } else if (errorCode == 4013101 || errorCode == 4000013) {
-                                    freshError(deployAnalyzerModel.sn, null, DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
-                                } else {
-                                    freshError(deployAnalyzerModel.sn, errorMsg, DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
-                                }
-                            }
-
-                            @Override
-                            public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
-                                freshPoint(deviceDeployRsp);
-                                getView().dismissProgressDialog();
-                                getView().finishAc();
-                            }
-                        });
-                break;
-            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
-                getView().showProgressDialog();
-                RetrofitServiceHelper.getInstance().doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
-                        deployAnalyzerModel.mDeviceDetail.getTaskId(), 1, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                        deployContactModel.name, deployContactModel.phone, imgUrls, null, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).
-                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
+        getView().showProgressDialog();
+        //
+        RetrofitServiceHelper.getInstance().doUploadDeployCamera(deployAnalyzerModel.sn, deployAnalyzerModel.nameAndAddress, deployAnalyzerModel.tagList,
+                PreferencesHelper.getInstance().getUserData().phone, String.valueOf(lan), String.valueOf(lon), imgUrls, deployAnalyzerModel.address,
+                mMethodConfig.code, mOrientationConfig.code, deployAnalyzerModel.cameraStatus)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .safeSubscribe(new CityObserver<DeployCameraUploadRsp>(this) {
                     @Override
-                    public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
-                        freshPoint(deviceDeployRsp);
+                    public void onCompleted(DeployCameraUploadRsp deployCameraUploadRsp) {
+                        freshSuccess(deployCameraUploadRsp);
                         getView().dismissProgressDialog();
-                        getView().finishAc();
                     }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().dismissProgressDialog();
-                        getView().updateUploadState(true);
                         if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                             getView().toastShort(errorMsg);
                         } else if (errorCode == 4013101 || errorCode == 4000013) {
-                            freshError(deployAnalyzerModel.sn, null, DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
+                            freshError(null, DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
                         } else {
-                            freshError(deployAnalyzerModel.sn, errorMsg, DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
+                            freshError(errorMsg, DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
                         }
+                        getView().dismissProgressDialog();
                     }
                 });
-                break;
-            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
-                getView().showProgressDialog();
-                RetrofitServiceHelper.getInstance().doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
-                        null, 2, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress, deployContactModel.name,
-                        deployContactModel.phone, imgUrls, null, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).
-                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
-                    @Override
-                    public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
-                        //
-                        freshPoint(deviceDeployRsp);
-                        getView().dismissProgressDialog();
-                        getView().finishAc();
-                    }
-
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().dismissProgressDialog();
-                        getView().updateUploadState(true);
-                        if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
-                            getView().toastShort(errorMsg);
-                        } else if (errorCode == 4013101 || errorCode == 4000013) {
-                            freshError(deployAnalyzerModel.sn, null, DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
-                        } else {
-                            freshError(deployAnalyzerModel.sn, errorMsg, DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
-                        }
-                    }
-                });
-                break;
-            default:
-                break;
-        }
-
     }
 
-    private void freshError(String scanSN, String errorInfo, int resultCode) {
+    private void freshError(String errorInfo, int resultCode) {
         //
         Intent intent = new Intent();
         intent.setClass(mContext, DeployResultActivity.class);
         DeployResultModel deployResultModel = new DeployResultModel();
-        deployResultModel.sn = scanSN;
-        deployResultModel.deviceType = deployAnalyzerModel.deviceType;
+        deployResultModel.sn = deployAnalyzerModel.sn;
         deployResultModel.resultCode = resultCode;
         deployResultModel.scanType = deployAnalyzerModel.deployType;
         deployResultModel.errorMsg = errorInfo;
-        deployResultModel.wxPhone = deployAnalyzerModel.weChatAccount;
-        deployResultModel.settingData = deployAnalyzerModel.settingData;
-        if (deployAnalyzerModel.deployContactModelList.size() > 0) {
-            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
-            deployResultModel.contact = deployContactModel.name;
-            deployResultModel.phone = deployContactModel.phone;
-        }
         deployResultModel.address = deployAnalyzerModel.address;
-        deployResultModel.updateTime = deployAnalyzerModel.updatedTime;
-        deployResultModel.deviceStatus = deployAnalyzerModel.status;
-        deployResultModel.signal = deployAnalyzerModel.signal;
+        //部署时间出错选当期系统时间
+        deployResultModel.updateTime = System.currentTimeMillis();
         deployResultModel.name = deployAnalyzerModel.nameAndAddress;
         intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
         getView().startAC(intent);
     }
 
-    private void freshPoint(DeviceDeployRsp deviceDeployRsp) {
+    private void freshSuccess(DeployCameraUploadRsp deployCameraUploadRsp) {
         DeployResultModel deployResultModel = new DeployResultModel();
-        DeviceInfo deviceInfo = deviceDeployRsp.getData();
-        deployResultModel.deviceInfo = deviceInfo;
         Intent intent = new Intent(mContext, DeployResultActivity.class);
         //
-        deployResultModel.sn = deviceInfo.getSn();
-        deployResultModel.deviceType = deployAnalyzerModel.deviceType;
+        DeployCameraUploadInfo data = deployCameraUploadRsp.getData();
+        deployResultModel.sn = deployAnalyzerModel.sn;
         deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
         deployResultModel.scanType = deployAnalyzerModel.deployType;
-        deployResultModel.wxPhone = deployAnalyzerModel.weChatAccount;
-        deployResultModel.settingData = deployAnalyzerModel.settingData;
-        //TODO 新版联系人
-        if (deployAnalyzerModel.deployContactModelList.size() > 0) {
-            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
-            deployResultModel.contact = deployContactModel.name;
-            deployResultModel.phone = deployContactModel.phone;
-        }
         deployResultModel.address = deployAnalyzerModel.address;
-        deployResultModel.updateTime = deviceInfo.getUpdatedTime();
-        deployResultModel.deviceStatus = deviceInfo.getStatus();
-        deployResultModel.signal = deviceInfo.getSignal();
+        String createTime = data.getCreateTime();
+        deployResultModel.updateTime = System.currentTimeMillis();
+        if (!TextUtils.isEmpty(createTime)) {
+            try {
+                deployResultModel.updateTime = Long.parseLong(createTime);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         deployResultModel.name = deployAnalyzerModel.nameAndAddress;
         intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
         getView().startAC(intent);
@@ -537,7 +448,7 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
         if (getRealImageSize() > 0) {
             intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
         }
-        intent.putExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
+        intent.putExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, "deploy_camera");
         getView().startAC(intent);
     }
 
@@ -620,38 +531,12 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
     }
 
     public void doConfirm() {
-        //姓名地址校验
-//        switch (deployAnalyzerModel.deployType) {
-////            case TYPE_SCAN_DEPLOY_STATION:
-////                if (checkHasPhoto()) return;
-////                //经纬度校验
-////                if (checkHasNoLatLng()) return;
-////                requestUpload();
-////                break;
-////            case TYPE_SCAN_DEPLOY_DEVICE:
-////            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
-////            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
-////                if (checkHasPhoto()) return;
-////                //经纬度校验
-////                if (checkHasNoLatLng()) return;
-////                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
-////                if (isFire) {
-////                    if (deployAnalyzerModel.settingData == null) {
-////                        getView().toastShort(mContext.getString(R.string.deploy_has_no_configuration_tip));
-////                        return;
-////                    }
-////                }
-//////                if (checkNeedSignal()) {
-//////                    checkHasForceUploadPermission();
-//////                } else {
-//////                    requestUpload();
-//////                }
-////
-////                break;
-////            default:
-////                break;
-////        }
-        //TODO 强制上传
+        if (checkHasCameraStatus()) {
+            //直接上传
+            requestUpload();
+        } else {
+            getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload);
+        }
     }
 
     private boolean checkCanUpload() {
@@ -689,21 +574,8 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
     /**
      * 检查是否能强制上传
      */
-    private void checkHasForceUploadPermission() {
-        String mergeType = WidgetUtil.handleMergeType(deployAnalyzerModel.deviceType);
-        if (TextUtils.isEmpty(mergeType)) {
-            getView().showWarnDialog(true);
-        } else {
-            if (Constants.DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST.contains(mergeType)) {
-                if (PreferencesHelper.getInstance().getUserData().hasBadSignalUpload) {
-                    getView().showWarnDialog(true);
-                } else {
-                    getView().showWarnDialog(false);
-                }
-            } else {
-                getView().showWarnDialog(true);
-            }
-        }
+    private boolean checkHasCameraStatus() {
+        return "1".equals(deployAnalyzerModel.cameraStatus);
     }
 
     private boolean checkHasDeployMethod() {

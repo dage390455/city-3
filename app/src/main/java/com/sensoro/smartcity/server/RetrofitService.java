@@ -9,6 +9,7 @@ import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractInfoRsp;
 import com.sensoro.smartcity.server.response.ContractsListRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
+import com.sensoro.smartcity.server.response.DeployCameraUploadRsp;
 import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.DeployRecordRsp;
 import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
@@ -386,5 +387,7 @@ public interface RetrofitService {
     @GET("cameras")
     Observable<DeviceCameraListRsp> getDeviceCameraListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
 
+    @POST("camera/deploy")
+    Observable<DeployCameraUploadRsp> doUploadDeployCamera(@Body RequestBody requestBody);
 }
 

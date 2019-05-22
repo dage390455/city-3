@@ -256,13 +256,12 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="12dp"
                         android:layout_marginBottom="12dp"
-                        android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:text="@string/deploy_device_detail_deploy_location"
                         android:textColor="@color/c_a6a6a6"
@@ -271,11 +270,12 @@
 
                     <TextView
                         android:id="@+id/tv_ac_deploy_device_camera_fixed_point_state"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="14dp"
-                        android:gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:gravity="end"
                         android:text="@string/required"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14dp" />
@@ -406,9 +406,9 @@
                         android:layout_marginTop="12dp"
                         android:layout_marginBottom="12dp"
                         android:layout_weight="1"
-                        android:text="@string/deploy_camera_watch_live"
                         android:drawableStart="@drawable/ic_deploy_camera_video"
                         android:drawablePadding="10dp"
+                        android:text="@string/deploy_camera_watch_live"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14dp" />
 
@@ -438,8 +438,8 @@
                     android:layout_height="@dimen/view_divider_height"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
-                    android:visibility="gone"
-                    android:background="@color/c_dfdfdf" />
+                    android:background="@color/c_dfdfdf"
+                    android:visibility="gone" />
             </LinearLayout>
 
 

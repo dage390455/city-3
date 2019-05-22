@@ -32,6 +32,7 @@ import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
 import com.sensoro.smartcity.server.response.DeviceCameraDetailRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 
@@ -316,16 +317,19 @@ public class DeployAnalyzerUtils {
                         if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                             listener.onError(errorCode, null, errorMsg);
                         } else if (errorCode == 4013101 || errorCode == 4000013) {
-                            //不在账户下
-//                            Intent intent = new Intent();
-//                            intent.setClass(activity, DeployResultActivity.class);
-//                            DeployResultModel deployResultModel = new DeployResultModel();
-//                            deployResultModel.scanType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
-//                            deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
-//                            deployResultModel.sn = scanSerialNumber;
-//                            intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
-//                            listener.onError(errorCode, intent, errorMsg);
-                            doCamera();
+                            if (AppUtils.isChineseLanguage()) {
+                                doCamera();
+                            } else {
+                                //不在账户下
+                                Intent intent = new Intent();
+                                intent.setClass(activity, DeployResultActivity.class);
+                                DeployResultModel deployResultModel = new DeployResultModel();
+                                deployResultModel.scanType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
+                                deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
+                                deployResultModel.sn = scanSerialNumber;
+                                intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                                listener.onError(errorCode, intent, errorMsg);
+                            }
                         } else {
                             Intent intent = new Intent();
                             intent.setClass(activity, DeployResultActivity.class);
@@ -344,29 +348,46 @@ public class DeployAnalyzerUtils {
                         DeployStationInfo deployStationInfo = deployStationInfoRsp.getData();
                         try {
                             //todo 包装类
-                            DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
-                            deployAnalyzerModel.deployType = Constants.TYPE_SCAN_DEPLOY_STATION;
-                            deployAnalyzerModel.sn = deployStationInfo.getSn();
-                            deployAnalyzerModel.nameAndAddress = deployStationInfo.getName();
-                            deployAnalyzerModel.status = deployStationInfo.getNormalStatus();
-                            List<Double> lonlat = deployStationInfo.getLonlat();
-                            deployAnalyzerModel.status = deployStationInfo.getNormalStatus();
-                            if (lonlat != null && lonlat.size() == 2) {
-                                deployAnalyzerModel.latLng.clear();
-                                deployAnalyzerModel.latLng.addAll(lonlat);
-                            }
-                            List<String> tags = deployStationInfo.getTags();
-                            if (tags != null && tags.size() > 0) {
-                                deployAnalyzerModel.tagList.clear();
-                                deployAnalyzerModel.tagList.addAll(tags);
-                            }
-                            deployAnalyzerModel.updatedTime = deployStationInfo.getUpdatedTime();
-                            Intent intent = new Intent();
-                            //TODO 测试
+                            if (deployStationInfo == null || TextUtils.isEmpty(deployStationInfo.getSn())) {
+                                if (AppUtils.isChineseLanguage()) {
+                                    doCamera();
+                                } else {
+                                    //不在账户下
+                                    Intent intent = new Intent();
+                                    intent.setClass(activity, DeployResultActivity.class);
+                                    DeployResultModel deployResultModel = new DeployResultModel();
+                                    deployResultModel.scanType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
+                                    deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
+                                    deployResultModel.sn = scanSerialNumber;
+                                    intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                                    listener.onError(0, intent, null);
+                                }
+                            } else {
+                                DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
+                                deployAnalyzerModel.deployType = Constants.TYPE_SCAN_DEPLOY_STATION;
+                                deployAnalyzerModel.sn = deployStationInfo.getSn();
+                                deployAnalyzerModel.nameAndAddress = deployStationInfo.getName();
+                                deployAnalyzerModel.status = deployStationInfo.getNormalStatus();
+                                List<Double> lonlat = deployStationInfo.getLonlat();
+                                deployAnalyzerModel.status = deployStationInfo.getNormalStatus();
+                                if (lonlat != null && lonlat.size() == 2) {
+                                    deployAnalyzerModel.latLng.clear();
+                                    deployAnalyzerModel.latLng.addAll(lonlat);
+                                }
+                                List<String> tags = deployStationInfo.getTags();
+                                if (tags != null && tags.size() > 0) {
+                                    deployAnalyzerModel.tagList.clear();
+                                    deployAnalyzerModel.tagList.addAll(tags);
+                                }
+                                deployAnalyzerModel.updatedTime = deployStationInfo.getUpdatedTime();
+                                Intent intent = new Intent();
+                                //TODO 测试
 //                            intent.setClass(activity, DeployCameraDetailActivity.class);
-                            intent.setClass(activity, DeployMonitorDetailActivity.class);
-                            intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
-                            listener.onSuccess(intent);
+                                intent.setClass(activity, DeployMonitorDetailActivity.class);
+                                intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+                                listener.onSuccess(intent);
+                            }
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -410,7 +431,6 @@ public class DeployAnalyzerUtils {
                                             deployAnalyzerModel.cameraStatus = data.getDeviceStatus();
                                             deployAnalyzerModel.latLng.clear();
                                             String latitudeStr = data.getLatitude();
-                                            deployAnalyzerModel.cameraLatitude = latitudeStr;
                                             String longitudeStr = data.getLongitude();
                                             if (!TextUtils.isEmpty(latitudeStr) && !TextUtils.isEmpty(longitudeStr)) {
                                                 try {

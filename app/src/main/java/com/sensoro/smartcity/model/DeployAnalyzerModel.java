@@ -20,8 +20,6 @@ public class DeployAnalyzerModel implements Serializable {
     public boolean notOwn;
     public int status;
     public String cameraStatus;
-    public String cameraLatitude;
-    public String cameraLongitude;
     public String blePassword;
     public String deviceType;
     public int mapSourceType = 1;
