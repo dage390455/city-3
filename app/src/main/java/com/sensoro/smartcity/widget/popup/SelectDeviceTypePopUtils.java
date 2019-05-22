@@ -7,6 +7,7 @@ import android.os.Build;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.TypeSelectAdapter;
 import com.sensoro.smartcity.model.DeviceTypeModel;
+import com.sensoro.smartcity.widget.MaxHeightGridLayoutManager;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import java.util.List;
@@ -54,7 +56,7 @@ public class SelectDeviceTypePopUtils {
         mRlTitle = view.findViewById(R.id.pop_type_tv_select_rl_title);
 
         mTypeSelectAdapter = new TypeSelectAdapter(activity);
-        GridLayoutManager manager = new GridLayoutManager(activity, 4);
+        MaxHeightGridLayoutManager manager = new MaxHeightGridLayoutManager(activity, 4);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL);
         dividerItemDecoration.setDrawable(mActivity.getResources().getDrawable(R.drawable.shape_soid_df));
         mRcTypeSelect.addItemDecoration(dividerItemDecoration);
@@ -121,10 +123,10 @@ public class SelectDeviceTypePopUtils {
 
     public void showAtLocation(View view, int gravity) {
         mPopupWindow.showAtLocation(view, gravity, 0, 0);
-        int i = mTypeSelectAdapter.getItemCount() / 4;
-        i *= 100;
-        showTranslateAnimation.setDuration(i);
-        dismissTranslateAnimation.setDuration(i);
+//        int i = mTypeSelectAdapter.getItemCount() / 4;
+//        i *= 100;
+        showTranslateAnimation.setDuration(300);
+        dismissTranslateAnimation.setDuration(300);
         mFl.startAnimation(showTranslateAnimation);
     }
 
@@ -150,13 +152,13 @@ public class SelectDeviceTypePopUtils {
     }
 
     private void showAnimation() {
-        int i = mTypeSelectAdapter.getItemCount() / 4;
-        i *= 100;
-        if(i<300){
-            i = 300;
-        }
-        showTranslateAnimation.setDuration(i);
-        dismissTranslateAnimation.setDuration(i);
+//        int i = mTypeSelectAdapter.getItemCount() / 4;
+//        i *= 100;
+//        if(i<300){
+//            i = 300;
+//        }
+        showTranslateAnimation.setDuration(300);
+        dismissTranslateAnimation.setDuration(300);
         mFl.startAnimation(showTranslateAnimation);
     }
 

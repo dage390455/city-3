@@ -217,8 +217,6 @@
         <activity android:name=".activity.MerchantSwitchActivity" />
         <activity
             android:name=".activity.DeployMonitorAlarmContactActivity"
-
-
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activity.DeployMonitorNameAddressActivity" />
         <activity android:name=".activity.DeployResultActivity" />
@@ -362,6 +360,10 @@
         <activity android:name=".temp.TestUpdateActivity" />
         <activity android:name=".activity.DeployMonitorCheckActivity" />
         <activity android:name=".activity.DeployRepairInstructionActivity" />
+
+        <activity android:name=".activity.SecurityRisksActivity" />
+        <activity android:name=".activity.SecurityRiskTagManagerActivity" />
+
         <activity android:name=".temp.CameraTest" />
         <activity android:name=".temp.RecyclerViewActivity" />
         <activity android:name=".activity.CameraListActivity" />
@@ -369,6 +371,7 @@
             android:name=".activity.CameraDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
+
         <activity android:name=".activity.WireMaterialDiameterCalculatorActivity" />
         <activity
             android:name=".activity.CameraPersonLocusActivity"

@@ -2,59 +2,64 @@
 <resources>
     <declare-styleable name="MonthView">
         <!-- only draw the month day, or not, default is false -->
-        <attr name="sc_draw_monthday_only" format="boolean"/>
+        <attr name="sc_draw_monthday_only" format="boolean" />
         <!-- start day of a week, we support (sunday、monday and saturday) -->
         <attr name="sc_firstday_week" format="enum">
-            <enum name="sunday" value="1"/>
-            <enum name="monday" value="2"/>
-            <enum name="saturday" value="7"/>
+            <enum name="sunday" value="1" />
+            <enum name="monday" value="2" />
+            <enum name="saturday" value="7" />
         </attr>
-        <attr name="sc_should_reset_decor" format="boolean"/>
+        <attr name="sc_should_reset_decor" format="boolean" />
 
         <!-- editor mode only -->
         <!-- test selected days (format:1,2,3,4) -->
-        <attr name="sc_selected_days" format="string"/>
+        <attr name="sc_selected_days" format="string" />
         <!-- test month (format:2016-3) -->
-        <attr name="sc_month" format="string"/>
+        <attr name="sc_month" format="string" />
     </declare-styleable>
     <declare-styleable name="IRecyclerView">
-        <attr name="refreshHeaderLayout" format="reference"/>  <!--freshUI header layout res id-->
-        <attr name="loadMoreFooterLayout" format="reference"/> <!--loadmore fotter layout res id-->
-        <attr name="refreshEnabled" format="boolean"/>
-        <attr name="loadMoreEnabled" format="boolean"/>
-        <attr name="refreshFinalMoveOffset" format="dimension"/>   <!--freshUI header max move distance-->
+        <attr name="refreshHeaderLayout" format="reference" />  <!--freshUI header layout res id-->
+        <attr name="loadMoreFooterLayout" format="reference" /> <!--loadmore fotter layout res id-->
+        <attr name="refreshEnabled" format="boolean" />
+        <attr name="loadMoreEnabled" format="boolean" />
+        <attr name="refreshFinalMoveOffset" format="dimension" />   <!--freshUI header max move distance-->
     </declare-styleable>
     //
     <declare-styleable name="TagsEditText">
-        <attr name="allowSpaceInTag" format="boolean"/>
-        <attr name="tagsTextColor" format="color"/>
-        <attr name="tagsTextSize" format="dimension"/>
-        <attr name="tagsBackground" format="integer"/>
-        <attr name="tagsCloseImageLeft" format="integer"/>
-        <attr name="tagsCloseImageRight" format="integer"/>
-        <attr name="tagsCloseImagePadding" format="dimension"/>
-        <attr name="tagsPaddingLeft" format="dimension"/>
-        <attr name="tagsPaddingRight" format="dimension"/>
-        <attr name="tagsPaddingTop" format="dimension"/>
-        <attr name="tagsPaddingBottom" format="dimension"/>
+        <attr name="allowSpaceInTag" format="boolean" />
+        <attr name="tagsTextColor" format="color" />
+        <attr name="tagsTextSize" format="dimension" />
+        <attr name="tagsBackground" format="integer" />
+        <attr name="tagsCloseImageLeft" format="integer" />
+        <attr name="tagsCloseImageRight" format="integer" />
+        <attr name="tagsCloseImagePadding" format="dimension" />
+        <attr name="tagsPaddingLeft" format="dimension" />
+        <attr name="tagsPaddingRight" format="dimension" />
+        <attr name="tagsPaddingTop" format="dimension" />
+        <attr name="tagsPaddingBottom" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="NumKeyView">
-        <attr name="gbColor" format="color|reference"/>
-        <attr name="deleteDrawable" format="reference"/>
-        <attr name="decimalDrawable" format="reference"/>
+        <attr name="gbColor" format="color|reference" />
+        <attr name="deleteDrawable" format="reference" />
+        <attr name="decimalDrawable" format="reference" />
 
     </declare-styleable>
     <declare-styleable name="CropImageView">
-        <attr name="cropMaskColor" format="color"/>
-        <attr name="cropBorderColor" format="color"/>
-        <attr name="cropBorderWidth" format="dimension"/>
-        <attr name="cropFocusWidth" format="dimension"/>
-        <attr name="cropFocusHeight" format="dimension"/>
+        <attr name="cropMaskColor" format="color" />
+        <attr name="cropBorderColor" format="color" />
+        <attr name="cropBorderWidth" format="dimension" />
+        <attr name="cropFocusWidth" format="dimension" />
+        <attr name="cropFocusHeight" format="dimension" />
         <attr name="cropStyle" format="enum">
-            <enum name="rectangle" value="0"/>
-            <enum name="circle" value="1"/>
+            <enum name="rectangle" value="0" />
+            <enum name="circle" value="1" />
         </attr>
+    </declare-styleable>
+
+    //自定义view最小高度
+    <declare-styleable name="MinHeightView">
+        <attr name="ViewMinHeight" format="dimension" />
     </declare-styleable>
 
     <!--任务轨迹seekbar-->

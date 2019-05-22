@@ -197,7 +197,9 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
         if (isFormList) {
             includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
             includeTextTitleTvSubtitle.setText(mActivity.getResources().getString(R.string.cancel));
-            includeTextTitleImvArrowsLeft.setVisibility(View.GONE);
+            //这里为了要保持边距，所以需要设置invisible，可是不能隐藏掉，所以下面调用绘制的方法，使其隐藏
+            includeTextTitleImvArrowsLeft.setVisibility(View.INVISIBLE);
+            includeTextTitleImvArrowsLeft.postInvalidate();
         } else {
             includeTextTitleImvArrowsLeft.setVisibility(View.VISIBLE);
             includeTextTitleTvSubtitle.setVisibility(View.GONE);

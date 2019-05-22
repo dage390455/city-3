@@ -28,6 +28,7 @@ import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 import com.sensoro.smartcity.server.response.DeviceUpdateFirmwareDataRsp;
+import com.sensoro.smartcity.server.response.DevicesAlarmPopupConfigRsp;
 import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskExceptionDeviceRsp;
@@ -108,6 +109,7 @@ public interface RetrofitService {
     String INSPECT_TASK_EXCEPTION_DETAIL = "inspect/device/_search";
     String INSPECTION_TASK_GET_TEMPLATE = "inspect/template";
     String GET_DEVICES_MERGE_TYPES = "devices/mergeTypes";
+    String GET_DEVICES_ALARM_POPUP_CONFIG = "alarms/config";
     String GET_DEPOLY_RECORD_LIST = "prov1/deploy/list";
     String MONITOR_POINT_OPERATION = "devices/list/task";
     //    String DEPLOY_DEVICE_DETAIL = "devices/detail";
@@ -338,6 +340,10 @@ public interface RetrofitService {
     @Streaming
     @GET
     Observable<ResponseBody> downloadDeviceFirmwareFile(@Url String url);
+
+    @GET(GET_DEVICES_ALARM_POPUP_CONFIG)
+//    Observable<DevicesMergeTypesRsp> getDevicesMergeTypes(@Header("x-session-id") String sessionId);
+    Observable<DevicesAlarmPopupConfigRsp> getDevicesAlarmPopupConfig();
 
     /**
      * 通过sn获取摄像头详情

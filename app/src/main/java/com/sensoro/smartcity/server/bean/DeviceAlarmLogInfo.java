@@ -35,6 +35,8 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
     private int sort;
     private Map<String, Object> sensorData;
     private String event;
+    //1正常
+    private int alarmStatus;
 
     public String getEvent() {
         return event;
@@ -171,6 +173,7 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
     public void setUpdatedTime(long updatedTime) {
         this.updatedTime = updatedTime;
     }
+
     public long getCreatedTime() {
         return createdTime;
     }
@@ -201,6 +204,14 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
 
     public void setCameras(List<String> cameras) {
         this.cameras = cameras;
+    }
+
+    public int getAlarmStatus() {
+        return alarmStatus;
+    }
+
+    public void setAlarmStatus(int alarmStatus) {
+        this.alarmStatus = alarmStatus;
     }
 
 

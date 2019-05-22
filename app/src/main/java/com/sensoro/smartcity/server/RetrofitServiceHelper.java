@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.adapter.model.SecurityRisksAdapterModel;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.server.bean.ScenesData;
@@ -42,6 +43,7 @@ import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 import com.sensoro.smartcity.server.response.DeviceUpdateFirmwareDataRsp;
+import com.sensoro.smartcity.server.response.DevicesAlarmPopupConfigRsp;
 import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskExceptionDeviceRsp;
@@ -72,6 +74,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -789,13 +792,19 @@ public class RetrofitServiceHelper {
      * @param remark
      * @return
      */
-    public Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(String id, int statusResult, int statusType, int
-            statusPlace, String remark, boolean isReconfirm, List<ScenesData> scenesDataList) {
+    public Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(String id, Integer displayStatus, Integer reason, Integer
+            place, String remark, boolean isReconfirm, List<ScenesData> scenesDataList) {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("displayStatus", statusResult);
-            jsonObject.put("reason", statusType);
-            jsonObject.put("place", statusPlace);
+            if (displayStatus != null) {
+                jsonObject.put("displayStatus", displayStatus);
+            }
+            if (reason != null) {
+                jsonObject.put("reason", reason);
+            }
+            if (place != null) {
+                jsonObject.put("place", place);
+            }
             if (!TextUtils.isEmpty(remark)) {
                 jsonObject.put("remark", remark);
             }
@@ -807,6 +816,70 @@ public class RetrofitServiceHelper {
             }
             //
             if (scenesDataList != null) {
+                JSONArray jsonArray = new JSONArray();
+                for (ScenesData scenesData : scenesDataList) {
+                    JSONObject jsonObject1 = new JSONObject();
+                    jsonObject1.put("type", scenesData.type);
+                    jsonObject1.put("url", scenesData.url);
+                    if (!TextUtils.isEmpty(scenesData.thumbUrl)) {
+                        jsonObject1.put("thumbUrl", scenesData.thumbUrl);
+                    }
+                    jsonArray.put(jsonObject1);
+                }
+                jsonObject.put("scenes", jsonArray);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.doUpdatePhotosUrl(id, body);
+    }
+
+    /**
+     * 修改提交确认预警信息备注(图片)
+     *
+     * @param id
+     * @param remark
+     * @return
+     */
+    public Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(String id, Map<String, Integer> map, List<SecurityRisksAdapterModel> alarmPopupDangerDataList, String remark, boolean isReconfirm, List<ScenesData> scenesDataList) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (map != null) {
+                Set<Map.Entry<String, Integer>> entries = map.entrySet();
+                for (Map.Entry<String, Integer> entry : entries) {
+                    String key = entry.getKey();
+                    Integer value = entry.getValue();
+                    jsonObject.put(key, value);
+                }
+            }
+            if (alarmPopupDangerDataList != null && alarmPopupDangerDataList.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (SecurityRisksAdapterModel alarmPopupDangerData : alarmPopupDangerDataList) {
+                    JSONObject jsonObjectDanger = new JSONObject();
+                    jsonObjectDanger.put("place", alarmPopupDangerData.place);
+                    if (alarmPopupDangerData.action.size() > 0) {
+                        JSONArray jsonArray1 = new JSONArray();
+                        for (String str : alarmPopupDangerData.action) {
+                            jsonArray1.put(str);
+                        }
+                        jsonObjectDanger.put("action", jsonArray1);
+                    }
+                    jsonArray.put(jsonObjectDanger);
+                }
+                jsonObject.put("danger", jsonArray);
+            }
+            if (!TextUtils.isEmpty(remark)) {
+                jsonObject.put("remark", remark);
+            }
+            jsonObject.put("source", "app");
+            if (isReconfirm) {
+                jsonObject.put("type", "reconfirm");
+            } else {
+                jsonObject.put("type", "confirm");
+            }
+            //
+            if (scenesDataList != null && scenesDataList.size() > 0) {
                 JSONArray jsonArray = new JSONArray();
                 for (ScenesData scenesData : scenesDataList) {
                     JSONObject jsonObject1 = new JSONObject();
@@ -1523,6 +1596,15 @@ public class RetrofitServiceHelper {
     }
 
     /**
+     * 获取预警确认弹窗的配置文件
+     *
+     * @return
+     */
+    public Observable<DevicesAlarmPopupConfigRsp> getDevicesAlarmPopupConfig() {
+        return retrofitService.getDevicesAlarmPopupConfig();
+    }
+
+    /**
      * 通过sn获取摄像头详情
      *
      * @param sn
@@ -1594,14 +1676,14 @@ public class RetrofitServiceHelper {
         return retrofitService.getDeviceCameraFaceList(body);
     }
 
-    public Observable<AlarmCameraLiveRsp> getAlarmCamerasDetail(List<String> cameraIds){
+    public Observable<AlarmCameraLiveRsp> getAlarmCamerasDetail(List<String> cameraIds) {
         StringBuilder sb = new StringBuilder();
-        if (cameraIds != null&& cameraIds.size() > 0) {
+        if (cameraIds != null && cameraIds.size() > 0) {
             for (String cameraId : cameraIds) {
                 sb.append(cameraId).append(",");
             }
 
-            sb.deleteCharAt(sb.length() -1);
+            sb.deleteCharAt(sb.length() - 1);
         }
         return retrofitService.getAlarmCamerasDetail(sb.toString());
 
@@ -1668,7 +1750,7 @@ public class RetrofitServiceHelper {
                 for (String cameraId : cameraIds) {
                     jsonArray.put(cameraId);
                 }
-                jsonObject.put("cameraIds",jsonArray);
+                jsonObject.put("cameraIds", jsonArray);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1691,16 +1773,16 @@ public class RetrofitServiceHelper {
         return retrofitService.getDeviceCameraListByFilter(pageSize, page, search, mapFilter);
     }
 
-    public Observable<AlarmCloudVideoRsp> getCloudVideo(String[] eventIds){
+    public Observable<AlarmCloudVideoRsp> getCloudVideo(String[] eventIds) {
         JSONObject jsonObject = new JSONObject();
-        if (eventIds != null && eventIds.length >0) {
+        if (eventIds != null && eventIds.length > 0) {
             try {
                 JSONArray jsonArray = new JSONArray();
 
                 for (int i = 0; i < eventIds.length; i++) {
                     jsonArray.put(eventIds[i]);
                 }
-                jsonObject.put("eventIds",jsonArray);
+                jsonObject.put("eventIds", jsonArray);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

@@ -100,10 +100,15 @@
     <color name="c_fde4e4">#FDE4E4</color>
     <color name="c_4dffffff">#66FFFFFF</color>
     <color name="c_03ffffff">#33FFFFFF</color>
+
+    <color name="color_alarm_pup_red">#FFF35A58</color>
+
+
     <color name="c_119f82">#119F82</color>
     <color name="c_383838">#383838</color>
     <color name="c_CC383838">#CC383838</color>
     <color name="c_08000000">#08000000</color>
     <color name="c_f48f57">#F48F57</color>
+
 
 </resources>
