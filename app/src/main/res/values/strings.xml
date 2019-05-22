@@ -1011,6 +1011,9 @@
     <string name="secondary_dns">Secondary DNS</string>
     <string name="vpn">VPN</string>
     <string name="frequency_poin_info">Frequency Poin Info</string>
+    <string name="todaynew">Today</string>
+    <string name="this_week">This Week</string>
+    <string name="base_station_detail">Base Station Detail</string>
 
 
 </resources>

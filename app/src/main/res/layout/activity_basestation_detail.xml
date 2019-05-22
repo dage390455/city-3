@@ -314,8 +314,11 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/shape_bg_top"
-                    android:textColor="@color/c_25292d"
+                    android:gravity="center"
+                    android:text="@string/todaynew"
+
+
+                    android:textColor="@color/c_252525"
                     android:textSize="14dp" />
 
                 <View
@@ -328,7 +331,13 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:textColor="@color/c_25292d"
+
+                    android:background="@drawable/shape_bg_top"
+
+                    android:gravity="center"
+                    android:text="@string/this_week"
+
+                    android:textColor="@color/c_6a6a6a"
                     android:textSize="14dp" />
             </LinearLayout>
 
@@ -340,11 +349,11 @@
 
 
             <android.support.constraint.ConstraintLayout
+                android:id="@+id/navigation_cl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
 
-                android:id="@+id/navigation_cl"
+                android:background="@color/white"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp">
 
