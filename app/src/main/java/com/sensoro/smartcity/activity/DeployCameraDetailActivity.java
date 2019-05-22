@@ -461,7 +461,7 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
         }
     }
 
-    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.tv_ac_deploy_device_camera_upload, R.id.ll_ac_deploy_device_camera_name_location, R.id.rl_ac_deploy_device_camera_tag, R.id.ll_ac_deploy_device_camera_deploy_pic, R.id.ll_ac_deploy_device_camera_fixed_point, R.id.ll_ac_deploy_device_camera_deploy_method, R.id.ll_ac_deploy_device_camera_deploy_orientation})
+    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.tv_ac_deploy_device_camera_upload, R.id.ll_ac_deploy_device_camera_name_location, R.id.rl_ac_deploy_device_camera_tag, R.id.ll_ac_deploy_device_camera_deploy_pic, R.id.ll_ac_deploy_device_camera_fixed_point, R.id.ll_ac_deploy_device_camera_deploy_method, R.id.ll_ac_deploy_device_camera_deploy_orientation,R.id.ll_ac_deploy_device_camera_deploy_live})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
@@ -487,6 +487,9 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
                 break;
             case R.id.ll_ac_deploy_device_camera_deploy_orientation:
                 mPresenter.doDeployOrientation();
+                break;
+            case R.id.ll_ac_deploy_device_camera_deploy_live:
+                mPresenter.doDeployCameraLive();
                 break;
         }
     }

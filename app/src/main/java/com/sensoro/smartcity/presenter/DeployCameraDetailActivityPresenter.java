@@ -20,6 +20,7 @@ import com.amap.api.services.geocoder.StreetNumber;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.DeployCameraLiveDetailActivity;
 import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMapENActivity;
@@ -37,9 +38,11 @@ import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeployCameraUploadInfo;
+import com.sensoro.smartcity.server.bean.DeviceCameraDetailInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.CameraFilterRsp;
 import com.sensoro.smartcity.server.response.DeployCameraUploadRsp;
+import com.sensoro.smartcity.server.response.DeviceCameraDetailRsp;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -58,16 +61,33 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCameraDetailActivityView> implements IOnCreate, IOnStart, Constants
-        , Runnable {
+public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCameraDetailActivityView> implements IOnCreate, IOnStart, Constants {
     private Activity mContext;
     private Handler mHandler;
     private DeployAnalyzerModel deployAnalyzerModel;
-    private final Runnable signalTask = new Runnable() {
+    private final Runnable checkCameraStatusTask = new Runnable() {
         @Override
         public void run() {
             //TODO 轮询查看摄像头状态？
-            mHandler.postDelayed(signalTask, 2000);
+            RetrofitServiceHelper.getInstance().getDeviceCamera(deployAnalyzerModel.sn.toUpperCase()).subscribeOn
+                    (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraDetailRsp>(DeployCameraDetailActivityPresenter.this) {
+                @Override
+                public void onCompleted(DeviceCameraDetailRsp deviceCameraDetailRsp) {
+                    DeviceCameraDetailInfo data = deviceCameraDetailRsp.getData();
+                    if (data != null) {
+                        String deviceStatus = data.getDeviceStatus();
+                        if (!TextUtils.isEmpty(deviceStatus)) {
+                            deployAnalyzerModel.cameraStatus = deviceStatus;
+                            getView().setDeployCameraStatus(deployAnalyzerModel.cameraStatus);
+                        }
+                    }
+                }
+
+                @Override
+                public void onErrorMsg(int errorCode, String errorMsg) {
+                }
+            });
+            mHandler.postDelayed(checkCameraStatusTask, 10 * 1000);
         }
     };
     private final List<DeployCameraConfigModel> deployMethods = new ArrayList<>();
@@ -83,10 +103,7 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
         Intent intent = mContext.getIntent();
         deployAnalyzerModel = (DeployAnalyzerModel) intent.getSerializableExtra(EXTRA_DEPLOY_ANALYZER_MODEL);
         getView().setNotOwnVisible(deployAnalyzerModel.notOwn);
-        if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION || Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
-            mHandler.post(this);
-        }
-        mHandler.post(signalTask);
+        mHandler.postDelayed(checkCameraStatusTask, 5 * 1000);
         init();
         requestData();
     }
@@ -592,14 +609,6 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
 
 
     @Override
-    public void run() {
-        //TODO
-        mHandler.postDelayed(this, 2000);
-
-    }
-
-
-    @Override
     public void onStart() {
     }
 
@@ -716,5 +725,13 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
                 getView().setDeployMethod(method);
             }
         }, strings);
+    }
+
+    public void doDeployCameraLive() {
+        if (checkHasCameraStatus()) {
+            Intent intent = new Intent(mContext, DeployCameraLiveDetailActivity.class);
+            intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+            getView().startAC(intent);
+        }
     }
 }
