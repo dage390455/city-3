@@ -26,6 +26,7 @@ import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractInfoRsp;
 import com.sensoro.smartcity.server.response.ContractsListRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
+import com.sensoro.smartcity.server.response.DeployCameraUploadRsp;
 import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.DeployRecordRsp;
 import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
@@ -1789,6 +1790,73 @@ public class RetrofitServiceHelper {
         }
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
         return retrofitService.getCloudVideo(requestBody);
+    }
+
+    /**
+     * 摄像头部署
+     *
+     * @param sn
+     * @param name
+     * @param label
+     * @param mobilePhone
+     * @param latitude
+     * @param longitude
+     * @param imgUrls
+     * @param location
+     * @param installationMode
+     * @param orientation
+     * @return
+     */
+    public Observable<DeployCameraUploadRsp> doUploadDeployCamera(String sn, String name, List<String> label, String mobilePhone, String latitude, String longitude,
+                                                                  List<String> imgUrls, String location, String installationMode, String orientation, String createStatus) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(sn)) {
+                jsonObject.put("sn", sn);
+            }
+            if (!TextUtils.isEmpty(name)) {
+                jsonObject.put("name", name);
+            }
+            if (!TextUtils.isEmpty(mobilePhone)) {
+                jsonObject.put("mobilePhone", mobilePhone);
+            }
+            if (!TextUtils.isEmpty(latitude)) {
+                jsonObject.put("latitude", latitude);
+            }
+            if (!TextUtils.isEmpty(longitude)) {
+                jsonObject.put("longitude", longitude);
+            }
+            if (!TextUtils.isEmpty(location)) {
+                jsonObject.put("location", location);
+            }
+            if (!TextUtils.isEmpty(installationMode)) {
+                jsonObject.put("installationMode", installationMode);
+            }
+            if (!TextUtils.isEmpty(orientation)) {
+                jsonObject.put("orientation", orientation);
+            }
+            if (!TextUtils.isEmpty(createStatus)) {
+                jsonObject.put("createStatus", createStatus);
+            }
+            if (label != null && label.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (String tag : label) {
+                    jsonArray.put(tag);
+                }
+                jsonObject.put("label", jsonArray);
+            }
+            if (imgUrls != null && imgUrls.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (String url : imgUrls) {
+                    jsonArray.put(url);
+                }
+                jsonObject.put("imgUrls", jsonArray);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.doUploadDeployCamera(requestBody);
     }
 
 }

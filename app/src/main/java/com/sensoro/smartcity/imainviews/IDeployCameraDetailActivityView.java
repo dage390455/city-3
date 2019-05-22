@@ -37,7 +37,7 @@ public interface IDeployCameraDetailActivityView extends IToast, IProgressDialog
 
     void dismissBleConfigDialog();
 
-    void setDeployPosition(boolean hasPosition);
+    void setDeployPosition(boolean hasPosition,String text);
 
     void setNotOwnVisible(boolean isVisible);
 

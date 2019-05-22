@@ -53,8 +53,6 @@ public class CameraListPopAdapter extends RecyclerView.Adapter<CameraListPopAdap
         GridLayoutManager manager = new GridLayoutManager(mContext, 3);
         holder.itemPopRvCamerListFilter.setLayoutManager(manager);
         holder.itemPopRvCamerListFilter.setAdapter(cameraListFilterAdapter);
-
-
         if (null != mStateCountList.get(position)) {
             CameraFilterModel model = mStateCountList.get(position);
             holder.itemPopTvCamerListFilterTitle.setText(model.getTitle().trim());

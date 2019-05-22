@@ -155,6 +155,7 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
         mDialogTvConfirm = view.findViewById(R.id.dialog_deploy_device_upload_tv_confirm);
         mDialogTvTitle = view.findViewById(R.id.dialog_deploy_device_upload_tv_title);
         mDialogTvMsg = view.findViewById(R.id.dialog_deploy_device_upload_tv_msg);
+        mDialogTvMsg.setText("摄像机离线");
         line1 = view.findViewById(R.id.line1);
 
         mDialogTvConfirm.setOnClickListener(this);
@@ -363,10 +364,10 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
     }
 
     @Override
-    public void setDeployPosition(boolean hasPosition) {
+    public void setDeployPosition(boolean hasPosition, String text) {
         if (hasPosition) {
             tvAcDeployDeviceCameraFixedPointState.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
-            tvAcDeployDeviceCameraFixedPointState.setText(mActivity.getText(R.string.positioned));
+            tvAcDeployDeviceCameraFixedPointState.setText(TextUtils.isEmpty(text) ? mActivity.getText(R.string.positioned) : text);
         } else {
             tvAcDeployDeviceCameraFixedPointState.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
             tvAcDeployDeviceCameraFixedPointState.setText(mActivity.getString(R.string.required));
@@ -416,24 +417,34 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
 
     @Override
     public void setDeployCameraStatus(String status) {
-        switch (status) {
-            case "0:":
-                //离线
-                tvAcDeployDeviceCameraDeployLive.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
-                Drawable drawableOffline = mActivity.getResources().getDrawable(R.drawable.shape_small_oval_fa6a6a6);
-                drawableOffline.setBounds(0, 0, drawableOffline.getMinimumWidth(), drawableOffline.getMinimumHeight());
-                tvAcDeployDeviceCameraDeployLive.setText(mActivity.getString(R.string.deploy_camera_status_offline));
-                tvAcDeployDeviceCameraDeployLive.setCompoundDrawables(drawableOffline, null, null, null);
-                break;
-            case "1":
-                //在线
-                tvAcDeployDeviceCameraDeployLive.setTextColor(mActivity.getResources().getColor(R.color.c_1DBB99));
-                Drawable drawableOnline = mActivity.getResources().getDrawable(R.drawable.shape_small_oval_f1dbb99);
-                drawableOnline.setBounds(0, 0, drawableOnline.getMinimumWidth(), drawableOnline.getMinimumHeight());
-                tvAcDeployDeviceCameraDeployLive.setText(mActivity.getString(R.string.deploy_camera_status_online));
-                tvAcDeployDeviceCameraDeployLive.setCompoundDrawables(drawableOnline, null, null, null);
-                break;
+        if (status != null) {
+            switch (status) {
+                case "0:":
+                    //离线
+                    tvAcDeployDeviceCameraDeployLive.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+                    Drawable drawableOffline = mActivity.getResources().getDrawable(R.drawable.shape_small_oval_fa6a6a6);
+                    drawableOffline.setBounds(0, 0, drawableOffline.getMinimumWidth(), drawableOffline.getMinimumHeight());
+                    tvAcDeployDeviceCameraDeployLive.setText(mActivity.getString(R.string.deploy_camera_status_offline));
+                    tvAcDeployDeviceCameraDeployLive.setCompoundDrawables(drawableOffline, null, null, null);
+                    break;
+                case "1":
+                    //在线
+                    tvAcDeployDeviceCameraDeployLive.setTextColor(mActivity.getResources().getColor(R.color.c_1DBB99));
+                    Drawable drawableOnline = mActivity.getResources().getDrawable(R.drawable.shape_small_oval_f1dbb99);
+                    drawableOnline.setBounds(0, 0, drawableOnline.getMinimumWidth(), drawableOnline.getMinimumHeight());
+                    tvAcDeployDeviceCameraDeployLive.setText(mActivity.getString(R.string.deploy_camera_status_online));
+                    tvAcDeployDeviceCameraDeployLive.setCompoundDrawables(drawableOnline, null, null, null);
+                    break;
+            }
+        } else {
+            //拿不到数据认为设备离线
+            tvAcDeployDeviceCameraDeployLive.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+            Drawable drawableOffline = mActivity.getResources().getDrawable(R.drawable.shape_small_oval_fa6a6a6);
+            drawableOffline.setBounds(0, 0, drawableOffline.getMinimumWidth(), drawableOffline.getMinimumHeight());
+            tvAcDeployDeviceCameraDeployLive.setText(mActivity.getString(R.string.deploy_camera_status_offline));
+            tvAcDeployDeviceCameraDeployLive.setCompoundDrawables(drawableOffline, null, null, null);
         }
+
 
     }
 

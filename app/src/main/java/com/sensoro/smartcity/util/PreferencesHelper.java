@@ -82,7 +82,7 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_BRIEF, eventLoginData.hasDeviceBrief);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK, eventLoginData.hasSignalCheck);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, eventLoginData.hasSignalConfig);
-        editor.putBoolean(EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD, eventLoginData.hasBadSignalUpload);
+        editor.putBoolean(EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD, eventLoginData.hasForceUpload);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION, eventLoginData.hasDevicePositionCalibration);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_SHORT, eventLoginData.hasDeviceMuteShort);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_LONG, eventLoginData.hasDeviceMuteLong);
@@ -158,7 +158,7 @@ public final class PreferencesHelper implements Constants {
             //TODO 统一去掉信号配置
 //            eventLoginData.hasSignalConfig = hasDeviceSignalConfig;
             eventLoginData.hasSignalConfig = false;
-            eventLoginData.hasBadSignalUpload = hasBadSignalUpload;
+            eventLoginData.hasForceUpload = hasBadSignalUpload;
             eventLoginData.hasDevicePositionCalibration = hasDevicePositionCalibration;
             eventLoginData.hasDeviceMuteShort = hasDeviceMuteShort;
             eventLoginData.hasDeviceMuteLong = hasDeviceMuteLong;
