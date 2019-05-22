@@ -304,6 +304,8 @@ dependencies {
     implementation project(path: ':gsyVideoPlayer-proxy_cache')
     implementation project(path: ':gsyVideoPlayer-java')
     implementation project(path: ':gsyVideoPlayer-armv7a')
+
+
     //mp表格组件
     implementation deps.MPAndroidChart
 
