@@ -1756,5 +1756,4 @@ public class RetrofitServiceHelper {
         return retrofitService.getDeviceCameraListByFilter(pageSize, page, search, mapFilter);
     }
 
-
 }

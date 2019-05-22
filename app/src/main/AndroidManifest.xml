@@ -360,8 +360,10 @@
         <activity android:name=".temp.TestUpdateActivity" />
         <activity android:name=".activity.DeployMonitorCheckActivity" />
         <activity android:name=".activity.DeployRepairInstructionActivity" />
+
         <activity android:name=".activity.SecurityRisksActivity" />
         <activity android:name=".activity.SecurityRiskTagManagerActivity" />
+
         <activity android:name=".temp.CameraTest" />
         <activity android:name=".temp.RecyclerViewActivity" />
         <activity android:name=".activity.CameraListActivity" />

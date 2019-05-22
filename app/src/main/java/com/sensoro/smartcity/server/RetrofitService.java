@@ -339,6 +339,7 @@ public interface RetrofitService {
     @GET(GET_DEVICES_ALARM_POPUP_CONFIG)
 //    Observable<DevicesMergeTypesRsp> getDevicesMergeTypes(@Header("x-session-id") String sessionId);
     Observable<DevicesAlarmPopupConfigRsp> getDevicesAlarmPopupConfig();
+
     /**
      * 通过sn获取摄像头详情
      *
@@ -390,6 +391,5 @@ public interface RetrofitService {
 
     @GET("cameras")
     Observable<DeviceCameraListRsp> getDeviceCameraListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
-
 }
 

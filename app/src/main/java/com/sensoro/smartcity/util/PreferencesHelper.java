@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
-import com.sensoro.common.utils.AESUtil;
 import com.sensoro.smartcity.R;
+import com.sensoro.common.utils.AESUtil;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.adapter.model.SecurityRisksTagModel;
 import com.sensoro.smartcity.constant.Constants;
