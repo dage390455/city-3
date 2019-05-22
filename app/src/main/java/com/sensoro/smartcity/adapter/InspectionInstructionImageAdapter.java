@@ -3,11 +3,7 @@ package com.sensoro.smartcity.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +15,6 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.server.bean.ScenesData;
-import com.sensoro.smartcity.util.AppUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -69,12 +64,24 @@ public class InspectionInstructionImageAdapter extends RecyclerView.Adapter<Insp
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        resource.compress(Bitmap.CompressFormat.PNG,100,baos);
-                        int height = resource.getHeight() * (mScreenWidth / resource.getWidth());
-                        Glide.with(mContext)
-                                .load( baos.toByteArray())
-                                .override(mScreenWidth,height)
-                                .into(holder.itemAdapterInspectionInstructionImv);
+                        try {
+
+                            resource.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                            int width = resource.getWidth();
+                            double resourceHeight = resource.getHeight();
+                            double percent = (double) mScreenWidth / (double) width;
+                            int height = (int) (resourceHeight * percent);
+                            Glide.with(mContext)
+                                    .load(baos.toByteArray())
+                                    .override(mScreenWidth, height)
+                                    .into(holder.itemAdapterInspectionInstructionImv);
+                        } catch (Exception e) {
+                            Glide.with(mContext)
+                                    .load(baos.toByteArray())
+                                    .into(holder.itemAdapterInspectionInstructionImv);
+                            e.printStackTrace();
+                        }
+
                     }
                 });
 //                .into(holder.itemAdapterInspectionInstructionImv);
