@@ -21,7 +21,6 @@ import com.sensoro.smartcity.server.response.CameraFilterRsp;
 import com.sensoro.smartcity.server.response.DeviceCameraDetailRsp;
 import com.sensoro.smartcity.server.response.DeviceCameraListRsp;
 import com.sensoro.smartcity.util.PreferencesHelper;
-import com.yixia.camera.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -351,7 +350,7 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
                         stringBuffer.append(",");
                     }
                 }
-                if (!StringUtils.isEmpty(stringBuffer.toString())) {
+                if (!TextUtils.isEmpty(stringBuffer.toString())) {
                     stringBuffer.deleteCharAt(stringBuffer.length() - 1).toString();
                     hashMap.put(key, stringBuffer.toString());
                 }

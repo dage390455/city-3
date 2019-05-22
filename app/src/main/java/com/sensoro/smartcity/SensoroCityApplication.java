@@ -33,18 +33,18 @@ import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.sensoro.common.utils.Repause;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceManager;
+import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.push.AppBlockCanaryContext;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
 import com.sensoro.smartcity.push.ThreadPoolManager;
-import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.util.DynamicTimeFormat;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.NotificationUtils;
-import com.sensoro.common.utils.Repause;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.view.CropImageView;
 import com.sensoro.smartcity.widget.popup.GlideImageLoader;
@@ -54,11 +54,9 @@ import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.yixia.camera.VCamera;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.File;
 import java.util.Locale;
 
 import me.jessyan.autosize.AutoSizeConfig;
@@ -294,20 +292,6 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     }
 
 
-    private void initVc() {
-        VIDEO_PATH += "SensoroCity";
-        File file = new File(VIDEO_PATH);
-        if (!file.exists()) file.mkdirs();
-
-        //设置视频缓存路径
-        VCamera.setVideoCachePath(VIDEO_PATH);
-
-        // 开启log输出,ffmpeg输出到logcat
-        VCamera.setDebugMode(false);
-        // 初始化拍摄SDK，必须
-        VCamera.initialize(this);
-    }
-
     private void initBugLy() {
         try {
 //  在这里设置strategy的属性，在bugly初始化时传入
@@ -534,7 +518,6 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         api = WXAPIFactory.createWXAPI(this, Constants.APP_ID, false);
         api.registerApp(Constants.APP_ID);
 //        FMMapSDK.init(this);
-        initVc();
         initImagePicker();
         initUploadManager();
         locate();
