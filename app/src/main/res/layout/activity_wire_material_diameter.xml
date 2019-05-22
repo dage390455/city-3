@@ -50,6 +50,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/air_open_rated_current"
                     android:layout_marginStart="20dp"
+                    android:textColor="@color/c_a6a6a6"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"/>
 
@@ -66,6 +67,7 @@
                     android:imeOptions="actionDone"
                     android:inputType="numberSigned"
                     android:gravity="end"
+                    android:maxLength="6"
                     android:paddingEnd="20dp"
                     android:textCursorDrawable="@drawable/my_cursor" />
             </RelativeLayout>

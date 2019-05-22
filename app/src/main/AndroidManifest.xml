@@ -381,6 +381,9 @@
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".activity.DeployCameraDetailActivity" />
         <activity android:name=".temp.LineChartActivity2" />
+        <activity android:name=".activity.SelfCheckActivity" />
+        <activity android:name=".activity.FrequencyPointActivity" />
+        <activity android:name=".activity.NetWorkInfoActivity" />
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"

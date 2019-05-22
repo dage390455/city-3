@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.CameraDetailActivity;
+import com.sensoro.smartcity.activity.BaseStationDetailActivity;
 import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -100,16 +100,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                     DeviceCameraDetailInfo.CameraBean camera = data.getCamera();
                     String lastCover = data.getLastCover();
                     Intent intent = new Intent();
-                    intent.setClass(mContext, CameraDetailActivity.class);
-                    intent.putExtra("cid", cid);
-                    intent.putExtra("hls", hls);
-                    intent.putExtra("sn", sn);
-                    if (camera != null) {
-                        String name = camera.getName();
-                        intent.putExtra("cameraName", name);
-                    }
-                    intent.putExtra("lastCover", lastCover);
-                    intent.putExtra("deviceStatus", data.getDeviceStatus());
+                    intent.setClass(mContext, BaseStationDetailActivity.class);
                     getView().startAC(intent);
                 } else {
                     getView().toastShort(mContext.getString(R.string.camera_info_get_failed));

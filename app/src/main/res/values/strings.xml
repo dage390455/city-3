@@ -988,6 +988,7 @@
 
     <string name="deploy_device_detail_check_failed">Deploy Check Failed</string>
     <string name="deploy_device_detail_checking">Deploy Checking</string>
+    <string name="deploy_device_detail_check_config_failed">初始配置失败</string>
     <string name="deploy_device_detail_check_not_nearby">设备位置检测失败，请开启手机蓝牙并确保在设备附近</string>
     <string name="deploy_device_detail_check_tip_is_powered_on">Please make sure the device is powered on</string>
     <string name="deploy_device_detail_check_tip_press_the_sensor">Please press the sensor self-test button</string>
@@ -1001,4 +1002,15 @@
     <string name="cannot_be_all_spaces">Cannot be all spaces</string>
     <string name="The_network_information">The network information</string>
     <string name="Self_check_state">Self-check state</string>
+    <string name="networking_mode">Networking Mode</string>
+    <string name="network_info">Networking Info</string>
+    <string name="ip">Ip</string>
+    <string name="gateway">GateWay</string>
+    <string name="subnet_mask">Subnet Mask</string>
+    <string name="primary_dns">Primary DNS</string>
+    <string name="secondary_dns">Secondary DNS</string>
+    <string name="vpn">VPN</string>
+    <string name="frequency_poin_info">Frequency Poin Info</string>
+
+
 </resources>

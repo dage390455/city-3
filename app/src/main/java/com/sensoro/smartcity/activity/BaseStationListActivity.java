@@ -25,13 +25,13 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.DeviceCameraContentAdapter;
+import com.sensoro.smartcity.adapter.BaseStationListAdapter;
 import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
 import com.sensoro.smartcity.model.CameraFilterModel;
-import com.sensoro.smartcity.presenter.CameraListActivityPresenter;
+import com.sensoro.smartcity.presenter.BaseStationListActivityPresenter;
 import com.sensoro.smartcity.server.bean.DeviceCameraInfo;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
@@ -47,8 +47,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BaseStationListActivity extends BaseActivity<ICameraListActivityView, CameraListActivityPresenter>
-        implements ICameraListActivityView, DeviceCameraContentAdapter.OnDeviceCameraContentClickListener, View.OnClickListener {
+public class BaseStationListActivity extends BaseActivity<ICameraListActivityView, BaseStationListActivityPresenter>
+        implements ICameraListActivityView, BaseStationListAdapter.OnDeviceCameraContentClickListener, View.OnClickListener {
 
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
@@ -89,7 +89,7 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
     LinearLayout cameraListSearchTop;
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
-    private DeviceCameraContentAdapter mDeviceCameraContentAdapter;
+    private BaseStationListAdapter mDeviceCameraContentAdapter;
     private Animation returnTopAnimation;
 
     private CameraListFilterPopupWindow mCameraListFilterPopupWindow;
@@ -111,7 +111,7 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
 
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        mDeviceCameraContentAdapter = new DeviceCameraContentAdapter(mActivity);
+        mDeviceCameraContentAdapter = new BaseStationListAdapter(mActivity);
         mDeviceCameraContentAdapter.setOnAlarmHistoryLogConfirmListener(this);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -344,8 +344,8 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
     }
 
     @Override
-    protected CameraListActivityPresenter createPresenter() {
-        return new CameraListActivityPresenter();
+    protected BaseStationListActivityPresenter createPresenter() {
+        return new BaseStationListActivityPresenter();
     }
 
     @Override
