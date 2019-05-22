@@ -330,6 +330,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         tv_hint.setVisibility(View.GONE);
 
         myHandler.removeCallbacksAndMessages(null);
+
     }
 
 
@@ -449,6 +450,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     public void surfaceDestroyed(SurfaceHolder holder) {
         LogUtil.i("JCameraView SurfaceDestroyed");
         CameraInterface.getInstance().doDestroyCamera();
+        myHandler.removeCallbacksAndMessages(null);
     }
 
 
