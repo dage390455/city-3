@@ -379,6 +379,10 @@
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".activity.DeployCameraDetailActivity" />
         <activity android:name=".temp.LineChartActivity2" />
+        <activity
+            android:name=".activity.DeployCameraLiveDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"

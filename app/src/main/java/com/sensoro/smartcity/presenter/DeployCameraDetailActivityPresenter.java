@@ -20,6 +20,7 @@ import com.amap.api.services.geocoder.StreetNumber;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.DeployCameraLiveDetailActivity;
 import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMapENActivity;
@@ -716,5 +717,13 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
                 getView().setDeployMethod(method);
             }
         }, strings);
+    }
+
+    public void doDeployCameraLive() {
+        if (checkHasCameraStatus()) {
+            Intent intent = new Intent(mContext, DeployCameraLiveDetailActivity.class);
+            intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+            getView().startAC(intent);
+        }
     }
 }
