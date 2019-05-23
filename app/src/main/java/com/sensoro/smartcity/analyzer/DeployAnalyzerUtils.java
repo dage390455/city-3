@@ -80,12 +80,19 @@ public class DeployAnalyzerUtils {
                     listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
                     return;
                 } else {
-                    if (scanSerialNumber.length() >= 8 && scanSerialNumber.length() <= 32) {
-                        handleDeployDeviceStation(presenter, scanSerialNumber, activity, listener);
-                    } else {
+                    try {
+                        String[] strings = scanSerialNumber.split(" ");
+                        scanSerialNumber = strings[0];
+                        if (scanSerialNumber.length() >= 8 && scanSerialNumber.length() <= 32) {
+                            handleDeployDeviceStation(presenter, scanSerialNumber, activity, listener);
+                        } else {
+                            listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
+                            return;
+                        }
+                    } catch (Exception e) {
                         listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
-                        return;
                     }
+
                 }
                 break;
             case Constants.TYPE_SCAN_LOGIN:
@@ -427,35 +434,39 @@ public class DeployAnalyzerUtils {
                                         } else {
                                             deployAnalyzerModel.deployType = Constants.TYPE_SCAN_DEPLOY_CAMERA;
                                             deployAnalyzerModel.sn = sn;
-                                            deployAnalyzerModel.nameAndAddress = data.getDeviceName();
-                                            deployAnalyzerModel.cameraStatus = data.getDeviceStatus();
-                                            deployAnalyzerModel.latLng.clear();
-                                            String latitudeStr = data.getLatitude();
-                                            String longitudeStr = data.getLongitude();
-                                            if (!TextUtils.isEmpty(latitudeStr) && !TextUtils.isEmpty(longitudeStr)) {
-                                                try {
-                                                    double latitude = Double.parseDouble(latitudeStr);
-                                                    double longitude = Double.parseDouble(longitudeStr);
-                                                    if (0 != latitude && 0 != longitude) {
-//                                                        final double lon = deployAnalyzerModel.latLng.get(0);
-//                                                        final double lan = deployAnalyzerModel.latLng.get(1);
-                                                        deployAnalyzerModel.latLng.add(longitude);
-                                                        deployAnalyzerModel.latLng.add(latitude);
-                                                    }
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-                                            deployAnalyzerModel.tagList.clear();
                                             deployAnalyzerModel.hls = data.getHls();
                                             DeviceCameraDetailInfo.CameraBean camera = data.getCamera();
+                                            //
                                             if (camera != null) {
+                                                deployAnalyzerModel.nameAndAddress = camera.getName();
+                                                deployAnalyzerModel.orientation = camera.getOrientation();
+                                                deployAnalyzerModel.installationMode = camera.getInstallationMode();
                                                 List<String> label = camera.getLabel();
                                                 if (label != null && label.size() > 0) {
+                                                    deployAnalyzerModel.tagList.clear();
                                                     deployAnalyzerModel.tagList.addAll(label);
                                                 }
-                                                deployAnalyzerModel.installationMode = camera.getInstallationMode();
-                                                deployAnalyzerModel.orientation = camera.getOrientation();
+                                                DeviceCameraDetailInfo.CameraBean.InfoBean info = camera.getInfo();
+                                                if (info != null) {
+                                                    deployAnalyzerModel.cameraStatus = info.getDeviceStatus();
+                                                    deployAnalyzerModel.latLng.clear();
+                                                    String latitudeStr = info.getLatitude();
+                                                    String longitudeStr = info.getLongitude();
+                                                    if (!TextUtils.isEmpty(latitudeStr) && !TextUtils.isEmpty(longitudeStr)) {
+                                                        try {
+                                                            double latitude = Double.parseDouble(latitudeStr);
+                                                            double longitude = Double.parseDouble(longitudeStr);
+                                                            if (0 != latitude && 0 != longitude) {
+//                                                        final double lon = deployAnalyzerModel.latLng.get(0);
+//                                                        final double lan = deployAnalyzerModel.latLng.get(1);
+                                                                deployAnalyzerModel.latLng.add(longitude);
+                                                                deployAnalyzerModel.latLng.add(latitude);
+                                                            }
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                }
                                             }
                                             Intent intent = new Intent();
                                             intent.setClass(activity, DeployCameraDetailActivity.class);

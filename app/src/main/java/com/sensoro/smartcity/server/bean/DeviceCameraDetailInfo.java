@@ -331,8 +331,8 @@ public class DeviceCameraDetailInfo {
             private String cid;
             private String sn;
             private boolean platform;
-            private double latitude;
-            private double longitude;
+            private String latitude;
+            private String longitude;
             private String deviceStatus;
 
             public String getType() {
@@ -383,19 +383,19 @@ public class DeviceCameraDetailInfo {
                 this.platform = platform;
             }
 
-            public double getLatitude() {
+            public String getLatitude() {
                 return latitude;
             }
 
-            public void setLatitude(double latitude) {
+            public void setLatitude(String latitude) {
                 this.latitude = latitude;
             }
 
-            public double getLongitude() {
+            public String getLongitude() {
                 return longitude;
             }
 
-            public void setLongitude(double longitude) {
+            public void setLongitude(String longitude) {
                 this.longitude = longitude;
             }
 
