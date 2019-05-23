@@ -17,6 +17,7 @@ import com.sensoro.smartcity.imainviews.IDeployNameplateAddSensorActivityView;
 import com.sensoro.smartcity.presenter.DeployNameplateAddSensorActivityPresenter;
 import com.sensoro.smartcity.widget.divider.BottomNoDividerItemDecoration;
 import com.sensoro.smartcity.widget.divider.CustomDivider;
+import com.sensoro.smartcity.widget.divider.CustomDrawableDivider;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import butterknife.BindView;
@@ -64,8 +65,8 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
     private void initRvAddedSensorList() {
         mAddedSensorAdapter = new AddedSensorAdapter(mActivity);
         LinearLayoutManager manager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
-        CustomDivider bottomNoDividerItemDecoration =
-                new CustomDivider(mActivity, BottomNoDividerItemDecoration.VERTICAL);
+        CustomDrawableDivider bottomNoDividerItemDecoration =
+                new CustomDrawableDivider(mActivity, CustomDrawableDivider.VERTICAL);
         rvAddedListAcDeployNameplateAddSensor.addItemDecoration(bottomNoDividerItemDecoration);
         rvAddedListAcDeployNameplateAddSensor.setLayoutManager(manager);
         rvAddedListAcDeployNameplateAddSensor.setAdapter(mAddedSensorAdapter);

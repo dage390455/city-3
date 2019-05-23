@@ -1,7 +1,7 @@
 package com.sensoro.smartcity.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -15,18 +15,19 @@ import android.widget.Toast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.AddSensorListAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
-import com.sensoro.smartcity.imainviews.IDeployNameplateAddSensorActivityView;
-import com.sensoro.smartcity.imainviews.IDeployNameplateAddSensorListActivityView;
-import com.sensoro.smartcity.presenter.DeployNameplateAddSensorListActivityPresenter;
+import com.sensoro.smartcity.imainviews.IDeployNameplateAddSensorFromListActivityView;
+import com.sensoro.smartcity.presenter.DeployNameplateAddSensorFromListActivityPresenter;
+import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.divider.CustomDivider;
+import com.sensoro.smartcity.widget.divider.CustomDrawableDivider;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DeployNameplateAddSensorListActivity extends BaseActivity<IDeployNameplateAddSensorListActivityView,
-        DeployNameplateAddSensorListActivityPresenter> implements IDeployNameplateAddSensorActivityView {
+public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDeployNameplateAddSensorFromListActivityView,
+        DeployNameplateAddSensorFromListActivityPresenter> implements IDeployNameplateAddSensorFromListActivityView {
 
     @BindView(R.id.iv_arrow_left_ac_deploy_nameplate_sensor_list)
     ImageView ivArrowLeftAcDeployNameplateSensorList;
@@ -49,10 +50,11 @@ public class DeployNameplateAddSensorListActivity extends BaseActivity<IDeployNa
     @BindView(R.id.tv_add_ac_deploy_nameplate_sensor_list)
     TextView tvAddAcDeployNameplateSensorList;
     private AddSensorListAdapter mAddSensorListAdapter;
+    private ProgressUtils mProgressUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_deplaoy_nameplate_add_sensor_list);
+        setContentView(R.layout.activity_deplaoy_nameplate_add_sensor_from_list);
         ButterKnife.bind(this);
         initView();
         mPresenter.initData(mActivity);
@@ -60,44 +62,20 @@ public class DeployNameplateAddSensorListActivity extends BaseActivity<IDeployNa
     }
 
     private void initView() {
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mAddSensorListAdapter = new AddSensorListAdapter(mActivity);
         LinearLayoutManager manager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
-        CustomDivider customDivider = new CustomDivider(mActivity, CustomDivider.VERTICAL);
-
+        CustomDrawableDivider customDivider = new CustomDrawableDivider(mActivity, CustomDrawableDivider.VERTICAL);
         rvListAcDeployNameplateSensorList.setLayoutManager(manager);
         rvListAcDeployNameplateSensorList.addItemDecoration(customDivider);
         rvListAcDeployNameplateSensorList.setAdapter(mAddSensorListAdapter);
     }
 
     @Override
-    protected DeployNameplateAddSensorListActivityPresenter createPresenter() {
-        return new DeployNameplateAddSensorListActivityPresenter();
+    protected DeployNameplateAddSensorFromListActivityPresenter createPresenter() {
+        return new DeployNameplateAddSensorFromListActivityPresenter();
     }
 
-    @Override
-    public void startAC(Intent intent) {
-        mActivity.startActivity(intent);
-    }
-
-    @Override
-    public void finishAc() {
-        mActivity.finish();
-    }
-
-    @Override
-    public void startACForResult(Intent intent, int requestCode) {
-        mActivity.startActivityForResult(intent,requestCode);
-    }
-
-    @Override
-    public void setIntentResult(int resultCode) {
-
-    }
-
-    @Override
-    public void setIntentResult(int resultCode, Intent data) {
-
-    }
 
     @Override
     public void toastShort(String msg) {
@@ -114,7 +92,7 @@ public class DeployNameplateAddSensorListActivity extends BaseActivity<IDeployNa
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_arrow_left_ac_deploy_nameplate_sensor_list:
-                finishAc();
+                mActivity.finish();
                 break;
             case R.id.et_search_ac_deploy_nameplate_sensor_list:
                 break;
@@ -128,6 +106,28 @@ public class DeployNameplateAddSensorListActivity extends BaseActivity<IDeployNa
                 break;
             case R.id.tv_add_ac_deploy_nameplate_sensor_list:
                 break;
+        }
+    }
+
+    @Override
+    public void showProgressDialog() {
+        if (mProgressUtils != null) {
+            mProgressUtils.showProgress();
+        }
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+        if (mProgressUtils != null) {
+            mProgressUtils.dismissProgress();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
         }
     }
 }

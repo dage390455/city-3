@@ -16,16 +16,18 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.util.AppUtils;
 
 /**
- * recyclerview 不通屏的分割线边距20dp,最后一条没有分割线，且只限竖直方向的recyclerview，
+ * recyclerview 不通屏的分割线边距20dp,最后一条没有分割线，且只限竖直方向的recyclerview，这里距离两边的距离是写死在drawable里面，而且是白色
+ * 限定了drawable
  *
  */
-public class CustomDivider extends RecyclerView.ItemDecoration {
+public class CustomDrawableDivider extends RecyclerView.ItemDecoration {
     public static final int HORIZONTAL = LinearLayout.HORIZONTAL;
     public static final int VERTICAL = LinearLayout.VERTICAL;
 
     private static final String TAG = "DividerItem";
     private static final int[] ATTRS = new int[]{ android.R.attr.listDivider };
     private final Context mContext;
+    private final int dp1;
 
     private Drawable mDivider;
 
@@ -35,6 +37,7 @@ public class CustomDivider extends RecyclerView.ItemDecoration {
     private int mOrientation;
 
     private final Rect mBounds = new Rect();
+    private int dp20;
 
     /**
      * Creates a divider {@link RecyclerView.ItemDecoration} that can be used with a
@@ -42,16 +45,18 @@ public class CustomDivider extends RecyclerView.ItemDecoration {
      *  @param context Current context, it will be used to access resources.
      * @param orientation Divider orientation. Should be {@link #HORIZONTAL} or {@link #VERTICAL}.
      */
-    public CustomDivider(Context context, int orientation) {
+    public CustomDrawableDivider(Context context, int orientation) {
         final TypedArray a = context.obtainStyledAttributes(ATTRS);
         mContext = context;
-        mDivider = a.getDrawable(0);
+        mDivider = mContext.getResources().getDrawable(R.drawable.divider_d8d8);
         if (mDivider == null) {
             Log.w(TAG, "@android:attr/listDivider was not set in the theme used for this "
                     + "DividerItemDecoration. Please set that attribute all call setDrawable()");
         }
         a.recycle();
         setOrientation(orientation);
+        this.dp20 = AppUtils.dp2px(mContext, 20);
+        this.dp1 = AppUtils.dp2px(mContext, 0.5f);
     }
 
     /**
@@ -98,8 +103,8 @@ public class CustomDivider extends RecyclerView.ItemDecoration {
         final int right;
         //修改了这里,左右各20dp
         if (parent.getClipToPadding()) {
-            left = parent.getPaddingLeft() + AppUtils.dp2px(mContext,20);
-            right = parent.getWidth() - parent.getPaddingRight() - AppUtils.dp2px(mContext,20);
+            left = parent.getPaddingLeft() ;
+            right = parent.getWidth() - parent.getPaddingRight();
             canvas.clipRect(left, parent.getPaddingTop(), right,
                     parent.getHeight() - parent.getPaddingBottom());
         } else {
@@ -112,9 +117,17 @@ public class CustomDivider extends RecyclerView.ItemDecoration {
             final View child = parent.getChildAt(i);
             parent.getDecoratedBoundsWithMargins(child, mBounds);
             final int bottom = mBounds.bottom + Math.round(child.getTranslationY());
-            final int top = bottom - mDivider.getIntrinsicHeight();
-            mDivider.setBounds(left, top, right, bottom);
+            int IntrinsicHeight = mDivider.getIntrinsicHeight();
+            final int top;
+            if (IntrinsicHeight != -1) {
+                top = bottom - mDivider.getIntrinsicHeight();
+            }else{
+                top = bottom - dp1;
+            }
+
+            mDivider.setBounds(left, top, right , bottom);
             mDivider.draw(canvas);
+
         }
         canvas.restore();
     }
@@ -154,7 +167,11 @@ public class CustomDivider extends RecyclerView.ItemDecoration {
             return;
         }
         if (mOrientation == VERTICAL) {
-            outRect.set(0, 0, 0, mDivider.getIntrinsicHeight());
+            int intrinsicHeight = mDivider.getIntrinsicHeight();
+            if(intrinsicHeight < 1){
+                intrinsicHeight = dp1;
+            }
+            outRect.set(0, 0, 0, intrinsicHeight);
         } else {
             outRect.set(0, 0, mDivider.getIntrinsicWidth(), 0);
         }

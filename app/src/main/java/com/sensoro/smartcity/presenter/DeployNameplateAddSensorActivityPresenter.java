@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import com.sensoro.smartcity.activity.DeployNameplateAddSensorListActivity;
+import com.sensoro.smartcity.activity.DeployNameplateAddSensorFromListActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.imainviews.IDeployNameplateAddSensorActivityView;
 
@@ -22,7 +22,7 @@ public class DeployNameplateAddSensorActivityPresenter extends BasePresenter<IDe
     }
 
     public void doAddFromList() {
-        Intent intent = new Intent(mActivity, DeployNameplateAddSensorListActivity.class);
+        Intent intent = new Intent(mActivity, DeployNameplateAddSensorFromListActivity.class);
         getView().startAC(intent);
     }
 }

@@ -2,6 +2,7 @@ package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,13 +27,21 @@ public class AddSensorListAdapter extends RecyclerView.Adapter<AddSensorListAdap
     @NonNull
     @Override
     public AddSensorListAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View inflate = LayoutInflater.from(mContext).inflate(R.layout.item_adapter_add_sensor_list, parent, false);
-        AddSensorListAdapterViewHolder holder = new AddSensorListAdapterViewHolder(inflate);
+        View inflate = LayoutInflater.from(mContext).inflate(R.layout.item_adapter_add_sensor_from_list, parent, false);
+        final AddSensorListAdapterViewHolder holder = new AddSensorListAdapterViewHolder(inflate);
+        holder.clRootItemAdapterAddSensorList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Integer position = (Integer) holder.clRootItemAdapterAddSensorList.getTag();
+                notifyItemChanged(position);
+            }
+        });
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull AddSensorListAdapterViewHolder holder, int position) {
+        holder.clRootItemAdapterAddSensorList.setTag(position);
         holder.tvNameItemAdapterAddSensorList.setText("费家村小卖铺");
         holder.tvDeviceNameItemAdapterAddSensorList.setText("烟雾");
         holder.tvDeviceSnItemAdapterAddSensorList.setText("1234567890123456");
@@ -49,7 +58,7 @@ public class AddSensorListAdapter extends RecyclerView.Adapter<AddSensorListAdap
 
     @Override
     public int getItemCount() {
-        return 10;
+        return 3;
     }
 
     class AddSensorListAdapterViewHolder extends RecyclerView.ViewHolder {
@@ -63,6 +72,8 @@ public class AddSensorListAdapter extends RecyclerView.Adapter<AddSensorListAdap
         TextView tvDeviceNameItemAdapterAddSensorList;
         @BindView(R.id.tv_device_sn_item_adapter_add_sensor_list)
         TextView tvDeviceSnItemAdapterAddSensorList;
+        @BindView(R.id.cl_root_item_adapter_add_sensor_list)
+        ConstraintLayout clRootItemAdapterAddSensorList;
         public AddSensorListAdapterViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
