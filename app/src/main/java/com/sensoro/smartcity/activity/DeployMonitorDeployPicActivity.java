@@ -24,7 +24,7 @@ import com.sensoro.smartcity.imainviews.IDeployMonitorDeployPicView;
 import com.sensoro.smartcity.presenter.DeployMonitorDeployPicPresenter;
 import com.sensoro.smartcity.widget.dialog.DeployPicExampleDialogUtils;
 import com.sensoro.common.model.ImageItem;
-import com.sensoro.smartcity.widget.popup.SelectDialog;
+import com.sensoro.common.widgets.SelectDialog;
 
 import java.util.List;
 

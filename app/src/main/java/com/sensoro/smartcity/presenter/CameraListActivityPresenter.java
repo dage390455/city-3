@@ -18,7 +18,7 @@ import com.sensoro.common.server.response.CameraFilterRsp;
 import com.sensoro.common.server.response.DeviceCameraDetailRsp;
 import com.sensoro.common.server.response.DeviceCameraListRsp;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.BaseStationDetailActivity;
+import com.sensoro.smartcity.activity.CameraDetailActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
 
@@ -99,7 +99,16 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                     DeviceCameraDetailInfo.CameraBean camera = data.getCamera();
                     String lastCover = data.getLastCover();
                     Intent intent = new Intent();
-                    intent.setClass(mContext, BaseStationDetailActivity.class);
+                    intent.setClass(mContext, CameraDetailActivity.class);
+                    intent.putExtra("cid", cid);
+                    intent.putExtra("hls", hls);
+                    intent.putExtra("sn", sn);
+                    if (camera != null) {
+                        String name = camera.getName();
+                        intent.putExtra("cameraName", name);
+                    }
+                    intent.putExtra("lastCover", lastCover);
+                    intent.putExtra("deviceStatus", data.getDeviceStatus());
                     getView().startAC(intent);
                 } else {
                     getView().toastShort(mContext.getString(R.string.camera_info_get_failed));

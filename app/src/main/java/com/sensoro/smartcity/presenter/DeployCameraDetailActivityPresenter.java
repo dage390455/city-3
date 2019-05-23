@@ -39,7 +39,7 @@ import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.common.model.ImageItem;
-import com.sensoro.smartcity.widget.popup.SelectDialog;
+import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.smartcity.widget.popup.UpLoadPhotosUtils;
 
 import org.greenrobot.eventbus.EventBus;

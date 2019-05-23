@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.text.TextUtils;
 
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -12,8 +13,12 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.BaseStationDetailModel;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.ScenesData;
+import com.sensoro.common.server.response.BaseStationDetailRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.FrequencyPointActivity;
 import com.sensoro.smartcity.imainviews.IBaseStationDetailActivityView;
@@ -30,6 +35,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.sensoro.smartcity.constant.Constants.EVENT_DATA_DEVICE_POSITION_CALIBRATION;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_JUST_DISPLAY_PIC;
@@ -78,6 +86,34 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
     public void initData(Context context) {
         mContext = (Activity) context;
         EventBus.getDefault().register(this);
+        String sn = mContext.getIntent().getStringExtra("sn");
+
+        if (!TextUtils.isEmpty(sn)) {
+            requestDetailData(sn);
+        }
+
+    }
+
+
+    public void requestDetailData(String sn) {
+
+        RetrofitServiceHelper.getInstance().getBaseStatioDetail(sn).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<BaseStationDetailRsp>(this) {
+            @Override
+            public void onCompleted(BaseStationDetailRsp deviceCameraListRsp) {
+
+                BaseStationDetailModel data = deviceCameraListRsp.getData();
+
+                getView().dismissProgressDialog();
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().dismissProgressDialog();
+                getView().toastShort(errorMsg);
+
+            }
+        });
 
     }
 

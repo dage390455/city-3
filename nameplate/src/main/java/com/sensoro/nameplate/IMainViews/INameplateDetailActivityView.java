@@ -1,4 +1,6 @@
 package com.sensoro.nameplate.IMainViews;
 
-public interface INameplateDetailActivityView {
+import com.sensoro.common.iwidget.IActivityIntent;
+
+public interface INameplateDetailActivityView extends IActivityIntent {
 }

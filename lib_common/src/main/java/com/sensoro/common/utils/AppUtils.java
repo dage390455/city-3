@@ -26,8 +26,10 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.sensoro.common.R;
 import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.server.bean.AlarmInfo;
+import com.sensoro.common.widgets.SelectDialog;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -599,16 +601,16 @@ public class AppUtils {
 
     }
 
-//    /**
-//     * 合同选择场地性质dialog
-//     */
-//    public static SelectDialog showDialog(Activity activity, SelectDialog.SelectDialogListener listener, List<String> items) {
-//        SelectDialog dialog = new SelectDialog(activity, R.style
-//                .transparentFrameWindowStyle,
-//                listener, items);
-//        if (!activity.isFinishing()) {
-//            dialog.show();
-//        }
-//        return dialog;
-//    }
+    /**
+     * 合同选择场地性质dialog
+     */
+    public static SelectDialog showDialog(Activity activity, SelectDialog.SelectDialogListener listener, List<String> items) {
+        SelectDialog dialog = new SelectDialog(activity, R.style
+                .transparentFrameWindowStyle,
+                listener, items);
+        if (!activity.isFinishing()) {
+            dialog.show();
+        }
+        return dialog;
+    }
 }

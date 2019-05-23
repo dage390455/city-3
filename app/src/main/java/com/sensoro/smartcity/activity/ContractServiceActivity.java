@@ -25,7 +25,7 @@ import com.sensoro.smartcity.presenter.ContractServiceActivityPresenter;
 import com.sensoro.common.server.bean.ContractsTemplateInfo;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
-import com.sensoro.smartcity.widget.popup.SelectDialog;
+import com.sensoro.common.widgets.SelectDialog;
 
 import java.util.ArrayList;
 import java.util.List;

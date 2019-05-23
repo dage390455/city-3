@@ -30,7 +30,7 @@ import com.sensoro.smartcity.widget.dialog.BleConfigurationDialogUtils;
 import com.sensoro.smartcity.widget.dialog.EarlyWarningThresholdDialogUtils;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
-import com.sensoro.smartcity.widget.popup.SelectDialog;
+import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
 import com.sensoro.common.widgets.SensoroToast;
 

@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.widget.popup;
+package com.sensoro.common.widgets;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -18,7 +18,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.sensoro.smartcity.R;
+import com.sensoro.common.R;
 
 import java.util.List;
 

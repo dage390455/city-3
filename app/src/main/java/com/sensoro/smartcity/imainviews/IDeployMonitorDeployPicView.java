@@ -5,7 +5,7 @@ import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
 import com.sensoro.common.server.bean.DeployPicInfo;
 import com.sensoro.common.model.ImageItem;
-import com.sensoro.smartcity.widget.popup.SelectDialog;
+import com.sensoro.common.widgets.SelectDialog;
 
 import java.util.List;
 

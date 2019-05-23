@@ -33,7 +33,7 @@ import com.sensoro.common.server.bean.AlarmInfo;
 import com.sensoro.common.utils.GPSUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.widget.popup.SelectDialog;
+import com.sensoro.common.widgets.SelectDialog;
 
 import java.io.BufferedReader;
 import java.io.IOException;

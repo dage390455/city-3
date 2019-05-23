@@ -16,7 +16,7 @@ import com.sensoro.smartcity.imainviews.IDeployMonitorSettingPhotoActivityView;
 import com.sensoro.smartcity.presenter.DeployMonitorSettingPhotoActivityPresenter;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.model.ImageItem;
-import com.sensoro.smartcity.widget.popup.SelectDialog;
+import com.sensoro.common.widgets.SelectDialog;
 
 import java.util.ArrayList;
 import java.util.List;

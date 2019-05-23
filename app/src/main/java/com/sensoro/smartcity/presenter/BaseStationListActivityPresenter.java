@@ -12,17 +12,14 @@ import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
-import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
-import com.sensoro.common.server.bean.DeviceCameraInfo;
+import com.sensoro.common.server.bean.BaseStationInfo;
+import com.sensoro.common.server.response.BaseStationListRsp;
 import com.sensoro.common.server.response.CameraFilterRsp;
-import com.sensoro.common.server.response.DeviceCameraDetailRsp;
-import com.sensoro.common.server.response.DeviceCameraListRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.BaseStationDetailActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +30,7 @@ import io.reactivex.schedulers.Schedulers;
 public class BaseStationListActivityPresenter extends BasePresenter<ICameraListActivityView> implements Constants {
     private Activity mContext;
     private volatile int cur_page = 1;
-    private final List<DeviceCameraInfo> deviceCameraInfos = new ArrayList<>();
+    private final List<BaseStationInfo> deviceCameraInfos = new ArrayList<>();
     private final List<String> mSearchHistoryList = new ArrayList<>();
 
     private final List<CameraFilterModel> cameraFilterModelList = new ArrayList<>();
@@ -44,19 +41,7 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        Serializable serializableExtra = mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST);
-        if (serializableExtra instanceof ArrayList) {
-            getView().setSmartRefreshEnable(false);
-            deviceCameraInfos.clear();
-            List<DeviceCameraInfo> data = (List<DeviceCameraInfo>) serializableExtra;
-            deviceCameraInfos.addAll(data);
-            getView().updateDeviceCameraAdapter(deviceCameraInfos);
-            getView().onPullRefreshComplete();
-            getView().dismissProgressDialog();
-            getView().setTopTitleState();
-        } else {
-            requestDataByFilter(DIRECTION_DOWN, null);
-        }
+        requestDataByFilter(DIRECTION_DOWN, null);
         List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST);
         if (list != null) {
             mSearchHistoryList.addAll(list);
@@ -86,35 +71,12 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
         selectedHashMap.clear();
     }
 
-    public void onClickDeviceCamera(final DeviceCameraInfo deviceCameraInfo) {
-        final String sn = deviceCameraInfo.getSn();
-        final String cid = deviceCameraInfo.getCid();
-        getView().showProgressDialog();
-        RetrofitServiceHelper.getInstance().getDeviceCamera(sn).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraDetailRsp>(this) {
-            @Override
-            public void onCompleted(DeviceCameraDetailRsp deviceCameraDetailRsp) {
-                DeviceCameraDetailInfo data = deviceCameraDetailRsp.getData();
-                if (data != null) {
-                    String hls = data.getHls();
-                    DeviceCameraDetailInfo.CameraBean camera = data.getCamera();
-                    String lastCover = data.getLastCover();
-                    Intent intent = new Intent();
-                    intent.setClass(mContext, BaseStationDetailActivity.class);
-                    getView().startAC(intent);
-                } else {
-                    getView().toastShort(mContext.getString(R.string.camera_info_get_failed));
+    public void onClickDeviceCamera(final BaseStationInfo deviceCameraInfo) {
 
-                }
-                getView().dismissProgressDialog();
-
-            }
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().dismissProgressDialog();
-                getView().toastShort(errorMsg);
-            }
-        });
+        Intent intent = new Intent();
+        intent.putExtra("sn", deviceCameraInfo.getSn());
+        intent.setClass(mContext, BaseStationDetailActivity.class);
+        getView().startAC(intent);
 
     }
 
@@ -126,17 +88,17 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
                 if (isAttachedView()) {
                     getView().showProgressDialog();
                 }
-                RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(20, cur_page, search, selectedHashMap).subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(this) {
+                RetrofitServiceHelper.getInstance().getBaseStationListByFilter(20, cur_page, search, selectedHashMap).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<BaseStationListRsp>(this) {
                     @Override
-                    public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
+                    public void onCompleted(BaseStationListRsp deviceCameraListRsp) {
 
-                        List<DeviceCameraInfo> data = deviceCameraListRsp.getData();
+                        List<BaseStationInfo> data = deviceCameraListRsp.getData();
                         deviceCameraInfos.clear();
                         if (data != null && data.size() > 0) {
                             deviceCameraInfos.addAll(data);
                         }
-                        getView().updateDeviceCameraAdapter(deviceCameraInfos);
+                        getView().updateDBaseStationAdapter(deviceCameraInfos);
                         getView().onPullRefreshComplete();
                         getView().dismissProgressDialog();
                     }
@@ -155,15 +117,15 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
                 if (isAttachedView()) {
                     getView().showProgressDialog();
                 }
-                RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(20, cur_page, search, selectedHashMap).subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(this) {
+                RetrofitServiceHelper.getInstance().getBaseStationListByFilter(20, cur_page, search, selectedHashMap).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<BaseStationListRsp>(this) {
                     @Override
-                    public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
+                    public void onCompleted(BaseStationListRsp deviceCameraListRsp) {
 
-                        List<DeviceCameraInfo> data = deviceCameraListRsp.getData();
+                        List<BaseStationInfo> data = deviceCameraListRsp.getData();
                         if (data != null && data.size() > 0) {
                             deviceCameraInfos.addAll(data);
-                            getView().updateDeviceCameraAdapter(deviceCameraInfos);
+                            getView().updateDBaseStationAdapter(deviceCameraInfos);
                         } else {
                             getView().toastShort(mContext.getString(R.string.no_more_data));
                         }
@@ -199,7 +161,7 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
             //第一次请求数据
             if (cameraFilterModelList.size() == 0) {
                 getView().showProgressDialog();
-                RetrofitServiceHelper.getInstance().getCameraFilter().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<CameraFilterRsp>(this) {
+                RetrofitServiceHelper.getInstance().getStationFilter().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<CameraFilterRsp>(this) {
                     @Override
                     public void onCompleted(CameraFilterRsp cameraFilterRsp) {
                         List<CameraFilterModel> data = cameraFilterRsp.getData();
@@ -262,12 +224,12 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
         if (isAttachedView()) {
             getView().showProgressDialog();
         }
-        RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(20, cur_page, searchText, selectedHashMap).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(this) {
+        RetrofitServiceHelper.getInstance().getBaseStationListByFilter(20, cur_page, searchText, selectedHashMap).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<BaseStationListRsp>(this) {
             @Override
-            public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
+            public void onCompleted(BaseStationListRsp deviceCameraListRsp) {
 
-                List<DeviceCameraInfo> data = deviceCameraListRsp.getData();
+                List<BaseStationInfo> data = deviceCameraListRsp.getData();
                 deviceCameraInfos.clear();
                 if (data != null && data.size() > 0) {
                     deviceCameraInfos.addAll(data);
@@ -275,7 +237,7 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
                 //只在重置成功了进行刷新
                 clearCameraFilterData();
                 getView().updateCameraListFilterPopupWindowStatusList(cameraFilterModelList);
-                getView().updateDeviceCameraAdapter(deviceCameraInfos);
+                getView().updateDBaseStationAdapter(deviceCameraInfos);
                 getView().onPullRefreshComplete();
                 getView().dismissProgressDialog();
                 getView().dismissCameraListFilterPopupWindow();
@@ -310,17 +272,17 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
         if (isAttachedView()) {
             getView().showProgressDialog();
         }
-        RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(20, cur_page, searchText, selectedHashMap).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(this) {
+        RetrofitServiceHelper.getInstance().getBaseStationListByFilter(20, cur_page, searchText, selectedHashMap).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<BaseStationListRsp>(this) {
             @Override
-            public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
+            public void onCompleted(BaseStationListRsp deviceCameraListRsp) {
 
-                List<DeviceCameraInfo> data = deviceCameraListRsp.getData();
+                List<BaseStationInfo> data = deviceCameraListRsp.getData();
                 deviceCameraInfos.clear();
                 if (data != null && data.size() > 0) {
                     deviceCameraInfos.addAll(data);
                 }
-                getView().updateDeviceCameraAdapter(deviceCameraInfos);
+                getView().updateDBaseStationAdapter(deviceCameraInfos);
                 getView().setCameraListFilterPopupWindowSelectState(getHasSelect());
                 getView().onPullRefreshComplete();
                 getView().dismissProgressDialog();

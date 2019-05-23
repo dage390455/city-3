@@ -30,7 +30,7 @@ import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.common.model.ImageItem;
-import com.sensoro.smartcity.widget.popup.SelectDialog;
+import com.sensoro.common.widgets.SelectDialog;
 
 import java.util.ArrayList;
 import java.util.List;
