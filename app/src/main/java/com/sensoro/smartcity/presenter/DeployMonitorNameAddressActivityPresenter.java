@@ -4,13 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.EventData;
 import com.sensoro.smartcity.R;
-import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorNameAddressActivityView;
 
 import org.greenrobot.eventbus.EventBus;

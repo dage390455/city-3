@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.widget.LinearLayout;
 
+import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.model.EventData;
@@ -14,15 +16,13 @@ import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeployRecordInfo;
 import com.sensoro.common.server.response.DeployRecordRsp;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployRecordDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
-import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IDeployRecordActivityView;
 import com.sensoro.smartcity.model.CalendarDateModel;
-import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
 
 import org.greenrobot.eventbus.EventBus;

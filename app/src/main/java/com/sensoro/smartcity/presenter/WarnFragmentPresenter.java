@@ -8,7 +8,9 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.widget.LinearLayout;
 
+import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.manger.ThreadPoolManager;
@@ -21,16 +23,14 @@ import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.DeviceAlarmItemRsp;
 import com.sensoro.common.server.response.DeviceAlarmLogRsp;
 import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmDetailLogActivity;
-import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IWarnFragmentView;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
 

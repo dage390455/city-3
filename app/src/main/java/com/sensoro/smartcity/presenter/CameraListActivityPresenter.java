@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.server.CityObserver;
@@ -19,7 +20,6 @@ import com.sensoro.common.server.response.DeviceCameraListRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.BaseStationDetailActivity;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
 
 import java.io.Serializable;

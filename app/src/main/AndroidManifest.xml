@@ -381,6 +381,10 @@
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".activity.DeployCameraDetailActivity" />
         <activity android:name=".temp.LineChartActivity2" />
+        <activity android:name=".activity.DeployNameplateActivity" />
+        <activity android:name=".activity.DeployNameplateNameActivity" />
+        <activity android:name=".activity.DeployNameplateAddSensorActivity" />
+        <activity android:name=".activity.DeployNameplateAddSensorFromListActivity" />
 
 
         <activity android:name=".activity.SelfCheckActivity" />

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/c_f4f4f4"
+    >
+    <include layout="@layout/item_include_text_text_title"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_marginTop="12dp"
+        >
+        <LinearLayout
+            android:id="@+id/ll_from_List_ac_deploy_nameplate_add_sensor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/c_252525"
+                android:textSize="16dp"
+                android:text="@string/add_sensor_from_list"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrows_right"
+                android:layout_marginStart="8dp"
+                android:contentDescription="@null"
+                />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/view_divider_height"
+            android:background="@color/c_dfdfdf"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"/>
+        <LinearLayout
+            android:id="@+id/ll_from_scan_ac_deploy_nameplate_add_sensor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/c_252525"
+                android:textSize="16dp"
+                android:text="@string/add_sensor_from_scan"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrows_right"
+                android:layout_marginStart="8dp"
+                android:contentDescription="@null"
+                />
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/tv_added_count_ac_deploy_nameplate_add_sensor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:textColor="@color/c_a6a6a6"
+            android:textSize="14dp"
+            />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_added_list_ac_deploy_nameplate_add_sensor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/c_f4f4f4"
+            android:layout_marginTop="12dp">
+
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+
+</LinearLayout>

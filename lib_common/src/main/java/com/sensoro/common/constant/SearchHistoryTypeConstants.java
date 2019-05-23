@@ -24,6 +24,8 @@ public interface SearchHistoryTypeConstants {
     String SP_FILE_CONTRACT = "search_history_contract";
     String SP_FILE_MERCHANT= "search_history_merchant";
     String SP_FILE_DEPLOY_RECORD= "search_history_deploy_record";
-
+    //
+    int TYPE_SEARCH_HISTORY_DEPLOY_NAMEPLATE_NAME = 13;
+    String SP_FILE_DEPLOY_NAMEPLATE_NAME = "search_history_deploy_nameplate_name";
 
 }

@@ -128,6 +128,10 @@ public class PreferencesSaveAnalyzer {
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_ALARM_CONTRACT_PHONE:
                 PreferencesHelper.getInstance().saveDeployAlarmContactPhoneHistory(content);
                 break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_NAMEPLATE_NAME:
+                ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_DEPLOY_NAMEPLATE_NAME, Context
+                        .MODE_PRIVATE).edit().putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, content).apply();
+                break;
 
         }
     }
@@ -174,6 +178,10 @@ public class PreferencesSaveAnalyzer {
                 break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_ALARM_CONTRACT_PHONE:
                 oldText = PreferencesHelper.getInstance().getDeployAlarmContactPhoneHistory();
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_NAMEPLATE_NAME:
+                oldText = ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_DEPLOY_NAMEPLATE_NAME, Context
+                        .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
                 break;
 
 
@@ -235,6 +243,11 @@ public class PreferencesSaveAnalyzer {
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_ALARM_CONTRACT_PHONE:
                 ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE)
                         .edit().putString(Constants.PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_PHONE, "").apply();
+                break;
+
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_NAMEPLATE_NAME:
+                ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_DEPLOY_NAMEPLATE_NAME, Activity.MODE_PRIVATE)
+                        .edit().clear().apply();
                 break;
 
         }
