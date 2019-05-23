@@ -3,14 +3,6 @@
  */
 package com.baidu.ocr.ui.camera;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -19,10 +11,19 @@ import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
-import android.support.v4.app.ActivityCompat;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import androidx.core.app.ActivityCompat;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 5.0以下相机API的封装。

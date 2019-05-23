@@ -3,7 +3,6 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -11,14 +10,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.gyf.barlibrary.ImmersionBar;
-import com.sensoro.smartcity.R;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IScanActivityView;
 import com.sensoro.smartcity.presenter.ScanActivityPresenter;
-import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.smartcity.widget.ViewFinderView;
-import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.ArrayList;
 

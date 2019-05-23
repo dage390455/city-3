@@ -1,7 +1,7 @@
 package com.sensoro.common.utils;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.sensoro.common.R;
 

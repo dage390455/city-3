@@ -2,7 +2,7 @@ package com.sensoro.smartcity.temp;
 
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.fengmap.android.FMErrorMsg;
 import com.fengmap.android.data.OnFMDownloadProgressListener;

@@ -3,11 +3,12 @@ package com.sensoro.smartcity.temp;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.transition.Explode;
 import android.view.Window;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.temp.entity.VideoModel;

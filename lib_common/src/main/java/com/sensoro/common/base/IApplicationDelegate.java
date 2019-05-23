@@ -1,6 +1,6 @@
 package com.sensoro.common.base;
 
-import android.support.annotation.Keep;
+import androidx.annotation.Keep;
 
 /**
  * <p>类说明</p>

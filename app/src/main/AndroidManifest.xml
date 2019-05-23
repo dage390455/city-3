@@ -365,6 +365,8 @@
         <activity android:name=".temp.CameraTest" />
         <activity android:name=".temp.RecyclerViewActivity" />
         <activity android:name=".activity.CameraListActivity" />
+        <activity android:name=".activity.BaseStationListActivity" />
+        <activity android:name=".activity.BaseStationDetailActivity" />
         <activity
             android:name=".activity.CameraDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -379,16 +381,12 @@
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".activity.DeployCameraDetailActivity" />
         <activity android:name=".temp.LineChartActivity2" />
-        <activity android:name=".temp.TestRecordActivity" />
-        <activity android:name="com.afollestad.materialcamera.internal.PlayActivity"/>
-        <activity
-            android:name="com.afollestad.materialcamera.CaptureActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MaterialCamera.CaptureActivity" />
-        <activity
-            android:name="com.afollestad.materialcamera.CaptureActivity2"
-            android:screenOrientation="portrait"
-            android:theme="@style/MaterialCamera.CaptureActivity" />
+
+
+        <activity android:name=".activity.SelfCheckActivity" />
+        <activity android:name=".activity.FrequencyPointActivity" />
+        <activity android:name=".activity.NetWorkInfoActivity" />
+
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"

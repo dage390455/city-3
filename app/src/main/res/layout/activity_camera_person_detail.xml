@@ -13,7 +13,7 @@
         android:background="@color/white"/>
     <include layout="@layout/item_include_imv_title"/>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -29,7 +29,7 @@
             >
 
         </com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer>
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </LinearLayout>

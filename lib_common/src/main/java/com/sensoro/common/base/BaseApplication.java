@@ -1,7 +1,7 @@
 package com.sensoro.common.base;
 
 import android.app.Activity;
-import android.support.multidex.MultiDexApplication;
+import androidx.multidex.MultiDexApplication;
 
 import com.sensoro.common.utils.LogUtils;
 

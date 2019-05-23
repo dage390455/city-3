@@ -3,14 +3,14 @@ package com.sensoro.smartcity.temp;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.antelope.sdk.ACMediaInfo;
 import com.antelope.sdk.ACMessageListener;
@@ -29,6 +29,7 @@ import com.antelope.sdk.streamer.ACProtocolType;
 import com.antelope.sdk.streamer.ACStreamer;
 import com.antelope.sdk.streamer.ACStreamerFactory;
 import com.antelope.sdk.utils.WorkThreadExecutor;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.sensoro.common.server.CityObserver;

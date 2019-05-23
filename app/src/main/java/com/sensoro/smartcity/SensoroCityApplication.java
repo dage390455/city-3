@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatDelegate;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
@@ -52,11 +52,8 @@ import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.yixia.camera.VCamera;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.io.File;
 
 /**
  * Created by sensoro on 17/7/24.
@@ -213,20 +210,6 @@ public class SensoroCityApplication extends BaseApplication implements Repause
         ThreadPoolManager.getInstance().execute(this);
     }
 
-
-    private void initVc() {
-        VIDEO_PATH += "SensoroCity";
-        File file = new File(VIDEO_PATH);
-        if (!file.exists()) file.mkdirs();
-
-        //设置视频缓存路径
-        VCamera.setVideoCachePath(VIDEO_PATH);
-
-        // 开启log输出,ffmpeg输出到logcat
-        VCamera.setDebugMode(false);
-        // 初始化拍摄SDK，必须
-        VCamera.initialize(this);
-    }
 
     private void initBugLy() {
         try {
@@ -454,7 +437,6 @@ public class SensoroCityApplication extends BaseApplication implements Repause
         api = WXAPIFactory.createWXAPI(this, Constants.APP_ID, false);
         api.registerApp(Constants.APP_ID);
 //        FMMapSDK.init(this);
-        initVc();
         initImagePicker();
         initUploadManager();
         locate();

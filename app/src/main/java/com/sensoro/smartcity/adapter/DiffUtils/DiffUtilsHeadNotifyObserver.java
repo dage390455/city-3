@@ -1,6 +1,6 @@
 package com.sensoro.smartcity.adapter.DiffUtils;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class DiffUtilsHeadNotifyObserver extends RecyclerView.AdapterDataObserver {
 

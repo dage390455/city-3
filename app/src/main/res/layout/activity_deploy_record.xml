@@ -168,13 +168,13 @@
             android:layout_marginTop="12dp"
             android:orientation="vertical">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/ac_deploy_record_rc_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white">
 
-            </android.support.v7.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
         <include layout="@layout/item_include_search_history_rv" />

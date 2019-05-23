@@ -13,7 +13,7 @@ import com.sensoro.smartcity.R;
  * Created by sensoro on 17/11/13.
  */
 
-public class ClearableTextView extends android.support.v7.widget.AppCompatTextView {
+public class ClearableTextView extends androidx.appcompat.widget.AppCompatTextView {
 
     public interface OnTextClearListener {
         public void onTextClear(ClearableTextView v);

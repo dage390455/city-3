@@ -2,10 +2,11 @@ package com.sensoro.smartcity.widget.imagepicker.ui;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+
+import androidx.viewpager.widget.ViewPager;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.widget.imagepicker.util.NavigationBarChangeListener;

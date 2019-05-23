@@ -3,7 +3,7 @@ package com.sensoro.smartcity.widget.dialog;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 import android.view.View;
 import android.widget.TextView;
 

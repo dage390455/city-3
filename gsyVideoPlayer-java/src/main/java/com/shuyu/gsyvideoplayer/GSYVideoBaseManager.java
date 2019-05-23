@@ -5,9 +5,10 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.Surface;
+
+import androidx.annotation.Nullable;
 
 import com.sensoro.smartcity.gsyvideoplayer.cache.ICacheManager;
 import com.sensoro.smartcity.gsyvideoplayer.model.GSYModel;

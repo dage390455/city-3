@@ -525,6 +525,9 @@
     //warn framgen
     <string name="warn_fragment_search_tip">设备名称/设备编号/手机号</string>
 
+    <string name="basestation_search_tip">基站名称/基站标号/标签</string>
+
+
     //
     <string name="top_bar_image">图片</string>
     <string name="top_bar_finish">完成(0/3)</string>
@@ -952,6 +955,8 @@
     <string name="mobile_network">"您正在使用移动网络，请注意您的数据使用。"</string>
     <string name="camera_manager">摄像机管理</string>
     <string name="camera_nameplate">铭牌管理</string>
+    <string name="basestation_manager">基站管理</string>
+
     <string name="camera_living">直播中</string>
     <string name="click_select_date">点击选择日期</string>
     <string name="time_parse_error">时间解析错误</string>
@@ -983,6 +988,18 @@
     <string name="app_crash_tips">系统出错了，请重新登录</string>
     <string name="camera_name_sn">摄像机名称/设备号</string>
     <string name="cannot_be_all_spaces">不能全部为空格</string>
+
+    <string name="The_network_information">网络信息</string>
+    <string name="Self_check_state">自检状态</string>
+    <string name="networking_mode">联网方式</string>
+    <string name="ip">Ip</string>
+    <string name="gateway">网关</string>
+    <string name="subnet_mask">子网掩码</string>
+    <string name="primary_dns">主DNS</string>
+    <string name="secondary_dns">从DNS</string>
+    <string name="vpn">VPN</string>
+    <string name="network_info">网络信息</string>
+    <string name="frequency_poin_info">频点信息</string>
 
 
 </resources>

@@ -35,7 +35,7 @@
         android:textColor="@color/c_252525"
         android:textSize="12dp" />
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/tv_fg_deploy_local_check_tip">
@@ -299,5 +299,5 @@
                     android:textSize="12dp" />
             </FrameLayout>
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 </RelativeLayout>

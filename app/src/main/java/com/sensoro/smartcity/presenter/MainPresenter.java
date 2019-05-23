@@ -8,9 +8,10 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+
+import androidx.fragment.app.Fragment;
 
 import com.igexin.sdk.PushManager;
 import com.sensoro.common.base.BasePresenter;

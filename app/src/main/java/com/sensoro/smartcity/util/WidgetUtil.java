@@ -18,8 +18,8 @@ import android.graphics.drawable.GradientDrawable;
 import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.v4.graphics.drawable.DrawableCompat;
+import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.DrawableCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -1302,7 +1302,7 @@ public class WidgetUtil {
 
         canvas.drawBitmap(newbm, width / 5 - x_offset, height / 5 - 5 - y_offset,
                 textPaint);
-        canvas.save(Canvas.ALL_SAVE_FLAG);
+        canvas.save();
         canvas.restore();
 
         return new BitmapDrawable(context.getResources(), imgTemp);

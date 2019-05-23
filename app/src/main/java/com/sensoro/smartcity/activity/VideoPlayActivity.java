@@ -10,8 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -20,12 +18,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.gyf.barlibrary.ImmersionBar;
-import com.sensoro.smartcity.R;
 import com.sensoro.common.manger.ActivityTaskManager;
-import com.sensoro.smartcity.widget.MyVideoView;
-import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.model.ImageItem;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.widget.MyVideoView;
 import com.sensoro.smartcity.widget.imagepicker.util.NavigationBarChangeListener;
 import com.sensoro.smartcity.widget.imagepicker.view.SystemBarTintManager;
 

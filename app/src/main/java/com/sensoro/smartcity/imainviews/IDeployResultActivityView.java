@@ -1,7 +1,7 @@
 package com.sensoro.smartcity.imainviews;
 
 import android.graphics.drawable.Drawable;
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IToast;

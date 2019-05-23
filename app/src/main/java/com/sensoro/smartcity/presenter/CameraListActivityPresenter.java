@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.CameraFilterModel;
@@ -16,12 +17,10 @@ import com.sensoro.common.server.response.CameraFilterRsp;
 import com.sensoro.common.server.response.DeviceCameraDetailRsp;
 import com.sensoro.common.server.response.DeviceCameraListRsp;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.CameraDetailActivity;
-import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
+import com.sensoro.smartcity.activity.BaseStationDetailActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
-import com.yixia.camera.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -100,16 +99,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                     DeviceCameraDetailInfo.CameraBean camera = data.getCamera();
                     String lastCover = data.getLastCover();
                     Intent intent = new Intent();
-                    intent.setClass(mContext, CameraDetailActivity.class);
-                    intent.putExtra("cid", cid);
-                    intent.putExtra("hls", hls);
-                    intent.putExtra("sn", sn);
-                    if (camera != null) {
-                        String name = camera.getName();
-                        intent.putExtra("cameraName", name);
-                    }
-                    intent.putExtra("lastCover", lastCover);
-                    intent.putExtra("deviceStatus", data.getDeviceStatus());
+                    intent.setClass(mContext, BaseStationDetailActivity.class);
                     getView().startAC(intent);
                 } else {
                     getView().toastShort(mContext.getString(R.string.camera_info_get_failed));
@@ -360,7 +350,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                         stringBuffer.append(",");
                     }
                 }
-                if (!StringUtils.isEmpty(stringBuffer.toString())) {
+                if (!TextUtils.isEmpty(stringBuffer.toString())) {
                     stringBuffer.deleteCharAt(stringBuffer.length() - 1).toString();
                     hashMap.put(key, stringBuffer.toString());
                 }

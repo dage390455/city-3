@@ -2,14 +2,15 @@ package com.sensoro.smartcity.activity;
 
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sensoro.smartcity.R;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.fragment.DeployMonitorLocalCheckFragment;
 import com.sensoro.smartcity.fragment.DeployMonitorUploadCheckFragment;
 import com.sensoro.smartcity.imainviews.IDeployMonitorCheckActivityView;

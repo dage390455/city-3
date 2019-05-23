@@ -42,7 +42,7 @@
             android:src="@drawable/arrows_right" />
     </RelativeLayout>
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -144,7 +144,7 @@
                         android:textSize="14dp" />
                 </LinearLayout>
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/ac_monitoring_point_content_malfunction"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -262,12 +262,12 @@
                         android:background="@color/c_dfdfdf"
                         android:visibility="gone" />
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/ac_monitoring_point_rc_content"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                    </android.support.v7.widget.RecyclerView>
+                    </androidx.recyclerview.widget.RecyclerView>
 
                     <TableLayout
                         android:id="@+id/elect_3_detail"
@@ -503,7 +503,7 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <android.support.constraint.ConstraintLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/ac_monitoring_point_cl_alert_contact"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -576,7 +576,7 @@
                         app:layout_constraintBottom_toBottomOf="@id/ac_monitoring_point_imv_phone"
                         app:layout_constraintEnd_toStartOf="@id/ac_monitoring_point_imv_phone"
                         app:layout_constraintTop_toTopOf="@id/ac_monitoring_point_imv_phone" />
-                </android.support.constraint.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
                     android:id="@+id/ac_monitoring_point_line"
@@ -587,7 +587,7 @@
                     android:layout_marginEnd="20dp"
                     android:background="@color/c_dfdfdf" />
 
-                <android.support.constraint.ConstraintLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/ac_monitoring_point_cl_location_navigation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -634,7 +634,7 @@
                         app:layout_constraintTop_toBottomOf="@id/ac_monitoring_point_tv_location_navigation" />
 
 
-                </android.support.constraint.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
                     android:layout_width="match_parent"
@@ -772,7 +772,7 @@
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="12dp" />
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/ac_monitoring_point_rc_operation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -782,7 +782,7 @@
                     android:layout_marginEnd="20dp"
                     android:layout_marginBottom="4dp">
 
-                </android.support.v7.widget.RecyclerView>
+                </androidx.recyclerview.widget.RecyclerView>
             </LinearLayout>
             <!--基本信息-->
             <LinearLayout
@@ -1281,6 +1281,6 @@
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>
 

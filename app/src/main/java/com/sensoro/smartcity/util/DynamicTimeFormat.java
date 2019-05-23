@@ -1,7 +1,7 @@
 package com.sensoro.smartcity.util;
 
 import android.content.res.Resources;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.sensoro.common.base.ContextUtils;
 import com.sensoro.smartcity.R;

@@ -1,6 +1,6 @@
 package com.sensoro.common.server.bean;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.json.JSONObject;
 

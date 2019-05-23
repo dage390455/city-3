@@ -2,9 +2,10 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.bottomnavigation.BadgeItem;
@@ -13,13 +14,13 @@ import com.sensoro.bottomnavigation.BottomNavigationItem;
 import com.sensoro.bottomnavigation.TextBadgeItem;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainFragmentPageAdapter;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.presenter.MainPresenter;
 import com.sensoro.smartcity.widget.HomeViewPager;
-import com.sensoro.common.widgets.ProgressUtils;
 
 import java.util.List;
 

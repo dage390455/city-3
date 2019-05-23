@@ -2,9 +2,6 @@ package com.sensoro.smartcity.widget.imagepicker.adapter;
 
 import android.Manifest;
 import android.app.Activity;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +9,13 @@ import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.sensoro.smartcity.R;
-import com.sensoro.common.widgets.SensoroToast;
-import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.sensoro.common.model.ImageItem;
+import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageBaseActivity;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
 import com.sensoro.smartcity.widget.imagepicker.util.Utils;
@@ -28,7 +28,7 @@ import java.util.List;
  * 加载相册图片的RecyclerView适配器
  */
 
-public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
+public class ImageRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     private static final int ITEM_TYPE_CAMERA = 0;  //第一个条目是相机
@@ -72,7 +72,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == ITEM_TYPE_CAMERA) {
             return new CameraViewHolder(mInflater.inflate(R.layout.adapter_camera_item, parent, false));
         }
@@ -80,7 +80,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof CameraViewHolder) {
             ((CameraViewHolder) holder).bindCamera();
         } else if (holder instanceof ImageViewHolder) {
@@ -89,7 +89,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position, List<Object> payloads) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
         super.onBindViewHolder(holder, position, payloads);
         //修复局部刷新闪烁问题
         if (payloads.isEmpty()) {
@@ -128,7 +128,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
-    class ImageViewHolder extends ViewHolder {
+    class ImageViewHolder extends RecyclerView.ViewHolder {
 
         final View rootView;
         final ImageView ivThumb;
@@ -221,7 +221,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     }
 
-    class CameraViewHolder extends ViewHolder {
+    class CameraViewHolder extends RecyclerView.ViewHolder {
 
         final View mItemView;
 

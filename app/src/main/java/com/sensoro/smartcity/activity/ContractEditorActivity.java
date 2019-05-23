@@ -2,21 +2,22 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sensoro.smartcity.R;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.widgets.TipOperationDialogUtils;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.fragment.BusinessContractFragment;
 import com.sensoro.smartcity.fragment.PersonalContractFragment;
 import com.sensoro.smartcity.imainviews.IContractEditorView;
 import com.sensoro.smartcity.presenter.ContractEditorPresenter;
-import com.sensoro.common.widgets.TipOperationDialogUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

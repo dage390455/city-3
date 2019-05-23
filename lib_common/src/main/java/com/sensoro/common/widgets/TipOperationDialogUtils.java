@@ -2,7 +2,7 @@ package com.sensoro.common.widgets;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;

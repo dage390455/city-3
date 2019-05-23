@@ -3,9 +3,6 @@ package com.sensoro.smartcity.widget.imagepicker.ui;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.format.Formatter;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +11,15 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
-import com.sensoro.smartcity.R;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.adapter.ImageBottomAdapter;
-import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.util.NavigationBarChangeListener;
 import com.sensoro.smartcity.widget.imagepicker.util.Utils;
 import com.sensoro.smartcity.widget.imagepicker.view.SuperCheckBox;

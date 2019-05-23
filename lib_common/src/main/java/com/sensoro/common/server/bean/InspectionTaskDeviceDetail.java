@@ -1,6 +1,6 @@
 package com.sensoro.common.server.bean;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.io.Serializable;
 import java.util.List;

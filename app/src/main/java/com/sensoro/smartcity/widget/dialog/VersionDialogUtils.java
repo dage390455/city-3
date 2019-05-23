@@ -1,7 +1,7 @@
 package com.sensoro.smartcity.widget.dialog;
 
 import android.app.Activity;
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 import android.view.View;
 import android.widget.TextView;
 

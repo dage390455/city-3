@@ -497,6 +497,7 @@
     <string name="manager_fragment_exit_account">Sign Out</string>
     //warn framgen
     <string name="warn_fragment_search_tip">Name/SN/Mobile</string>
+    <string name="basestation_search_tip">BaseStation Name/SN/TAG</string>
 
     //
     <string name="top_bar_image">Image</string>
@@ -960,7 +961,8 @@
     <string name="retry_play">"Video loading failed, please try again"</string>
 
     <string name="mobile_network">"You are now using mobile network,\n please mind your data usage."</string>
-    <string name="camera_manager">摄像机管理</string>
+    <string name="camera_manager">Camera Manager</string>
+    <string name="basestation_manager">Basestation Manager</string>
     <string name="camera_living">直播中</string>
     <string name="click_select_date">点击选择日期</string>
     <string name="time_parse_error">时间解析错误</string>
@@ -998,4 +1000,17 @@
     <string name="app_crash_tips">System error, please log in again</string>
     <string name="camera_name_sn">摄像机名称/设备号</string>
     <string name="cannot_be_all_spaces">Cannot be all spaces</string>
+    <string name="The_network_information">The network information</string>
+    <string name="Self_check_state">Self-check state</string>
+    <string name="networking_mode">Networking Mode</string>
+    <string name="network_info">Networking Info</string>
+    <string name="ip">Ip</string>
+    <string name="gateway">GateWay</string>
+    <string name="subnet_mask">Subnet Mask</string>
+    <string name="primary_dns">Primary DNS</string>
+    <string name="secondary_dns">Secondary DNS</string>
+    <string name="vpn">VPN</string>
+    <string name="frequency_poin_info">Frequency Poin Info</string>
+
+
 </resources>

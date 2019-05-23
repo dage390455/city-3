@@ -2,21 +2,16 @@ package com.sensoro.smartcity.widget.popup;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialog;
-import android.support.design.widget.CoordinatorLayout;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
-import com.gyf.barlibrary.ImmersionBar;
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.smartcity.util.WidgetUtil;
-import com.tencent.bugly.crashreport.common.info.AppInfo;
 
 public class FixHeightBottomSheetDialog extends BottomSheetDialog {
 

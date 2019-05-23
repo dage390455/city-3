@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.sensoro.nameplate.activity.NameplateListActivity;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.activity.BaseStationListActivity;
 import com.sensoro.smartcity.activity.CameraListActivity;
 import com.sensoro.common.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
@@ -224,11 +225,12 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
         super.onDestroyView();
     }
 
-    @OnClick({R.id.fg_main_manage_ll_change_merchants, R.id.fg_main_manage_ll_deploy_device,
+    @OnClick(value = {R.id.fg_main_manage_ll_change_merchants, R.id.fg_main_manage_ll_deploy_device,
             R.id.fg_main_manage_ll_contract_management, R.id.fg_main_manage_ll_polling_mission,
             R.id.fg_main_manage_ll_maintenance_mission, R.id.fg_main_manage_ll_scan_login,
             R.id.fg_main_manage_ll_about_us, R.id.fg_main_manage_ll_version_info,
-            R.id.fg_main_manage_ll_exit, R.id.fg_main_manage_ll_signal_check, R.id.fg_main_manage_ll_wire_material_diameter, R.id.fg_main_manage_ll_camera,R.id.fg_main_manage_ll_nameplate})
+            R.id.fg_main_manage_ll_nameplate, R.id.fg_main_manage_ll_exit, R.id.fg_main_manage_ll_signal_check,
+            R.id.fg_main_manage_ll_wire_material_diameter, R.id.fg_main_manage_ll_camera,})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fg_main_manage_ll_change_merchants:
@@ -351,6 +353,9 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 break;
             case R.id.fg_main_manage_ll_nameplate:
                 startAC(new Intent(mRootFragment.getActivity(), NameplateListActivity.class));
+                break;
+            case R.id.fg_main_manage_ll_basestation:
+                startAC(new Intent(mRootFragment.getActivity(), BaseStationListActivity.class));
                 break;
         }
     }

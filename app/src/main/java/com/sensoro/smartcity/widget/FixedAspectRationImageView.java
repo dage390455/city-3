@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 /**
  * 固定纵横比的imageView，目前固定的宽高比值为16：9
  */
-public class FixedAspectRationImageView extends android.support.v7.widget.AppCompatImageView {
+public class FixedAspectRationImageView extends androidx.appcompat.widget.AppCompatImageView {
     public FixedAspectRationImageView(Context context) {
         super(context);
     }
