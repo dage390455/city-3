@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -44,10 +45,22 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
     RadioButton rbSelectAllAcDeployNameplateSensorList;
     @BindView(R.id.tv_selected_count_ac_deploy_nameplate_sensor_list)
     TextView tvSelectedCountAcDeployNameplateSensorList;
-    @BindView(R.id.rv_list_ac_deploy_nameplate_sensor_list)
-    RecyclerView rvListAcDeployNameplateSensorList;
     @BindView(R.id.tv_add_ac_deploy_nameplate_sensor_list)
     TextView tvAddAcDeployNameplateSensorList;
+    @BindView(R.id.ll_status_ac_deploy_nameplate_sensor_list)
+    LinearLayout llStatusAcDeployNameplateSensorList;
+    @BindView(R.id.no_content)
+    ImageView noContent;
+    @BindView(R.id.no_content_tip)
+    TextView noContentTip;
+    @BindView(R.id.ic_no_content)
+    LinearLayout icNoContent;
+    @BindView(R.id.rv_list_include)
+    RecyclerView rvListInclude;
+    @BindView(R.id.refreshLayout_include)
+    SmartRefreshLayout refreshLayoutInclude;
+    @BindView(R.id.return_top_include)
+    ImageView returnTopInclude;
     private AddSensorListAdapter mAddSensorListAdapter;
     private ProgressUtils mProgressUtils;
 
@@ -62,12 +75,17 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
 
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+        initRv();
+
+    }
+
+    private void initRv() {
         mAddSensorListAdapter = new AddSensorListAdapter(mActivity);
         LinearLayoutManager manager = new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false);
         CustomDrawableDivider customDivider = new CustomDrawableDivider(mActivity, CustomDrawableDivider.VERTICAL);
-        rvListAcDeployNameplateSensorList.setLayoutManager(manager);
-        rvListAcDeployNameplateSensorList.addItemDecoration(customDivider);
-        rvListAcDeployNameplateSensorList.setAdapter(mAddSensorListAdapter);
+        rvListInclude.setLayoutManager(manager);
+        rvListInclude.addItemDecoration(customDivider);
+        rvListInclude.setAdapter(mAddSensorListAdapter);
     }
 
     @Override
@@ -129,4 +147,5 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
             mProgressUtils.destroyProgress();
         }
     }
+
 }

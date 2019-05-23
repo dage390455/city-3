@@ -142,17 +142,40 @@
         android:textSize="16dp" />
 
 
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/c_f4f4f4">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_list_ac_deploy_nameplate_sensor_list"
+        <include layout="@layout/item_no_content" />
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout_include"
             android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_list_include"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+        <ImageView
+            android:id="@+id/return_top_include"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ll_status_ac_deploy_nameplate_sensor_list"
-            android:layout_above="@id/tv_add_ac_deploy_nameplate_sensor_list"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="14.5dp"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_return_to_top"
+            android:visibility="gone" />
 
-            >
+    </RelativeLayout>
 
-        </androidx.recyclerview.widget.RecyclerView>
 
 
 </RelativeLayout>
