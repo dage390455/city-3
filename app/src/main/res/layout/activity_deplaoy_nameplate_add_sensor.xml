@@ -93,14 +93,14 @@
             android:textColor="@color/c_a6a6a6"
             android:textSize="14dp"
             />
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_added_list_ac_deploy_nameplate_add_sensor"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/c_f4f4f4"
             android:layout_marginTop="12dp">
 
-        </android.support.v7.widget.RecyclerView>
+        </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
 
 </LinearLayout>
