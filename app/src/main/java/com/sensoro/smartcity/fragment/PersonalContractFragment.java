@@ -23,7 +23,7 @@ import com.sensoro.smartcity.presenter.PersonalContractPresenter;
 import com.sensoro.common.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
-import com.sensoro.smartcity.widget.popup.SelectDialog;
+import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
 import com.sensoro.common.widgets.SensoroToast;
 

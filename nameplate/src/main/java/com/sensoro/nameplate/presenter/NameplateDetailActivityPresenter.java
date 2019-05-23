@@ -15,4 +15,8 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
     public void onDestroy() {
 
     }
+
+    public void doNesSensor(int position) {
+
+    }
 }

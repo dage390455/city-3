@@ -1030,4 +1030,7 @@
     <string name="add">添加</string>
     <string name="select_all">全选</string>
     <string name="selected">已选择:</string>
+
+
+    <string name="nameplate_manager_detail">铭牌详情</string>
 </resources>
