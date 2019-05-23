@@ -5,6 +5,7 @@
     <application>
         <activity android:name=".activity.NameplateDetailActivity"></activity>
         <activity android:name=".activity.NameplateListActivity" />
+        <activity android:name=".activity.EditNameplateDetailActivity" />
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package com.sensoro.nameplate.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -72,6 +73,7 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
         options.add("传感器列表中关联");
         initTag();
         initRvAddedSensorList();
+        mPresenter.initData(mActivity);
     }
 
     private void initTag() {
@@ -119,13 +121,13 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     @OnClick({R2.id.include_text_title_imv_arrows_left, R2.id.tv_nameplate_qrcode, R2.id.tv_nameplate_edit, R2.id.tv_nameplate_associated_new_sensor})
     public void onViewClicked(View view) {
         int id = view.getId();
-        if (R2.id.include_text_title_imv_arrows_left == id) {
+        if (R.id.include_text_title_imv_arrows_left == id) {
 
-        } else if (R2.id.tv_nameplate_qrcode == id) {
+        } else if (R.id.tv_nameplate_qrcode == id) {
 
-        } else if (R2.id.tv_nameplate_edit == id) {
-
-        } else if (R2.id.tv_nameplate_associated_new_sensor == id) {
+        } else if (R.id.tv_nameplate_edit == id) {
+            mPresenter.doEditNameplate();
+        } else if (R.id.tv_nameplate_associated_new_sensor == id) {
             AppUtils.showDialog(mActivity, new SelectDialog.SelectDialogListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -135,5 +137,30 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
         } else {
 
         }
+    }
+
+    @Override
+    public void startAC(Intent intent) {
+        mActivity.startActivity(intent);
+    }
+
+    @Override
+    public void finishAc() {
+        mActivity.finish();
+    }
+
+    @Override
+    public void startACForResult(Intent intent, int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int resultCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int resultCode, Intent data) {
+
     }
 }
