@@ -4,14 +4,14 @@
     <!-- 连框颜色值 -->
     <item>
         <shape>
-            <solid android:color="@color/c_f4f4f4" />
+            <solid android:color="@color/c_fafafa" />
         </shape>
     </item>
     <!-- 主体背景颜色值 -->
     <item android:top="0.5dp"> <!--设置只有底部有边框-->
 
         <shape>
-            <solid android:color="#ffffff" />
+            <solid android:color="@color/c_fafafa" />
         </shape>
     </item>
 </layer-list>

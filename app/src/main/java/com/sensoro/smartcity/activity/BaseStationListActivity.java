@@ -41,7 +41,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
 import com.sensoro.smartcity.presenter.BaseStationListActivityPresenter;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.smartcity.widget.popup.CameraListFilterPopupWindow;
+import com.sensoro.smartcity.widget.popup.CameraListFilterPopupWindowTest;
 
 import java.util.List;
 
@@ -93,7 +93,7 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
     private BaseStationListAdapter mDeviceCameraContentAdapter;
     private Animation returnTopAnimation;
 
-    private CameraListFilterPopupWindow mCameraListFilterPopupWindow;
+    private CameraListFilterPopupWindowTest mCameraListFilterPopupWindow;
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private TipOperationDialogUtils historyClearDialog;
 
@@ -173,49 +173,9 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
 
             }
         });
-        mCameraListFilterPopupWindow = new CameraListFilterPopupWindow(this);
+        mCameraListFilterPopupWindow = new CameraListFilterPopupWindowTest(this);
 
 
-        mCameraListFilterPopupWindow.setDismissListener(new CameraListFilterPopupWindow.DismissListener() {
-            @Override
-            public void dismiss() {
-
-
-//                if (mPresenter.selectedHashMap == null || mPresenter.selectedHashMap.size() == 0) {
-//                    cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
-//
-//                }
-
-            }
-        });
-//        mCameraListFilterPopupWindow.setSelectModleListener(new CameraListFilterPopupWindow.SelectModleListener() {
-//            @Override
-//            public void selectedListener(HashMap hashMap) {
-//
-//                HashMap mPresenterSelectedHashMap = mPresenter.selectedHashMap;
-//                String search = null;
-//
-//                if (mPresenterSelectedHashMap.containsKey("search")) {
-//
-//                    search = (String) mPresenterSelectedHashMap.get("search");
-//                }
-//                mPresenterSelectedHashMap.clear();
-//
-//                if (null != hashMap && hashMap.size() > 0) {
-//                    mPresenter.selectedHashMap.putAll(hashMap);
-//                    cameraListIvFilter.setImageResource(R.drawable.camera_filter_selected);
-//                } else {
-//
-//                    cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
-//                }
-//
-//
-//                if (!TextUtils.isEmpty(search)) {
-//                    mPresenterSelectedHashMap.put("search", search);
-//                }
-//                mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN, getSearchText());
-//            }
-//        });
 
         cameraListEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override

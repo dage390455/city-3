@@ -63,7 +63,7 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mAddSensorListAdapter = new AddSensorListAdapter(mActivity);
-        LinearLayoutManager manager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager manager = new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false);
         CustomDrawableDivider customDivider = new CustomDrawableDivider(mActivity, CustomDrawableDivider.VERTICAL);
         rvListAcDeployNameplateSensorList.setLayoutManager(manager);
         rvListAcDeployNameplateSensorList.addItemDecoration(customDivider);

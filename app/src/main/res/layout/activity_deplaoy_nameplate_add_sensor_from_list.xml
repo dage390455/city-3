@@ -142,6 +142,7 @@
         android:textSize="16dp" />
 
 
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_list_ac_deploy_nameplate_sensor_list"
             android:layout_width="match_parent"
