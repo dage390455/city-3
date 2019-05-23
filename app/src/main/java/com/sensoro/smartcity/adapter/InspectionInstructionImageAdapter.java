@@ -17,7 +17,6 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.sensoro.smartcity.R;
 import com.sensoro.common.server.bean.ScenesData;
-
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,12 +65,24 @@ public class InspectionInstructionImageAdapter extends RecyclerView.Adapter<Insp
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        resource.compress(Bitmap.CompressFormat.PNG,100,baos);
-                        int height = resource.getHeight() * (mScreenWidth / resource.getWidth());
-                        Glide.with(mContext)
-                                .load( baos.toByteArray())
-                                .override(mScreenWidth,height)
-                                .into(holder.itemAdapterInspectionInstructionImv);
+                        try {
+
+                            resource.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                            int width = resource.getWidth();
+                            double resourceHeight = resource.getHeight();
+                            double percent = (double) mScreenWidth / (double) width;
+                            int height = (int) (resourceHeight * percent);
+                            Glide.with(mContext)
+                                    .load(baos.toByteArray())
+                                    .override(mScreenWidth, height)
+                                    .into(holder.itemAdapterInspectionInstructionImv);
+                        } catch (Exception e) {
+                            Glide.with(mContext)
+                                    .load(baos.toByteArray())
+                                    .into(holder.itemAdapterInspectionInstructionImv);
+                            e.printStackTrace();
+                        }
+
                     }
                 });
 //                .into(holder.itemAdapterInspectionInstructionImv);
