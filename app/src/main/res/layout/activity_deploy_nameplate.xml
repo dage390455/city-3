@@ -120,14 +120,13 @@
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="14dp" />
 
-                <com.sensoro.smartcity.widget.TouchRecycleView
+                <com.sensoro.common.widgets.TouchRecycleView
                     android:id="@+id/rc_tag_ac_deploy_nameplate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:visibility="gone">
+                    android:visibility="gone"/>
 
-                </com.sensoro.smartcity.widget.TouchRecycleView>
             </RelativeLayout>
 
             <ImageView

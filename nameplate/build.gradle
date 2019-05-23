@@ -50,6 +50,8 @@ dependencies {
     //
     testImplementation deps.junit
     //
+    implementation deps.glide
+    //
     implementation deps.smartrefresh
     //网络组件
     implementation deps.okhttp3_logging

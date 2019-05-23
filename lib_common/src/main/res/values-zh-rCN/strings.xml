@@ -988,20 +988,7 @@
     <string name="app_crash_tips">系统出错了，请重新登录</string>
     <string name="camera_name_sn">摄像机名称/设备号</string>
     <string name="cannot_be_all_spaces">不能全部为空格</string>
-    <string name="nameplate_name">铭牌名称</string>
-    <string name="nameplate_tag">铭牌标签</string>
-    <string name="nameplate_pic">铭牌照片</string>
-    <string name="add_all_upload">请补充完必填项后上传</string>
-    <string name="associated_sensor">关联传感器</string>
-    <string name="nameplate_deploy">铭牌部署</string>
-    <string name="deploy_nameplate_name_tip">请输入能用于唯一标识或定位的铭牌名称，建议输入地址\n例：望京SOHO-T1-A座-1001</string>
-    <string name="add_sensor_from_list">传感器列表中添加</string>
-    <string name="add_sensor_from_scan">扫码添加</string>
-    <string name="add_sensor">添加传感器</string>
-    <string name="sensor_name_sn_tag">传感器名称/编号/标签</string>
-    <string name="add">添加</string>
-    <string name="select_all">全选</string>
-    <string name="selected">已选择：</string>
+    //
 
     <string name="The_network_information">网络信息</string>
     <string name="Self_check_state">自检状态</string>
@@ -1017,6 +1004,22 @@
     <string name="todaynew">今天</string>
     <string name="this_week">本周</string>
     <string name="base_station_detail">基站详情</string>
+    //
 
+    <string name="nameplate_name">铭牌名称</string>
+    <string name="nameplate_tag">铭牌标签</string>
+    <string name="nameplate_pic">铭牌照片</string>
+    <string name="add_all_upload">请补充完必填项后上传</string>
+    <string name="associated_sensor">关联传感器</string>
+    <string name="nameplate_deploy">铭牌部署</string>
+    <string name="deploy_nameplate_name_tip">请输入能用于唯一标识或定位的铭牌名称，建议输入地址\n例：望京SOHO-T1-A座-1001</string>
+    <string name="add_sensor_from_list">传感器列表中添加</string>
+    <string name="add_sensor_from_scan">扫码添加</string>
+    <string name="add_sensor">添加传感器</string>
+    <string name="delete">删除</string>
+    <string name="sensor_name_sn_tag">传感器名称/编号/标签</string>
+    <string name="add">添加</string>
+    <string name="select_all">全选</string>
+    <string name="selected">已选择:</string>
 
 </resources>
