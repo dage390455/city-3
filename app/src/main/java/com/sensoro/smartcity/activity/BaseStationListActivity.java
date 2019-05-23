@@ -30,6 +30,7 @@ import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.model.CameraFilterModel;
+import com.sensoro.common.server.bean.BaseStationInfo;
 import com.sensoro.common.server.bean.DeviceCameraInfo;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -115,7 +116,7 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
         mDeviceCameraContentAdapter = new BaseStationListAdapter(mActivity);
         mDeviceCameraContentAdapter.setOnAlarmHistoryLogConfirmListener(this);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         acHistoryLogRcContent.setLayoutManager(linearLayoutManager);
         acHistoryLogRcContent.setAdapter(mDeviceCameraContentAdapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL);
@@ -359,13 +360,18 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
 
     @Override
     public void onItemClick(View v, int position) {
-        DeviceCameraInfo deviceCameraInfo = mDeviceCameraContentAdapter.getData().get(position);
+        BaseStationInfo deviceCameraInfo = mDeviceCameraContentAdapter.getData().get(position);
         mPresenter.onClickDeviceCamera(deviceCameraInfo);
     }
 
 
     @Override
     public void updateDeviceCameraAdapter(List<DeviceCameraInfo> data) {
+
+    }
+
+    @Override
+    public void updateDBaseStationAdapter(List<BaseStationInfo> data) {
         if (data != null && data.size() > 0) {
             mDeviceCameraContentAdapter.updateAdapter(data);
         }

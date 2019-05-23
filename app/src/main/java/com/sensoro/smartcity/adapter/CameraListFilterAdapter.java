@@ -2,17 +2,19 @@ package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sensoro.smartcity.R;
-import com.sensoro.common.model.CameraFilterModel;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.model.CameraFilterModel;
+import com.sensoro.smartcity.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +57,13 @@ public class CameraListFilterAdapter extends RecyclerView.Adapter<CameraListFilt
             boolean select = ic.isSelect();
             holder.itemPopSelectLlRoot.setBackgroundResource(!select ? R.drawable.shape_bg_solid_ff_corner
                     : R.drawable.shape_bg_corner_1dbb99_shadow);
+
+            if (select) {
+                holder.selected_tick_iv.setVisibility(View.VISIBLE);
+            } else {
+                holder.selected_tick_iv.setVisibility(View.GONE);
+
+            }
 
             holder.itemPopTvSelectState.setTextColor(resources.getColor(!select ? R.color.c_252525 : R.color.white));
 
@@ -111,9 +120,11 @@ public class CameraListFilterAdapter extends RecyclerView.Adapter<CameraListFilt
     class InspectionTaskStateSelectHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.item_pop_tv_select_state)
         TextView itemPopTvSelectState;
+        @BindView(R.id.selected_tick_iv)
+        ImageView selected_tick_iv;
 
         @BindView(R.id.item_pop_select_ll_root)
-        LinearLayout itemPopSelectLlRoot;
+        RelativeLayout itemPopSelectLlRoot;
 
         InspectionTaskStateSelectHolder(View itemView) {
             super(itemView);

@@ -549,7 +549,6 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         if (view.getVisibility() != View.VISIBLE) return;
 
 
-        //选中的高亮和顶部同时消失，高亮没有复位。只是位置消失了，LineChartRenderer  drawHighlightLines
 
 
         myHandler.sendEmptyMessageDelayed(0, 1000);
@@ -565,7 +564,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
         @Override
         public String getFormattedValue(float value) {
-            Log.d(TAG, "----->getFormattedValue: " + value);
+//            Log.d(TAG, "----->getFormattedValue: " + value);
 
             if (value > 0) {
 
@@ -579,7 +578,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
         @Override
         public String getAxisLabel(float value, AxisBase axis) {
-            Log.d(TAG, "----->getAxisLabel: " + value);
+//            Log.d(TAG, "----->getAxisLabel: " + value);
 
             return mPresenter.stampToDate(value + "");
 
@@ -589,12 +588,12 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     public class MyYFormatter extends ValueFormatter {
 
 
-        private static final String TAG = "MyXFormatter";
+//        private static final String TAG = "MyXFormatter";
 
 
         @Override
         public String getFormattedValue(float value) {
-            Log.d(TAG, "----->getFormattedValue: " + value);
+//            Log.d(TAG, "----->getFormattedValue: " + value);
 
 
             String p = decimalFormat.format(value);
@@ -605,7 +604,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
         @Override
         public String getAxisLabel(float value, AxisBase axis) {
-            Log.d(TAG, "----->getAxisLabel: " + value);
+//            Log.d(TAG, "----->getAxisLabel: " + value);
 
 //            return stampToDate(value + "");
 
