@@ -311,8 +311,12 @@ public class DateUtil {
             } else {
                 return context.getString(R.string.yesterday) + apm_text + formatTime;
             }
-        } else if (day < 2) {
-            return context.getString(R.string.yesterday) + apm_text + formatTime;
+//        } else if (day < 2) {
+//            return context.getString(R.string.yesterday) + apm_text + formatTime;
+//        } else {
+//            String other_date = new SimpleDateFormat("MM.dd hh:mm:ss", Locale.ROOT).format(new Date(time));
+//            return other_date.replace(" ", " " + apm_text);
+//        }
         } else {
             String other_date = new SimpleDateFormat("MM.dd hh:mm:ss", Locale.ROOT).format(new Date(time));
             return other_date.replace(" ", " " + apm_text);
@@ -354,8 +358,11 @@ public class DateUtil {
             } else {
                 return context.getString(R.string.yesterday) + formatTime;
             }
-        } else if (day < 2) {
-            return context.getString(R.string.yesterday) + formatTime;
+//        } else if (day < 2) {
+//            return context.getString(R.string.yesterday) + formatTime;
+//        } else {
+//            return new SimpleDateFormat(pattern, Locale.ROOT).format(new Date(time));
+//        }
         } else {
             return new SimpleDateFormat(pattern, Locale.ROOT).format(new Date(time));
         }
@@ -378,8 +385,11 @@ public class DateUtil {
             } else {
                 return context.getString(R.string.yesterday) + formatTime;
             }
-        } else if (day < 2) {
-            return context.getString(R.string.yesterday) + formatTime;
+//        } else if (day < 2) {
+//            return context.getString(R.string.yesterday) + formatTime;
+//        } else {
+//            return new SimpleDateFormat(pattern, Locale.ROOT).format(new Date(time));
+//        }
         } else {
             return new SimpleDateFormat(pattern, Locale.ROOT).format(new Date(time));
         }
