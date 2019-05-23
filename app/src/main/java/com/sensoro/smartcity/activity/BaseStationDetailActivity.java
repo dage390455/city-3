@@ -163,9 +163,31 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
                 break;
             case R.id.ac_basestation_tv_today:
 
-                mPresenter.switchCharType();
+
+                acBasestationTvToday.setTextColor(Color.parseColor("#252525"));
+                acBasestationTvWeek.setBackground(getResources().getDrawable(R.drawable.shape_bg_top));
+
+
+                acBasestationTvWeek.setTextColor(Color.parseColor("#A6A6A6"));
+                acBasestationTvToday.setBackground(null);
+
+
+                mPresenter.requestData();
+
+
                 break;
             case R.id.ac_basestation_tv_week:
+
+
+                acBasestationTvWeek.setTextColor(Color.parseColor("#252525"));
+                acBasestationTvToday.setBackground(getResources().getDrawable(R.drawable.shape_bg_top));
+
+
+                acBasestationTvToday.setTextColor(Color.parseColor("#A6A6A6"));
+                acBasestationTvWeek.setBackground(null);
+
+                mPresenter.requestData();
+
                 break;
             case R.id.rl_network_information:
                 startActivity(new Intent(mActivity, NetWorkInfoActivity.class));
@@ -252,6 +274,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         acMonitorDeployPhoto.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
     }
+
     @Override
     protected BaseStationDetailActivityPresenter createPresenter() {
         return new BaseStationDetailActivityPresenter();
@@ -264,7 +287,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         mPresenter.initData(mActivity);
 
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
-
+        includeTextTitleTvTitle.setText(getResources().getString(R.string.base_station_detail));
 
         out_tv = findViewById(R.id.out_tv);
         in_tv = findViewById(R.id.in_tv);
@@ -325,8 +348,8 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         leftAxis.setDrawGridLines(true);
         leftAxis.setDrawAxisLine(false);
 
-        leftAxis.enableGridDashedLine(10, 10, 0);
-        leftAxis.setGranularityEnabled(true);
+//        leftAxis.enableGridDashedLine(10, 10, 0);
+//        leftAxis.setGranularityEnabled(true);
         leftAxis.setValueFormatter(new MyYFormatter());
 
 
@@ -351,12 +374,6 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
             Log.i("====onChartGestureStart", "=====" + me.getAction());
 
-            final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
-            final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
-            set1.setDrawVerticalHighlightIndicator(true);
-            set2.setDrawVerticalHighlightIndicator(true);
-            fadeIn(topStateRl);
-            myHandler.removeCallbacksAndMessages(null);
 
         }
 
@@ -435,9 +452,13 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
     @Override
     public void updateChartData(LineData lineData) {
+
         chart.setData(lineData);
-//        chart.getData().notifyDataChanged();
-//        chart.notifyDataSetChanged();
+        final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+        final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
+        set1.setDrawVerticalHighlightIndicator(false);
+        set2.setDrawVerticalHighlightIndicator(false);
+        chart.invalidate();
     }
 
     @Override
@@ -455,6 +476,14 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
                 .getAxisDependency(), 500);
         mPresenter.drawHighlight(e, h, chart.getData());
         e.setIcon(getResources().getDrawable(R.drawable.chart_black_dot));
+
+
+        final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+        final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
+        set1.setDrawVerticalHighlightIndicator(true);
+        set2.setDrawVerticalHighlightIndicator(true);
+        fadeIn(topStateRl);
+        myHandler.removeCallbacksAndMessages(null);
     }
 
     @Override
