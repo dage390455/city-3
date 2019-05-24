@@ -20,6 +20,8 @@ import com.sensoro.common.server.bean.DeployControlSettingData;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.AuthRsp;
+import com.sensoro.common.server.response.BaseStationDetailRsp;
+import com.sensoro.common.server.response.BaseStationListRsp;
 import com.sensoro.common.server.response.CameraFilterRsp;
 import com.sensoro.common.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.common.server.response.ContractAddRsp;
@@ -1666,8 +1668,20 @@ public class RetrofitServiceHelper {
         return retrofitService.getCameraFilter();
     }
 
+    public Observable<CameraFilterRsp> getStationFilter() {
+        return retrofitService.getStationFilter();
+    }
+
     public Observable<DeviceCameraListRsp> getDeviceCameraListByFilter(Integer pageSize, Integer page, String search, Map<String, String> mapFilter) {
         return retrofitService.getDeviceCameraListByFilter(pageSize, page, search, mapFilter);
+    }
+
+    public Observable<BaseStationListRsp> getBaseStationListByFilter(Integer pageSize, Integer page, String search, Map<String, String> mapFilter) {
+        return retrofitService.getBaseStationListByFilter(pageSize, page, search, mapFilter);
+    }
+
+    public Observable<BaseStationDetailRsp> getBaseStatioDetail(String stationsn) {
+        return retrofitService.getBaseStationDetail(stationsn);
     }
 
 

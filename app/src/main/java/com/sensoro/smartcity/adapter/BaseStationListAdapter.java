@@ -3,7 +3,6 @@ package com.sensoro.smartcity.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sensoro.common.server.bean.DeviceCameraInfo;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.sensoro.common.server.bean.BaseStationInfo;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 
@@ -26,7 +27,7 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
 
     private Context mContext;
     private OnDeviceCameraContentClickListener listener;
-    private final List<DeviceCameraInfo> mData = new ArrayList<>();
+    private final List<BaseStationInfo> mData = new ArrayList<>();
 
     public BaseStationListAdapter(Context context) {
         mContext = context;
@@ -36,13 +37,13 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
         listener = onDeviceCameraContentClickListener;
     }
 
-    public void updateAdapter(List<DeviceCameraInfo> data) {
+    public void updateAdapter(List<BaseStationInfo> data) {
         mData.clear();
         mData.addAll(data);
         notifyDataSetChanged();
     }
 
-    public List<DeviceCameraInfo> getData() {
+    public List<BaseStationInfo> getData() {
         return mData;
     }
 
@@ -59,14 +60,13 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
     @Override
     public void onBindViewHolder(final DeviceCameraContentHolder holder, final int position) {
 
-        DeviceCameraInfo deviceCameraInfo = mData.get(position);
+        BaseStationInfo deviceCameraInfo = mData.get(position);
         if (deviceCameraInfo != null) {
             //
             String name = deviceCameraInfo.getName();
             if (TextUtils.isEmpty(name)) {
                 name = mContext.getString(R.string.unknown);
             }
-//            holder.tvAlarmHistoryLogContent.setText(DateUtil.getStrTimeToday(mContext, alarmLogInfo.getCreatedTime(), 0) + mContext.getString(R.string.occur_alarmed));
             holder.itemDeviceCameraTvDeviceName.setText(name);
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -78,54 +78,60 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
             }
         });
 
+//        if (deviceCameraInfo.getType().equals("")) {
+//
+//        } else {
+//        }
 
-        holder.itemDeviceCameraTvId.setText(deviceCameraInfo.getSn());
-        if (!TextUtils.isEmpty(deviceCameraInfo.getOrientationName())) {
-            holder.orientationTv.setVisibility(View.VISIBLE);
-            holder.orientationTv.setText(deviceCameraInfo.getOrientationName());
-            holder.orientationTv.setText(deviceCameraInfo.getOrientationName());
 
+        if (!TextUtils.isEmpty(deviceCameraInfo.getSn())) {
+            holder.itemDeviceCameraTvId.setText(deviceCameraInfo.getSn());
         } else {
-            holder.orientationTv.setVisibility(View.GONE);
-
-        }
-        if (!TextUtils.isEmpty(deviceCameraInfo.getInstallationModeName())) {
-            holder.installationmodeTv.setVisibility(View.VISIBLE);
-            holder.installationmodeTv.setText(deviceCameraInfo.getInstallationModeName());
-        } else {
-            holder.installationmodeTv.setVisibility(View.GONE);
+            holder.itemDeviceCameraTvId.setText("");
 
         }
 
-        if ("1".equals(deviceCameraInfo.getDeviceStatus())) {
+
+        if (null != deviceCameraInfo.getTags() && deviceCameraInfo.getTags().size() > 0) {
+
+            holder.itemDeviceCameraLlDetail.setVisibility(View.VISIBLE);
+            holder.itemDeviceCameraLlDetail.removeAllViews();
+            for (String tag : deviceCameraInfo.getTags()) {
+                View view = LayoutInflater.from(mContext).inflate(R.layout.item_basestation_tag_item, null);
+                TextView textView = view.findViewById(R.id.item_basestation_tag_tv);
+                textView.setText(tag);
+                holder.itemDeviceCameraLlDetail.addView(view);
+            }
+        } else {
+            holder.itemDeviceCameraLlDetail.setVisibility(View.INVISIBLE);
+        }
+
+
+        if ("offline".equals(deviceCameraInfo.getStatus())) {
+
+
+            Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_basestation_offline);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+
+            holder.itemDeviceCameraTvOnlinestate.setText("离线");
+            holder.itemDeviceCameraTvOnlinestate.setTextColor(Color.parseColor("#5D5D5D"));
+            holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);
+
+
+        } else if ("inactive".equals(deviceCameraInfo.getStatus())) {
+            Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_inactive);
+            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+            holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);
+            holder.itemDeviceCameraTvOnlinestate.setText("未激活");
+            holder.itemDeviceCameraTvOnlinestate.setTextColor(Color.parseColor("#A6A6A6"));
+        } else {
             Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_device_online);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);
             holder.itemDeviceCameraTvOnlinestate.setText("在线");
             holder.itemDeviceCameraTvOnlinestate.setTextColor(Color.parseColor("#1DBB99"));
-        } else {
-            Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_device_offline);
-            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-
-            holder.itemDeviceCameraTvOnlinestate.setText("离线");
-            holder.itemDeviceCameraTvOnlinestate.setTextColor(Color.parseColor("#A6A6A6"));
-            holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);
-
 
         }
-//        AlarmInfo.RecordInfo[] recordInfoArray = alarmLogInfo.getRecords();
-//        boolean isAlarm = false;
-//        for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
-////                AlarmInfo.RecordInfo.Event[] event = recordInfo.getPhoneList();
-//            String type = recordInfo.getType();
-//            if ("alarm".equals(type)) {
-
-
-//                break;
-//            }
-//        }
-        //
-//        holder.tvAlarmHistoryLogContent.setText("今天-------->>>>" + position);
 
     }
 
@@ -143,10 +149,6 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
         TextView itemDeviceCameraTvId;
         @BindView(R.id.item_device_camera_ll_detail)
         LinearLayout itemDeviceCameraLlDetail;
-        @BindView(R.id.orientation_tv)
-        TextView orientationTv;
-        @BindView(R.id.installationmode_tv)
-        TextView installationmodeTv;
 
         DeviceCameraContentHolder(View itemView) {
             super(itemView);

@@ -4,12 +4,15 @@ import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
 import com.sensoro.common.model.CameraFilterModel;
+import com.sensoro.common.server.bean.BaseStationInfo;
 import com.sensoro.common.server.bean.DeviceCameraInfo;
 
 import java.util.List;
 
 public interface ICameraListActivityView extends IToast, IProgressDialog, IActivityIntent {
     void updateDeviceCameraAdapter(List<DeviceCameraInfo> data);
+
+    void updateDBaseStationAdapter(List<BaseStationInfo> data);
 
     void onPullRefreshCompleteNoMoreData();
 

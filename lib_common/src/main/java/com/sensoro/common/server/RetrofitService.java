@@ -3,6 +3,8 @@ package com.sensoro.common.server;
 
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.AuthRsp;
+import com.sensoro.common.server.response.BaseStationDetailRsp;
+import com.sensoro.common.server.response.BaseStationListRsp;
 import com.sensoro.common.server.response.CameraFilterRsp;
 import com.sensoro.common.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.common.server.response.ContractAddRsp;
@@ -382,9 +384,17 @@ public interface RetrofitService {
     @GET("query-dict")
     Observable<CameraFilterRsp> getCameraFilter();
 
+    @GET("group/stations/fields")
+    Observable<CameraFilterRsp> getStationFilter();
 
     @GET("cameras")
     Observable<DeviceCameraListRsp> getDeviceCameraListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
 
+    @GET("stations")
+    Observable<BaseStationListRsp> getBaseStationListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
+
+
+    @GET("stations")
+    Observable<BaseStationDetailRsp> getBaseStationDetail(@Query("stationsn") String stationsn);
 }
 
