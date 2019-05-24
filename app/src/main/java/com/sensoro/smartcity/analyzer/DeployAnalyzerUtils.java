@@ -473,7 +473,7 @@ public class DeployAnalyzerUtils {
                             public void onErrorMsg(int errorCode, String errorMsg) {
                                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                                     listener.onError(errorCode, null, errorMsg);
-                                } else if (errorCode == 4013101 || errorCode == 4000013) {
+                                } else if (errorCode == 4013101 || errorCode == 4000013 || errorCode == 4029003) {
                                     //不在账户下
                                     Intent intent = new Intent();
                                     intent.setClass(activity, DeployResultActivity.class);
