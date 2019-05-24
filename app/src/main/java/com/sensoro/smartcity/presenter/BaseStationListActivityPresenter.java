@@ -41,19 +41,57 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        requestDataByFilter(DIRECTION_DOWN, null);
-        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST);
+
+        initData();
+        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_BASESTATION);
         if (list != null) {
             mSearchHistoryList.addAll(list);
             getView().updateSearchHistoryList(mSearchHistoryList);
         }
     }
 
+
+    /**
+     * 首先获取筛选项
+     */
+    public void initData() {
+
+
+        if (cameraFilterModelList.size() == 0) {
+            getView().showProgressDialog();
+            RetrofitServiceHelper.getInstance().getStationFilter().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<CameraFilterRsp>(this) {
+                @Override
+                public void onCompleted(CameraFilterRsp cameraFilterRsp) {
+                    List<CameraFilterModel> data = cameraFilterRsp.getData();
+                    if (data != null) {
+                        cameraFilterModelList.addAll(data);
+                        for (CameraFilterModel cameraFilterModel : cameraFilterModelList) {
+                            if (cameraFilterModel.getKey().equals("type")) {
+                                getView().setBaseStationType(cameraFilterModel.getList());
+                                break;
+                            }
+                        }
+                    }
+                    requestDataByFilter(DIRECTION_DOWN, null);
+
+                }
+
+                @Override
+                public void onErrorMsg(int errorCode, String errorMsg) {
+                    getView().toastShort(errorMsg);
+                    requestDataByFilter(DIRECTION_DOWN, null);
+
+                }
+            });
+        }
+    }
+
+
     public void save(String text) {
         if (TextUtils.isEmpty(text)) {
             return;
         }
-        List<String> warnList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST, text);
+        List<String> warnList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_BASESTATION, text);
         mSearchHistoryList.clear();
         mSearchHistoryList.addAll(warnList);
         getView().updateSearchHistoryList(mSearchHistoryList);
@@ -61,7 +99,7 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
     }
 
     public void clearSearchHistory() {
-        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST);
+        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_BASESTATION);
         mSearchHistoryList.clear();
         getView().updateSearchHistoryList(mSearchHistoryList);
     }
@@ -98,7 +136,8 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
                         if (data != null && data.size() > 0) {
                             deviceCameraInfos.addAll(data);
                         }
-                        getView().updateDBaseStationAdapter(deviceCameraInfos);
+
+                        getView().updateBaseStationAdapter(deviceCameraInfos);
                         getView().onPullRefreshComplete();
                         getView().dismissProgressDialog();
                     }
@@ -125,7 +164,7 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
                         List<BaseStationInfo> data = deviceCameraListRsp.getData();
                         if (data != null && data.size() > 0) {
                             deviceCameraInfos.addAll(data);
-                            getView().updateDBaseStationAdapter(deviceCameraInfos);
+                            getView().updateBaseStationAdapter(deviceCameraInfos);
                         } else {
                             getView().toastShort(mContext.getString(R.string.no_more_data));
                         }
@@ -237,7 +276,7 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
                 //只在重置成功了进行刷新
                 clearCameraFilterData();
                 getView().updateCameraListFilterPopupWindowStatusList(cameraFilterModelList);
-                getView().updateDBaseStationAdapter(deviceCameraInfos);
+                getView().updateBaseStationAdapter(deviceCameraInfos);
                 getView().onPullRefreshComplete();
                 getView().dismissProgressDialog();
                 getView().dismissCameraListFilterPopupWindow();
@@ -282,7 +321,7 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
                 if (data != null && data.size() > 0) {
                     deviceCameraInfos.addAll(data);
                 }
-                getView().updateDBaseStationAdapter(deviceCameraInfos);
+                getView().updateBaseStationAdapter(deviceCameraInfos);
                 getView().setCameraListFilterPopupWindowSelectState(getHasSelect());
                 getView().onPullRefreshComplete();
                 getView().dismissProgressDialog();

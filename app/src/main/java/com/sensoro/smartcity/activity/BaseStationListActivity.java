@@ -42,7 +42,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
 import com.sensoro.smartcity.presenter.BaseStationListActivityPresenter;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.smartcity.widget.popup.CameraListFilterPopupWindowTest;
+import com.sensoro.smartcity.widget.popup.BaseStationPopupWindow;
 
 import java.util.List;
 
@@ -50,7 +50,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class BaseStationListActivity extends BaseActivity<ICameraListActivityView, BaseStationListActivityPresenter>
-        implements ICameraListActivityView, BaseStationListAdapter.OnDeviceCameraContentClickListener, View.OnClickListener {
+        implements ICameraListActivityView, BaseStationListAdapter.OnDeviceCameraContentClickListener, View.OnClickListener, BaseStationPopupWindow.OnCameraListFilterPopupWindowListener {
 
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
@@ -94,7 +94,7 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
     private BaseStationListAdapter mDeviceCameraContentAdapter;
     private Animation returnTopAnimation;
 
-    private CameraListFilterPopupWindowTest mCameraListFilterPopupWindow;
+    private BaseStationPopupWindow mCameraListFilterPopupWindow;
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private TipOperationDialogUtils historyClearDialog;
 
@@ -174,8 +174,8 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
 
             }
         });
-        mCameraListFilterPopupWindow = new CameraListFilterPopupWindowTest(this);
-
+        mCameraListFilterPopupWindow = new BaseStationPopupWindow(this);
+        mCameraListFilterPopupWindow.setOnCameraListFilterPopupWindowListener(this);
 
 
         cameraListEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -371,11 +371,18 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
     }
 
     @Override
-    public void updateDBaseStationAdapter(List<BaseStationInfo> data) {
+    public void updateBaseStationAdapter(List<BaseStationInfo> data) {
         if (data != null && data.size() > 0) {
             mDeviceCameraContentAdapter.updateAdapter(data);
         }
         setNoContentVisible(data == null || data.size() < 1);
+    }
+
+    @Override
+    public void setBaseStationType(List<CameraFilterModel.ListBean> data) {
+        if (data != null && data.size() > 0) {
+            mDeviceCameraContentAdapter.setaseStationType(data);
+        }
     }
 
 
@@ -432,22 +439,30 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
 
     @Override
     public void showCameraListFilterPopupWindow(List<CameraFilterModel> data) {
-
+        if (!mCameraListFilterPopupWindow.isShowing()) {
+            mCameraListFilterPopupWindow.showAsDropDown(cameraListLlTopSearch, data);
+        }
     }
 
     @Override
     public void dismissCameraListFilterPopupWindow() {
+        mCameraListFilterPopupWindow.dismiss();
 
     }
 
     @Override
     public void updateCameraListFilterPopupWindowStatusList(List<CameraFilterModel> list) {
+        mCameraListFilterPopupWindow.updateSelectDeviceStatusList(list);
 
     }
 
     @Override
     public void setCameraListFilterPopupWindowSelectState(boolean hasSelect) {
-
+        if (hasSelect) {
+            cameraListIvFilter.setImageResource(R.drawable.camera_filter_selected);
+        } else {
+            cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
+        }
     }
 
 
@@ -494,20 +509,7 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
                 break;
 
             case R.id.camera_list_iv_filter:
-//                if (mPresenter.getCameraFilterModelList().size() == 0) {
-//                    mPresenter.getFilterPopData();
-//                } else {
-//                    if (!mCameraListFilterPopupWindow.isShowing()) {
-//                        mCameraListFilterPopupWindow.updateSelectDeviceStatusList(mPresenter.getCameraFilterModelList());
-//                        cameraListIvFilter.setImageResource(R.drawable.camera_filter_selected);
-//                        mCameraListFilterPopupWindow.showAsDropDown(cameraListLlTopSearch);
-//                    } else {
-//                        cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
-//
-//
-//                        mCameraListFilterPopupWindow.dismiss();
-//                    }
-//                }
+                mPresenter.doShowCameraListFilterPopupWindow(mCameraListFilterPopupWindow.isShowing());
 
 
                 break;
@@ -559,13 +561,28 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
     @Override
     public void onBackPressed() {
         if (mCameraListFilterPopupWindow.isShowing()) {
-            cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
-
-            mCameraListFilterPopupWindow.dismiss();
+            mPresenter.onCameraListFilterPopupWindowDismiss();
         } else {
             super.onBackPressed();
         }
 
+    }
+
+
+    @Override
+    public void onSave(List<CameraFilterModel> list) {
+        mPresenter.onSaveCameraListFilterPopupWindowDismiss(list, getSearchText());
+    }
+
+    @Override
+    public void onDismiss() {
+        mPresenter.onCameraListFilterPopupWindowDismiss();
+    }
+
+
+    @Override
+    public void onReset() {
+        mPresenter.onResetCameraListFilterPopupWindowDismiss(getSearchText());
     }
 
     private String getSearchText() {

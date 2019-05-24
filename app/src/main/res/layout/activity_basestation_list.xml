@@ -162,9 +162,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="12dp"
-            android:background="@color/white"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp">
+            android:background="@color/white">
 
             <include layout="@layout/item_no_content" />
 
@@ -172,6 +170,8 @@
                 android:id="@+id/refreshLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
                 android:orientation="vertical">
 
                 <androidx.recyclerview.widget.RecyclerView

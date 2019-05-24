@@ -47,7 +47,7 @@ public final class PreferencesHelper implements Constants {
     }
 
 
-    public void saveUserData( EventLoginData eventLoginData) {
+    public void saveUserData(EventLoginData eventLoginData) {
         mEventLoginData = eventLoginData;
         SharedPreferences sp = ContextUtils.getContext().getSharedPreferences(PREFERENCE_SPLASH_LOGIN_DATA, Context
                 .MODE_PRIVATE);
@@ -385,6 +385,9 @@ public final class PreferencesHelper implements Constants {
 
             case SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST:
                 spFileName = SearchHistoryTypeConstants.SP_FILE_SEARCH_CAMERALIST;
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_BASESTATION:
+                spFileName = SearchHistoryTypeConstants.SP_FILE_BASESTATION;
                 break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN:
                 spFileName = SearchHistoryTypeConstants.SP_FILE_WARN;

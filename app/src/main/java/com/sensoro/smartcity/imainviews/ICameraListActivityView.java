@@ -12,7 +12,9 @@ import java.util.List;
 public interface ICameraListActivityView extends IToast, IProgressDialog, IActivityIntent {
     void updateDeviceCameraAdapter(List<DeviceCameraInfo> data);
 
-    void updateDBaseStationAdapter(List<BaseStationInfo> data);
+    void updateBaseStationAdapter(List<BaseStationInfo> data);
+
+    void setBaseStationType(List<CameraFilterModel.ListBean> data);
 
     void onPullRefreshCompleteNoMoreData();
 

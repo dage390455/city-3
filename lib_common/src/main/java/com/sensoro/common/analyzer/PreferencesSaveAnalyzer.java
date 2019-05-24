@@ -87,7 +87,10 @@ public class PreferencesSaveAnalyzer {
 
     private static void savePreferences(int status, String content) {
         switch (status) {
-
+            case SearchHistoryTypeConstants.TYPE_SEARCH_BASESTATION:
+                ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_BASESTATION, Context
+                        .MODE_PRIVATE).edit().putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, content).apply();
+                break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST:
                 ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_SEARCH_CAMERALIST, Context
                         .MODE_PRIVATE).edit().putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, content).apply();
@@ -139,6 +142,11 @@ public class PreferencesSaveAnalyzer {
     private static String obtainOldText(int status) {
         String oldText = null;
         switch (status) {
+
+            case SearchHistoryTypeConstants.TYPE_SEARCH_BASESTATION:
+                oldText = ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_BASESTATION, Context
+                        .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
+                break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST:
                 oldText = ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_SEARCH_CAMERALIST, Context
                         .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
@@ -196,7 +204,10 @@ public class PreferencesSaveAnalyzer {
      */
     public static void clearAllData(int status) {
         switch (status) {
-
+            case SearchHistoryTypeConstants.TYPE_SEARCH_BASESTATION:
+                ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_BASESTATION, Activity.MODE_PRIVATE)
+                        .edit().clear().apply();
+                break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST:
                 ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_SEARCH_CAMERALIST, Activity.MODE_PRIVATE)
                         .edit().clear().apply();
