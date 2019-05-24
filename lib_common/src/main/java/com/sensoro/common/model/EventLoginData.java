@@ -34,6 +34,9 @@ public final class EventLoginData implements Serializable {
     public boolean needAuth = false;
     public boolean hasControllerAid = false;
     public boolean hasDeviceCameraList = false;
+    //TODO 加入本地字段写入支持
+    public boolean hasStationList = false;
+    public boolean hasNameplateList = false;
 
     @Override
     public String toString() {
@@ -69,6 +72,8 @@ public final class EventLoginData implements Serializable {
                 ", needAuth=" + needAuth +
                 ", hasControllerAid=" + hasControllerAid +
                 ", hasDeviceCameraList=" + hasDeviceCameraList +
+                ", hasStationList=" + hasStationList +
+                ", hasNameplateList=" + hasNameplateList +
                 '}';
     }
 }
