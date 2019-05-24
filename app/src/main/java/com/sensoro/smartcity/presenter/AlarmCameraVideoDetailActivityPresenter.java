@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -15,10 +14,12 @@ import android.text.TextUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.sensoro.common.utils.FileUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAlarmCameraVideoDetailActivityView;
+import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.download.DownloadListener;
@@ -38,13 +39,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlarmCameraVideoDetailActivityView>
-implements DownloadListener{
+        implements DownloadListener {
     private Activity mActivity;
     private DownloadUtil mDownloadUtil;
     private String downLoadFilePath;
     private ArrayList<MediasBean> mList = new ArrayList<>();
     private AlarmCloudVideoRsp.DataBean mVideoData;
-    private MediasBean mItemMediaBean;
     private MediasBean mDownloadBean;
 
     @Override
@@ -55,7 +55,6 @@ implements DownloadListener{
             mVideoData = (AlarmCloudVideoRsp.DataBean) extra;
             mList.addAll(mVideoData.getMedias());
             MediasBean mediasBean = mVideoData.getMedias().get(0);
-            mItemMediaBean = mediasBean;
             getView().doPlayLive(mediasBean.getMediaUrl());
             getLastCoverImage(mediasBean.getCoverUrl());
 
@@ -65,7 +64,7 @@ implements DownloadListener{
 
     }
 
-    private void setCreateTime(String createTime)  {
+    private void setCreateTime(String createTime) {
         //这里的时间是格林尼治时间，而不是时间戳，原因是，后端说做了转发，不太容易转成时间戳
         try {
             getView().setPlayVideoTime(DateUtil.parseUTC(createTime));
@@ -94,7 +93,6 @@ implements DownloadListener{
                             if (medias != null && medias.size() > 0) {
                                 mList.addAll(medias);
                                 MediasBean mediasBean = medias.get(0);
-                                mItemMediaBean = mediasBean;
                                 String createTime = mediasBean.getCreateTime();
 
                                 setCreateTime(createTime);
@@ -116,7 +114,6 @@ implements DownloadListener{
     }
 
     public void doItemClick(MediasBean bean) {
-        mItemMediaBean = bean;
         getView().doPlayLive(bean.getMediaUrl());
         setCreateTime(bean.getCreateTime());
         getLastCoverImage(bean.getCoverUrl());
@@ -127,15 +124,19 @@ implements DownloadListener{
             onFailed(mActivity.getString(R.string.tips_data_error));
             return;
         }
-        File dcim = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM+"/Camera");
-        if (dcim == null) {
-            dcim = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/DICM/Camera");
+//        File dcim = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM+"/Camera");
+//        if (dcim == null) {
+//            dcim = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/DICM/Camera");
+//        }
+        File cacheFile = FileUtil.getDiskCachePath(mActivity);
+        if (cacheFile == null) {
+            cacheFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Sensoro/Camera");
         }
-        if (!dcim.isDirectory()) {
-            boolean mkdir = dcim.mkdir();
+        if (!cacheFile.isDirectory()) {
+            boolean mkdir = cacheFile.mkdir();
         }
-        downLoadFilePath = String.format(Locale.ROOT,"%s/%s%s%s"
-                ,dcim.getAbsolutePath(),mDownloadBean.getSn(),mDownloadBean.getCreateTime(),".mp4");
+        downLoadFilePath = String.format(Locale.ROOT, "%s/%s%s%s"
+                , cacheFile.getAbsolutePath(), mDownloadBean.getSn(), mDownloadBean.getCreateTime(), ".mp4");
 
         getView().setDownloadStartState(mDownloadBean.getVideoSize());
         if (mDownloadUtil == null) {
@@ -145,20 +146,47 @@ implements DownloadListener{
 
 
     }
+
     @Override
     public void onFinish(final File file) {
-        if (isAttachedView()) {
-            getView().doDownloadFinish();
-
-            insertVideoToMediaStore(file.getAbsolutePath());
-
-            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            intent.setData(Uri.fromFile(file));
-            mActivity.sendBroadcast(intent);
+        //拷贝文件 并删除缓存文件
+        File dcim = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + "/Camera");
+        if (dcim == null) {
+            dcim = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/DICM/Camera");
+        }
+        if (!dcim.isDirectory()) {
+            boolean mkdir = dcim.mkdir();
+        }
+        try {
+            final String newPath = String.format(Locale.ROOT, "%s/%s%s%s"
+                    , dcim.getAbsolutePath(), mDownloadBean.getSn(), mDownloadBean.getCreateTime(), ".mp4");
+            ThreadPoolManager.getInstance().execute(new Runnable() {
+                @Override
+                public void run() {
+                    FileUtil.copyFile(file.getAbsolutePath(), newPath);
+                    if (isAttachedView()) {
+                        mActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (isAttachedView()) {
+                                    getView().doDownloadFinish();
+                                    insertVideoToMediaStore(file.getAbsolutePath());
+                                    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                                    intent.setData(Uri.fromFile(file));
+                                    mActivity.sendBroadcast(intent);
+                                    deleteCacheFile();
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    public  void insertVideoToMediaStore(String filePath) {
+    public void insertVideoToMediaStore(String filePath) {
         long createTime = System.currentTimeMillis();
         ContentValues values = initCommonContentValues(filePath, createTime);
         values.put(MediaStore.Video.VideoColumns.DATE_TAKEN, createTime);
@@ -166,7 +194,7 @@ implements DownloadListener{
         mActivity.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
     }
 
-    private  ContentValues initCommonContentValues(String filePath, long time) {
+    private ContentValues initCommonContentValues(String filePath, long time) {
         ContentValues values = new ContentValues();
         File saveFile = new File(filePath);
         values.put(MediaStore.MediaColumns.TITLE, saveFile.getName());
@@ -181,8 +209,7 @@ implements DownloadListener{
     @Override
     public void onProgress(int progress, String totalBytesRead, String fileSize) {
         if (isAttachedView()) {
-            getView().updateDownLoadProgress(progress,totalBytesRead,fileSize);
-
+            getView().updateDownLoadProgress(progress, totalBytesRead, fileSize);
         }
     }
 
@@ -191,20 +218,14 @@ implements DownloadListener{
         if (isAttachedView()) {
             getView().setDownloadErrorState();
         }
+        deleteCacheFile();
     }
 
     public void doDownloadCancel() {
         if (mDownloadUtil != null) {
             mDownloadUtil.cancelDownload();
         }
-
-        if (!TextUtils.isEmpty(downLoadFilePath)) {
-            File file = new File(downLoadFilePath);
-            if (file.exists()) {
-                boolean delete = file.delete();
-            }
-        }
-
+        deleteCacheFile();
     }
 
     private void getLastCoverImage(String lastCover) {
@@ -219,5 +240,24 @@ implements DownloadListener{
 
     public void setDownloadBean(MediasBean bean) {
         mDownloadBean = bean;
+    }
+
+    /**
+     * 删除临时文件
+     */
+    private void deleteCacheFile() {
+        if (!TextUtils.isEmpty(downLoadFilePath)) {
+            try {
+                ThreadPoolManager.getInstance().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        FileUtil.deleteDirectory(downLoadFilePath);
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }

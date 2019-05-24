@@ -7,6 +7,7 @@ import android.util.Log;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -288,5 +289,77 @@ public class FileUtil {
         }
     }
 
+    /**
+     * 复制单个文件
+     *
+     * @param oldPath$Name String 原文件路径+文件名 如：data/user/0/com.test/files/abc.txt
+     * @param newPath$Name String 复制后路径+文件名 如：data/user/0/com.test/cache/abc.txt
+     * @return <code>true</code> if and only if the file was copied;
+     * <code>false</code> otherwise
+     */
+    public static boolean copyFile(String oldPath$Name, String newPath$Name) {
+        FileInputStream fileInputStream = null;
+        FileOutputStream fileOutputStream = null;
 
+        try {
+            File oldFile = new File(oldPath$Name);
+            if (!oldFile.exists()) {
+                Log.e("--Method--", "copyFile:  oldFile not exist.");
+                return false;
+            } else if (!oldFile.isFile()) {
+                Log.e("--Method--", "copyFile:  oldFile not file.");
+                return false;
+            } else if (!oldFile.canRead()) {
+                Log.e("--Method--", "copyFile:  oldFile cannot read.");
+                return false;
+            }
+
+        /* 如果不需要打log，可以使用下面的语句
+        if (!oldFile.exists() || !oldFile.isFile() || !oldFile.canRead()) {
+            return false;
+        }
+        */
+
+            fileInputStream = new FileInputStream(oldPath$Name);    //读入原文件
+            fileOutputStream = new FileOutputStream(newPath$Name);
+            byte[] buffer = new byte[1024];
+            int byteRead;
+            while ((byteRead = fileInputStream.read(buffer)) != -1) {
+                fileOutputStream.write(buffer, 0, byteRead);
+            }
+            fileInputStream.close();
+            fileOutputStream.flush();
+            fileOutputStream.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (fileInputStream != null) {
+                    fileInputStream.close();
+                }
+                if (fileOutputStream != null) {
+                    fileOutputStream.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 获取cache路径
+     *
+     * @param context
+     * @return
+     */
+    public static File getDiskCachePath(Context context) {
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+                || !Environment.isExternalStorageRemovable()) {
+            return context.getExternalCacheDir();
+        } else {
+            return context.getCacheDir();
+        }
+    }
 }
