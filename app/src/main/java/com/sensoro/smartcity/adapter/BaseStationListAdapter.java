@@ -131,7 +131,7 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
             Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_basestation_offline);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
 
-            holder.itemDeviceCameraTvOnlinestate.setText("离线");
+            holder.itemDeviceCameraTvOnlinestate.setText(mContext.getResources().getString(R.string.offline));
             holder.itemDeviceCameraTvOnlinestate.setTextColor(Color.parseColor("#5D5D5D"));
             holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);
 
@@ -140,13 +140,13 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
             Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_inactive);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);
-            holder.itemDeviceCameraTvOnlinestate.setText("未激活");
+            holder.itemDeviceCameraTvOnlinestate.setText(mContext.getResources().getString(R.string.inactive));
             holder.itemDeviceCameraTvOnlinestate.setTextColor(Color.parseColor("#A6A6A6"));
         } else {
             Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_device_online);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);
-            holder.itemDeviceCameraTvOnlinestate.setText("正常");
+            holder.itemDeviceCameraTvOnlinestate.setText(mContext.getResources().getString(R.string.normal));
             holder.itemDeviceCameraTvOnlinestate.setTextColor(Color.parseColor("#1DBB99"));
 
         }

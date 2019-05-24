@@ -1014,6 +1014,9 @@
     <string name="todaynew">Today</string>
     <string name="this_week">This Week</string>
     <string name="base_station_detail">Base Station Detail</string>
+    <string name="offline">Offline</string>
+    <string name="inactive">nactive</string>
+
 
     <string name="nameplate_name">铭牌名称</string>
     <string name="nameplate_tag">铭牌标签</string>

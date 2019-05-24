@@ -1004,6 +1004,10 @@
     <string name="todaynew">今天</string>
     <string name="this_week">本周</string>
     <string name="base_station_detail">基站详情</string>
+    <string name="offline">离线</string>
+    <string name="inactive">未激活</string>
+
+
     //
 
     <string name="nameplate_name">铭牌名称</string>
