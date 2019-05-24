@@ -46,9 +46,6 @@ import com.sensoro.smartcity.server.response.UpdateRsp;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
 
-import org.json.JSONArray;
-
-import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -407,5 +404,8 @@ public interface RetrofitService {
 
     @POST("camera/deploy")
     Observable<DeployCameraUploadRsp> doUploadDeployCamera(@Body RequestBody requestBody);
+
+    @POST("camera/check")
+    Observable<DeviceCameraDetailRsp> getDeployCameraInfo(@Body RequestBody requestBody);
 }
 

@@ -1859,4 +1859,23 @@ public class RetrofitServiceHelper {
         return retrofitService.doUploadDeployCamera(requestBody);
     }
 
+    /**
+     * 获取部署接口
+     *
+     * @param sn
+     * @return
+     */
+    public Observable<DeviceCameraDetailRsp> getDeployCameraInfo(String sn) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(sn)) {
+                jsonObject.put("sn", sn);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.getDeployCameraInfo(requestBody);
+    }
+
 }

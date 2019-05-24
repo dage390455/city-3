@@ -401,7 +401,7 @@ public class DeployAnalyzerUtils {
                     }
 
                     private void doCamera() {
-                        RetrofitServiceHelper.getInstance().getDeviceCamera(scanSerialNumber.toUpperCase()).subscribeOn
+                        RetrofitServiceHelper.getInstance().getDeployCameraInfo(scanSerialNumber.toUpperCase()).subscribeOn
                                 (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraDetailRsp>(presenter) {
                             @Override
                             public void onCompleted(DeviceCameraDetailRsp deviceCameraDetailRsp) {
@@ -420,60 +420,49 @@ public class DeployAnalyzerUtils {
                                         intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
                                         listener.onError(0, intent, null);
                                     } else {
-                                        String sn = data.getSn();
-                                        if (TextUtils.isEmpty(sn)) {
-                                            //不在账户下
-                                            Intent intent = new Intent();
-                                            intent.setClass(activity, DeployResultActivity.class);
-                                            DeployResultModel deployResultModel = new DeployResultModel();
-                                            deployResultModel.scanType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
-                                            deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
-                                            deployResultModel.sn = scanSerialNumber;
-                                            intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
-                                            listener.onError(0, intent, null);
-                                        } else {
-                                            deployAnalyzerModel.deployType = Constants.TYPE_SCAN_DEPLOY_CAMERA;
-                                            deployAnalyzerModel.sn = sn;
-                                            deployAnalyzerModel.hls = data.getHls();
-                                            DeviceCameraDetailInfo.CameraBean camera = data.getCamera();
-                                            //
-                                            if (camera != null) {
-                                                deployAnalyzerModel.nameAndAddress = camera.getName();
-                                                deployAnalyzerModel.orientation = camera.getOrientation();
-                                                deployAnalyzerModel.installationMode = camera.getInstallationMode();
-                                                List<String> label = camera.getLabel();
-                                                if (label != null && label.size() > 0) {
-                                                    deployAnalyzerModel.tagList.clear();
-                                                    deployAnalyzerModel.tagList.addAll(label);
-                                                }
-                                                DeviceCameraDetailInfo.CameraBean.InfoBean info = camera.getInfo();
-                                                if (info != null) {
-                                                    deployAnalyzerModel.cameraStatus = info.getDeviceStatus();
-                                                    deployAnalyzerModel.latLng.clear();
-                                                    String latitudeStr = info.getLatitude();
-                                                    String longitudeStr = info.getLongitude();
-                                                    if (!TextUtils.isEmpty(latitudeStr) && !TextUtils.isEmpty(longitudeStr)) {
-                                                        try {
-                                                            double latitude = Double.parseDouble(latitudeStr);
-                                                            double longitude = Double.parseDouble(longitudeStr);
-                                                            if (0 != latitude && 0 != longitude) {
+
+                                        deployAnalyzerModel.deployType = Constants.TYPE_SCAN_DEPLOY_CAMERA;
+                                        deployAnalyzerModel.sn = scanSerialNumber;
+                                        deployAnalyzerModel.hls = data.getHls();
+                                        DeviceCameraDetailInfo.CameraBean camera = data.getCamera();
+                                        //
+                                        if (camera != null) {
+                                            deployAnalyzerModel.nameAndAddress = camera.getName();
+                                            deployAnalyzerModel.orientation = camera.getOrientation();
+                                            deployAnalyzerModel.installationMode = camera.getInstallationMode();
+                                            deployAnalyzerModel.sn = camera.getSn();
+                                            List<String> label = camera.getLabel();
+                                            if (label != null && label.size() > 0) {
+                                                deployAnalyzerModel.tagList.clear();
+                                                deployAnalyzerModel.tagList.addAll(label);
+                                            }
+                                            DeviceCameraDetailInfo.CameraBean.InfoBean info = camera.getInfo();
+                                            if (info != null) {
+                                                deployAnalyzerModel.cameraStatus = info.getDeviceStatus();
+                                                deployAnalyzerModel.latLng.clear();
+                                                String latitudeStr = info.getLatitude();
+                                                String longitudeStr = info.getLongitude();
+                                                if (!TextUtils.isEmpty(latitudeStr) && !TextUtils.isEmpty(longitudeStr)) {
+                                                    try {
+                                                        double latitude = Double.parseDouble(latitudeStr);
+                                                        double longitude = Double.parseDouble(longitudeStr);
+                                                        if (0 != latitude && 0 != longitude) {
 //                                                        final double lon = deployAnalyzerModel.latLng.get(0);
 //                                                        final double lan = deployAnalyzerModel.latLng.get(1);
-                                                                deployAnalyzerModel.latLng.add(longitude);
-                                                                deployAnalyzerModel.latLng.add(latitude);
-                                                            }
-                                                        } catch (Exception e) {
-                                                            e.printStackTrace();
+                                                            deployAnalyzerModel.latLng.add(longitude);
+                                                            deployAnalyzerModel.latLng.add(latitude);
                                                         }
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
                                                     }
                                                 }
                                             }
-                                            Intent intent = new Intent();
-                                            intent.setClass(activity, DeployCameraDetailActivity.class);
-                                            intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
-                                            listener.onSuccess(intent);
-
                                         }
+                                        Intent intent = new Intent();
+                                        intent.setClass(activity, DeployCameraDetailActivity.class);
+                                        intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+                                        listener.onSuccess(intent);
+
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
