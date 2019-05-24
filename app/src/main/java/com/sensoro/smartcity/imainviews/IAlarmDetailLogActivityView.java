@@ -4,6 +4,7 @@ import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
 import com.sensoro.common.server.bean.AlarmInfo;
+import com.sensoro.smartcity.model.AlarmPopupModel;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public interface IAlarmDetailLogActivityView extends IToast, IProgressDialog, IA
 
     void updateAlertLogContentAdapter(List<AlarmInfo.RecordInfo> recordInfoList);
 
-    void showAlarmPopupView();
+    void showAlarmPopupView(AlarmPopupModel alarmPopupModel);
 
     void dismissAlarmPopupView();
 
@@ -27,4 +28,8 @@ public interface IAlarmDetailLogActivityView extends IToast, IProgressDialog, IA
     void setConfirmColor(int resId);
 
     void setDeviceSn(String deviceSN);
+
+    void setCameraLiveCount(List<String> liveCount);
+
+    void setLlVideoSize(int size);
 }

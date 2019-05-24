@@ -44,6 +44,12 @@ import com.sensoro.common.server.response.UpdateRsp;
 import com.sensoro.common.server.response.UserAccountControlRsp;
 import com.sensoro.common.server.response.UserAccountRsp;
 
+
+import com.sensoro.common.server.response.AlarmCameraLiveRsp;
+import com.sensoro.common.server.response.AlarmCloudVideoRsp;
+import com.sensoro.common.server.response.DeployCameraUploadRsp;
+import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
+
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -105,6 +111,7 @@ public interface RetrofitService {
     String INSPECT_TASK_EXCEPTION_DETAIL = "inspect/device/_search";
     String INSPECTION_TASK_GET_TEMPLATE = "inspect/template";
     String GET_DEVICES_MERGE_TYPES = "devices/mergeTypes";
+    String GET_DEVICES_ALARM_POPUP_CONFIG = "alarms/config";
     String GET_DEPOLY_RECORD_LIST = "prov1/deploy/list";
     String MONITOR_POINT_OPERATION = "devices/list/task";
     //    String DEPLOY_DEVICE_DETAIL = "devices/detail";
@@ -336,6 +343,10 @@ public interface RetrofitService {
     @GET
     Observable<ResponseBody> downloadDeviceFirmwareFile(@Url String url);
 
+    @GET(GET_DEVICES_ALARM_POPUP_CONFIG)
+//    Observable<DevicesMergeTypesRsp> getDevicesMergeTypes(@Header("x-session-id") String sessionId);
+    Observable<DevicesAlarmPopupConfigRsp> getDevicesAlarmPopupConfig();
+
     /**
      * 通过sn获取摄像头详情
      *
@@ -356,6 +367,7 @@ public interface RetrofitService {
     @GET("cameras")
     Observable<DeviceCameraListRsp> getDeviceCameraList(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search);
 
+
     /**
      * 获取用户下全量摄像头列表
      *
@@ -363,6 +375,9 @@ public interface RetrofitService {
      */
     @GET("cameras/map")
     Observable<ResponseBase> getDeviceCameraMapList();
+
+    @GET("cameras/detail")
+    Observable<AlarmCameraLiveRsp> getAlarmCamerasDetail(@Query("sn") String sn);
 
     @POST("picture/faceList")
     Observable<DeviceCameraFacePicListRsp> getDeviceCameraFaceList(@Body RequestBody requestBody);
@@ -396,5 +411,14 @@ public interface RetrofitService {
 
     @GET("stations")
     Observable<BaseStationDetailRsp> getBaseStationDetail(@Query("stationsn") String stationsn);
+
+    @POST("qiniu/getCloudMediaByEventId")
+    Observable<AlarmCloudVideoRsp> getCloudVideo(@Body RequestBody requestBody);
+
+    @POST("camera/deploy")
+    Observable<DeployCameraUploadRsp> doUploadDeployCamera(@Body RequestBody requestBody);
+
+    @POST("camera/check")
+    Observable<DeviceCameraDetailRsp> getDeployCameraInfo(@Body RequestBody requestBody);
 }
 

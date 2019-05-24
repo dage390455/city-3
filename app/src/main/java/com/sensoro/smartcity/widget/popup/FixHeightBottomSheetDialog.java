@@ -17,6 +17,7 @@ public class FixHeightBottomSheetDialog extends BottomSheetDialog {
 
     private Activity mActivity;
     private View mContentView;
+    private OnBottomSheetDialogBackPressedListener mListener;
 
     public FixHeightBottomSheetDialog(@NonNull Context context) {
         super(context);
@@ -67,5 +68,24 @@ public class FixHeightBottomSheetDialog extends BottomSheetDialog {
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) parent.getLayoutParams();
         params.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
         parent.setLayoutParams(params);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mListener != null) {
+            mListener.onBottomSheetDialogBackPressed();
+        }else{
+            cancel();
+        }
+
+
+    }
+
+    public void setOnBottomSheetDialogBackPressedListener(OnBottomSheetDialogBackPressedListener listener){
+        mListener = listener;
+    }
+
+    interface OnBottomSheetDialogBackPressedListener{
+        void onBottomSheetDialogBackPressed();
     }
 }

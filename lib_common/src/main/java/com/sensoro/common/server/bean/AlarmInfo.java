@@ -1,5 +1,7 @@
 package com.sensoro.common.server.bean;
 
+import com.sensoro.common.model.SecurityRisksAdapterModel;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -138,19 +140,41 @@ public class AlarmInfo implements Serializable {
     }
 
     public class RecordInfo implements Serializable {
-
         private String type;
         private String sensorType;
         private int thresholds;
         private long updatedTime;
         private String source;
         //
-        private int displayStatus;
-        private int place;
-        private int reason;
+        private Integer displayStatus;
+        private Integer place;
+        private Integer reason;
         private String name;
         private String remark;
         private Event[] phoneList;
+        private Integer firePhase;
+        private Integer fireType;
+        private List<SecurityRisksAdapterModel> danger;
+
+        public List<SecurityRisksAdapterModel> getDanger() {
+            return danger;
+        }
+
+        public void setDanger(List<SecurityRisksAdapterModel> danger) {
+            this.danger = danger;
+        }
+
+        public void setFirePhase(Integer firePhase) {
+            this.firePhase = firePhase;
+        }
+
+        public Integer getFireType() {
+            return fireType;
+        }
+
+        public void setFireType(Integer fireType) {
+            this.fireType = fireType;
+        }
 
         //
         private List<String> images;
@@ -165,19 +189,19 @@ public class AlarmInfo implements Serializable {
             this.scenes = scenes;
         }
 
-        public int getPlace() {
+        public Integer getPlace() {
             return place;
         }
 
-        public void setPlace(int place) {
+        public void setPlace(Integer place) {
             this.place = place;
         }
 
-        public int getReason() {
+        public Integer getReason() {
             return reason;
         }
 
-        public void setReason(int reason) {
+        public void setReason(Integer reason) {
             this.reason = reason;
         }
 
@@ -239,11 +263,11 @@ public class AlarmInfo implements Serializable {
             this.source = source;
         }
 
-        public int getDisplayStatus() {
+        public Integer getDisplayStatus() {
             return displayStatus;
         }
 
-        public void setDisplayStatus(int displayStatus) {
+        public void setDisplayStatus(Integer displayStatus) {
             this.displayStatus = displayStatus;
         }
 
@@ -269,6 +293,10 @@ public class AlarmInfo implements Serializable {
 
         public void setRemark(String remark) {
             this.remark = remark;
+        }
+
+        public Integer getFirePhase() {
+            return firePhase;
         }
 
         public class Event implements Serializable {

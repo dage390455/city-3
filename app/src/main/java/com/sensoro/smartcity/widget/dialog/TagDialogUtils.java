@@ -14,6 +14,7 @@ import com.sensoro.smartcity.util.AppUtils;
 
 public class TagDialogUtils implements View.OnClickListener {
     private final Activity mActivity;
+    private final TextView mDialogTvTittle;
     private CustomCornerDialog mAddTagDialog;
     private EditText mDialogEtInput;
     private ImageView mDialogImvClear;
@@ -28,6 +29,7 @@ public class TagDialogUtils implements View.OnClickListener {
     public TagDialogUtils(final Activity activity) {
         View view = View.inflate(activity, R.layout.dialog_frag_deploy_device_add_tag, null);
         mDialogEtInput = view.findViewById(R.id.dialog_add_tag_et_input);
+        mDialogTvTittle = view.findViewById(R.id.tv_title_dialog_add_tag);
         mDialogImvClear = view.findViewById(R.id.dialog_add_tag_imv_clear);
         mDialogTvCancel = view.findViewById(R.id.dialog_add_tag_tv_cancel);
         mDialogTvConfirm = view.findViewById(R.id.dialog_add_tag_tv_confirm);
@@ -71,6 +73,12 @@ public class TagDialogUtils implements View.OnClickListener {
 
     public void registerListener(OnTagDialogListener onTagDialogListener) {
         this.onTagDialogListener = onTagDialogListener;
+    }
+
+    public void setTitle(String title) {
+        if (mDialogTvTittle != null) {
+            mDialogTvTittle.setText(title);
+        }
     }
 
     public interface OnTagDialogListener {

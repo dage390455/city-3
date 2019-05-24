@@ -541,4 +541,17 @@ public class DateUtil {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM.dd HH:mm:ss", Locale.ROOT);
         return simpleDateFormat.format(new Date(time));
     }
+
+    /**
+     * 解析格林尼治时间戳
+     * @param time 格式为：2019-05-15T09:09:55.000Z
+     */
+    public static String parseUTC(String time) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z",Locale.ROOT);
+        Date z = dateFormat.parse(time.replace("Z", " UTC"));
+        dateFormat.applyPattern("yyyy.MM.dd HH:mm:ss");
+        return dateFormat.format(z);
+
+
+    }
 }

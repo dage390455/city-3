@@ -1,9 +1,6 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +8,17 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.common.server.bean.DeviceCameraFacePic;
 import com.sensoro.common.utils.DateUtil;
-import com.sensoro.smartcity.widget.GlideRoundTransform;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.widget.GlideCircleTransform;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +81,7 @@ public class CameraDetailListAdapter extends RecyclerView.Adapter<CameraDetailLi
         DeviceCameraFacePic model = mList.get(position);
         Glide.with(mContext)                             //配置上下文
                 .load(Constants.CAMERA_BASE_URL + model.getFaceUrl())
-                .bitmapTransform(new GlideRoundTransform(mContext))
+                .bitmapTransform(new GlideCircleTransform(mContext))
 //                    .thumbnail(0.01f)//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
                 .error(R.drawable.person_locus_placeholder)           //设置错误图片
                 .placeholder(R.drawable.person_locus_placeholder)//设置占位图片

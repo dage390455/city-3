@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.sensoro.common.R;
 import com.sensoro.common.base.ContextUtils;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.model.EventLoginData;
+import com.sensoro.common.model.SecurityRisksTagModel;
 import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.AlarmPopupDataBean;
 import com.sensoro.common.server.bean.DeployPicInfo;
 import com.sensoro.common.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.common.server.bean.DeviceTypeStyles;
@@ -34,6 +37,7 @@ public final class PreferencesHelper implements Constants {
 
     private volatile EventLoginData mEventLoginData;
     private volatile DeviceMergeTypesInfo mDeviceMergeTypesInfo;
+    private volatile AlarmPopupDataBean mAlarmPopupDataBean;
 
     private PreferencesHelper() {
     }
@@ -41,6 +45,7 @@ public final class PreferencesHelper implements Constants {
     public static PreferencesHelper getInstance() {
         return PreferencesHelperHolder.instance;
     }
+
 
     private static class PreferencesHelperHolder {
         private static final PreferencesHelper instance = new PreferencesHelper();
@@ -79,7 +84,7 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_BRIEF, eventLoginData.hasDeviceBrief);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK, eventLoginData.hasSignalCheck);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, eventLoginData.hasSignalConfig);
-        editor.putBoolean(EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD, eventLoginData.hasBadSignalUpload);
+        editor.putBoolean(EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD, eventLoginData.hasForceUpload);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION, eventLoginData.hasDevicePositionCalibration);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_SHORT, eventLoginData.hasDeviceMuteShort);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_LONG, eventLoginData.hasDeviceMuteLong);
@@ -155,7 +160,7 @@ public final class PreferencesHelper implements Constants {
             //TODO 统一去掉信号配置
 //            eventLoginData.hasSignalConfig = hasDeviceSignalConfig;
             eventLoginData.hasSignalConfig = false;
-            eventLoginData.hasBadSignalUpload = hasBadSignalUpload;
+            eventLoginData.hasForceUpload = hasBadSignalUpload;
             eventLoginData.hasDevicePositionCalibration = hasDevicePositionCalibration;
             eventLoginData.hasDeviceMuteShort = hasDeviceMuteShort;
             eventLoginData.hasDeviceMuteLong = hasDeviceMuteLong;
@@ -339,6 +344,47 @@ public final class PreferencesHelper implements Constants {
                 .MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, json);
+        editor.apply();
+        return true;
+    }
+
+    public AlarmPopupDataBean getAlarmPopupDataBeanCache() {
+        try {
+            if (mAlarmPopupDataBean == null) {
+                String json = ContextUtils.getContext().getSharedPreferences(PREFERENCE_LOCAL_ALARM_POPUP_DATA_BEAN, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_LOCAL_ALARM_POPUP_DATA_BEAN, null);
+                LogUtils.loge("alarmPopupDataBeanCache json : " + json);
+                if (!TextUtils.isEmpty(json)) {
+                    mAlarmPopupDataBean = RetrofitServiceHelper.getInstance().getGson().fromJson(json, AlarmPopupDataBean.class);
+                }
+            }
+            return mAlarmPopupDataBean;
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
+    public boolean saveAlarmPopupDataBeanCache(AlarmPopupDataBean alarmPopupDataBean) {
+        if (alarmPopupDataBean == null) {
+            return false;
+        }
+        mAlarmPopupDataBean = alarmPopupDataBean;
+        String json = RetrofitServiceHelper.getInstance().getGson().toJson(alarmPopupDataBean);
+        if (!TextUtils.isEmpty(json)) {
+            try {
+                LogUtils.loge("saveAlarmPopupDataBeanCache length = " + json.length());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+            try {
+                LogUtils.loge("saveAlarmPopupDataBeanCache :" + json);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        }
+        SharedPreferences sp = ContextUtils.getContext().getSharedPreferences(PREFERENCE_LOCAL_ALARM_POPUP_DATA_BEAN, Context
+                .MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(PREFERENCE_KEY_LOCAL_ALARM_POPUP_DATA_BEAN, json);
         editor.apply();
         return true;
     }
@@ -662,5 +708,117 @@ public final class PreferencesHelper implements Constants {
         }
         ContextUtils.getContext().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_PHONE, history).apply();
         return true;
+    }
+
+    /**
+     * 安全隐患，参考地点标签
+     */
+    public ArrayList<SecurityRisksTagModel> getSecurityRiskLocationTags(Context context) {
+        String location = ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_SECURITY_RISK_TAG, Context.MODE_PRIVATE)
+                .getString(Constants.PREFERENCE_KEY_SECURITY_RISK_LOCATION, "");
+
+        if (TextUtils.isEmpty(location)) {
+            ArrayList<SecurityRisksTagModel> list = new ArrayList<>(4);
+            SecurityRisksTagModel model1 = new SecurityRisksTagModel();
+            model1.tag = context.getString(R.string.evacuation_walkway);
+            list.add(model1);
+            SecurityRisksTagModel model2 = new SecurityRisksTagModel();
+            model2.tag = context.getString(R.string.fire_exits);
+            list.add(model2);
+            SecurityRisksTagModel model3 = new SecurityRisksTagModel();
+            model3.tag = context.getString(R.string.safe_exit);
+            list.add(model3);
+            SecurityRisksTagModel model4 = new SecurityRisksTagModel();
+            model4.tag = context.getString(R.string.indoor);
+            list.add(model4);
+            saveSecurityRiskLocationTag(list);
+            return list;
+        } else {
+            ArrayList<SecurityRisksTagModel> list = new ArrayList<>();
+            String[] split = location.split("#");
+            for (int i = 0; i < split.length; i++) {
+                SecurityRisksTagModel model = new SecurityRisksTagModel();
+                model.tag = split[i];
+                list.add(model);
+            }
+            return list;
+        }
+    }
+
+    public void saveSecurityRiskLocationTag(ArrayList<SecurityRisksTagModel> list) {
+        StringBuilder sb = new StringBuilder();
+        for (SecurityRisksTagModel model : list) {
+            sb.append(model.tag);
+            sb.append("#");
+        }
+        ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_SECURITY_RISK_TAG, Context.MODE_PRIVATE)
+                .edit().putString(Constants.PREFERENCE_KEY_SECURITY_RISK_LOCATION, sb.toString()).apply();
+    }
+
+    /**
+     * 安全隐患，参考行为标签
+     *
+     * @param context
+     * @return
+     */
+    public ArrayList<SecurityRisksTagModel> getSecurityRiskBehaviorTags(Context context) {
+        String location = ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_SECURITY_RISK_TAG, Context.MODE_PRIVATE)
+                .getString(Constants.PREFERENCE_KEY_SECURITY_RISK_BEHAVIOR, "");
+
+        if (TextUtils.isEmpty(location)) {
+            ArrayList<SecurityRisksTagModel> list = new ArrayList<>(4);
+            SecurityRisksTagModel model1 = new SecurityRisksTagModel();
+            model1.tag = context.getString(R.string.use_high_power_equipment);
+            list.add(model1);
+            SecurityRisksTagModel model2 = new SecurityRisksTagModel();
+            model2.tag = context.getString(R.string.use_little_sun);
+            list.add(model2);
+            SecurityRisksTagModel model10 = new SecurityRisksTagModel();
+            model10.tag = context.getString(R.string.use_electric_blanket);
+            list.add(model10);
+
+            SecurityRisksTagModel model3 = new SecurityRisksTagModel();
+            model3.tag = context.getString(R.string.use_hot_fast);
+            list.add(model3);
+            SecurityRisksTagModel model4 = new SecurityRisksTagModel();
+            model4.tag = context.getString(R.string.use_induction_cooker);
+            list.add(model4);
+            SecurityRisksTagModel model5 = new SecurityRisksTagModel();
+            model5.tag = context.getString(R.string.use_coal_stove);
+            list.add(model5);
+            SecurityRisksTagModel model6 = new SecurityRisksTagModel();
+            model6.tag = context.getString(R.string.use_lpg);
+            list.add(model6);
+            SecurityRisksTagModel model7 = new SecurityRisksTagModel();
+            model7.tag = context.getString(R.string.electric_vehicle_charging);
+            list.add(model7);
+            SecurityRisksTagModel model8 = new SecurityRisksTagModel();
+            model8.tag = context.getString(R.string.park_electric_car);
+            list.add(model8);
+            SecurityRisksTagModel model9 = new SecurityRisksTagModel();
+            model9.tag = context.getString(R.string.private_pull_wire);
+            list.add(model9);
+            saveSecurityRiskBehaviorTag(list);
+            return list;
+        } else {
+            ArrayList<SecurityRisksTagModel> list = new ArrayList<>();
+            String[] split = location.split("#");
+            for (int i = 0; i < split.length; i++) {
+                SecurityRisksTagModel model = new SecurityRisksTagModel();
+                model.tag = split[i];
+                list.add(model);
+            }
+            return list;
+        }
+    }
+
+    public void saveSecurityRiskBehaviorTag(ArrayList<SecurityRisksTagModel> list) {
+        StringBuilder sb = new StringBuilder();
+        for (SecurityRisksTagModel model : list) {
+            sb.append(model.tag);
+            sb.append("#");
+        }
+        ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_SECURITY_RISK_TAG, Context.MODE_PRIVATE)
+                .edit().putString(Constants.PREFERENCE_KEY_SECURITY_RISK_BEHAVIOR, sb.toString()).apply();
     }
 }

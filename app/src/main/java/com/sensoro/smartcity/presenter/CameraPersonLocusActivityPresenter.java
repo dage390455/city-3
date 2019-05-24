@@ -32,6 +32,7 @@ import com.sensoro.common.server.response.DeviceCameraPersonFaceRsp;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.widget.GlideRoundTransform;
+import com.sensoro.smartcity.widget.GlideCircleTransform;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -234,7 +235,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                 .asBitmap()
                 .thumbnail(0.1f)
 //                .override(size,size)
-                .transform(new GlideRoundTransform(mActivity,dp24))
+                .transform(new GlideCircleTransform(mActivity,dp24))
                 .error(R.drawable.deploy_pic_placeholder)           //设置错误图片
                 .placeholder(R.drawable.ic_default_cround_image)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
