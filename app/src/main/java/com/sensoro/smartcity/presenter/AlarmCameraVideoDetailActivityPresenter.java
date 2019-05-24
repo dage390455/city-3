@@ -8,6 +8,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
@@ -16,6 +18,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.sensoro.common.utils.FileUtil;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAlarmCameraVideoDetailActivityView;
@@ -164,21 +167,20 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
                 @Override
                 public void run() {
                     FileUtil.copyFile(file.getAbsolutePath(), newPath);
-                    if (isAttachedView()) {
-                        mActivity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (isAttachedView()) {
-                                    getView().doDownloadFinish();
-                                    insertVideoToMediaStore(file.getAbsolutePath());
-                                    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                                    intent.setData(Uri.fromFile(file));
-                                    mActivity.sendBroadcast(intent);
-                                    deleteCacheFile();
-                                }
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            File fileNew = new File(newPath);
+                            insertVideoToMediaStore(fileNew.getAbsolutePath());
+                            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                            intent.setData(Uri.fromFile(fileNew));
+                            SensoroCityApplication.getInstance().sendBroadcast(intent);
+                            if (isAttachedView()) {
+                                getView().doDownloadFinish();
                             }
-                        });
-                    }
+                            deleteCacheFile();
+                        }
+                    });
                 }
             });
         } catch (Exception e) {
@@ -186,12 +188,12 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
         }
     }
 
-    public void insertVideoToMediaStore(String filePath) {
+    private void insertVideoToMediaStore(String filePath) {
         long createTime = System.currentTimeMillis();
         ContentValues values = initCommonContentValues(filePath, createTime);
         values.put(MediaStore.Video.VideoColumns.DATE_TAKEN, createTime);
         values.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
-        mActivity.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+        SensoroCityApplication.getInstance().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
     }
 
     private ContentValues initCommonContentValues(String filePath, long time) {
