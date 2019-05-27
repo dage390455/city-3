@@ -65,11 +65,14 @@ import static com.sensoro.smartcity.constant.Constants.REQUEST_CODE_PREVIEW;
 public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStationDetailActivityView> implements GeocodeSearch.OnGeocodeSearchListener {
     private Activity mContext;
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd HH:mm:ss");
+    private SimpleDateFormat hmssimpleDateFormat = new SimpleDateFormat("HH:mm:ss");
     private DecimalFormat decimalFormat = new DecimalFormat(".00");
     private String sn;
 
     private BaseStationDetailModel data;
     private GeocodeSearch geocoderSearch;
+
+    private String curentType = "day";
     DeviceInfo mDeviceInfo = new DeviceInfo();
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -104,7 +107,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         geocoderSearch.setOnGeocodeSearchListener(this);
         if (!TextUtils.isEmpty(sn)) {
             requestDetailData(sn);
-            requestChartDetailData("day");
+            requestChartDetailData(curentType);
         }
 
     }
@@ -205,6 +208,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
     public void requestChartDetailData(String dayOrWeek) {
 
 
+        curentType = dayOrWeek;
         long from;
 //'1m'|'1d
         String interval = "1h";
@@ -339,7 +343,15 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         String time;
         long lt = Float.valueOf(stap).longValue();
         Date date = new Date(lt);
-        time = simpleDateFormat.format(date);
+
+
+        if (curentType.equals("day")) {
+            time = hmssimpleDateFormat.format(date);
+
+        } else {
+            time = simpleDateFormat.format(date);
+
+        }
 
 
         return time;

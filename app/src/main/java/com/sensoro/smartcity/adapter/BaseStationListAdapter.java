@@ -121,7 +121,7 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
                 holder.itemDeviceCameraLlDetail.addView(view);
             }
         } else {
-            holder.itemDeviceCameraLlDetail.setVisibility(View.INVISIBLE);
+            holder.itemDeviceCameraLlDetail.setVisibility(View.GONE);
         }
 
 

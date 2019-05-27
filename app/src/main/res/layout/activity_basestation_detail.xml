@@ -38,8 +38,7 @@
                 android:orientation="vertical"
                 android:paddingLeft="20dp"
                 android:paddingTop="16dp"
-                android:paddingRight="20dp"
-                android:paddingBottom="16dp">
+                android:paddingRight="20dp">
 
 
                 <TextView
@@ -124,6 +123,7 @@
 
                     android:layout_height="wrap_content"
                     android:paddingLeft="20dp"
+                    android:paddingTop="16dp"
                     android:paddingRight="20dp"
                     android:paddingBottom="16dp">
 
@@ -140,8 +140,8 @@
                         android:layout_width="wrap_content"
 
                         android:layout_height="wrap_content"
+                        android:visibility="gone"
                         android:layout_below="@+id/ac_basestation_tv_channel_title"
-                        android:layout_marginTop="8dp"
                         android:textColor="@color/c_252525"
                         android:textSize="16dp" />
 
