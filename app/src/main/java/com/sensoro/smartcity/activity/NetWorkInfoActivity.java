@@ -103,6 +103,11 @@ public class NetWorkInfoActivity extends BaseActivity<INetWorkInfoActivityView, 
             tvNetworkingMode.setText(netWork.getAcm());
 
         }
+        if (!TextUtils.isEmpty(netWork.getVpn())) {
+
+            tvVpn.setText(netWork.getVpn());
+
+        }
 
     }
 

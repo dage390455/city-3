@@ -133,6 +133,16 @@ public class BaseStationDetailModel {
     private String status;
     private String firmwareVersion;
     private NetWork network;
+
+    public Vpn getVpn() {
+        return vpn;
+    }
+
+    public void setVpn(Vpn vpn) {
+        this.vpn = vpn;
+    }
+
+    private Vpn vpn;
     private ArrayList<String> tags;
     private ArrayList<Double> lonlatLabel;
     private ArrayList<String> channels;
@@ -223,6 +233,22 @@ public class BaseStationDetailModel {
     }
 
 
+    public static class Vpn {
+
+
+        public String getIp() {
+            return ip;
+        }
+
+        public void setIp(String ip) {
+            this.ip = ip;
+        }
+
+        private String ip;
+
+
+    }
+
     public static class NetWork implements Parcelable {
 
         private String adns;
@@ -273,6 +299,16 @@ public class BaseStationDetailModel {
         private String nmask;
         private String acm;
 
+        public String getVpn() {
+            return vpn;
+        }
+
+        public void setVpn(String vpn) {
+            this.vpn = vpn;
+        }
+
+        private String vpn;
+
 
 //    network
 
@@ -300,6 +336,7 @@ public class BaseStationDetailModel {
             dest.writeString(this.gw);
             dest.writeString(this.nmask);
             dest.writeString(this.acm);
+            dest.writeString(this.vpn);
         }
 
         protected NetWork(Parcel in) {
@@ -309,6 +346,7 @@ public class BaseStationDetailModel {
             this.gw = in.readString();
             this.nmask = in.readString();
             this.acm = in.readString();
+            this.vpn = in.readString();
         }
 
         public static final Creator<NetWork> CREATOR = new Creator<NetWork>() {

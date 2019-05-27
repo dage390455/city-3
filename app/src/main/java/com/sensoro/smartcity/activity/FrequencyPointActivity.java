@@ -62,12 +62,12 @@ public class FrequencyPointActivity extends BaseActivity<IFrequencyPointActivity
 
         ArrayList<String> channels = getIntent().getStringArrayListExtra("channels");
 
-        if (null != channels) {
+        if (null != channels && channels.size() > 0) {
             acFrequencyPointRc.setAdapter(frequencyPointAdapter);
             frequencyPointAdapter.updateDeviceTypList(channels);
         } else {
             ic_no_content.setVisibility(View.VISIBLE);
-            acFrequencyPointRc.setVisibility(View.GONE);
+            refreshLayout.setVisibility(View.GONE);
         }
         refreshLayout.setEnabled(false);
 

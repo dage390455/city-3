@@ -144,6 +144,12 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
                 data = deviceCameraListRsp.getData();
 
 
+                data.getVpn();
+
+                if (null != data.getVpn() && null != data.getNetwork()) {
+                    data.getNetwork().setVpn(data.getVpn().getIp());
+                }
+
                 getView().updateDetailData(data);
                 freshLocationDeviceInfo();
                 if (null != data.getImages() && data.getImages().size() > 0) {
