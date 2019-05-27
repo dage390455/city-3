@@ -48,9 +48,8 @@ public class CameraListFilterAdapter extends RecyclerView.Adapter<CameraListFilt
 
         if (null != mStateCountList.get(position)) {
             final CameraFilterModel.ListBean ic = mStateCountList.get(position);
-
+            //
             if (!TextUtils.isEmpty(ic.getName())) {
-
                 String name = ic.getName().replace("（", "(").replace("）", ")");
                 holder.itemPopTvSelectState.setText(name);
             }

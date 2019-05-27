@@ -12,6 +12,7 @@ public class SelfCheckActivityPresenter extends BasePresenter<ISelfCheckActivity
     @Override
     public void initData(Context context) {
 
+
     }
 
     @Override

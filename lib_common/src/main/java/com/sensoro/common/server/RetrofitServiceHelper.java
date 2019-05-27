@@ -15,11 +15,15 @@ import com.google.gson.JsonObject;
 import com.sensoro.common.base.ContextUtils;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.RxApiManager;
+import com.sensoro.common.model.SecurityRisksAdapterModel;
 import com.sensoro.common.server.bean.ContractsTemplateInfo;
 import com.sensoro.common.server.bean.DeployControlSettingData;
 import com.sensoro.common.server.bean.ScenesData;
+import com.sensoro.common.server.response.AlarmCameraLiveRsp;
+import com.sensoro.common.server.response.AlarmCloudVideoRsp;
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.AuthRsp;
+import com.sensoro.common.server.response.BaseStationChartDetailRsp;
 import com.sensoro.common.server.response.BaseStationDetailRsp;
 import com.sensoro.common.server.response.BaseStationListRsp;
 import com.sensoro.common.server.response.CameraFilterRsp;
@@ -28,6 +32,7 @@ import com.sensoro.common.server.response.ContractAddRsp;
 import com.sensoro.common.server.response.ContractInfoRsp;
 import com.sensoro.common.server.response.ContractsListRsp;
 import com.sensoro.common.server.response.ContractsTemplateRsp;
+import com.sensoro.common.server.response.DeployCameraUploadRsp;
 import com.sensoro.common.server.response.DeployDeviceDetailRsp;
 import com.sensoro.common.server.response.DeployRecordRsp;
 import com.sensoro.common.server.response.DeployStationInfoRsp;
@@ -45,6 +50,7 @@ import com.sensoro.common.server.response.DeviceInfoListRsp;
 import com.sensoro.common.server.response.DeviceRecentRsp;
 import com.sensoro.common.server.response.DeviceTypeCountRsp;
 import com.sensoro.common.server.response.DeviceUpdateFirmwareDataRsp;
+import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
 import com.sensoro.common.server.response.DevicesMergeTypesRsp;
 import com.sensoro.common.server.response.InspectionTaskDeviceDetailRsp;
 import com.sensoro.common.server.response.InspectionTaskExceptionDeviceRsp;
@@ -74,6 +80,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -785,13 +792,19 @@ public class RetrofitServiceHelper {
      * @param remark
      * @return
      */
-    public Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(String id, int statusResult, int statusType, int
-            statusPlace, String remark, boolean isReconfirm, List<ScenesData> scenesDataList) {
+    public Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(String id, Integer displayStatus, Integer reason, Integer
+            place, String remark, boolean isReconfirm, List<ScenesData> scenesDataList) {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("displayStatus", statusResult);
-            jsonObject.put("reason", statusType);
-            jsonObject.put("place", statusPlace);
+            if (displayStatus != null) {
+                jsonObject.put("displayStatus", displayStatus);
+            }
+            if (reason != null) {
+                jsonObject.put("reason", reason);
+            }
+            if (place != null) {
+                jsonObject.put("place", place);
+            }
             if (!TextUtils.isEmpty(remark)) {
                 jsonObject.put("remark", remark);
             }
@@ -803,6 +816,70 @@ public class RetrofitServiceHelper {
             }
             //
             if (scenesDataList != null) {
+                JSONArray jsonArray = new JSONArray();
+                for (ScenesData scenesData : scenesDataList) {
+                    JSONObject jsonObject1 = new JSONObject();
+                    jsonObject1.put("type", scenesData.type);
+                    jsonObject1.put("url", scenesData.url);
+                    if (!TextUtils.isEmpty(scenesData.thumbUrl)) {
+                        jsonObject1.put("thumbUrl", scenesData.thumbUrl);
+                    }
+                    jsonArray.put(jsonObject1);
+                }
+                jsonObject.put("scenes", jsonArray);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.doUpdatePhotosUrl(id, body);
+    }
+
+    /**
+     * 修改提交确认预警信息备注(图片)
+     *
+     * @param id
+     * @param remark
+     * @return
+     */
+    public Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(String id, Map<String, Integer> map, List<SecurityRisksAdapterModel> alarmPopupDangerDataList, String remark, boolean isReconfirm, List<ScenesData> scenesDataList) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (map != null) {
+                Set<Map.Entry<String, Integer>> entries = map.entrySet();
+                for (Map.Entry<String, Integer> entry : entries) {
+                    String key = entry.getKey();
+                    Integer value = entry.getValue();
+                    jsonObject.put(key, value);
+                }
+            }
+            if (alarmPopupDangerDataList != null && alarmPopupDangerDataList.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (SecurityRisksAdapterModel alarmPopupDangerData : alarmPopupDangerDataList) {
+                    JSONObject jsonObjectDanger = new JSONObject();
+                    jsonObjectDanger.put("place", alarmPopupDangerData.place);
+                    if (alarmPopupDangerData.action.size() > 0) {
+                        JSONArray jsonArray1 = new JSONArray();
+                        for (String str : alarmPopupDangerData.action) {
+                            jsonArray1.put(str);
+                        }
+                        jsonObjectDanger.put("action", jsonArray1);
+                    }
+                    jsonArray.put(jsonObjectDanger);
+                }
+                jsonObject.put("danger", jsonArray);
+            }
+            if (!TextUtils.isEmpty(remark)) {
+                jsonObject.put("remark", remark);
+            }
+            jsonObject.put("source", "app");
+            if (isReconfirm) {
+                jsonObject.put("type", "reconfirm");
+            } else {
+                jsonObject.put("type", "confirm");
+            }
+            //
+            if (scenesDataList != null && scenesDataList.size() > 0) {
                 JSONArray jsonArray = new JSONArray();
                 for (ScenesData scenesData : scenesDataList) {
                     JSONObject jsonObject1 = new JSONObject();
@@ -1494,6 +1571,7 @@ public class RetrofitServiceHelper {
                     }
                     outputStream.write(fileReader, 0, read);
                     fileSizeDownloaded += read;
+
                     try {
                         LogUtils.loge("writeResponseBodyToDisk-->> file download: " + fileSizeDownloaded + " of " + fileSize);
                     } catch (Throwable throwable) {
@@ -1515,6 +1593,15 @@ public class RetrofitServiceHelper {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    /**
+     * 获取预警确认弹窗的配置文件
+     *
+     * @return
+     */
+    public Observable<DevicesAlarmPopupConfigRsp> getDevicesAlarmPopupConfig() {
+        return retrofitService.getDevicesAlarmPopupConfig();
     }
 
     /**
@@ -1589,6 +1676,19 @@ public class RetrofitServiceHelper {
         return retrofitService.getDeviceCameraFaceList(body);
     }
 
+    public Observable<AlarmCameraLiveRsp> getAlarmCamerasDetail(List<String> cameraIds) {
+        StringBuilder sb = new StringBuilder();
+        if (cameraIds != null && cameraIds.size() > 0) {
+            for (String cameraId : cameraIds) {
+                sb.append(cameraId).append(",");
+            }
+
+            sb.deleteCharAt(sb.length() - 1);
+        }
+        return retrofitService.getAlarmCamerasDetail(sb.toString());
+
+    }
+
     public Observable<DeviceCameraHistoryRsp> getDeviceCameraPlayHistoryAddress(String cid, String beginTime, String endTime, String mediaType) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -1650,6 +1750,7 @@ public class RetrofitServiceHelper {
                 for (String cameraId : cameraIds) {
                     jsonArray.put(cameraId);
                 }
+                jsonObject.put("cameraIds", jsonArray);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1676,6 +1777,7 @@ public class RetrofitServiceHelper {
         return retrofitService.getDeviceCameraListByFilter(pageSize, page, search, mapFilter);
     }
 
+
     public Observable<BaseStationListRsp> getBaseStationListByFilter(Integer pageSize, Integer page, String search, Map<String, String> mapFilter) {
         return retrofitService.getBaseStationListByFilter(pageSize, page, search, mapFilter);
     }
@@ -1684,5 +1786,131 @@ public class RetrofitServiceHelper {
         return retrofitService.getBaseStationDetail(stationsn);
     }
 
+    public Observable<BaseStationChartDetailRsp> getBaseStationChartDetail(String stationsn, String type, String interval, long from, long to) {
+        return retrofitService.getBaseStationChartDetail(stationsn, type, interval, from, to);
+    }
+
+
+//    public Observable<BaseStationDetailRsp> updateStationLocation(String stationsn) {
+//        return retrofitService.updateStationLocation(stationsn);
+//    }
+
+
+    public Observable<BaseStationDetailRsp> updateStationLocation(String sn, Double lon, Double lat) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("lon", lon);
+            jsonObject.put("lat", lat);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+
+        return retrofitService.updateStationLocation(sn, body);
+    }
+
+    public Observable<AlarmCloudVideoRsp> getCloudVideo(String[] eventIds) {
+        JSONObject jsonObject = new JSONObject();
+        if (eventIds != null && eventIds.length > 0) {
+            try {
+                JSONArray jsonArray = new JSONArray();
+
+                for (int i = 0; i < eventIds.length; i++) {
+                    jsonArray.put(eventIds[i]);
+                }
+                jsonObject.put("eventIds", jsonArray);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.getCloudVideo(requestBody);
+    }
+
+    /**
+     * 摄像头部署
+     *
+     * @param sn
+     * @param name
+     * @param label
+     * @param mobilePhone
+     * @param latitude
+     * @param longitude
+     * @param imgUrls
+     * @param location
+     * @param installationMode
+     * @param orientation
+     * @return
+     */
+    public Observable<DeployCameraUploadRsp> doUploadDeployCamera(String sn, String name, List<String> label, String mobilePhone, String latitude, String longitude,
+                                                                  List<String> imgUrls, String location, String installationMode, String orientation, String createStatus) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(sn)) {
+                jsonObject.put("sn", sn);
+            }
+            if (!TextUtils.isEmpty(name)) {
+                jsonObject.put("name", name);
+            }
+            if (!TextUtils.isEmpty(mobilePhone)) {
+                jsonObject.put("mobilePhone", mobilePhone);
+            }
+            if (!TextUtils.isEmpty(latitude)) {
+                jsonObject.put("latitude", latitude);
+            }
+            if (!TextUtils.isEmpty(longitude)) {
+                jsonObject.put("longitude", longitude);
+            }
+            if (!TextUtils.isEmpty(location)) {
+                jsonObject.put("location", location);
+            }
+            if (!TextUtils.isEmpty(installationMode)) {
+                jsonObject.put("installationMode", installationMode);
+            }
+            if (!TextUtils.isEmpty(orientation)) {
+                jsonObject.put("orientation", orientation);
+            }
+            if (!TextUtils.isEmpty(createStatus)) {
+                jsonObject.put("createStatus", createStatus);
+            }
+            if (label != null && label.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (String tag : label) {
+                    jsonArray.put(tag);
+                }
+                jsonObject.put("label", jsonArray);
+            }
+            if (imgUrls != null && imgUrls.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (String url : imgUrls) {
+                    jsonArray.put(url);
+                }
+                jsonObject.put("imgUrls", jsonArray);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.doUploadDeployCamera(requestBody);
+    }
+
+    /**
+     * 获取部署接口
+     *
+     * @param sn
+     * @return
+     */
+    public Observable<DeviceCameraDetailRsp> getDeployCameraInfo(String sn) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(sn)) {
+                jsonObject.put("sn", sn);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.getDeployCameraInfo(requestBody);
+    }
 
 }

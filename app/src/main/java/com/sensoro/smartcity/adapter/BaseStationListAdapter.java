@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.server.bean.BaseStationInfo;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
@@ -28,6 +29,7 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
     private Context mContext;
     private OnDeviceCameraContentClickListener listener;
     private final List<BaseStationInfo> mData = new ArrayList<>();
+    private List<CameraFilterModel.ListBean> types;
 
     public BaseStationListAdapter(Context context) {
         mContext = context;
@@ -41,6 +43,12 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
         mData.clear();
         mData.addAll(data);
         notifyDataSetChanged();
+    }
+
+    public void setaseStationType(List<CameraFilterModel.ListBean> data) {
+
+        types = data;
+
     }
 
     public List<BaseStationInfo> getData() {
@@ -78,10 +86,20 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
             }
         });
 
-//        if (deviceCameraInfo.getType().equals("")) {
-//
-//        } else {
-//        }
+
+        if (null != types && types.size() > 0) {
+            for (CameraFilterModel.ListBean type : types) {
+                if (deviceCameraInfo.getType().equals(type.getCode())) {
+
+                    holder.item_basestation_tv_type.setVisibility(View.VISIBLE);
+                    holder.item_basestation_tv_type.setText(type.getTitle());
+                    break;
+                } else {
+                    holder.item_basestation_tv_type.setVisibility(View.GONE);
+
+                }
+            }
+        }
 
 
         if (!TextUtils.isEmpty(deviceCameraInfo.getSn())) {
@@ -103,7 +121,7 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
                 holder.itemDeviceCameraLlDetail.addView(view);
             }
         } else {
-            holder.itemDeviceCameraLlDetail.setVisibility(View.INVISIBLE);
+            holder.itemDeviceCameraLlDetail.setVisibility(View.GONE);
         }
 
 
@@ -113,7 +131,7 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
             Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_basestation_offline);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
 
-            holder.itemDeviceCameraTvOnlinestate.setText("离线");
+            holder.itemDeviceCameraTvOnlinestate.setText(mContext.getResources().getString(R.string.offline));
             holder.itemDeviceCameraTvOnlinestate.setTextColor(Color.parseColor("#5D5D5D"));
             holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);
 
@@ -122,13 +140,13 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
             Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_inactive);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);
-            holder.itemDeviceCameraTvOnlinestate.setText("未激活");
+            holder.itemDeviceCameraTvOnlinestate.setText(mContext.getResources().getString(R.string.inactive));
             holder.itemDeviceCameraTvOnlinestate.setTextColor(Color.parseColor("#A6A6A6"));
         } else {
             Drawable drawable = mContext.getResources().getDrawable(R.drawable.item_device_online);
             drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
             holder.itemDeviceCameraTvOnlinestate.setCompoundDrawables(drawable, null, null, null);
-            holder.itemDeviceCameraTvOnlinestate.setText("在线");
+            holder.itemDeviceCameraTvOnlinestate.setText(mContext.getResources().getString(R.string.normal));
             holder.itemDeviceCameraTvOnlinestate.setTextColor(Color.parseColor("#1DBB99"));
 
         }
@@ -147,6 +165,8 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
         TextView itemDeviceCameraTvOnlinestate;
         @BindView(R.id.item_device_camera_tv_id)
         TextView itemDeviceCameraTvId;
+        @BindView(R.id.item_basestation_tv_type)
+        TextView item_basestation_tv_type;
         @BindView(R.id.item_device_camera_ll_detail)
         LinearLayout itemDeviceCameraLlDetail;
 

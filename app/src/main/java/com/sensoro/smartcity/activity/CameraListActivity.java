@@ -371,7 +371,12 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
     }
 
     @Override
-    public void updateDBaseStationAdapter(List<BaseStationInfo> data) {
+    public void updateBaseStationAdapter(List<BaseStationInfo> data) {
+
+    }
+
+    @Override
+    public void setBaseStationType(List<CameraFilterModel.ListBean> data) {
 
     }
 

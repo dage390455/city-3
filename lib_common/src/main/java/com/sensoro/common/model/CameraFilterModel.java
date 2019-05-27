@@ -66,6 +66,7 @@ public class CameraFilterModel {
 
         private String code;
         private String name;
+        private String title;
         private boolean isSelect;
 //        private boolean isReset;
 
@@ -92,6 +93,14 @@ public class CameraFilterModel {
 
         public void setSelect(boolean select) {
             isSelect = select;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
         }
 
 //        public boolean isReset() {

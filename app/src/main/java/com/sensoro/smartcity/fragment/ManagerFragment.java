@@ -10,21 +10,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sensoro.common.base.BaseFragment;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.nameplate.activity.NameplateListActivity;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.BaseStationListActivity;
 import com.sensoro.smartcity.activity.CameraListActivity;
-import com.sensoro.common.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
 import com.sensoro.smartcity.presenter.ManagerFragmentPresenter;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.common.widgets.ProgressUtils;
-import com.sensoro.common.widgets.PermissionDialogUtils;
 import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
 import com.sensoro.common.widgets.dialog.TipDialogUtils;
 import com.sensoro.smartcity.widget.dialog.VersionDialogUtils;
-import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.Objects;
 
@@ -91,11 +90,14 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     LinearLayout fgMainManageLlNameplate;
     @BindView(R.id.line9)
     FrameLayout line9;
+    @BindView(R.id.fg_main_manage_ll_basestation)
+    LinearLayout fgMainManageLlBasestation;
+    @BindView(R.id.line10)
+    FrameLayout line10;
     private ProgressUtils mProgressUtils;
     private TipDialogUtils mExitDialog;
     private VersionDialogUtils mVersionDialog;
     private TipBleDialogUtils tipBleDialogUtils;
-    private PermissionDialogUtils permissionDialogUtils;
 
     @Override
     protected void initData(Context activity) {
@@ -104,7 +106,6 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     }
 
     private void initView() {
-        permissionDialogUtils = new PermissionDialogUtils(mRootFragment.getActivity());
         tipBleDialogUtils = new TipBleDialogUtils(mRootFragment.getActivity());
         tipBleDialogUtils.setTipDialogUtilsClickListener(new TipBleDialogUtils.TipDialogUtilsClickListener() {
             @Override
@@ -261,84 +262,6 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 mExitDialog.show();
                 break;
             case R.id.fg_main_manage_ll_signal_check:
-//                final FragmentActivity activity = mRootFragment.getActivity();
-//                AndPermission.with(activity).runtime()
-//                        .permission(permissions)
-//                        .rationale(new Rationale<List<String>>() {
-//                            @Override
-//                            public void showRationale(Context context, List<String> data, final RequestExecutor executor) {
-//                                // 重新授权的提示
-//                                StringBuilder stringBuilder = new StringBuilder();
-//                                for (String str : data) {
-//                                    stringBuilder.append(str).append(",");
-//                                }
-//                                try {
-//                                    LogUtils.loge("权限列表：" + stringBuilder.toString());
-//                                } catch (Throwable throwable) {
-//                                    throwable.printStackTrace();
-//                                }
-//                                permissionDialogUtils.setTipMessageText(activity.getString(R.string.permission_descript)).setTipConfirmText(mContext.getString(R.string.reauthorization), mContext.getResources().getColor(R.color.colorAccent)).show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
-//                                    @Override
-//                                    public void onCancelClick() {
-//                                        executor.cancel();
-//                                        permissionDialogUtils.dismiss();
-//                                        MyPermissionManager.restart(activity);
-//                                    }
-//
-//                                    @Override
-//                                    public void onConfirmClick() {
-//                                        executor.execute();
-//                                        permissionDialogUtils.dismiss();
-//                                    }
-//                                });
-//                            }
-//                        })
-//                        .onGranted(new Action<List<String>>() {
-//                            @Override
-//                            public void onAction(List<String> data) {
-//                                // 用户同意授权
-//                                initPushSDK();
-//                                checkLoginState();
-//                                try {
-//                                    LogUtils.loge("SplashActivityPresenter 进入界面 ");
-//                                } catch (Throwable throwable) {
-//                                    throwable.printStackTrace();
-//                                }
-//                            }
-//                        })
-//                        .onDenied(new Action<List<String>>() {
-//                            @Override
-//                            public void onAction(List<String> data) {
-//                                // 用户拒绝权限，提示用户授权
-//                                if (AndPermission.hasAlwaysDeniedPermission(mContext, permissions)) {
-//                                    // 如果用户勾选了禁止重复提醒，需要提示用户去到APP权限设置页面开启权限
-//                                    String permissionTips = MyPermissionManager.getPermissionTips(data);
-//                                    permissionDialogUtils.setTipConfirmText(mContext.getString(R.string.go_setting), mContext.getResources().getColor(R.color.c_f34a4a)).setTipMessageText(permissionTips + mContext.getString(R.string.permission_check)).show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
-//                                        @Override
-//                                        public void onCancelClick() {
-//                                            permissionDialogUtils.dismiss();
-//                                            MyPermissionManager.restart(mContext);
-//
-//                                        }
-//
-//                                        @Override
-//                                        public void onConfirmClick() {
-//                                            permissionDialogUtils.dismiss();
-//                                            MyPermissionManager.startAppSetting(mContext);
-//                                        }
-//                                    });
-//                                } else {
-//                                    requestPermissions(data.toArray(new String[data.size()]));
-//                                }
-//
-//                            }
-//                        })
-//                        .start();
-//                if (PermissionUtils.checkHasLocationPermission(mRootFragment.getActivity()) && ContextUtils.getContext().bleDeviceManager.isBluetoothEnabled()) {
-//                    mPresenter.doSignalCheck();
-//                } else {
-//                    showBleTips();
-//                }
                 if (SensoroCityApplication.getInstance().bleDeviceManager.isBluetoothEnabled()) {
                     mPresenter.doSignalCheck();
                 } else {
@@ -416,6 +339,18 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     public void setDeviceCameraVisible(boolean hasDeviceCamera) {
         fgMainManageLlCamera.setVisibility(hasDeviceCamera ? View.VISIBLE : View.GONE);
         line8.setVisibility(hasDeviceCamera ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setStationManagerVisible(boolean hasStationList) {
+        line9.setVisibility(hasStationList?View.VISIBLE:View.GONE);
+        fgMainManageLlBasestation.setVisibility(hasStationList?View.VISIBLE:View.GONE);
+    }
+
+    @Override
+    public void setNameplateVisible(boolean hasNameplate) {
+        line10.setVisibility(hasNameplate?View.VISIBLE:View.GONE);
+        fgMainManageLlNameplate.setVisibility(hasNameplate?View.VISIBLE:View.GONE);
     }
 
     @Override

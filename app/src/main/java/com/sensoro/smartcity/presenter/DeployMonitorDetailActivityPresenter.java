@@ -399,14 +399,14 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             public void onFailed(String errorMsg) {
                 tempForceReason = "config";
                 getView().dismissBleConfigDialog();
-                getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_device_detail_check_config_failed) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
+                getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, mContext.getString(R.string.deploy_device_detail_check_config_failed) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
             }
 
             @Override
             public void onOverTime(String overTimeMsg) {
                 tempForceReason = "config";
                 getView().dismissBleConfigDialog();
-                getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_device_detail_check_config_failed) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
+                getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, mContext.getString(R.string.deploy_device_detail_check_config_failed) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
             }
         };
         if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
@@ -428,7 +428,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 } else {
                     //不在附近
                     tempForceReason = "lonlat";
-                    getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_device_detail_check_not_nearby), "");
+                    getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, mContext.getString(R.string.deploy_device_detail_check_not_nearby), "");
                 }
             } else {
                 getView().toastShort(mContext.getString(R.string.channel_mask_error_tip));
@@ -442,7 +442,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 } else {
                     //不在附近
                     tempForceReason = "lonlat";
-                    getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_device_detail_check_not_nearby), "");
+                    getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, mContext.getString(R.string.deploy_device_detail_check_not_nearby), "");
                 }
                 return;
             }
@@ -479,19 +479,19 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         tempForceReason = "signalQuality";
                         tempSignalQuality = "none";
                         getView().dismissBleConfigDialog();
-                        getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_check_dialog_quality_bad_signal) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
+                        getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, mContext.getString(R.string.deploy_check_dialog_quality_bad_signal) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
                         return;
                     case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD:
                         tempForceReason = "signalQuality";
                         tempSignalQuality = "bad";
                         getView().dismissBleConfigDialog();
-                        getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_check_dialog_quality_bad_signal) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
+                        getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, mContext.getString(R.string.deploy_check_dialog_quality_bad_signal) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
                         return;
                 }
                 tempForceReason = "signalQuality";
                 tempSignalQuality = "none";
                 getView().dismissBleConfigDialog();
-                getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_check_dialog_quality_bad_signal) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
+                getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, mContext.getString(R.string.deploy_check_dialog_quality_bad_signal) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
             }
         };
         checkHandler.init(1000, 10);
@@ -1431,14 +1431,14 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     tempStatus = data.getData().getStatus();
                     String alarmReason = handleAlarmReason(data.getData());
                     getView().dismissBleConfigDialog();
-                    getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, alarmReason, mContext.getString(R.string.deploy_check_suggest_repair_instruction));
+                    getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, alarmReason, mContext.getString(R.string.deploy_check_suggest_repair_instruction));
                     break;
                 case SENSOR_STATUS_MALFUNCTION:
                     tempForceReason = "status";
                     tempStatus = data.getData().getStatus();
                     String reason = handleMalfunctionReason(data.getData());
                     getView().dismissBleConfigDialog();
-                    getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, reason, mContext.getString(R.string.deploy_check_suggest_repair_instruction));
+                    getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, reason, mContext.getString(R.string.deploy_check_suggest_repair_instruction));
                     break;
                 default:
                     tempForceReason = null;

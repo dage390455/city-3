@@ -160,7 +160,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
             if (!TextUtils.isEmpty(deployResultModel.sn)) {
                 getView().setSnTextView(deployResultModel.sn);
             }
-            getView().setTipsTextView(mContext.getResources().getString(R.string.tips_data_error),R.color.c_a6a6a6);
+            getView().setTipsTextView(mContext.getResources().getString(R.string.tips_data_error), R.color.c_a6a6a6);
         }
 
     }
@@ -208,7 +208,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 getView().setResultImageView(R.drawable.deploy_succeed);
                 getView().setStateTextView(mContext.getString(R.string.success));
                 getView().setDeployResultTvStateTextColor(R.color.c_1dbb99);
-                getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_success),R.color.c_a6a6a6);
+                getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_success), R.color.c_a6a6a6);
                 if (!TextUtils.isEmpty(deployResultModel.sn)) {
                     getView().setSnTextView(deployResultModel.sn);
                 }
@@ -280,6 +280,31 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 }
                 checkMergeTypeConfigInfo();
                 break;
+            case TYPE_SCAN_DEPLOY_CAMERA:
+                getView().setResultImageView(R.drawable.deploy_succeed);
+                getView().setStateTextView(mContext.getString(R.string.success));
+                getView().setDeployResultTvStateTextColor(R.color.c_1dbb99);
+                getView().setTipsTextView("恭喜！摄像机点位部署成功", R.color.c_a6a6a6);
+                if (!TextUtils.isEmpty(deployResultModel.sn)) {
+                    getView().setSnTextView(deployResultModel.sn);
+                }
+                if (!TextUtils.isEmpty(deployResultModel.name)) {
+                    getView().setNameTextView(deployResultModel.name);
+                }
+                if (!TextUtils.isEmpty(deployResultModel.address)) {
+                    getView().setAddressTextView(deployResultModel.address);
+                }
+
+                getView().setContactAndSignalVisible(false);
+                //基站不展示状态
+//                getView().setStatusTextView(mContext.getString(Constants.STATION_STATUS_ARRAY[deployResultModel.stationStatus + 1]),
+//                        mContext.getResources().getColor(Constants.STATION_STATUS_COLOR_ARRAY[deployResultModel.stationStatus + 1]));
+                if (deployResultModel.deployTime == null) {
+                    getView().setUpdateTextView(DateUtil.getStrTimeToday(mContext, System.currentTimeMillis(), 0));
+                } else {
+                    getView().setUpdateTextView(DateUtil.getStrTimeToday(mContext, deployResultModel.deployTime, 0));
+                }
+                break;
             default:
                 break;
         }
@@ -291,14 +316,14 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
             case TYPE_SCAN_DEPLOY_STATION:
                 getView().setResultImageView(R.drawable.deploy_fail);
                 getView().setTipsTextView(mContext.getResources().getString(R.string
-                        .tips_deploy_station_failed),R.color.c_a6a6a6);
+                        .tips_deploy_station_failed), R.color.c_a6a6a6);
                 getView().setStateTextView(mContext.getString(R.string.failed));
                 getView().setDeployResultTvStateTextColor(R.color.c_f34a4a);
                 if (!TextUtils.isEmpty(deployResultModel.sn)) {
                     getView().setSnTextView(deployResultModel.sn);
                 }
                 if (!TextUtils.isEmpty(deployResultModel.errorMsg)) {
-                    getView().setTipsTextView(mContext.getString(R.string.reason) + "：" + deployResultModel.errorMsg,R.color.c_a6a6a6);
+                    getView().setTipsTextView(mContext.getString(R.string.reason) + "：" + deployResultModel.errorMsg, R.color.c_a6a6a6);
                 }
                 if (!TextUtils.isEmpty(deployResultModel.name)) {
                     getView().setNameTextView(deployResultModel.name);
@@ -329,12 +354,12 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 getView().setResultImageView(R.drawable.deploy_fail);
                 getView().setStateTextView(mContext.getString(R.string.failed));
                 getView().setDeployResultTvStateTextColor(R.color.c_f34a4a);
-                getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_failed),R.color.c_a6a6a6);
+                getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_failed), R.color.c_a6a6a6);
                 if (!TextUtils.isEmpty(deployResultModel.sn)) {
                     getView().setSnTextView(deployResultModel.sn);
                 }
                 if (!TextUtils.isEmpty(deployResultModel.errorMsg)) {
-                    getView().setTipsTextView(mContext.getString(R.string.reason) + "：" + deployResultModel.errorMsg,R.color.c_a6a6a6);
+                    getView().setTipsTextView(mContext.getString(R.string.reason) + "：" + deployResultModel.errorMsg, R.color.c_a6a6a6);
                 }
                 if (!TextUtils.isEmpty(deployResultModel.name)) {
                     getView().setNameTextView(deployResultModel.name);
@@ -403,6 +428,30 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                         getView().setDeployResultHasSetting(mContext.getString(R.string.not_setting));
                     }
 
+                }
+                break;
+            case TYPE_SCAN_DEPLOY_CAMERA:
+                getView().setResultImageView(R.drawable.deploy_fail);
+                getView().setTipsTextView("很遗憾! 摄像头部署失败", R.color.c_a6a6a6);
+                getView().setStateTextView(mContext.getString(R.string.failed));
+                getView().setDeployResultTvStateTextColor(R.color.c_f34a4a);
+                if (!TextUtils.isEmpty(deployResultModel.sn)) {
+                    getView().setSnTextView(deployResultModel.sn);
+                }
+                if (!TextUtils.isEmpty(deployResultModel.errorMsg)) {
+                    getView().setTipsTextView(mContext.getString(R.string.reason) + "：" + deployResultModel.errorMsg, R.color.c_a6a6a6);
+                }
+                if (!TextUtils.isEmpty(deployResultModel.name)) {
+                    getView().setNameTextView(deployResultModel.name);
+                }
+                if (!TextUtils.isEmpty(deployResultModel.address)) {
+                    getView().setAddressTextView(deployResultModel.address);
+                }
+                getView().setContactAndSignalVisible(false);
+                if (deployResultModel.deployTime == null) {
+                    getView().setUpdateTextView(DateUtil.getStrTimeToday(mContext, System.currentTimeMillis(), 0));
+                } else {
+                    getView().setUpdateTextView(DateUtil.getStrTimeToday(mContext, deployResultModel.deployTime, 0));
                 }
                 break;
             default:

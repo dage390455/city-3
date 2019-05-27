@@ -10,10 +10,10 @@
         layout="@layout/item_include_text_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/ac_alert_log_tv_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/ac_alert_log_tv_name"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/ac_alert_log_tv_name"
@@ -25,123 +25,216 @@
         android:text="@string/unknown"
         android:textColor="@color/c_252525"
         android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/ac_alert_tv_sn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ac_alert_log_title"
-        app:layout_constraintBottom_toTopOf="@+id/ac_alert_tv_sn"/>
+        app:layout_constraintTop_toBottomOf="@id/ac_alert_log_title" />
 
     <TextView
         android:id="@+id/ac_alert_tv_sn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="20dp"
         android:textColor="@color/c_a6a6a6"
-        android:layout_marginTop="8dp"
         android:textSize="14dp"
         android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/ac_alert_tv_alert_time_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ac_alert_log_tv_name"
-        app:layout_constraintBottom_toTopOf="@+id/ac_alert_ll_card"/>
+        app:layout_constraintTop_toBottomOf="@id/ac_alert_log_tv_name" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+
+    <TextView
+        android:id="@+id/ac_alert_tv_alert_time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="28dp"
+        android:text="@string/alarm_log_alarm_time"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/ac_alert_tv_alert_time"
+        app:layout_constraintEnd_toStartOf="@id/guideline1"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@+id/iv_alarm_time_ac_alert"
+        app:layout_constraintTop_toBottomOf="@id/ac_alert_tv_sn" />
+
+    <TextView
+        android:id="@+id/ac_alert_tv_alert_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:textColor="@color/c_252525"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/ll_camera_live_ac_alert"
+        app:layout_constraintEnd_toStartOf="@id/guideline1"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="@+id/ac_alert_tv_alert_time_text"
+        app:layout_constraintTop_toBottomOf="@id/ac_alert_tv_alert_time_text" />
+
+    <ImageView
+        android:id="@+id/iv_alarm_time_ac_alert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:contentDescription="@null"
+        android:src="@drawable/alarm_log_alarm_time"
+        app:layout_constraintBottom_toBottomOf="@id/ac_alert_tv_alert_time"
+        app:layout_constraintEnd_toStartOf="@id/guideline1"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ac_alert_tv_alert_time_text" />
+
+    <TextView
+        android:id="@+id/ac_alert_tv_alert_count_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="@string/alarm_log_alarm_count"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/ac_alert_tv_alert_count"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@+id/iv_alarm_count_ac_alert"
+        app:layout_constraintTop_toTopOf="@id/ac_alert_tv_alert_time_text" />
+
+    <TextView
+        android:id="@+id/ac_alert_tv_alert_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="26dp"
+        android:textColor="@color/c_252525"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/ac_alert_tv_alert_count_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="@+id/ac_alert_tv_alert_count_text"
+        app:layout_constraintTop_toBottomOf="@id/ac_alert_tv_alert_count_text" />
+
+    <ImageView
+        android:id="@+id/iv_alarm_count_ac_alert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:contentDescription="@null"
+        android:src="@drawable/alarm_log_count"
+        app:layout_constraintBottom_toBottomOf="@id/ac_alert_tv_alert_time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="@id/guideline1"
+        app:layout_constraintTop_toTopOf="@id/ac_alert_tv_alert_count_text" />
+
 
     <LinearLayout
-        android:id="@+id/ac_alert_ll_card"
-        android:layout_width="0dp"
+        android:id="@+id/ll_camera_live_ac_alert"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/shape_bg_corner_1dbb99_shadow"
         android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="12dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/ll_camera_video_ac_alert"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ac_alert_tv_sn"
-        app:layout_constraintBottom_toTopOf="@+id/ac_alert_rc_content">
+        app:layout_constraintTop_toBottomOf="@id/ac_alert_tv_alert_time">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:src="@drawable/alarm_log_camera_live" />
 
-            <LinearLayout
-                android:id="@+id/ac_alert_ll_alert_time"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/shape_bg_corner_f34_shadow"
-                android:orientation="vertical">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="@string/deploy_camera_watch_live"
+            android:textColor="@color/white"
+            android:textSize="14dp" />
 
-                <ImageView
-                    android:id="@+id/ac_alert_imv_alert_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginTop="18dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/alert_time_white" />
+        <TextView
+            android:id="@+id/tv_live_camera_count_ac_alert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/white"
+            android:textSize="14dp" />
 
-                <TextView
-                    android:id="@+id/ac_alert_tv_alert_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="12dp"
-                    android:textColor="@color/white"
-                    android:textSize="16dp" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:src="@drawable/arrows_right_white" />
+    </LinearLayout>
 
-                <TextView
-                    android:id="@+id/ac_alert_tv_alert_time_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="16dp"
-                    android:text="@string/alarm_log_alarm_time"
-                    android:textColor="@color/white"
-                    android:textSize="12dp" />
+    <LinearLayout
+        android:id="@+id/ll_camera_video_ac_alert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/shape_bg_corner_f4f4f4_shadow"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="12dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/ac_alert_rc_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll_camera_live_ac_alert"
+        app:layout_goneMarginTop="12dp">
 
-            </LinearLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:src="@drawable/alarm_log_camera_video" />
 
-            <LinearLayout
-                android:id="@+id/ac_alert_ll_alert_count"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/shape_bg_corner_f4_shadow"
-                android:orientation="vertical">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="@string/alarm_video"
+            android:textColor="@color/c_252525"
+            android:textSize="14dp" />
 
-                <ImageView
-                    android:id="@+id/ac_alert_imv_alert_count_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginTop="18dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/alert_count" />
+        <TextView
+            android:id="@+id/tv_video_camera_count_ac_alert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/c_a6a6a6"
+            android:textSize="14dp" />
 
-                <TextView
-                    android:id="@+id/ac_alert_tv_alert_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="10dp"
-                    android:textColor="@color/c_252525"
-                    android:textSize="20dp" />
-
-                <TextView
-                    android:id="@+id/ac_alert_tv_alert_count_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="14dp"
-                    android:text="@string/alarm_log_alarm_count"
-                    android:textColor="@color/c_a6a6a6"
-                    android:textSize="12dp" />
-
-            </LinearLayout>
-
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:src="@drawable/arrows_right" />
     </LinearLayout>
 
 
@@ -154,9 +247,9 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ac_alert_rc_content">
+        app:layout_constraintTop_toBottomOf="@+id/ac_alert_rc_content"
+        app:layout_constraintVertical_bias="1">
 
         <TextView
             android:id="@+id/ac_alert_tv_contact_owner"
@@ -214,7 +307,7 @@
         app:layout_constraintBottom_toTopOf="@id/view3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ac_alert_ll_card">
+        app:layout_constraintTop_toBottomOf="@id/ll_camera_video_ac_alert">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -225,8 +318,9 @@
         android:layout_height="@dimen/view_divider_height"
         android:background="@color/c_dfdfdf"
         app:layout_constraintBottom_toTopOf="@id/ac_alert_ll_bottom"
-        app:layout_constraintTop_toTopOf="@id/ac_alert_ll_bottom"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ac_alert_ll_bottom" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

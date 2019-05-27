@@ -5,12 +5,12 @@ public class BusinessLicenseData {
      * log_id : 7330434043510039211
      * direction : 0
      * words_result_num : 7
-     * words_result : {"社会信用代码":{"location":{"width":0,"top":0,"height":0,"left":0},"words":"无"},
-     * "单位名称":{"location":{"width":165,"top":244,"height":37,"left":147},"words":"咸海九鼎的织服装有限公司"},
-     * "法人":{"location":{"width":50,"top":308,"height":26,"left":145},"words":"郭云丽"},"证件编号":{"location":{"width":79,
-     * "top":217,"height":6,"left":569},"words":"7103020001133"},"成立日期":{"location":{"width":0,"top":0,"height":0,
-     * "left":0},"words":"无"},"地址":{"location":{"width":132,"top":276,"height":30,"left":147},"words":"威海市世品大道7"},
-     * "有效期":{"location":{"width":0,"top":0,"height":0,"left":0},"words":"无"}}
+     * words_result : {"社会信用代码":{"place":{"width":0,"top":0,"height":0,"left":0},"words":"无"},
+     * "单位名称":{"place":{"width":165,"top":244,"height":37,"left":147},"words":"咸海九鼎的织服装有限公司"},
+     * "法人":{"place":{"width":50,"top":308,"height":26,"left":145},"words":"郭云丽"},"证件编号":{"place":{"width":79,
+     * "top":217,"height":6,"left":569},"words":"7103020001133"},"成立日期":{"place":{"width":0,"top":0,"height":0,
+     * "left":0},"words":"无"},"地址":{"place":{"width":132,"top":276,"height":30,"left":147},"words":"威海市世品大道7"},
+     * "有效期":{"place":{"width":0,"top":0,"height":0,"left":0},"words":"无"}}
      */
 
     private long log_id;
@@ -52,13 +52,13 @@ public class BusinessLicenseData {
 
     public static class WordsResultBean {
         /**
-         * 社会信用代码 : {"location":{"width":0,"top":0,"height":0,"left":0},"words":"无"}
-         * 单位名称 : {"location":{"width":165,"top":244,"height":37,"left":147},"words":"咸海九鼎的织服装有限公司"}
-         * 法人 : {"location":{"width":50,"top":308,"height":26,"left":145},"words":"郭云丽"}
-         * 证件编号 : {"location":{"width":79,"top":217,"height":6,"left":569},"words":"7103020001133"}
-         * 成立日期 : {"location":{"width":0,"top":0,"height":0,"left":0},"words":"无"}
-         * 地址 : {"location":{"width":132,"top":276,"height":30,"left":147},"words":"威海市世品大道7"}
-         * 有效期 : {"location":{"width":0,"top":0,"height":0,"left":0},"words":"无"}
+         * 社会信用代码 : {"place":{"width":0,"top":0,"height":0,"left":0},"words":"无"}
+         * 单位名称 : {"place":{"width":165,"top":244,"height":37,"left":147},"words":"咸海九鼎的织服装有限公司"}
+         * 法人 : {"place":{"width":50,"top":308,"height":26,"left":145},"words":"郭云丽"}
+         * 证件编号 : {"place":{"width":79,"top":217,"height":6,"left":569},"words":"7103020001133"}
+         * 成立日期 : {"place":{"width":0,"top":0,"height":0,"left":0},"words":"无"}
+         * 地址 : {"place":{"width":132,"top":276,"height":30,"left":147},"words":"威海市世品大道7"}
+         * 有效期 : {"place":{"width":0,"top":0,"height":0,"left":0},"words":"无"}
          */
 
         private 社会信用代码Bean 社会信用代码;
@@ -127,7 +127,7 @@ public class BusinessLicenseData {
 
         public static class 社会信用代码Bean {
             /**
-             * location : {"width":0,"top":0,"height":0,"left":0}
+             * place : {"width":0,"top":0,"height":0,"left":0}
              * words : 无
              */
 
@@ -199,7 +199,7 @@ public class BusinessLicenseData {
 
         public static class 单位名称Bean {
             /**
-             * location : {"width":165,"top":244,"height":37,"left":147}
+             * place : {"width":165,"top":244,"height":37,"left":147}
              * words : 咸海九鼎的织服装有限公司
              */
 
@@ -271,7 +271,7 @@ public class BusinessLicenseData {
 
         public static class 法人Bean {
             /**
-             * location : {"width":50,"top":308,"height":26,"left":145}
+             * place : {"width":50,"top":308,"height":26,"left":145}
              * words : 郭云丽
              */
 
@@ -343,7 +343,7 @@ public class BusinessLicenseData {
 
         public static class 证件编号Bean {
             /**
-             * location : {"width":79,"top":217,"height":6,"left":569}
+             * place : {"width":79,"top":217,"height":6,"left":569}
              * words : 7103020001133
              */
 
@@ -415,7 +415,7 @@ public class BusinessLicenseData {
 
         public static class 成立日期Bean {
             /**
-             * location : {"width":0,"top":0,"height":0,"left":0}
+             * place : {"width":0,"top":0,"height":0,"left":0}
              * words : 无
              */
 
@@ -487,7 +487,7 @@ public class BusinessLicenseData {
 
         public static class 地址Bean {
             /**
-             * location : {"width":132,"top":276,"height":30,"left":147}
+             * place : {"width":132,"top":276,"height":30,"left":147}
              * words : 威海市世品大道7
              */
 
@@ -559,7 +559,7 @@ public class BusinessLicenseData {
 
         public static class 有效期Bean {
             /**
-             * location : {"width":0,"top":0,"height":0,"left":0}
+             * place : {"width":0,"top":0,"height":0,"left":0}
              * words : 无
              */
 

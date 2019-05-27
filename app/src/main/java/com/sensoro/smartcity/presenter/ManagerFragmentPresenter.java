@@ -16,7 +16,6 @@ import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.response.ResponseBase;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractManagerActivity;
-import com.sensoro.nameplate.activity.DeployNameplateActivity;
 import com.sensoro.smartcity.activity.DeployRecordActivity;
 import com.sensoro.smartcity.activity.InspectionTaskListActivity;
 import com.sensoro.smartcity.activity.LoginActivity;
@@ -62,6 +61,10 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
             getView().changeMerchantTitle(userData.hasSubMerchant);
             getView().setSignalCheckVisible(userData.hasSignalCheck);
             getView().setDeviceCameraVisible(userData.hasDeviceCameraList && chineseLanguage);
+            //TODO 是否显示基站管理
+            getView().setStationManagerVisible(userData.hasStationList);
+            //TODO 是否显示铭牌管理
+            getView().setNameplateVisible(userData.hasNameplateList);
         }
     }
 
@@ -172,10 +175,9 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         Intent intent = new Intent(mContext, DeployRecordActivity.class);
 //                intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
         getView().startAC(intent);
-//                return;
-//            }
-//        }
-//        getView().toastShort(mContext.getString(R.string.no_such_permission));
+
+//        Intent intent = new Intent(mContext, DeployNameplateActivity.class);
+//        getView().startAC(intent);
 
     }
 
@@ -213,8 +215,6 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         } else {
             AppUtils.openNetPage(mContext, "https://www.sensoro.com/en/about.html");
         }
-//        Intent intent = new Intent(mContext, LineChartActivity2.class);
-//        getView().startAC(intent);
     }
 
     public void doVersionInfo() {

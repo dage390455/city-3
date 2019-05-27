@@ -1456,8 +1456,13 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     @Override
     public void onAutoCompletion() {
         super.onAutoCompletion();
+        //TODO 控制播放状态
+        if(isLive==View.VISIBLE){
+            setCityPlayState(4);
+        }else {
+            setCityPlayState(3);
+        }
 
-        setCityPlayState(4);
 
     }
 

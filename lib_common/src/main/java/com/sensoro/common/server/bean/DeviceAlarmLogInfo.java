@@ -4,6 +4,8 @@ package com.sensoro.common.server.bean;
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -20,6 +22,7 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
     private String unionType;
     private String deviceType;
     private String _updatedTime;
+    private List<String> cameras;
     private long updatedTime;
     private long createdTime;
     private AlarmInfo.RuleInfo[] rules;
@@ -33,6 +36,8 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
     private int sort;
     private Map<String, Object> sensorData;
     private String event;
+    //1正常
+    private int alarmStatus;
 
     public String getEvent() {
         return event;
@@ -169,6 +174,7 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
     public void setUpdatedTime(long updatedTime) {
         this.updatedTime = updatedTime;
     }
+
     public long getCreatedTime() {
         return createdTime;
     }
@@ -191,6 +197,22 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
 
     public void setDeviceNotification(DeviceNotificationBean deviceNotification) {
         this.deviceNotification = deviceNotification;
+    }
+
+    public List<String> getCameras() {
+        return cameras;
+    }
+
+    public void setCameras(List<String> cameras) {
+        this.cameras = cameras;
+    }
+
+    public int getAlarmStatus() {
+        return alarmStatus;
+    }
+
+    public void setAlarmStatus(int alarmStatus) {
+        this.alarmStatus = alarmStatus;
     }
 
 

@@ -47,7 +47,7 @@ public class UserPermissionFactory {
         //TODO 统一去掉信号配置
 //        eventLoginData.hasSignalConfig = getHasSignalConfig(grants);
         eventLoginData.hasSignalConfig = false;
-        eventLoginData.hasBadSignalUpload = getHasBadSignalUpload(grants);
+        eventLoginData.hasForceUpload = getHasBadSignalUpload(grants);
         eventLoginData.hasDevicePositionCalibration = getHasDevicePositionCalibration(grants);
         eventLoginData.hasDeviceMuteShort = getHasMuteShort(grants);
         eventLoginData.hasDeviceMuteLong = getHasMuteLong(grants);

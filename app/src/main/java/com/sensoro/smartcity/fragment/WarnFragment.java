@@ -32,6 +32,7 @@ import com.sensoro.smartcity.adapter.MainWarnFragRcContentAdapter;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IWarnFragmentView;
+import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.presenter.WarnFragmentPresenter;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.util.AppUtils;
@@ -42,8 +43,8 @@ import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.smartcity.widget.popup.AlarmPopUtilsTest;
 
 import java.util.List;
 import java.util.Objects;
@@ -55,7 +56,7 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPresenter> implements
-        IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener,TipOperationDialogUtils.TipDialogUtilsClickListener {
+        IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.fg_main_top_search_title_root)
     LinearLayout fgMainWarnTitleRoot;
     @BindView(R.id.fg_main_top_search_frame_search)
@@ -93,7 +94,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     private MainWarnFragRcContentAdapter mRcContentAdapter;
     private boolean isShowDialog = true;
     private ProgressUtils mProgressUtils;
-    private AlarmPopUtils mAlarmPopUtils;
+    private AlarmPopUtilsTest mAlarmPopUtils;
     private Animation returnTopAnimation;
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private TipOperationDialogUtils historyClearDialog;
@@ -108,7 +109,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     @SuppressLint("ClickableViewAccessibility")
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
-        mAlarmPopUtils = new AlarmPopUtils(mRootFragment.getActivity());
+        mAlarmPopUtils = new AlarmPopUtilsTest(mRootFragment.getActivity());
         mAlarmPopUtils.setOnPopupCallbackListener(mPresenter);
         returnTopAnimation = AnimationUtils.loadAnimation(mRootFragment.getContext(), R.anim.return_top_in_anim);
         mReturnTopImageView.setAnimation(returnTopAnimation);
@@ -465,6 +466,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
                 break;
         }
     }
+
     @Override
     public void cancelSearchData() {
         doCancelSearch();
@@ -496,8 +498,8 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     }
 
     @Override
-    public void showAlarmPopupView() {
-        mAlarmPopUtils.show();
+    public void showAlarmPopupView(AlarmPopupModel alarmPopupModel) {
+        mAlarmPopUtils.show(alarmPopupModel);
     }
 
     @Override

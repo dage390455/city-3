@@ -10,6 +10,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 
 import com.amap.api.services.core.LatLonPoint;
@@ -1350,6 +1351,8 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             getView().toastShort(mContext.getString(R.string.location_information_not_set));
             return;
         }
+
+        Log.d("************", lonlat.get(0) + "**********" + lonlat.get(1) + "*******");
         Intent intent = new Intent();
         if (AppUtils.isChineseLanguage()) {
             intent.setClass(mContext, MonitorPointMapActivity.class);

@@ -44,18 +44,12 @@ public class MalfunctionDetailActivity extends BaseActivity<IMalfunctionDetailAc
     TextView acMalfunctionDetailTvTime;
     @BindView(R.id.ac_malfunction_detail_tv_time_text)
     TextView acMalfunctionDetailTvTimeText;
-    @BindView(R.id.ac_malfunction_detail_ll_time)
-    LinearLayout acMalfunctionDetailLlTime;
     @BindView(R.id.ac_malfunction_detail_imv_count_icon)
     ImageView acMalfunctionDetailImCountIcon;
     @BindView(R.id.ac_malfunction_detail_tv_count)
     TextView acMalfunctionDetailTvCount;
     @BindView(R.id.ac_malfunction_detail_tv_count_text)
     TextView acMalfunctionDetailTvCountText;
-    @BindView(R.id.ac_malfunction_detail_ll_count)
-    LinearLayout acMalfunctionDetailLlCount;
-    @BindView(R.id.ac_malfunction_detail_ll_card)
-    LinearLayout acMalfunctionDetailLlCard;
     @BindView(R.id.ac_malfunction_detail_tv_contact_owner)
     TextView acMalfunctionDetailTvContactOwner;
     @BindView(R.id.ac_malfunction_detail_tv_quick_navigation)
@@ -179,20 +173,20 @@ public class MalfunctionDetailActivity extends BaseActivity<IMalfunctionDetailAc
 
     @Override
     public void setMalfunctionStatus(int malfunctionStatus, String time) {
-        switch (malfunctionStatus) {
-            case 1:
-                acMalfunctionDetailLlTime.setBackgroundResource(R.drawable.shape_bg_corner_f4_shadow);
-                acMalfunctionDetailImvIcon.setImageResource(R.drawable.alert_time_normal);
-                acMalfunctionDetailTvTime.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
-                acMalfunctionDetailTvTimeText.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
-                break;
-            case 2:
-                acMalfunctionDetailLlTime.setBackgroundResource(R.drawable.shape_bg_corner_fdc83b_shadow);
-                acMalfunctionDetailImvIcon.setImageResource(R.drawable.alert_time_white);
-                acMalfunctionDetailTvTime.setTextColor(Color.WHITE);
-                acMalfunctionDetailTvTimeText.setTextColor(Color.WHITE);
-                break;
-        }
+//        switch (malfunctionStatus) {
+//            case 1:
+//                acMalfunctionDetailLlTime.setBackgroundResource(R.drawable.shape_bg_corner_f4_shadow);
+//                acMalfunctionDetailImvIcon.setImageResource(R.drawable.alert_time_normal);
+//                acMalfunctionDetailTvTime.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+//                acMalfunctionDetailTvTimeText.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+//                break;
+//            case 2:
+//                acMalfunctionDetailLlTime.setBackgroundResource(R.drawable.shape_bg_corner_fdc83b_shadow);
+//                acMalfunctionDetailImvIcon.setImageResource(R.drawable.alert_time_white);
+//                acMalfunctionDetailTvTime.setTextColor(Color.WHITE);
+//                acMalfunctionDetailTvTimeText.setTextColor(Color.WHITE);
+//                break;
+//        }
         acMalfunctionDetailTvTime.setText(time);
 
     }

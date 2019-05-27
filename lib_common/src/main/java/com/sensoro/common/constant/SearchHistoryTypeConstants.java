@@ -16,11 +16,13 @@ public interface SearchHistoryTypeConstants {
     int TYPE_SEARCH_CAMERA_LIST = 12;
     int TYPE_SEARCH_HISTORY_DEPLOY_NAMEPLATE_NAME = 13;
     int TYPE_SEARCH_HISTORY_NAMEPLATE_ADD_FROM_LIST = 14;
+    int TYPE_SEARCH_BASESTATION = 15;
 
     String SEARCH_HISTORY_KEY = "search_history_key";
 
     String SP_FILE_WARN = "search_history_warn";
     String SP_FILE_SEARCH_CAMERA_LIST = "search_search_camera_list";
+    String SP_FILE_BASESTATION = "search_search_basestation";
     String SP_FILE_MALFUNCTION = "search_history_malfunction";
     String SP_FILE_INSPECTION = "search_history_inspection";
     String SP_FILE_CONTRACT = "search_history_contract";

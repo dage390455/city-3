@@ -15,7 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.common.server.bean.DeviceCameraFacePic;
-import com.sensoro.smartcity.widget.GlideRoundTransform;
+import com.sensoro.smartcity.widget.GlideCircleTransform;
 
 import java.util.ArrayList;
 
@@ -60,7 +60,7 @@ class CameraDetailAvatarAdapter extends RecyclerView.Adapter<CameraDetailAvatarA
 
         Glide.with(mContext)                             //配置上下文
                 .load(Constants.CAMERA_BASE_URL + pic.getFaceUrl())
-                .bitmapTransform(new GlideRoundTransform(mContext))
+                .bitmapTransform(new GlideCircleTransform(mContext))
 //                    .thumbnail(0.01f)//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
                 .error(R.drawable.deploy_pic_placeholder)           //设置错误图片
                 .placeholder(R.drawable.ic_default_cround_image)//设置占位图片

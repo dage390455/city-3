@@ -24,6 +24,11 @@ public interface IManagerFragmentView extends IToast, IActivityIntent, IProgress
     void setSignalCheckVisible(boolean hasSignalCheck);
 
     void setDeviceCameraVisible(boolean hasDeviceCamera);
+
+    void setStationManagerVisible(boolean hasStationList);
+
+    void setNameplateVisible(boolean hasNameplate);
+
     void showBleTips();
 
     void hideBleTips();

@@ -445,5 +445,13 @@ public interface Constants {
     String EXTRA_CAMERA_PERSON_AVATAR_HISTORY_FACE_URL = "EXTRA_CAMERA_PERSON_AVATAR_HISTORY_FACE_URL";
     String EXTRA_DEPLOY_NAMEPLATE_NAME = "extra_deploy_nameplate_name";
 
+
+    String PREFERENCE_LOCAL_ALARM_POPUP_DATA_BEAN = "preference_local_alarm_popup_data_bean";
+    String PREFERENCE_KEY_LOCAL_ALARM_POPUP_DATA_BEAN = "preference_key_local_alarm_popup_data_bean";
+
+    //安全隐患，标签
+    String PREFERENCE_SECURITY_RISK_TAG = "preference_security_risk_tag";
+    String PREFERENCE_KEY_SECURITY_RISK_LOCATION = "preference_key_security_risk_location";
+    String PREFERENCE_KEY_SECURITY_RISK_BEHAVIOR = "preference_key_security_risk_behavior";
 }
 

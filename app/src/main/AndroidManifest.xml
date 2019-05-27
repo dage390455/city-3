@@ -217,8 +217,6 @@
         <activity android:name=".activity.MerchantSwitchActivity" />
         <activity
             android:name=".activity.DeployMonitorAlarmContactActivity"
-
-
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activity.DeployMonitorNameAddressActivity" />
         <activity android:name=".activity.DeployResultActivity" />
@@ -362,6 +360,10 @@
         <activity android:name=".temp.TestUpdateActivity" />
         <activity android:name=".activity.DeployMonitorCheckActivity" />
         <activity android:name=".activity.DeployRepairInstructionActivity" />
+
+        <activity android:name=".activity.SecurityRisksActivity" />
+        <activity android:name=".activity.SecurityRiskTagManagerActivity" />
+
         <activity android:name=".temp.CameraTest" />
         <activity android:name=".temp.RecyclerViewActivity" />
         <activity android:name=".activity.CameraListActivity" />
@@ -371,6 +373,7 @@
             android:name=".activity.CameraDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
+
         <activity android:name=".activity.WireMaterialDiameterCalculatorActivity" />
         <activity
             android:name=".activity.CameraPersonLocusActivity"
@@ -380,7 +383,12 @@
             android:name=".activity.CameraPersonDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".activity.DeployCameraDetailActivity" />
+        <activity android:name=".activity.AlarmCameraLiveDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity android:name=".activity.AlarmCameraVideoDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity android:name=".temp.LineChartActivity2" />
+
         <activity android:name="com.sensoro.nameplate.activity.DeployNameplateActivity" />
         <activity android:name="com.sensoro.nameplate.activity.DeployNameplateNameActivity" />
         <activity android:name="com.sensoro.nameplate.activity.DeployNameplateAddSensorActivity" />
@@ -390,6 +398,12 @@
         <activity android:name=".activity.SelfCheckActivity" />
         <activity android:name=".activity.FrequencyPointActivity" />
         <activity android:name=".activity.NetWorkInfoActivity" />
+
+
+        <activity
+            android:name=".activity.DeployCameraLiveDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
 
 
         <provider

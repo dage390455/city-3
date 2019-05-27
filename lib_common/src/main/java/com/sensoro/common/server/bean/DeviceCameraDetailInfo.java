@@ -1,5 +1,6 @@
 package com.sensoro.common.server.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class DeviceCameraDetailInfo {
@@ -188,7 +189,7 @@ public class DeviceCameraDetailInfo {
         this.pathId = pathId;
     }
 
-    public static class CameraBean {
+    public static class CameraBean implements Serializable {
         /**
          * label : []
          * createTime : 2019-04-04T13:07:32.059Z
@@ -211,7 +212,9 @@ public class DeviceCameraDetailInfo {
         private InfoBean info;
         private String mobilePhone;
         private String id;
-        private List<?> label;
+        private List<String> label;
+        private String installationMode;
+        private String orientation;
 
         public String getCreateTime() {
             return createTime;
@@ -285,12 +288,28 @@ public class DeviceCameraDetailInfo {
             this.id = id;
         }
 
-        public List<?> getLabel() {
+        public List<String> getLabel() {
             return label;
         }
 
-        public void setLabel(List<?> label) {
+        public void setLabel(List<String> label) {
             this.label = label;
+        }
+
+        public String getInstallationMode() {
+            return installationMode;
+        }
+
+        public void setInstallationMode(String installationMode) {
+            this.installationMode = installationMode;
+        }
+
+        public String getOrientation() {
+            return orientation;
+        }
+
+        public void setOrientation(String orientation) {
+            this.orientation = orientation;
         }
 
         public static class InfoBean {
@@ -312,8 +331,8 @@ public class DeviceCameraDetailInfo {
             private String cid;
             private String sn;
             private boolean platform;
-            private double latitude;
-            private double longitude;
+            private String latitude;
+            private String longitude;
             private String deviceStatus;
 
             public String getType() {
@@ -364,19 +383,19 @@ public class DeviceCameraDetailInfo {
                 this.platform = platform;
             }
 
-            public double getLatitude() {
+            public String getLatitude() {
                 return latitude;
             }
 
-            public void setLatitude(double latitude) {
+            public void setLatitude(String latitude) {
                 this.latitude = latitude;
             }
 
-            public double getLongitude() {
+            public String getLongitude() {
                 return longitude;
             }
 
-            public void setLongitude(double longitude) {
+            public void setLongitude(String longitude) {
                 this.longitude = longitude;
             }
 

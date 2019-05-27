@@ -6,9 +6,10 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Handler;
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.helper.PreferencesHelper;
@@ -26,14 +27,17 @@ import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.response.DeviceAlarmLogRsp;
 import com.sensoro.common.server.response.DeviceInfoListRsp;
 import com.sensoro.common.server.response.DeviceTypeCountRsp;
+import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractEditorActivity;
 import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.activity.SearchMonitorActivity;
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
+import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IHomeFragmentView;
+import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.HomeTopModel;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
@@ -894,10 +898,55 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         });
     }
 
-    private void enterAlarmLogPop(DeviceAlarmLogInfo deviceAlarmLogInfo) {
-        AlarmLogPopUtils mAlarmLogPop = new AlarmLogPopUtils(mContext, this);
+    private void enterAlarmLogPop(final DeviceAlarmLogInfo deviceAlarmLogInfo) {
+        final AlarmLogPopUtils mAlarmLogPop = new AlarmLogPopUtils(mContext, this);
         mAlarmLogPop.refreshData(deviceAlarmLogInfo);
-        mAlarmLogPop.show();
+        //
+        if (PreferencesHelper.getInstance().getAlarmPopupDataBeanCache() == null) {
+            RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesAlarmPopupConfigRsp>(this) {
+                @Override
+                public void onCompleted(DevicesAlarmPopupConfigRsp devicesAlarmPopupConfigRsp) {
+                    PreferencesHelper.getInstance().saveAlarmPopupDataBeanCache(devicesAlarmPopupConfigRsp.getData());
+                    final AlarmPopupModel alarmPopupModel = new AlarmPopupModel();
+                    String deviceName = deviceAlarmLogInfo.getDeviceName();
+                    if (TextUtils.isEmpty(deviceName)) {
+                        alarmPopupModel.title = deviceAlarmLogInfo.getDeviceSN();
+                    } else {
+                        alarmPopupModel.title = deviceName;
+                    }
+                    alarmPopupModel.alarmStatus = deviceAlarmLogInfo.getAlarmStatus();
+                    alarmPopupModel.updateTime = deviceAlarmLogInfo.getUpdatedTime();
+                    alarmPopupModel.mergeType = WidgetUtil.handleMergeType(deviceAlarmLogInfo.getDeviceType());
+                    alarmPopupModel.sensorType = deviceAlarmLogInfo.getSensorType();
+                    //
+                    AlarmPopupConfigAnalyzer.handleAlarmPopupModel(null, alarmPopupModel);
+                    mAlarmLogPop.show(alarmPopupModel);
+                    getView().dismissProgressDialog();
+
+                }
+
+                @Override
+                public void onErrorMsg(int errorCode, String errorMsg) {
+                    getView().toastShort(errorMsg);
+                    getView().dismissProgressDialog();
+                }
+            });
+        } else {
+            final AlarmPopupModel alarmPopupModel = new AlarmPopupModel();
+            String deviceName = deviceAlarmLogInfo.getDeviceName();
+            if (TextUtils.isEmpty(deviceName)) {
+                alarmPopupModel.title = deviceAlarmLogInfo.getDeviceSN();
+            } else {
+                alarmPopupModel.title = deviceName;
+            }
+            alarmPopupModel.alarmStatus = deviceAlarmLogInfo.getAlarmStatus();
+            alarmPopupModel.updateTime = deviceAlarmLogInfo.getUpdatedTime();
+            alarmPopupModel.mergeType = WidgetUtil.handleMergeType(deviceAlarmLogInfo.getDeviceType());
+            alarmPopupModel.sensorType = deviceAlarmLogInfo.getSensorType();
+            //
+            AlarmPopupConfigAnalyzer.handleAlarmPopupModel(null, alarmPopupModel);
+            mAlarmLogPop.show(alarmPopupModel);
+        }
 
     }
 

@@ -35,6 +35,7 @@ import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeviceInfo;
+import com.sensoro.common.server.response.BaseStationDetailRsp;
 import com.sensoro.common.server.response.DeployDeviceDetailRsp;
 import com.sensoro.common.server.response.DeviceDeployRsp;
 import com.sensoro.common.server.response.DeviceInfoListRsp;
@@ -312,6 +313,30 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                         }
                     });
                     break;
+
+                case DEPLOY_MAP_SOURCE_TYPE_BASESTATION:
+                    getView().showProgressDialog();
+                    RetrofitServiceHelper.getInstance().updateStationLocation(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<BaseStationDetailRsp>(this) {
+                        @Override
+                        public void onCompleted(BaseStationDetailRsp deviceDeployRsp) {
+                            getView().dismissProgressDialog();
+
+
+                            EventData eventData = new EventData();
+                            eventData.code = EVENT_DATA_UPDATEBASESTATION;
+                            eventData.data = deviceDeployRsp.getData().getLonlatLabel();
+                            EventBus.getDefault().post(eventData);
+                            getView().finishAc();
+                        }
+
+                        @Override
+                        public void onErrorMsg(int errorCode, String errorMsg) {
+                            getView().dismissProgressDialog();
+                            getView().toastShort(errorMsg);
+                        }
+                    });
+
+                    break;
             }
         }
     }
@@ -364,6 +389,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                 break;
             case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
             case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+            case DEPLOY_MAP_SOURCE_TYPE_BASESTATION:
                 if (cameraPosition != null) {
                     //解决不能回显的bug 不能直接赋值
                     deviceMarker.setPosition(cameraPosition.target);
@@ -389,6 +415,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                 break;
             case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
             case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+            case DEPLOY_MAP_SOURCE_TYPE_BASESTATION:
                 if (cameraPosition != null) {
                     deployAnalyzerModel.latLng.clear();
                     deployAnalyzerModel.latLng.add(cameraPosition.target.longitude);
