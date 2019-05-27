@@ -1,12 +1,16 @@
 package com.sensoro.smartcity.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.server.bean.BaseStationDetailModel;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.INetWorkInfoActivityView;
 import com.sensoro.smartcity.presenter.NetWorkInfoActivityPresenter;
@@ -18,7 +22,7 @@ import butterknife.OnClick;
 /**
  * 网络信息
  */
-public class NetWorkInfoActivity extends BaseActivity<INetWorkInfoActivityView, NetWorkInfoActivityPresenter> {
+public class NetWorkInfoActivity extends BaseActivity<INetWorkInfoActivityView, NetWorkInfoActivityPresenter> implements INetWorkInfoActivityView {
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
     @BindView(R.id.include_text_title_tv_title)
@@ -51,6 +55,7 @@ public class NetWorkInfoActivity extends BaseActivity<INetWorkInfoActivityView, 
         ButterKnife.bind(this);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         includeTextTitleTvTitle.setText(R.string.network_info);
+        mPresenter.initData(this);
     }
 
     @Override
@@ -65,4 +70,84 @@ public class NetWorkInfoActivity extends BaseActivity<INetWorkInfoActivityView, 
         finish();
     }
 
+    @Override
+    public void updateNetWork(BaseStationDetailModel.NetWork netWork) {
+
+
+        if (!TextUtils.isEmpty(netWork.getIp())) {
+            tvIp.setText(netWork.getIp());
+
+
+        }
+        if (!TextUtils.isEmpty(netWork.getGw())) {
+
+            tvGateway.setText(netWork.getGw());
+
+        }
+        if (!TextUtils.isEmpty(netWork.getNmask())) {
+
+            tvSubMerchant.setText(netWork.getNmask());
+
+        }
+        if (!TextUtils.isEmpty(netWork.getPdns())) {
+
+            tvPrimaryDns.setText(netWork.getPdns());
+
+        }
+        if (!TextUtils.isEmpty(netWork.getAdns())) {
+            tvSecondaryDns.setText(netWork.getAdns());
+
+        }
+        if (!TextUtils.isEmpty(netWork.getAcm())) {
+
+            tvNetworkingMode.setText(netWork.getAcm());
+
+        }
+
+    }
+
+    @Override
+    public void startAC(Intent intent) {
+
+    }
+
+    @Override
+    public void finishAc() {
+
+    }
+
+    @Override
+    public void startACForResult(Intent intent, int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int resultCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int resultCode, Intent data) {
+
+    }
+
+    @Override
+    public void showProgressDialog() {
+
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+
+    }
+
+    @Override
+    public void toastShort(String msg) {
+
+    }
+
+    @Override
+    public void toastLong(String msg) {
+
+    }
 }

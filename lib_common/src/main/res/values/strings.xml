@@ -1016,6 +1016,9 @@
     <string name="base_station_detail">Base Station Detail</string>
     <string name="offline">Offline</string>
     <string name="inactive">nactive</string>
+    <string name="αbasestation">α BaseStation</string>
+    <string name="αgateway">α GatewWay</string>
+    <string name="αroute">α Route</string>
 
 
     <string name="nameplate_name">铭牌名称</string>

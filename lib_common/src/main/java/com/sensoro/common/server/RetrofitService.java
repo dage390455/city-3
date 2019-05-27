@@ -3,6 +3,7 @@ package com.sensoro.common.server;
 
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.AuthRsp;
+import com.sensoro.common.server.response.BaseStationChartDetailRsp;
 import com.sensoro.common.server.response.BaseStationDetailRsp;
 import com.sensoro.common.server.response.BaseStationListRsp;
 import com.sensoro.common.server.response.CameraFilterRsp;
@@ -409,8 +410,6 @@ public interface RetrofitService {
     Observable<BaseStationListRsp> getBaseStationListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
 
 
-    @GET("stations")
-    Observable<BaseStationDetailRsp> getBaseStationDetail(@Query("stationsn") String stationsn);
 
     @POST("qiniu/getCloudMediaByEventId")
     Observable<AlarmCloudVideoRsp> getCloudVideo(@Body RequestBody requestBody);
@@ -420,5 +419,15 @@ public interface RetrofitService {
 
     @POST("camera/check")
     Observable<DeviceCameraDetailRsp> getDeployCameraInfo(@Body RequestBody requestBody);
+
+    @GET("stations/{stationsn}")
+    Observable<BaseStationDetailRsp> getBaseStationDetail(@Path("stationsn") String stationsn);
+
+    @GET("stations/{stationsn}/sensor/{type}")
+    Observable<BaseStationChartDetailRsp> getBaseStationChartDetail(@Path("stationsn") String stationsn, @Path("type") String type, @Query("interval") String interval, @Query("from") long from, @Query("to") long to);
+
+
+    @PUT("stations/{stationsn}")
+    Observable<BaseStationDetailRsp> updateStationLocation(@Path("stationsn") String stationsn, @Body RequestBody body);
 }
 

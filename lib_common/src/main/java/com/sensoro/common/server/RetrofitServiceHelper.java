@@ -23,6 +23,7 @@ import com.sensoro.common.server.response.AlarmCameraLiveRsp;
 import com.sensoro.common.server.response.AlarmCloudVideoRsp;
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.AuthRsp;
+import com.sensoro.common.server.response.BaseStationChartDetailRsp;
 import com.sensoro.common.server.response.BaseStationDetailRsp;
 import com.sensoro.common.server.response.BaseStationListRsp;
 import com.sensoro.common.server.response.CameraFilterRsp;
@@ -1785,6 +1786,28 @@ public class RetrofitServiceHelper {
         return retrofitService.getBaseStationDetail(stationsn);
     }
 
+    public Observable<BaseStationChartDetailRsp> getBaseStationChartDetail(String stationsn, String type, String interval, long from, long to) {
+        return retrofitService.getBaseStationChartDetail(stationsn, type, interval, from, to);
+    }
+
+
+//    public Observable<BaseStationDetailRsp> updateStationLocation(String stationsn) {
+//        return retrofitService.updateStationLocation(stationsn);
+//    }
+
+
+    public Observable<BaseStationDetailRsp> updateStationLocation(String sn, Double lon, Double lat) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("lon", lon);
+            jsonObject.put("lat", lat);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+
+        return retrofitService.updateStationLocation(sn, body);
+    }
 
     public Observable<AlarmCloudVideoRsp> getCloudVideo(String[] eventIds) {
         JSONObject jsonObject = new JSONObject();

@@ -286,6 +286,12 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         ButterKnife.bind(this);
         mPresenter.initData(mActivity);
 
+    }
+
+
+    private void initView() {
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         includeTextTitleTvTitle.setText(getResources().getString(R.string.base_station_detail));
 
@@ -343,12 +349,11 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
         leftAxis.setTextColor(Color.parseColor("#252525"));
 
-        leftAxis.setAxisMaximum(70f);
-        leftAxis.setAxisMinimum(10f);
+
         leftAxis.setDrawGridLines(true);
         leftAxis.setDrawAxisLine(false);
 
-//        leftAxis.enableGridDashedLine(10, 10, 0);
+        leftAxis.enableGridDashedLine(10, 10, 0);
 //        leftAxis.setGranularityEnabled(true);
         leftAxis.setValueFormatter(new MyYFormatter());
 
@@ -356,13 +361,10 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         chart.getAxisRight().setEnabled(false);
 
 
-        mPresenter.requestData();
-
-
         chart.setOnTouchListener(touchListener);
+        chart.setNoDataText("暂无数据");
 
         chart.setOnChartGestureListener(onChartGestureListener);
-
     }
 
 

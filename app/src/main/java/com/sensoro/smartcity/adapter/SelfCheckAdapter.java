@@ -1,14 +1,14 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sensoro.common.server.bean.DeviceCameraInfo;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 
@@ -25,14 +25,14 @@ public class SelfCheckAdapter extends RecyclerView.Adapter<SelfCheckAdapter.Self
 
 
     private Context mContext;
-    private final List<DeviceCameraInfo> mData = new ArrayList<>();
+    private final List<String> mData = new ArrayList<>();
 
     public SelfCheckAdapter(Context context) {
         mContext = context;
     }
 
 
-    public void updateAdapter(List<DeviceCameraInfo> data) {
+    public void updateAdapter(List<String> data) {
         mData.clear();
         mData.addAll(data);
         notifyDataSetChanged();
@@ -48,14 +48,15 @@ public class SelfCheckAdapter extends RecyclerView.Adapter<SelfCheckAdapter.Self
     @Override
     public void onBindViewHolder(final SelfCheckHolder holder, final int position) {
 
-//        DeviceCameraInfo deviceCameraInfo = mData.get(position);
+        String deviceCameraInfo = mData.get(position);
+        holder.itemTvSelfCheckState.setText(deviceCameraInfo);
 
 
     }
 
     @Override
     public int getItemCount() {
-        return 4;
+        return mData.size();
     }
 
     class SelfCheckHolder extends RecyclerView.ViewHolder {
