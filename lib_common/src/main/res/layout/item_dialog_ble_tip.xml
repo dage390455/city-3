@@ -21,6 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:text="@string/open_ble_to_location"
         android:textColor="@color/c_a6a6a6"
         android:textSize="14dp" />

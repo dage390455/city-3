@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.activity;
+package com.sensoro.nameplate.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,11 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.widgets.SensoroToast;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.AddedSensorAdapter;
-import com.sensoro.smartcity.imainviews.IDeployNameplateAddSensorActivityView;
-import com.sensoro.smartcity.presenter.DeployNameplateAddSensorActivityPresenter;
-import com.sensoro.smartcity.widget.divider.CustomDrawableDivider;
+import com.sensoro.nameplate.IMainViews.IDeployNameplateAddSensorActivityView;
+import com.sensoro.nameplate.R;
+import com.sensoro.nameplate.R2;
+import com.sensoro.nameplate.presenter.DeployNameplateAddSensorActivityPresenter;
+import com.sensoro.nameplate.adapter.AddedSensorAdapter;
+import com.sensoro.nameplate.widget.CustomDrawableDivider;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,23 +26,23 @@ import butterknife.OnClick;
 
 public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNameplateAddSensorActivityView,
         DeployNameplateAddSensorActivityPresenter> implements IDeployNameplateAddSensorActivityView{
-    @BindView(R.id.include_text_title_tv_cancel)
+    @BindView(R2.id.include_text_title_tv_cancel)
     TextView includeTextTitleTvCancel;
-    @BindView(R.id.include_text_title_tv_title)
+    @BindView(R2.id.include_text_title_tv_title)
     TextView includeTextTitleTvTitle;
-    @BindView(R.id.include_text_title_tv_subtitle)
+    @BindView(R2.id.include_text_title_tv_subtitle)
     TextView includeTextTitleTvSubtitle;
-    @BindView(R.id.include_text_title_divider)
+    @BindView(R2.id.include_text_title_divider)
     View includeTextTitleDivider;
-    @BindView(R.id.include_text_title_cl_root)
+    @BindView(R2.id.include_text_title_cl_root)
     ConstraintLayout includeTextTitleClRoot;
-    @BindView(R.id.ll_from_List_ac_deploy_nameplate_add_sensor)
+    @BindView(R2.id.ll_from_List_ac_deploy_nameplate_add_sensor)
     LinearLayout llFromListAcDeployNameplateAddSensor;
-    @BindView(R.id.ll_from_scan_ac_deploy_nameplate_add_sensor)
+    @BindView(R2.id.ll_from_scan_ac_deploy_nameplate_add_sensor)
     LinearLayout llFromScanAcDeployNameplateAddSensor;
-    @BindView(R.id.tv_added_count_ac_deploy_nameplate_add_sensor)
+    @BindView(R2.id.tv_added_count_ac_deploy_nameplate_add_sensor)
     TextView tvAddedCountAcDeployNameplateAddSensor;
-    @BindView(R.id.rv_added_list_ac_deploy_nameplate_add_sensor)
+    @BindView(R2.id.rv_added_list_ac_deploy_nameplate_add_sensor)
     RecyclerView rvAddedListAcDeployNameplateAddSensor;
     private AddedSensorAdapter mAddedSensorAdapter;
 
@@ -63,7 +64,7 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
 
     private void initRvAddedSensorList() {
         mAddedSensorAdapter = new AddedSensorAdapter(mActivity);
-        LinearLayoutManager manager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager manager = new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false);
         CustomDrawableDivider bottomNoDividerItemDecoration =
                 new CustomDrawableDivider(mActivity, CustomDrawableDivider.VERTICAL);
         rvAddedListAcDeployNameplateAddSensor.addItemDecoration(bottomNoDividerItemDecoration);
@@ -85,19 +86,17 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
     }
 
 
-    @OnClick({R.id.include_text_title_tv_cancel, R.id.include_text_title_tv_subtitle, R.id.ll_from_List_ac_deploy_nameplate_add_sensor, R.id.ll_from_scan_ac_deploy_nameplate_add_sensor})
+    @OnClick({R2.id.include_text_title_tv_cancel, R2.id.include_text_title_tv_subtitle, R2.id.ll_from_List_ac_deploy_nameplate_add_sensor, R2.id.ll_from_scan_ac_deploy_nameplate_add_sensor})
     public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.include_text_title_tv_cancel:
-                finishAc();
-                break;
-            case R.id.include_text_title_tv_subtitle:
-                break;
-            case R.id.ll_from_List_ac_deploy_nameplate_add_sensor:
-                mPresenter.doAddFromList();
-                break;
-            case R.id.ll_from_scan_ac_deploy_nameplate_add_sensor:
-                break;
+        int id = view.getId();
+        if(id == R.id.include_text_title_tv_cancel){
+            finishAc();
+        }else if(id == R.id.include_text_title_tv_subtitle){
+
+        }else if(id == R.id.ll_from_List_ac_deploy_nameplate_add_sensor){
+            mPresenter.doAddFromList();
+        }else if(id == R.id.ll_from_scan_ac_deploy_nameplate_add_sensor){
+
         }
     }
 

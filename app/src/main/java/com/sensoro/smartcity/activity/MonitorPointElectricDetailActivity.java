@@ -43,7 +43,7 @@ import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.dialog.EarlyWarningThresholdDialogUtils;
 import com.sensoro.smartcity.widget.dialog.MonitorPointDemoDialogUtils;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
-import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
+import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
 import com.sensoro.smartcity.widget.dialog.TipDeviceUpdateDialogUtils;
 import com.sensoro.smartcity.widget.divider.BottomNoDividerItemDecoration;
 import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;

@@ -400,9 +400,6 @@ public interface Constants {
     int EVENT_DATA_APP_CRASH = 0x56;
 
 
-    int EVENT_DATA_DEPLOY_NAMEPLATE_NAME = 0x57;
-
-
 
     int TYPE_SCAN_DEPLOY_DEVICE = 0x29;
     int TYPE_SCAN_DEPLOY_STATION = 0x39;
@@ -493,6 +490,5 @@ public interface Constants {
     String LIVE_URL = "http://wdquan-space.b0.upaiyun.com/VIDEO/2018/11/22/ae0645396048_hls_time10.m3u8";
     String EXTRA_CAMERA_PERSON_DETAIL = "extra_camera_person_detail";
     String EXTRA_CAMERA_PERSON_AVATAR_HISTORY_FACE_URL = "EXTRA_CAMERA_PERSON_AVATAR_HISTORY_FACE_URL";
-    String EXTRA_DEPLOY_NAMEPLATE_NAME = "extra_deploy_nameplate_name";
 }
 

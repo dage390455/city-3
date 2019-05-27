@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.imainviews;
+package com.sensoro.nameplate.IMainViews;
 
 import androidx.annotation.ColorRes;
 

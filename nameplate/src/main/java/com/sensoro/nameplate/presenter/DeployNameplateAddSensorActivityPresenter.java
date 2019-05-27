@@ -1,12 +1,12 @@
-package com.sensoro.smartcity.presenter;
+package com.sensoro.nameplate.presenter;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.activity.DeployNameplateAddSensorFromListActivity;
-import com.sensoro.smartcity.imainviews.IDeployNameplateAddSensorActivityView;
+import com.sensoro.nameplate.activity.DeployNameplateAddSensorFromListActivity;
+import com.sensoro.nameplate.IMainViews.IDeployNameplateAddSensorActivityView;
 
 public class DeployNameplateAddSensorActivityPresenter extends BasePresenter<IDeployNameplateAddSensorActivityView> {
     private Activity mActivity;

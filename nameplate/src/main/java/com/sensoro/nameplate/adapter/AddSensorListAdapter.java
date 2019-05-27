@@ -1,8 +1,6 @@
-package com.sensoro.smartcity.adapter;
+package com.sensoro.nameplate.adapter;
 
 import android.content.Context;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +12,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.model.AddSensorFromListModel;
+import com.sensoro.nameplate.R;
+import com.sensoro.nameplate.R2;
+import com.sensoro.nameplate.model.AddSensorFromListModel;
 
 import java.util.ArrayList;
 
@@ -66,7 +65,7 @@ public class AddSensorListAdapter extends RecyclerView.Adapter<AddSensorListAdap
                 .placeholder(R.drawable.ic_default_image)
                 .into(holder.ivIconItemAdapterAddSensorList);
         boolean isCheck = model.isCheck;
-        holder.ivStatusItemAdapterAddSensorList.setImageResource(model.isCheck ? R.drawable.radio_btn_checked : R.drawable.radio_btn_unchecked);
+        holder.ivStatusItemAdapterAddSensorList.setImageResource(model.isCheck ? R.mipmap.radio_btn_checked : R.mipmap.radio_btn_unchecked);
     }
 
     @Override
@@ -85,17 +84,17 @@ public class AddSensorListAdapter extends RecyclerView.Adapter<AddSensorListAdap
     }
 
     class AddSensorListAdapterViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.iv_status_item_adapter_add_sensor_list)
+        @BindView(R2.id.iv_status_item_adapter_add_sensor_list)
         ImageView ivStatusItemAdapterAddSensorList;
-        @BindView(R.id.tv_name_item_adapter_add_sensor_list)
+        @BindView(R2.id.tv_name_item_adapter_add_sensor_list)
         TextView tvNameItemAdapterAddSensorList;
-        @BindView(R.id.iv_icon_item_adapter_add_sensor_list)
+        @BindView(R2.id.iv_icon_item_adapter_add_sensor_list)
         ImageView ivIconItemAdapterAddSensorList;
-        @BindView(R.id.tv_device_name_item_adapter_add_sensor_list)
+        @BindView(R2.id.tv_device_name_item_adapter_add_sensor_list)
         TextView tvDeviceNameItemAdapterAddSensorList;
-        @BindView(R.id.tv_device_sn_item_adapter_add_sensor_list)
+        @BindView(R2.id.tv_device_sn_item_adapter_add_sensor_list)
         TextView tvDeviceSnItemAdapterAddSensorList;
-        @BindView(R.id.cl_root_item_adapter_add_sensor_list)
+        @BindView(R2.id.cl_root_item_adapter_add_sensor_list)
         ConstraintLayout clRootItemAdapterAddSensorList;
         public AddSensorListAdapterViewHolder(View itemView) {
             super(itemView);

@@ -1,18 +1,16 @@
-package com.sensoro.smartcity.presenter;
+package com.sensoro.nameplate.presenter;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.EventData;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
-import com.sensoro.smartcity.activity.DeployMonitorDeployPicActivity;
-import com.sensoro.smartcity.activity.DeployNameplateAddSensorActivity;
-import com.sensoro.smartcity.activity.DeployNameplateNameActivity;
-import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.imainviews.IDeployNameplateActivityView;
+import com.sensoro.nameplate.R;
+import com.sensoro.nameplate.activity.DeployNameplateAddSensorActivity;
+import com.sensoro.nameplate.activity.DeployNameplateNameActivity;
+import com.sensoro.nameplate.IMainViews.IDeployNameplateActivityView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -72,20 +70,20 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
     }
 
     public void doTag() {
-            Intent intent = new Intent(mActivity, DeployDeviceTagActivity.class);
-//            if (deployAnalyzerModel.tagList.size() > 0) {
-//                intent.putStringArrayListExtra(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
-//            }
-            getView().startAC(intent);
+//            Intent intent = new Intent(mActivity, DeployDeviceTagActivity.class);
+////            if (deployAnalyzerModel.tagList.size() > 0) {
+////                intent.putStringArrayListExtra(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
+////            }
+//            getView().startAC(intent);
     }
 
     public void doPic() {
-        Intent intent = new Intent(mActivity, DeployMonitorDeployPicActivity.class);
-//        if (getRealImageSize() > 0) {
-//            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
-//        }
-//        intent.putExtra(Constants.EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
-        getView().startAC(intent);
+//        Intent intent = new Intent(mActivity, DeployMonitorDeployPicActivity.class);
+////        if (getRealImageSize() > 0) {
+////            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
+////        }
+////        intent.putExtra(Constants.EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
+//        getView().startAC(intent);
     }
 
     public void doAssociationSensor() {

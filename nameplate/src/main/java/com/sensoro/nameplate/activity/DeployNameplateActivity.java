@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.activity;
+package com.sensoro.nameplate.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,9 +18,10 @@ import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TouchRecycleView;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.imainviews.IDeployNameplateActivityView;
-import com.sensoro.smartcity.presenter.DeployNameplateActivityPresenter;
+import com.sensoro.nameplate.IMainViews.IDeployNameplateActivityView;
+import com.sensoro.nameplate.R;
+import com.sensoro.nameplate.R2;
+import com.sensoro.nameplate.presenter.DeployNameplateActivityPresenter;
 
 import java.util.List;
 
@@ -30,41 +31,41 @@ import butterknife.OnClick;
 
 public class DeployNameplateActivity extends BaseActivity<IDeployNameplateActivityView, DeployNameplateActivityPresenter>
         implements IDeployNameplateActivityView {
-    @BindView(R.id.include_text_title_imv_arrows_left)
+    @BindView(R2.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
-    @BindView(R.id.include_text_title_tv_title)
+    @BindView(R2.id.include_text_title_tv_title)
     TextView includeTextTitleTvTitle;
-    @BindView(R.id.include_text_title_tv_subtitle)
+    @BindView(R2.id.include_text_title_tv_subtitle)
     TextView includeTextTitleTvSubtitle;
-    @BindView(R.id.include_text_title_divider)
+    @BindView(R2.id.include_text_title_divider)
     View includeTextTitleDivider;
-    @BindView(R.id.include_text_title_cl_root)
+    @BindView(R2.id.include_text_title_cl_root)
     ConstraintLayout includeTextTitleClRoot;
-    @BindView(R.id.ll_info_ac_deploy_nameplate)
+    @BindView(R2.id.ll_info_ac_deploy_nameplate)
     LinearLayout llInfoAcDeployNameplate;
-    @BindView(R.id.tv_name_option_ac_deploy_nameplate)
+    @BindView(R2.id.tv_name_option_ac_deploy_nameplate)
     TextView tvNameOptionAcDeployNameplate;
-    @BindView(R.id.ll_name_ac_deploy_nameplate)
+    @BindView(R2.id.ll_name_ac_deploy_nameplate)
     LinearLayout llNameAcDeployNameplate;
-    @BindView(R.id.tv_tag_option_ac_deploy_nameplate)
+    @BindView(R2.id.tv_tag_option_ac_deploy_nameplate)
     TextView tvTagOptionAcDeployNameplate;
-    @BindView(R.id.rc_tag_ac_deploy_nameplate)
+    @BindView(R2.id.rc_tag_ac_deploy_nameplate)
     TouchRecycleView rcTagAcDeployNameplate;
-    @BindView(R.id.ll_tag_ac_deploy_nameplate)
+    @BindView(R2.id.ll_tag_ac_deploy_nameplate)
     LinearLayout llTagAcDeployNameplate;
-    @BindView(R.id.tv_pic_option_ac_deploy_nameplate)
+    @BindView(R2.id.tv_pic_option_ac_deploy_nameplate)
     TextView tvPicOptionAcDeployNameplate;
-    @BindView(R.id.ll_pic_ac_deploy_nameplate)
+    @BindView(R2.id.ll_pic_ac_deploy_nameplate)
     LinearLayout llPicAcDeployNameplate;
-    @BindView(R.id.ll_content_ac_deploy_nameplate)
+    @BindView(R2.id.ll_content_ac_deploy_nameplate)
     LinearLayout llContentAcDeployNameplate;
-    @BindView(R.id.tv_association_sensor_option_ac_deploy_nameplate)
+    @BindView(R2.id.tv_association_sensor_option_ac_deploy_nameplate)
     TextView tvAssociationSensorOptionAcDeployNameplate;
-    @BindView(R.id.ll_association_sensor_ac_deploy_nameplate)
+    @BindView(R2.id.ll_association_sensor_ac_deploy_nameplate)
     LinearLayout llAssociationSensorAcDeployNameplate;
-    @BindView(R.id.tv_upload_ac_deploy_nameplate)
+    @BindView(R2.id.tv_upload_ac_deploy_nameplate)
     TextView tvUploadAcDeployNameplate;
-    @BindView(R.id.tv_tip_ac_deploy_nameplate)
+    @BindView(R2.id.tv_tip_ac_deploy_nameplate)
     TextView tvTipAcDeployNameplate;
     private ProgressUtils mProgressUtils;
     private TagAdapter mTagAdapter;
@@ -182,27 +183,27 @@ public class DeployNameplateActivity extends BaseActivity<IDeployNameplateActivi
     }
 
 
-    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ll_name_ac_deploy_nameplate, R.id.ll_tag_ac_deploy_nameplate, R.id.ll_pic_ac_deploy_nameplate, R.id.ll_association_sensor_ac_deploy_nameplate, R.id.tv_upload_ac_deploy_nameplate})
+    @OnClick({R2.id.include_text_title_imv_arrows_left, R2.id.ll_name_ac_deploy_nameplate, R2.id.ll_tag_ac_deploy_nameplate, R2.id.ll_pic_ac_deploy_nameplate, R2.id.ll_association_sensor_ac_deploy_nameplate, R2.id.tv_upload_ac_deploy_nameplate})
     public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.include_text_title_imv_arrows_left:
-                finishAc();
-                break;
-            case R.id.ll_name_ac_deploy_nameplate:
-                mPresenter.doName(tvNameOptionAcDeployNameplate.getText().toString());
-                break;
-            case R.id.ll_tag_ac_deploy_nameplate:
-                mPresenter.doTag();
-                break;
-            case R.id.ll_pic_ac_deploy_nameplate:
-                mPresenter.doPic();
-                break;
-            case R.id.ll_association_sensor_ac_deploy_nameplate:
-                mPresenter.doAssociationSensor();
-                break;
-            case R.id.tv_upload_ac_deploy_nameplate:
-                break;
+        int id = view.getId();
+        if (id == R.id.include_text_title_imv_arrows_left) {
+            finishAc();
+        }else if (id == R.id.ll_name_ac_deploy_nameplate) {
+            mPresenter.doName(tvNameOptionAcDeployNameplate.getText().toString());
+
+        }else if (id == R.id.ll_tag_ac_deploy_nameplate) {
+            mPresenter.doTag();
+
+        }else if (id == R.id.ll_pic_ac_deploy_nameplate) {
+            mPresenter.doPic();
+
+        }else if (id == R.id.ll_association_sensor_ac_deploy_nameplate) {
+            mPresenter.doAssociationSensor();
+
+        }else if (id == R.id.tv_upload_ac_deploy_nameplate) {
+
         }
+
     }
 
     @Override

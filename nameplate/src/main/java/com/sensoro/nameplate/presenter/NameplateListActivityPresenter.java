@@ -57,7 +57,7 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
         } else {
             requestDataByFilter(DIRECTION_DOWN, null);
         }
-        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST);
+        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERA_LIST);
         if (list != null) {
             mSearchHistoryList.addAll(list);
             getView().updateSearchHistoryList(mSearchHistoryList);
@@ -68,7 +68,7 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
         if (TextUtils.isEmpty(text)) {
             return;
         }
-        List<String> warnList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST, text);
+        List<String> warnList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERA_LIST, text);
         mSearchHistoryList.clear();
         mSearchHistoryList.addAll(warnList);
         getView().updateSearchHistoryList(mSearchHistoryList);
@@ -76,7 +76,7 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
     }
 
     public void clearSearchHistory() {
-        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST);
+        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERA_LIST);
         mSearchHistoryList.clear();
         getView().updateSearchHistoryList(mSearchHistoryList);
     }

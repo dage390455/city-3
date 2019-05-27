@@ -41,7 +41,7 @@ import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.widgets.SpacesItemDecoration;
-import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
+import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.popup.InspectionTaskStatePopUtils;
 import com.sensoro.smartcity.widget.popup.SelectDeviceTypePopUtils;

@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.NameAddressHistoryAdapter;
+import com.sensoro.common.adapter.NameAddressHistoryAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorWeChatRelationActivityView;
 import com.sensoro.smartcity.presenter.DeployMonitorWeChatRelationActivityPresenter;

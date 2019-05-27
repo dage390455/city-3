@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.model;
+package com.sensoro.nameplate.model;
 
 public class AddSensorFromListModel {
     public String sn;

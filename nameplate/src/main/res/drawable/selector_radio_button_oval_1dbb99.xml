@@ -2,10 +2,10 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_enabled="true"
         android:state_checked="true"
-        android:drawable="@drawable/radio_btn_checked"/>
+        android:drawable="@mipmap/radio_btn_checked"/>
 
     <item android:state_enabled="true"
         android:state_checked="false"
-        android:drawable="@drawable/radio_btn_unchecked"/>
+        android:drawable="@mipmap/radio_btn_unchecked"/>
 
 </selector>

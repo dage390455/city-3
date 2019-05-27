@@ -1,12 +1,12 @@
-package com.sensoro.smartcity.widget.dialog;
+package com.sensoro.common.widgets.dialog;
 
 import android.app.Activity;
 import androidx.annotation.ColorInt;
 import android.view.View;
 import android.widget.TextView;
 
+import com.sensoro.common.R;
 import com.sensoro.common.widgets.CustomCornerDialog;
-import com.sensoro.smartcity.R;
 
 public class TipDialogUtils {
 

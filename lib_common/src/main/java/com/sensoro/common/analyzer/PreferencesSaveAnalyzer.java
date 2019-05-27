@@ -88,8 +88,8 @@ public class PreferencesSaveAnalyzer {
     private static void savePreferences(int status, String content) {
         switch (status) {
 
-            case SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST:
-                ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_SEARCH_CAMERALIST, Context
+            case SearchHistoryTypeConstants.TYPE_SEARCH_CAMERA_LIST:
+                ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_SEARCH_CAMERA_LIST, Context
                         .MODE_PRIVATE).edit().putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, content).apply();
                 break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN:
@@ -132,6 +132,10 @@ public class PreferencesSaveAnalyzer {
                 ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_DEPLOY_NAMEPLATE_NAME, Context
                         .MODE_PRIVATE).edit().putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, content).apply();
                 break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_NAMEPLATE_ADD_FROM_LIST:
+                ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_NAMEPLATE_ADD_FROM_LIST, Context
+                        .MODE_PRIVATE).edit().putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, content).apply();
+                break;
 
         }
     }
@@ -139,8 +143,8 @@ public class PreferencesSaveAnalyzer {
     private static String obtainOldText(int status) {
         String oldText = null;
         switch (status) {
-            case SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST:
-                oldText = ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_SEARCH_CAMERALIST, Context
+            case SearchHistoryTypeConstants.TYPE_SEARCH_CAMERA_LIST:
+                oldText = ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_SEARCH_CAMERA_LIST, Context
                         .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
                 break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN:
@@ -183,6 +187,10 @@ public class PreferencesSaveAnalyzer {
                 oldText = ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_DEPLOY_NAMEPLATE_NAME, Context
                         .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
                 break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_NAMEPLATE_ADD_FROM_LIST:
+                oldText = ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_NAMEPLATE_ADD_FROM_LIST, Context
+                        .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
+                break;
 
 
         }
@@ -197,8 +205,8 @@ public class PreferencesSaveAnalyzer {
     public static void clearAllData(int status) {
         switch (status) {
 
-            case SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST:
-                ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_SEARCH_CAMERALIST, Activity.MODE_PRIVATE)
+            case SearchHistoryTypeConstants.TYPE_SEARCH_CAMERA_LIST:
+                ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_SEARCH_CAMERA_LIST, Activity.MODE_PRIVATE)
                         .edit().clear().apply();
                 break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN:
@@ -247,6 +255,10 @@ public class PreferencesSaveAnalyzer {
 
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_NAMEPLATE_NAME:
                 ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_DEPLOY_NAMEPLATE_NAME, Activity.MODE_PRIVATE)
+                        .edit().clear().apply();
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_NAMEPLATE_ADD_FROM_LIST:
+                ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_NAMEPLATE_ADD_FROM_LIST, Activity.MODE_PRIVATE)
                         .edit().clear().apply();
                 break;
 

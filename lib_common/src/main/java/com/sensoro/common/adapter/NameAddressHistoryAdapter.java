@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.adapter;
+package com.sensoro.common.adapter;
 
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sensoro.smartcity.R;
+import com.sensoro.common.R;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
@@ -63,12 +63,11 @@ public class NameAddressHistoryAdapter extends RecyclerView.Adapter<NameAddressH
     }
 
     class NameAddressHistoryHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_adapter_tv)
         TextView itemAdapterTv;
 
         NameAddressHistoryHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            itemView.findViewById(R.id.item_adapter_tv);
         }
     }
 
