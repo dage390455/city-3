@@ -1,12 +1,14 @@
 package com.sensoro.smartcity.activity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.sensoro.common.base.BaseActivity;
@@ -14,6 +16,8 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.SelfCheckAdapter;
 import com.sensoro.smartcity.imainviews.ISelfCheckActivityView;
 import com.sensoro.smartcity.presenter.SelfCheckActivityPresenter;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,6 +38,8 @@ public class SelfCheckActivity extends BaseActivity<ISelfCheckActivityView, Self
     RecyclerView acSelfCheckRc;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
+    @BindView(R.id.ic_no_content)
+    LinearLayout ic_no_content;
 
     SelfCheckAdapter selfCheckAdapter;
 
@@ -49,7 +55,20 @@ public class SelfCheckActivity extends BaseActivity<ISelfCheckActivityView, Self
         acSelfCheckRc.setLayoutManager(new LinearLayoutManager(this));
         acSelfCheckRc.setAdapter(selfCheckAdapter);
 
-//        refreshLayout.setEnabled(false);
+
+        ArrayList<String> selftest = getIntent().getStringArrayListExtra("selftest");
+
+
+        if (null != selftest && selftest.size() > 0) {
+
+            selfCheckAdapter.updateAdapter(selftest);
+
+        } else {
+            ic_no_content.setVisibility(View.VISIBLE);
+            acSelfCheckRc.setVisibility(View.GONE);
+
+        }
+        refreshLayout.setEnabled(false);
 
     }
 

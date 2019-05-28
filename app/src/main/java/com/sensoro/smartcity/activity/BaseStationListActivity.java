@@ -32,6 +32,7 @@ import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.server.bean.BaseStationInfo;
 import com.sensoro.common.server.bean.DeviceCameraInfo;
+import com.sensoro.common.widgets.CustomDivider;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
@@ -119,7 +120,7 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         acHistoryLogRcContent.setLayoutManager(linearLayoutManager);
         acHistoryLogRcContent.setAdapter(mDeviceCameraContentAdapter);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL);
+        CustomDivider dividerItemDecoration = new CustomDivider(mActivity, DividerItemDecoration.VERTICAL);
         acHistoryLogRcContent.addItemDecoration(dividerItemDecoration);
         //
         returnTopAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.return_top_in_anim);

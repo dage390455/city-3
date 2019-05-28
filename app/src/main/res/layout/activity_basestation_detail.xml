@@ -38,8 +38,7 @@
                 android:orientation="vertical"
                 android:paddingLeft="20dp"
                 android:paddingTop="16dp"
-                android:paddingRight="20dp"
-                android:paddingBottom="16dp">
+                android:paddingRight="20dp">
 
 
                 <TextView
@@ -48,7 +47,6 @@
                     android:layout_width="wrap_content"
 
                     android:layout_height="wrap_content"
-                    android:text="海淀听松堂新ZTDB-基站机房"
                     android:textColor="@color/c_252525"
                     android:textSize="20dp"
                     android:textStyle="bold" />
@@ -67,7 +65,6 @@
 
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/ac_basestation_tv_name"
-                        android:text="α基站 10:14:28"
                         android:textColor="@color/c_252525"
                         android:textSize="14dp" />
 
@@ -80,8 +77,6 @@
                         android:layout_below="@+id/ac_basestation_tv_name"
                         android:layout_marginLeft="12dp"
                         android:layout_toRightOf="@+id/ac_basestation_tv_typetime"
-                        android:text="正常"
-                        android:textColor="@color/c_1dbb99"
                         android:textSize="14dp" />
                 </LinearLayout>
 
@@ -102,8 +97,6 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/ac_basestation_tv_netdelay_title"
                     android:layout_marginTop="8dp"
-                    android:text="87ms"
-                    android:textColor="@color/c_1dbb99"
                     android:textSize="24dp" />
 
 
@@ -130,6 +123,7 @@
 
                     android:layout_height="wrap_content"
                     android:paddingLeft="20dp"
+                    android:paddingTop="16dp"
                     android:paddingRight="20dp"
                     android:paddingBottom="16dp">
 
@@ -146,9 +140,8 @@
                         android:layout_width="wrap_content"
 
                         android:layout_height="wrap_content"
+                        android:visibility="gone"
                         android:layout_below="@+id/ac_basestation_tv_channel_title"
-                        android:layout_marginTop="8dp"
-                        android:text="第6信道"
                         android:textColor="@color/c_252525"
                         android:textSize="16dp" />
 
@@ -590,8 +583,9 @@
                     android:id="@+id/rl_network_information"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
+
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
                     android:visibility="visible">
 
                     <TextView
@@ -628,8 +622,8 @@
                     android:id="@+id/rl_self_check_state"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
                     android:visibility="visible">
 
                     <TextView

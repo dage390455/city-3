@@ -1,8 +1,10 @@
 package com.sensoro.smartcity.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -16,6 +18,8 @@ import com.sensoro.smartcity.adapter.FrequencyPointAdapter;
 import com.sensoro.smartcity.imainviews.IFrequencyPointActivityView;
 import com.sensoro.smartcity.presenter.FrequencyPointActivityPresenter;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -23,7 +27,7 @@ import butterknife.OnClick;
 /**
  * 频点信息
  */
-public class FrequencyPointActivity extends BaseActivity<IFrequencyPointActivityView, FrequencyPointActivityPresenter> {
+public class FrequencyPointActivity extends BaseActivity<IFrequencyPointActivityView, FrequencyPointActivityPresenter> implements IFrequencyPointActivityView {
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
     @BindView(R.id.include_text_title_tv_title)
@@ -40,7 +44,8 @@ public class FrequencyPointActivity extends BaseActivity<IFrequencyPointActivity
     RecyclerView acFrequencyPointRc;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
-
+    @BindView(R.id.ic_no_content)
+    LinearLayout ic_no_content;
     FrequencyPointAdapter frequencyPointAdapter;
 
 
@@ -55,8 +60,17 @@ public class FrequencyPointActivity extends BaseActivity<IFrequencyPointActivity
         acFrequencyPointRc.setLayoutManager(manager);
         frequencyPointAdapter = new FrequencyPointAdapter(this);
 
+        ArrayList<String> channels = getIntent().getStringArrayListExtra("channels");
 
-        acFrequencyPointRc.setAdapter(frequencyPointAdapter);
+        if (null != channels && channels.size() > 0) {
+            acFrequencyPointRc.setAdapter(frequencyPointAdapter);
+            frequencyPointAdapter.updateDeviceTypList(channels);
+        } else {
+            ic_no_content.setVisibility(View.VISIBLE);
+            refreshLayout.setVisibility(View.GONE);
+        }
+        refreshLayout.setEnabled(false);
+
     }
 
     @Override
@@ -71,4 +85,54 @@ public class FrequencyPointActivity extends BaseActivity<IFrequencyPointActivity
         finish();
     }
 
+    @Override
+    public void updateData(ArrayList<String> arrayList) {
+
+
+    }
+
+    @Override
+    public void startAC(Intent intent) {
+
+    }
+
+    @Override
+    public void finishAc() {
+
+    }
+
+    @Override
+    public void startACForResult(Intent intent, int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int resultCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int resultCode, Intent data) {
+
+    }
+
+    @Override
+    public void showProgressDialog() {
+
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+
+    }
+
+    @Override
+    public void toastShort(String msg) {
+
+    }
+
+    @Override
+    public void toastLong(String msg) {
+
+    }
 }

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
@@ -31,8 +33,14 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.server.bean.BaseStationDetailModel;
+import com.sensoro.common.server.bean.ScenesData;
+import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TouchRecycleView;
 import com.sensoro.smartcity.R;
@@ -42,6 +50,7 @@ import com.sensoro.smartcity.presenter.BaseStationDetailActivityPresenter;
 import com.sensoro.smartcity.util.AppUtils;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -138,124 +147,9 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     private TextView out_tv, in_tv, time_tv;
     private DecimalFormat decimalFormat = new DecimalFormat(".00");
     MonitorDeployDetailPhotoAdapter mAdapter;
+    private ProgressUtils mProgressUtils;
+    private TagAdapter mTagAdapter;
 
-    @OnClick({R.id.navigation_cl, R.id.include_text_title_imv_arrows_left, R.id.ac_basestation_rl_channel, R.id.ac_basestation_tv_today, R.id.ac_basestation_tv_week, R.id.rl_network_information, R.id.rl_self_check_state})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-
-            case R.id.navigation_cl:
-                Intent intent = new Intent();
-                if (AppUtils.isChineseLanguage()) {
-                    intent.setClass(mActivity, MonitorPointMapActivity.class);
-                } else {
-                    intent.setClass(mActivity, MonitorPointMapENActivity.class);
-                }
-
-                break;
-
-            case R.id.include_text_title_imv_arrows_left:
-                finish();
-                break;
-            case R.id.ac_basestation_rl_channel:
-
-
-                startActivity(new Intent(mActivity, FrequencyPointActivity.class));
-                break;
-            case R.id.ac_basestation_tv_today:
-
-
-                acBasestationTvToday.setTextColor(Color.parseColor("#252525"));
-                acBasestationTvWeek.setBackground(getResources().getDrawable(R.drawable.shape_bg_top));
-
-
-                acBasestationTvWeek.setTextColor(Color.parseColor("#A6A6A6"));
-                acBasestationTvToday.setBackground(null);
-
-
-                mPresenter.requestData();
-
-
-                break;
-            case R.id.ac_basestation_tv_week:
-
-
-                acBasestationTvWeek.setTextColor(Color.parseColor("#252525"));
-                acBasestationTvToday.setBackground(getResources().getDrawable(R.drawable.shape_bg_top));
-
-
-                acBasestationTvToday.setTextColor(Color.parseColor("#A6A6A6"));
-                acBasestationTvWeek.setBackground(null);
-
-                mPresenter.requestData();
-
-                break;
-            case R.id.rl_network_information:
-                startActivity(new Intent(mActivity, NetWorkInfoActivity.class));
-                break;
-            case R.id.rl_self_check_state:
-                startActivity(new Intent(mActivity, SelfCheckActivity.class));
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        myHandler.removeCallbacksAndMessages(null);
-    }
-
-    @Override
-    public void startAC(Intent intent) {
-
-    }
-
-    @Override
-    public void finishAc() {
-
-    }
-
-    @Override
-    public void startACForResult(Intent intent, int requestCode) {
-
-    }
-
-    @Override
-    public void setIntentResult(int resultCode) {
-
-    }
-
-    @Override
-    public void setIntentResult(int resultCode, Intent data) {
-
-    }
-
-    @Override
-    public void showProgressDialog() {
-
-    }
-
-    @Override
-    public void dismissProgressDialog() {
-
-    }
-
-    @Override
-    public void toastShort(String msg) {
-
-    }
-
-    @Override
-    public void toastLong(String msg) {
-
-    }
-
-    @Override
-    public void onItemClick(View view, int position) {
-
-    }
 
     private void initMonitorPhoto() {
         //
@@ -284,7 +178,16 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_basestation_detail);
         ButterKnife.bind(this);
+        initRcDeployDeviceTag();
+        initMonitorPhoto();
+        initView();
         mPresenter.initData(mActivity);
+
+    }
+
+
+    private void initView() {
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         includeTextTitleTvTitle.setText(getResources().getString(R.string.base_station_detail));
@@ -343,12 +246,11 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
         leftAxis.setTextColor(Color.parseColor("#252525"));
 
-        leftAxis.setAxisMaximum(70f);
-        leftAxis.setAxisMinimum(10f);
+
         leftAxis.setDrawGridLines(true);
         leftAxis.setDrawAxisLine(false);
 
-//        leftAxis.enableGridDashedLine(10, 10, 0);
+        leftAxis.enableGridDashedLine(10, 10, 0);
 //        leftAxis.setGranularityEnabled(true);
         leftAxis.setValueFormatter(new MyYFormatter());
 
@@ -356,15 +258,11 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         chart.getAxisRight().setEnabled(false);
 
 
-        mPresenter.requestData();
-
-
         chart.setOnTouchListener(touchListener);
+        chart.setNoDataText("暂无数据");
 
         chart.setOnChartGestureListener(onChartGestureListener);
-
     }
-
 
     /**
      * 手势处理，显示和隐藏高亮及topview
@@ -449,16 +347,181 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         }
     };
 
+    private void initRcDeployDeviceTag() {
+        rcTag.setIntercept(true);
+        mTagAdapter = new TagAdapter(mActivity, R.color.c_252525, R.color.c_dfdfdf);
+        //
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity, false) {
+            @Override
+            public boolean canScrollHorizontally() {
+                return false;
+            }
+        };
+
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        int spacingInPixels = mActivity.getResources().getDimensionPixelSize(R.dimen.x10);
+        rcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
+        rcTag.setLayoutManager(layoutManager);
+        rcTag.setAdapter(mTagAdapter);
+    }
+
 
     @Override
-    public void updateChartData(LineData lineData) {
+    public void updateMonitorPhotos(final List<ScenesData> data) {
+        if (acMonitorDeployPhoto.isComputingLayout()) {
+            acMonitorDeployPhoto.post(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.updateImages(data);
+                }
+            });
+            return;
+        }
+        mAdapter.updateImages(data);
+    }
 
+    @Override
+    public void updateChartData(LineData lineData, float max, float min) {
+
+
+        YAxis leftAxis = chart.getAxisLeft();
+
+//        leftAxis.setAxisMaximum(max);
+//        leftAxis.setAxisMinimum(min);
         chart.setData(lineData);
         final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
         final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
         set1.setDrawVerticalHighlightIndicator(false);
         set2.setDrawVerticalHighlightIndicator(false);
         chart.invalidate();
+    }
+
+    @Override
+    public void updateDetailData(BaseStationDetailModel model) {
+        acBasestationTvName.setText(model.getName());
+
+
+        if ("station".equals(model.getType())) {
+            acBasestationTvTypetime.setText(R.string.αbasestation);
+        } else if ("gateway".equals(model.getType())) {
+            acBasestationTvTypetime.setText(R.string.αgateway);
+        } else if ("scgateway".equals(model.getType())) {
+            acBasestationTvTypetime.setText(R.string.αroute);
+        } else if ("ai_camera".equals(model.getType())) {
+            acBasestationTvTypetime.setText("AI_CAMERA");
+        }
+
+        if (!TextUtils.isEmpty(model.getUpdatedTime())) {
+            acBasestationTvTypetime.append(" " + DateUtil.getDate(Long.parseLong(model.getUpdatedTime())));
+        }
+
+        if (!TextUtils.isEmpty(model.getStatus())) {
+
+            if ("offline".equals(model.getStatus())) {
+                acBasestationTvState.setText(mActivity.getResources().getString(R.string.offline));
+                acBasestationTvState.setTextColor(Color.parseColor("#5D5D5D"));
+            } else if ("inactive".equals(model.getStatus())) {
+                acBasestationTvState.setText(mActivity.getResources().getString(R.string.inactive));
+                acBasestationTvState.setTextColor(Color.parseColor("#A6A6A6"));
+            } else {
+                acBasestationTvState.setText(mActivity.getResources().getString(R.string.normal));
+                acBasestationTvState.setTextColor(Color.parseColor("#1DBB99"));
+
+            }
+        }
+
+
+        if (model.getTags().size() > 0) {
+            rcTag.setVisibility(View.GONE);
+            rcTag.setVisibility(View.VISIBLE);
+            mTagAdapter.updateTags(model.getTags());
+        } else {
+            rcTag.setVisibility(View.VISIBLE);
+            rcTag.setVisibility(View.GONE);
+        }
+        tvSn.setText(model.getSn());
+
+        tvDeviceVision.setText(model.getFirmwareVersion());
+
+
+    }
+
+    @Override
+    public void updateNetDelay(String delay, int color) {
+        acBasestationTvNetdelay.setTextColor(getResources().getColor(color));
+        acBasestationTvNetdelay.setText(delay);
+
+
+    }
+
+
+    @OnClick({R.id.navigation_cl, R.id.include_text_title_imv_arrows_left, R.id.ac_basestation_rl_channel, R.id.ac_basestation_tv_today, R.id.ac_basestation_tv_week, R.id.rl_network_information, R.id.rl_self_check_state})
+
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+
+            case R.id.navigation_cl:
+                mPresenter.doNavigation();
+
+                break;
+
+            case R.id.include_text_title_imv_arrows_left:
+                finish();
+                break;
+            case R.id.ac_basestation_rl_channel:
+
+
+                mPresenter.startFrequencyPointActivity();
+
+                break;
+            case R.id.ac_basestation_tv_today:
+
+
+                acBasestationTvToday.setTextColor(Color.parseColor("#252525"));
+                acBasestationTvWeek.setBackground(getResources().getDrawable(R.drawable.shape_bg_top));
+
+
+                acBasestationTvWeek.setTextColor(Color.parseColor("#A6A6A6"));
+                acBasestationTvToday.setBackground(null);
+
+
+                mPresenter.requestChartDetailData("day");
+
+
+                break;
+            case R.id.ac_basestation_tv_week:
+
+
+                acBasestationTvWeek.setTextColor(Color.parseColor("#252525"));
+                acBasestationTvToday.setBackground(getResources().getDrawable(R.drawable.shape_bg_top));
+
+
+                acBasestationTvToday.setTextColor(Color.parseColor("#A6A6A6"));
+                acBasestationTvWeek.setBackground(null);
+
+                mPresenter.requestChartDetailData("week");
+
+                break;
+            case R.id.rl_network_information:
+
+
+                mPresenter.startNetWorkInfoActivity();
+                break;
+            case R.id.rl_self_check_state:
+
+                mPresenter.startSelfCheckActivity();
+
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        myHandler.removeCallbacksAndMessages(null);
     }
 
     @Override
@@ -523,8 +586,6 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
 
             set1.setDrawVerticalHighlightIndicator(false);
-//
-//
             set2.setDrawVerticalHighlightIndicator(false);
 
 
@@ -549,8 +610,6 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         if (view.getVisibility() != View.VISIBLE) return;
 
 
-
-
         myHandler.sendEmptyMessageDelayed(0, 1000);
 
     }
@@ -559,12 +618,8 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     public class MyXFormatter extends ValueFormatter {
 
 
-        private static final String TAG = "MyXFormatter";
-
-
         @Override
         public String getFormattedValue(float value) {
-//            Log.d(TAG, "----->getFormattedValue: " + value);
 
             if (value > 0) {
 
@@ -578,7 +633,6 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
         @Override
         public String getAxisLabel(float value, AxisBase axis) {
-//            Log.d(TAG, "----->getAxisLabel: " + value);
 
             return mPresenter.stampToDate(value + "");
 
@@ -587,30 +641,88 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
     public class MyYFormatter extends ValueFormatter {
 
-
-//        private static final String TAG = "MyXFormatter";
-
-
         @Override
         public String getFormattedValue(float value) {
-//            Log.d(TAG, "----->getFormattedValue: " + value);
 
 
             String p = decimalFormat.format(value);
             return (p + "\u2103");
 
-//            return super.getFormattedValue(value);
         }
 
         @Override
         public String getAxisLabel(float value, AxisBase axis) {
-//            Log.d(TAG, "----->getAxisLabel: " + value);
-
-//            return stampToDate(value + "");
 
             return super.getAxisLabel(value, axis);
         }
     }
 
+    @Override
+    public void startAC(Intent intent) {
+        mActivity.startActivity(intent);
 
+    }
+
+    @Override
+    public void finishAc() {
+
+    }
+
+    @Override
+    public void startACForResult(Intent intent, int requestCode) {
+        mActivity.startActivityForResult(intent, requestCode);
+
+    }
+
+    @Override
+    public void setIntentResult(int resultCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int resultCode, Intent data) {
+
+    }
+
+    @Override
+    public void showProgressDialog() {
+        if (mProgressUtils != null) {
+            mProgressUtils.showProgress();
+        }
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+        if (mProgressUtils != null) {
+            mProgressUtils.dismissProgress();
+        }
+    }
+
+    @Override
+    public void toastShort(String msg) {
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void toastLong(String msg) {
+
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        List<ScenesData> images = mAdapter.getImages();
+        mPresenter.toPhotoDetail(position, images);
+    }
+
+    @Override
+    public void setDeviceLocationTextColor(int color) {
+        acMonitoringPointTvLocation.setTextColor(mActivity.getResources().getColor(color));
+    }
+
+    @Override
+    public void setDeviceLocation(String location, boolean isArrowsRight) {
+        acMonitoringPointTvLocation.setText(location);
+        acBasestationImvLocation.setVisibility(isArrowsRight ? View.VISIBLE : View.GONE);
+    }
 }

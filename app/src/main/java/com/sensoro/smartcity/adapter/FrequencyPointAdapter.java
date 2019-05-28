@@ -1,14 +1,13 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
-import android.content.res.Resources;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sensoro.common.model.CameraFilterModel;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.sensoro.smartcity.R;
 
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ import butterknife.ButterKnife;
 
 public class FrequencyPointAdapter extends RecyclerView.Adapter<FrequencyPointAdapter.FrequencyPointHolder> {
     private final Context mContext;
-    private List<CameraFilterModel.ListBean> mStateCountList = new ArrayList<>();
+    private List<String> mStateCountList = new ArrayList<>();
 
     public FrequencyPointAdapter(Context context) {
         mContext = context;
@@ -36,19 +35,19 @@ public class FrequencyPointAdapter extends RecyclerView.Adapter<FrequencyPointAd
 
     @Override
     public void onBindViewHolder(final FrequencyPointHolder holder, int position) {
-        Resources resources = mContext.getResources();
 
 
-//        if (null != mStateCountList.get(position)) {
-//            final CameraFilterModel.ListBean ic = mStateCountList.get(position);
-//
-//        }
+        if (null != mStateCountList.get(position)) {
+            final String ic = mStateCountList.get(position);
+            holder.itemPointTv.setText(ic);
+
+        }
 
 
     }
 
 
-    public void updateDeviceTypList(List<CameraFilterModel.ListBean> list, boolean isMutilSelect) {
+    public void updateDeviceTypList(List<String> list) {
         mStateCountList.clear();
         mStateCountList.addAll(list);
         notifyDataSetChanged();
@@ -63,7 +62,7 @@ public class FrequencyPointAdapter extends RecyclerView.Adapter<FrequencyPointAd
 
     @Override
     public int getItemCount() {
-        return 20;
+        return mStateCountList.size();
     }
 
 

@@ -49,7 +49,7 @@ public class DeviceInfo implements Serializable, Comparable {
     private Long deployTime;
     private DeployControlSettingData config;
     private Integer demoMode;
-//    private DeviceGroup deviceGroup;
+    //    private DeviceGroup deviceGroup;
     private String deviceGroup;
 
     private String appId;
@@ -70,6 +70,16 @@ public class DeviceInfo implements Serializable, Comparable {
     private String wxPhone;
     private boolean notOwn;
     private String firmwareVersion;
+
+    public int getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(int sourceType) {
+        this.sourceType = sourceType;
+    }
+
+    private int sourceType;//地图入口
 
     public boolean isDeployFlag() {
         return deployFlag;
