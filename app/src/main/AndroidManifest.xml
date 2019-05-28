@@ -389,10 +389,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity android:name=".temp.LineChartActivity2" />
 
-        <activity android:name="com.sensoro.nameplate.activity.DeployNameplateActivity" />
-        <activity android:name="com.sensoro.nameplate.activity.DeployNameplateNameActivity" />
-        <activity android:name="com.sensoro.nameplate.activity.DeployNameplateAddSensorActivity" />
-        <activity android:name="com.sensoro.nameplate.activity.DeployNameplateAddSensorFromListActivity" />
 
 
         <activity android:name=".activity.SelfCheckActivity" />

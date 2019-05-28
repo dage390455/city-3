@@ -1,5 +1,6 @@
 package com.sensoro.nameplate.activity;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -7,6 +8,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -55,7 +57,7 @@ import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 
 public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDeployNameplateAddSensorFromListActivityView,
         DeployNameplateAddSensorFromListActivityPresenter> implements IDeployNameplateAddSensorFromListActivityView,
-        TextView.OnEditorActionListener {
+        TextView.OnEditorActionListener, View.OnClickListener {
 
     @BindView(R2.id.iv_arrow_left_ac_deploy_nameplate_sensor_list)
     ImageView ivArrowLeftAcDeployNameplateSensorList;
@@ -128,6 +130,8 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
         returnTopInclude.setAnimation(returnTopAnimation);
         returnTopInclude.setVisibility(View.GONE);
 
+        initOnclick();
+
         initEditText();
 
         initSmartRefresh();
@@ -138,6 +142,17 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
 
     }
 
+    private void initOnclick() {
+        ivArrowLeftAcDeployNameplateSensorList.setOnClickListener(this);
+        ivClearAcDeployNameplateSensorList.setOnClickListener(this);
+        tvSearchCancelAcDeployNameplateSensorList.setOnClickListener(this);
+        rbSelectAllAcDeployNameplateSensorList.setOnClickListener(this);
+        tvAddAcDeployNameplateSensorList.setOnClickListener(this);
+        returnTopInclude.setOnClickListener(this);
+
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
     private void initEditText() {
         etSearchAcDeployNameplateSensorList.setOnEditorActionListener(this);
         etSearchAcDeployNameplateSensorList.addTextChangedListener(new TextWatcher() {
@@ -165,6 +180,19 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
             @Override
             public void onKeyBoardOpen() {
                 etSearchAcDeployNameplateSensorList.setCursorVisible(true);
+            }
+        });
+
+        etSearchAcDeployNameplateSensorList.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    setSearchHistoryVisible(true);
+                    etSearchAcDeployNameplateSensorList.requestFocus();
+                    etSearchAcDeployNameplateSensorList.setCursorVisible(true);
+                    AppUtils.openInputMethodManager(mActivity, etSearchAcDeployNameplateSensorList);
+                }
+                return false;
             }
         });
     }
@@ -286,39 +314,6 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
         SensoroToast.getInstance().makeText(msg, Toast.LENGTH_LONG).show();
     }
 
-
-    @OnClick({R2.id.iv_arrow_left_ac_deploy_nameplate_sensor_list, R2.id.et_search_ac_deploy_nameplate_sensor_list,
-            R2.id.iv_clear_ac_deploy_nameplate_sensor_list,R2.id.ll_search_ac_deploy_nameplate_sensor_list,
-            R2.id.tv_search_cancel_ac_deploy_nameplate_sensor_list, R2.id.rb_select_all_ac_deploy_nameplate_sensor_list,
-            R2.id.tv_add_ac_deploy_nameplate_sensor_list})
-    public void onViewClicked(View view) {
-        int id = view.getId();
-        if (id == R.id.iv_arrow_left_ac_deploy_nameplate_sensor_list) {
-            mActivity.finish();
-        }else if (id == R.id.et_search_ac_deploy_nameplate_sensor_list || id == R.id.ll_search_ac_deploy_nameplate_sensor_list) {
-            setSearchHistoryVisible(true);
-            etSearchAcDeployNameplateSensorList.requestFocus();
-            etSearchAcDeployNameplateSensorList.setCursorVisible(true);
-            AppUtils.openInputMethodManager(mActivity, etSearchAcDeployNameplateSensorList);
-        }else if (id == R.id.iv_clear_ac_deploy_nameplate_sensor_list ) {
-            etSearchAcDeployNameplateSensorList.getText().clear();
-        }else if (id == R.id.tv_search_cancel_ac_deploy_nameplate_sensor_list) {
-            etSearchAcDeployNameplateSensorList.getText().clear();
-            mPresenter.requestWithDirection(DIRECTION_DOWN,null);
-            setSearchHistoryVisible(false);
-            AppUtils.dismissInputMethodManager(mActivity, etSearchAcDeployNameplateSensorList);
-        }else if (id == R.id.rb_select_all_ac_deploy_nameplate_sensor_list) {
-            mPresenter.doSelectAll();
-        }else if (id == R.id.tv_add_ac_deploy_nameplate_sensor_list) {
-            if (mConfirmDialog != null) {
-                mConfirmDialog.show(mPresenter.mSelectList);
-            }
-        }else if (id == R.id.return_top_include) {
-            rvListInclude.smoothScrollToPosition(0);
-            returnTopInclude.setVisibility(View.GONE);
-        }
-    }
-
     @Override
     public void showProgressDialog() {
         if (mProgressUtils != null) {
@@ -428,5 +423,35 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
             return true;
         }
         return false;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        AppUtils.dismissInputMethodManager(mActivity,etSearchAcDeployNameplateSensorList);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.iv_arrow_left_ac_deploy_nameplate_sensor_list) {
+            mActivity.finish();
+        }else if  (id == R.id.iv_clear_ac_deploy_nameplate_sensor_list ) {
+            etSearchAcDeployNameplateSensorList.getText().clear();
+        }else if (id == R.id.tv_search_cancel_ac_deploy_nameplate_sensor_list) {
+            etSearchAcDeployNameplateSensorList.getText().clear();
+            mPresenter.requestWithDirection(DIRECTION_DOWN,null);
+            setSearchHistoryVisible(false);
+            AppUtils.dismissInputMethodManager(mActivity, etSearchAcDeployNameplateSensorList);
+        }else if (id == R.id.rb_select_all_ac_deploy_nameplate_sensor_list) {
+            mPresenter.doSelectAll();
+        }else if (id == R.id.tv_add_ac_deploy_nameplate_sensor_list) {
+            if (mConfirmDialog != null) {
+                mConfirmDialog.show(mPresenter.mSelectList);
+            }
+        }else if (id == R.id.return_top_include) {
+            rvListInclude.smoothScrollToPosition(0);
+            returnTopInclude.setVisibility(View.GONE);
+        }
     }
 }
