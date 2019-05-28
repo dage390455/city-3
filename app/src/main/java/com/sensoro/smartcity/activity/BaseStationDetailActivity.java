@@ -61,9 +61,7 @@ import static android.graphics.Typeface.DEFAULT_BOLD;
 /**
  * 基站详情
  */
-public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailActivityView, BaseStationDetailActivityPresenter>
-        implements OnChartValueSelectedListener, IBaseStationDetailActivityView,
-        MonitorDeployDetailPhotoAdapter.OnRecyclerViewItemClickListener {
+public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailActivityView, BaseStationDetailActivityPresenter> implements OnChartValueSelectedListener, IBaseStationDetailActivityView, MonitorDeployDetailPhotoAdapter.OnRecyclerViewItemClickListener {
 
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
@@ -239,7 +237,10 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         xAxis.setDrawAxisLine(true);
         xAxis.setValueFormatter(new MyXFormatter());
 
-        xAxis.setLabelCount(3);
+        xAxis.setLabelCount(3, true);
+        xAxis.setAvoidFirstLastClipping(true);
+
+//        xAxis.s
 
 
         YAxis leftAxis = chart.getAxisLeft();
@@ -261,7 +262,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
 
         chart.setOnTouchListener(touchListener);
-        chart.setNoDataText("暂无数据");
+        chart.setNoDataText("");
 
         chart.setOnChartGestureListener(onChartGestureListener);
     }
@@ -326,25 +327,18 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
      */
 
     View.OnTouchListener touchListener = new View.OnTouchListener() {
-        float ratio = 3f;
-        float x0 = 0f;
-        float y0 = 0f;
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    x0 = event.getX();
-                    y0 = event.getY();
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    float dx = Math.abs(event.getX() - x0);
-                    float dy = Math.abs(event.getY() - y0);
-                    x0 = event.getX();
-                    y0 = event.getY();
-                    chart.requestDisallowInterceptTouchEvent(dx * ratio > dy);
-                    break;
+
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+
+                scrollView.requestDisallowInterceptTouchEvent(false);
+            } else {
+                scrollView.requestDisallowInterceptTouchEvent(true);
+
             }
+
             return false;
         }
     };
@@ -388,7 +382,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
         YAxis leftAxis = chart.getAxisLeft();
 
-//        leftAxis.setAxisMaximum(max);
+        leftAxis.setAxisMaximum(max);
 //        leftAxis.setAxisMinimum(min);
         chart.setData(lineData);
         final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
@@ -399,8 +393,41 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     }
 
     @Override
+    public void updateCharEmpty() {
+
+        LineData data = new LineData();
+
+        YAxis leftAxis = chart.getAxisLeft();
+        chart.setData(data);
+
+
+        leftAxis.setAxisMaximum(100);
+        leftAxis.setAxisMinimum(10);
+
+
+//        XAxis xAxis = chart.getXAxis();
+//
+//        Date dayBegin = DateUtil.getDayBegin();
+//        Date dayEnd = DateUtil.getDayEnd();
+//
+//        xAxis.setAxisMaximum(dayBegin.getTime());
+//        xAxis.setAxisMaximum(dayEnd.getTime());
+
+
+        chart.invalidate();
+
+
+    }
+
+    @Override
     public void updateDetailData(BaseStationDetailModel model) {
-        acBasestationTvName.setText(model.getName());
+        if (!TextUtils.isEmpty(model.getName())) {
+            acBasestationTvName.setText(model.getName());
+
+        } else {
+            acBasestationTvName.setText(model.getSn());
+
+        }
 
 
         if ("station".equals(model.getType())) {
@@ -636,6 +663,10 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         @Override
         public String getAxisLabel(float value, AxisBase axis) {
 
+
+//            axis  else {
+//                    return null;
+//                }
             return mPresenter.stampToDate(value + "");
 
         }

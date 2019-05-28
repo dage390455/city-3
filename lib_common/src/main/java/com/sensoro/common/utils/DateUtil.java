@@ -1,6 +1,7 @@
 package com.sensoro.common.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -17,6 +18,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+
 /**
  * Created by bruceli on 2015/6/16.
  */
@@ -546,10 +548,11 @@ public class DateUtil {
 
     /**
      * 解析格林尼治时间戳
+     *
      * @param time 格式为：2019-05-15T09:09:55.000Z
      */
     public static String parseUTC(String time) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z",Locale.ROOT);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z", Locale.ROOT);
         Date z = dateFormat.parse(time.replace("Z", " UTC"));
         dateFormat.applyPattern("yyyy.MM.dd HH:mm:ss");
         return dateFormat.format(z);
@@ -866,5 +869,37 @@ public class DateUtil {
         begincal = new GregorianCalendar(beginYear, beginMonth, max);
         list.add(begincal.getTime());
         return list;
+    }
+
+    /**
+     * 获取过去第几天的日期
+     *
+     * @param past
+     * @return
+     */
+    public static Date getPastDate(int past) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - past);
+        Date today = calendar.getTime();
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//        String result = format.format(today);
+//        Log.e(null, result);
+        return today;
+    }
+
+    /**
+     * 获取未来 第 past 天的日期
+     *
+     * @param past
+     * @return
+     */
+    public static String getFetureDate(int past) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + past);
+        Date today = calendar.getTime();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String result = format.format(today);
+        Log.e(null, result);
+        return result;
     }
 }

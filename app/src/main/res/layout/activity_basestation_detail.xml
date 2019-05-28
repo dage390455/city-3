@@ -140,10 +140,10 @@
                         android:layout_width="wrap_content"
 
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
                         android:layout_below="@+id/ac_basestation_tv_channel_title"
                         android:textColor="@color/c_252525"
-                        android:textSize="16dp" />
+                        android:textSize="16dp"
+                        android:visibility="gone" />
 
 
                     <ImageView
@@ -205,8 +205,9 @@
                         android:layout_height="250dp"
                         android:layout_below="@+id/top_state_rl"
 
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginBottom="16dp" />
+                        android:layout_marginBottom="16dp"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp" />
 
                 </LinearLayout>
 
