@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -227,21 +228,21 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         chart.setScaleYEnabled(false);
         chart.setScaleXEnabled(false);
 
-
+//        chart.setViewPortOffsets(120, 20, 60, 100);
         XAxis xAxis = chart.getXAxis();
         xAxis.setTypeface(DEFAULT_BOLD);
         xAxis.setTextSize(10f);
         xAxis.setTextColor(Color.parseColor("#252525"));
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
-        xAxis.setAxisLineColor(Color.BLACK);
+
+        xAxis.setAxisLineColor(ContextCompat.getColor(this, R.color.c_dfdfdf));
+
         xAxis.setDrawAxisLine(true);
         xAxis.setValueFormatter(new MyXFormatter());
 
         xAxis.setLabelCount(3, true);
         xAxis.setAvoidFirstLastClipping(true);
-
-//        xAxis.s
 
 
         YAxis leftAxis = chart.getAxisLeft();
@@ -410,9 +411,9 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         YAxis leftAxis = chart.getAxisLeft();
 
         leftAxis.resetAxisMaximum();
-        leftAxis.resetAxisMaximum();
-        leftAxis.setAxisMaximum(max);
-
+        leftAxis.resetAxisMinimum();
+//        leftAxis.setAxisMaximum(max);
+//
 //        leftAxis.setAxisMinimum(min);
         chart.setData(lineData);
         final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
@@ -428,8 +429,8 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         LineData data = new LineData();
 
         YAxis leftAxis = chart.getAxisLeft();
-        leftAxis.setAxisMaximum(100);
-        leftAxis.setAxisMinimum(10);
+        leftAxis.setAxisMaximum(100f);
+        leftAxis.setAxisMinimum(0f);
         chart.setData(data);
 
 
@@ -703,9 +704,12 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
         @Override
         public String getFormattedValue(float value) {
-
-
-            String p = decimalFormat.format(value);
+            String p;
+            if (value > 0) {
+                p = decimalFormat.format(value);
+            } else {
+                p = 0 + "";
+            }
             return (p + "\u2103");
 
         }
