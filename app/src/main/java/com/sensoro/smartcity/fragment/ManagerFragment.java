@@ -21,8 +21,8 @@ import com.sensoro.smartcity.activity.CameraListActivity;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
 import com.sensoro.smartcity.presenter.ManagerFragmentPresenter;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
-import com.sensoro.smartcity.widget.dialog.TipDialogUtils;
+import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
+import com.sensoro.common.widgets.dialog.TipDialogUtils;
 import com.sensoro.smartcity.widget.dialog.VersionDialogUtils;
 
 import java.util.Objects;

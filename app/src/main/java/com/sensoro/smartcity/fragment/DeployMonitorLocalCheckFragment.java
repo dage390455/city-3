@@ -35,7 +35,7 @@ import com.sensoro.smartcity.presenter.DeployMonitorLocalCheckFragmentPresenter;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.dialog.DeployMonitorCheckDialogUtils;
 import com.sensoro.smartcity.widget.dialog.EarlyWarningThresholdDialogUtils;
-import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
+import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
 import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.common.widgets.SensoroToast;
 

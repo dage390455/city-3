@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.presenter;
+package com.sensoro.nameplate.presenter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,12 +6,12 @@ import android.text.TextUtils;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.EventData;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.imainviews.IDeployNameplateNameActivityView;
+import com.sensoro.nameplate.R;
+import com.sensoro.nameplate.IMainViews.IDeployNameplateNameActivityView;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -26,9 +26,9 @@ public class DeployNameplateNameActivityPresenter extends BasePresenter<IDeployN
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        String sn = mContext.getIntent().getStringExtra(EXTRA_DEPLOY_TO_SN);
+        String sn = mContext.getIntent().getStringExtra(Constants.EXTRA_DEPLOY_TO_SN);
 //
-        String name = mContext.getIntent().getStringExtra(EXTRA_SETTING_NAME_ADDRESS);
+        String name = mContext.getIntent().getStringExtra(Constants.EXTRA_SETTING_NAME_ADDRESS);
         List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_NAMEPLATE_NAME);
         if (list != null) {
             mHistoryKeywords.addAll(list);

@@ -37,6 +37,8 @@ import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
+import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
+import com.sensoro.common.widgets.dialog.TitleTipDialogUtils;
 import com.sensoro.nameplate.IMainViews.INameplateListActivityView;
 import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.adapter.NameplateListAdapter;
@@ -46,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NameplateListActivity extends BaseActivity<INameplateListActivityView, NameplateListActivityPresenter>
-        implements INameplateListActivityView, View.OnClickListener {
+        implements INameplateListActivityView, View.OnClickListener, TitleTipDialogUtils.TitleTipDialogUtilsClickListener {
 
 
     ImageView ivNameplateListTopBack;
@@ -78,6 +80,7 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
     private TipOperationDialogUtils historyClearDialog;
     //
     private NameplateListAdapter nameplateListAdapter;
+    private TitleTipDialogUtils mDeleteDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -121,12 +124,21 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
         btnSearchClear.setOnClickListener(this);
         ivReturnTop.setOnClickListener(this);
 
+
         //
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+        //
+        mDeleteDialog = new TitleTipDialogUtils(mActivity);
+        mDeleteDialog.setTipTitleText(mActivity.getString(R.string.is_delete_nameplate));
+        mDeleteDialog.setTipCancelText(mActivity.getString(R.string.cancel),mActivity.getResources().getColor(R.color.c_252525));
+        mDeleteDialog.setTipConfirmText(mActivity.getString(R.string.delete),mActivity.getResources().getColor(R.color.c_f35a58));
+        mDeleteDialog.setTipMessageText(mActivity.getString(R.string.redploy_after_delete));
+        mDeleteDialog.setTipDialogUtilsClickListener(this);
+        //
 //        mDeviceCameraContentAdapter = new DeviceCameraContentAdapter(mActivity);
 //        mDeviceCameraContentAdapter.setOnAlarmHistoryLogConfirmListener(this);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         rvNameplateContent.setLayoutManager(linearLayoutManager);
 //        acHistoryLogRcContent.setAdapter(mDeviceCameraContentAdapter);
 //        CustomDivider dividerItemDecoration = new CustomDivider(mActivity, DividerItemDecoration.VERTICAL);
@@ -155,7 +167,7 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
         //
         nameplateListAdapter = new NameplateListAdapter(mActivity);
         final LinearLayoutManager manager = new LinearLayoutManager(mActivity);
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        manager.setOrientation(RecyclerView.VERTICAL);
 //        CustomDivider dividerItemDecoration = new CustomDivider(mActivity, DividerItemDecoration.VERTICAL);
 //        rvNameplateContent.addItemDecoration(dividerItemDecoration);
         rvNameplateContent.setLayoutManager(manager);
@@ -173,6 +185,9 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
             @Override
             public void onDelete(int position) {
                 //删除
+                if (mDeleteDialog != null) {
+                    mDeleteDialog.show();
+                }
             }
         });
         rvNameplateContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -319,6 +334,10 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
         if (returnTopAnimation != null) {
             returnTopAnimation.cancel();
             returnTopAnimation = null;
+        }
+
+        if (mDeleteDialog != null) {
+            mDeleteDialog.destroy();
         }
     }
 
@@ -525,6 +544,22 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
             rvNameplateContent.smoothScrollToPosition(0);
             ivReturnTop.setVisibility(View.GONE);
             refreshLayout.closeHeaderOrFooter();
+        }
+    }
+
+    @Override
+    public void onCancelClick() {
+        toastShort("取消点击了");
+        if (mDeleteDialog != null) {
+            mDeleteDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onConfirmClick() {
+        toastShort("确认点击了");
+        if (mDeleteDialog != null) {
+            mDeleteDialog.dismiss();
         }
     }
 

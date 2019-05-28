@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    >
+
+    <TextView
+        android:id="@+id/tv_title_item_dialog_associate_sensor_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="18dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/c_252525"
+        android:text="@string/associated_sensor"
+        />
+    <ImageView
+        android:id="@+id/iv_close_item_dialog_associate_sensor_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/deploy_install_test_close"
+        android:padding="16dp"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@null"
+        />
+
+    <TextView
+        android:id="@+id/tv_count_item_dialog_associate_sensor_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_below="@id/tv_title_item_dialog_associate_sensor_confirm"
+        android:textSize="14dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/c_252525"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_content_item_dialog_associate_sensor_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_count_item_dialog_associate_sensor_confirm"
+        android:layout_marginBottom="16dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+
+    <TextView
+        android:id="@+id/tv_confirm_item_dialog_associate_sensor_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/confirm_associate"
+        android:textColor="@color/white"
+        android:textSize="14dp"
+        android:gravity="center"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="6dp"
+        android:layout_below="@id/rv_content_item_dialog_associate_sensor_confirm"
+        android:background="@drawable/shape_bg_corner_4_29c_shadow"
+        />
+    <TextView
+        android:id="@+id/tv_cancel_item_dialog_associate_sensor_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="14dp"
+        android:layout_below="@id/tv_confirm_item_dialog_associate_sensor_confirm"
+        android:gravity="center"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        />
+
+
+
+</RelativeLayout>

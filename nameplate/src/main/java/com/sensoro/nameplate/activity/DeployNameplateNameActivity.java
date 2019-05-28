@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.activity;
+package com.sensoro.nameplate.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,17 +16,18 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.sensoro.common.adapter.NameAddressHistoryAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.NameAddressHistoryAdapter;
-import com.sensoro.smartcity.imainviews.IDeployNameplateNameActivityView;
-import com.sensoro.smartcity.presenter.DeployNameplateNameActivityPresenter;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.nameplate.IMainViews.IDeployNameplateNameActivityView;
+import com.sensoro.nameplate.R;
+import com.sensoro.nameplate.R2;
+import com.sensoro.nameplate.presenter.DeployNameplateNameActivityPresenter;
 
 import java.util.List;
 
@@ -36,21 +37,21 @@ import butterknife.OnClick;
 
 public class DeployNameplateNameActivity extends BaseActivity<IDeployNameplateNameActivityView, DeployNameplateNameActivityPresenter>
         implements IDeployNameplateNameActivityView, RecycleViewItemClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
-    @BindView(R.id.et_name_ac_deploy_nameplate_name)
+    @BindView(R2.id.et_name_ac_deploy_nameplate_name)
     EditText acNameAddressEt;
-    @BindView(R.id.ll_edit_ac_deploy_nameplate_name)
+    @BindView(R2.id.ll_edit_ac_deploy_nameplate_name)
     LinearLayout acNamAddressLl;
-    @BindView(R.id.tv_history_ac_deploy_nameplate_name)
+    @BindView(R2.id.tv_history_ac_deploy_nameplate_name)
     TextView acNamAddressTvHistory;
-    @BindView(R.id.rc_history_ac_deploy_nameplate_name)
+    @BindView(R2.id.rc_history_ac_deploy_nameplate_name)
     RecyclerView acNamAddressRcHistory;
-    @BindView(R.id.iv_delete_ac_deploy_nameplate_name)
+    @BindView(R2.id.iv_delete_ac_deploy_nameplate_name)
     ImageView ivAcNamAddressDeleteHistory;
-    @BindView(R.id.include_text_title_tv_cancel)
+    @BindView(R2.id.include_text_title_tv_cancel)
     TextView includeTextTitleTvCancel;
-    @BindView(R.id.include_text_title_tv_title)
+    @BindView(R2.id.include_text_title_tv_title)
     TextView includeTextTitleTvTitle;
-    @BindView(R.id.include_text_title_tv_subtitle)
+    @BindView(R2.id.include_text_title_tv_subtitle)
     TextView includeTextTitleTvSubtitle;
     private NameAddressHistoryAdapter mHistoryAdapter;
     private ProgressUtils mProgressUtils;
@@ -182,26 +183,22 @@ public class DeployNameplateNameActivity extends BaseActivity<IDeployNameplateNa
     }
 
 
-    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel, R.id.iv_delete_ac_deploy_nameplate_name,
-            R.id.et_name_ac_deploy_nameplate_name})
+    @OnClick({R2.id.include_text_title_tv_subtitle, R2.id.include_text_title_tv_cancel, R2.id.iv_delete_ac_deploy_nameplate_name,
+            R2.id.et_name_ac_deploy_nameplate_name})
     public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.include_text_title_tv_subtitle:
-                AppUtils.dismissInputMethodManager(mActivity, acNameAddressEt);
-                String text = acNameAddressEt.getText().toString().trim();
-                mPresenter.doChoose(text);
-                break;
-            case R.id.include_text_title_tv_cancel:
-                AppUtils.dismissInputMethodManager(mActivity, acNameAddressEt);
-                finishAc();
-                break;
-            case R.id.iv_delete_ac_deploy_nameplate_name:
-                showHistoryClearDialog();
-                break;
-            case R.id.et_name_ac_deploy_nameplate_name:
-                acNameAddressEt.setCursorVisible(true);
-                acNameAddressEt.requestFocus();
-                break;
+        int id = view.getId();
+        if (id == R.id.include_text_title_tv_subtitle) {
+            AppUtils.dismissInputMethodManager(mActivity, acNameAddressEt);
+            String text = acNameAddressEt.getText().toString().trim();
+            mPresenter.doChoose(text);
+        }else if(id == R.id.include_text_title_tv_cancel) {
+            AppUtils.dismissInputMethodManager(mActivity, acNameAddressEt);
+            finishAc();
+        }else if(id == R.id.iv_delete_ac_deploy_nameplate_name) {
+            showHistoryClearDialog();
+        }else if(id == R.id.et_name_ac_deploy_nameplate_name) {
+            acNameAddressEt.setCursorVisible(true);
+            acNameAddressEt.requestFocus();
         }
 
     }

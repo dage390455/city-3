@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.nameplate.IMainViews.INameplateDetailActivityView;
+import com.sensoro.nameplate.activity.DeployNameplateAddSensorFromListActivity;
 import com.sensoro.nameplate.activity.EditNameplateDetailActivity;
 
 public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDetailActivityView> {
@@ -22,6 +23,14 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
     }
 
     public void doNesSensor(int position) {
+        switch (position){
+            case 0:
+                break;
+            case 1:
+                Intent intent = new Intent(mContext, DeployNameplateAddSensorFromListActivity.class);
+                getView().startAC(intent);
+                break;
+        }
 
     }
 

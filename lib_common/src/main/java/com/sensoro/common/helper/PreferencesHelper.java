@@ -429,8 +429,8 @@ public final class PreferencesHelper implements Constants {
         String spFileName = null;
         switch (type) {
 
-            case SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST:
-                spFileName = SearchHistoryTypeConstants.SP_FILE_SEARCH_CAMERALIST;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_CAMERA_LIST:
+                spFileName = SearchHistoryTypeConstants.SP_FILE_SEARCH_CAMERA_LIST;
                 break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_BASESTATION:
                 spFileName = SearchHistoryTypeConstants.SP_FILE_BASESTATION;
@@ -455,6 +455,9 @@ public final class PreferencesHelper implements Constants {
                 break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_NAMEPLATE_NAME:
                 spFileName = SearchHistoryTypeConstants.SP_FILE_DEPLOY_NAMEPLATE_NAME;
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_NAMEPLATE_ADD_FROM_LIST:
+                spFileName = SearchHistoryTypeConstants.SP_FILE_NAMEPLATE_ADD_FROM_LIST;
                 break;
         }
         return spFileName;

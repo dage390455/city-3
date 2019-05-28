@@ -61,7 +61,9 @@ import static android.graphics.Typeface.DEFAULT_BOLD;
 /**
  * 基站详情
  */
-public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailActivityView, BaseStationDetailActivityPresenter> implements OnChartValueSelectedListener, IBaseStationDetailActivityView, MonitorDeployDetailPhotoAdapter.OnRecyclerViewItemClickListener {
+public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailActivityView, BaseStationDetailActivityPresenter>
+        implements OnChartValueSelectedListener, IBaseStationDetailActivityView,
+        MonitorDeployDetailPhotoAdapter.OnRecyclerViewItemClickListener {
 
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
@@ -324,7 +326,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
      */
 
     View.OnTouchListener touchListener = new View.OnTouchListener() {
-        float ratio = 1.8f;
+        float ratio = 3f;
         float x0 = 0f;
         float y0 = 0f;
 
@@ -340,7 +342,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
                     float dy = Math.abs(event.getY() - y0);
                     x0 = event.getX();
                     y0 = event.getY();
-                    scrollView.requestDisallowInterceptTouchEvent(dx * ratio > dy);
+                    chart.requestDisallowInterceptTouchEvent(dx * ratio > dy);
                     break;
             }
             return false;

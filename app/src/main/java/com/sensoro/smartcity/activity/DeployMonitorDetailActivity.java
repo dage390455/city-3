@@ -7,6 +7,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -34,7 +36,7 @@ import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TouchRecycleView;
 import com.sensoro.common.widgets.CustomCornerDialog;
-import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
+import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
 import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.List;
@@ -171,7 +173,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
         acDeployDeviceDetailRcAlarmContact.setIntercept(true);
         mAlarmContactAdapter = new DeployDeviceDetailAlarmContactAdapter(mActivity);
         LinearLayoutManager manager = new LinearLayoutManager(mActivity);
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        manager.setOrientation(RecyclerView.VERTICAL);
         acDeployDeviceDetailRcAlarmContact.setLayoutManager(manager);
         acDeployDeviceDetailRcAlarmContact.setAdapter(mAlarmContactAdapter);
     }

@@ -18,6 +18,7 @@ import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TouchRecycleView;
+import com.sensoro.common.widgets.dialog.TipDialogUtils;
 import com.sensoro.nameplate.IMainViews.INameplateDetailActivityView;
 import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.R2;
@@ -32,7 +33,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivityView, NameplateDetailActivityPresenter> implements INameplateDetailActivityView {
+public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivityView, NameplateDetailActivityPresenter>
+        implements INameplateDetailActivityView, TipDialogUtils.TipDialogUtilsClickListener {
     @BindView(R2.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
     @BindView(R2.id.include_text_title_tv_title)
@@ -62,6 +64,7 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     private AddedSensorAdapter mAddedSensorAdapter;
     private TagAdapter tagAdapter;
     private final List<String> options = new ArrayList<>();
+    private TipDialogUtils mDeleteDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -71,9 +74,18 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         options.add("扫码关联");
         options.add("传感器列表中关联");
+        initNormalDialog();
         initTag();
         initRvAddedSensorList();
         mPresenter.initData(mActivity);
+    }
+
+    private void initNormalDialog() {
+        mDeleteDialog = new TipDialogUtils(mActivity);
+        mDeleteDialog.setTipMessageText(mActivity.getString(R.string.delete_associate_sensor));
+        mDeleteDialog.setTipCacnleText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_252525));
+        mDeleteDialog.setTipConfirmText(mActivity.getString(R.string.delete), mActivity.getResources().getColor(R.color.c_f35a58));
+        mDeleteDialog.setTipDialogUtilsClickListener(this);
     }
 
     private void initTag() {
@@ -96,7 +108,7 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
 
     private void initRvAddedSensorList() {
         mAddedSensorAdapter = new AddedSensorAdapter(mActivity);
-        LinearLayoutManager manager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager manager = new LinearLayoutManager(mActivity, RecyclerView.VERTICAL, false);
         CustomDrawableDivider bottomNoDividerItemDecoration =
                 new CustomDrawableDivider(mActivity, CustomDrawableDivider.VERTICAL);
         rvNameplateAssociatedSensor.addItemDecoration(bottomNoDividerItemDecoration);
@@ -107,6 +119,9 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
             @Override
             public void onDeleteClick(int position) {
 //                toastShort("点击了");
+                if (mDeleteDialog != null) {
+                    mDeleteDialog.show();
+                }
             }
         });
 
@@ -162,5 +177,27 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     @Override
     public void setIntentResult(int resultCode, Intent data) {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mDeleteDialog != null) {
+            mDeleteDialog.destory();
+        }
+    }
+
+    @Override
+    public void onCancelClick() {
+        if (mDeleteDialog != null) {
+            mDeleteDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onConfirmClick() {
+        if (mDeleteDialog != null) {
+            mDeleteDialog.dismiss();
+        }
     }
 }

@@ -22,6 +22,7 @@ import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.model.SecurityRisksAdapterModel;
 import com.sensoro.common.model.SecurityRisksTagModel;
 import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.common.widgets.dialog.TipDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.SecurityRisksContentAdapter;
 import com.sensoro.smartcity.adapter.SecurityRisksReferTagAdapter;
@@ -29,7 +30,6 @@ import com.sensoro.smartcity.adapter.touchHelper.SecurityRiskContentTouchHelper;
 import com.sensoro.smartcity.imainviews.ISecurityRisksActivityView;
 import com.sensoro.smartcity.presenter.SecurityRisksPresenter;
 import com.sensoro.smartcity.widget.dialog.TagDialogUtils;
-import com.sensoro.smartcity.widget.dialog.TipDialogUtils;
 
 import java.util.ArrayList;
 import java.util.List;

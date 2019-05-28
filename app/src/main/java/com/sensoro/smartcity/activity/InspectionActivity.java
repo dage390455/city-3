@@ -18,7 +18,7 @@ import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
-import com.sensoro.smartcity.widget.dialog.TipDialogUtils;
+import com.sensoro.common.widgets.dialog.TipDialogUtils;
 
 import java.util.List;
 

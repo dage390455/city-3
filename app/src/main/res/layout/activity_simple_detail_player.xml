@@ -99,7 +99,7 @@
             android:layout_gravity="center_vertical"
             android:contentDescription="@null"
             android:scaleType="centerInside"
-            android:src="@drawable/deploy_install_test_close"
+            android:src="@mipmap/deploy_install_test_close"
             android:visibility="gone" />
 
 
