@@ -143,9 +143,6 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
 
                 data = deviceCameraListRsp.getData();
 
-
-                data.getVpn();
-
                 if (null != data.getVpn() && null != data.getNetwork()) {
                     data.getNetwork().setVpn(data.getVpn().getIp());
                 }
@@ -233,7 +230,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
 
             from = DateUtil.getPastDate(7).getTime();
 
-            interval = "1h";
+            interval = "4h";
 
         }
         getView().showProgressDialog();
@@ -504,10 +501,6 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
             intent.setClass(mContext, MonitorPointMapENActivity.class);
         }
 
-//        ArrayList arrayList = new ArrayList();
-////        116.49411568430277**********39.90086870238459
-//        arrayList.add(116.49411568430277);
-//        arrayList.add(39.90086870238459);
 
 
         mDeviceInfo.setLonlat(data.getLonlatLabel());

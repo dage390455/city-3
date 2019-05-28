@@ -50,6 +50,7 @@ import com.sensoro.smartcity.presenter.BaseStationDetailActivityPresenter;
 import com.sensoro.smartcity.util.AppUtils;
 
 import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -326,22 +327,48 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
      * 处理事件冲突
      */
 
+//    View.OnTouchListener touchListener = new View.OnTouchListener() {
+//
+//        @Override
+//        public boolean onTouch(View v, MotionEvent event) {
+//
+//            if (event.getAction() == MotionEvent.ACTION_UP) {
+//
+//                scrollView.requestDisallowInterceptTouchEvent(false);
+//            } else {
+//                scrollView.requestDisallowInterceptTouchEvent(true);
+//
+//            }
+//
+//            return false;
+//        }
+//    };
+
+
     View.OnTouchListener touchListener = new View.OnTouchListener() {
+        float ratio = 1.2f;
+        float x0 = 0f;
+        float y0 = 0f;
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-                scrollView.requestDisallowInterceptTouchEvent(false);
-            } else {
-                scrollView.requestDisallowInterceptTouchEvent(true);
-
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    x0 = event.getX();
+                    y0 = event.getY();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    float dx = Math.abs(event.getX() - x0);
+                    float dy = Math.abs(event.getY() - y0);
+                    x0 = event.getX();
+                    y0 = event.getY();
+                    scrollView.requestDisallowInterceptTouchEvent(dx * ratio > dy);
+                    break;
             }
-
             return false;
         }
     };
+
 
     private void initRcDeployDeviceTag() {
         rcTag.setIntercept(true);
@@ -398,20 +425,17 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         LineData data = new LineData();
 
         YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setAxisMaximum(100);
+        leftAxis.setAxisMinimum(10);
         chart.setData(data);
 
 
-        leftAxis.setAxisMaximum(100);
-        leftAxis.setAxisMinimum(10);
+        XAxis xAxis = chart.getXAxis();
 
+        Date dayBegin = DateUtil.getPastDate(1);
 
-//        XAxis xAxis = chart.getXAxis();
-//
-//        Date dayBegin = DateUtil.getDayBegin();
-//        Date dayEnd = DateUtil.getDayEnd();
-//
-//        xAxis.setAxisMaximum(dayBegin.getTime());
-//        xAxis.setAxisMaximum(dayEnd.getTime());
+        xAxis.setAxisMinimum(dayBegin.getTime());
+        xAxis.setAxisMaximum(System.currentTimeMillis());
 
 
         chart.invalidate();
