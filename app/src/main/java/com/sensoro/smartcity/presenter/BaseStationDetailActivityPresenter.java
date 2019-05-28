@@ -230,7 +230,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
 
             from = DateUtil.getPastDate(7).getTime();
 
-            interval = "4h";
+            interval = "1h";
 
         }
         getView().showProgressDialog();
