@@ -698,7 +698,7 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
     //处理安装朝向
     private void handleOrientation() {
         ArrayList<String> strings = new ArrayList<>();
-        for (DeployCameraConfigModel deployMethod : deployMethods) {
+        for (DeployCameraConfigModel deployMethod : deployOrientations) {
             strings.add(deployMethod.name);
         }
         AppUtils.showDialog(mContext, new SelectDialog.SelectDialogListener() {
@@ -707,6 +707,8 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
                 mOrientationConfig = deployOrientations.get(position);
                 String orientation = mOrientationConfig.name;
                 getView().setDeployOrientation(orientation);
+                getView().setUploadBtnStatus(checkCanUpload());
+
             }
         }, strings);
     }
@@ -723,6 +725,7 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
                 mMethodConfig = deployMethods.get(position);
                 String method = mMethodConfig.name;
                 getView().setDeployMethod(method);
+                getView().setUploadBtnStatus(checkCanUpload());
             }
         }, strings);
     }
