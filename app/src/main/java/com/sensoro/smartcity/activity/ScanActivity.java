@@ -21,12 +21,9 @@ import com.sensoro.smartcity.imainviews.IScanActivityView;
 import com.sensoro.smartcity.presenter.ScanActivityPresenter;
 import com.sensoro.smartcity.widget.ViewFinderView;
 
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.szx.simplescanner.zbar.BarcodeFormat;
 import cn.szx.simplescanner.zbar.Result;
 import cn.szx.simplescanner.zbar.ZBarScannerView;
 
@@ -75,11 +72,12 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
         viewFinderView = new ViewFinderView(mActivity);
         zBarScannerView = new ZBarScannerView(mActivity, viewFinderView, this);
         scanQrViewRoot.addView(zBarScannerView);
-        ArrayList<BarcodeFormat> formats = new ArrayList<>(2);
-        formats.add(BarcodeFormat.QRCODE);
-        //支持code39的条形码扫描
-        formats.add(BarcodeFormat.CODE39);
-        zBarScannerView.setFormats(formats);
+        //TODO 暂时添加支持所有类型的扫描
+//        ArrayList<BarcodeFormat> formats = new ArrayList<>(2);
+//        formats.add(BarcodeFormat.QRCODE);
+//        支持code39的条形码扫描
+//        formats.add(BarcodeFormat.CODE39);
+//        zBarScannerView.setFormats(formats);
 
     }
 
