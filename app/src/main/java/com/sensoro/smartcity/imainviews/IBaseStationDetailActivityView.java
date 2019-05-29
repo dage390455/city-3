@@ -14,6 +14,8 @@ public interface IBaseStationDetailActivityView extends IToast, IProgressDialog,
 
     void updateChartData(LineData lineData, float max, float min);
 
+    void updateCharEmpty();
+
     void updateDetailData(BaseStationDetailModel model);
 
     void updateNetDelay(String delay, int color);

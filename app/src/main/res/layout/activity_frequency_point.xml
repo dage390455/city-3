@@ -16,17 +16,12 @@
         android:background="@color/c_f4f4f4" />
 
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
 
-        android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:layout_height="match_parent"
 
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingTop="16dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="16dp">
+        android:orientation="vertical">
 
 
         <TextView
@@ -45,7 +40,7 @@
             android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            android:background="@color/white"
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
@@ -53,9 +48,13 @@
                 android:id="@+id/ac_frequency_point_rc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white" />
+                android:paddingLeft="20dp"
+                android:paddingTop="16dp"
+
+                android:paddingRight="20dp"
+                android:paddingBottom="16dp" />
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>

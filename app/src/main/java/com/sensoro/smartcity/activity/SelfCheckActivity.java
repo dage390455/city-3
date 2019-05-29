@@ -65,7 +65,7 @@ public class SelfCheckActivity extends BaseActivity<ISelfCheckActivityView, Self
 
         } else {
             ic_no_content.setVisibility(View.VISIBLE);
-            acSelfCheckRc.setVisibility(View.GONE);
+            refreshLayout.setVisibility(View.GONE);
 
         }
         refreshLayout.setEnabled(false);

@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -50,6 +51,7 @@ import com.sensoro.smartcity.presenter.BaseStationDetailActivityPresenter;
 import com.sensoro.smartcity.util.AppUtils;
 
 import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -61,9 +63,7 @@ import static android.graphics.Typeface.DEFAULT_BOLD;
 /**
  * 基站详情
  */
-public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailActivityView, BaseStationDetailActivityPresenter>
-        implements OnChartValueSelectedListener, IBaseStationDetailActivityView,
-        MonitorDeployDetailPhotoAdapter.OnRecyclerViewItemClickListener {
+public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailActivityView, BaseStationDetailActivityPresenter> implements OnChartValueSelectedListener, IBaseStationDetailActivityView, MonitorDeployDetailPhotoAdapter.OnRecyclerViewItemClickListener {
 
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
@@ -228,18 +228,21 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         chart.setScaleYEnabled(false);
         chart.setScaleXEnabled(false);
 
-
+//        chart.setViewPortOffsets(120, 20, 60, 100);
         XAxis xAxis = chart.getXAxis();
         xAxis.setTypeface(DEFAULT_BOLD);
         xAxis.setTextSize(10f);
         xAxis.setTextColor(Color.parseColor("#252525"));
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
-        xAxis.setAxisLineColor(Color.BLACK);
+
+        xAxis.setAxisLineColor(ContextCompat.getColor(this, R.color.c_dfdfdf));
+
         xAxis.setDrawAxisLine(true);
         xAxis.setValueFormatter(new MyXFormatter());
 
-        xAxis.setLabelCount(3);
+        xAxis.setLabelCount(3, true);
+        xAxis.setAvoidFirstLastClipping(true);
 
 
         YAxis leftAxis = chart.getAxisLeft();
@@ -261,7 +264,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
 
         chart.setOnTouchListener(touchListener);
-        chart.setNoDataText("暂无数据");
+        chart.setNoDataText("");
 
         chart.setOnChartGestureListener(onChartGestureListener);
     }
@@ -326,28 +329,47 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
      */
 
     View.OnTouchListener touchListener = new View.OnTouchListener() {
-        float ratio = 3f;
-        float x0 = 0f;
-        float y0 = 0f;
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    x0 = event.getX();
-                    y0 = event.getY();
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    float dx = Math.abs(event.getX() - x0);
-                    float dy = Math.abs(event.getY() - y0);
-                    x0 = event.getX();
-                    y0 = event.getY();
-                    chart.requestDisallowInterceptTouchEvent(dx * ratio > dy);
-                    break;
+
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+
+                scrollView.requestDisallowInterceptTouchEvent(false);
+            } else {
+                scrollView.requestDisallowInterceptTouchEvent(true);
+
             }
+
             return false;
         }
     };
+
+
+//    View.OnTouchListener touchListener = new View.OnTouchListener() {
+//        float ratio = 12f;
+//        float x0 = 0f;
+//        float y0 = 0f;
+//
+//        @Override
+//        public boolean onTouch(View v, MotionEvent event) {
+//            switch (event.getAction()) {
+//                case MotionEvent.ACTION_DOWN:
+//                    x0 = event.getX();
+//                    y0 = event.getY();
+//                    break;
+//                case MotionEvent.ACTION_MOVE:
+//                    float dx = Math.abs(event.getX() - x0);
+//                    float dy = Math.abs(event.getY() - y0);
+//                    x0 = event.getX();
+//                    y0 = event.getY();
+//                    scrollView.requestDisallowInterceptTouchEvent(dx * ratio > dy);
+//                    break;
+//            }
+//            return false;
+//        }
+//    };
+
 
     private void initRcDeployDeviceTag() {
         rcTag.setIntercept(true);
@@ -388,7 +410,10 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
         YAxis leftAxis = chart.getAxisLeft();
 
+        leftAxis.resetAxisMaximum();
+        leftAxis.resetAxisMinimum();
 //        leftAxis.setAxisMaximum(max);
+//
 //        leftAxis.setAxisMinimum(min);
         chart.setData(lineData);
         final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
@@ -399,8 +424,38 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     }
 
     @Override
+    public void updateCharEmpty() {
+
+        LineData data = new LineData();
+
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setAxisMaximum(100f);
+        leftAxis.setAxisMinimum(0f);
+        chart.setData(data);
+
+
+        XAxis xAxis = chart.getXAxis();
+
+        Date dayBegin = DateUtil.getPastDate(1);
+
+        xAxis.setAxisMinimum(dayBegin.getTime());
+        xAxis.setAxisMaximum(System.currentTimeMillis());
+
+
+        chart.invalidate();
+
+
+    }
+
+    @Override
     public void updateDetailData(BaseStationDetailModel model) {
-        acBasestationTvName.setText(model.getName());
+        if (!TextUtils.isEmpty(model.getName())) {
+            acBasestationTvName.setText(model.getName());
+
+        } else {
+            acBasestationTvName.setText(model.getSn());
+
+        }
 
 
         if ("station".equals(model.getType())) {
@@ -636,6 +691,10 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         @Override
         public String getAxisLabel(float value, AxisBase axis) {
 
+
+//            axis  else {
+//                    return null;
+//                }
             return mPresenter.stampToDate(value + "");
 
         }
@@ -645,9 +704,12 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
         @Override
         public String getFormattedValue(float value) {
-
-
-            String p = decimalFormat.format(value);
+            String p;
+            if (value > 0) {
+                p = decimalFormat.format(value);
+            } else {
+                p = 0 + "";
+            }
             return (p + "\u2103");
 
         }

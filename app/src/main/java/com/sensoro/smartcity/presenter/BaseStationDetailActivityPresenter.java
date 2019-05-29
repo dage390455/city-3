@@ -143,9 +143,6 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
 
                 data = deviceCameraListRsp.getData();
 
-
-                data.getVpn();
-
                 if (null != data.getVpn() && null != data.getNetwork()) {
                     data.getNetwork().setVpn(data.getVpn().getIp());
                 }
@@ -220,13 +217,21 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         String interval = "1h";
 
         if ("day".equals(dayOrWeek)) {
-            Date dayBegin = DateUtil.getDayBegin();
-            from = dayBegin.getTime();
+//            Date dayBegin = DateUtil.getDayBegin();
+
+            from = DateUtil.getPastDate(1).getTime();
+
+
+//            from = dayBegin.getTime();
             interval = "30m";
         } else {
             Date beginDayOfWeek = DateUtil.getBeginDayOfWeek();
-            from = beginDayOfWeek.getTime();
+//            from = beginDayOfWeek.getTime();
+
+            from = DateUtil.getPastDate(7).getTime();
+
             interval = "1h";
+
         }
         getView().showProgressDialog();
 
@@ -238,10 +243,9 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
 
                 List<BaseStationChartDetailModel> data = deviceCameraListRsp.getData();
                 if (null != data && data.size() > 0) {
-
-
                     processChartData(data);
-
+                } else {
+                    getView().updateCharEmpty();
 
                 }
                 getView().dismissProgressDialog();
@@ -253,6 +257,8 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
+                getView().updateCharEmpty();
+
 
             }
         });
@@ -340,7 +346,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         data.setValueTextColor(Color.WHITE);
         data.setValueTextSize(9f);
         data.setDrawValues(false);
-        getView().updateChartData(data, max + 0.5f, min);
+        getView().updateChartData(data, max + 1f, min);
 
     }
 
@@ -351,13 +357,13 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         Date date = new Date(lt);
 
 
-        if (curentType.equals("day")) {
-            time = hmssimpleDateFormat.format(date);
+//        if (curentType.equals("day")) {
+//            time = hmssimpleDateFormat.format(date);
+//
+//        } else {
+        time = simpleDateFormat.format(date);
 
-        } else {
-            time = simpleDateFormat.format(date);
-
-        }
+//        }
 
 
         return time;
@@ -495,10 +501,6 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
             intent.setClass(mContext, MonitorPointMapENActivity.class);
         }
 
-//        ArrayList arrayList = new ArrayList();
-////        116.49411568430277**********39.90086870238459
-//        arrayList.add(116.49411568430277);
-//        arrayList.add(39.90086870238459);
 
 
         mDeviceInfo.setLonlat(data.getLonlatLabel());
