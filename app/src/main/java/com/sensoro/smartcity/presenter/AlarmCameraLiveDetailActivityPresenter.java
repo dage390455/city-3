@@ -5,12 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
@@ -20,6 +23,10 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAlarmCameraLiveDetailActivityView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,25 +34,86 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
+
 public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarmCameraLiveDetailActivityView> {
     private Activity mActivity;
     private ArrayList<AlarmCameraLiveRsp.DataBean> mList = new ArrayList<>();
     private List<String> cameras;
     private int mItemClickPosition = 0;
 
+    /**
+     * 网络改变状态
+     *
+     * @param eventData
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        int code = eventData.code;
+        if (code == NetworkInfo) {
+            int data = (int) eventData.data;
+
+            switch (data) {
+
+                case ConnectivityManager.TYPE_WIFI:
+                    getView().getPlayView().setCityPlayState(-1);
+
+//                    if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
+                    //直播需要重新拉去
+                    doLive();
+//                    }
+
+
+                    break;
+
+                case ConnectivityManager.TYPE_MOBILE:
+
+                    if (isAttachedView()) {
+                        getView().getPlayView().setCityPlayState(2);
+                        getView().getPlayView().getPlayAndRetryBtn().setOnClickListener(null);
+                        getView().getPlayView().getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                getView().getPlayView().setCityPlayState(-1);
+                                doLive();
+
+//                                GSYVideoManager.onResume();
+
+
+                            }
+                        });
+                    }
+
+                    break;
+
+                case -1:
+                    if (isAttachedView()) {
+
+                        getView().getPlayView().setCityPlayState(1);
+                    }
+                    break;
+
+
+                default:
+                    break;
+
+            }
+        }
+    }
+
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
 
+        EventBus.getDefault().register(this);
         Intent intent = mActivity.getIntent();
         if (intent != null) {
             Serializable serializable = intent.getSerializableExtra(Constants.EXTRA_ALARM_CAMERAS);
             if (serializable instanceof ArrayList) {
                 cameras = (List<String>) serializable;
-                requestData(cameras,true);
+                requestData(cameras, true);
             }
         }
-
 
 
     }
@@ -56,7 +124,7 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
 
         }
         RetrofitServiceHelper.getInstance().getAlarmCamerasDetail(cameras).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCameraLiveRsp>(this){
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCameraLiveRsp>(this) {
 
             @Override
             public void onCompleted(AlarmCameraLiveRsp alarmCameraLiveRsp) {
@@ -99,20 +167,22 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
 
             getLastCoverImage(dataBean.getLastCover());
             if (!TextUtils.isEmpty(dataBean.getDeviceStatus()) && "0".equals(dataBean.getDeviceStatus())) {
-                getView().offlineType(dataBean.getHls(),dataBean.getSn());
+                getView().offlineType(dataBean.getHls(), dataBean.getSn());
             } else {
                 getView().doPlayLive(dataBean.getHls());
 
             }
-        }else{
+        } else {
             getView().toastShort(mActivity.getString(R.string.unknown_error));
         }
 
     }
+
     @Override
     public void onDestroy() {
         mList.clear();
         mList = null;
+        EventBus.getDefault().unregister(this);
     }
 
     public void doRefresh() {
@@ -130,7 +200,6 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
     }
 
 
-
     public void regainGetCameraState(final String sn) {
         getView().showProgressDialog();
         RetrofitServiceHelper.getInstance().getDeviceCamera(sn).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraDetailRsp>(this) {
@@ -144,7 +213,7 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
                     getLastCoverImage(lastCover);
                     String deviceStatus = data.getDeviceStatus();
                     if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
-                        getView().offlineType(hls,sn);
+                        getView().offlineType(hls, sn);
                     } else {
                         doLive();
                     }

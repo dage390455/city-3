@@ -259,6 +259,8 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
                 getCurPlay().startWindowFullscreen(AlarmCameraLiveDetailActivity.this, true, true);
             }
         });
+        getPlayView().setIsShowBackMaskTv(false);
+
     }
 
     private GSYBaseVideoPlayer getCurPlay() {
@@ -298,6 +300,10 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
     }
 
     @Override
+    public CityStandardGSYVideoPlayer getPlayView() {
+        return gsyPlayerAcAlarmCameraLiveDetail;
+    }
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (orientationUtils != null)
@@ -318,15 +324,19 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
 
     @Override
     protected void onPause() {
-        getCurPlay().onVideoPause();
         super.onPause();
+        GSYVideoManager.onPause();
+
+//        getCurPlay().onVideoPause();
         isPause = true;
     }
 
     @Override
     protected void onResume() {
-        getCurPlay().onVideoResume();
         super.onResume();
+        GSYVideoManager.onResume();
+
+//        getCurPlay().onVideoResume();
         isPause = false;
     }
 
@@ -357,6 +367,8 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
     public void offlineType(final String url, final String sn) {
         orientationUtils.setEnable(false);
         gsyPlayerAcAlarmCameraLiveDetail.setCityPlayState(5);
+        getPlayView().setIsShowBackMaskTv(false);
+
         gsyPlayerAcAlarmCameraLiveDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -395,7 +407,7 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
 
     private void setNoContentVisible(boolean isVisible) {
         icNoContent.setVisibility(isVisible ? VISIBLE : GONE);
-            rvListInclude.setVisibility(isVisible ? GONE : VISIBLE);
+        rvListInclude.setVisibility(isVisible ? GONE : VISIBLE);
     }
 ////
 //
@@ -413,6 +425,15 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
 //            }
 //        });
 //    }
+
+
+    @Override
+    protected void onRestart() {
+        //直播重新拉去否则一直lodding，可能是音频有aac编码播放器不支持问题
+        mPresenter.doLive();
+        super.onRestart();
+
+    }
 
     @Override
     public void doPlayLive(final String url) {

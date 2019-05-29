@@ -95,6 +95,7 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     }
 
     private void initView() {
+
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 
         mDownloadUtils = new VideoDownloadDialogUtils(mActivity);
@@ -217,6 +218,9 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
                 getCurPlay().startWindowFullscreen(AlarmCameraVideoDetailActivity.this, true, true);
             }
         });
+
+        getPlayView().setIsShowBackMaskTv(false);
+
     }
 
     private GSYBaseVideoPlayer getCurPlay() {
@@ -294,9 +298,11 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
 
     @Override
     protected void onPause() {
-        getCurPlay().onVideoPause();
+//        getCurPlay().onVideoPause();
         super.onPause();
         isPause = true;
+        GSYVideoManager.onPause();
+
     }
 
     @Override
@@ -351,7 +357,7 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     @Override
     public void updateDownLoadProgress(int progress, String totalBytesRead, String fileSize) {
         if (mDownloadUtils.isShowing()) {
-            mDownloadUtils.updateDownLoadProgress(progress,totalBytesRead,fileSize);
+            mDownloadUtils.updateDownLoadProgress(progress, totalBytesRead, fileSize);
         }
     }
 
@@ -372,6 +378,11 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     @Override
     public void setPlayVideoTime(String s) {
         tvTimeAcAlarmCameraVideoDetail.setText(s);
+    }
+
+    @Override
+    public CityStandardGSYVideoPlayer getPlayView() {
+        return gsyPlayerAcAlarmCameraVideoDetail;
     }
 
     @Override
@@ -427,14 +438,16 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
 
     @Override
     protected void onResume() {
-        getCurPlay().onVideoResume();
+//        getCurPlay().onVideoResume();
         super.onResume();
         isPause = false;
+        GSYVideoManager.onResume();
+
     }
 
-    @OnClick({R.id.include_imv_title_imv_arrows_left,R.id.return_top_include})
+    @OnClick({R.id.include_imv_title_imv_arrows_left, R.id.return_top_include})
     public void onViewClicked(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.include_imv_title_imv_arrows_left:
                 mActivity.finish();
                 break;

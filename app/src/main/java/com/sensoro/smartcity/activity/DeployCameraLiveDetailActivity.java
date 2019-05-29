@@ -102,6 +102,7 @@ public class DeployCameraLiveDetailActivity extends BaseActivity<IDeployCameraLi
             }
         });
 
+
         getCurPlay().getBackButton().setVisibility(View.INVISIBLE);
         initVideoOption();
     }
@@ -244,16 +245,20 @@ public class DeployCameraLiveDetailActivity extends BaseActivity<IDeployCameraLi
 
     @Override
     protected void onResume() {
-        getCurPlay().onVideoResume(false);
+//        getCurPlay().onVideoResume(false);
         super.onResume();
+        GSYVideoManager.onResume();
+
         isPause = false;
     }
 
     @Override
     protected void onPause() {
-        getCurPlay().onVideoPause();
+//        getCurPlay().onVideoPause();
+
         super.onPause();
         isPause = true;
+        GSYVideoManager.onPause();
     }
 
     @Override

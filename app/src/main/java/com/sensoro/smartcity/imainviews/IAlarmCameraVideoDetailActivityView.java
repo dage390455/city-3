@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
 import com.sensoro.common.server.response.AlarmCloudVideoRsp;
-
+import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 
 import java.util.ArrayList;
 
@@ -27,4 +27,7 @@ public interface IAlarmCameraVideoDetailActivityView extends IToast, IProgressDi
     void setDownloadErrorState();
 
     void setPlayVideoTime(String s);
+
+    CityStandardGSYVideoPlayer getPlayView();
+
 }
