@@ -4,9 +4,10 @@ import android.content.Context;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
-import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -323,7 +324,7 @@ public class SensoroCityApplication extends BaseApplication implements Repause
                 .putThreshhold(1024 * 1024)   // 启用分片上传阀值。默认512K
                 .connectTimeout(10)           // 链接超时。默认10秒
                 .useHttps(true)               // 是否使用https上传域名
-                .responseTimeout(60)          // 服务器响应超时。默认60秒
+                .responseTimeout(60)// 服务器响应超时。默认60秒
                 .recorder(null)           // recorder分片上传时，已上传片记录器。默认null
 //                .recorder(new re, keyGen)   // keyGen 分片上传时，生成标识符，用于片记录器区分是那个文件的上传记录
                 .zone(FixedZone.zone0)// 设置区域，指定不同区域的上传域名、备用域名、备用IP。

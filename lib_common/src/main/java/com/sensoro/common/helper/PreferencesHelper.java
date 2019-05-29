@@ -38,6 +38,7 @@ public final class PreferencesHelper implements Constants {
     private volatile EventLoginData mEventLoginData;
     private volatile DeviceMergeTypesInfo mDeviceMergeTypesInfo;
     private volatile AlarmPopupDataBean mAlarmPopupDataBean;
+    private volatile String myBaseUrl;
 
     private PreferencesHelper() {
     }
@@ -221,6 +222,27 @@ public final class PreferencesHelper implements Constants {
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt(PREFERENCE_KEY_URL, urlType);
         editor.apply();
+    }
+
+    public String getMyBaseUrl() {
+        if (!TextUtils.isEmpty(myBaseUrl)) {
+            return myBaseUrl;
+        }
+        SharedPreferences sp = ContextUtils.getContext().getSharedPreferences(PREFERENCE_SCOPE, Context
+                .MODE_PRIVATE);
+        myBaseUrl = sp.getString(PREFERENCE_KEY_MY_BASE_URL, null);
+        return myBaseUrl;
+    }
+
+    public void saveMyBaseUrl(String url) {
+        this.myBaseUrl = url;
+        if (!TextUtils.isEmpty(myBaseUrl)) {
+            SharedPreferences sp = ContextUtils.getContext().getSharedPreferences(PREFERENCE_SCOPE, Context
+                    .MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString(PREFERENCE_KEY_MY_BASE_URL, url);
+            editor.apply();
+        }
     }
 
     public boolean saveSessionId(String sessionId) {

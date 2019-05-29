@@ -18,6 +18,7 @@ public interface Constants {
     String PREFERENCE_DEPLOY_EXAMPLE_PIC = "preference_deploy_example_pic";
     String PREFERENCE_DEMO_MODE_JSON = "preference_demo_mode_json";
     String PREFERENCE_KEY_URL = "url";
+    String PREFERENCE_KEY_MY_BASE_URL = "preference_key_my_base_url";
     String PREFERENCE_DEVICE_HISTORY = "city_device_history";
     String PREFERENCE_ALARM_SEARCH_HISTORY = "preference_alarm_search_history";
     String PREFERENCE_MERCHANT_HISTORY = "city_merchant_history";

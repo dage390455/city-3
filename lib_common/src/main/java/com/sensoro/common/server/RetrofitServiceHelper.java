@@ -197,6 +197,10 @@ public class RetrofitServiceHelper {
                 //开发环境
                 BASE_URL = RetrofitService.SCOPE_DEVELOPER;
                 break;
+            case 5:
+                //自定义
+                BASE_URL = "https://" + PreferencesHelper.getInstance().getMyBaseUrl();
+                break;
             default:
                 BASE_URL = RetrofitService.SCOPE_MASTER;
                 break;
@@ -227,6 +231,10 @@ public class RetrofitServiceHelper {
                         break;
                     case 4:
                         BASE_URL = RetrofitService.SCOPE_DEVELOPER;
+                        break;
+                    case 5:
+                        //自定义
+                        BASE_URL = "https://" + PreferencesHelper.getInstance().getMyBaseUrl();
                         break;
                     default:
                         BASE_URL = RetrofitService.SCOPE_MASTER;

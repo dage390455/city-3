@@ -1547,6 +1547,122 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     }
 
+    public void initData(Context context,Intent intent) {
+        mContext = (Activity) context;
+        mHandler = new Handler(Looper.getMainLooper());
+        onCreate();
+        deployAnalyzerModel = (DeployAnalyzerModel) intent.getSerializableExtra(EXTRA_DEPLOY_ANALYZER_MODEL);
+        //TODO 暂时用烟感做测试
+//        PreferencesHelper.getInstance().getUserData().hasSignalConfig = true;
+        //
+//        deployAnalyzerModel.deviceType ="acrel_single";
+        //
+        getView().setNotOwnVisible(deployAnalyzerModel.notOwn);
+        init();
+        if ((PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION && deployAnalyzerModel.whiteListDeployType != Constants.TYPE_SCAN_DEPLOY_WHITE_LIST) || Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+            mHandler.post(this);
+        }
+        BleObserver.getInstance().registerBleObserver(this);
+        mHandler.post(signalTask);
+        //默认显示已定位
+        deployAnalyzerModel.address = mContext.getString(R.string.positioned);
+        //
+        //获取一次临时的位置信息
+        GeocodeSearch geocoderSearch = new GeocodeSearch(mContext);
+        geocoderSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
+            @Override
+            public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
+                try {
+                    RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
+
+                    StringBuilder stringBuilder = new StringBuilder();
+                    //
+                    String province = regeocodeAddress.getProvince();
+                    //
+                    String district = regeocodeAddress.getDistrict();// 区或县或县级市
+                    //
+                    //
+                    String township = regeocodeAddress.getTownship();// 乡镇
+                    //
+                    String streetName = null;// 道路
+                    List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
+                    if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
+                        RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
+                        if (regeocodeRoad != null) {
+                            streetName = regeocodeRoad.getName();
+                        }
+                    }
+                    //
+                    String streetNumber = null;// 门牌号
+                    StreetNumber number = regeocodeAddress.getStreetNumber();
+                    if (number != null) {
+                        String street = number.getStreet();
+                        if (street != null) {
+                            streetNumber = street + number.getNumber();
+                        } else {
+                            streetNumber = number.getNumber();
+                        }
+                    }
+                    //
+                    String building = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
+                    //区县
+                    if (!TextUtils.isEmpty(province)) {
+                        stringBuilder.append(province);
+                    }
+                    if (!TextUtils.isEmpty(district)) {
+                        stringBuilder.append(district);
+                    }
+                    //乡镇
+                    if (!TextUtils.isEmpty(township)) {
+                        stringBuilder.append(township);
+                    }
+                    //道路
+                    if (!TextUtils.isEmpty(streetName)) {
+                        stringBuilder.append(streetName);
+                    }
+                    //标志性建筑
+                    if (!TextUtils.isEmpty(building)) {
+                        stringBuilder.append(building);
+                    } else {
+                        //门牌号
+                        if (!TextUtils.isEmpty(streetNumber)) {
+                            stringBuilder.append(streetNumber);
+                        }
+                    }
+                    String address;
+                    if (TextUtils.isEmpty(stringBuilder)) {
+                        address = township;
+                    } else {
+                        address = stringBuilder.append("附近").toString();
+                    }
+                    if (!TextUtils.isEmpty(address)) {
+                        deployAnalyzerModel.address = address;
+                    }
+                    try {
+                        LogUtils.loge("deployMapModel", "----" + deployAnalyzerModel.address);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+
+                    //
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
+
+            }
+        });
+        //查询一次地址信息
+        if (deployAnalyzerModel.latLng.size() == 2) {
+            LatLonPoint lp = new LatLonPoint(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
+            RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
+            geocoderSearch.getFromLocationAsyn(query);
+        }
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////
     //    private void connectDevice() {
 //        getView().showBleConfigDialog();

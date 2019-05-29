@@ -8,16 +8,16 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Vibrator;
 
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.DeployManualActivity;
-import com.sensoro.smartcity.analyzer.DeployAnalyzerUtils;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.imainviews.IScanActivityView;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.DeployManualActivity;
+import com.sensoro.smartcity.analyzer.DeployAnalyzerUtils;
+import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.imainviews.IScanActivityView;
 import com.sensoro.smartcity.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -138,6 +138,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
             @Override
             public void onSuccess(Intent intent) {
                 getView().dismissProgressDialog();
+//                ARouter.getInstance().build(ARouterConstants.activity_deploy_detail).withParcelable("intent",intent).navigation(mContext);
                 getView().startAC(intent);
             }
 

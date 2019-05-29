@@ -50,6 +50,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        onCreate();
         Beta.checkUpgrade(false, false);
         readLoginData();
         initSeverUrl();
@@ -106,8 +107,13 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     }
 
     public void saveScopeData(int which) {
-        RetrofitServiceHelper.getInstance().saveBaseUrlType(which);
-        getView().setLogButtonState(which);
+        if (5 == which) {
+            getView().showMyBaseUrlDialog(PreferencesHelper.getInstance().getMyBaseUrl());
+        } else {
+            RetrofitServiceHelper.getInstance().saveBaseUrlType(which);
+            getView().setLogButtonState(which);
+        }
+
 
     }
 
@@ -260,4 +266,10 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     }
 
 
+    public void doSaveMyBaseUrl(String text) {
+        PreferencesHelper.getInstance().saveMyBaseUrl(text);
+        RetrofitServiceHelper.getInstance().saveBaseUrlType(5);
+        getView().setLogButtonState(5);
+        getView().dismissLoginDialog();
+    }
 }

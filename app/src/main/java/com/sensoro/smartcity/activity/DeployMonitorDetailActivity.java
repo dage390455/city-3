@@ -5,10 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -23,21 +19,25 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.DeployDeviceDetailAlarmContactAdapter;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.widgets.CustomCornerDialog;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.common.widgets.SpacesItemDecoration;
+import com.sensoro.common.widgets.TouchRecycleView;
+import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.DeployDeviceDetailAlarmContactAdapter;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
 import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.presenter.DeployMonitorDetailActivityPresenter;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.common.widgets.ProgressUtils;
-import com.sensoro.common.manger.SensoroLinearLayoutManager;
-import com.sensoro.common.widgets.SpacesItemDecoration;
-import com.sensoro.common.widgets.TouchRecycleView;
-import com.sensoro.common.widgets.CustomCornerDialog;
-import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
-import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.List;
 
@@ -45,6 +45,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+//@Route(path = ARouterConstants.activity_deploy_detail)
 public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDetailActivityView, DeployMonitorDetailActivityPresenter>
         implements IDeployMonitorDetailActivityView, View.OnClickListener {
 
@@ -124,13 +125,17 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     private ProgressUtils mLoadBleConfigDialog;
     private ProgressUtils.Builder mLoadBleConfigDialogBuilder;
     private View line1;
+//    @Autowired()
+//    Intent intent;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.actvity_deploy_device_detail_h);
         ButterKnife.bind(this);
+//        ARouter.getInstance().inject(this);
         initView();
         mPresenter.initData(mActivity);
+//        mPresenter.initData(mActivity, intent);
     }
 
     private void initView() {

@@ -1,8 +1,10 @@
 package com.sensoro.common.base;
 
 import android.app.Activity;
+
 import androidx.multidex.MultiDexApplication;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.sensoro.common.utils.LogUtils;
 
 import java.util.List;
@@ -42,7 +44,12 @@ public class BaseApplication extends MultiDexApplication {
             delegate.onCreate();
         }
         initAutoSize();
-
+        if (ContextUtils.isAppDebug()) {
+            //开启InstantRun之后，一定要在ARouter.init之前调用openDebug
+            ARouter.openDebug();
+            ARouter.openLog();
+        }
+        ARouter.init(this);
 
     }
 

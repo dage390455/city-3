@@ -10,4 +10,8 @@ public interface ILoginView extends IToast, IProgressDialog, IActivityIntent {
     void showAccountPwd(String pwd);
 
     void setLogButtonState(int which);
+
+    void showMyBaseUrlDialog(String url);
+
+    void dismissLoginDialog();
 }
