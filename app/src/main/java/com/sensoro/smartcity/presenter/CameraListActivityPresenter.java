@@ -211,6 +211,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                 RetrofitServiceHelper.getInstance().getCameraFilter().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<CameraFilterRsp>(this) {
                     @Override
                     public void onCompleted(CameraFilterRsp cameraFilterRsp) {
+                        cameraFilterModelList.clear();
                         List<CameraFilterModel> data = cameraFilterRsp.getData();
                         if (data != null) {
                             cameraFilterModelList.addAll(data);

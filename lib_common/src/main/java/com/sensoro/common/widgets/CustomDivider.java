@@ -33,6 +33,7 @@ public class CustomDivider extends RecyclerView.ItemDecoration {
     private int mOrientation;
 
     private final Rect mBounds = new Rect();
+    private int sideWith = 20;
 
     /**
      * Creates a divider {@link RecyclerView.ItemDecoration} that can be used with a
@@ -97,8 +98,8 @@ public class CustomDivider extends RecyclerView.ItemDecoration {
         final int right;
         //修改了这里,左右各20dp
         if (parent.getClipToPadding()) {
-            left = parent.getPaddingLeft() + AppUtils.dp2px(mContext, 20);
-            right = parent.getWidth() - parent.getPaddingRight() - AppUtils.dp2px(mContext, 20);
+            left = parent.getPaddingLeft() + AppUtils.dp2px(mContext, sideWith);
+            right = parent.getWidth() - parent.getPaddingRight() - AppUtils.dp2px(mContext, sideWith);
             canvas.clipRect(left, parent.getPaddingTop(), right,
                     parent.getHeight() - parent.getPaddingBottom());
         } else {
@@ -116,6 +117,15 @@ public class CustomDivider extends RecyclerView.ItemDecoration {
             mDivider.draw(canvas);
         }
         canvas.restore();
+    }
+
+    /**
+     * 设置两边边距，单位dp
+     *
+     * @param sideWith
+     */
+    public void setSideWith(int sideWith) {
+        this.sideWith = sideWith;
     }
 
     private void drawHorizontal(Canvas canvas, RecyclerView parent) {
