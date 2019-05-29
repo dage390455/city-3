@@ -28,6 +28,10 @@ public interface IAlarmCameraVideoDetailActivityView extends IToast, IProgressDi
 
     void setPlayVideoTime(String s);
 
+    void backFromWindowFull();
+
+    void setVerOrientationUtil(boolean enable);
+
     CityStandardGSYVideoPlayer getPlayView();
 
 }

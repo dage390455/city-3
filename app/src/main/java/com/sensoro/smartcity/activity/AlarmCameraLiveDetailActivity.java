@@ -303,6 +303,7 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
     public CityStandardGSYVideoPlayer getPlayView() {
         return gsyPlayerAcAlarmCameraLiveDetail;
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -452,6 +453,25 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
             return;
         }
         super.onBackPressed();
+    }
+
+    @Override
+    public void backFromWindowFull() {
+
+        if (orientationUtils != null) {
+            orientationUtils.backToProtVideo();
+        }
+        orientationUtils.setEnable(false);
+        if (GSYVideoManager.backFromWindowFull(this)) {
+            return;
+        }
+    }
+
+    @Override
+    public void setVerOrientationUtil(boolean enable) {
+        if (orientationUtils != null) {
+            orientationUtils.setEnable(enable);
+        }
     }
 
     @OnClick(R.id.include_imv_title_imv_arrows_left)

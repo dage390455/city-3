@@ -104,6 +104,9 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
 
                             }
                         });
+
+                        getView().backFromWindowFull();
+
                     }
 
                     break;
@@ -111,6 +114,8 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
                 case -1:
                     if (isAttachedView()) {
 
+
+                        getView().backFromWindowFull();
                         getView().getPlayView().setCityPlayState(1);
                     }
                     break;

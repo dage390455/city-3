@@ -959,7 +959,6 @@
     <string name="retry">"Retry"</string>
     <string name="retry_play">"Video loading failed, please try again"</string>
 
-    <string name="mobile_network">"You are now using mobile network,\n please mind your data usage."</string>
     <string name="camera_manager">摄像机管理</string>
     <string name="camera_nameplate">铭牌管理</string>
     <string name="basestation_manager">基站管理</string>

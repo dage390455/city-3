@@ -20,6 +20,11 @@ public interface IAlarmCameraLiveDetailActivityView extends IToast, IProgressDia
 
     void setImage(Drawable bitmapDrawable);
 
+    void backFromWindowFull();
+
+    void setVerOrientationUtil(boolean enable);
+
+
     CityStandardGSYVideoPlayer getPlayView();
 
 }
