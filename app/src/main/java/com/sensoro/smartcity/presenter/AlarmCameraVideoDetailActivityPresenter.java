@@ -79,7 +79,9 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
                 case ConnectivityManager.TYPE_WIFI:
                     getView().getPlayView().setCityPlayState(-1);
                     if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
-                        GSYVideoManager.onResume();
+                        GSYVideoManager.onResume(true);
+//                        getView().getPlayView().prepareCityVideo();
+
                     } else if (getView().getPlayView().getCurrentState() != CURRENT_STATE_PLAYING) {
 //                        initData(mActivity);
                         if (!TextUtils.isEmpty(currentPlayUrl)) {
@@ -99,7 +101,9 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
                             @Override
                             public void onClick(View v) {
                                 getView().getPlayView().setCityPlayState(-1);
-                                GSYVideoManager.onResume();
+                                GSYVideoManager.onResume(true);
+
+//                                getView().getPlayView().prepareCityVideo();
 
 
                             }
