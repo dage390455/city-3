@@ -70,7 +70,6 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
 
                     if (isAttachedView()) {
                         getView().getPlayView().setCityPlayState(2);
-                        getView().getPlayView().getPlayAndRetryBtn().setOnClickListener(null);
                         getView().getPlayView().getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

@@ -520,9 +520,11 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         rMobileData.setVisibility(GONE);
         maskFaceIv.setVisibility(GONE);
 
+
         if ((!NetworkUtils.isAvailable(getContext()) || !NetworkUtils.isWifiConnected(getContext()))) {
 
             if (!NetworkUtils.isAvailable(getContext())) {
+
                 setCityPlayState(1);
 
                 return;
