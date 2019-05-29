@@ -199,17 +199,30 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         switch (cityPlayState) {
 
             case 1:
+
+
                 GSYVideoManager.onPause();
 
+                playAndRetryBtn.setText(getResources().getString(R.string.retry));
 
                 tiptv.setText(getResources().getString(R.string.online_tip));
-                playAndRetryBtn.setVisibility(GONE);
+                playAndRetryBtn.setVisibility(VISIBLE);
                 rMobileData.setVisibility(VISIBLE);
                 rMobileData.setBackgroundResource(R.drawable.camera_detail_mask);
 
                 maskFaceIv.setVisibility(GONE);
                 maskLayoutTop.setVisibility(VISIBLE);
                 setViewShowState(mBottomContainer, INVISIBLE);
+                playAndRetryBtn.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+
+                        startPlayLogic();
+
+
+                    }
+                });
 
 
                 break;
@@ -224,6 +237,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
 
                 maskTitleTv.setText(mTitle);
+
 
                 tiptv.setText(getResources().getString(R.string.mobile_network));
                 maskLayoutTop.setVisibility(VISIBLE);
@@ -916,6 +930,8 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
             initFullUI(gsyVideoPlayer);
             //比如你自定义了返回案件，但是因为返回按键底层已经设置了返回事件，所以你需要在这里重新增加的逻辑
         }
+        backMaskTv.setVisibility(VISIBLE);
+
 
         return gsyBaseVideoPlayer;
     }
@@ -1484,6 +1500,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
             mStateTv.setText(getResources().getString(R.string.gsy_video));
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_f48f57_shadow);
         }
+
 
         audioIv.setChecked(isAudioChecked);
 
