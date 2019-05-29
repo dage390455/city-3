@@ -53,11 +53,12 @@ public class CameraListFilterAdapter extends RecyclerView.Adapter<CameraListFilt
                 String name = ic.getName().replace("（", "(").replace("）", ")");
                 holder.itemPopTvSelectState.setText(name);
             }
+
             boolean select = ic.isSelect();
             holder.itemPopSelectLlRoot.setBackgroundResource(!select ? R.drawable.shape_bg_solid_ff_corner
                     : R.drawable.shape_bg_corner_1dbb99_shadow);
 
-            if (select) {
+            if (select && isMutilSelect) {
                 holder.selected_tick_iv.setVisibility(View.VISIBLE);
             } else {
                 holder.selected_tick_iv.setVisibility(View.GONE);

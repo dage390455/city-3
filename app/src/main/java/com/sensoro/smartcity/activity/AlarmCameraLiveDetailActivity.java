@@ -343,6 +343,7 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
     @Override
     public boolean isActivityOverrideStatusBar() {
         immersionBar = ImmersionBar.with(mActivity);
+
         immersionBar.statusBarDarkFont(true).statusBarColor(R.color.white).init();
         return true;
     }
