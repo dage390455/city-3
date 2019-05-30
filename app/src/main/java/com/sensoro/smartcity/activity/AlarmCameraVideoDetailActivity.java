@@ -386,7 +386,7 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
             orientationUtils.backToProtVideo();
         }
         orientationUtils.setEnable(false);
-        if (GSYVideoManager.backFromWindowFull(this,gsyPlayerAcAlarmCameraVideoDetail.isHideKey())) {
+        if (GSYVideoManager.backFromWindowFull(this)) {
             return;
         }
     }
@@ -427,7 +427,7 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
         if (orientationUtils != null) {
             orientationUtils.backToProtVideo();
         }
-        if (GSYVideoManager.backFromWindowFull(this,gsyPlayerAcAlarmCameraVideoDetail.isHideKey())) {
+        if (GSYVideoManager.backFromWindowFull(this)) {
             return;
         }
         super.onBackPressed();

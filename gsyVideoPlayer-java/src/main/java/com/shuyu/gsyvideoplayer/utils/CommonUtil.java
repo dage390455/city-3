@@ -18,6 +18,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.TintContextWrapper;
 import androidx.fragment.app.FragmentActivity;
 
+import com.gyf.barlibrary.BarHide;
+import com.gyf.barlibrary.FlymeOSStatusBarFontUtils;
+import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.barlibrary.OSUtils;
+
 import java.io.File;
 import java.util.Formatter;
 import java.util.Locale;
@@ -168,8 +173,11 @@ public class CommonUtil {
         }
     }
 
+
+
     public static void showNavKey(Context context, int systemUiVisibility) {
-        ((Activity) context).getWindow().getDecorView().setSystemUiVisibility(systemUiVisibility);
+//        ((Activity) context).getWindow().getDecorView().setSystemUiVisibility(systemUiVisibility);
+        ImmersionBar.with((Activity) context).hideBar(BarHide.FLAG_SHOW_BAR).init();
     }
 
 

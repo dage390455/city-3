@@ -110,7 +110,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (GSYVideoManager.backFromWindowFull(this,true)) {
+        if (GSYVideoManager.backFromWindowFull(this)) {
             return;
         }
         super.onBackPressed();

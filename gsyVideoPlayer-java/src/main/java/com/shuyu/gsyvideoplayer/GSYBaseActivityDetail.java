@@ -73,7 +73,7 @@ public abstract class GSYBaseActivityDetail<T extends GSYBaseVideoPlayer> extend
         if (orientationUtils != null) {
             orientationUtils.backToProtVideo();
         }
-        if (GSYVideoManager.backFromWindowFull(this,getGSYVideoPlayer().isHideKey())) {
+        if (GSYVideoManager.backFromWindowFull(this)) {
             return;
         }
         super.onBackPressed();

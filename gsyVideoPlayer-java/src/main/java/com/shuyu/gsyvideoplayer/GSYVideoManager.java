@@ -80,19 +80,13 @@ public class GSYVideoManager extends GSYVideoBaseManager {
      * @return 返回是否全屏
      */
     @SuppressWarnings("ResourceType")
-    public static boolean backFromWindowFull(Context context,boolean isHideNavKey) {
+    public static boolean backFromWindowFull(Context context) {
         boolean backFrom = false;
         ViewGroup vp = (ViewGroup) (CommonUtil.scanForActivity(context)).findViewById(Window.ID_ANDROID_CONTENT);
         View oldF = vp.findViewById(FULLSCREEN_ID);
         if (oldF != null) {
             backFrom = true;
-//            if (isHideNavKey) {
-//                hideNavKey(context);
-//            }else{
-                int mSystemUiVisibility = ((Activity) context).getWindow().getDecorView().getSystemUiVisibility();
-                showNavKey(context,View.SYSTEM_UI_FLAG_VISIBLE);
-//            }
-
+            showNavKey(context,View.SYSTEM_UI_FLAG_VISIBLE);
             if (GSYVideoManager.instance().lastListener() != null) {
                 GSYVideoManager.instance().lastListener().onBackFullscreen();
             }

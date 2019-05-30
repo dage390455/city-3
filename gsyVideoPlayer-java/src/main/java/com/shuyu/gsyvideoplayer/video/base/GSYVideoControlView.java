@@ -1300,8 +1300,6 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
      * 全屏隐藏虚拟按键，默认打开
      */
     public void setHideKey(boolean hideKey) {
-        int i = 0;
-        i = i+ 1;
         this.mHideKey = hideKey;
     }
 

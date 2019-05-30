@@ -478,7 +478,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
                     if (GSYVideoManager.isFullState((Activity) getContext())) {
 
 
-                        if (GSYVideoManager.backFromWindowFull(mContext,isHideKey())) {
+                        if (GSYVideoManager.backFromWindowFull(mContext)) {
                             return;
                         }
                     } else {

@@ -30,6 +30,7 @@ import com.sensoro.smartcity.presenter.CameraDetailActivityPresenter;
 import com.sensoro.common.server.bean.DeviceCameraFacePic;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.smartcity.util.AppUtils;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
@@ -128,8 +129,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                         @Override
                         public void onClick(View v) {
                             GSYVideoManager.onResume();
-//                            gsyPlayerAcCameraDetail.startPlayLogic();
-
                         }
                     });
                     break;
@@ -154,11 +153,9 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         initView();
         EventBus.getDefault().register(this);
         mPresenter.initData(mActivity);
-
     }
 
     private void initView() {
-
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
 
         //外部辅助的旋转，帮助全屏
@@ -533,7 +530,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         if (orientationUtils != null) {
             orientationUtils.backToProtVideo();
         }
-        if (GSYVideoManager.backFromWindowFull(this,gsyPlayerAcCameraDetail.isHideKey())) {
+        if (GSYVideoManager.backFromWindowFull(this)) {
             return;
         }
         super.onBackPressed();

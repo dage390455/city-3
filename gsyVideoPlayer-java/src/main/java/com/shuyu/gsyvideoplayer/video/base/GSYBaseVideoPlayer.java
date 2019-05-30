@@ -403,6 +403,7 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
             @Override
             public void run() {
                 backToNormal();
+                showNavKey(mContext,View.SYSTEM_UI_FLAG_VISIBLE);
             }
         }, delay);
 
@@ -987,6 +988,5 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
     public void setAutoFullWithSize(boolean autoFullWithSize) {
         this.mAutoFullWithSize = autoFullWithSize;
     }
-
 
 }
