@@ -238,7 +238,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
             temp_startTime = startDateTime;
             temp_endTime = endDateTime;
         }
-        mCalendarPopUtils.show(root, temp_startTime, temp_endTime);
+        mCalendarPopUtils.showFalseClip(root, temp_startTime, temp_endTime);
 
 
     }
