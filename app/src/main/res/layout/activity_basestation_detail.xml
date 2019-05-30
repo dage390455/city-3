@@ -189,7 +189,7 @@
                         android:paddingBottom="12dp"
                         android:text="温度信息"
                         android:textColor="#A6A6A6"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
                 </LinearLayout>
 
@@ -230,7 +230,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#ffffff"
-                        android:textSize="12sp" />
+                        android:textSize="12dp" />
 
 
                     <LinearLayout
@@ -259,7 +259,7 @@
                             android:text="dddd"
 
                             android:textColor="#ffffff"
-                            android:textSize="12sp" />
+                            android:textSize="12dp" />
                     </LinearLayout>
 
 
@@ -287,7 +287,7 @@
                             android:text="dddd"
 
                             android:textColor="#ffffff"
-                            android:textSize="12sp" />
+                            android:textSize="12dp" />
                     </LinearLayout>
 
 

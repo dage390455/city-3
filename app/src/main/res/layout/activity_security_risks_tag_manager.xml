@@ -21,7 +21,7 @@
                 android:layout_marginTop="20dp"
                 android:text="@string/refer_location_no"
                 android:textColor="@color/c_a6a6a6"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_location_ac_security_risk_tag_manager"
@@ -40,7 +40,7 @@
                 android:layout_marginTop="20dp"
                 android:text="@string/refer_behavior_no"
                 android:textColor="@color/c_a6a6a6"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_behavior_ac_security_risk_tag_manager"
