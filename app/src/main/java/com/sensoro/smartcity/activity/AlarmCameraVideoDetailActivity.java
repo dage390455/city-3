@@ -1,11 +1,9 @@
 package com.sensoro.smartcity.activity;
 
-import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -327,7 +325,9 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         //如果旋转了就全屏
-        if (isPlay && !isPause) {
+
+
+        if (isPlay && !isPause && orientationUtils.isEnable()) {
             getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
         }
     }
@@ -411,6 +411,14 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
 
     @Override
     public void setVerOrientationUtil(boolean enable) {
+
+
+        if (!enable) {
+            isPause = true;
+        } else {
+            isPause = false;
+
+        }
         if (orientationUtils != null) {
             orientationUtils.setEnable(enable);
         }

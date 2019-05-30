@@ -177,6 +177,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                     public void onPlayError(final String url, Object... objects) {
 
                         gsyPlayerAcCameraDetail.setCityPlayState(3);
+                        orientationUtils.setEnable(false);
+                        backFromWindowFull();
                         gsyPlayerAcCameraDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -188,7 +190,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
                     @Override
                     public void onAutoComplete(final String url, Object... objects) {
-
+                        orientationUtils.setEnable(false);
+                        backFromWindowFull();
 //
                     }
 
@@ -568,7 +571,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         //如果旋转了就全屏
-        if (isPlay && !isPause) {
+        if (isPlay && !isPause && orientationUtils.isEnable()) {
             getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
         }
     }

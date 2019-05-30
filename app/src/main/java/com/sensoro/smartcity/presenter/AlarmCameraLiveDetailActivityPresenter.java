@@ -94,17 +94,15 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
 
                     break;
 
-                case -1:
+                default:
                     if (isAttachedView()) {
                         getView().backFromWindowFull();
+                        getView().getPlayView().setCityPlayState(1);
                         getView().setVerOrientationUtil(false);
 
-                        getView().getPlayView().setCityPlayState(1);
                     }
-                    break;
 
 
-                default:
                     break;
 
             }

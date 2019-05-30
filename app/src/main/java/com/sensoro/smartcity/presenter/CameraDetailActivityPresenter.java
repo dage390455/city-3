@@ -46,6 +46,7 @@ import io.reactivex.schedulers.Schedulers;
 import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
 import static com.sensoro.smartcity.constant.Constants.VIDEO_START;
 import static com.sensoro.smartcity.constant.Constants.VIDEO_STOP;
+import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_AUTO_COMPLETE;
 import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAUSE;
 
 public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailActivityView> implements
@@ -84,11 +85,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
                 case ConnectivityManager.TYPE_WIFI:
                     getView().getPlayView().setCityPlayState(-1);
-
-
                     if (null == itemUrl) {
-
-
                         doLive();
                         getView().setVerOrientationUtil(true);
 
@@ -414,7 +411,11 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
         if (itemUrl == null) {
             doLive();
         } else {
-            getView().doPlayLive(itemUrl, TextUtils.isEmpty(itemTitle) ? "" : itemTitle, false);
+            if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
+                GSYVideoManager.onResume(true);
+            } else if (getView().getPlayView().getCurrentState() != CURRENT_STATE_AUTO_COMPLETE) {
+                getView().doPlayLive(itemUrl, TextUtils.isEmpty(itemTitle) ? "" : itemTitle, false);
+            }
         }
     }
 
