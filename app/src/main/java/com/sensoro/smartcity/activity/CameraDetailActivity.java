@@ -37,8 +37,6 @@ import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.List;
 
 import butterknife.BindView;
@@ -100,7 +98,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         setContentView(R.layout.activity_simple_detail_player);
         ButterKnife.bind(this);
         initView();
-        EventBus.getDefault().register(this);
         mPresenter.initData(mActivity);
 
     }
@@ -563,7 +560,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         }
 
         GSYVideoManager.releaseAllVideos();
-        EventBus.getDefault().unregister(this);
 
     }
 
