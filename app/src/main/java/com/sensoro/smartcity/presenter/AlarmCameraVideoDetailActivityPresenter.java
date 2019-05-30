@@ -80,10 +80,9 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
                     getView().getPlayView().setCityPlayState(-1);
                     if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
                         GSYVideoManager.onResume(true);
-//                        getView().getPlayView().prepareCityVideo();
+//                        getView().getPlayView().clickCityStartIcon();
 
                     } else if (getView().getPlayView().getCurrentState() != CURRENT_STATE_PLAYING) {
-//                        initData(mActivity);
                         if (!TextUtils.isEmpty(currentPlayUrl)) {
                             getView().doPlayLive(currentPlayUrl);
                         }
@@ -100,10 +99,12 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
                         getView().getPlayView().getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+
                                 getView().getPlayView().setCityPlayState(-1);
                                 GSYVideoManager.onResume(true);
-
-//                                getView().getPlayView().prepareCityVideo();
+                                if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
+                                    getView().getPlayView().clickCityStartIcon();
+                                }
 
 
                             }

@@ -575,8 +575,8 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     }
 
-    public void prepareCityVideo() {
-        prepareVideo();
+    public void clickCityStartIcon() {
+        clickStartIcon();
 
     }
 

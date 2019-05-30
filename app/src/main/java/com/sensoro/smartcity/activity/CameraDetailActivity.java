@@ -5,9 +5,6 @@ import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -16,20 +13,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.gyf.barlibrary.ImmersionBar;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.CameraDetailListAdapter;
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.smartcity.imainviews.ICameraDetailActivityView;
 import com.sensoro.common.model.EventData;
-import com.sensoro.smartcity.presenter.CameraDetailActivityPresenter;
 import com.sensoro.common.server.bean.DeviceCameraFacePic;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.CameraDetailListAdapter;
+import com.sensoro.smartcity.imainviews.ICameraDetailActivityView;
+import com.sensoro.smartcity.presenter.CameraDetailActivityPresenter;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
@@ -475,6 +476,30 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     public void setGsyVideoNoVideo() {
         gsyPlayerAcCameraDetail.onVideoPause();
         gsyPlayerAcCameraDetail.setNoVideo();
+    }
+
+
+    @Override
+    public CityStandardGSYVideoPlayer getPlayView() {
+        return gsyPlayerAcCameraDetail;
+    }
+
+    @Override
+    public void backFromWindowFull() {
+        if (orientationUtils != null) {
+            orientationUtils.backToProtVideo();
+        }
+        orientationUtils.setEnable(false);
+        if (GSYVideoManager.backFromWindowFull(this)) {
+            return;
+        }
+    }
+
+    @Override
+    public void setVerOrientationUtil(boolean enable) {
+        if (orientationUtils != null) {
+            orientationUtils.setEnable(enable);
+        }
     }
 
     private void initRvCameraList() {
