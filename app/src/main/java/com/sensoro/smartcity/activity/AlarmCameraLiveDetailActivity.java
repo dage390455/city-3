@@ -125,7 +125,7 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
             }
         });
         final LinearLayoutManager manager = new LinearLayoutManager(mActivity);
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        manager.setOrientation(RecyclerView.VERTICAL);
 //        MarginBottomNoDividerItemDecoration dividerItemDecoration = new MarginBottomNoDividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL);
 //        rvListInclude.addItemDecoration(dividerItemDecoration);
         rvListInclude.setLayoutManager(manager);
@@ -450,7 +450,7 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
         if (orientationUtils != null) {
             orientationUtils.backToProtVideo();
         }
-        if (GSYVideoManager.backFromWindowFull(this)) {
+        if (GSYVideoManager.backFromWindowFull(this,gsyPlayerAcAlarmCameraLiveDetail.isHideKey())) {
             return;
         }
         super.onBackPressed();
@@ -463,7 +463,7 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
             orientationUtils.backToProtVideo();
         }
         orientationUtils.setEnable(false);
-        if (GSYVideoManager.backFromWindowFull(this)) {
+        if (GSYVideoManager.backFromWindowFull(this,gsyPlayerAcAlarmCameraLiveDetail.isHideKey())) {
             return;
         }
     }

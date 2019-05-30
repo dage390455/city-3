@@ -533,7 +533,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         if (orientationUtils != null) {
             orientationUtils.backToProtVideo();
         }
-        if (GSYVideoManager.backFromWindowFull(this)) {
+        if (GSYVideoManager.backFromWindowFull(this,gsyPlayerAcCameraDetail.isHideKey())) {
             return;
         }
         super.onBackPressed();

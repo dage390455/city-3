@@ -258,7 +258,7 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
             }
         });
         final LinearLayoutManager manager = new LinearLayoutManager(mActivity);
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        manager.setOrientation(RecyclerView.VERTICAL);
         rvListInclude.setLayoutManager(manager);
         rvListInclude.setAdapter(mListAdapter);
 
@@ -386,7 +386,7 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
             orientationUtils.backToProtVideo();
         }
         orientationUtils.setEnable(false);
-        if (GSYVideoManager.backFromWindowFull(this)) {
+        if (GSYVideoManager.backFromWindowFull(this,gsyPlayerAcAlarmCameraVideoDetail.isHideKey())) {
             return;
         }
     }
@@ -427,7 +427,7 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
         if (orientationUtils != null) {
             orientationUtils.backToProtVideo();
         }
-        if (GSYVideoManager.backFromWindowFull(this)) {
+        if (GSYVideoManager.backFromWindowFull(this,gsyPlayerAcAlarmCameraVideoDetail.isHideKey())) {
             return;
         }
         super.onBackPressed();

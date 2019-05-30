@@ -38,8 +38,8 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer {
     }
 
     @Override
-    protected boolean backFromFull(Context context) {
-        return GSYVideoManager.backFromWindowFull(context);
+    protected boolean backFromFull(Context context, boolean mHideKey) {
+        return GSYVideoManager.backFromWindowFull(context,mHideKey);
     }
 
     @Override
