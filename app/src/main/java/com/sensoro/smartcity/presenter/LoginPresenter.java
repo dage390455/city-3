@@ -7,7 +7,6 @@ import android.text.TextUtils;
 
 import com.igexin.sdk.PushManager;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.common.base.ContextUtils;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.model.EventData;
@@ -23,6 +22,7 @@ import com.sensoro.common.server.response.DevicesMergeTypesRsp;
 import com.sensoro.common.server.response.LoginRsp;
 import com.sensoro.smartcity.BuildConfig;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.AuthActivity;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.constant.Constants;
@@ -123,7 +123,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
         } else if (TextUtils.isEmpty(pwd)) {
             getView().toastShort(mContext.getResources().getString(R.string.tips_login_pwd_empty));
         } else {
-            final String phoneId = PushManager.getInstance().getClientid(ContextUtils.getContext());
+            final String phoneId = PushManager.getInstance().getClientid(SensoroCityApplication.getInstance());
             try {
                 LogUtils.loge(this, "------phoneId = " + phoneId);
             } catch (Throwable throwable) {

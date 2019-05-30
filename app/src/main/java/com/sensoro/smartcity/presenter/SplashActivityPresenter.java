@@ -8,13 +8,13 @@ import android.text.TextUtils;
 
 import com.igexin.sdk.PushManager;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.common.base.ContextUtils;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.widgets.PermissionDialogUtils;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.constant.Constants;
@@ -127,16 +127,16 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
     }
 
     private void initPushSDK() {
-        PushManager.getInstance().initialize(ContextUtils.getContext(), SensoroPushService.class);
+        PushManager.getInstance().initialize(SensoroCityApplication.getInstance(), SensoroPushService.class);
         // 注册 intentService 后 PushDemoReceiver 无效, sdk 会使用 DemoIntentService 传递数据,
         // AndroidManifest 对应保留一个即可(如果注册 DemoIntentService, 可以去掉 PushDemoReceiver, 如果注册了
         // IntentService, 必须在 AndroidManifest 中声明)
-        PushManager.getInstance().registerPushIntentService(ContextUtils.getContext(),
+        PushManager.getInstance().registerPushIntentService(SensoroCityApplication.getInstance(),
                 SensoroPushIntentService.class);
-        if (PushManager.getInstance().getClientid(ContextUtils.getContext()) == null) {
-            PushManager.getInstance().turnOffPush(ContextUtils.getContext());
+        if (PushManager.getInstance().getClientid(SensoroCityApplication.getInstance()) == null) {
+            PushManager.getInstance().turnOffPush(SensoroCityApplication.getInstance());
         } else {
-            PushManager.getInstance().turnOnPush(ContextUtils.getContext());
+            PushManager.getInstance().turnOnPush(SensoroCityApplication.getInstance());
         }
     }
 

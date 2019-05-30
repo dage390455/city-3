@@ -50,7 +50,6 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
                         throwable.printStackTrace();
                     }
                     showRationaleDialog(executor);
-
                 }
             }).onGranted(new Action<Void>() {
                 @Override
@@ -69,6 +68,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
                     } catch (Throwable throwable) {
                         throwable.printStackTrace();
                     }
+                    showRationaleDialog(null);
                 }
             }).start();
         }
@@ -241,7 +241,10 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
                 @Override
                 public void onCancelClick() {
                     permissionDialogUtils.dismiss();
-                    executor.cancel();
+                    if (executor != null) {
+                        executor.cancel();
+                    }
+
                 }
 
                 @Override
@@ -253,7 +256,9 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
                     intent.setData(uri);
                     startActivity(intent);
                     permissionDialogUtils.dismiss();
-                    executor.execute();
+                    if (executor != null) {
+                        executor.execute();
+                    }
                 }
             });
         }
