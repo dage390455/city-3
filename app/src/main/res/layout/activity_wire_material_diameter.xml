@@ -42,34 +42,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/air_open_rated_current"
                     android:layout_marginStart="20dp"
-                    android:textColor="@color/c_a6a6a6"
                     android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"/>
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/air_open_rated_current"
+                    android:textColor="@color/c_a6a6a6" />
 
                 <EditText
                     android:id="@+id/et_input_rated_current_ac_wire_material_diameter1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="14dp"
-                    android:textColor="@color/c_252525"
                     android:background="@null"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
                     android:cursorVisible="true"
+                    android:gravity="end"
                     android:imeOptions="actionDone"
                     android:inputType="numberSigned"
-                    android:gravity="end"
                     android:maxLength="6"
+                    android:paddingTop="16dp"
                     android:paddingEnd="20dp"
-                    android:textCursorDrawable="@drawable/my_cursor" />
+                    android:paddingBottom="16dp"
+                    android:textColor="@color/c_252525"
+                    android:textCursorDrawable="@drawable/my_cursor"
+                    android:textSize="14dp" />
             </RelativeLayout>
 
 
@@ -80,8 +79,8 @@
                 android:paddingTop="20dp"
                 android:paddingEnd="20dp"
                 android:paddingBottom="12dp"
-                android:textColor="@color/c_a6a6a6"
-                android:text="@string/diameter_arguments_tip" />
+                android:text="@string/diameter_arguments_tip"
+                android:textColor="@color/c_a6a6a6" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -118,30 +117,28 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:paddingBottom="8dp"
-                        android:paddingTop="8dp"
                         android:layout_marginTop="8dp"
+                        android:layout_marginEnd="20dp"
                         android:background="@drawable/select_wire_diameter_stroke_fafa_ee"
-                        >
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp">
+
                         <TextView
                             android:id="@+id/tv_in_line_add_ac_wire_material_diameter"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:drawablePadding="4dp"
                             android:layout_gravity="center"
-                            android:text="@string/add_wire"
-                            android:gravity="center"
                             android:drawableStart="@drawable/wire_add"
-                            />
+                            android:drawablePadding="4dp"
+                            android:gravity="center"
+                            android:text="@string/add_wire" />
                     </FrameLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_in_line_ac_wire_material_diameter"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        >
+                        android:layout_marginTop="8dp">
 
                     </androidx.recyclerview.widget.RecyclerView>
                 </LinearLayout>
@@ -173,22 +170,21 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:paddingBottom="8dp"
-                        android:paddingTop="8dp"
                         android:layout_marginTop="8dp"
+                        android:layout_marginEnd="20dp"
                         android:background="@drawable/select_wire_diameter_stroke_fafa_ee"
-                        >
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp">
+
                         <TextView
                             android:id="@+id/tv_out_line_add_ac_wire_material_diameter"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:drawablePadding="4dp"
                             android:layout_gravity="center"
-                            android:text="@string/add_wire"
-                            android:gravity="center"
                             android:drawableStart="@drawable/wire_add"
-                            />
+                            android:drawablePadding="4dp"
+                            android:gravity="center"
+                            android:text="@string/add_wire" />
                     </FrameLayout>
 
 
@@ -196,8 +192,7 @@
                         android:id="@+id/rv_out_line_ac_wire_material_diameter"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        >
+                        android:layout_marginTop="8dp">
 
                     </androidx.recyclerview.widget.RecyclerView>
 
