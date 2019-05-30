@@ -374,7 +374,7 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         //如果旋转了就全屏
-        if (isPlay && !isPause) {
+        if (isPlay && !isPause && orientationUtils.isEnable()) {
             getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
         }
     }
@@ -483,7 +483,7 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
     }
 
     @Override
-    public void setVerOrientationUtil(boolean enable) {
+    public void setVerOrientationUtilEnable(boolean enable) {
         if (orientationUtils != null) {
             orientationUtils.setEnable(enable);
         }

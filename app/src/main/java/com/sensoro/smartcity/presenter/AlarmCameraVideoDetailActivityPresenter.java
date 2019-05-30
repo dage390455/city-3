@@ -81,9 +81,11 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
 
                 case ConnectivityManager.TYPE_WIFI:
                     getView().getPlayView().setCityPlayState(-1);
+                    getView().setVerOrientationUtil(true);
+
                     if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
                         GSYVideoManager.onResume(true);
-//                        getView().getPlayView().clickCityStartIcon();
+                        getView().getPlayView().clickCityStartIcon();
 
                     } else if (getView().getPlayView().getCurrentState() != CURRENT_STATE_PLAYING) {
                         if (!TextUtils.isEmpty(currentPlayUrl)) {
@@ -95,6 +97,7 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
                     break;
 
                 case ConnectivityManager.TYPE_MOBILE:
+                    getView().setVerOrientationUtil(false);
 
                     if (isAttachedView()) {
                         getView().getPlayView().setCityPlayState(2);
@@ -119,18 +122,16 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
 
                     break;
 
-                case -1:
+                default:
                     if (isAttachedView()) {
 
 
                         getView().backFromWindowFull();
                         getView().getPlayView().setCityPlayState(1);
+                        getView().setVerOrientationUtil(false);
                     }
                     break;
 
-
-                default:
-                    break;
 
             }
         } else if (code == VIDEO_START) {
