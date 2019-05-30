@@ -209,7 +209,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             String remark = recordInfo.getRemark();
             if (!TextUtils.isEmpty(remark)) {
                 holder.itemAlarmDetailChildAlarmRemarks.setText(remark);
-            }else {
+            } else {
                 holder.itemAlarmDetailChildAlarmRemarks.setText("");
             }
             final List<ScenesData> scenes = recordInfo.getScenes();
@@ -244,7 +244,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 adapter.setImages(scenes);
                 //TODO 防止数据错误打标签
                 holder.rvAlarmPhoto.setTag(adapter);
-            }else {
+            } else {
                 holder.rvAlarmPhoto.setVisibility(View.GONE);
             }
 
@@ -258,10 +258,26 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 StringBuilder stringBuilder = new StringBuilder();
                 SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensorType);
                 if (sensorTypeStyles != null) {
-                    String trueMean = sensorTypeStyles.getTrueMean();
+//                    String trueMean = sensorTypeStyles.getTrueMean();
                     boolean bool = sensorTypeStyles.isBool();
                     if (bool) {
-                        stringBuilder.append(trueMean).append("，").append(mContext.getString(R.string.back_to_normal));
+                        int thresholds = recordInfo.getThresholds();
+                        switch (thresholds) {
+                            case 1:
+                                //true
+                                String trueMean = sensorTypeStyles.getTrueMean();
+                                stringBuilder.append(trueMean).append("，").append(mContext.getString(R.string.back_to_normal));
+                                break;
+                            case 0:
+                                //false
+                                String falseMean = sensorTypeStyles.getFalseMean();
+                                stringBuilder.append(falseMean).append("，").append(mContext.getString(R.string.back_to_normal));
+                                break;
+                            default:
+                                String falseMean1 = sensorTypeStyles.getFalseMean();
+                                stringBuilder.append(falseMean1).append("，").append(mContext.getString(R.string.back_to_normal));
+                                break;
+                        }
                     } else {
 //                    "电量低于预警值, 恢复正常";
 ////                    info = "温度 值为 " + thresholds + "°C 达到预警值";
@@ -315,6 +331,10 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                                 //false
                                 String falseMean = sensorTypeStyles.getFalseMean();
                                 stringBuilder.append(falseMean).append("，").append(mContext.getString(R.string.equipment_warning));
+                                break;
+                            default:
+                                String trueMean1 = sensorTypeStyles.getTrueMean();
+                                stringBuilder.append(trueMean1).append("，").append(mContext.getString(R.string.equipment_warning));
                                 break;
                         }
 

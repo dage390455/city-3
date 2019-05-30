@@ -41,7 +41,7 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
             SecurityRisksAdapterModel model = new SecurityRisksAdapterModel();
             securityRisksList.add(model);
             getView().updateSecurityRisksContent(securityRisksList);
-        }else{
+        } else {
             securityRisksList = list;
             getView().updateSecurityRisksContent(securityRisksList);
         }
@@ -58,15 +58,15 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(EventData eventData){
+    public void onMessageEvent(EventData eventData) {
         if (eventData.code == Constants.EVENT_DATA_SECURITY_RISK_TAG_MANAGER) {
             locationTagList = PreferencesHelper.getInstance().getSecurityRiskLocationTags(mActivity);
             behaviorTagList = PreferencesHelper.getInstance().getSecurityRiskBehaviorTags(mActivity);
 
             if (getView().getIsLocation()) {
-                getView().updateSecurityRisksTag(locationTagList,true);
-            }else{
-                getView().updateSecurityRisksTag(behaviorTagList,false);
+                getView().updateSecurityRisksTag(locationTagList, true);
+            } else {
+                getView().updateSecurityRisksTag(behaviorTagList, false);
             }
 
             for (SecurityRisksAdapterModel model : securityRisksList) {
@@ -181,9 +181,7 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
                 model.action.remove(tagModel.tag);
             }
             getView().updateSecurityRisksContent(securityRisksList);
-
         }
-
     }
 
     @Override
@@ -204,12 +202,18 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
             getView().toastShort(mActivity.getString(R.string.input_not_null));
             return;
         }
+        text = getTrim(text);
+        if (TextUtils.isEmpty(text)) {
+            getView().toastShort(mActivity.getString(R.string.cannot_be_all_spaces));
+            return;
+        }
         byte[] bytes = text.getBytes();
         if (bytes.length > 30) {
             getView().toastShort(mActivity.getString(R.string.the_maximum_length_of_the_label));
             return;
         }
         if (mAddTagTypeIsLocation) {
+
             for (SecurityRisksTagModel tagModel : locationTagList) {
                 if (tagModel.tag != null && tagModel.tag.equals(text)) {
                     getView().toastShort(mActivity.getString(R.string.label_cannot_be_repeated));
@@ -220,8 +224,8 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
             model.tag = text;
             locationTagList.add(model);
             PreferencesHelper.getInstance().saveSecurityRiskLocationTag(locationTagList);
-            getView().updateSecurityRisksTag(locationTagList,true);
-        }else{
+            getView().updateSecurityRisksTag(locationTagList, true);
+        } else {
             for (SecurityRisksTagModel tagModel : behaviorTagList) {
                 if (tagModel.tag != null && tagModel.tag.equals(text)) {
                     getView().toastShort(mActivity.getString(R.string.label_cannot_be_repeated));
@@ -232,10 +236,26 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
             model.tag = text;
             behaviorTagList.add(model);
             PreferencesHelper.getInstance().saveSecurityRiskBehaviorTag(behaviorTagList);
-            getView().updateSecurityRisksTag(behaviorTagList,false);
+            getView().updateSecurityRisksTag(behaviorTagList, false);
         }
         getView().tagScrollBottom();
         getView().dismissTagDialog();
+    }
+
+    private String getTrim(String text) {
+        try {
+            text = text.trim();
+            while (text.startsWith("　")) {//这里判断是不是全角空格
+                text = text.substring(1, text.length()).trim();
+            }
+            while (text.endsWith("　")) {
+                text = text.substring(0, text.length() - 1).trim();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return text;
     }
 
     public void doSave() {
