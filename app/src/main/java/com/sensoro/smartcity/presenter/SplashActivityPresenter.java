@@ -26,9 +26,9 @@ import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.MyPermissionManager;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.permission.Rationale;
 import com.yanzhenjie.permission.RequestExecutor;
+import com.yanzhenjie.permission.runtime.Permission;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
     private final Handler handler = new Handler();
 
     private PermissionDialogUtils permissionDialogUtils;
-    private final String[] requestPermissions = {Permission.READ_PHONE_STATE, Permission.ACCESS_COARSE_LOCATION, Permission.ACCESS_FINE_LOCATION, Permission.WRITE_EXTERNAL_STORAGE, Permission.WRITE_CONTACTS, Permission.CAMERA, Permission.RECORD_AUDIO, Permission.CALL_PHONE};
+    private final String[] requestPermissions = {Permission.READ_PHONE_STATE, Permission.ACCESS_COARSE_LOCATION, Permission.ACCESS_FINE_LOCATION, Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE, Permission.WRITE_CONTACTS, Permission.READ_CONTACTS, Permission.CAMERA, Permission.RECORD_AUDIO, Permission.CALL_PHONE};
 
     @Override
     public void initData(Context context) {
