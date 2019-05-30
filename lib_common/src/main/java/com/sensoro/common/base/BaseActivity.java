@@ -1,5 +1,6 @@
 package com.sensoro.common.base;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -9,18 +10,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
+
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.baidu.mobstat.StatService;
-import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.common.R;
 import com.sensoro.common.manger.ActivityTaskManager;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.widgets.PermissionDialogUtils;
 import com.sensoro.common.widgets.SensoroToast;
+import com.yanzhenjie.permission.Action;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Rationale;
+import com.yanzhenjie.permission.RequestExecutor;
 
 import java.lang.reflect.Method;
 
@@ -36,15 +41,36 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
     private final Runnable notificationsTask = new Runnable() {
         @Override
         public void run() {
-            boolean hasNo = NotificationManagerCompat.from(mActivity).areNotificationsEnabled();
-//        final NotificationManagerCompat manager = NotificationManagerCompat.from(mActivity);
-////        boolean isOpened = manager.areNotificationsEnabled();
-////        if (!isNotificationEnabled(mActivity) && !isOpened) {
-////            showRationaleDialog();
-////        }
-            if (!hasNo) {
-                showRationaleDialog();
-            }
+            AndPermission.with(BaseActivity.this).notification().permission().rationale(new Rationale<Void>() {
+                @Override
+                public void showRationale(Context context, Void data, RequestExecutor executor) {
+                    try {
+                        LogUtils.loge("permission no : showRationale");
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                    showRationaleDialog(executor);
+                }
+            }).onGranted(new Action<Void>() {
+                @Override
+                public void onAction(Void data) {
+                    try {
+                        LogUtils.loge("permission no : onGranted");
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                }
+            }).onDenied(new Action<Void>() {
+                @Override
+                public void onAction(Void data) {
+                    try {
+                        LogUtils.loge("permission no : onDenied");
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                    showRationaleDialog(null);
+                }
+            }).start();
         }
     };
     /**
@@ -134,9 +160,9 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         mPresenter.onDestroy();
         mPresenter.detachView();
         SensoroToast.getInstance().cancelToast();
-        if (immersionBar != null) {
-            immersionBar.destroy();
-        }
+//        if (immersionBar != null) {
+//            immersionBar.destroy();
+//        }
         mHandler.removeCallbacksAndMessages(null);
         super.onDestroy();
         ActivityTaskManager.getInstance().popActivity(this);
@@ -206,13 +232,19 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
 
     /**
      * 弹出声明的 Dialog
+     *
+     * @param executor
      */
-    private void showRationaleDialog() {
+    private void showRationaleDialog(RequestExecutor executor) {
         if (permissionDialogUtils != null) {
             permissionDialogUtils.setTipMessageText(mActivity.getString(R.string.notification_prompt)).setTipCacnleText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_a6a6a6)).setTipConfirmText(mActivity.getString(R.string.go_setting), mActivity.getResources().getColor(R.color.colorAccent)).show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
                 @Override
                 public void onCancelClick() {
                     permissionDialogUtils.dismiss();
+                    if (executor != null) {
+                        executor.cancel();
+                    }
+
                 }
 
                 @Override
@@ -224,6 +256,9 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
                     intent.setData(uri);
                     startActivity(intent);
                     permissionDialogUtils.dismiss();
+                    if (executor != null) {
+                        executor.execute();
+                    }
                 }
             });
         }

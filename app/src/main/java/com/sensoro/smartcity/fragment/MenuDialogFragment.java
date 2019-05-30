@@ -17,7 +17,7 @@ import android.widget.RelativeLayout;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.EventLoginData;
 import com.sensoro.smartcity.R;
@@ -166,9 +166,9 @@ public class MenuDialogFragment extends DialogFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (immersionBar != null) {
-            immersionBar.destroy();
-        }
+//        if (immersionBar != null) {
+//            immersionBar.destroy();
+//        }
         unbinder.unbind();
     }
 

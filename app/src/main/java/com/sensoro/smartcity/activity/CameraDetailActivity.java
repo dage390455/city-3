@@ -5,9 +5,6 @@ import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -16,21 +13,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gyf.barlibrary.ImmersionBar;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.gyf.immersionbar.ImmersionBar;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.CameraDetailListAdapter;
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.smartcity.imainviews.ICameraDetailActivityView;
 import com.sensoro.common.model.EventData;
-import com.sensoro.smartcity.presenter.CameraDetailActivityPresenter;
 import com.sensoro.common.server.bean.DeviceCameraFacePic;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.CameraDetailListAdapter;
+import com.sensoro.smartcity.imainviews.ICameraDetailActivityView;
+import com.sensoro.smartcity.presenter.CameraDetailActivityPresenter;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
@@ -39,7 +39,6 @@ import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -51,7 +50,7 @@ import butterknife.OnClick;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
+import static com.sensoro.common.constant.Constants.NetworkInfo;
 
 
 /**
@@ -151,7 +150,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         setContentView(R.layout.activity_simple_detail_player);
         ButterKnife.bind(this);
         initView();
-        EventBus.getDefault().register(this);
         mPresenter.initData(mActivity);
     }
 
@@ -229,6 +227,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                     public void onPlayError(final String url, Object... objects) {
 
                         gsyPlayerAcCameraDetail.setCityPlayState(3);
+                        orientationUtils.setEnable(false);
+                        backFromWindowFull();
                         gsyPlayerAcCameraDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -240,7 +240,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
                     @Override
                     public void onAutoComplete(final String url, Object... objects) {
-
+                        orientationUtils.setEnable(false);
+                        backFromWindowFull();
 //
                     }
 
@@ -474,6 +475,47 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         gsyPlayerAcCameraDetail.setNoVideo();
     }
 
+
+    @Override
+    public CityStandardGSYVideoPlayer getPlayView() {
+        return gsyPlayerAcCameraDetail;
+    }
+
+    @Override
+    public void backFromWindowFull() {
+        if (orientationUtils != null) {
+            orientationUtils.backToProtVideo();
+        }
+        orientationUtils.setEnable(false);
+        if (GSYVideoManager.backFromWindowFull(this)) {
+            return;
+        }
+    }
+
+    @Override
+    public void onVideoPause() {
+
+        onPause();
+
+    }
+
+    @Override
+    public void onVideoResume(boolean isLive) {
+        if (isLive) {
+            onRestart();
+        } else {
+            onResume();
+        }
+
+    }
+
+    @Override
+    public void setVerOrientationUtilEnable(boolean enable) {
+        if (orientationUtils != null) {
+            orientationUtils.setEnable(enable);
+        }
+    }
+
     private void initRvCameraList() {
         deviceCameraListAdapter = new CameraDetailListAdapter(this);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -571,7 +613,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         }
 
         GSYVideoManager.releaseAllVideos();
-        EventBus.getDefault().unregister(this);
 
     }
 
@@ -580,7 +621,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         //如果旋转了就全屏
-        if (isPlay && !isPause) {
+        if (isPlay && !isPause && orientationUtils.isEnable()) {
             getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
         }
     }

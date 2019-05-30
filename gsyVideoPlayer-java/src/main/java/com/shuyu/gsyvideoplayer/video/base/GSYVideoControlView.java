@@ -91,6 +91,8 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
 
     //是否改变播放进度
     protected boolean mChangePosition = false;
+    //自定义控件，直播时禁止拖动进度
+    protected boolean cityChangePosition = true;
 
     //触摸显示虚拟按键
     protected boolean mShowVKey = false;
@@ -695,7 +697,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
         int curWidth = CommonUtil.getCurrentScreenLand((Activity) getActivityContext()) ? mScreenHeight : mScreenWidth;
         int curHeight = CommonUtil.getCurrentScreenLand((Activity) getActivityContext()) ? mScreenWidth : mScreenHeight;
 
-        if (mChangePosition) {
+        if (mChangePosition && cityChangePosition) {
             int totalTimeDuration = getDuration();
             mSeekTimePosition = (int) (mDownPosition + (deltaX * totalTimeDuration / curWidth) / mSeekRatio);
             if (mSeekTimePosition > totalTimeDuration)
@@ -765,7 +767,7 @@ public abstract class GSYVideoControlView extends GSYVideoView implements View.O
         dismissProgressDialog();
         dismissVolumeDialog();
         dismissBrightnessDialog();
-        if (mChangePosition && getGSYVideoManager() != null && (mCurrentState == CURRENT_STATE_PLAYING || mCurrentState == CURRENT_STATE_PAUSE)) {
+        if (mChangePosition && cityChangePosition && getGSYVideoManager() != null && (mCurrentState == CURRENT_STATE_PLAYING || mCurrentState == CURRENT_STATE_PAUSE)) {
             try {
                 getGSYVideoManager().seekTo(mSeekTimePosition);
             } catch (Exception e) {

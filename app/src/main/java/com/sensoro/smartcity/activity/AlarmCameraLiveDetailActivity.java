@@ -16,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.immersionbar.ImmersionBar;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -87,6 +87,8 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
     }
 
     private void initView() {
+
+
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 
         includeImvTitleTvTitle.setText(mActivity.getString(R.string.deploy_camera_watch_live));
@@ -305,6 +307,18 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
     }
 
     @Override
+    public void onVideoPause() {
+
+        onPause();
+    }
+
+    @Override
+    public void onVideoResume() {
+
+        onRestart();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (orientationUtils != null)
@@ -360,7 +374,7 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         //如果旋转了就全屏
-        if (isPlay && !isPause) {
+        if (isPlay && !isPause && orientationUtils.isEnable()) {
             getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
         }
     }
@@ -469,7 +483,7 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
     }
 
     @Override
-    public void setVerOrientationUtil(boolean enable) {
+    public void setVerOrientationUtilEnable(boolean enable) {
         if (orientationUtils != null) {
             orientationUtils.setEnable(enable);
         }

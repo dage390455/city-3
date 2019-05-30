@@ -9,7 +9,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.smartcity.R;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ISplashActivityView;

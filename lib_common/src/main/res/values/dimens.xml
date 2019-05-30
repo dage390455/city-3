@@ -2,10 +2,10 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
-    <dimen name="city_btn_text_size">16sp</dimen>
-    <dimen name="tag_default_size">13sp</dimen>
-    <dimen name="grid_sensor_value">25sp</dimen>
-    <dimen name="grid_sensor_unit">10sp</dimen>
+    <dimen name="city_btn_text_size">16dp</dimen>
+    <dimen name="tag_default_size">13dp</dimen>
+    <dimen name="grid_sensor_value">25dp</dimen>
+    <dimen name="grid_sensor_unit">10dp</dimen>
     <dimen name="city_small_size">@dimen/x35</dimen>
     <dimen name="city_size">@dimen/x40</dimen>
     <dimen name="city_normal_size">@dimen/x42</dimen>

@@ -42,6 +42,8 @@ dependencies {
     //
     androidTestImplementation deps.support.test_espresso
     //
+    implementation deps.permission
+    //
     implementation deps.butterknife
     annotationProcessor deps.butterknife_compiler
     //

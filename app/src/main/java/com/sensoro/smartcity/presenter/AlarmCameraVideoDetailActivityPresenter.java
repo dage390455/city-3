@@ -50,8 +50,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
+import static com.sensoro.smartcity.constant.Constants.VIDEO_START;
+import static com.sensoro.smartcity.constant.Constants.VIDEO_STOP;
 import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAUSE;
-import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PLAYING;
 
 public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlarmCameraVideoDetailActivityView>
         implements DownloadListener {
@@ -62,6 +63,7 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
     private ArrayList<MediasBean> mList = new ArrayList<>();
     private AlarmCloudVideoRsp.DataBean mVideoData;
     private MediasBean mDownloadBean;
+
 
     /**
      * 网络改变状态
@@ -78,21 +80,19 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
 
                 case ConnectivityManager.TYPE_WIFI:
                     getView().getPlayView().setCityPlayState(-1);
-                    if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
-                        GSYVideoManager.onResume(true);
-//                        getView().getPlayView().prepareCityVideo();
+                    getView().setVerOrientationUtil(true);
 
-                    } else if (getView().getPlayView().getCurrentState() != CURRENT_STATE_PLAYING) {
-//                        initData(mActivity);
-                        if (!TextUtils.isEmpty(currentPlayUrl)) {
-                            getView().doPlayLive(currentPlayUrl);
-                        }
+                    if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
+                        getView().getPlayView().clickCityStartIcon();
+
+                        GSYVideoManager.onResume(true);
 
                     }
 
                     break;
 
                 case ConnectivityManager.TYPE_MOBILE:
+                    getView().setVerOrientationUtil(false);
 
                     if (isAttachedView()) {
                         getView().getPlayView().setCityPlayState(2);
@@ -100,10 +100,14 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
                         getView().getPlayView().getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                getView().getPlayView().setCityPlayState(-1);
-                                GSYVideoManager.onResume(true);
 
-//                                getView().getPlayView().prepareCityVideo();
+                                getView().getPlayView().setCityPlayState(-1);
+                                if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
+                                    getView().getPlayView().clickCityStartIcon();
+                                    getView().setVerOrientationUtil(true);
+
+                                }
+                                GSYVideoManager.onResume(true);
 
 
                             }
@@ -115,20 +119,26 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
 
                     break;
 
-                case -1:
+                default:
                     if (isAttachedView()) {
 
 
                         getView().backFromWindowFull();
                         getView().getPlayView().setCityPlayState(1);
+                        getView().setVerOrientationUtil(false);
                     }
                     break;
 
 
-                default:
-                    break;
-
             }
+        } else if (code == VIDEO_START) {
+
+            getView().onVideoResume();
+
+        } else if (code == VIDEO_STOP) {
+            getView().onVideoPause();
+
+
         }
     }
 

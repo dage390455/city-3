@@ -257,7 +257,7 @@ public class AlarmPopupConfigAnalyzer {
                     }
                 }
                 break;
-            case "firePhase":
+            case "fireStage":
                 if (alarmPopupDataBeanCache != null) {
                     Map<String, AlarmPopupDataConfigBean> config = alarmPopupDataBeanCache.getConfig();
                     if (config != null) {

@@ -73,6 +73,9 @@ public class IjkPlayerManager implements IPlayerManager {
                 mediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
                 mediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1);
                 mediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1);
+                //m3u8视频快进和设置currentPlaybackTime不太准,seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少，播放器会在拖动的位置找最近的关键帧。
+                mediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
+
             }
 
             if (gsyModel.isCache() && cacheManager != null) {

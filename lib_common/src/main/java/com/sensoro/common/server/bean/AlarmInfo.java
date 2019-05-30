@@ -152,7 +152,7 @@ public class AlarmInfo implements Serializable {
         private String name;
         private String remark;
         private Event[] phoneList;
-        private Integer firePhase;
+        private Integer fireStage;
         private Integer fireType;
         private List<SecurityRisksAdapterModel> danger;
 
@@ -164,8 +164,8 @@ public class AlarmInfo implements Serializable {
             this.danger = danger;
         }
 
-        public void setFirePhase(Integer firePhase) {
-            this.firePhase = firePhase;
+        public void setFireStage(Integer fireStage) {
+            this.fireStage = fireStage;
         }
 
         public Integer getFireType() {
@@ -295,8 +295,8 @@ public class AlarmInfo implements Serializable {
             this.remark = remark;
         }
 
-        public Integer getFirePhase() {
-            return firePhase;
+        public Integer getFireStage() {
+            return fireStage;
         }
 
         public class Event implements Serializable {

@@ -1,8 +1,10 @@
 package com.sensoro.smartcity.activity;
 
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -16,7 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.immersionbar.ImmersionBar;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -95,7 +97,6 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     }
 
     private void initView() {
-
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 
         mDownloadUtils = new VideoDownloadDialogUtils(mActivity);
@@ -158,12 +159,16 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
                 .setVideoAllCallBack(new GSYSampleCallBack() {
                     @Override
                     public void onPlayError(final String url, Object... objects) {
+                        orientationUtils.setEnable(false);
 
+                        backFromWindowFull();
                     }
 
                     @Override
                     public void onAutoComplete(final String url, Object... objects) {
+                        orientationUtils.setEnable(false);
 
+                        backFromWindowFull();
 //
                     }
 
@@ -302,6 +307,8 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
         super.onPause();
         isPause = true;
         GSYVideoManager.onPause();
+        Log.d("======", "onPause");
+
 
     }
 
@@ -322,7 +329,9 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         //如果旋转了就全屏
-        if (isPlay && !isPause) {
+
+
+        if (isPlay && !isPause && orientationUtils.isEnable()) {
             getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
         }
     }
@@ -381,6 +390,19 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     }
 
     @Override
+    public void onVideoPause() {
+
+        onPause();
+    }
+
+    @Override
+    public void onVideoResume() {
+
+        onResume();
+
+    }
+
+    @Override
     public void backFromWindowFull() {
         if (orientationUtils != null) {
             orientationUtils.backToProtVideo();
@@ -393,6 +415,14 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
 
     @Override
     public void setVerOrientationUtil(boolean enable) {
+
+
+        if (!enable) {
+            isPause = true;
+        } else {
+            isPause = false;
+
+        }
         if (orientationUtils != null) {
             orientationUtils.setEnable(enable);
         }
@@ -461,6 +491,8 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
         isPause = false;
         GSYVideoManager.onResume();
 
+        Log.d("======", "onResume");
+
     }
 
     @OnClick({R.id.include_imv_title_imv_arrows_left, R.id.return_top_include})
@@ -517,4 +549,6 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     public void onConfirmClick() {
         mPresenter.doDownload();
     }
+
+
 }

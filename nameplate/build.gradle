@@ -53,7 +53,8 @@ dependencies {
     implementation deps.glide
     //
     implementation deps.smartrefresh
-
+    //
+    implementation deps.permission
     //消息组件
     implementation deps.event_bus
     //网络组件

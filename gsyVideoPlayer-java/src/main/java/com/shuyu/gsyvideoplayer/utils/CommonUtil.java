@@ -18,10 +18,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.TintContextWrapper;
 import androidx.fragment.app.FragmentActivity;
 
-import com.gyf.barlibrary.BarHide;
-import com.gyf.barlibrary.FlymeOSStatusBarFontUtils;
-import com.gyf.barlibrary.ImmersionBar;
-import com.gyf.barlibrary.OSUtils;
+
+import com.gyf.immersionbar.BarHide;
+import com.gyf.immersionbar.ImmersionBar;
 
 import java.io.File;
 import java.util.Formatter;

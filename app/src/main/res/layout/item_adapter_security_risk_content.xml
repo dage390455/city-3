@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/c_a6a6a6"
-            android:textSize="14sp"
+            android:textSize="14dp"
             android:layout_gravity="center_vertical"
             android:text="@string/security_location"
 
@@ -48,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical|start"
-                android:textSize="12sp"
+                android:textSize="12dp"
                 android:textColor="@color/white"
                 />
             <ImageView
@@ -91,7 +91,7 @@
             android:textColor="@color/c_a6a6a6"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="6dp"
-            android:textSize="14sp"
+            android:textSize="14dp"
             android:text="@string/security_behavior"
 
             />

@@ -137,7 +137,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     public CityStandardGSYVideoPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
-        int dp48 = (int) (context.getResources().getDisplayMetrics().density * 48 + 0.5f);
+        int dp48 = (int) (context.getResources().getDisplayMetrics().density * 28 + 0.5f);
         if (attrs != null) {
             TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.standard_view);
             int titleTop = (int) ta.getDimension(R.styleable.standard_view_title_margin_top, dp48);
@@ -361,6 +361,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     public void setIsLive(int isLive) {
 
         if (isLive == View.INVISIBLE) {
+            cityChangePosition = false;
             mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
 
             audioIv.setChecked(true);
@@ -370,6 +371,9 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
             mStateTv.setText(R.string.live);
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_29c_shadow);
         } else {
+
+            cityChangePosition = true;
+
             mStateTv.setText(R.string.gsy_video);
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_f48f57_shadow);
         }
@@ -575,8 +579,8 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     }
 
-    public void prepareCityVideo() {
-        prepareVideo();
+    public void clickCityStartIcon() {
+        clickStartIcon();
 
     }
 
@@ -1497,9 +1501,13 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
 
         if (isLive == View.INVISIBLE) {
+            cityChangePosition = false;
+
             mStateTv.setText(getResources().getString(R.string.live));
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_29c_shadow);
         } else {
+            cityChangePosition = true;
+
             mStateTv.setText(getResources().getString(R.string.gsy_video));
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_f48f57_shadow);
         }
@@ -1580,8 +1588,12 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-    }
+        try {
+            getContext().unregisterReceiver(mVolumeReceiver);
+        } catch (IllegalArgumentException e) {
 
+        }
+    }
 
     @Override
     public void onAutoCompletion() {

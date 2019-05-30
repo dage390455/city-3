@@ -22,7 +22,7 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.Polyline;
 import com.amap.api.maps.model.PolylineOptions;
-import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.PersonLocusCameraGaoDeAdapter;
 import com.sensoro.common.base.BaseActivity;
