@@ -91,8 +91,8 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
                     } else {
                         if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
+                            getView().getPlayView().clickCityStartIcon();
                             GSYVideoManager.onResume(true);
-//                        getView().getPlayView().clickCityStartIcon();
                         }
                     }
                     break;
@@ -125,6 +125,8 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                                     GSYVideoManager.onResume(true);
                                     if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
                                         getView().getPlayView().clickCityStartIcon();
+                                        getView().setVerOrientationUtilEnable(true);
+
                                     }
 
 
