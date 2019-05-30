@@ -36,6 +36,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
+import static com.sensoro.smartcity.constant.Constants.VIDEO_START;
+import static com.sensoro.smartcity.constant.Constants.VIDEO_STOP;
 
 public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarmCameraLiveDetailActivityView> {
     private Activity mActivity;
@@ -84,7 +86,6 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
                                 doLive();
 
 
-
                             }
                         });
                         getView().backFromWindowFull();
@@ -107,6 +108,14 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
                     break;
 
             }
+        } else if (code == VIDEO_START) {
+
+            getView().onVideoResume();
+
+        } else if (code == VIDEO_STOP) {
+            getView().onVideoPause();
+
+
         }
     }
 
@@ -271,4 +280,5 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
             }
         });
     }
+
 }

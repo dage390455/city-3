@@ -60,4 +60,8 @@ public interface ICameraDetailActivityView extends IProgressDialog, IToast, IAct
 
     void backFromWindowFull();
 
+    void onVideoPause();
+
+    void onVideoResume(boolean isLive);
+
 }

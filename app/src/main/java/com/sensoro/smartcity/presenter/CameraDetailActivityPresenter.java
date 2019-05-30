@@ -44,6 +44,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
+import static com.sensoro.smartcity.constant.Constants.VIDEO_START;
+import static com.sensoro.smartcity.constant.Constants.VIDEO_STOP;
 import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAUSE;
 
 public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailActivityView> implements
@@ -66,32 +68,6 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     private String deviceStatus;
     private String sn;
     private ArrayList<DeviceCameraFacePic> mLists = new ArrayList<>();
-
-    @Override
-    public void initData(Context context) {
-        mActivity = (Activity) context;
-        EventBus.getDefault().register(this);
-        Intent intent = mActivity.getIntent();
-        if (intent != null) {
-            cid = intent.getStringExtra("cid");
-            url = intent.getStringExtra("hls");
-            mCameraName = intent.getStringExtra("cameraName");
-            lastCover = intent.getStringExtra("lastCover");
-            getLastCoverImage(lastCover);
-            deviceStatus = intent.getStringExtra("deviceStatus");
-            sn = intent.getStringExtra("sn");
-
-        }
-
-        getView().showProgressDialog();
-        requestData(cid, Constants.DIRECTION_DOWN);
-        mCalendarPopUtils = new CalendarPopUtils(mActivity);
-        mCalendarPopUtils.setMonthStatus(1)
-                .setRangeStatus(1)
-                .isDefaultSelectedCurDay(false);
-        mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
-    }
-
 
     /**
      * 网络改变状态
@@ -178,7 +154,40 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                     break;
 
             }
+        } else if (code == VIDEO_START) {
+
+            getView().onVideoResume(null == itemUrl);
+
+        } else if (code == VIDEO_STOP) {
+            getView().onVideoPause();
+
+
         }
+    }
+
+    @Override
+    public void initData(Context context) {
+        mActivity = (Activity) context;
+        EventBus.getDefault().register(this);
+        Intent intent = mActivity.getIntent();
+        if (intent != null) {
+            cid = intent.getStringExtra("cid");
+            url = intent.getStringExtra("hls");
+            mCameraName = intent.getStringExtra("cameraName");
+            lastCover = intent.getStringExtra("lastCover");
+            getLastCoverImage(lastCover);
+            deviceStatus = intent.getStringExtra("deviceStatus");
+            sn = intent.getStringExtra("sn");
+
+        }
+
+        getView().showProgressDialog();
+        requestData(cid, Constants.DIRECTION_DOWN);
+        mCalendarPopUtils = new CalendarPopUtils(mActivity);
+        mCalendarPopUtils.setMonthStatus(1)
+                .setRangeStatus(1)
+                .isDefaultSelectedCurDay(false);
+        mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
     }
 
 

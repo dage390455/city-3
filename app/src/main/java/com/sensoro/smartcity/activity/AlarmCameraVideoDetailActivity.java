@@ -1,9 +1,12 @@
 package com.sensoro.smartcity.activity;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -96,7 +99,6 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     }
 
     private void initView() {
-
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 
         mDownloadUtils = new VideoDownloadDialogUtils(mActivity);
@@ -303,6 +305,8 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
         super.onPause();
         isPause = true;
         GSYVideoManager.onPause();
+        Log.d("======", "onPause");
+
 
     }
 
@@ -379,6 +383,19 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     @Override
     public void setPlayVideoTime(String s) {
         tvTimeAcAlarmCameraVideoDetail.setText(s);
+    }
+
+    @Override
+    public void onVideoPause() {
+
+        onPause();
+    }
+
+    @Override
+    public void onVideoResume() {
+
+        onResume();
+
     }
 
     @Override
@@ -462,6 +479,8 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
         isPause = false;
         GSYVideoManager.onResume();
 
+        Log.d("======", "onResume");
+
     }
 
     @OnClick({R.id.include_imv_title_imv_arrows_left, R.id.return_top_include})
@@ -520,20 +539,4 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     }
 
 
-    /**
-     * 隐藏虚拟按键，并且全屏
-     */
-    protected void hideBottomUIMenu() {
-        //隐藏虚拟按键，并且全屏
-        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
-            View v = this.getWindow().getDecorView();
-            v.setSystemUiVisibility(View.GONE);
-        } else if (Build.VERSION.SDK_INT >= 19) {
-            //for new api versions.
-            View decorView = getWindow().getDecorView();
-            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN;
-            decorView.setSystemUiVisibility(uiOptions);
-        }
-    }
 }

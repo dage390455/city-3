@@ -28,6 +28,9 @@ public interface IAlarmCameraVideoDetailActivityView extends IToast, IProgressDi
 
     void setPlayVideoTime(String s);
 
+    void onVideoPause();
+
+    void onVideoResume();
     void backFromWindowFull();
 
     void setVerOrientationUtil(boolean enable);

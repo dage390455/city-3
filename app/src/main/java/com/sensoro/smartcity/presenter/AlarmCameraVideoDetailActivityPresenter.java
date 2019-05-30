@@ -50,6 +50,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
+import static com.sensoro.smartcity.constant.Constants.VIDEO_START;
+import static com.sensoro.smartcity.constant.Constants.VIDEO_STOP;
 import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAUSE;
 import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PLAYING;
 
@@ -62,6 +64,7 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
     private ArrayList<MediasBean> mList = new ArrayList<>();
     private AlarmCloudVideoRsp.DataBean mVideoData;
     private MediasBean mDownloadBean;
+
 
     /**
      * 网络改变状态
@@ -130,6 +133,14 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
                     break;
 
             }
+        } else if (code == VIDEO_START) {
+
+            getView().onVideoResume();
+
+        } else if (code == VIDEO_STOP) {
+            getView().onVideoPause();
+
+
         }
     }
 

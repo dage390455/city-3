@@ -87,6 +87,8 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
     }
 
     private void initView() {
+
+
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 
         includeImvTitleTvTitle.setText(mActivity.getString(R.string.deploy_camera_watch_live));
@@ -302,6 +304,18 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
     @Override
     public CityStandardGSYVideoPlayer getPlayView() {
         return gsyPlayerAcAlarmCameraLiveDetail;
+    }
+
+    @Override
+    public void onVideoPause() {
+
+        onPause();
+    }
+
+    @Override
+    public void onVideoResume() {
+
+        onRestart();
     }
 
     @Override
