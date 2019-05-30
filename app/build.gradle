@@ -277,9 +277,9 @@ dependencies {
     implementation files('libs/ocr-sdk.jar')
     implementation project(':ocr_ui')
     //
-    implementation files('libs/GetuiSDK2.12.4.0.jar')
+//    implementation files('libs/GetuiSDK2.12.4.0.jar')
     //
-    implementation files('libs/AMap3DMap_6.4.1_AMapSearch_6.1.0_AMapLocation_4.2.0_20180906.jar')
+//    implementation files('libs/AMap3DMap_6.4.1_AMapSearch_6.1.0_AMapLocation_4.2.0_20180906.jar')
     //
     implementation project(':sensor-kit')
     //
@@ -312,7 +312,7 @@ dependencies {
         exclude group: "com.amap.api"
     }
     //播放器
-    implementation files('libs/player.jar')
+//    implementation files('libs/player.jar')
     implementation project(path: ':gsyVideoPlayer-base')
     implementation project(path: ':gsyVideoPlayer-proxy_cache')
     implementation project(path: ':gsyVideoPlayer-java')
@@ -320,6 +320,13 @@ dependencies {
     //
     implementation project(':nameplate')
     implementation "com.afollestad.material-dialogs:core:0.9.1.0"
+    implementation 'com.getui:sdk:2.13.2.0'
+    //3D地图so及jar
+    implementation 'com.amap.api:3dmap:latest.integration'
+    //定位功能
+    implementation 'com.amap.api:location:latest.integration'
+    //搜索功能
+    implementation 'com.amap.api:search:latest.integration'
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////

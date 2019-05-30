@@ -125,8 +125,9 @@ def addRepos(RepositoryHandler handler) {
 //    handler.jcenter { "https://maven.aliyun.com/repository/jcenter" }
     //Add the JitPack repository
     handler.maven { url "https://jitpack.io" }
+//    handler.maven { url "http://mvn.gt.igexin.com/nexus/content/repositories/releases/" }
     handler.mavenCentral()
-    handler.maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+//    handler.maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 //    handler.maven { url 'https://maven.aliyun.com/repository/google' }
 //    handler.maven { url 'https://maven.aliyun.com/repository/central'}
 //    handler.maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
