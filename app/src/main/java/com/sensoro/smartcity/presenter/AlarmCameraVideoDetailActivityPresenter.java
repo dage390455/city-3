@@ -102,12 +102,12 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
                             public void onClick(View v) {
 
                                 getView().getPlayView().setCityPlayState(-1);
-                                GSYVideoManager.onResume(true);
                                 if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
                                     getView().getPlayView().clickCityStartIcon();
                                     getView().setVerOrientationUtil(true);
 
                                 }
+                                GSYVideoManager.onResume(true);
 
 
                             }
