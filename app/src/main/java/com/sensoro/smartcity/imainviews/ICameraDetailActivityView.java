@@ -54,7 +54,7 @@ public interface ICameraDetailActivityView extends IProgressDialog, IToast, IAct
 
     void setGsyVideoNoVideo();
 
-    void setVerOrientationUtil(boolean enable);
+    void setVerOrientationUtilEnable(boolean enable);
 
     CityStandardGSYVideoPlayer getPlayView();
 

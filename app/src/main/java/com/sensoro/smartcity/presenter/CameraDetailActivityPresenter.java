@@ -87,7 +87,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                     getView().getPlayView().setCityPlayState(-1);
                     if (null == itemUrl) {
                         doLive();
-                        getView().setVerOrientationUtil(true);
+                        getView().setVerOrientationUtilEnable(true);
 
                     } else {
                         if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
@@ -102,7 +102,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                     if (isAttachedView()) {
                         getView().getPlayView().setCityPlayState(2);
 
-                        getView().setVerOrientationUtil(false);
+                        getView().setVerOrientationUtilEnable(false);
 
                         if (null == itemUrl) {
 

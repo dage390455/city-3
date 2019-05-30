@@ -159,12 +159,16 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
                 .setVideoAllCallBack(new GSYSampleCallBack() {
                     @Override
                     public void onPlayError(final String url, Object... objects) {
+                        orientationUtils.setEnable(false);
 
+                        backFromWindowFull();
                     }
 
                     @Override
                     public void onAutoComplete(final String url, Object... objects) {
+                        orientationUtils.setEnable(false);
 
+                        backFromWindowFull();
 //
                     }
 

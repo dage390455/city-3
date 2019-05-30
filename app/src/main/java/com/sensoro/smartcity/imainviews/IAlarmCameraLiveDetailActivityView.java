@@ -22,7 +22,8 @@ public interface IAlarmCameraLiveDetailActivityView extends IToast, IProgressDia
 
     void backFromWindowFull();
 
-    void setVerOrientationUtil(boolean enable);
+
+    void setVerOrientationUtilEnable(boolean enable);
 
 
     CityStandardGSYVideoPlayer getPlayView();

@@ -460,7 +460,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     @Override
-    public void setVerOrientationUtil(boolean enable) {
+    public void setVerOrientationUtilEnable(boolean enable) {
         if (orientationUtils != null) {
             orientationUtils.setEnable(enable);
         }

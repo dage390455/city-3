@@ -483,7 +483,7 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
     }
 
     @Override
-    public void setVerOrientationUtil(boolean enable) {
+    public void setVerOrientationUtilEnable(boolean enable) {
         if (orientationUtils != null) {
             orientationUtils.setEnable(enable);
         }

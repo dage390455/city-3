@@ -67,7 +67,7 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
                     //直播需要重新拉去
                     doLive();
 //                    }
-                    getView().setVerOrientationUtil(true);
+                    getView().setVerOrientationUtilEnable(true);
 
 
                     break;
@@ -75,7 +75,7 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
                 case ConnectivityManager.TYPE_MOBILE:
 
                     if (isAttachedView()) {
-                        getView().setVerOrientationUtil(false);
+                        getView().setVerOrientationUtilEnable(false);
 
                         getView().getPlayView().setCityPlayState(2);
                         getView().getPlayView().getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
@@ -98,7 +98,7 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
                     if (isAttachedView()) {
                         getView().backFromWindowFull();
                         getView().getPlayView().setCityPlayState(1);
-                        getView().setVerOrientationUtil(false);
+                        getView().setVerOrientationUtilEnable(false);
 
                     }
 
