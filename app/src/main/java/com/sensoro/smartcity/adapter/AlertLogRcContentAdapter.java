@@ -179,10 +179,10 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             } else {
                 holder.llItemAlarmDetailChildAlarmPlace.setVisibility(View.GONE);
             }
-            Integer firePhase = recordInfo.getFirePhase();
-            if (firePhase != null) {
+            Integer fireStage = recordInfo.getFireStage();
+            if (fireStage != null) {
                 holder.llItemAlarmDetailChildAlarmFirePhase.setVisibility(View.VISIBLE);
-                holder.itemAlarmDetailChildAlarmFirePhase.setText(AlarmPopupConfigAnalyzer.gerAlarmPopModelName("firePhase", firePhase, mContext));
+                holder.itemAlarmDetailChildAlarmFirePhase.setText(AlarmPopupConfigAnalyzer.gerAlarmPopModelName("fireStage", fireStage, mContext));
             } else {
                 holder.llItemAlarmDetailChildAlarmFirePhase.setVisibility(View.GONE);
             }
