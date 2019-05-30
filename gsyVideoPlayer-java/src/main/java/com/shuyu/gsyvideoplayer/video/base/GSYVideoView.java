@@ -872,7 +872,7 @@ public abstract class GSYVideoView extends GSYTextureRenderView implements GSYMe
      *
      * @return 是否在全屏界面
      */
-    protected abstract boolean backFromFull(Context context);
+    protected abstract boolean backFromFull(Context context, boolean mHideKey);
 
     /**
      * 释放播放器

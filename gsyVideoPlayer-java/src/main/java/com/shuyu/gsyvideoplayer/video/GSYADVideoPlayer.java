@@ -69,7 +69,7 @@ public class GSYADVideoPlayer extends StandardGSYVideoPlayer {
     }
 
     @Override
-    protected boolean backFromFull(Context context) {
+    protected boolean backFromFull(Context context, boolean mHideKey) {
         return GSYVideoADManager.backFromWindowFull(context);
     }
 
