@@ -7,6 +7,7 @@ import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
 import com.sensoro.common.server.bean.DeviceCameraFacePic;
+import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 
 import java.util.List;
 
@@ -52,4 +53,15 @@ public interface ICameraDetailActivityView extends IProgressDialog, IToast, IAct
     void doPlayLive(String url, String cameraName, boolean b);
 
     void setGsyVideoNoVideo();
+
+    void setVerOrientationUtil(boolean enable);
+
+    CityStandardGSYVideoPlayer getPlayView();
+
+    void backFromWindowFull();
+
+    void onVideoPause();
+
+    void onVideoResume(boolean isLive);
+
 }

@@ -5,19 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.CameraPersonAvatarHistoryActivity;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.imainviews.ICameraDetailActivityView;
-import com.sensoro.smartcity.model.CalendarDateModel;
+import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
@@ -27,13 +25,28 @@ import com.sensoro.common.server.response.DeviceCameraDetailRsp;
 import com.sensoro.common.server.response.DeviceCameraFacePicListRsp;
 import com.sensoro.common.server.response.DeviceCameraHistoryRsp;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.CameraPersonAvatarHistoryActivity;
+import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.imainviews.ICameraDetailActivityView;
+import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
+import static com.sensoro.smartcity.constant.Constants.VIDEO_START;
+import static com.sensoro.smartcity.constant.Constants.VIDEO_STOP;
+import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAUSE;
 
 public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailActivityView> implements
         CalendarPopUtils.OnCalendarPopupCallbackListener {
@@ -56,9 +69,106 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     private String sn;
     private ArrayList<DeviceCameraFacePic> mLists = new ArrayList<>();
 
+    /**
+     * 网络改变状态
+     *
+     * @param eventData
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        int code = eventData.code;
+        if (code == NetworkInfo) {
+            int data = (int) eventData.data;
+
+            switch (data) {
+
+                case ConnectivityManager.TYPE_WIFI:
+                    getView().getPlayView().setCityPlayState(-1);
+
+
+                    if (null == itemUrl) {
+
+
+                        doLive();
+                        getView().setVerOrientationUtil(true);
+
+                    } else {
+                        if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
+                            GSYVideoManager.onResume(true);
+//                        getView().getPlayView().clickCityStartIcon();
+                        }
+                    }
+                    break;
+
+                case ConnectivityManager.TYPE_MOBILE:
+
+                    if (isAttachedView()) {
+                        getView().getPlayView().setCityPlayState(2);
+
+                        getView().setVerOrientationUtil(false);
+
+                        if (null == itemUrl) {
+
+                            getView().getPlayView().getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    GSYVideoManager.onResume(true);
+                                    getView().getPlayView().setCityPlayState(-1);
+                                    doLive();
+                                }
+                            });
+
+
+                        } else {
+                            getView().getPlayView().getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    getView().getPlayView().setCityPlayState(-1);
+                                    GSYVideoManager.onResume(true);
+                                    if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
+                                        getView().getPlayView().clickCityStartIcon();
+                                    }
+
+
+                                }
+                            });
+
+                        }
+                        getView().backFromWindowFull();
+                    }
+
+                    break;
+
+                case -1:
+                    if (isAttachedView()) {
+
+
+                        getView().backFromWindowFull();
+                        getView().getPlayView().setCityPlayState(1);
+                    }
+                    break;
+
+
+                default:
+                    break;
+
+            }
+        } else if (code == VIDEO_START) {
+
+            getView().onVideoResume(null == itemUrl);
+
+        } else if (code == VIDEO_STOP) {
+            getView().onVideoPause();
+
+
+        }
+    }
+
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
+        EventBus.getDefault().register(this);
         Intent intent = mActivity.getIntent();
         if (intent != null) {
             cid = intent.getStringExtra("cid");
@@ -79,6 +189,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                 .isDefaultSelectedCurDay(false);
         mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
     }
+
 
     private void getLastCoverImage(String lastCover) {
         Glide.with(mActivity).load(lastCover).asBitmap().into(new SimpleTarget<Bitmap>() {
@@ -160,6 +271,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
     @Override
     public void onDestroy() {
+        EventBus.getDefault().unregister(this);
     }
 
     private void setLastCover(DeviceCameraFacePic model) {
@@ -270,7 +382,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
         endDateTime = DateUtil.strToDate(calendarDateModel.endDate).getTime();
         if (startDateTime == endDateTime) {
             getView().setSelectedDateSearchText(DateUtil.getCalendarYearMothDayFormatDate(startDateTime));
-        }else{
+        } else {
             getView().setSelectedDateSearchText(DateUtil.getCalendarYearMothDayFormatDate(startDateTime) + " ~ " + DateUtil
                     .getCalendarYearMothDayFormatDate(endDateTime));
         }

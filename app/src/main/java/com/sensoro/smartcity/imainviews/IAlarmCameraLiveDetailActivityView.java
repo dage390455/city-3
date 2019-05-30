@@ -27,4 +27,7 @@ public interface IAlarmCameraLiveDetailActivityView extends IToast, IProgressDia
 
     CityStandardGSYVideoPlayer getPlayView();
 
+    void onVideoPause();
+
+    void onVideoResume();
 }

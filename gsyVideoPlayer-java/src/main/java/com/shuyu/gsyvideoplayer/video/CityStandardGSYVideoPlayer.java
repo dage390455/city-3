@@ -19,7 +19,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -87,7 +86,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     //触摸进度dialog
     protected Dialog mProgressDialog;
     //seekbar和触摸进度dialog
-    protected Dialog mSeekProgressDialog;
+//    protected Dialog mSeekProgressDialog;
 
     protected TextView seekDialogTv;
 
@@ -445,6 +444,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         lastVolume = currVolume;
         registerReceiver();
         maskFaceIv = findViewById(R.id.face_iv);
+        seekDialogTv = findViewById(R.id.city_seek_dialog_tv);
         layoutBottomControlLl = findViewById(R.id.layout_bottom_control_ll);
         rMobileData = findViewById(R.id.rl_mobile_data);
         playAndRetryBtn = findViewById(R.id.playa_retry_btn);
@@ -572,6 +572,11 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
         setViewShowState(mTotalTimeTextView, isLive);
         setViewShowState(mCurrentTimeTextView, isLive);
+
+    }
+
+    public void clickCityStartIcon() {
+        clickStartIcon();
 
     }
 
@@ -753,28 +758,28 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     private void showCityProgressDiallog(String seekTime, int seekTimePosition) {
 
-        if (mSeekProgressDialog == null) {
-            View localView = LayoutInflater.from(getActivityContext()).inflate(R.layout.city_seek_dilog, null);
-
-            seekDialogTv = localView.findViewById(R.id.city_seek_dialog_tv);
-            mSeekProgressDialog = new Dialog(getActivityContext(), R.style.video_style_dialog_progress);
-            mSeekProgressDialog.setContentView(localView);
-            mSeekProgressDialog.getWindow().addFlags(Window.FEATURE_ACTION_BAR);
-            mSeekProgressDialog.getWindow().addFlags(32);
-            mSeekProgressDialog.getWindow().addFlags(16);
-            mSeekProgressDialog.getWindow().setLayout(getWidth(), getHeight());
-            WindowManager.LayoutParams localLayoutParams = mSeekProgressDialog.getWindow().getAttributes();
-            localLayoutParams.gravity = Gravity.TOP;
-            localLayoutParams.width = getWidth();
-            localLayoutParams.height = getHeight();
-            int location[] = new int[2];
-            getLocationOnScreen(location);
-            localLayoutParams.x = location[0];
-            localLayoutParams.y = location[1];
-            mSeekProgressDialog.getWindow().setAttributes(localLayoutParams);
-        }
-        if (!mSeekProgressDialog.isShowing()) {
-            mSeekProgressDialog.show();
+//        if (mSeekProgressDialog == null) {
+////            View localView = LayoutInflater.from(getActivityContext()).inflate(R.layout.city_seek_dilog, null);
+//
+////            seekDialogTv = localView.findViewById(R.id.city_seek_dialog_tv);
+//            mSeekProgressDialog = new Dialog(getActivityContext(), R.style.video_style_dialog_progress);
+//            mSeekProgressDialog.setContentView(localView);
+//            mSeekProgressDialog.getWindow().addFlags(Window.FEATURE_ACTION_BAR);
+//            mSeekProgressDialog.getWindow().addFlags(32);
+//            mSeekProgressDialog.getWindow().addFlags(16);
+//            mSeekProgressDialog.getWindow().setLayout(getWidth(), getHeight());
+//            WindowManager.LayoutParams localLayoutParams = mSeekProgressDialog.getWindow().getAttributes();
+//            localLayoutParams.gravity = Gravity.TOP;
+//            localLayoutParams.width = getWidth();
+//            localLayoutParams.height = getHeight();
+//            int location[] = new int[2];
+//            getLocationOnScreen(location);
+//            localLayoutParams.x = location[0];
+//            localLayoutParams.y = location[1];
+//            mSeekProgressDialog.getWindow().setAttributes(localLayoutParams);
+//        }
+        if (seekDialogTv.getVisibility() != View.VISIBLE) {
+            seekDialogTv.setVisibility(VISIBLE);
         }
         if (null != seekDialogTv) {
             seekDialogTv.setText(seekTime);
@@ -799,10 +804,8 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
             mProgressDialog = null;
         }
 
-        if (mSeekProgressDialog != null) {
-            mSeekProgressDialog.dismiss();
-            mSeekProgressDialog = null;
-        }
+
+        seekDialogTv.setVisibility(INVISIBLE);
 
     }
 

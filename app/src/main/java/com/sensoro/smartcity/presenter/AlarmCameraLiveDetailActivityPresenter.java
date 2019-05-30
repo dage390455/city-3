@@ -22,6 +22,7 @@ import com.sensoro.common.server.response.DeviceCameraDetailRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAlarmCameraLiveDetailActivityView;
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -35,12 +36,16 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
+import static com.sensoro.smartcity.constant.Constants.VIDEO_START;
+import static com.sensoro.smartcity.constant.Constants.VIDEO_STOP;
 
 public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarmCameraLiveDetailActivityView> {
     private Activity mActivity;
     private ArrayList<AlarmCameraLiveRsp.DataBean> mList = new ArrayList<>();
     private List<String> cameras;
     private int mItemClickPosition = 0;
+
+    private String currentReTryClickSn;
 
     /**
      * 网络改变状态
@@ -76,10 +81,9 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
                         getView().getPlayView().getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                GSYVideoManager.onResume(true);
                                 getView().getPlayView().setCityPlayState(-1);
                                 doLive();
-
-//                                GSYVideoManager.onResume();
 
 
                             }
@@ -104,6 +108,14 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
                     break;
 
             }
+        } else if (code == VIDEO_START) {
+
+            getView().onVideoResume();
+
+        } else if (code == VIDEO_STOP) {
+            getView().onVideoPause();
+
+
         }
     }
 
@@ -139,6 +151,17 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
                 if (data != null && data.size() > 0) {
                     mList.addAll(data);
                     mItemClickPosition = 0;
+
+                    if (!TextUtils.isEmpty(currentReTryClickSn)) {
+                        for (int i = 0; i < mList.size(); i++) {
+                            if (mList.get(i).getSn().equals(currentReTryClickSn)) {
+                                mItemClickPosition = i;
+                                break;
+                            }
+                        }
+                    }
+
+
                     doLive();
                 }
 
@@ -192,6 +215,7 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
     }
 
     public void doRefresh() {
+        currentReTryClickSn = "";
         if (cameras == null) {
             getView().onPullRefreshComplete();
             return;
@@ -202,6 +226,7 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
 
     public void doItemClick(int position) {
         mItemClickPosition = position;
+        currentReTryClickSn = "";
         doLive();
     }
 
@@ -222,6 +247,12 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
                         getView().offlineType(hls, sn);
                     } else {
                         doLive();
+                        //更新列表信息
+
+                        currentReTryClickSn = sn;
+                        requestData(cameras, true);
+
+
                     }
 
                 } else {
@@ -249,4 +280,5 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
             }
         });
     }
+
 }

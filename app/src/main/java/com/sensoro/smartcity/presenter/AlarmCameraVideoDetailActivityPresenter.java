@@ -50,6 +50,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
+import static com.sensoro.smartcity.constant.Constants.VIDEO_START;
+import static com.sensoro.smartcity.constant.Constants.VIDEO_STOP;
 import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAUSE;
 import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PLAYING;
 
@@ -62,6 +64,7 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
     private ArrayList<MediasBean> mList = new ArrayList<>();
     private AlarmCloudVideoRsp.DataBean mVideoData;
     private MediasBean mDownloadBean;
+
 
     /**
      * 网络改变状态
@@ -79,9 +82,10 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
                 case ConnectivityManager.TYPE_WIFI:
                     getView().getPlayView().setCityPlayState(-1);
                     if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
-                        GSYVideoManager.onResume();
+                        GSYVideoManager.onResume(true);
+//                        getView().getPlayView().clickCityStartIcon();
+
                     } else if (getView().getPlayView().getCurrentState() != CURRENT_STATE_PLAYING) {
-//                        initData(mActivity);
                         if (!TextUtils.isEmpty(currentPlayUrl)) {
                             getView().doPlayLive(currentPlayUrl);
                         }
@@ -98,8 +102,12 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
                         getView().getPlayView().getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+
                                 getView().getPlayView().setCityPlayState(-1);
-                                GSYVideoManager.onResume();
+                                GSYVideoManager.onResume(true);
+                                if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
+                                    getView().getPlayView().clickCityStartIcon();
+                                }
 
 
                             }
@@ -125,6 +133,14 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
                     break;
 
             }
+        } else if (code == VIDEO_START) {
+
+            getView().onVideoResume();
+
+        } else if (code == VIDEO_STOP) {
+            getView().onVideoPause();
+
+
         }
     }
 

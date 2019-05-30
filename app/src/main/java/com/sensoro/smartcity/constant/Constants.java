@@ -449,7 +449,9 @@ public interface Constants {
 
     int NetworkInfo = 0X55;
 
-
+    //监听电话广播
+    int VIDEO_START = 0X60;
+    int VIDEO_STOP = 0X61;
 
     List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{
         add("elec_fire");
@@ -511,5 +513,7 @@ public interface Constants {
     String EXTRA_DEPLOY_NAMEPLATE_NAME = "extra_deploy_nameplate_name";
     String EXTRA_ALARM_CAMERAS = "extra_alarm_cameras";
     String EXTRA_ALARM_CAMERA_VIDEO = "extra_alarm_camera_video";
+
+
 }
 
