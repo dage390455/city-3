@@ -8,14 +8,15 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.gyf.barlibrary.ImmersionBar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.widgets.SensoroToast;
@@ -160,9 +161,9 @@ public class TakeRecordActivity extends BaseActivity<ITakeRecordActivityView, Ta
     @Override
     protected void onDestroy() {
 
-        if (immersionBar != null) {
-            immersionBar.destroy();
-        }
+//        if (immersionBar != null) {
+//            immersionBar.destroy();
+//        }
         mPresenter.onDestroy();
         super.onDestroy();
     }

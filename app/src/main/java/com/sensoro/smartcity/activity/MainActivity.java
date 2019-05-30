@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.bottomnavigation.BadgeItem;
 import com.sensoro.bottomnavigation.BottomNavigationBar;
 import com.sensoro.bottomnavigation.BottomNavigationItem;

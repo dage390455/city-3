@@ -16,7 +16,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.baidu.mobstat.StatService;
-import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.common.R;
 import com.sensoro.common.manger.ActivityTaskManager;
 import com.sensoro.common.utils.LogUtils;
@@ -160,9 +160,9 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         mPresenter.onDestroy();
         mPresenter.detachView();
         SensoroToast.getInstance().cancelToast();
-        if (immersionBar != null) {
-            immersionBar.destroy();
-        }
+//        if (immersionBar != null) {
+//            immersionBar.destroy();
+//        }
         mHandler.removeCallbacksAndMessages(null);
         super.onDestroy();
         ActivityTaskManager.getInstance().popActivity(this);

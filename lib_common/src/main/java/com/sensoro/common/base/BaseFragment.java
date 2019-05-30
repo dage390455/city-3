@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.baidu.mobstat.StatService;
-import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.common.iwidget.IOnFragmentStart;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -164,9 +164,9 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
             mRootFragment = null;
         }
 
-        if(immersionBar != null){
-            immersionBar.destroy();
-        }
+//        if(immersionBar != null){
+//            immersionBar.destroy();
+//        }
         SensoroToast.getInstance().cancelToast();
         super.onDestroyView();
     }

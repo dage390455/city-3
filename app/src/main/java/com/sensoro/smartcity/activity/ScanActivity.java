@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -108,9 +108,9 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     protected void onDestroy() {
         mProgressUtils.destroyProgress();
 
-        if (immersionBar != null) {
-            immersionBar.destroy();
-        }
+//        if (immersionBar != null) {
+//            immersionBar.destroy();
+//        }
         super.onDestroy();
     }
 

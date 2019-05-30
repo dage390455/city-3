@@ -21,7 +21,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.common.manger.ActivityTaskManager;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.widgets.ProgressUtils;
@@ -211,9 +211,9 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
         mProgressUtils.destroyProgress();
         vv_play.release();
 
-        if (immersionBar != null) {
-            immersionBar.destroy();
-        }
+//        if (immersionBar != null) {
+//            immersionBar.destroy();
+//        }
         super.onDestroy();
         ActivityTaskManager.getInstance().popActivity(this);
     }
