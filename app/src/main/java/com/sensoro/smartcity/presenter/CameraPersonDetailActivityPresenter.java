@@ -52,13 +52,13 @@ public class CameraPersonDetailActivityPresenter extends BasePresenter<ICameraPe
 
             setLastCover();
             requestVideo(dataBean);
-        }else{
+        } else {
             getView().toastShort(mActivity.getString(R.string.tips_data_error));
         }
     }
 
     private void setLastCover() {
-        Glide.with(mActivity).load(Constants.CAMERA_BASE_URL+dataBean.getSceneUrl())
+        Glide.with(mActivity).load(Constants.CAMERA_BASE_URL + dataBean.getSceneUrl())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
                 .into(getView().getImageView());
 
@@ -84,7 +84,10 @@ public class CameraPersonDetailActivityPresenter extends BasePresenter<ICameraPe
                     if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
                         getView().getPlayView().clickCityStartIcon();
 
-                        GSYVideoManager.onResume(true);
+                        GSYVideoManager.onResume();
+
+                    } else {
+                        doRetry();
 
                     }
 
@@ -178,7 +181,7 @@ public class CameraPersonDetailActivityPresenter extends BasePresenter<ICameraPe
                         getView().startPlayLogic(url1);
                     }
 
-                }else{
+                } else {
                     if (isAttachedView()) {
                         getView().toastShort(mActivity.getString(R.string.obtain_video_fail));
                     }

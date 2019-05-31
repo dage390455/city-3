@@ -536,9 +536,10 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     @Override
     protected void onPause() {
-        getCurPlay().onVideoPause();
         super.onPause();
         isPause = true;
+        GSYVideoManager.onPause();
+
     }
 
     @Override
@@ -548,9 +549,11 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     @Override
     protected void onResume() {
-        getCurPlay().onVideoResume();
         super.onResume();
         isPause = false;
+
+        GSYVideoManager.onResume();
+
     }
 
     @Override

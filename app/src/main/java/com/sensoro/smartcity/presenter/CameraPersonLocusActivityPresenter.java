@@ -21,19 +21,18 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.sensoro.common.model.EventData;
-import com.sensoro.smartcity.R;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.imainviews.ICameraPersonLocusActivityView;
+import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeviceCameraHistoryBean;
 import com.sensoro.common.server.response.DeviceCameraHistoryRsp;
 import com.sensoro.common.server.response.DeviceCameraPersonFaceRsp;
-import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.common.utils.DateUtil;
-import com.sensoro.smartcity.widget.GlideRoundTransform;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.imainviews.ICameraPersonLocusActivityView;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.GlideCircleTransform;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
@@ -112,6 +111,9 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                         getView().clickCityStartIcon();
 
                         GSYVideoManager.onResume(true);
+
+                    } else {
+
 
                     }
 

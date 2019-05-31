@@ -87,6 +87,8 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
 
                         GSYVideoManager.onResume(true);
 
+                    } else {
+                        getView().doPlayLive(currentPlayUrl);
                     }
 
                     break;
