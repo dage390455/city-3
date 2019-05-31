@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.sensoro.common.model.EventData;
 import com.sensoro.smartcity.R;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -33,6 +35,11 @@ import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.widget.GlideRoundTransform;
 import com.sensoro.smartcity.widget.GlideCircleTransform;
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,6 +47,11 @@ import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
+import static com.sensoro.smartcity.constant.Constants.VIDEO_START;
+import static com.sensoro.smartcity.constant.Constants.VIDEO_STOP;
+import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAUSE;
 
 public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPersonLocusActivityView> {
     private Activity mActivity;
@@ -68,6 +80,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
+        EventBus.getDefault().register(this);
         faceId = mActivity.getIntent().getStringExtra(Constants.EXTRA_PERSON_LOCUS_FACE_ID);
         dp24 = AppUtils.dp2px(mActivity, 24);
         initMarkerImageView();
@@ -76,6 +89,83 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
 
 
 
+    }
+
+    /**
+     * 网络改变状态
+     *
+     * @param eventData
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        int code = eventData.code;
+        if (code == NetworkInfo) {
+            int data = (int) eventData.data;
+
+            switch (data) {
+
+                case ConnectivityManager.TYPE_WIFI:
+                    getView().setCityPlayState(-1);
+                    getView().setVerOrientationUtil(true);
+
+                    if (getView().getCurrentState() == CURRENT_STATE_PAUSE) {
+                        getView().clickCityStartIcon();
+
+                        GSYVideoManager.onResume(true);
+
+                    }
+
+                    break;
+
+                case ConnectivityManager.TYPE_MOBILE:
+                    getView().setVerOrientationUtil(false);
+
+                    if (isAttachedView()) {
+                        getView().setCityPlayState(2);
+
+                        getView().getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                getView().setCityPlayState(-1);
+                                if (getView().getCurrentState() == CURRENT_STATE_PAUSE) {
+                                    getView().clickCityStartIcon();
+                                    getView().setVerOrientationUtil(true);
+
+                                }
+                                GSYVideoManager.onResume(true);
+
+
+                            }
+                        });
+
+                        getView().backFromWindowFull();
+
+                    }
+
+                    break;
+
+                default:
+                    if (isAttachedView()) {
+
+
+                        getView().backFromWindowFull();
+                        getView().setCityPlayState(1);
+                        getView().setVerOrientationUtil(false);
+                    }
+                    break;
+
+
+            }
+        } else if (code == VIDEO_START) {
+
+            getView().onVideoResume();
+
+        } else if (code == VIDEO_STOP) {
+            getView().onVideoPause();
+
+
+        }
     }
 
     private void initMarkerImageView() {
@@ -293,7 +383,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
     }
     @Override
     public void onDestroy() {
-
+        EventBus.getDefault().unregister(this);
     }
 
     public void doMoveLeft() {

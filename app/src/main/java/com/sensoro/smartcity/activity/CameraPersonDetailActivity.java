@@ -231,6 +231,45 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
     }
 
     @Override
+    public CityStandardGSYVideoPlayer getPlayView() {
+        return gsyPlayerAcCameraPersonDetail;
+    }
+
+    @Override
+    public void setVerOrientationUtil(boolean b) {
+        if (!b) {
+            isPause = true;
+        } else {
+            isPause = false;
+
+        }
+        if (orientationUtils != null) {
+            orientationUtils.setEnable(b);
+        }
+    }
+
+    @Override
+    public void backFromWindowFull() {
+        if (orientationUtils != null) {
+            orientationUtils.backToProtVideo();
+        }
+        orientationUtils.setEnable(false);
+        if (GSYVideoManager.backFromWindowFull(this)) {
+            return;
+        }
+    }
+
+    @Override
+    public void onVideoResume() {
+        onResume();
+    }
+
+    @Override
+    public void onVideoPause() {
+        onPause();
+    }
+
+    @Override
     protected CameraPersonDetailActivityPresenter createPresenter() {
         return new CameraPersonDetailActivityPresenter();
     }
@@ -273,7 +312,7 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         //如果旋转了就全屏
-        if (isPlay && !isPause) {
+        if (isPlay && !isPause && orientationUtils.isEnable()) {
             getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
         }
 

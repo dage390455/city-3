@@ -2,6 +2,7 @@ package com.sensoro.smartcity.imainviews;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.view.View;
 
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.model.LatLng;
@@ -57,4 +58,20 @@ public interface ICameraPersonLocusActivityView extends IToast, IActivityIntent,
     void clearDisplayNormalLine();
 
     void setSeekBarTimeVisible(boolean isVisible);
+
+    void setCityPlayState(int state);
+
+    void setVerOrientationUtil(boolean enable);
+
+    int getCurrentState();
+
+    void clickCityStartIcon();
+
+    View getPlayAndRetryBtn();
+
+    void backFromWindowFull();
+
+    void onVideoResume();
+
+    void onVideoPause();
 }
