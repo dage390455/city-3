@@ -443,6 +443,62 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
     }
 
     @Override
+    public void setCityPlayState(int state) {
+        if (mGaoDeInfoAdapter != null) {
+            mGaoDeInfoAdapter.setCityPlayState(state);
+        }
+    }
+
+    @Override
+    public void setVerOrientationUtil(boolean enable) {
+        if (mGaoDeInfoAdapter != null) {
+            mGaoDeInfoAdapter.setVerOrientationUtil(enable);
+
+        }
+    }
+
+    @Override
+    public int getCurrentState() {
+        return mGaoDeInfoAdapter.getCurrentState();
+    }
+
+    @Override
+    public void clickCityStartIcon() {
+        if (mGaoDeInfoAdapter != null) {
+            mGaoDeInfoAdapter.clickCityStartIcon();
+
+        }
+    }
+
+    @Override
+    public View getPlayAndRetryBtn() {
+        return mGaoDeInfoAdapter.getPlayAndRetryBtn();
+    }
+
+    @Override
+    public void backFromWindowFull() {
+        if (mGaoDeInfoAdapter != null) {
+            mGaoDeInfoAdapter.backFromWindowFull();
+
+        }
+
+    }
+
+    @Override
+    public void onVideoResume() {
+        if (mGaoDeInfoAdapter != null) {
+            mGaoDeInfoAdapter.onResume();
+        }
+    }
+
+    @Override
+    public void onVideoPause() {
+        if (mGaoDeInfoAdapter != null) {
+            mGaoDeInfoAdapter.onPause();
+        }
+    }
+
+    @Override
     public void setMarkerTime(String time) {
         tvTimeRightAcPersonLocus.setText(time);
     }

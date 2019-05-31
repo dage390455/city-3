@@ -195,10 +195,9 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
     }
 
     public void onConfigurationChanged(Configuration newConfig) {
-        if (isPlay && !isPause) {
+        if (isPlay && !isPause && orientationUtils.isEnable()) {
             getCurPlay().onConfigurationChanged(mContext, newConfig, orientationUtils, true, true);
         }
-
     }
 
     public void onPause() {
@@ -223,6 +222,44 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
 
     public void setOnCloseClickListener(onVideoButtonClickListener listener) {
         mListener = listener;
+    }
+
+    public void setCityPlayState(int state) {
+        player.setCityPlayState(state);
+    }
+
+    public void setVerOrientationUtil(boolean enable) {
+        if (!enable) {
+            isPause = true;
+        } else {
+            isPause = false;
+
+        }
+        if (orientationUtils != null) {
+            orientationUtils.setEnable(enable);
+        }
+    }
+
+    public int getCurrentState() {
+        return player.getCurrentState();
+    }
+
+    public void clickCityStartIcon() {
+        player.clickCityStartIcon();
+    }
+
+    public View getPlayAndRetryBtn() {
+        return player.getPlayAndRetryBtn();
+    }
+
+    public void backFromWindowFull() {
+        if (orientationUtils != null) {
+            orientationUtils.backToProtVideo();
+        }
+        orientationUtils.setEnable(false);
+        if (GSYVideoManager.backFromWindowFull(mContext)) {
+            return;
+        }
     }
 
     public interface onVideoButtonClickListener {
