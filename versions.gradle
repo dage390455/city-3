@@ -37,6 +37,7 @@ versions.immersionbar = "3.0.0-beta04"
 versions.ijkplayer = '0.8.8'
 versions.transitionseverywhere = '1.7.0'
 versions.MPAndroidChart = '3.1.0'
+versions.GetTui = '2.13.2.0'
 //Arouter
 versions.arouter_compiler = "1.2.2"
 versions.arouter_api = "1.5.0"
@@ -98,6 +99,14 @@ deps.ijkplayer_x86_64 = "tv.danmaku.ijk.media:ijkplayer-x86_64:${versions.ijkpla
 deps.ijkplayer_x86 = "tv.danmaku.ijk.media:ijkplayer-x86:${versions.ijkplayer}"
 deps.ijkplayer_exo = "tv.danmaku.ijk.media:ijkplayer-exo:${versions.ijkplayer}"
 deps.MPAndroidChart = "com.github.PhilJay:MPAndroidChart:v${versions.MPAndroidChart}"
+//个推
+deps.getui = "com.getui:sdk:${versions.GetTui}"
+//3D地图so及jar
+deps.amap_3dmap = "com.amap.api:3dmap:latest.integration"
+//定位功能
+deps.amap_location = "com.amap.api:location:latest.integration"
+//搜索功能
+deps.amap_search = "com.amap.api:search:latest.integration"
 //
 deps.transitionseverywhere = "com.andkulikov:transitionseverywhere:${versions.transitionseverywhere}"
 //other
@@ -125,8 +134,9 @@ def addRepos(RepositoryHandler handler) {
 //    handler.jcenter { "https://maven.aliyun.com/repository/jcenter" }
     //Add the JitPack repository
     handler.maven { url "https://jitpack.io" }
+//    handler.maven { url "http://mvn.gt.igexin.com/nexus/content/repositories/releases/" }
     handler.mavenCentral()
-    handler.maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+//    handler.maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 //    handler.maven { url 'https://maven.aliyun.com/repository/google' }
 //    handler.maven { url 'https://maven.aliyun.com/repository/central'}
 //    handler.maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }

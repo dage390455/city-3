@@ -49,6 +49,10 @@ android {
                 GETUI_APP_ID    : "2VjnktTwteAnEZ1aMZCB53",
                 GETUI_APP_KEY   : "zrfWS690Dh7r9bPUUfh1o2",
                 GETUI_APP_SECRET: "fN5extdlmHA5NDbdKPkP6A",
+
+//              GETUI_APP_ID    : "g5ikHO2m7DAZ0oY4BrXNE",
+//              GETUI_APP_KEY   : "BkwqeevSYj8fQTO47FsXGA",
+//              GETUI_APP_SECRET: "Z41MlQj5AC8JwUzxEm2081",
                 //TODO 测试版/正式版 使用其中一个
                 APP_ICON        : "@mipmap/ic_launcher_beta",
                 APP_ROUND_ICON  : "@mipmap/ic_launcher_beta_round"
@@ -277,9 +281,9 @@ dependencies {
     implementation files('libs/ocr-sdk.jar')
     implementation project(':ocr_ui')
     //
-    implementation files('libs/GetuiSDK2.12.4.0.jar')
+//    implementation files('libs/GetuiSDK2.12.4.0.jar')
     //
-    implementation files('libs/AMap3DMap_6.4.1_AMapSearch_6.1.0_AMapLocation_4.2.0_20180906.jar')
+//    implementation files('libs/AMap3DMap_6.4.1_AMapSearch_6.1.0_AMapLocation_4.2.0_20180906.jar')
     //
     implementation project(':sensor-kit')
     //
@@ -312,14 +316,21 @@ dependencies {
         exclude group: "com.amap.api"
     }
     //播放器
-    implementation files('libs/player.jar')
+//    implementation files('libs/player.jar')
     implementation project(path: ':gsyVideoPlayer-base')
     implementation project(path: ':gsyVideoPlayer-proxy_cache')
     implementation project(path: ':gsyVideoPlayer-java')
     implementation project(path: ':gsyVideoPlayer-armv7a')
     //
     implementation project(':nameplate')
-    implementation "com.afollestad.material-dialogs:core:0.9.1.0"
+//    implementation "com.afollestad.material-dialogs:core:0.9.1.0"
+    implementation deps.getui
+    //3D地图so及jar
+    implementation deps.amap_3dmap
+    //定位功能
+    implementation deps.amap_location
+    //搜索功能
+    implementation deps.amap_search
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////

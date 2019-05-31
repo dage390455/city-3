@@ -86,6 +86,7 @@
         android:label="@string/app_name"
         android:roundIcon="${APP_ROUND_ICON}"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/MyTheme"
         tools:replace="android:theme">
         <!--适配华为（huawei）刘海屏-->
@@ -372,7 +373,6 @@
         <activity android:name=".activity.SecurityRisksActivity" />
         <activity android:name=".activity.SecurityRiskTagManagerActivity" />
 
-        <activity android:name=".temp.CameraTest" />
         <activity android:name=".temp.RecyclerViewActivity" />
         <activity android:name=".activity.CameraListActivity" />
         <activity android:name=".activity.BaseStationListActivity" />
