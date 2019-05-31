@@ -1588,8 +1588,12 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-    }
+        try {
+            getContext().unregisterReceiver(mVolumeReceiver);
+        } catch (IllegalArgumentException e) {
 
+        }
+    }
 
     @Override
     public void onAutoCompletion() {

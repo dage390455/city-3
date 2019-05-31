@@ -53,7 +53,6 @@ import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
 import static com.sensoro.smartcity.constant.Constants.VIDEO_START;
 import static com.sensoro.smartcity.constant.Constants.VIDEO_STOP;
 import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAUSE;
-import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PLAYING;
 
 public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlarmCameraVideoDetailActivityView>
         implements DownloadListener {
@@ -84,13 +83,9 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
                     getView().setVerOrientationUtil(true);
 
                     if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
-                        GSYVideoManager.onResume(true);
                         getView().getPlayView().clickCityStartIcon();
 
-                    } else if (getView().getPlayView().getCurrentState() != CURRENT_STATE_PLAYING) {
-                        if (!TextUtils.isEmpty(currentPlayUrl)) {
-                            getView().doPlayLive(currentPlayUrl);
-                        }
+                        GSYVideoManager.onResume(true);
 
                     }
 
@@ -107,10 +102,12 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
                             public void onClick(View v) {
 
                                 getView().getPlayView().setCityPlayState(-1);
-                                GSYVideoManager.onResume(true);
                                 if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
                                     getView().getPlayView().clickCityStartIcon();
+                                    getView().setVerOrientationUtil(true);
+
                                 }
+                                GSYVideoManager.onResume(true);
 
 
                             }

@@ -263,7 +263,7 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
             }
         });
         final LinearLayoutManager manager = new LinearLayoutManager(mActivity);
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        manager.setOrientation(RecyclerView.VERTICAL);
         rvListInclude.setLayoutManager(manager);
         rvListInclude.setAdapter(mListAdapter);
 

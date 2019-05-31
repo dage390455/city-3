@@ -90,7 +90,7 @@ public class DeployCameraLiveDetailActivity extends BaseActivity<IDeployCameraLi
 
         getCurPlay().setEnlargeImageRes(R.drawable.ic_camera_full_screen);
 
-        getCurPlay().setShrinkImageRes(R.drawable.ic_camera_full_screen);
+        getCurPlay().setShrinkImageRes(R.drawable.video_shrink);
 
         getCurPlay().getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
