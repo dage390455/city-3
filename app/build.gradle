@@ -323,7 +323,7 @@ dependencies {
     implementation project(path: ':gsyVideoPlayer-armv7a')
     //
     implementation project(':nameplate')
-    implementation "com.afollestad.material-dialogs:core:0.9.1.0"
+//    implementation "com.afollestad.material-dialogs:core:0.9.1.0"
     implementation 'com.getui:sdk:2.13.2.0'
     //3D地图so及jar
     implementation 'com.amap.api:3dmap:latest.integration'
