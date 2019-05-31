@@ -151,6 +151,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     public void initVideoOption() {
+        getPlayView().setIsShowBackMaskTv(true);
+
         gsyPlayerAcCameraDetail.setIsLive(View.INVISIBLE);
         gsyPlayerAcCameraDetail.setHideActionBar(true);
         //增加封面

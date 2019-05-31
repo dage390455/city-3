@@ -90,10 +90,8 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                         getView().setVerOrientationUtilEnable(true);
 
                     } else {
-                        if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
-                            getView().getPlayView().clickCityStartIcon();
-                            GSYVideoManager.onResume(true);
-                        }
+                        getView().getPlayView().clickCityStartIcon();
+                        GSYVideoManager.onResume(true);
                     }
                     break;
 
