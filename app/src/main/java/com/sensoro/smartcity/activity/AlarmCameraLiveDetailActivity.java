@@ -32,6 +32,7 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
+import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
@@ -453,6 +454,9 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
 
     @Override
     public void doPlayLive(final String url) {
+        if ((!NetworkUtils.isAvailable(mActivity) || !NetworkUtils.isWifiConnected(mActivity))) {
+            orientationUtils.setEnable(false);
+        }
         gsyVideoOption.setUrl(url).build(getCurPlay());
         getCurPlay().startPlayLogic();
 
