@@ -3,7 +3,10 @@
     android:id="@+id/camera_list_ll_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/c_f4f4f4">
+
+    android:background="@color/c_f4f4f4"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -171,8 +174,8 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/fg_history_log_rc_content"
                     android:layout_width="match_parent"
-                    android:background="@color/white"
                     android:layout_height="match_parent"
+                    android:background="@color/white"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp" />
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
