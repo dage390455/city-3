@@ -3,24 +3,26 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.gyf.immersionbar.ImmersionBar;
-import com.sensoro.smartcity.R;
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.smartcity.imainviews.ICameraPersonDetailActivityView;
-import com.sensoro.smartcity.presenter.CameraPersonDetailActivityPresenter;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.imainviews.ICameraPersonDetailActivityView;
+import com.sensoro.smartcity.presenter.CameraPersonDetailActivityPresenter;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
+import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
@@ -41,7 +43,7 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
     ConstraintLayout includeImvTitleImvClRoot;
     @BindView(R.id.view_top_ac_camera_person_detail)
     View viewTopAcCameraPersonDetail;
-    @BindView(R.id.gsy_player_ac_camera_person_detail)
+    @BindView(R.id.gsy_player_ac_camera_person_detailq)
     CityStandardGSYVideoPlayer gsyPlayerAcCameraPersonDetail;
     private OrientationUtils orientationUtils;
     private ImageView imageView;
@@ -196,12 +198,13 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
 
     @Override
     public void startPlayLogic(final String url1) {
-
+        if ((!NetworkUtils.isAvailable(mActivity) || !NetworkUtils.isWifiConnected(mActivity))) {
+            setVerOrientationUtil(false);
+        }
         gsyVideoOption.setUrl(url1).build(getCurPlay());
         gsyPlayerAcCameraPersonDetail.setIsLive(View.VISIBLE);
         gsyPlayerAcCameraPersonDetail.setIsShowMaskTopBack(false);
         getCurPlay().startPlayLogic();
-        orientationUtils.setEnable(true);
 
     }
 
@@ -276,16 +279,18 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
 
     @Override
     protected void onResume() {
-        getCurPlay().onVideoResume(false);
         super.onResume();
         isPause = false;
+        GSYVideoManager.onResume();
     }
 
     @Override
     protected void onPause() {
-        getCurPlay().onVideoPause();
+
         super.onPause();
         isPause = true;
+        GSYVideoManager.onPause();
+
     }
 
     @Override
