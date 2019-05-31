@@ -55,7 +55,7 @@ public class PersonLocusCameraGaoDeAdapter implements AMap.InfoWindowAdapter {
 
         getCurPlay().setEnlargeImageRes(R.drawable.ic_camera_full_screen);
 
-        getCurPlay().setShrinkImageRes(R.drawable.ic_camera_full_screen);
+        getCurPlay().setShrinkImageRes(R.drawable.video_shrink);
 
         getCurPlay().getBackButton().setImageResource(R.drawable.video_small_close);
 

@@ -13,6 +13,7 @@ import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
 import static com.shuyu.gsyvideoplayer.utils.CommonUtil.hideNavKey;
+import static com.shuyu.gsyvideoplayer.utils.CommonUtil.showNavKey;
 
 
 /**
@@ -85,7 +86,7 @@ public class GSYVideoManager extends GSYVideoBaseManager {
         View oldF = vp.findViewById(FULLSCREEN_ID);
         if (oldF != null) {
             backFrom = true;
-            hideNavKey(context);
+            showNavKey(context,View.SYSTEM_UI_FLAG_VISIBLE);
             if (GSYVideoManager.instance().lastListener() != null) {
                 GSYVideoManager.instance().lastListener().onBackFullscreen();
             }

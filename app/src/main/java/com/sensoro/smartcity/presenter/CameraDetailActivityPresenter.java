@@ -91,8 +91,8 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
                     } else {
                         if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
+                            getView().getPlayView().clickCityStartIcon();
                             GSYVideoManager.onResume(true);
-//                        getView().getPlayView().clickCityStartIcon();
                         }
                     }
                     break;
@@ -101,43 +101,31 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
                     if (isAttachedView()) {
                         getView().getPlayView().setCityPlayState(2);
-
                         getView().setVerOrientationUtilEnable(false);
-
-                        if (null == itemUrl) {
-
-                            getView().getPlayView().getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    GSYVideoManager.onResume(true);
-                                    getView().getPlayView().setCityPlayState(-1);
+                        getView().getPlayView().getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                getView().getPlayView().setCityPlayState(-1);
+                                getView().setVerOrientationUtilEnable(true);
+                                if (null == itemUrl) {
                                     doLive();
-                                }
-                            });
-
-
-                        } else {
-                            getView().getPlayView().getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                    getView().getPlayView().setCityPlayState(-1);
-                                    GSYVideoManager.onResume(true);
+                                } else {
                                     if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
                                         getView().getPlayView().clickCityStartIcon();
+
                                     }
-
-
                                 }
-                            });
+                                GSYVideoManager.onResume(true);
+                            }
+                        });
 
-                        }
+
                         getView().backFromWindowFull();
                     }
 
                     break;
 
-                case -1:
+                default:
                     if (isAttachedView()) {
 
 
@@ -146,9 +134,6 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                     }
                     break;
 
-
-                default:
-                    break;
 
             }
         } else if (code == VIDEO_START) {
@@ -347,7 +332,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
             temp_startTime = startDateTime;
             temp_endTime = endDateTime;
         }
-        mCalendarPopUtils.show(root, temp_startTime, temp_endTime);
+        mCalendarPopUtils.showFalseClip(root, temp_startTime, temp_endTime);
 
 
     }

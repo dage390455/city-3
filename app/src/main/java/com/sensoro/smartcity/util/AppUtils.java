@@ -20,6 +20,7 @@ import android.os.RemoteException;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -285,7 +286,6 @@ public class AppUtils {
             }
         });
     }
-
 
     public interface InputSoftStatusListener {
         void onKeyBoardClose();

@@ -1499,86 +1499,91 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     }
 
     private boolean doBleMuteOperation(final OnConfigInfoObserver onConfigInfoObserver) {
-        if (bleDeviceMap.containsKey(mDeviceInfo.getSn()) && !TextUtils.isEmpty(bleUpdateModel.blePassword)) {
-            String macAddress = bleDeviceMap.get(mDeviceInfo.getSn()).getMacAddress();
-            if (!TextUtils.isEmpty(macAddress)) {
-                if (sensoroDeviceConnection != null) {
-                    sensoroDeviceConnection.disconnect();
-                }
-                final Runnable configOvertime = new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isAttachedView()) {
-                            if (sensoroDeviceConnection != null) {
-                                sensoroDeviceConnection.disconnect();
-                            }
-                            if (onConfigInfoObserver != null) {
-                                onConfigInfoObserver.onOverTime(mContext.getString(R.string.init_config_over_time));
-                            }
-                        }
+        String sn = mDeviceInfo.getSn();
+        if (bleDeviceMap.containsKey(sn) && !TextUtils.isEmpty(bleUpdateModel.blePassword)) {
+            BLEDevice bleDevice = bleDeviceMap.get(sn);
+            if (bleDevice != null) {
+                String macAddress = bleDevice.getMacAddress();
+                if (!TextUtils.isEmpty(macAddress)) {
+                    if (sensoroDeviceConnection != null) {
+                        sensoroDeviceConnection.disconnect();
                     }
-                };
-                try {
-                    onConfigInfoObserver.onStart(null);
-                    sensoroDeviceConnection = new SensoroDeviceConnection(mContext, macAddress);
-                    final SensoroWriteCallback bleMuteOperationWriteCallback = new SensoroWriteCallback() {
+                    final Runnable configOvertime = new Runnable() {
                         @Override
-                        public void onWriteSuccess(Object o, int cmd) {
+                        public void run() {
                             if (isAttachedView()) {
                                 if (sensoroDeviceConnection != null) {
                                     sensoroDeviceConnection.disconnect();
                                 }
-                                mHandler.removeCallbacks(configOvertime);
-                                onConfigInfoObserver.onSuccess(null);
-                            }
-
-                        }
-
-                        @Override
-                        public void onWriteFailure(int errorCode, int cmd) {
-                            if (isAttachedView()) {
-                                if (sensoroDeviceConnection != null) {
-                                    sensoroDeviceConnection.disconnect();
+                                if (onConfigInfoObserver != null) {
+                                    onConfigInfoObserver.onOverTime(mContext.getString(R.string.init_config_over_time));
                                 }
-                                mHandler.removeCallbacks(configOvertime);
-                                onConfigInfoObserver.onFailed("写入失败");
                             }
-
                         }
                     };
-                    final SensoroConnectionCallback bleMuteOperationConnectionCallback = new SensoroConnectionCallback() {
-                        @Override
-                        public void onConnectedSuccess(BLEDevice bleDevice, int cmd) {
-                            if (isAttachedView()) {
-                                OperationCmdAnalyzer.doOperation(mDeviceInfo.getDeviceType(), mOperationType, sensoroDeviceConnection, bleMuteOperationWriteCallback);
+                    try {
+                        onConfigInfoObserver.onStart(null);
+                        sensoroDeviceConnection = new SensoroDeviceConnection(mContext, macAddress);
+                        final SensoroWriteCallback bleMuteOperationWriteCallback = new SensoroWriteCallback() {
+                            @Override
+                            public void onWriteSuccess(Object o, int cmd) {
+                                if (isAttachedView()) {
+                                    if (sensoroDeviceConnection != null) {
+                                        sensoroDeviceConnection.disconnect();
+                                    }
+                                    mHandler.removeCallbacks(configOvertime);
+                                    onConfigInfoObserver.onSuccess(null);
+                                }
+
                             }
 
-                        }
+                            @Override
+                            public void onWriteFailure(int errorCode, int cmd) {
+                                if (isAttachedView()) {
+                                    if (sensoroDeviceConnection != null) {
+                                        sensoroDeviceConnection.disconnect();
+                                    }
+                                    mHandler.removeCallbacks(configOvertime);
+                                    onConfigInfoObserver.onFailed("写入失败");
+                                }
 
-                        @Override
-                        public void onConnectedFailure(int errorCode) {
-                            if (isAttachedView()) {
-                                mHandler.removeCallbacks(configOvertime);
-                                onConfigInfoObserver.onFailed("连接失败");
+                            }
+                        };
+                        final SensoroConnectionCallback bleMuteOperationConnectionCallback = new SensoroConnectionCallback() {
+                            @Override
+                            public void onConnectedSuccess(BLEDevice bleDevice, int cmd) {
+                                if (isAttachedView()) {
+                                    OperationCmdAnalyzer.doOperation(mDeviceInfo.getDeviceType(), mOperationType, sensoroDeviceConnection, bleMuteOperationWriteCallback);
+                                }
+
                             }
 
-                        }
+                            @Override
+                            public void onConnectedFailure(int errorCode) {
+                                if (isAttachedView()) {
+                                    mHandler.removeCallbacks(configOvertime);
+                                    onConfigInfoObserver.onFailed("连接失败");
+                                }
 
-                        @Override
-                        public void onDisconnected() {
+                            }
 
-                        }
-                    };
-                    sensoroDeviceConnection.connect(bleUpdateModel.blePassword, bleMuteOperationConnectionCallback);
-                    mHandler.postDelayed(configOvertime, 10 * 1000);
-                    LogUtils.loge("--->>  蓝牙消音");
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                    mHandler.removeCallbacks(configOvertime);
-                    bleRequestCmd();
+                            @Override
+                            public void onDisconnected() {
+
+                            }
+                        };
+                        sensoroDeviceConnection.connect(bleUpdateModel.blePassword, bleMuteOperationConnectionCallback);
+                        mHandler.postDelayed(configOvertime, 10 * 1000);
+                        LogUtils.loge("--->>  蓝牙消音");
+                    } catch (Throwable e) {
+                        e.printStackTrace();
+                        mHandler.removeCallbacks(configOvertime);
+                        bleRequestCmd();
+                    }
+                    return true;
                 }
-                return true;
             }
+
         }
         return false;
     }

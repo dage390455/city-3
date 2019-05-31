@@ -449,7 +449,8 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
 
     @OnClick({R.id.iv_move_left_ac_person_locus, R.id.iv_move_right_ac_person_locus
             , R.id.tv_one_day_ac_person_locus, R.id.tv_three_day_ac_person_locus
-            , R.id.tv_seven_day_ac_person_locus, R.id.iv_monitor_map_location_ac_person_locus, R.id.include_text_title_imv_arrows_left})
+            , R.id.tv_seven_day_ac_person_locus, R.id.iv_monitor_map_location_ac_person_locus,
+            R.id.include_text_title_imv_arrows_left,R.id.ll_bottom_ac_person_locus})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_move_left_ac_person_locus:
@@ -472,6 +473,9 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
                 break;
             case R.id.include_text_title_imv_arrows_left:
                 finishAc();
+                break;
+            case R.id.ll_bottom_ac_person_locus:
+                //添加点击事件仅仅为了拦截掉手势，不让map获取事件，所以这里不做任何事情
                 break;
         }
     }
