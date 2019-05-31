@@ -3,7 +3,6 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -23,7 +22,6 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.bean.DeviceCameraFacePic;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -35,12 +33,10 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
+import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -50,7 +46,6 @@ import butterknife.OnClick;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static com.sensoro.common.constant.Constants.NetworkInfo;
 
 
 /**
@@ -98,52 +93,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     private ImageView imageView;
     private Animation returnTopAnimation;
 
-
-    /**
-     * 网络改变状态
-     *
-     * @param eventData
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(EventData eventData) {
-        int code = eventData.code;
-        if (code == NetworkInfo) {
-            int data = (int) eventData.data;
-
-            switch (data) {
-
-                case ConnectivityManager.TYPE_WIFI:
-//                    if (gsyPlayerAcCameraDetail..getVisibility() == VISIBLE) {
-//                        rMobileData.setVisibility(GONE);
-//                        GSYVideoManager.onResume();
-//                    }
-
-                    break;
-
-                case ConnectivityManager.TYPE_MOBILE:
-
-                    GSYVideoManager.onPause();
-                    gsyPlayerAcCameraDetail.setCityPlayState(2);
-                    gsyPlayerAcCameraDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            GSYVideoManager.onResume();
-                        }
-                    });
-                    break;
-
-                case -1:
-                    gsyPlayerAcCameraDetail.setCityPlayState(1);
-
-                    break;
-
-
-                default:
-                    break;
-
-            }
-        }
-    }
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -202,6 +151,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     public void initVideoOption() {
+        getPlayView().setIsShowBackMaskTv(true);
+
         gsyPlayerAcCameraDetail.setIsLive(View.INVISIBLE);
         gsyPlayerAcCameraDetail.setHideActionBar(true);
         //增加封面
@@ -462,6 +413,10 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     @Override
     public void doPlayLive(final String url, String cameraName, final boolean isLive) {
+
+        if ((!NetworkUtils.isAvailable(mActivity) || !NetworkUtils.isWifiConnected(mActivity))) {
+            orientationUtils.setEnable(false);
+        }
         gsyVideoOption.setUrl(url).setVideoTitle(cameraName).build(getCurPlay());
         gsyPlayerAcCameraDetail.setIsLive(isLive ? View.INVISIBLE : VISIBLE);
         getCurPlay().startPlayLogic();

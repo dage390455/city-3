@@ -1,6 +1,5 @@
 package com.sensoro.smartcity.activity;
 
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -35,6 +34,7 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
+import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
@@ -446,6 +446,11 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
 
     @Override
     public void doPlayLive(final String url) {
+
+        if ((!NetworkUtils.isAvailable(mActivity) || !NetworkUtils.isWifiConnected(mActivity))) {
+            setVerOrientationUtil(false);
+        }
+
         gsyVideoOption.setUrl(url).build(getCurPlay());
         getCurPlay().startPlayLogic();
 
