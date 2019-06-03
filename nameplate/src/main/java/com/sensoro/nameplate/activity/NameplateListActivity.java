@@ -21,6 +21,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -28,6 +30,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.model.CameraFilterModel;
@@ -37,7 +40,6 @@ import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
-import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
 import com.sensoro.common.widgets.dialog.TitleTipDialogUtils;
 import com.sensoro.nameplate.IMainViews.INameplateListActivityView;
 import com.sensoro.nameplate.R;
@@ -47,6 +49,7 @@ import com.sensoro.nameplate.presenter.NameplateListActivityPresenter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Route(path = ARouterConstants.activity_deploy_detail)
 public class NameplateListActivity extends BaseActivity<INameplateListActivityView, NameplateListActivityPresenter>
         implements INameplateListActivityView, View.OnClickListener, TitleTipDialogUtils.TitleTipDialogUtilsClickListener {
 
@@ -86,6 +89,7 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_nameplate_list);
         initView();
+        ARouter.getInstance().inject(this);
         mPresenter.initData(mActivity);
     }
 
@@ -130,8 +134,8 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
         //
         mDeleteDialog = new TitleTipDialogUtils(mActivity);
         mDeleteDialog.setTipTitleText(mActivity.getString(R.string.is_delete_nameplate));
-        mDeleteDialog.setTipCancelText(mActivity.getString(R.string.cancel),mActivity.getResources().getColor(R.color.c_252525));
-        mDeleteDialog.setTipConfirmText(mActivity.getString(R.string.delete),mActivity.getResources().getColor(R.color.c_f35a58));
+        mDeleteDialog.setTipCancelText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_252525));
+        mDeleteDialog.setTipConfirmText(mActivity.getString(R.string.delete), mActivity.getResources().getColor(R.color.c_f35a58));
         mDeleteDialog.setTipMessageText(mActivity.getString(R.string.redploy_after_delete));
         mDeleteDialog.setTipDialogUtilsClickListener(this);
         //
@@ -411,8 +415,8 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
 //            mDeviceCameraContentAdapter.updateAdapter(data);
 //        }
         ArrayList<String> strings = new ArrayList<>();
-        for (int i=0;i<10;i++){
-            strings.add("名称是房间爱离开房间爱离 "+i);
+        for (int i = 0; i < 10; i++) {
+            strings.add("名称是房间爱离开房间爱离 " + i);
         }
 
         nameplateListAdapter.updateData(strings);

@@ -10,10 +10,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.sensoro.common.base.BaseFragment;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
-import com.sensoro.nameplate.activity.NameplateListActivity;
+import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
+import com.sensoro.common.widgets.dialog.TipDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.BaseStationListActivity;
@@ -21,8 +24,6 @@ import com.sensoro.smartcity.activity.CameraListActivity;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
 import com.sensoro.smartcity.presenter.ManagerFragmentPresenter;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
-import com.sensoro.common.widgets.dialog.TipDialogUtils;
 import com.sensoro.smartcity.widget.dialog.VersionDialogUtils;
 
 import java.util.Objects;
@@ -275,7 +276,12 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 startAC(new Intent(mRootFragment.getActivity(), CameraListActivity.class));
                 break;
             case R.id.fg_main_manage_ll_nameplate:
-                startAC(new Intent(mRootFragment.getActivity(), NameplateListActivity.class));
+                ARouter.getInstance().build(ARouterConstants.activity_deploy_detail)
+                        .withLong("key1", 666L)
+                        .withString("key3", "888")
+                        .withObject("key4", new String("abc"))
+                        .navigation(mRootFragment.getActivity());
+//                startAC(new Intent(mRootFragment.getActivity(), NameplateListActivity.class));
                 break;
             case R.id.fg_main_manage_ll_basestation:
                 startAC(new Intent(mRootFragment.getActivity(), BaseStationListActivity.class));

@@ -36,7 +36,7 @@ public final class EventLoginData implements Serializable {
     public boolean hasDeviceCameraList = false;
     //TODO 加入本地字段写入支持
     public boolean hasStationList = false;
-    public boolean hasNameplateList = false;
+    public boolean hasNameplateList = true;
 
     @Override
     public String toString() {

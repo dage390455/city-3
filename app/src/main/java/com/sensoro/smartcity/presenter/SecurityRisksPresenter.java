@@ -45,8 +45,6 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
             securityRisksList = list;
             getView().updateSecurityRisksContent(securityRisksList);
         }
-
-
         locationTagList = PreferencesHelper.getInstance().getSecurityRiskLocationTags(mActivity);
         behaviorTagList = PreferencesHelper.getInstance().getSecurityRiskBehaviorTags(mActivity);
 

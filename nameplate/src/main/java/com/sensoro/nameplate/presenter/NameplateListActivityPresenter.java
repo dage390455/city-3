@@ -3,6 +3,7 @@ package com.sensoro.nameplate.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
@@ -45,7 +46,11 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        Serializable serializableExtra = mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST);
+        Intent intent = mContext.getIntent();
+        Bundle extras = intent.getExtras();
+        Object key1 = extras.get("key1");
+        Object key4 = extras.get("key4");
+        Serializable serializableExtra = intent.getSerializableExtra(EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST);
         if (serializableExtra instanceof ArrayList) {
             getView().setSmartRefreshEnable(false);
             deviceCameraInfos.clear();
