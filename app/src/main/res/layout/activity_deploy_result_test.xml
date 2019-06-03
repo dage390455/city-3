@@ -5,7 +5,7 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <com.sensoro.smartcity.widget.BoldTextView
+    <com.sensoro.common.widgets.BoldTextView
         android:id="@+id/ac_deploy_result_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

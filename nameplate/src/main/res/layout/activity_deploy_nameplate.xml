@@ -73,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@null"
-                android:src="@drawable/arrows_right" />
+                android:src="@mipmap/arrows_right" />
 
         </LinearLayout>
 
@@ -133,7 +133,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@null"
-                android:src="@drawable/arrows_right" />
+                android:src="@mipmap/arrows_right" />
 
         </LinearLayout>
 
@@ -178,7 +178,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@null"
-                android:src="@drawable/arrows_right" />
+                android:src="@mipmap/arrows_right" />
 
         </LinearLayout>
     </LinearLayout>
@@ -200,7 +200,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/association_sensor"
+            android:drawableStart="@mipmap/association_sensor"
             android:drawablePadding="8dp"
             android:text="@string/associated_sensor"
             android:textColor="@color/c_252525"
@@ -222,7 +222,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
-            android:src="@drawable/arrows_right" />
+            android:src="@mipmap/arrows_right" />
 
     </LinearLayout>
 

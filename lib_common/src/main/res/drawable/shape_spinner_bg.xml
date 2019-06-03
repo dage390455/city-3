@@ -14,6 +14,6 @@
 
         <bitmap
             android:gravity="end"
-            android:src="@drawable/list_arrow"/>
+            android:src="@mipmap/list_arrow"/>
     </item>
 </layer-list>
