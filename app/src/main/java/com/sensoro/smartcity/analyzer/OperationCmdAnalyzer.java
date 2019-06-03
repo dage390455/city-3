@@ -21,7 +21,7 @@ public class OperationCmdAnalyzer {
                 break;
             case "fhsj_smoke":
             case "n16w_smoke":
-            case "lite_smoke":
+//            case "lite_smoke":
                 doFhsjSmoke(mOperationType, sensoroDeviceConnection, callback);
                 break;
             case "cayman_smoke":
