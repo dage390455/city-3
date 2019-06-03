@@ -276,11 +276,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 startAC(new Intent(mRootFragment.getActivity(), CameraListActivity.class));
                 break;
             case R.id.fg_main_manage_ll_nameplate:
-                ARouter.getInstance().build(ARouterConstants.activity_deploy_detail)
-                        .withLong("key1", 666L)
-                        .withString("key3", "888")
-                        .withObject("key4", new String("abc"))
-                        .navigation(mRootFragment.getActivity());
+                ARouter.getInstance().build(ARouterConstants.activity_deploy_detail).navigation(mRootFragment.getActivity());
 //                startAC(new Intent(mRootFragment.getActivity(), NameplateListActivity.class));
                 break;
             case R.id.fg_main_manage_ll_basestation:

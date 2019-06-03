@@ -907,6 +907,7 @@
     <string name="deoloy_check_get_device_status_failed">获取失败</string>
     <string name="deploy_check_title_repair_instruction">修复说明</string>
     <string name="repair_instruction_obtain_failed">修复说明获取失败</string>
+
     <string name="added_security_risks">添加安全隐患</string>
     <string name="security_location">地点</string>
     <string name="security_behavior">行为</string>
@@ -1084,5 +1085,13 @@
 
     <string name="nameplate_manager_detail">铭牌详情</string>
 
-
+    <string name="nameplate_name_sn">铭牌名称/编号/标签</string>
+    <string name="associated_nameplate_list">取消</string>
+    <string name="is_delete_nameplate">是否删除铭牌</string>
+    <string name="redploy_after_delete">删除后可重新部署铭牌信息</string>
+    <string name="delete_associate_sensor">删除已关联传感器</string>
+    <string name="confirm_associate">确认关联</string>
+    <string name="monitor">监控</string>
+    <string name="selectede">已选</string>
+    <string name="sensor">部传感器</string>
 </resources>

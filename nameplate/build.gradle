@@ -1,5 +1,9 @@
-apply plugin: 'com.android.library'
-apply plugin: 'com.jakewharton.butterknife'
+if (isModule.toBoolean()) {
+    apply plugin: 'com.android.application'
+} else {
+    apply plugin: 'com.android.library'
+    apply plugin: 'com.jakewharton.butterknife'
+}
 android {
     compileSdkVersion build_versions.compile_sdk
 
@@ -28,6 +32,19 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    sourceSets {
+        main {
+            if (isModule.toBoolean()) {
+                manifest.srcFile 'src/main/module/AndroidManifest.xml'
+            } else {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+                //集成开发模式下排除debug文件夹中的所有Java文件
+                java {
+                    exclude 'debug/**'
+                }
+            }
+        }
     }
 
 }
@@ -73,4 +90,5 @@ dependencies {
     implementation deps.rxjava2
     implementation deps.rx_android
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
+//    implementation deps.getui
 }

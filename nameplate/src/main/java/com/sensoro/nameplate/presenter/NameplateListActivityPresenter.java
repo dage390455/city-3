@@ -48,8 +48,6 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
         mContext = (Activity) context;
         Intent intent = mContext.getIntent();
         Bundle extras = intent.getExtras();
-        Object key1 = extras.get("key1");
-        Object key4 = extras.get("key4");
         Serializable serializableExtra = intent.getSerializableExtra(EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST);
         if (serializableExtra instanceof ArrayList) {
             getView().setSmartRefreshEnable(false);
