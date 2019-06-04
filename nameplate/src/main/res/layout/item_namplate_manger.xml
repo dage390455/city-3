@@ -23,7 +23,6 @@
             android:adjustViewBounds="true"
             android:background="@null"
             android:cropToPadding="true"
-            android:text="已关联"
             android:textColor="@color/c_1dbb99"
             android:textSize="12dp" />
 
@@ -35,7 +34,6 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:cropToPadding="true"
-            android:text="传感器：4"
             android:textColor="@color/c_a6a6a6"
             android:textSize="12dp" />
 
@@ -71,7 +69,6 @@
             android:id="@+id/tv_nameplate_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="小刘末班加工厂"
             android:textColor="@color/c_252525"
             android:textSize="16dp" />
 
@@ -80,7 +77,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="01341414124141"
             android:textColor="@color/c_a6a6a6"
             android:textSize="12dp" />
 
@@ -89,7 +85,6 @@
             android:id="@+id/rv_item_adapter_nameplate_tag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="20dp" />
     </LinearLayout>

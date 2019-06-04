@@ -18,6 +18,7 @@ import com.sensoro.common.manger.RxApiManager;
 import com.sensoro.common.model.SecurityRisksAdapterModel;
 import com.sensoro.common.server.bean.ContractsTemplateInfo;
 import com.sensoro.common.server.bean.DeployControlSettingData;
+import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.AlarmCameraLiveRsp;
 import com.sensoro.common.server.response.AlarmCloudVideoRsp;
@@ -32,6 +33,7 @@ import com.sensoro.common.server.response.ContractAddRsp;
 import com.sensoro.common.server.response.ContractInfoRsp;
 import com.sensoro.common.server.response.ContractsListRsp;
 import com.sensoro.common.server.response.ContractsTemplateRsp;
+import com.sensoro.common.server.response.DeleteNamePlateRsp;
 import com.sensoro.common.server.response.DeployCameraUploadRsp;
 import com.sensoro.common.server.response.DeployDeviceDetailRsp;
 import com.sensoro.common.server.response.DeployRecordRsp;
@@ -61,8 +63,11 @@ import com.sensoro.common.server.response.LoginRsp;
 import com.sensoro.common.server.response.MalfunctionCountRsp;
 import com.sensoro.common.server.response.MalfunctionListRsp;
 import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
+import com.sensoro.common.server.response.NameplateBindDeviceRsp;
+import com.sensoro.common.server.response.NamePlateListRsp;
 import com.sensoro.common.server.response.QiNiuToken;
 import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.server.response.UpdateRsp;
 import com.sensoro.common.server.response.UserAccountControlRsp;
 import com.sensoro.common.server.response.UserAccountRsp;
@@ -1796,6 +1801,22 @@ public class RetrofitServiceHelper {
 
     public Observable<BaseStationChartDetailRsp> getBaseStationChartDetail(String stationsn, String type, String interval, long from, long to) {
         return retrofitService.getBaseStationChartDetail(stationsn, type, interval, from, to);
+    }
+
+    public Observable<NamePlateListRsp> getNameplateList(Integer pageSize, Integer page, String search, Map<String, String> mapFilter) {
+        return retrofitService.getNameplateList(pageSize, page, search, mapFilter);
+    }
+
+    public Observable<DeleteNamePlateRsp> deleteNameplate(String nameplateId) {
+        return retrofitService.deleteNameplate(nameplateId);
+    }
+
+    public Observable<ResponseResult<NamePlateInfo>> getNameplateDetail(String nameplateId) {
+        return retrofitService.getNameplateDetail(nameplateId);
+    }
+
+    public Observable<NameplateBindDeviceRsp> getNameplateBindDevices(Integer pageSize, Integer page, String nameplateId) {
+        return retrofitService.getNameplateBindDevices(nameplateId);
     }
 
 
