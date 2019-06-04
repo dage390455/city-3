@@ -21,6 +21,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -44,7 +46,6 @@ import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.adapter.NameplateListAdapter;
 import com.sensoro.nameplate.presenter.NameplateListActivityPresenter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Route(path = ARouterConstants.activity_deploy_detail)
@@ -496,6 +497,16 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
 //        } else {
 //            cameraListIvFilter.setImageResource(R.drawable.camera_filter_unselected);
 //        }
+    }
+
+    @Override
+    public void updateDeleteNamePlateStatus(int pos) {
+
+
+        nameplateListAdapter.notifyItemRemoved(pos);
+        nameplateListAdapter.getData().remove(pos);
+        setNoContentVisible(nameplateListAdapter.getData() == null || nameplateListAdapter.getData().size() < 1);
+
     }
 
     @Override
