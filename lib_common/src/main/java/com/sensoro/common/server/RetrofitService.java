@@ -1,6 +1,9 @@
 package com.sensoro.common.server;
 
 
+import com.sensoro.common.server.bean.NamePlateInfo;
+import com.sensoro.common.server.response.AlarmCameraLiveRsp;
+import com.sensoro.common.server.response.AlarmCloudVideoRsp;
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.AuthRsp;
 import com.sensoro.common.server.response.BaseStationChartDetailRsp;
@@ -12,6 +15,8 @@ import com.sensoro.common.server.response.ContractAddRsp;
 import com.sensoro.common.server.response.ContractInfoRsp;
 import com.sensoro.common.server.response.ContractsListRsp;
 import com.sensoro.common.server.response.ContractsTemplateRsp;
+import com.sensoro.common.server.response.DeleteNamePlateRsp;
+import com.sensoro.common.server.response.DeployCameraUploadRsp;
 import com.sensoro.common.server.response.DeployDeviceDetailRsp;
 import com.sensoro.common.server.response.DeployRecordRsp;
 import com.sensoro.common.server.response.DeployStationInfoRsp;
@@ -29,6 +34,7 @@ import com.sensoro.common.server.response.DeviceInfoListRsp;
 import com.sensoro.common.server.response.DeviceRecentRsp;
 import com.sensoro.common.server.response.DeviceTypeCountRsp;
 import com.sensoro.common.server.response.DeviceUpdateFirmwareDataRsp;
+import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
 import com.sensoro.common.server.response.DevicesMergeTypesRsp;
 import com.sensoro.common.server.response.InspectionTaskDeviceDetailRsp;
 import com.sensoro.common.server.response.InspectionTaskExceptionDeviceRsp;
@@ -39,17 +45,14 @@ import com.sensoro.common.server.response.LoginRsp;
 import com.sensoro.common.server.response.MalfunctionCountRsp;
 import com.sensoro.common.server.response.MalfunctionListRsp;
 import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
+import com.sensoro.common.server.response.NameplateBindDeviceRsp;
+import com.sensoro.common.server.response.NamePlateListRsp;
 import com.sensoro.common.server.response.QiNiuToken;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.server.response.ResponseBase;
 import com.sensoro.common.server.response.UpdateRsp;
 import com.sensoro.common.server.response.UserAccountControlRsp;
 import com.sensoro.common.server.response.UserAccountRsp;
-
-
-import com.sensoro.common.server.response.AlarmCameraLiveRsp;
-import com.sensoro.common.server.response.AlarmCloudVideoRsp;
-import com.sensoro.common.server.response.DeployCameraUploadRsp;
-import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
 
 import java.util.Map;
 
@@ -410,7 +413,6 @@ public interface RetrofitService {
     Observable<BaseStationListRsp> getBaseStationListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
 
 
-
     @POST("qiniu/getCloudMediaByEventId")
     Observable<AlarmCloudVideoRsp> getCloudVideo(@Body RequestBody requestBody);
 
@@ -429,5 +431,19 @@ public interface RetrofitService {
 
     @PUT("stations/{stationsn}")
     Observable<BaseStationDetailRsp> updateStationLocation(@Path("stationsn") String stationsn, @Body RequestBody body);
+
+
+    @GET("nameplates")
+    Observable<NamePlateListRsp> getNameplateList(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
+
+
+    @DELETE("nameplate/{nameplateId}")
+    Observable<DeleteNamePlateRsp> deleteNameplate(@Path("nameplateId") String nameplateId);
+
+    @GET("nameplate/{nameplateId}")
+    Observable<ResponseResult<NamePlateInfo>> getNameplateDetail(@Path("nameplateId") String nameplateId);
+
+    @GET("nameplate/bind/devices")
+    Observable<NameplateBindDeviceRsp> getNameplateBindDevices(@Query("nameplateId") String nameplateId);
 }
 

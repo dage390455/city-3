@@ -4,12 +4,12 @@ import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
 import com.sensoro.common.model.CameraFilterModel;
-import com.sensoro.common.server.bean.DeviceCameraInfo;
+import com.sensoro.common.server.bean.NamePlateInfo;
 
 import java.util.List;
 
 public interface INameplateListActivityView extends IToast, IProgressDialog, IActivityIntent {
-    void updateDeviceCameraAdapter(List<DeviceCameraInfo> data);
+    void updateDeviceCameraAdapter(List<NamePlateInfo> data);
 
     void onPullRefreshComplete();
 
@@ -34,4 +34,6 @@ public interface INameplateListActivityView extends IToast, IProgressDialog, IAc
     void updateCameraListFilterPopupWindowStatusList(List<CameraFilterModel> list);
 
     void setCameraListFilterPopupWindowSelectState(boolean hasSelect);
+
+    void updateDeleteNamePlateStatus(int pos);
 }

@@ -20,6 +20,9 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.Constants;
+import com.sensoro.common.server.bean.NamePlateInfo;
+import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.nameplate.IMainViews.IDeployNameplateAddSensorActivityView;
 import com.sensoro.nameplate.R;
@@ -27,6 +30,8 @@ import com.sensoro.nameplate.R2;
 import com.sensoro.nameplate.adapter.AddedSensorAdapter;
 import com.sensoro.nameplate.presenter.DeployNameplateAddSensorActivityPresenter;
 import com.sensoro.nameplate.widget.CustomDrawableDivider;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -67,6 +72,7 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
     ImageView returnTopInclude;
     private AddedSensorAdapter mAddedSensorAdapter;
     private Animation returnTopAnimation;
+    private ProgressUtils mProgressUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -80,6 +86,8 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
         includeTextTitleTvTitle.setText(R.string.add_sensor);
         includeTextTitleTvSubtitle.setText(R.string.save);
         includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_1dbb99));
+
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 
         returnTopAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.return_top_in_anim);
         returnTopInclude.setAnimation(returnTopAnimation);
@@ -96,13 +104,13 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
         refreshLayoutInclude.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
-//                mPresenter.doRefresh();
+                mPresenter.getBindDevice(Constants.DIRECTION_DOWN);
             }
         });
         refreshLayoutInclude.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-//                mPresenter.doLoadMore();
+                mPresenter.getBindDevice(Constants.DIRECTION_UP);
             }
         });
 
@@ -186,6 +194,22 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
     }
 
     @Override
+    public void updateBindData(List<NamePlateInfo> mBindList) {
+        mAddedSensorAdapter.updateData(mBindList);
+        setNoContentVisible(mBindList == null || mBindList.size() < 1);
+    }
+
+    @Override
+    public void setBindDeviceSize(int size) {
+        tvAddedCountAcDeployNameplateAddSensor.setText(getString(R.string.selected_device_size)+size);
+    }
+
+    private void setNoContentVisible(boolean isVisible) {
+        icNoContent.setVisibility(isVisible ? VISIBLE : GONE);
+        rvAddedListAcDeployNameplateAddSensor.setVisibility(isVisible ? GONE : VISIBLE);
+    }
+
+    @Override
     public void startAC(Intent intent) {
         mActivity.startActivity(intent);
     }
@@ -220,4 +244,26 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
         SensoroToast.getInstance().makeText(msg, Toast.LENGTH_LONG).show();
     }
 
+    @Override
+    public void showProgressDialog() {
+        if (mProgressUtils != null) {
+            mProgressUtils.showProgress();
+        }
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+        if (mProgressUtils != null) {
+            mProgressUtils.dismissProgress();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
+        }
+    }
 }

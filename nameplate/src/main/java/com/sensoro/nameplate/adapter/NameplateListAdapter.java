@@ -1,6 +1,7 @@
 package com.sensoro.nameplate.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TouchRecycleView;
 import com.sensoro.nameplate.R;
@@ -28,21 +30,22 @@ public class NameplateListAdapter extends RecyclerView.Adapter<NameplateListAdap
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private final List<String> mList = new ArrayList<>();
+    private final List<NamePlateInfo> mList = new ArrayList<>();
 
     public NameplateListAdapter(Context context) {
         this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
     }
 
-    public void updateData(List<String> list) {
+    public void updateData(List<NamePlateInfo> list) {
         this.mList.clear();
         this.mList.addAll(list);
         notifyDataSetChanged();
 
     }
 
-    public List<String> getData() {
+
+    public List<NamePlateInfo> getData() {
         return mList;
     }
 
@@ -72,23 +75,37 @@ public class NameplateListAdapter extends RecyclerView.Adapter<NameplateListAdap
                 }
             }
         });
-        holder.tvNameplateAssociated.setText("已关联");
-        holder.tvNameplateName.setText(mList.get(position));
-        holder.tvNameplateSensorCount.setText("传感器：5");
-        holder.tvNameplateSn.setText("sn");
-        //
-        TagAdapter tagAdapter = new TagAdapter(mContext, R.color.c_252525, R.color.c_dfdfdf);
-        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mContext, false);
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        holder.rvItemAdapterNameplateTag.setLayoutManager(layoutManager);
-//        int spacingInPixels = mContext.getResources().getDimensionPixelSize(R.dimen.x10);
-//        holder.rvItemAdapterNameplateTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
-        holder.rvItemAdapterNameplateTag.setAdapter(tagAdapter);
-        ArrayList<String> strings = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
-            strings.add("标签 " + i + position);
+
+
+        NamePlateInfo namePlateInfo = mList.get(position);
+
+
+        if (null != namePlateInfo.getTags() && namePlateInfo.getTags().size() > 0) {
+            holder.rvItemAdapterNameplateTag.setVisibility(View.VISIBLE);
+            TagAdapter tagAdapter = new TagAdapter(mContext, R.color.c_252525, R.color.c_dfdfdf);
+            SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mContext, false);
+            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            holder.rvItemAdapterNameplateTag.setLayoutManager(layoutManager);
+            holder.rvItemAdapterNameplateTag.setAdapter(tagAdapter);
+            tagAdapter.updateTags(namePlateInfo.getTags());
+        } else {
+            holder.rvItemAdapterNameplateTag.setVisibility(View.GONE);
+
         }
-        tagAdapter.updateTags(strings);
+
+
+//        holder.tvNameplateAssociated.setText("已关联");
+//        holder.tvNameplateSensorCount.setText("传感器：5");
+
+
+        if (!TextUtils.isEmpty(namePlateInfo.getSn())) {
+            holder.tvNameplateSn.setText(namePlateInfo.getSn());
+        }
+        if (!TextUtils.isEmpty(namePlateInfo.getName())) {
+            holder.tvNameplateName.setText(namePlateInfo.getName());
+        }
+
+
     }
 
 

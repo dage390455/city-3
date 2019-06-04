@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.R2;
 
@@ -63,10 +64,10 @@ public class AddedSensorAdapter extends RecyclerView.Adapter<AddedSensorAdapter.
 
     @Override
     public int getItemCount() {
-        return 3;
+        return mList.size();
     }
 
-    public void upDateData(List<Object> data){
+    public void updateData(List<NamePlateInfo> data) {
         mList.clear();
         mList.addAll(data);
         notifyDataSetChanged();
