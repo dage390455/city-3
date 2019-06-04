@@ -31,24 +31,22 @@ import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.model.CameraFilterModel;
-import com.sensoro.common.server.bean.DeviceCameraInfo;
+import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
-import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
 import com.sensoro.common.widgets.dialog.TitleTipDialogUtils;
 import com.sensoro.nameplate.IMainViews.INameplateListActivityView;
 import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.adapter.NameplateListAdapter;
 import com.sensoro.nameplate.presenter.NameplateListActivityPresenter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NameplateListActivity extends BaseActivity<INameplateListActivityView, NameplateListActivityPresenter>
-        implements INameplateListActivityView, View.OnClickListener, TitleTipDialogUtils.TitleTipDialogUtilsClickListener {
+        implements INameplateListActivityView, View.OnClickListener {
 
 
     ImageView ivNameplateListTopBack;
@@ -81,6 +79,7 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
     //
     private NameplateListAdapter nameplateListAdapter;
     private TitleTipDialogUtils mDeleteDialog;
+
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -130,10 +129,10 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
         //
         mDeleteDialog = new TitleTipDialogUtils(mActivity);
         mDeleteDialog.setTipTitleText(mActivity.getString(R.string.is_delete_nameplate));
-        mDeleteDialog.setTipCancelText(mActivity.getString(R.string.cancel),mActivity.getResources().getColor(R.color.c_252525));
-        mDeleteDialog.setTipConfirmText(mActivity.getString(R.string.delete),mActivity.getResources().getColor(R.color.c_f35a58));
+        mDeleteDialog.setTipCancelText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_252525));
+        mDeleteDialog.setTipConfirmText(mActivity.getString(R.string.delete), mActivity.getResources().getColor(R.color.c_f35a58));
         mDeleteDialog.setTipMessageText(mActivity.getString(R.string.redploy_after_delete));
-        mDeleteDialog.setTipDialogUtilsClickListener(this);
+//        mDeleteDialog.setTipDialogUtilsClickListener(this);
         //
 //        mDeviceCameraContentAdapter = new DeviceCameraContentAdapter(mActivity);
 //        mDeviceCameraContentAdapter.setOnAlarmHistoryLogConfirmListener(this);
@@ -187,6 +186,24 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
                 //删除
                 if (mDeleteDialog != null) {
                     mDeleteDialog.show();
+
+                    mDeleteDialog.setTipDialogUtilsClickListener(new TitleTipDialogUtils.TitleTipDialogUtilsClickListener() {
+                        @Override
+                        public void onCancelClick() {
+                            mDeleteDialog.dismiss();
+
+                        }
+
+                        @Override
+                        public void onConfirmClick() {
+
+
+                            mDeleteDialog.dismiss();
+                            mPresenter.deleteNamePlate(position);
+                        }
+                    });
+
+
                 }
             }
         });
@@ -406,16 +423,11 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
 //    }
 
     @Override
-    public void updateDeviceCameraAdapter(List<DeviceCameraInfo> data) {
-//        if (data != null && data.size() > 0) {
-//            mDeviceCameraContentAdapter.updateAdapter(data);
-//        }
-        ArrayList<String> strings = new ArrayList<>();
-        for (int i=0;i<10;i++){
-            strings.add("名称是房间爱离开房间爱离 "+i);
-        }
+    public void updateDeviceCameraAdapter(List<NamePlateInfo> data) {
+        if (data != null && data.size() > 0) {
 
-        nameplateListAdapter.updateData(strings);
+            nameplateListAdapter.updateData(data);
+        }
         setNoContentVisible(data == null || data.size() < 1);
     }
 
@@ -484,6 +496,16 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
     }
 
     @Override
+    public void updateDeleteNamePlateStatus(int pos) {
+
+
+        nameplateListAdapter.notifyItemRemoved(pos);
+        nameplateListAdapter.getData().remove(pos);
+        setNoContentVisible(nameplateListAdapter.getData() == null || nameplateListAdapter.getData().size() < 1);
+
+    }
+
+    @Override
     public void showHistoryClearDialog() {
         if (historyClearDialog != null) {
             historyClearDialog.show();
@@ -497,15 +519,15 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
     }
 
 
-    @Override
-    public void onBackPressed() {
+//    @Override
+//    public void onBackPressed() {
 //        if (mCameraListFilterPopupWindow.isShowing()) {
 //            mPresenter.onCameraListFilterPopupWindowDismiss();
 //        } else {
 //            super.onBackPressed();
 //        }
-
-    }
+//
+//    }
 
     private String getSearchText() {
         String text = etNameplateListSearch.getText().toString();
@@ -544,22 +566,6 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
             rvNameplateContent.smoothScrollToPosition(0);
             ivReturnTop.setVisibility(View.GONE);
             refreshLayout.closeHeaderOrFooter();
-        }
-    }
-
-    @Override
-    public void onCancelClick() {
-        toastShort("取消点击了");
-        if (mDeleteDialog != null) {
-            mDeleteDialog.dismiss();
-        }
-    }
-
-    @Override
-    public void onConfirmClick() {
-        toastShort("确认点击了");
-        if (mDeleteDialog != null) {
-            mDeleteDialog.dismiss();
         }
     }
 
