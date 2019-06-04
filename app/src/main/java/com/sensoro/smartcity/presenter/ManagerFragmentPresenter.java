@@ -19,7 +19,6 @@ import com.sensoro.common.server.response.ResponseBase;
 import com.sensoro.nameplate.activity.DeployNameplateActivity;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractManagerActivity;
-import com.sensoro.smartcity.activity.DeployRecordActivity;
 import com.sensoro.smartcity.activity.InspectionTaskListActivity;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.MerchantSwitchActivity;
