@@ -2,6 +2,7 @@ package com.sensoro.nameplate.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -11,9 +12,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.common.widgets.SpacesItemDecoration;
@@ -32,6 +35,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 
 public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivityView, NameplateDetailActivityPresenter>
         implements INameplateDetailActivityView, TipDialogUtils.TipDialogUtilsClickListener {
@@ -61,6 +66,11 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     RecyclerView rvNameplateAssociatedSensor;
     @BindView(R2.id.tv_nameplate_associated_new_sensor)
     TextView tvNameplateAssociatedNewSensor;
+
+    @BindView(R2.id.refreshLayout)
+
+    SmartRefreshLayout refreshLayout;
+
     private AddedSensorAdapter mAddedSensorAdapter;
     private TagAdapter tagAdapter;
     private final List<String> options = new ArrayList<>();
@@ -78,6 +88,10 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
         initTag();
         initRvAddedSensorList();
         mPresenter.initData(mActivity);
+
+        mPresenter.requestData(DIRECTION_DOWN);
+
+
     }
 
     private void initNormalDialog() {
@@ -98,12 +112,7 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
         trvNameplateTag.setLayoutManager(layoutManager);
 //        int spacingInPixels = mContext.getResources().getDimensionPixelSize(R.dimen.x10);
 //        holder.rvItemAdapterNameplateTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
-        trvNameplateTag.setAdapter(tagAdapter);
-        ArrayList<String> strings = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
-            strings.add("标签 " + i);
-        }
-        tagAdapter.updateTags(strings);
+
     }
 
     private void initRvAddedSensorList() {
@@ -199,5 +208,64 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
         if (mDeleteDialog != null) {
             mDeleteDialog.dismiss();
         }
+    }
+
+    @Override
+    public void showProgressDialog() {
+
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+
+    }
+
+    @Override
+    public void toastShort(String msg) {
+
+    }
+
+    @Override
+    public void toastLong(String msg) {
+
+    }
+
+
+    @Override
+    public void updateBindDeviceAdapter(List<NamePlateInfo> data) {
+
+        tvNameplateAssociatedSensor.append(data.size() + "");
+        if (data != null && data.size() > 0) {
+
+            mAddedSensorAdapter.upDateData(data);
+        }
+    }
+
+    @Override
+    public void onPullRefreshComplete() {
+        refreshLayout.finishLoadMore();
+        refreshLayout.finishRefresh();
+    }
+
+    @Override
+    public void updateTopDetail(NamePlateInfo namePlateInfo) {
+
+
+        if (null != namePlateInfo) {
+
+
+            if (null != namePlateInfo.getTags() && namePlateInfo.getTags().size() > 0) {
+                trvNameplateTag.setAdapter(tagAdapter);
+                tagAdapter.updateTags(namePlateInfo.getTags());
+            }
+
+            if (!TextUtils.isEmpty(namePlateInfo.get_id())) {
+                tvNameplateDetailSn.setText(namePlateInfo.get_id());
+            }
+            if (!TextUtils.isEmpty(namePlateInfo.getName())) {
+                tvNameplateName.setText(namePlateInfo.getName());
+            }
+        }
+
     }
 }
