@@ -21,7 +21,6 @@ import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
-import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.SelectDialog;
@@ -185,9 +184,7 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
             finish();
         } else if (R.id.tv_nameplate_qrcode == id) {
 
-            String nameplateId = getIntent().getStringExtra("nameplateId");
-            RetrofitServiceHelper.getInstance().getBaseUrlType();
-            dialogUtils.setImageUrl(RetrofitServiceHelper.getInstance().BASE_URL + "/nameplate/" + nameplateId);
+
             dialogUtils.show();
         } else if (R.id.tv_nameplate_edit == id) {
             mPresenter.doEditNameplate();
@@ -318,5 +315,10 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
 
         mAddedSensorAdapter.notifyItemRemoved(pos);
 
+    }
+
+    @Override
+    public void setQrCodeUrl(String qrCodeUrl) {
+        dialogUtils.setImageUrl(qrCodeUrl);
     }
 }

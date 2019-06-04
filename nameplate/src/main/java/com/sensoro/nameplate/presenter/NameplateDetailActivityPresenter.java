@@ -59,6 +59,11 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
         nameplateId = mContext.getIntent().getStringExtra("nameplateId");
         if (!TextUtils.isEmpty(nameplateId)) {
 
+
+            RetrofitServiceHelper.getInstance().getBaseUrlType();
+            String s = RetrofitServiceHelper.getInstance().BASE_URL + "/nameplate/" + nameplateId;
+            getView().setQrCodeUrl(s);
+
             getNameplateDetail();
         }
     }
