@@ -36,7 +36,16 @@ public final class EventLoginData implements Serializable {
     public boolean hasDeviceCameraList = false;
     //TODO 加入本地字段写入支持
     public boolean hasStationList = false;
-    public boolean hasNameplateList = true;
+    public boolean hasNameplateList = false;
+    public boolean hasNameplateDeploy = false;
+//    "nameplate": [
+//            "modify",
+//            "deploy",
+//            "list",
+//            "delete",
+//            "export",
+//            "add"
+//            ],
 
     @Override
     public String toString() {
@@ -74,6 +83,7 @@ public final class EventLoginData implements Serializable {
                 ", hasDeviceCameraList=" + hasDeviceCameraList +
                 ", hasStationList=" + hasStationList +
                 ", hasNameplateList=" + hasNameplateList +
+                ", hasNameplateDeploy=" + hasNameplateDeploy +
                 '}';
     }
 }
