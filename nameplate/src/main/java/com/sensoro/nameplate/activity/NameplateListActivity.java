@@ -21,8 +21,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alibaba.android.arouter.facade.annotation.Route;
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -34,7 +32,7 @@ import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.model.CameraFilterModel;
-import com.sensoro.common.server.bean.DeviceCameraInfo;
+import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -51,7 +49,7 @@ import java.util.List;
 
 @Route(path = ARouterConstants.activity_deploy_detail)
 public class NameplateListActivity extends BaseActivity<INameplateListActivityView, NameplateListActivityPresenter>
-        implements INameplateListActivityView, View.OnClickListener, TitleTipDialogUtils.TitleTipDialogUtilsClickListener {
+        implements INameplateListActivityView, View.OnClickListener {
 
 
     ImageView ivNameplateListTopBack;
@@ -137,7 +135,7 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
         mDeleteDialog.setTipCancelText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_252525));
         mDeleteDialog.setTipConfirmText(mActivity.getString(R.string.delete), mActivity.getResources().getColor(R.color.c_f35a58));
         mDeleteDialog.setTipMessageText(mActivity.getString(R.string.redploy_after_delete));
-        mDeleteDialog.setTipDialogUtilsClickListener(this);
+//        mDeleteDialog.setTipDialogUtilsClickListener(this);
         //
 //        mDeviceCameraContentAdapter = new DeviceCameraContentAdapter(mActivity);
 //        mDeviceCameraContentAdapter.setOnAlarmHistoryLogConfirmListener(this);
@@ -191,6 +189,24 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
                 //删除
                 if (mDeleteDialog != null) {
                     mDeleteDialog.show();
+
+                    mDeleteDialog.setTipDialogUtilsClickListener(new TitleTipDialogUtils.TitleTipDialogUtilsClickListener() {
+                        @Override
+                        public void onCancelClick() {
+                            mDeleteDialog.dismiss();
+
+                        }
+
+                        @Override
+                        public void onConfirmClick() {
+
+
+                            mDeleteDialog.dismiss();
+                            mPresenter.deleteNamePlate(position);
+                        }
+                    });
+
+
                 }
             }
         });
@@ -410,16 +426,11 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
 //    }
 
     @Override
-    public void updateDeviceCameraAdapter(List<DeviceCameraInfo> data) {
-//        if (data != null && data.size() > 0) {
-//            mDeviceCameraContentAdapter.updateAdapter(data);
-//        }
-        ArrayList<String> strings = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            strings.add("名称是房间爱离开房间爱离 " + i);
-        }
+    public void updateDeviceCameraAdapter(List<NamePlateInfo> data) {
+        if (data != null && data.size() > 0) {
 
-        nameplateListAdapter.updateData(strings);
+            nameplateListAdapter.updateData(data);
+        }
         setNoContentVisible(data == null || data.size() < 1);
     }
 
@@ -501,15 +512,15 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
     }
 
 
-    @Override
-    public void onBackPressed() {
+//    @Override
+//    public void onBackPressed() {
 //        if (mCameraListFilterPopupWindow.isShowing()) {
 //            mPresenter.onCameraListFilterPopupWindowDismiss();
 //        } else {
 //            super.onBackPressed();
 //        }
-
-    }
+//
+//    }
 
     private String getSearchText() {
         String text = etNameplateListSearch.getText().toString();
@@ -548,22 +559,6 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
             rvNameplateContent.smoothScrollToPosition(0);
             ivReturnTop.setVisibility(View.GONE);
             refreshLayout.closeHeaderOrFooter();
-        }
-    }
-
-    @Override
-    public void onCancelClick() {
-        toastShort("取消点击了");
-        if (mDeleteDialog != null) {
-            mDeleteDialog.dismiss();
-        }
-    }
-
-    @Override
-    public void onConfirmClick() {
-        toastShort("确认点击了");
-        if (mDeleteDialog != null) {
-            mDeleteDialog.dismiss();
         }
     }
 

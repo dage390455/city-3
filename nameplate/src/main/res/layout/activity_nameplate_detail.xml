@@ -45,7 +45,6 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
                     android:layout_weight="1"
-                    android:text="1213241241414"
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="12dp" />
 
@@ -86,7 +85,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="小刘家中称"
                 android:textColor="@color/c_252525"
                 android:textSize="20dp" />
 
@@ -118,15 +116,22 @@
             android:paddingStart="20dp"
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
-            android:text="关联传感器：4"
+            android:text="关联传感器："
             android:textColor="@color/c_a6a6a6" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_nameplate_associated_sensor"
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        </androidx.recyclerview.widget.RecyclerView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_nameplate_associated_sensor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
     </LinearLayout>
 
