@@ -67,7 +67,7 @@ public class AddedSensorAdapter extends RecyclerView.Adapter<AddedSensorAdapter.
         return mList.size();
     }
 
-    public void upDateData(List<NamePlateInfo> data) {
+    public void updateData(List<NamePlateInfo> data) {
         mList.clear();
         mList.addAll(data);
         notifyDataSetChanged();

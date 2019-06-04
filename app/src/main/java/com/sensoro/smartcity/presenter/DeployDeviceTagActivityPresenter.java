@@ -2,6 +2,7 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
@@ -30,10 +31,12 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
     public void initData(Context context) {
         mContext = (Activity) context;
 
-        ArrayList<String> stringArrayListExtra = mContext.getIntent().getStringArrayListExtra(EXTRA_SETTING_TAG_LIST);
+        Intent intent = mContext.getIntent();
+        ArrayList<String> stringArrayListExtra = intent.getStringArrayListExtra(EXTRA_SETTING_TAG_LIST);
         if (stringArrayListExtra != null) {
             mTagList.addAll(stringArrayListExtra);
         }
+
         String history = PreferencesHelper.getInstance().getDeployTagsHistory();
         if (!TextUtils.isEmpty(history)) {
             mHistoryKeywords.clear();

@@ -237,7 +237,7 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
         tvNameplateAssociatedSensor.append(data.size() + "");
         if (data != null && data.size() > 0) {
 
-            mAddedSensorAdapter.upDateData(data);
+            mAddedSensorAdapter.updateData(data);
         }
     }
 
