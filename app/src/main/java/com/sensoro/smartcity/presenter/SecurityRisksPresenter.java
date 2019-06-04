@@ -21,6 +21,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivityView> implements SecurityRisksContentAdapter.SecurityRisksContentClickListener
         , SecurityRisksReferTagAdapter.OnTagClickListener, TagDialogUtils.OnTagDialogListener {
@@ -60,28 +61,64 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
         if (eventData.code == Constants.EVENT_DATA_SECURITY_RISK_TAG_MANAGER) {
             locationTagList = PreferencesHelper.getInstance().getSecurityRiskLocationTags(mActivity);
             behaviorTagList = PreferencesHelper.getInstance().getSecurityRiskBehaviorTags(mActivity);
+            //
+            if (getView().getIsLocation()) {
+                SecurityRisksAdapterModel model = securityRisksList.get(mAdapterPosition);
+                for (SecurityRisksTagModel securityRisksTagModel : locationTagList) {
+                    securityRisksTagModel.isCheck = securityRisksTagModel.tag != null && securityRisksTagModel.tag.equals(model.place);
+                }
+                getView().updateSecurityRisksTag(locationTagList, true);
+                getView().setTvName(mActivity.getString(R.string.refer_loaction));
+            } else {
+                SecurityRisksAdapterModel model = securityRisksList.get(mAdapterPosition);
+                for (SecurityRisksTagModel securityRisksTagModel : behaviorTagList) {
+                    securityRisksTagModel.isCheck = securityRisksTagModel.tag != null && model.action.contains(securityRisksTagModel.tag);
+                }
+                getView().updateSecurityRisksTag(behaviorTagList, false);
+                getView().setTvName(mActivity.getString(R.string.refer_behavior));
+            }
 
             for (SecurityRisksAdapterModel model : securityRisksList) {
-                if (!locationTagList.contains(model.place)) {
+                if (!containPlace(model.place)) {
                     model.place = "";
                 }
-
-                for (String behavior : model.action) {
-                    if (!behaviorTagList.contains(behavior)) {
-                        model.action.remove(behavior);
+                Iterator<String> iterator = model.action.iterator();
+                while (iterator.hasNext()) {
+                    String next = iterator.next();
+                    if (!containAction(next)) {
+                        iterator.remove();
                     }
                 }
             }
-
-            if (getView().getIsLocation()) {
-                getView().updateSecurityRisksTag(locationTagList, true);
-            } else {
-                getView().updateSecurityRisksTag(behaviorTagList, false);
-            }
-
             getView().updateSecurityRisksContent(securityRisksList);
         }
     }
+
+    private boolean containAction(String action) {
+        if (TextUtils.isEmpty(action)) {
+            return false;
+        }
+        for (SecurityRisksTagModel securityRisksTagModel : behaviorTagList) {
+
+            if (securityRisksTagModel.tag != null && securityRisksTagModel.tag.equals(action)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean containPlace(String place) {
+        if (TextUtils.isEmpty(place)) {
+            return false;
+        }
+        for (SecurityRisksTagModel securityRisksTagModel : locationTagList) {
+            if (securityRisksTagModel.tag != null && securityRisksTagModel.tag.equals(place)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public void doAddSecurityRisk() {
         SecurityRisksAdapterModel model = new SecurityRisksAdapterModel();

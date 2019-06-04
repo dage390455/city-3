@@ -153,6 +153,7 @@ public class AlarmPopupConfigAnalyzer {
                                                         //第2层解
                                                         if (flag < 2) {
                                                             flag = 2;
+                                                            labels = alarmPopupDataGroupsBean.getLabels();
                                                         }
                                                         List<String> sensorTypesGroup = alarmPopupDataGroupsBean.getSensorTypes();
                                                         if (sensorTypesGroup != null && sensorTypesGroup.contains(alarmPopupModel.sensorType)) {
