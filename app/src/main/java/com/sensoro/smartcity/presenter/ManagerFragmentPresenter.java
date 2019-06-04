@@ -15,6 +15,7 @@ import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.response.ResponseBase;
 //import com.sensoro.nameplate.activity.DeployNameplateActivity;
+import com.sensoro.nameplate.activity.DeployNameplateActivity;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractManagerActivity;
 import com.sensoro.smartcity.activity.DeployRecordActivity;
@@ -173,7 +174,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     public void doScanDeploy() {
 //        if (PreferencesHelper.getInstance().getUserData() != null) {
 //            if (!PreferencesHelper.getInstance().getUserData().isSupperAccount) {
-        Intent intent = new Intent(mContext, DeployRecordActivity.class);
+        Intent intent = new Intent(mContext, DeployNameplateActivity.class);
 //                intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
         getView().startAC(intent);
 

@@ -3,7 +3,9 @@ package com.sensoro.nameplate.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.EventData;
@@ -16,6 +18,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNameplateActivityView> {
@@ -70,11 +73,9 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
     }
 
     public void doTag() {
-//            Intent intent = new Intent(mActivity, DeployDeviceTagActivity.class);
-////            if (deployAnalyzerModel.tagList.size() > 0) {
-////                intent.putStringArrayListExtra(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
-////            }
-//            getView().startAC(intent);
+
+//        ARouter.getInstance().build("/activity/DeployDeviceTagActivity").
+//                with(Bundle)withStringArrayList("dd",new ArrayList<>()).navigation();
     }
 
     public void doPic() {

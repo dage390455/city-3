@@ -61,12 +61,6 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
             locationTagList = PreferencesHelper.getInstance().getSecurityRiskLocationTags(mActivity);
             behaviorTagList = PreferencesHelper.getInstance().getSecurityRiskBehaviorTags(mActivity);
 
-            if (getView().getIsLocation()) {
-                getView().updateSecurityRisksTag(locationTagList, true);
-            } else {
-                getView().updateSecurityRisksTag(behaviorTagList, false);
-            }
-
             for (SecurityRisksAdapterModel model : securityRisksList) {
                 if (!locationTagList.contains(model.place)) {
                     model.place = "";
@@ -77,6 +71,12 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
                         model.action.remove(behavior);
                     }
                 }
+            }
+
+            if (getView().getIsLocation()) {
+                getView().updateSecurityRisksTag(locationTagList, true);
+            } else {
+                getView().updateSecurityRisksTag(behaviorTagList, false);
             }
 
             getView().updateSecurityRisksContent(securityRisksList);

@@ -14,6 +14,12 @@ public class DeployNameplateAddSensorActivityPresenter extends BasePresenter<IDe
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
+
+        getBindDevice();
+    }
+
+    private void getBindDevice() {
+
     }
 
     @Override
