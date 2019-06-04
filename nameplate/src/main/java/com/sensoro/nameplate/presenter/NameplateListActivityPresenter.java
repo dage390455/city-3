@@ -11,6 +11,7 @@ import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.CameraFilterModel;
+import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
@@ -23,6 +24,10 @@ import com.sensoro.common.utils.StringUtils;
 import com.sensoro.nameplate.IMainViews.INameplateListActivityView;
 import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.activity.NameplateDetailActivity;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,9 +47,22 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
 
     private final HashMap<String, String> selectedHashMap = new HashMap<String, String>();
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        int code = eventData.code;
+        if (code == EVENT_DATA_UPDATENAMEPALTELIST) {
+
+
+            requestDataByFilter(DIRECTION_DOWN, null);
+
+
+        }
+    }
+
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        EventBus.getDefault().register(this);
         //TODO 如果需要传递 更改key
         Object bundleValue = getBundleValue(mContext, EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST);
         if (bundleValue instanceof ArrayList) {
@@ -85,6 +103,8 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
     @Override
     public void onDestroy() {
         selectedHashMap.clear();
+        EventBus.getDefault().unregister(this);
+
     }
 
     public void onClickDeviceCamera(final NamePlateInfo NamePlateInfo) {

@@ -8,19 +8,25 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TouchRecycleView;
+import com.sensoro.nameplate.widget.QrCodeDialogUtils;
 import com.sensoro.common.widgets.dialog.TipDialogUtils;
 import com.sensoro.nameplate.IMainViews.INameplateDetailActivityView;
 import com.sensoro.nameplate.R;
@@ -39,7 +45,7 @@ import butterknife.OnClick;
 import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 
 public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivityView, NameplateDetailActivityPresenter>
-        implements INameplateDetailActivityView, TipDialogUtils.TipDialogUtilsClickListener {
+        implements INameplateDetailActivityView {
     @BindView(R2.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
     @BindView(R2.id.include_text_title_tv_title)
@@ -91,7 +97,19 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
 
         mPresenter.requestData(DIRECTION_DOWN);
 
-
+        refreshLayout.setEnableAutoLoadMore(false);//开启自动加载功能（非必须）
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
+                mPresenter.requestData(Constants.DIRECTION_DOWN);
+            }
+        });
+        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
+                mPresenter.requestData(Constants.DIRECTION_UP);
+            }
+        });
     }
 
     private void initNormalDialog() {
@@ -99,7 +117,6 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
         mDeleteDialog.setTipMessageText(mActivity.getString(R.string.delete_associate_sensor));
         mDeleteDialog.setTipCacnleText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_252525));
         mDeleteDialog.setTipConfirmText(mActivity.getString(R.string.delete), mActivity.getResources().getColor(R.color.c_f35a58));
-        mDeleteDialog.setTipDialogUtilsClickListener(this);
     }
 
     private void initTag() {
@@ -130,6 +147,21 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
 //                toastShort("点击了");
                 if (mDeleteDialog != null) {
                     mDeleteDialog.show();
+                    mDeleteDialog.setTipDialogUtilsClickListener(new TipDialogUtils.TipDialogUtilsClickListener() {
+                        @Override
+                        public void onCancelClick() {
+                            mDeleteDialog.dismiss();
+                            mPresenter.unbindNameplateDevice(position);
+                        }
+
+                        @Override
+                        public void onConfirmClick() {
+                            mDeleteDialog.dismiss();
+
+                        }
+                    });
+
+
                 }
             }
         });
@@ -147,8 +179,12 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
         int id = view.getId();
         if (R.id.include_text_title_imv_arrows_left == id) {
 
+            finish();
         } else if (R.id.tv_nameplate_qrcode == id) {
 
+            QrCodeDialogUtils dialogUtils = new QrCodeDialogUtils(mActivity);
+            dialogUtils.setImageUrl("https://city-dev-api.sensoro.com/nameplate/5cf5df69efef53fd8d5e95fa");
+            dialogUtils.show();
         } else if (R.id.tv_nameplate_edit == id) {
             mPresenter.doEditNameplate();
         } else if (R.id.tv_nameplate_associated_new_sensor == id) {
@@ -196,19 +232,6 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
         }
     }
 
-    @Override
-    public void onCancelClick() {
-        if (mDeleteDialog != null) {
-            mDeleteDialog.dismiss();
-        }
-    }
-
-    @Override
-    public void onConfirmClick() {
-        if (mDeleteDialog != null) {
-            mDeleteDialog.dismiss();
-        }
-    }
 
     @Override
     public void showProgressDialog() {
@@ -234,10 +257,13 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     @Override
     public void updateBindDeviceAdapter(List<NamePlateInfo> data) {
 
-        tvNameplateAssociatedSensor.append(data.size() + "");
         if (data != null && data.size() > 0) {
+            tvNameplateAssociatedSensor.append(data.size() + "");
 
             mAddedSensorAdapter.updateData(data);
+        } else {
+            tvNameplateAssociatedSensor.append(data.size() + "0");
+
         }
     }
 
@@ -245,6 +271,14 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     public void onPullRefreshComplete() {
         refreshLayout.finishLoadMore();
         refreshLayout.finishRefresh();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
     }
 
     @Override
@@ -257,6 +291,11 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
             if (null != namePlateInfo.getTags() && namePlateInfo.getTags().size() > 0) {
                 trvNameplateTag.setAdapter(tagAdapter);
                 tagAdapter.updateTags(namePlateInfo.getTags());
+            } else {
+
+                tagAdapter.getTags().clear();
+                tagAdapter.notifyDataSetChanged();
+
             }
 
             if (!TextUtils.isEmpty(namePlateInfo.get_id())) {
@@ -266,6 +305,14 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
                 tvNameplateName.setText(namePlateInfo.getName());
             }
         }
+
+    }
+
+    @Override
+    public void updateNamePlateStatus(int pos) {
+
+
+        mAddedSensorAdapter.notifyItemRemoved(pos);
 
     }
 }

@@ -1094,5 +1094,6 @@
     <string name="monitor">监控</string>
     <string name="selectede">已选</string>
     <string name="sensor">部传感器</string>
+    <string name="nameplate_name_empty">铭牌名称不能为空</string>
     <string name="selected_device_size">已选择传感器：</string>
 </resources>

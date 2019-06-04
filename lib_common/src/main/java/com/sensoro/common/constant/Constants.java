@@ -414,6 +414,7 @@ public interface Constants {
 
     int EVENT_DATA_DEPLOY_NAMEPLATE_NAME = 0x57;
 
+    int EVENT_DATA_UPDATENAMEPALTELIST = 0x58;
 
     List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{
         add("elec_fire");

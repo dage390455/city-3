@@ -98,8 +98,8 @@ public class NameplateListAdapter extends RecyclerView.Adapter<NameplateListAdap
 //        holder.tvNameplateSensorCount.setText("传感器：5");
 
 
-        if (!TextUtils.isEmpty(namePlateInfo.getSn())) {
-            holder.tvNameplateSn.setText(namePlateInfo.getSn());
+        if (!TextUtils.isEmpty(namePlateInfo.get_id())) {
+            holder.tvNameplateSn.setText(namePlateInfo.get_id());
         }
         if (!TextUtils.isEmpty(namePlateInfo.getName())) {
             holder.tvNameplateName.setText(namePlateInfo.getName());

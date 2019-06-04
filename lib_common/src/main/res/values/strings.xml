@@ -1059,7 +1059,6 @@
     //
 
 
-
     <string name="camera_nameplate">铭牌管理</string>
 
     //
@@ -1111,4 +1110,7 @@
     <string name="selectede">已选</string>
     <string name="sensor">部传感器</string>
     <string name="selected_device_size">已选择传感器：</string>
+
+    <string name="nameplate_name_empty">nameplate name can not be empty</string>
+
 </resources>
