@@ -1816,10 +1816,64 @@ public class RetrofitServiceHelper {
     }
 
     public Observable<NameplateBindDeviceRsp> getNameplateBindDevices(Integer pageSize, Integer page, String nameplateId) {
-        return retrofitService.getNameplateBindDevices(nameplateId);
+        return retrofitService.getNameplateBindDevices(pageSize, page, nameplateId);
     }
 
 
+    /**
+     * 解绑铭牌设备
+     *
+     * @param nameplateId
+     * @param sns
+     * @return
+     */
+    public Observable<ResponseResult<Integer>> unbindNameplateDevice(String nameplateId, List<String> sns) {
+        JSONObject jsonObject = new JSONObject();
+        if (sns != null && sns.size() > 0) {
+            try {
+                JSONArray jsonArray = new JSONArray();
+
+                for (int i = 0; i < sns.size(); i++) {
+                    jsonArray.put(sns.get(i));
+                }
+                jsonObject.put("nameplateId", nameplateId);
+                jsonObject.put("sns", jsonArray);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.unbindNameplateDevice(requestBody);
+    }
+
+
+    /**
+     * 更新铭牌基本信息
+     *
+     * @param nameplateId
+     * @param name
+     * @param tags
+     * @return
+     */
+    public Observable<ResponseResult<Integer>> updateNameplate(String nameplateId, String name, List<String> tags) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONArray jsonArray = new JSONArray();
+            if (null != tags && tags.size() > 0) {
+                for (String tag : tags) {
+                    jsonArray.put(tag);
+                }
+            }
+            jsonObject.put("tags", jsonArray);
+            if (!TextUtils.isEmpty(name)) {
+                jsonObject.put("name", name);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.updateNameplate(nameplateId, body);
+    }
 //    public Observable<BaseStationDetailRsp> updateStationLocation(String stationsn) {
 //        return retrofitService.updateStationLocation(stationsn);
 //    }

@@ -1,7 +1,7 @@
 package com.sensoro.common.server.bean;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.ArrayList;
 
 public class NamePlateInfo implements Serializable {
 
@@ -16,8 +16,10 @@ public class NamePlateInfo implements Serializable {
     private String orientationName;
     private String deviceType;
 
+    public String deviceTypeName;
+    public String iconUrl;
 
-    private List<String> tags;
+    private ArrayList<String> tags;
 
     public String getCreateTime() {
         return createTime;
@@ -76,11 +78,11 @@ public class NamePlateInfo implements Serializable {
         this.orientationName = orientationName;
     }
 
-    public List<String> getTags() {
+    public ArrayList<String> getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(ArrayList<String> tags) {
         this.tags = tags;
     }
 
@@ -98,5 +100,13 @@ public class NamePlateInfo implements Serializable {
 
     public void set_id(String _id) {
         this._id = _id;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
     }
 }

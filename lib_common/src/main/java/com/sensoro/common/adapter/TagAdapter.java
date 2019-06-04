@@ -3,12 +3,12 @@ package com.sensoro.common.adapter;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
-import androidx.annotation.ColorRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.ColorRes;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.R;
@@ -20,6 +20,11 @@ import java.util.List;
 public class TagAdapter extends RecyclerView.
         Adapter<TagAdapter.TagHolder> {
     private final Context mContext;
+
+    public List<String> getTags() {
+        return tags;
+    }
+
     private final List<String> tags = new ArrayList<>();
     private int mTextColor = -1;
     private int mStrokeColor = -1;
