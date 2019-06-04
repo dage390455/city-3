@@ -171,7 +171,4 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
         super.onDestroyView();
     }
 
-
-
-
 }

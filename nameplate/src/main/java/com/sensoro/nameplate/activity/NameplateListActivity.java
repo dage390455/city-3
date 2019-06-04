@@ -427,7 +427,7 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
 //    }
 
     @Override
-    public void updateDeviceCameraAdapter(List<NamePlateInfo> data) {
+    public void updateNameplateAdapter(List<NamePlateInfo> data) {
         if (data != null && data.size() > 0) {
 
             nameplateListAdapter.updateData(data);

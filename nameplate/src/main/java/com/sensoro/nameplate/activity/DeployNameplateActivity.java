@@ -74,7 +74,6 @@ public class DeployNameplateActivity extends BaseActivity<IDeployNameplateActivi
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_nameplate);
         ButterKnife.bind(this);
-
         initView();
 
         mPresenter.initData(mActivity);

@@ -10,9 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.sensoro.common.base.BaseFragment;
-import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
@@ -276,7 +274,8 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 startAC(new Intent(mRootFragment.getActivity(), CameraListActivity.class));
                 break;
             case R.id.fg_main_manage_ll_nameplate:
-                ARouter.getInstance().build(ARouterConstants.activity_deploy_detail).navigation(mRootFragment.getActivity());
+                mPresenter.doManageNameplate();
+//                ARouter.getInstance().build(ARouterConstants.activity_deploy_detail).navigation(mRootFragment.getActivity());
 //                startAC(new Intent(mRootFragment.getActivity(), NameplateListActivity.class));
                 break;
             case R.id.fg_main_manage_ll_basestation:

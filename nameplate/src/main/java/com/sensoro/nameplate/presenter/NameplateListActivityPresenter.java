@@ -3,7 +3,6 @@ package com.sensoro.nameplate.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
@@ -25,7 +24,6 @@ import com.sensoro.nameplate.IMainViews.INameplateListActivityView;
 import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.activity.NameplateDetailActivity;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,15 +45,14 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        Intent intent = mContext.getIntent();
-        Bundle extras = intent.getExtras();
-        Serializable serializableExtra = intent.getSerializableExtra(EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST);
-        if (serializableExtra instanceof ArrayList) {
+        //TODO 如果需要传递 更改key
+        Object bundleValue = getBundleValue(mContext, EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST);
+        if (bundleValue instanceof ArrayList) {
             getView().setSmartRefreshEnable(false);
             plateInfos.clear();
-            List<NamePlateInfo> data = (List<NamePlateInfo>) serializableExtra;
+            List<NamePlateInfo> data = (List<NamePlateInfo>) bundleValue;
             plateInfos.addAll(data);
-            getView().updateDeviceCameraAdapter(plateInfos);
+            getView().updateNameplateAdapter(plateInfos);
             getView().onPullRefreshComplete();
             getView().dismissProgressDialog();
         } else {
@@ -150,7 +147,7 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
                         if (data != null && data.size() > 0) {
                             plateInfos.addAll(data);
                         }
-                        getView().updateDeviceCameraAdapter(plateInfos);
+                        getView().updateNameplateAdapter(plateInfos);
                         getView().onPullRefreshComplete();
                         getView().dismissProgressDialog();
                     }
@@ -177,7 +174,7 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
                         List<NamePlateInfo> data = deviceCameraListRsp.getData();
                         if (data != null && data.size() > 0) {
                             plateInfos.addAll(data);
-                            getView().updateDeviceCameraAdapter(plateInfos);
+                            getView().updateNameplateAdapter(plateInfos);
                         } else {
                             getView().toastShort(mContext.getString(R.string.no_more_data));
                         }
@@ -289,7 +286,7 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
                 //只在重置成功了进行刷新
                 clearCameraFilterData();
                 getView().updateCameraListFilterPopupWindowStatusList(cameraFilterModelList);
-                getView().updateDeviceCameraAdapter(plateInfos);
+                getView().updateNameplateAdapter(plateInfos);
                 getView().onPullRefreshComplete();
                 getView().dismissProgressDialog();
                 getView().dismissCameraListFilterPopupWindow();
@@ -334,7 +331,7 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
                 if (data != null && data.size() > 0) {
                     plateInfos.addAll(data);
                 }
-                getView().updateDeviceCameraAdapter(plateInfos);
+                getView().updateNameplateAdapter(plateInfos);
                 getView().setCameraListFilterPopupWindowSelectState(getHasSelect());
                 getView().onPullRefreshComplete();
                 getView().dismissProgressDialog();

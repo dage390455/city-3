@@ -9,7 +9,7 @@ import com.sensoro.common.server.bean.NamePlateInfo;
 import java.util.List;
 
 public interface INameplateListActivityView extends IToast, IProgressDialog, IActivityIntent {
-    void updateDeviceCameraAdapter(List<NamePlateInfo> data);
+    void updateNameplateAdapter(List<NamePlateInfo> data);
 
     void onPullRefreshComplete();
 
