@@ -21,12 +21,12 @@ import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TouchRecycleView;
-import com.sensoro.nameplate.widget.QrCodeDialogUtils;
 import com.sensoro.common.widgets.dialog.TipDialogUtils;
 import com.sensoro.nameplate.IMainViews.INameplateDetailActivityView;
 import com.sensoro.nameplate.R;
@@ -34,6 +34,7 @@ import com.sensoro.nameplate.R2;
 import com.sensoro.nameplate.adapter.AddedSensorAdapter;
 import com.sensoro.nameplate.presenter.NameplateDetailActivityPresenter;
 import com.sensoro.nameplate.widget.CustomDrawableDivider;
+import com.sensoro.nameplate.widget.QrCodeDialogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +82,7 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     private TagAdapter tagAdapter;
     private final List<String> options = new ArrayList<>();
     private TipDialogUtils mDeleteDialog;
+    private QrCodeDialogUtils dialogUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -88,6 +90,7 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
         ButterKnife.bind(this);
         includeTextTitleTvTitle.setText(R.string.nameplate_manager_detail);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
+        dialogUtils = new QrCodeDialogUtils(mActivity);
         options.add("扫码关联");
         options.add("传感器列表中关联");
         initNormalDialog();
@@ -182,8 +185,9 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
             finish();
         } else if (R.id.tv_nameplate_qrcode == id) {
 
-            QrCodeDialogUtils dialogUtils = new QrCodeDialogUtils(mActivity);
-            dialogUtils.setImageUrl("https://city-dev-api.sensoro.com/nameplate/5cf5df69efef53fd8d5e95fa");
+            String nameplateId = getIntent().getStringExtra("nameplateId");
+            RetrofitServiceHelper.getInstance().getBaseUrlType();
+            dialogUtils.setImageUrl(RetrofitServiceHelper.getInstance().BASE_URL + "/nameplate/" + nameplateId);
             dialogUtils.show();
         } else if (R.id.tv_nameplate_edit == id) {
             mPresenter.doEditNameplate();
