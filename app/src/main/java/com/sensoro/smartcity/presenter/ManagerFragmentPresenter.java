@@ -3,9 +3,11 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnFragmentStart;
@@ -14,7 +16,6 @@ import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.response.ResponseBase;
-//import com.sensoro.nameplate.activity.DeployNameplateActivity;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractManagerActivity;
 import com.sensoro.smartcity.activity.DeployRecordActivity;
@@ -36,6 +37,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+
+//import com.sensoro.nameplate.activity.DeployNameplateActivity;
 
 public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView> implements IOnCreate, IOnFragmentStart, Constants {
     private Activity mContext;
@@ -254,5 +257,11 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     public void doWireMaterial_diameter() {
         Intent intent = new Intent(mContext, WireMaterialDiameterCalculatorActivity.class);
         getView().startAC(intent);
+    }
+
+    public void doManageNameplate() {
+        Bundle bundle = new Bundle();
+        bundle.putInt("abc", 123);
+        startActivity(ARouterConstants.activity_deploy_detail, null, mContext);
     }
 }

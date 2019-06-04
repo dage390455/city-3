@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.baidu.mobstat.StatService;
 import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.common.R;
@@ -124,6 +125,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         }
         onCreateInit(savedInstanceState);
         StatService.setDebugOn(true);
+        ARouter.getInstance().inject(this);
         ActivityTaskManager.getInstance().pushActivity(this);
     }
 
