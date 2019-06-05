@@ -75,7 +75,7 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
                 public void onCompleted(DeviceCameraDetailRsp deviceCameraDetailRsp) {
                     DeviceCameraDetailInfo data = deviceCameraDetailRsp.getData();
                     if (data != null) {
-                        String deviceStatus = data.getDeviceStatus();
+                        String deviceStatus = data.getCamera().getInfo().getDeviceStatus();
                         if (!TextUtils.isEmpty(deviceStatus)) {
                             deployAnalyzerModel.cameraStatus = deviceStatus;
                             getView().setDeployCameraStatus(deployAnalyzerModel.cameraStatus);

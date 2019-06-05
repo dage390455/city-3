@@ -105,9 +105,13 @@ public class AlarmCameraLiveDetailAdapter extends RecyclerView.Adapter<AlarmCame
 //                    .bitmapTransform(new GlideRoundTransform(mContext,dp4))
                     .placeholder(R.drawable.camera_placeholder)
                     .into(holder.ivPicItemAdapterAlarmCameraLiveDetail);
-            holder.tvNameItemAdapterAlarmCameraLiveDetail.setText(dataBean.getDeviceName());
+            String name = dataBean.getCamera().getName();
+            if (TextUtils.isEmpty(name)) {
+                name = dataBean.getCamera().getSn();
+            }
+            holder.tvNameItemAdapterAlarmCameraLiveDetail.setText(name);
 
-            String deviceStatus = dataBean.getDeviceStatus();
+            String deviceStatus = dataBean.getCamera().getInfo().getDeviceStatus();
             if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
                 holder.tvStatusItemAdapterAlarmCameraLiveDetail.setText(mContext.getString(R.string.deploy_camera_status_offline));
                 holder.tvStatusItemAdapterAlarmCameraLiveDetail.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
