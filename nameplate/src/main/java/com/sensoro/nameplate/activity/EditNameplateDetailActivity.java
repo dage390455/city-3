@@ -67,7 +67,7 @@ public class EditNameplateDetailActivity extends BaseActivity<IEditNameplateDeta
     }
 
     private void initTitle() {
-        includeTextTitleTvTitle.setText(R.string.sensor_detail_tag);
+        includeTextTitleTvTitle.setText(R.string.nameplate_base_info);
         includeTextTitleTvCancel.setVisibility(View.VISIBLE);
         includeTextTitleTvCancel.setTextColor(getResources().getColor(R.color.c_b6b6b6));
         includeTextTitleTvCancel.setText(R.string.cancel);
