@@ -164,6 +164,8 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
             getView().onVideoResume();
 
         } else if (code == VIDEO_STOP) {
+            getView().backFromWindowFull();
+
             getView().onVideoPause();
 
 

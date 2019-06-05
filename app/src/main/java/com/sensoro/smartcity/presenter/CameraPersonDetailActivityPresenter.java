@@ -138,6 +138,8 @@ public class CameraPersonDetailActivityPresenter extends BasePresenter<ICameraPe
             getView().onVideoResume();
 
         } else if (code == VIDEO_STOP) {
+            getView().backFromWindowFull();
+
             getView().onVideoPause();
 
 

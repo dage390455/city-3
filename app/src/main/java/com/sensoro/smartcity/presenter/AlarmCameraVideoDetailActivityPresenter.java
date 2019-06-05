@@ -138,6 +138,8 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
             getView().onVideoResume();
 
         } else if (code == VIDEO_STOP) {
+            getView().backFromWindowFull();
+
             getView().onVideoPause();
 
 

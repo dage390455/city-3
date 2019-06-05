@@ -81,6 +81,8 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
                         getView().getPlayView().getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                getView().setVerOrientationUtilEnable(true);
+
                                 GSYVideoManager.onResume(true);
                                 getView().getPlayView().setCityPlayState(-1);
                                 doLive();
@@ -111,6 +113,8 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
             getView().onVideoResume();
 
         } else if (code == VIDEO_STOP) {
+            getView().backFromWindowFull();
+
             getView().onVideoPause();
 
 
