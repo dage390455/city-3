@@ -42,10 +42,10 @@ public class AlarmCameraLiveDetailAdapter extends RecyclerView.Adapter<AlarmCame
     public AlarmCameraLiveDetailAdapter(Context context) {
         mContext = context;
         onLineDrawable = mContext.getResources().getDrawable(R.drawable.shape_oval_1dbb99_6dp);
-        onLineDrawable.setBounds(0,0,onLineDrawable.getMinimumWidth(),onLineDrawable.getMinimumHeight());
+        onLineDrawable.setBounds(0, 0, onLineDrawable.getMinimumWidth(), onLineDrawable.getMinimumHeight());
 
         offLineDrawable = mContext.getResources().getDrawable(R.drawable.shape_oval_b6b6_6dp);
-        offLineDrawable.setBounds(0,0,offLineDrawable.getMinimumWidth(),offLineDrawable.getMinimumHeight());
+        offLineDrawable.setBounds(0, 0, offLineDrawable.getMinimumWidth(), offLineDrawable.getMinimumHeight());
 
         dp4 = AppUtils.dp2px(context, 4);
 
@@ -91,7 +91,7 @@ public class AlarmCameraLiveDetailAdapter extends RecyclerView.Adapter<AlarmCame
             holder.clRootItemAdapterAlarmCameraLiveDetail.setBackgroundColor(mContext.getResources().getColor(R.color.c_eeeeee));
             holder.ivLiveItemAdapterAlarmCameraLiveDetail.setVisibility(View.GONE);
             holder.tvWatchStateItemAdapterAlarmCameraLiveDetail.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             holder.clRootItemAdapterAlarmCameraLiveDetail.setBackgroundColor(mContext.getResources().getColor(R.color.white));
             holder.ivLiveItemAdapterAlarmCameraLiveDetail.setVisibility(View.VISIBLE);
             holder.tvWatchStateItemAdapterAlarmCameraLiveDetail.setVisibility(View.GONE);
@@ -105,33 +105,52 @@ public class AlarmCameraLiveDetailAdapter extends RecyclerView.Adapter<AlarmCame
 //                    .bitmapTransform(new GlideRoundTransform(mContext,dp4))
                     .placeholder(R.drawable.camera_placeholder)
                     .into(holder.ivPicItemAdapterAlarmCameraLiveDetail);
-            holder.tvNameItemAdapterAlarmCameraLiveDetail.setText(dataBean.getDeviceName());
+            AlarmCameraLiveRsp.DataBean.CameraBean camera = dataBean.getCamera();
+            if (camera != null) {
+                String name = camera.getName();
+                if (TextUtils.isEmpty(name)) {
+                    name = camera.getSn();
+                }
+                holder.tvNameItemAdapterAlarmCameraLiveDetail.setText(name);
 
-            String deviceStatus = dataBean.getDeviceStatus();
-            if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
-                holder.tvStatusItemAdapterAlarmCameraLiveDetail.setText(mContext.getString(R.string.deploy_camera_status_offline));
-                holder.tvStatusItemAdapterAlarmCameraLiveDetail.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
-                holder.tvStatusItemAdapterAlarmCameraLiveDetail.setCompoundDrawables(offLineDrawable,null,null,null);
-            }else{
-                holder.tvStatusItemAdapterAlarmCameraLiveDetail.setText(mContext.getString(R.string.deploy_camera_status_online));
-                holder.tvStatusItemAdapterAlarmCameraLiveDetail.setTextColor(mContext.getResources().getColor(R.color.c_1dbb99));
-                holder.tvStatusItemAdapterAlarmCameraLiveDetail.setCompoundDrawables(onLineDrawable,null,null,null);
+                AlarmCameraLiveRsp.DataBean.CameraBean.InfoBean info = camera.getInfo();
+                if (info != null) {
+                    String deviceStatus = info.getDeviceStatus();
+                    setDeviceCameraStatus(holder, !TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus));
+                } else {
+                    setDeviceCameraStatus(holder, true);
+                }
+
+            } else {
+                setDeviceCameraStatus(holder, true);
             }
+
 
         }
 
 
-
     }
 
-    public void updateData(List<AlarmCameraLiveRsp.DataBean> data){
+    private void setDeviceCameraStatus(CameraLiveDetailViewHolder holder, boolean isOffline) {
+        if (isOffline) {
+            holder.tvStatusItemAdapterAlarmCameraLiveDetail.setText(mContext.getString(R.string.deploy_camera_status_offline));
+            holder.tvStatusItemAdapterAlarmCameraLiveDetail.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
+            holder.tvStatusItemAdapterAlarmCameraLiveDetail.setCompoundDrawables(offLineDrawable, null, null, null);
+        } else {
+            holder.tvStatusItemAdapterAlarmCameraLiveDetail.setText(mContext.getString(R.string.deploy_camera_status_online));
+            holder.tvStatusItemAdapterAlarmCameraLiveDetail.setTextColor(mContext.getResources().getColor(R.color.c_1dbb99));
+            holder.tvStatusItemAdapterAlarmCameraLiveDetail.setCompoundDrawables(onLineDrawable, null, null, null);
+        }
+    }
+
+    public void updateData(List<AlarmCameraLiveRsp.DataBean> data) {
         mList.clear();
         mList.addAll(data);
         mClickPosition = 0;
         notifyDataSetChanged();
     }
 
-    public void setOnAlarmCameraLiveItemClickListener(AlarmCameraLiveItemClickListener listener){
+    public void setOnAlarmCameraLiveItemClickListener(AlarmCameraLiveItemClickListener listener) {
         mListener = listener;
     }
 
@@ -140,7 +159,7 @@ public class AlarmCameraLiveDetailAdapter extends RecyclerView.Adapter<AlarmCame
         return mList.size();
     }
 
-    public interface AlarmCameraLiveItemClickListener{
+    public interface AlarmCameraLiveItemClickListener {
         void OnAlarmCameraLiveItemClick(int position);
     }
 
@@ -158,6 +177,7 @@ public class AlarmCameraLiveDetailAdapter extends RecyclerView.Adapter<AlarmCame
         TextView tvStatusItemAdapterAlarmCameraLiveDetail;
         @BindView(R.id.cl_root_item_adapter_alarm_camera_live_detail)
         ConstraintLayout clRootItemAdapterAlarmCameraLiveDetail;
+
         public CameraLiveDetailViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
