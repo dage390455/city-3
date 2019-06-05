@@ -94,10 +94,11 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
             @Override
             public void onCompleted(ResponseResult<Integer> result) {
 
-                if (result.getData() == 1) {
+                if (result.getData() > 0) {
 
                     getView().updateNamePlateStatus(pos);
                 }
+                getView().dismissProgressDialog();
 
 
             }
