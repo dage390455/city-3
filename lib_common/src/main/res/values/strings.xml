@@ -1113,5 +1113,5 @@
 
     <string name="nameplate_name_empty">nameplate name can not be empty</string>
     <string name="association_sensor">association sensor：</string>
-
+    <string name="nameplate_base_info">nameplate base info</string>
 </resources>
