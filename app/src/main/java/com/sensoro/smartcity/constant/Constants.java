@@ -254,7 +254,7 @@ public interface Constants {
     //部署相关
     String EXTRA_DEPLOY_PHOTO = "extra_deploy_photo";
     String EXTRA_DEPLOY_TYPE = "extra_deploy_type";
-    String EXTRA_DEPLOY_ORIGIN_NAME_ADDRESS = "extra_deploy_origin_name_address";
+//    String EXTRA_DEPLOY_ORIGIN_NAME_ADDRESS = "extra_deploy_origin_name_address";
     String EXTRA_DEPLOY_TO_PHOTO = "extra_deploy_to_photo";
     String EXTRA_DEPLOY_TO_MAP = "extra_deploy_to_map";
     String EXTRA_DEPLOY_TO_SN = "extra_deploy_to_sn";

@@ -1,20 +1,20 @@
 package com.sensoro.common.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.R;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class NameAddressHistoryAdapter extends RecyclerView.Adapter<NameAddressHistoryAdapter.NameAddressHistoryHolder> {
 
@@ -50,7 +50,9 @@ public class NameAddressHistoryAdapter extends RecyclerView.Adapter<NameAddressH
     @Override
     public void onBindViewHolder(NameAddressHistoryHolder holder, final int position) {
         //一定要设置，因为是通用的，所以要设置这个
-        holder.itemAdapterTv.setBackground(mContext.getResources().getDrawable(R.drawable.shape_bg_solid_e7_full_corner));
+        Resources resources = mContext.getResources();
+        Drawable drawable = resources.getDrawable(R.drawable.shape_bg_solid_e7_full_corner);
+        holder.itemAdapterTv.setBackground(drawable);
         holder.itemAdapterTv.setText(mList.get(position));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +69,7 @@ public class NameAddressHistoryAdapter extends RecyclerView.Adapter<NameAddressH
 
         NameAddressHistoryHolder(View itemView) {
             super(itemView);
-            itemView.findViewById(R.id.item_adapter_tv);
+            itemAdapterTv = itemView.findViewById(R.id.item_adapter_tv);
         }
     }
 

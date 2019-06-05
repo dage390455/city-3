@@ -18,8 +18,6 @@ import com.sensoro.smartcity.util.AppUtils;
 
 import java.util.ArrayList;
 
-import butterknife.ButterKnife;
-
 
 public class SecurityRisksReferTagAdapter extends RecyclerView.Adapter<SecurityRisksReferTagAdapter.SecurityRisksReferTagViewHolder> {
     private final Context mContext;
@@ -149,7 +147,6 @@ public class SecurityRisksReferTagAdapter extends RecyclerView.Adapter<SecurityR
 
         public SecurityRisksReferTagViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
             tvTag = itemView.findViewById(R.id.tv_tag_security_risk_refer_tag);
         }
     }
