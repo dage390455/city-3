@@ -45,7 +45,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-//@Route(path = ARouterConstants.activity_deploy_detail)
+//@Route(path = ARouterConstants.ACTIVITY_NAMEPLATE_LIST)
 public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDetailActivityView, DeployMonitorDetailActivityPresenter>
         implements IDeployMonitorDetailActivityView, View.OnClickListener {
 

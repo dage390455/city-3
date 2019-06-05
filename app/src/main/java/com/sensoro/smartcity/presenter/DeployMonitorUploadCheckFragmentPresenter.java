@@ -2,8 +2,10 @@ package com.sensoro.smartcity.presenter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
 import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
@@ -279,11 +281,11 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
     }
 
     public void doTag() {
-        Intent intent = new Intent(mActivity, DeployDeviceTagActivity.class);
+        Bundle bundle = new Bundle();
         if (deployAnalyzerModel.tagList.size() > 0) {
-            intent.putStringArrayListExtra(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
+            bundle.putStringArrayList(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
         }
-        getView().startAC(intent);
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_TAG,bundle,mActivity);
     }
 
     public void doSettingPhoto() {

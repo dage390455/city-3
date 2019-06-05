@@ -138,7 +138,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
             @Override
             public void onSuccess(Intent intent) {
                 getView().dismissProgressDialog();
-//                ARouter.getInstance().build(ARouterConstants.activity_deploy_detail).withParcelable("intent",intent).navigation(mContext);
+//                ARouter.getInstance().build(ARouterConstants.ACTIVITY_NAMEPLATE_LIST).withParcelable("intent",intent).navigation(mContext);
                 getView().startAC(intent);
             }
 

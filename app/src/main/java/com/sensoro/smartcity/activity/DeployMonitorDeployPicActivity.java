@@ -12,10 +12,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.server.bean.DeployPicInfo;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
@@ -32,6 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+@Route(path = ARouterConstants.ACTIVITY_DEPLOY_DEVICE_PIC)
 public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorDeployPicView, DeployMonitorDeployPicPresenter>
         implements IDeployMonitorDeployPicView {
     @BindView(R.id.include_text_title_tv_cancel)
@@ -118,7 +121,7 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     private void initRC() {
         mDeployPicAdapter = new DeployPicAdapter(mActivity);
         LinearLayoutManager manager = new LinearLayoutManager(mActivity);
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        manager.setOrientation(RecyclerView.VERTICAL);
         acDeployPicRc.setLayoutManager(manager);
         acDeployPicRc.setAdapter(mDeployPicAdapter);
 

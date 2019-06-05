@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -18,6 +19,7 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.handler.HandlerDeployCheck;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
@@ -763,11 +765,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     }
 
     public void doTag() {
-        Intent intent = new Intent(mContext, DeployDeviceTagActivity.class);
+        Bundle bundle = new Bundle();
         if (deployAnalyzerModel.tagList.size() > 0) {
-            intent.putStringArrayListExtra(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
+            bundle.putStringArrayList(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
         }
-        getView().startAC(intent);
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_TAG,bundle,mContext);
     }
 
     public void doSettingPhoto() {

@@ -1096,4 +1096,5 @@
     <string name="sensor">部传感器</string>
     <string name="nameplate_name_empty">铭牌名称不能为空</string>
     <string name="selected_device_size">已选择传感器：</string>
+    <string name="deploy_pic_look_device_look_sn">需拍产品机身及看清设备号</string>
 </resources>

@@ -275,7 +275,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 break;
             case R.id.fg_main_manage_ll_nameplate:
                 mPresenter.doManageNameplate();
-//                ARouter.getInstance().build(ARouterConstants.activity_deploy_detail).navigation(mRootFragment.getActivity());
+//                ARouter.getInstance().build(ARouterConstants.ACTIVITY_NAMEPLATE_LIST).navigation(mRootFragment.getActivity());
 //                startAC(new Intent(mRootFragment.getActivity(), NameplateListActivity.class));
                 break;
             case R.id.fg_main_manage_ll_basestation:
@@ -351,7 +351,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     @Override
     public void setNameplateVisible(boolean hasNameplate) {
         line10.setVisibility(hasNameplate?View.VISIBLE:View.GONE);
-        fgMainManageLlNameplate.setVisibility(hasNameplate?View.VISIBLE:View.GONE);
+//        fgMainManageLlNameplate.setVisibility(hasNameplate?View.VISIBLE:View.GONE);
     }
 
     @Override

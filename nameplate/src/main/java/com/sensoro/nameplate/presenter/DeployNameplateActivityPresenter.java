@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.EventData;
 import com.sensoro.nameplate.R;
@@ -73,13 +74,15 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
     }
 
     public void doTag() {
-
-//        ARouter.getInstance().build("/activity/DeployDeviceTagActivity").
-//                with(Bundle)withStringArrayList("dd",new ArrayList<>()).navigation();
+        Bundle bundle = new Bundle();
+//        if (deployAnalyzerModel.tagList.size() > 0) {
+//            bundle.putStringArrayList(Constants.EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
+//        }
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_TAG,bundle,mActivity);
     }
 
     public void doPic() {
-//        Intent intent = new Intent(mActivity, DeployMonitorDeployPicActivity.class);
+        Intent intent = new Intent(mActivity, DeployMonitorDeployPicActivity.class);
 ////        if (getRealImageSize() > 0) {
 ////            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
 ////        }

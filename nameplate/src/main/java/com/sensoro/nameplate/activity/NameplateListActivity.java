@@ -48,7 +48,7 @@ import com.sensoro.nameplate.presenter.NameplateListActivityPresenter;
 
 import java.util.List;
 
-@Route(path = ARouterConstants.activity_deploy_detail)
+@Route(path = ARouterConstants.ACTIVITY_NAMEPLATE_LIST)
 public class NameplateListActivity extends BaseActivity<INameplateListActivityView, NameplateListActivityPresenter>
         implements INameplateListActivityView, View.OnClickListener {
 

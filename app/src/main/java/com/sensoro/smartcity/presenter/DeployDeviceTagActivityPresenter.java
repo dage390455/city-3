@@ -31,9 +31,9 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
     public void initData(Context context) {
         mContext = (Activity) context;
 
-        Intent intent = mContext.getIntent();
-        ArrayList<String> stringArrayListExtra = intent.getStringArrayListExtra(EXTRA_SETTING_TAG_LIST);
-        if (stringArrayListExtra != null) {
+        Object bundleValue = getBundleValue(mContext, EXTRA_SETTING_TAG_LIST);
+        if (bundleValue instanceof ArrayList) {
+            ArrayList<String> stringArrayListExtra = (ArrayList<String>) bundleValue;
             mTagList.addAll(stringArrayListExtra);
         }
 
