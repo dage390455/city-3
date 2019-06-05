@@ -153,12 +153,13 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
                         @Override
                         public void onCancelClick() {
                             mDeleteDialog.dismiss();
-                            mPresenter.unbindNameplateDevice(position);
                         }
 
                         @Override
                         public void onConfirmClick() {
                             mDeleteDialog.dismiss();
+                            mPresenter.unbindNameplateDevice(position);
+
 
                         }
                     });
@@ -259,11 +260,11 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     public void updateBindDeviceAdapter(List<NamePlateInfo> data) {
 
         if (data != null && data.size() > 0) {
-            tvNameplateAssociatedSensor.append(data.size() + "");
+            tvNameplateAssociatedSensor.setText(getResources().getString(R.string.association_sensor) + data.size());
 
             mAddedSensorAdapter.updateData(data);
         } else {
-            tvNameplateAssociatedSensor.append(data.size() + "0");
+            tvNameplateAssociatedSensor.setText(getResources().getString(R.string.association_sensor) + "0");
 
         }
     }
@@ -312,8 +313,10 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     @Override
     public void updateNamePlateStatus(int pos) {
 
+        mAddedSensorAdapter.getmList().remove(pos);
 
         mAddedSensorAdapter.notifyItemRemoved(pos);
+        tvNameplateAssociatedSensor.setText(getResources().getString(R.string.association_sensor) + mAddedSensorAdapter.getmList().size());
 
     }
 

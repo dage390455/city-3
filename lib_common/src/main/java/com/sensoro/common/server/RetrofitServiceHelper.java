@@ -1816,7 +1816,8 @@ public class RetrofitServiceHelper {
     }
 
     public Observable<NameplateBindDeviceRsp> getNameplateBindDevices(Integer pageSize, Integer page, String nameplateId) {
-        return retrofitService.getNameplateBindDevices(pageSize, page, nameplateId);
+        return retrofitService.getNameplateBindDevices(nameplateId);
+//        return retrofitService.getNameplateBindDevices(pageSize, page, nameplateId);
     }
 
 
@@ -1837,7 +1838,7 @@ public class RetrofitServiceHelper {
                     jsonArray.put(sns.get(i));
                 }
                 jsonObject.put("nameplateId", nameplateId);
-                jsonObject.put("sns", jsonArray);
+                jsonObject.put("snList", jsonArray);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

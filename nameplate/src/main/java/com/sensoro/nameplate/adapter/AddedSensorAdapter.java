@@ -24,6 +24,11 @@ import butterknife.ButterKnife;
 
 public class AddedSensorAdapter extends RecyclerView.Adapter<AddedSensorAdapter.AddedSensorAdapterViewHolder> {
     private final Context mContext;
+
+    public List<NamePlateInfo> getmList() {
+        return mList;
+    }
+
     private List<NamePlateInfo> mList = new ArrayList<>();
     private onDeleteClickListenre mListener;
 

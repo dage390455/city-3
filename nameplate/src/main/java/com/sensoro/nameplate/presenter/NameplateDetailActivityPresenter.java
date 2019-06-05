@@ -86,7 +86,7 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
 
         List<String> list = new ArrayList<>();
         if (null != plateInfos && plateInfos.size() > 0) {
-            list.add(plateInfos.get(pos).get_id());
+            list.add(plateInfos.get(pos).getSn());
         }
         RetrofitServiceHelper.getInstance().unbindNameplateDevice(nameplateId, list).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Integer>>(this) {
@@ -95,6 +95,7 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
             public void onCompleted(ResponseResult<Integer> result) {
 
                 if (result.getData() == 1) {
+
                     getView().updateNamePlateStatus(pos);
                 }
 
