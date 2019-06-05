@@ -1,6 +1,7 @@
 package com.sensoro.nameplate.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.R2;
-import com.sensoro.nameplate.model.AddSensorFromListModel;
+import com.sensoro.nameplate.model.AddSensorModel;
 
 import java.util.ArrayList;
 
@@ -23,7 +25,7 @@ import butterknife.ButterKnife;
 
 public class AddSensorListAdapter extends RecyclerView.Adapter<AddSensorListAdapter.AddSensorListAdapterViewHolder> {
     private final Context mContext;
-    ArrayList<AddSensorFromListModel> mList = new ArrayList<>();
+    ArrayList<NamePlateInfo> mList = new ArrayList<>();
     private OnSensorListCheckListener mListener;
 
     public AddSensorListAdapter(Context context) {
@@ -52,11 +54,11 @@ public class AddSensorListAdapter extends RecyclerView.Adapter<AddSensorListAdap
     @Override
     public void onBindViewHolder(@NonNull AddSensorListAdapterViewHolder holder, int position) {
         holder.clRootItemAdapterAddSensorList.setTag(position);
-        AddSensorFromListModel model = mList.get(position);
+        NamePlateInfo model = mList.get(position);
 
-        holder.tvNameItemAdapterAddSensorList.setText(model.name);
+        holder.tvNameItemAdapterAddSensorList.setText(TextUtils.isEmpty(model.getName()) ? model.getSn() : model.getName());
         holder.tvDeviceNameItemAdapterAddSensorList.setText(model.deviceTypeName);
-        holder.tvDeviceSnItemAdapterAddSensorList.setText(model.sn);
+        holder.tvDeviceSnItemAdapterAddSensorList.setText(model.getSn());
 
         Glide.with(mContext)
                 .load(model.iconUrl)
@@ -64,7 +66,6 @@ public class AddSensorListAdapter extends RecyclerView.Adapter<AddSensorListAdap
                 .error(R.drawable.ic_default_image)
                 .placeholder(R.drawable.ic_default_image)
                 .into(holder.ivIconItemAdapterAddSensorList);
-        boolean isCheck = model.isCheck;
         holder.ivStatusItemAdapterAddSensorList.setImageResource(model.isCheck ? R.mipmap.radio_btn_checked : R.mipmap.radio_btn_unchecked);
     }
 
@@ -73,7 +74,7 @@ public class AddSensorListAdapter extends RecyclerView.Adapter<AddSensorListAdap
         return mList.size();
     }
 
-    public void updateData(ArrayList<AddSensorFromListModel> data) {
+    public void updateData(ArrayList<NamePlateInfo> data) {
         mList.clear();
         mList.addAll(data);
         notifyDataSetChanged();

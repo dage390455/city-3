@@ -26,7 +26,6 @@ import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TouchRecycleView;
-import com.sensoro.nameplate.widget.QrCodeDialogUtils;
 import com.sensoro.common.widgets.dialog.TipDialogUtils;
 import com.sensoro.nameplate.IMainViews.INameplateDetailActivityView;
 import com.sensoro.nameplate.R;
@@ -34,6 +33,7 @@ import com.sensoro.nameplate.R2;
 import com.sensoro.nameplate.adapter.AddedSensorAdapter;
 import com.sensoro.nameplate.presenter.NameplateDetailActivityPresenter;
 import com.sensoro.nameplate.widget.CustomDrawableDivider;
+import com.sensoro.nameplate.widget.QrCodeDialogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +81,7 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     private TagAdapter tagAdapter;
     private final List<String> options = new ArrayList<>();
     private TipDialogUtils mDeleteDialog;
+    private QrCodeDialogUtils dialogUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -88,6 +89,7 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
         ButterKnife.bind(this);
         includeTextTitleTvTitle.setText(R.string.nameplate_manager_detail);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
+        dialogUtils = new QrCodeDialogUtils(mActivity);
         options.add("扫码关联");
         options.add("传感器列表中关联");
         initNormalDialog();
@@ -151,12 +153,13 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
                         @Override
                         public void onCancelClick() {
                             mDeleteDialog.dismiss();
-                            mPresenter.unbindNameplateDevice(position);
                         }
 
                         @Override
                         public void onConfirmClick() {
                             mDeleteDialog.dismiss();
+                            mPresenter.unbindNameplateDevice(position);
+
 
                         }
                     });
@@ -182,8 +185,7 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
             finish();
         } else if (R.id.tv_nameplate_qrcode == id) {
 
-            QrCodeDialogUtils dialogUtils = new QrCodeDialogUtils(mActivity);
-            dialogUtils.setImageUrl("https://city-dev-api.sensoro.com/nameplate/5cf5df69efef53fd8d5e95fa");
+
             dialogUtils.show();
         } else if (R.id.tv_nameplate_edit == id) {
             mPresenter.doEditNameplate();
@@ -258,11 +260,11 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     public void updateBindDeviceAdapter(List<NamePlateInfo> data) {
 
         if (data != null && data.size() > 0) {
-            tvNameplateAssociatedSensor.append(data.size() + "");
+            tvNameplateAssociatedSensor.setText(getResources().getString(R.string.association_sensor) + data.size());
 
             mAddedSensorAdapter.updateData(data);
         } else {
-            tvNameplateAssociatedSensor.append(data.size() + "0");
+            tvNameplateAssociatedSensor.setText(getResources().getString(R.string.association_sensor) + "0");
 
         }
     }
@@ -311,8 +313,15 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     @Override
     public void updateNamePlateStatus(int pos) {
 
+        mAddedSensorAdapter.getmList().remove(pos);
 
         mAddedSensorAdapter.notifyItemRemoved(pos);
+        tvNameplateAssociatedSensor.setText(getResources().getString(R.string.association_sensor) + mAddedSensorAdapter.getmList().size());
 
+    }
+
+    @Override
+    public void setQrCodeUrl(String qrCodeUrl) {
+        dialogUtils.setImageUrl(qrCodeUrl);
     }
 }

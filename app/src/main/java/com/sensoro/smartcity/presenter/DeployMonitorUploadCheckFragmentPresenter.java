@@ -289,12 +289,19 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
     }
 
     public void doSettingPhoto() {
-        Intent intent = new Intent(mActivity, DeployMonitorDeployPicActivity.class);
+        Bundle bundle = new Bundle();
         if (getRealImageSize() > 0) {
-            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
+            bundle.putSerializable(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
         }
-        intent.putExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
-        getView().startAC(intent);
+        bundle.putString(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_PIC,bundle,mActivity);
+
+//        Intent intent = new Intent(mActivity, DeployMonitorDeployPicActivity.class);
+//        if (getRealImageSize() > 0) {
+//            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
+//        }
+//        intent.putExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
+//        getView().startAC(intent);
     }
 
     private int getRealImageSize() {

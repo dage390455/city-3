@@ -2,15 +2,18 @@ package com.sensoro.nameplate.IMainViews;
 
 import android.graphics.drawable.Drawable;
 
+import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
-import com.sensoro.nameplate.model.AddSensorFromListModel;
+import com.sensoro.common.server.bean.NamePlateInfo;
+import com.sensoro.nameplate.model.AddSensorModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public interface IDeployNameplateAddSensorFromListActivityView extends IToast, IProgressDialog {
-    void updateData(ArrayList<AddSensorFromListModel> mList);
+public interface IDeployNameplateAddSensorFromListActivityView extends IToast, IProgressDialog,
+        IActivityIntent {
+    void updateData(ArrayList<NamePlateInfo> mList);
 
     void onPullRefreshComplete();
 
@@ -27,4 +30,6 @@ public interface IDeployNameplateAddSensorFromListActivityView extends IToast, I
     void setSearchButtonTextVisible(boolean isVisible);
 
     void UpdateSearchHistoryList(List<String> mSearchHistoryList);
+
+    void showConfirmDialog();
 }

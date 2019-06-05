@@ -18,6 +18,7 @@ public class NamePlateInfo implements Serializable {
 
     public String deviceTypeName;
     public String iconUrl;
+    public boolean isCheck;
 
     private ArrayList<String> tags;
 

@@ -1097,4 +1097,9 @@
     <string name="nameplate_name_empty">铭牌名称不能为空</string>
     <string name="selected_device_size">已选择传感器：</string>
     <string name="deploy_pic_look_device_look_sn">需拍产品机身及看清设备号</string>
+    <string name="association_sensor">关联传感器：</string>
+    <string name="deploy_pic_look_installation_environmental">需拍摄产品安装位置及周边环境</string>
+    <string name="deploy_pic_installation_sit">安装现场</string>
+    <string name="deploy_pic_nameplate_look_installation_environmental">需拍摄铭牌安装位置及周边环境</string>
+
 </resources>

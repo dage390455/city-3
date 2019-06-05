@@ -9,15 +9,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.nameplate.R;
-import com.sensoro.nameplate.model.AddSensorFromListModel;
+import com.sensoro.nameplate.model.AddSensorModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AssociationSensorDialogAdapter extends RecyclerView.Adapter<AssociationSensorDialogAdapter.AssociationSensorDialogViewHolder> {
     private final Context mContext;
-    private ArrayList<AddSensorFromListModel> mList = new ArrayList<AddSensorFromListModel>();
+    private ArrayList<NamePlateInfo> mList = new ArrayList<>();
 
     public AssociationSensorDialogAdapter(Context context) {
         mContext = context;
@@ -33,9 +34,9 @@ public class AssociationSensorDialogAdapter extends RecyclerView.Adapter<Associa
     @Override
     public void onBindViewHolder(@NonNull AssociationSensorDialogViewHolder holder, int position) {
         StringBuilder sb = new StringBuilder();
-        AddSensorFromListModel model = mList.get(position);
+        NamePlateInfo model = mList.get(position);
         sb.append(model.deviceTypeName).append(mContext.getString(R.string.monitor))
-                .append("(").append(model.name).append(")");
+                .append("(").append(model.getName()).append(")");
         holder.tvContent.setText(sb.toString());
     }
 
@@ -44,7 +45,7 @@ public class AssociationSensorDialogAdapter extends RecyclerView.Adapter<Associa
         return mList.size();
     }
 
-    public void updateData(List<AddSensorFromListModel> data){
+    public void updateData(List<NamePlateInfo> data){
         mList.clear();
         mList.addAll(data);
         notifyDataSetChanged();

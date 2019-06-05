@@ -45,9 +45,14 @@ public class DeployPicAdapter extends RecyclerView.Adapter<DeployPicAdapter.Depl
     public void onBindViewHolder(@NonNull final DeployPicHolder holder, int position) {
         DeployPicInfo model = list.get(position);
         String title = TextUtils.isEmpty(model.title) ? mContext.getString(R.string.unknown) : model.title;
-        String require = mContext.getString(model.isRequired ? R.string.deploy_pic_required : R.string.deploy_pic_optional);
+        if (model.isRequired == null) {
+            holder.tvDeployPicTitle.setText(title);
+        }else{
+            String require = mContext.getString(model.isRequired ? R.string.deploy_pic_required : R.string.deploy_pic_optional);
+            holder.tvDeployPicTitle.setText(String.format(Locale.ROOT,"%s (%s)",title,require));
+        }
 
-        holder.tvDeployPicTitle.setText(String.format(Locale.ROOT,"%s (%s)",title,require));
+
         holder.tvDeployPicDescription.setText(TextUtils.isEmpty(model.description) ? "" : model.description);
         if (model.photoItem == null) {
             holder.llAddDeployPic.setVisibility(View.VISIBLE);

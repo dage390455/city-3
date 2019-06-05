@@ -1,12 +1,12 @@
 package com.sensoro.nameplate.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -31,8 +32,10 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -41,7 +44,7 @@ import com.sensoro.nameplate.IMainViews.IDeployNameplateAddSensorFromListActivit
 import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.R2;
 import com.sensoro.nameplate.adapter.AddSensorListAdapter;
-import com.sensoro.nameplate.model.AddSensorFromListModel;
+import com.sensoro.nameplate.model.AddSensorModel;
 import com.sensoro.nameplate.presenter.DeployNameplateAddSensorFromListActivityPresenter;
 import com.sensoro.nameplate.widget.AssociationSensorConfirmDialogUtil;
 import com.sensoro.nameplate.widget.CustomDrawableDivider;
@@ -51,10 +54,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 
+@Route(path = ARouterConstants.ACTIVITY_DEPLOY_ASSOCIATE_SENSOR_FROM_LIST)
 public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDeployNameplateAddSensorFromListActivityView,
         DeployNameplateAddSensorFromListActivityPresenter> implements IDeployNameplateAddSensorFromListActivityView,
         TextView.OnEditorActionListener, View.OnClickListener {
@@ -341,7 +344,7 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
     }
 
     @Override
-    public void updateData(ArrayList<AddSensorFromListModel> mList) {
+    public void updateData(ArrayList<NamePlateInfo> mList) {
         if (mList == null || mList.size() > 0) {
             icNoContent.setVisibility(View.GONE);
             refreshLayoutInclude.setVisibility(View.VISIBLE);
@@ -412,6 +415,13 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
     }
 
     @Override
+    public void showConfirmDialog() {
+        if (mConfirmDialog != null) {
+            mConfirmDialog.show(mPresenter.mSelectList);
+        }
+    }
+
+    @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
             String text = etSearchAcDeployNameplateSensorList.getText().toString();
@@ -446,12 +456,35 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
         }else if (id == R.id.rb_select_all_ac_deploy_nameplate_sensor_list) {
             mPresenter.doSelectAll();
         }else if (id == R.id.tv_add_ac_deploy_nameplate_sensor_list) {
-            if (mConfirmDialog != null) {
-                mConfirmDialog.show(mPresenter.mSelectList);
-            }
+            mPresenter.doAddSensorList();
         }else if (id == R.id.return_top_include) {
             rvListInclude.smoothScrollToPosition(0);
             returnTopInclude.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void startAC(Intent intent) {
+
+    }
+
+    @Override
+    public void finishAc() {
+        mActivity.finish();
+    }
+
+    @Override
+    public void startACForResult(Intent intent, int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int resultCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int resultCode, Intent data) {
+
     }
 }

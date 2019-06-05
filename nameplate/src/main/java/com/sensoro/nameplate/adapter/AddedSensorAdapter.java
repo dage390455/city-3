@@ -24,6 +24,11 @@ import butterknife.ButterKnife;
 
 public class AddedSensorAdapter extends RecyclerView.Adapter<AddedSensorAdapter.AddedSensorAdapterViewHolder> {
     private final Context mContext;
+
+    public List<NamePlateInfo> getmList() {
+        return mList;
+    }
+
     private List<NamePlateInfo> mList = new ArrayList<>();
     private onDeleteClickListenre mListener;
 
@@ -51,18 +56,12 @@ public class AddedSensorAdapter extends RecyclerView.Adapter<AddedSensorAdapter.
     @Override
     public void onBindViewHolder(@NonNull AddedSensorAdapterViewHolder holder, int position) {
         holder.tvDeleteItemAdapterAddedSensor.setTag(position);
-        holder.tvNameItemAdapterAddedSensor.setText("费家村中央杂货铺");
-        holder.tvDeviceNameItemAdapterAddedSensor.setText("烟雾");
-        holder.tvDeviceSnItemAdapterAddedSensor.setText("1234567890190123456");
-
-
         NamePlateInfo plateInfo = mList.get(position);
-
 
         if (!TextUtils.isEmpty(plateInfo.getName())) {
             holder.tvNameItemAdapterAddedSensor.setText(plateInfo.getName());
         } else {
-            holder.tvNameItemAdapterAddedSensor.setText("");
+            holder.tvNameItemAdapterAddedSensor.setText(plateInfo.getSn());
 
         }
         if (!TextUtils.isEmpty(plateInfo.getSn())) {

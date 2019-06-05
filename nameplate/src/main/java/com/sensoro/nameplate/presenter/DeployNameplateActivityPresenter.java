@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
@@ -19,7 +18,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNameplateActivityView> {
@@ -82,16 +80,21 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
     }
 
     public void doPic() {
-        Intent intent = new Intent(mActivity, DeployMonitorDeployPicActivity.class);
-////        if (getRealImageSize() > 0) {
-////            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
-////        }
-////        intent.putExtra(Constants.EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
-//        getView().startAC(intent);
+//        Intent intent = new Intent(mActivity, DeployMonitorDeployPicActivity.class);
+//////        if (getRealImageSize() > 0) {
+//////            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
+//////        }
+//////        intent.putExtra(Constants.EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
+////        getView().startAC(intent);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.EXTRA_SETTING_DEPLOY_DEVICE_TYPE, "deploy_nameplate");
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_PIC,bundle,mActivity);
     }
 
     public void doAssociationSensor() {
-        Intent intent = new Intent(mActivity, DeployNameplateAddSensorActivity.class);
-        getView().startAC(intent);
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.EXTRA_ASSOCIATION_SENSOR_ORIGIN_TYPE,"deploy");
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_ASSOCIATE_SENSOR,bundle,mActivity);
     }
 }

@@ -3,6 +3,7 @@ package com.sensoro.nameplate.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
@@ -10,16 +11,20 @@ import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
-import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.DeviceTypeStyles;
 import com.sensoro.common.server.bean.MergeTypeStyles;
-import com.sensoro.common.server.response.DeviceInfoListRsp;
+import com.sensoro.common.server.bean.NamePlateInfo;
+import com.sensoro.common.server.response.NameplateBindDeviceRsp;
 import com.sensoro.nameplate.R;
-import com.sensoro.nameplate.model.AddSensorFromListModel;
+import com.sensoro.nameplate.model.AddSensorModel;
 import com.sensoro.nameplate.IMainViews.IDeployNameplateAddSensorFromListActivityView;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,16 +34,28 @@ import io.reactivex.schedulers.Schedulers;
 public class DeployNameplateAddSensorFromListActivityPresenter extends BasePresenter<IDeployNameplateAddSensorFromListActivityView> {
     private Activity mActivity;
     private int page;
-    private ArrayList<AddSensorFromListModel> mList = new ArrayList<>();
-    public ArrayList<AddSensorFromListModel> mSelectList = new ArrayList<>();
+    private ArrayList<NamePlateInfo> mList = new ArrayList<>();
+    public ArrayList<NamePlateInfo> mSelectList = new ArrayList<>();
+    public ArrayList<NamePlateInfo> mBindList ;
     private final List<String> mSearchHistoryList = new ArrayList<>();
     private Drawable checkedDrawable;
     private Drawable unCheckedDrawable;
     private boolean isCheckAll = false;
+    private String mOriginType;
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
+
+        Bundle bundle = getBundle(mActivity);
+        if (bundle != null) {
+            mOriginType = bundle.getString(Constants.EXTRA_ASSOCIATION_SENSOR_ORIGIN_TYPE);
+            Serializable serializable = bundle.getSerializable(Constants.EXTRA_ASSOCIATION_SENSOR_BIND_LIST);
+            if (serializable instanceof ArrayList) {
+                mBindList = (ArrayList<NamePlateInfo>) serializable;
+            }
+        }
+
         checkedDrawable = mActivity.getResources().getDrawable(R.mipmap.radio_btn_checked);
         checkedDrawable.setBounds(0, 0, checkedDrawable.getMinimumWidth(), checkedDrawable.getMinimumHeight());
         unCheckedDrawable = mActivity.getResources().getDrawable(R.mipmap.radio_btn_unchecked);
@@ -47,7 +64,7 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
         initSearchHistoryData();
 
         getView().showProgressDialog();
-        requestWithDirection(Constants.DIRECTION_DOWN,null);
+        requestWithDirection(Constants.DIRECTION_DOWN, null);
     }
 
     private void initSearchHistoryData() {
@@ -58,110 +75,154 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
         }
     }
 
-
-    public void requestWithDirection(int direction,String text) {
-//        getView().setRelationLayoutVisible(false);
-        getView().showProgressDialog();
+    public void requestWithDirection(int direction, String searchText) {
         if (direction == Constants.DIRECTION_DOWN) {
             page = 1;
-            RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, null, null, text).subscribeOn
-                    (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
-
-
-                @Override
-                public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
-                    mList.clear();
-                    List<DeviceInfo> data = deviceInfoListRsp.getData();
-                    if (data != null && data.size() > 0) {
-                        dealData(data);
-                    }
-                    getView().updateData(mList);
-                    getView().onPullRefreshComplete();
-                    getView().dismissProgressDialog();
-
-
-                    mSelectList.clear();
-                    updateStatus();
-
-                }
-
-                @Override
-                public void onErrorMsg(int errorCode, String errorMsg) {
-                    getView().dismissProgressDialog();
-                    getView().onPullRefreshComplete();
-                    getView().toastShort(errorMsg);
-                }
-            });
         } else {
             page++;
-            RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, null, null, null).subscribeOn
-                    (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
-
-
-                @Override
-                public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
-                    List<DeviceInfo> data = deviceInfoListRsp.getData();
-                    if (data != null && data.size() > 0) {
-                        dealData(data);
-                    }
-                    getView().updateData(mList);
-                    getView().onPullRefreshComplete();
-                    getView().dismissProgressDialog();
-
-
-
-                    updateStatus();
-                }
-
-                @Override
-                public void onErrorMsg(int errorCode, String errorMsg) {
-                    page--;
-                    getView().dismissProgressDialog();
-                    getView().onPullRefreshComplete();
-                    getView().toastShort(errorMsg);
-                }
-            });
         }
-    }
 
-    private void dealData(List<DeviceInfo> data) {
-        for (DeviceInfo datum : data) {
-            AddSensorFromListModel model = new AddSensorFromListModel();
-            model.sn = datum.getSn();
-            if (TextUtils.isEmpty(datum.getName())) {
-                model.name = datum.getSn();
+        RetrofitServiceHelper.getInstance().getNameplateUnbindDevices(page, 20, "5cf5e9d4efef53239b5e9625")
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<NameplateBindDeviceRsp>(this) {
+            @Override
+            public void onCompleted(NameplateBindDeviceRsp nameplateBindDeviceRsp) {
+                if (direction == Constants.DIRECTION_DOWN) {
+                    mList.clear();
+                    mSelectList.clear();
+                }
+                List<NamePlateInfo> data = nameplateBindDeviceRsp.getData();
+                if (data != null && data.size() > 0) {
+                    dealData(data);
+                }
+                getView().updateData(mList);
+                updateStatus();
 
-            } else {
-                model.name = datum.getName();
+                getView().onPullRefreshComplete();
+                getView().dismissProgressDialog();
 
             }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                if (direction == Constants.DIRECTION_UP) {
+                    page--;
+
+                }
+                getView().dismissProgressDialog();
+                getView().onPullRefreshComplete();
+                getView().toastShort(errorMsg);
+            }
+        });
+    }
+
+//    public void requestWithDirection(int direction,String text) {
+////        getView().setRelationLayoutVisible(false);
+//        getView().showProgressDialog();
+//        if (direction == Constants.DIRECTION_DOWN) {
+//            page = 1;
+//            RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, null, null, text).subscribeOn
+//                    (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
+//
+//
+//                @Override
+//                public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+//                    mList.clear();
+//                    List<DeviceInfo> data = deviceInfoListRsp.getData();
+//                    if (data != null && data.size() > 0) {
+//                        dealData(data);
+//                    }
+//                    getView().updateData(mList);
+//                    getView().onPullRefreshComplete();
+//                    getView().dismissProgressDialog();
+//
+//
+//                    mSelectList.clear();
+//                    updateStatus();
+//
+//                }
+//
+//                @Override
+//                public void onErrorMsg(int errorCode, String errorMsg) {
+//                    getView().dismissProgressDialog();
+//                    getView().onPullRefreshComplete();
+//                    getView().toastShort(errorMsg);
+//                }
+//            });
+//        } else {
+//            page++;
+//            RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, null, null, null).subscribeOn
+//                    (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
+//
+//
+//                @Override
+//                public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+//                    List<DeviceInfo> data = deviceInfoListRsp.getData();
+//                    if (data != null && data.size() > 0) {
+//                        dealData(data);
+//                    }
+//                    getView().updateData(mList);
+//                    getView().onPullRefreshComplete();
+//                    getView().dismissProgressDialog();
+//
+//
+//
+//                    updateStatus();
+//                }
+//
+//                @Override
+//                public void onErrorMsg(int errorCode, String errorMsg) {
+//                    page--;
+//                    getView().dismissProgressDialog();
+//                    getView().onPullRefreshComplete();
+//                    getView().toastShort(errorMsg);
+//                }
+//            });
+//        }
+//    }
+
+    private void dealData(List<NamePlateInfo> data) {
+
+        for (NamePlateInfo datum : data) {
+
+            if (isBindListContain(datum)) {
+                continue;
+            }
+
             DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(datum.getDeviceType());
             if (configDeviceType != null) {
                 String category = configDeviceType.getCategory();
                 String mergeType = configDeviceType.getMergeType();
                 MergeTypeStyles mergeTypeStyles = PreferencesHelper.getInstance().getConfigMergeType(mergeType);
                 if (mergeTypeStyles != null) {
-                    model.deviceTypeName = mergeTypeStyles.getName();
+                    datum.deviceTypeName = mergeTypeStyles.getName();
                     if (!TextUtils.isEmpty(category)) {
-                        model.deviceTypeName = model.deviceTypeName + category;
+                        datum.deviceTypeName = datum.deviceTypeName + category;
                     }
                     if (TextUtils.isEmpty(mergeTypeStyles.getImage())) {
-                        model.iconUrl = "";
+                        datum.iconUrl = "";
                     } else {
-                        model.iconUrl = mergeTypeStyles.getImage();
+                        datum.iconUrl = mergeTypeStyles.getImage();
                     }
                 } else {
-                    model.deviceTypeName = mActivity.getString(R.string.unknown);
-                    model.iconUrl = "";
+                    datum.deviceTypeName = mActivity.getString(R.string.unknown);
+                    datum.iconUrl = "";
                 }
 
             } else {
-                model.deviceTypeName = mActivity.getString(R.string.unknown);
-                model.iconUrl = "";
+                datum.deviceTypeName = mActivity.getString(R.string.unknown);
+                datum.iconUrl = "";
             }
-
-            mList.add(model);
+            mList.add(datum);
         }
+    }
+
+    private boolean isBindListContain(NamePlateInfo datum) {
+        for (NamePlateInfo namePlateInfo : mBindList) {
+            if (namePlateInfo.getSn().equals(datum.getSn())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -170,7 +231,7 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
     }
 
     public void doChecked(int position) {
-        AddSensorFromListModel model = mList.get(position);
+        NamePlateInfo model = mList.get(position);
         model.isCheck = !model.isCheck;
         if (model.isCheck) {
             if (!mSelectList.contains(model)) {
@@ -185,7 +246,7 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
     }
 
     private void updateStatus() {
-        getView().setSelectSize(""+mSelectList.size());
+        getView().setSelectSize("" + mSelectList.size());
 
         if (mSelectList.size() != mList.size() || mList.size() == 0) {
             isCheckAll = false;
@@ -209,7 +270,7 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
             mSelectList.addAll(mList);
         }
 
-        for (AddSensorFromListModel model : mList) {
+        for (NamePlateInfo model : mList) {
             model.isCheck = isCheckAll;
         }
 
@@ -219,21 +280,39 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
     }
 
     public void save(String text) {
-            if (TextUtils.isEmpty(text)) {
-                return;
-            }
+        if (TextUtils.isEmpty(text)) {
+            return;
+        }
 //        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_CONTRACT);
 //        mSearchHistoryList.remove(text);
 //        mSearchHistoryList.add(0, text);
-            List<String> contractList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_NAMEPLATE_ADD_FROM_LIST, text);
-            mSearchHistoryList.clear();
-            mSearchHistoryList.addAll(contractList);
-            getView().UpdateSearchHistoryList(mSearchHistoryList);
+        List<String> contractList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_NAMEPLATE_ADD_FROM_LIST, text);
+        mSearchHistoryList.clear();
+        mSearchHistoryList.addAll(contractList);
+        getView().UpdateSearchHistoryList(mSearchHistoryList);
     }
 
     public void requestSearchData(int directionDown, String text) {
         getView().showProgressDialog();
-        requestWithDirection(directionDown,text);
+        requestWithDirection(directionDown, text);
 
+    }
+
+    public void doAddSensorList() {
+        if ("deploy".equals(mOriginType)) {
+            doDeploy();
+        }/*else if(){
+            getView().showConfirmDialog();
+        }*/else{
+            getView().toastShort(mActivity.getString(R.string.unknown_error));
+        }
+    }
+
+    private void doDeploy() {
+        EventData eventData = new EventData();
+        eventData.code = Constants.EVENT_DATA_DEPLOY_ASSOCIATE_SENSOR_FROM_LIST;
+        eventData.data = mSelectList;
+        EventBus.getDefault().post(eventData);
+        getView().finishAc();
     }
 }

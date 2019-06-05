@@ -1,6 +1,6 @@
 package com.sensoro.nameplate.model;
 
-public class AddSensorFromListModel {
+public class AddSensorModel {
     public String sn;
     public String name;
     public String deviceTypeName;

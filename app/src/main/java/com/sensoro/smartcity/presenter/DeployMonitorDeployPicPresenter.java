@@ -89,14 +89,22 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
                 DeployPicInfo deployPicInfo2 = new DeployPicInfo();
                 deployPicInfo2.isRequired = true;
                 deployPicInfo2.title = mActivity.getString(R.string.deploy_pic_installation_site);
-                deployPicInfo2.description = "需拍摄产品安装位置及周边环境";
+                deployPicInfo2.description = mActivity.getString(R.string.deploy_pic_look_installation_environmental);
                 deployPicInfos.add(deployPicInfo1);
                 deployPicInfos.add(deployPicInfo2);
-            } else {
+            }else if("deploy_nameplate".equals(deviceType)){
+                DeployPicInfo deployPicInfo2 = new DeployPicInfo();
+                deployPicInfo2.isRequired = null;
+                deployPicInfo2.title = mActivity.getString(R.string.deploy_pic_installation_sit);
+                deployPicInfo2.description = mActivity.getString(R.string.deploy_pic_nameplate_look_installation_environmental);
+
+                deployPicInfos.add(deployPicInfo2);
+            } else{
                 DeployPicInfo deployPicInfo1 = new DeployPicInfo();
                 deployPicInfo1.title = mActivity.getString(R.string.deploy_pic_device_pic);
                 deployPicInfo1.isRequired = true;
                 deployPicInfo1.description = mActivity.getString(R.string.deploy_pic_device_pic_tip);
+
                 DeployPicInfo deployPicInfo2 = new DeployPicInfo();
                 deployPicInfo2.isRequired = true;
                 deployPicInfo2.title = mActivity.getString(R.string.deploy_pic_installation_site);
@@ -206,7 +214,7 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
             List<DeployPicInfo> deployPicData = getView().getDeployPicData();
             boolean isCanSave = true;
             for (DeployPicInfo deployPicDatum : deployPicData) {
-                if (deployPicDatum.isRequired && deployPicDatum.photoItem == null) {
+                if (deployPicDatum.isRequired != null && deployPicDatum.isRequired && deployPicDatum.photoItem == null) {
                     isCanSave = false;
                     break;
                 }

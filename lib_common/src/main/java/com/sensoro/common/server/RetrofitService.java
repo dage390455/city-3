@@ -444,12 +444,18 @@ public interface RetrofitService {
     Observable<ResponseResult<NamePlateInfo>> getNameplateDetail(@Path("nameplateId") String nameplateId);
 
     @GET("nameplate/bind/devices")
-    Observable<NameplateBindDeviceRsp> getNameplateBindDevices(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("nameplateId") String nameplateId);
+    Observable<NameplateBindDeviceRsp> getNameplateBindDevices(@Query("page") Integer pageSize, @Query("count") Integer page, @Query("nameplateId") String nameplateId);
+//    Observable<NameplateBindDeviceRsp> getNameplateBindDevices(@Query("nameplateId") String nameplateId);
 
     @PUT("nameplate/unbind/device")
     Observable<ResponseResult<Integer>> unbindNameplateDevice(@Body RequestBody requestBody);
 
     @PUT("nameplate/{nameplateId}")
     Observable<ResponseResult<Integer>> updateNameplate(@Path("nameplateId") String nameplateId, @Body RequestBody body);
+
+    @GET("nameplate/unbind/devices")
+    Observable<NameplateBindDeviceRsp> getNameplateUnbindDevices(@Query("page") Integer pageSize, @Query("count") Integer page, @Query("nameplateId") String nameplateId);
+
+
 }
 

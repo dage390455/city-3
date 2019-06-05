@@ -5,13 +5,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.adapter.AssociationSensorDialogAdapter;
-import com.sensoro.nameplate.model.AddSensorFromListModel;
+import com.sensoro.nameplate.model.AddSensorModel;
 
 import java.util.List;
 
@@ -86,7 +86,7 @@ public class AssociationSensorConfirmDialogUtil {
         return false;
     }
 
-    public void show(List<AddSensorFromListModel> data) {
+    public void show(List<NamePlateInfo> data) {
         if (mDialog != null) {
             mAdapter.updateData(data);
             StringBuilder sb = new StringBuilder();

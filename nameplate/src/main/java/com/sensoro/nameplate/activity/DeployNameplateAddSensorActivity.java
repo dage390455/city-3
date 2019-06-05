@@ -15,11 +15,13 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.widgets.ProgressUtils;
@@ -40,6 +42,7 @@ import butterknife.OnClick;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+@Route(path = ARouterConstants.ACTIVITY_DEPLOY_ASSOCIATE_SENSOR)
 public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNameplateAddSensorActivityView,
         DeployNameplateAddSensorActivityPresenter> implements IDeployNameplateAddSensorActivityView {
     @BindView(R2.id.include_text_title_tv_cancel)
@@ -128,7 +131,7 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
         mAddedSensorAdapter.setOnDeleteClickListener(new AddedSensorAdapter.onDeleteClickListenre() {
             @Override
             public void onDeleteClick(int position) {
-                toastShort("点击了");
+                mPresenter.doDeleteItem(position);
             }
         });
 
@@ -197,6 +200,9 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
     public void updateBindData(List<NamePlateInfo> mBindList) {
         mAddedSensorAdapter.updateData(mBindList);
         setNoContentVisible(mBindList == null || mBindList.size() < 1);
+        if (mBindList != null) {
+            setBindDeviceSize(mBindList.size());
+        }
     }
 
     @Override
