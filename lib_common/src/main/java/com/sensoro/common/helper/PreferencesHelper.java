@@ -93,6 +93,7 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_DEMO_MODE, eventLoginData.hasDeviceDemoMode);
         editor.putBoolean(EXTRA_GRANTS_HAS_CONTROLLER_AID, eventLoginData.hasControllerAid);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_CAMERA_LIST, eventLoginData.hasDeviceCameraList);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_CAMERA_DEPLOY, eventLoginData.hasDeviceCameraDeploy);
         //
         editor.apply();
     }
@@ -136,6 +137,7 @@ public final class PreferencesHelper implements Constants {
             boolean hasDeviceDemoMode = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_DEMO_MODE, false);
             boolean hasControllerAid = sp.getBoolean(EXTRA_GRANTS_HAS_CONTROLLER_AID, false);
             boolean hasDeviceCameraList = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_CAMERA_LIST, false);
+            boolean hasDeviceCameraDeploy = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_CAMERA_DEPLOY, false);
             final EventLoginData eventLoginData = new EventLoginData();
             eventLoginData.phoneId = phoneId;
             eventLoginData.userId = userId;
@@ -169,6 +171,7 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasDeviceDemoMode = hasDeviceDemoMode;
             eventLoginData.hasControllerAid = hasControllerAid;
             eventLoginData.hasDeviceCameraList = hasDeviceCameraList;
+            eventLoginData.hasDeviceCameraDeploy = hasDeviceCameraDeploy;
             mEventLoginData = eventLoginData;
         }
         return mEventLoginData;
