@@ -136,12 +136,20 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
             }
         } else if (code == VIDEO_START) {
 
-            getView().onVideoResume(null == itemUrl);
+            if (null == itemUrl) {
+                doLive();
+                getView().setVerOrientationUtilEnable(true);
 
+            } else {
+                getView().getPlayView().clickCityStartIcon();
+                GSYVideoManager.onResume(true);
+            }
         } else if (code == VIDEO_STOP) {
+            getView().setVerOrientationUtilEnable(false);
+            GSYVideoManager.onPause();
+
             getView().backFromWindowFull();
 
-            getView().onVideoPause();
 
 
         }

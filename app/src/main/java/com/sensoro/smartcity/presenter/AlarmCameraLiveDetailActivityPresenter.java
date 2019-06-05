@@ -110,12 +110,16 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
             }
         } else if (code == VIDEO_START) {
 
-            getView().onVideoResume();
+            doLive();
+//                    }
+            getView().setVerOrientationUtilEnable(true);
 
         } else if (code == VIDEO_STOP) {
-            getView().backFromWindowFull();
 
-            getView().onVideoPause();
+
+            getView().setVerOrientationUtilEnable(false);
+            GSYVideoManager.onPause();
+            getView().backFromWindowFull();
 
 
         }
