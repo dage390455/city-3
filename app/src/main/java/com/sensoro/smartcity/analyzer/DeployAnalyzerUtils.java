@@ -403,7 +403,7 @@ public class DeployAnalyzerUtils {
                         if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                             listener.onError(errorCode, null, errorMsg);
                         } else if (errorCode == 4013101 || errorCode == 4000013) {
-                            if (AppUtils.isChineseLanguage()) {
+                            if (AppUtils.isChineseLanguage() && PreferencesHelper.getInstance().getUserData().hasDeviceCameraDeploy) {
                                 doCamera();
                             } else {
                                 //不在账户下
@@ -435,7 +435,7 @@ public class DeployAnalyzerUtils {
                         try {
                             //todo 包装类
                             if (deployStationInfo == null || TextUtils.isEmpty(deployStationInfo.getSn())) {
-                                if (AppUtils.isChineseLanguage()) {
+                                if (AppUtils.isChineseLanguage() && PreferencesHelper.getInstance().getUserData().hasDeviceCameraDeploy) {
                                     doCamera();
                                 } else {
                                     //不在账户下

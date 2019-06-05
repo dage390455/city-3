@@ -56,6 +56,7 @@ public class UserPermissionFactory {
         eventLoginData.hasDeviceCameraList = getHasDeviceCameraList(grants);
         eventLoginData.hasNameplateList = getHasNameplateList(grants);
         eventLoginData.hasNameplateDeploy = getHasNameplateDeploy(grants);
+        eventLoginData.hasDeviceCameraDeploy = getHasDeviceCameraDeploy(grants);
         String controllerAid = userInfo.getControllerAid();
         //通过controllerAid来判断是否可以返回主账户
         eventLoginData.hasControllerAid = !TextUtils.isEmpty(controllerAid);
@@ -456,7 +457,23 @@ public class UserPermissionFactory {
     }
 
     /**
-     * 检查是否有铭牌查看
+     * 摄像头部署
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasDeviceCameraDeploy(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsCamera = grants.getCamera();
+            if (grantsCamera != null) {
+                return grantsCamera.contains("deploy");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 铭牌查看
      *
      * @param grants
      * @return
