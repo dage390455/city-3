@@ -81,6 +81,8 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
                         getView().getPlayView().getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                getView().setVerOrientationUtilEnable(true);
+
                                 GSYVideoManager.onResume(true);
                                 getView().getPlayView().setCityPlayState(-1);
                                 doLive();
@@ -108,10 +110,16 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
             }
         } else if (code == VIDEO_START) {
 
-            getView().onVideoResume();
+            doLive();
+//                    }
+            getView().setVerOrientationUtilEnable(true);
 
         } else if (code == VIDEO_STOP) {
-            getView().onVideoPause();
+
+
+            getView().setVerOrientationUtilEnable(false);
+            GSYVideoManager.onPause();
+            getView().backFromWindowFull();
 
 
         }

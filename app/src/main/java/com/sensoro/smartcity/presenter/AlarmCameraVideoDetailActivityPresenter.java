@@ -134,11 +134,21 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
 
             }
         } else if (code == VIDEO_START) {
+            getView().setVerOrientationUtil(true);
 
-            getView().onVideoResume();
+            if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
+                getView().getPlayView().clickCityStartIcon();
 
+                GSYVideoManager.onResume(true);
+
+            } else {
+                getView().doPlayLive(currentPlayUrl);
+            }
         } else if (code == VIDEO_STOP) {
-            getView().onVideoPause();
+            getView().setVerOrientationUtil(false);
+            GSYVideoManager.onPause();
+
+            getView().backFromWindowFull();
 
 
         }

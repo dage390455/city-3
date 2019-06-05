@@ -233,6 +233,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
                 playAndRetryBtn.setVisibility(VISIBLE);
                 playAndRetryBtn.setText(R.string.play);
                 rMobileData.setBackgroundColor(Color.TRANSPARENT);
+                maskFaceIv.setVisibility(VISIBLE);
 
 
                 maskTitleTv.setText(mTitle);
