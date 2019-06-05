@@ -135,10 +135,25 @@ public class CameraPersonDetailActivityPresenter extends BasePresenter<ICameraPe
             }
         } else if (code == VIDEO_START) {
 
-            getView().onVideoResume();
+            getView().setVerOrientationUtil(true);
+
+            if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
+                getView().getPlayView().clickCityStartIcon();
+
+                GSYVideoManager.onResume();
+
+            } else {
+                doRetry();
+
+            }
 
         } else if (code == VIDEO_STOP) {
-            getView().onVideoPause();
+
+            getView().setVerOrientationUtil(false);
+            GSYVideoManager.onPause();
+
+            getView().backFromWindowFull();
+
 
 
         }
