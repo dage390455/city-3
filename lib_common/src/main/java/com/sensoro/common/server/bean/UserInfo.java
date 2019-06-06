@@ -226,6 +226,7 @@ public class UserInfo implements Serializable {
 
     public static class Account implements Serializable {
         private String id;
+        private String contacts;
         private boolean totpEnable;
 
         public boolean isTotpEnable() {
@@ -242,6 +243,14 @@ public class UserInfo implements Serializable {
 
         public void setId(String id) {
             this.id = id;
+        }
+
+        public String getContacts() {
+            return contacts;
+        }
+
+        public void setContacts(String contacts) {
+            this.contacts = contacts;
         }
     }
 }
