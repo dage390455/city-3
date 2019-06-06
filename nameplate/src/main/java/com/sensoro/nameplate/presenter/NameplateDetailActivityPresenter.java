@@ -50,7 +50,7 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
         int code = eventData.code;
         if (code == EVENT_DATA_UPDATENAMEPALTELIST) {
             getNameplateDetail();
-        }else if(code == Constants.EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL){
+        } else if (code == Constants.EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL) {
             requestData(DIRECTION_DOWN);
         }
     }
@@ -98,8 +98,10 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
             public void onCompleted(ResponseResult<Integer> result) {
 
                 if (result.getData() > 0) {
+                    plateInfos.remove(pos);
 
                     getView().updateNamePlateStatus(pos);
+                    EventBus.getDefault().post(new EventData(EVENT_DATA_UPDATENAMEPALTELIST));
                 }
                 getView().dismissProgressDialog();
 

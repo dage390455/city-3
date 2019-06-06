@@ -368,6 +368,9 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
 
 
                 }
+
+                ivNameplateListFilter.setImageResource(R.mipmap.namepalte_filter_selected);
+
                 mPresenter.requestDataByFilter(DIRECTION_DOWN, getSearchText(), deviceFlag);
                 filterPopUtils.dismiss();
 
@@ -502,8 +505,8 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
     public void updateDeleteNamePlateStatus(int pos) {
 
 
-        nameplateListAdapter.notifyItemRemoved(pos);
         nameplateListAdapter.getData().remove(pos);
+        nameplateListAdapter.notifyDataSetChanged();
         setNoContentVisible(nameplateListAdapter.getData() == null || nameplateListAdapter.getData().size() < 1);
 
     }

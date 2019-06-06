@@ -43,7 +43,7 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
-        if (code == EVENT_DATA_UPDATENAMEPALTELIST) {
+        if (code == EVENT_DATA_UPDATENAMEPALTELIST || EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL == code) {
 
 
             requestDataByFilter(DIRECTION_DOWN, null, deviceFlag);
@@ -211,7 +211,7 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
             getView().showProgressDialog();
         }
         if (null != plateInfos.get(position)) {
-            RetrofitServiceHelper.getInstance().deleteNameplate(plateInfos.get(position).getId()).subscribeOn(Schedulers.io())
+            RetrofitServiceHelper.getInstance().deleteNameplate(plateInfos.get(position).get_id()).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeleteNamePlateRsp>(this) {
                 @Override
                 public void onCompleted(DeleteNamePlateRsp deviceCameraListRsp) {
@@ -219,6 +219,7 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
                     Integer data = deviceCameraListRsp.getData();
 
                     if (data == 1) {
+                        plateInfos.remove(position);
                         getView().updateDeleteNamePlateStatus(position);
                     }
 

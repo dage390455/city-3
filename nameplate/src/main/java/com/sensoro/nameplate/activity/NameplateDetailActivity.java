@@ -242,7 +242,6 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     }
 
 
-
     @Override
     public void showProgressDialog() {
         if (mProgressUtils != null) {
@@ -328,7 +327,9 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
 
         mAddedSensorAdapter.getmList().remove(pos);
 
-        mAddedSensorAdapter.notifyItemRemoved(pos);
+        mAddedSensorAdapter.notifyDataSetChanged();
+//        mAddedSensorAdapter.notifyItemRangeChanged(0, mAddedSensorAdapter.getmList().size());
+
         tvNameplateAssociatedSensor.setText(getResources().getString(R.string.association_sensor) + mAddedSensorAdapter.getmList().size());
 
     }
