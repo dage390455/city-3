@@ -94,7 +94,7 @@ public class NameplateListAdapter extends RecyclerView.Adapter<NameplateListAdap
         }
 
 
-        if (namePlateInfo.isDeployFlag()) {
+        if (namePlateInfo.getDevicesCount() > 0) {
             holder.tvNameplateAssociated.setText("已关联");
             holder.tvNameplateAssociated.setTextColor(mContext.getResources().getColor(R.color.c_1dbb99));
 
