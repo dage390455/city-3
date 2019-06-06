@@ -46,12 +46,11 @@ import com.sensoro.common.server.response.LoginRsp;
 import com.sensoro.common.server.response.MalfunctionCountRsp;
 import com.sensoro.common.server.response.MalfunctionListRsp;
 import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
-import com.sensoro.common.server.response.NameplateAssociateDeviceRsp;
-import com.sensoro.common.server.response.NameplateBindDeviceRsp;
 import com.sensoro.common.server.response.NamePlateListRsp;
+import com.sensoro.common.server.response.NameplateBindDeviceRsp;
 import com.sensoro.common.server.response.QiNiuToken;
-import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.server.response.UpdateRsp;
 import com.sensoro.common.server.response.UserAccountControlRsp;
 import com.sensoro.common.server.response.UserAccountRsp;
@@ -458,9 +457,9 @@ public interface RetrofitService {
     Observable<NameplateBindDeviceRsp> getNameplateUnbindDevices(@Query("page") Integer page, @Query("count") Integer count, @Query("nameplateId") String nameplateId);
 
     @PUT("nameplate/deploy/{nameplateId}")
-    Observable<DeployNameplateRsp> doUploadDeployNameplate(@Path("nameplateId")String nameplateId, @Body RequestBody requestBody);
+    Observable<DeployNameplateRsp> doUploadDeployNameplate(@Path("nameplateId") String nameplateId, @Body RequestBody requestBody);
 
     @PUT("nameplate/bind/device")
-    Observable<NameplateAssociateDeviceRsp> doBindDevice(@Body RequestBody requestBody);
+    Observable<ResponseResult<Integer>> doBindDevice(@Body RequestBody requestBody);
 }
 

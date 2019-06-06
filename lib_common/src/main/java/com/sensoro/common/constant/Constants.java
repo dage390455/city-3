@@ -421,6 +421,10 @@ public interface Constants {
 
     int EVENT_DATA_DEPLOY_BIND_LIST = 0x60;
 
+    int TYPE_SCAN_NAMEPLATE_ASSOCIATEDEVICE = 0x61;
+
+    int EVENT_DATA_UPDATEELIST = 0x62;
+
     List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{
         add("elec_fire");
         add("smoke");

@@ -64,9 +64,8 @@ import com.sensoro.common.server.response.LoginRsp;
 import com.sensoro.common.server.response.MalfunctionCountRsp;
 import com.sensoro.common.server.response.MalfunctionListRsp;
 import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
-import com.sensoro.common.server.response.NameplateAssociateDeviceRsp;
-import com.sensoro.common.server.response.NameplateBindDeviceRsp;
 import com.sensoro.common.server.response.NamePlateListRsp;
+import com.sensoro.common.server.response.NameplateBindDeviceRsp;
 import com.sensoro.common.server.response.QiNiuToken;
 import com.sensoro.common.server.response.ResponseBase;
 import com.sensoro.common.server.response.ResponseResult;
@@ -2035,7 +2034,7 @@ public class RetrofitServiceHelper {
         return retrofitService.doUploadDeployNameplate(nameplateId,requestBody);
     }
 
-    public Observable<NameplateAssociateDeviceRsp> doBindDevices(String nameplateId, ArrayList<NamePlateInfo> snList) {
+    public Observable<ResponseResult<Integer>> doBindDevices(String nameplateId, ArrayList<NamePlateInfo> snList) {
         JSONObject jsonObject = new JSONObject();
         if (snList != null && snList.size() > 0) {
             try {

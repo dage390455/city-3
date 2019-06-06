@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import static android.content.Context.VIBRATOR_SERVICE;
+import static com.sensoro.common.constant.Constants.EVENT_DATA_UPDATEELIST;
 
 public class ScanActivityPresenter extends BasePresenter<IScanActivityView> implements IOnCreate, Constants,
         MediaPlayer.OnErrorListener {
@@ -55,6 +56,8 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
 
     private void updateTitle() {
         switch (scanType) {
+            case com.sensoro.common.constant.Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATEDEVICE:
+
             case TYPE_SCAN_DEPLOY_STATION:
             case TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
@@ -139,39 +142,72 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
     public void processResult(String result) {
         playVoice();
         getView().showProgressDialog();
-        DeployAnalyzerUtils.getInstance().handlerDeployAnalyzerResult(this, scanType, result, mContext, mTaskInfo, mDeviceDetail, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
-            @Override
-            public void onSuccess(Intent intent) {
-                getView().dismissProgressDialog();
-                if (intent != null && !TextUtils.isEmpty(intent.getStringExtra(ARouterConstants.AROUTER_PATH))) {
-                    Serializable serializableExtra = intent.getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
-                    if (serializableExtra instanceof DeployAnalyzerModel) {
-                        DeployAnalyzerModel model = (DeployAnalyzerModel) serializableExtra;
-                        if (model.deployNameplateFlag != null && model.deployNameplateFlag) {
-                            startActivity(ARouter.getInstance().build(ARouterConstants.ACTIVITY_NAMEPLATE_DETAIL).withSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, serializableExtra), mContext);
-                        }else{
-                            startActivity(ARouter.getInstance().build(ARouterConstants.ACTIVITY_DEPLOY_NAMEPLATE).withSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, serializableExtra), mContext);
+
+
+        if (scanType == com.sensoro.common.constant.Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATEDEVICE) {
+
+            String nameplateId = mContext.getIntent().getStringExtra("nameplateId");
+
+            DeployAnalyzerUtils.getInstance().handlerDeployAnalyzerResult(this, result, mContext, nameplateId, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
+                @Override
+                public void onSuccess(Intent intent) {
+                    getView().dismissProgressDialog();
+                    //更新列表，关闭界面
+
+                    EventData data = new EventData(EVENT_DATA_UPDATEELIST);
+                    EventBus.getDefault().post(data);
+                    getView().finishAc();
+                }
+
+                @Override
+                public void onError(int errType, Intent intent, String errMsg) {
+                    getView().dismissProgressDialog();
+                    if (intent != null) {
+                        getView().startAC(intent);
+                    } else {
+                        getView().toastShort(errMsg);
+                        getView().startScan();
+                    }
+                }
+            });
+
+        } else {
+
+
+            DeployAnalyzerUtils.getInstance().handlerDeployAnalyzerResult(this, scanType, result, mContext, mTaskInfo, mDeviceDetail, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
+                @Override
+                public void onSuccess(Intent intent) {
+                    getView().dismissProgressDialog();
+                    if (intent != null && !TextUtils.isEmpty(intent.getStringExtra(ARouterConstants.AROUTER_PATH))) {
+                        Serializable serializableExtra = intent.getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
+                        if (serializableExtra instanceof DeployAnalyzerModel) {
+                            DeployAnalyzerModel model = (DeployAnalyzerModel) serializableExtra;
+                            if (model.deployNameplateFlag != null && model.deployNameplateFlag) {
+                                startActivity(ARouter.getInstance().build(ARouterConstants.ACTIVITY_NAMEPLATE_DETAIL).withSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, serializableExtra), mContext);
+                            } else {
+                                startActivity(ARouter.getInstance().build(ARouterConstants.ACTIVITY_DEPLOY_NAMEPLATE).withSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, serializableExtra), mContext);
+                            }
+                        } else {
+                            getView().toastShort("error");
                         }
                     } else {
-                        getView().toastShort("error");
+                        getView().startAC(intent);
                     }
-                } else {
-                    getView().startAC(intent);
-                }
 //
-            }
-
-            @Override
-            public void onError(int errType, Intent intent, String errMsg) {
-                getView().dismissProgressDialog();
-                if (intent != null) {
-                    getView().startAC(intent);
-                } else {
-                    getView().toastShort(errMsg);
-                    getView().startScan();
                 }
-            }
-        });
+
+                @Override
+                public void onError(int errType, Intent intent, String errMsg) {
+                    getView().dismissProgressDialog();
+                    if (intent != null) {
+                        getView().startAC(intent);
+                    } else {
+                        getView().toastShort(errMsg);
+                        getView().startScan();
+                    }
+                }
+            });
+        }
     }
 
     private MediaPlayer buildMediaPlayer(Context activity) {

@@ -18,9 +18,8 @@ import com.sensoro.common.server.bean.DeviceTypeStyles;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.server.response.NameplateBindDeviceRsp;
-import com.sensoro.nameplate.R;
-import com.sensoro.nameplate.model.AddSensorModel;
 import com.sensoro.nameplate.IMainViews.IDeployNameplateAddSensorFromListActivityView;
+import com.sensoro.nameplate.R;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -36,7 +35,7 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
     private int page;
     private ArrayList<NamePlateInfo> mList = new ArrayList<>();
     public ArrayList<NamePlateInfo> mSelectList = new ArrayList<>();
-    public ArrayList<NamePlateInfo> mBindList ;
+    public ArrayList<NamePlateInfo> mBindList = new ArrayList<>();
     private final List<String> mSearchHistoryList = new ArrayList<>();
     private Drawable checkedDrawable;
     private Drawable unCheckedDrawable;
@@ -315,9 +314,9 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
     public void doAddSensorList() {
         if ("deploy".equals(mOriginType)) {
             doDeploy();
-        }else if("nameplate_detail".equals(mOriginType)){
+        } else if ("nameplate_detail".equals(mOriginType)) {
             getView().showConfirmDialog();
-        }else{
+        } else {
             getView().toastShort(mActivity.getString(R.string.unknown_error));
         }
     }

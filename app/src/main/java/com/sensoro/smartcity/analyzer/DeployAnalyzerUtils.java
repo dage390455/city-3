@@ -58,6 +58,43 @@ public class DeployAnalyzerUtils {
         private static final DeployAnalyzerUtils instance = new DeployAnalyzerUtils();
     }
 
+
+    /**
+     * 铭牌扫码绑定传感器
+     *
+     * @param presenter
+     * @param result
+     * @param activity
+     * @param nameplateId
+     * @param listener
+     */
+    public void handlerDeployAnalyzerResult(BasePresenter presenter, final String result, final Activity activity, String nameplateId, final OnDeployAnalyzerListener listener) {
+        if (TextUtils.isEmpty(result)) {
+            listener.onError(0, null, activity.getResources().getString(R.string.please_re_scan_try_again));
+            return;
+
+        }
+        String scanSerialNumber = parseResultMac(result);
+        if (TextUtils.isEmpty(scanSerialNumber)) {
+            listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
+            return;
+        } else {
+            try {
+                String[] strings = scanSerialNumber.split(" ");
+                scanSerialNumber = strings[0];
+                if (scanSerialNumber.length() == 16) {
+                    nameplateAssociateDevice(nameplateId, scanSerialNumber, listener, activity, presenter);
+                } else {
+                    listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
+                    return;
+                }
+            } catch (Exception e) {
+                listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
+            }
+
+        }
+    }
+
     /**
      * 分析来源，返回扫描等结果
      *
@@ -73,8 +110,10 @@ public class DeployAnalyzerUtils {
         if (TextUtils.isEmpty(result)) {
             listener.onError(0, null, activity.getResources().getString(R.string.please_re_scan_try_again));
             return;
+
         }
         switch (scanType) {
+
             //基站部署
             case Constants.TYPE_SCAN_DEPLOY_STATION:
                 //设备部署
@@ -179,6 +218,43 @@ public class DeployAnalyzerUtils {
             default:
                 break;
         }
+    }
+
+    /**
+     * 铭牌扫码绑定传感器
+     *
+     * @param nameplateId
+     * @param scanSerialNumber
+     * @param listener
+     * @param activity
+     * @param presenter
+     */
+
+    private void nameplateAssociateDevice(String nameplateId, String scanSerialNumber, OnDeployAnalyzerListener listener, Activity activity, BasePresenter presenter) {
+
+
+        ArrayList arrayList = new ArrayList();
+        arrayList.add(scanSerialNumber);
+        RetrofitServiceHelper.getInstance().doBindDevices(nameplateId, arrayList).subscribeOn
+                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Integer>>(presenter) {
+            @Override
+            public void onCompleted(ResponseResult<Integer> result) {
+                if (result.getData() > 0) {
+                    listener.onSuccess(null);
+                } else {
+                    listener.onError(0, null, activity.getResources().getString(R.string.please_re_scan_try_again));
+
+                }
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                listener.onError(0, null, errorMsg);
+
+            }
+        });
+
+
     }
 
     private void handleNameplate(BasePresenter presenter, String nameplateId, Activity activity, OnDeployAnalyzerListener listener) {
@@ -931,6 +1007,7 @@ public class DeployAnalyzerUtils {
 
     public interface OnDeployAnalyzerListener {
         void onSuccess(Intent intent);
+
 
         void onError(int errType, Intent intent, String errMsg);
 
