@@ -1119,4 +1119,5 @@
     <string name="deploy_pic_nameplate_look_installation_environmental">需拍摄铭牌安装位置及周边环境</string>
 
     <string name="nameplate_base_info">nameplate base info</string>
+    <string name="nameplate_id_null">铭牌编码为空，关联失败</string>
 </resources>

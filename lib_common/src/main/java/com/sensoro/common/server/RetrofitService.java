@@ -46,6 +46,7 @@ import com.sensoro.common.server.response.LoginRsp;
 import com.sensoro.common.server.response.MalfunctionCountRsp;
 import com.sensoro.common.server.response.MalfunctionListRsp;
 import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
+import com.sensoro.common.server.response.NameplateAssociateDeviceRsp;
 import com.sensoro.common.server.response.NameplateBindDeviceRsp;
 import com.sensoro.common.server.response.NamePlateListRsp;
 import com.sensoro.common.server.response.QiNiuToken;
@@ -458,5 +459,8 @@ public interface RetrofitService {
 
     @PUT("nameplate/deploy/{nameplateId}")
     Observable<DeployNameplateRsp> doUploadDeployNameplate(@Path("nameplateId")String nameplateId, @Body RequestBody requestBody);
+
+    @PUT("nameplate/bind/device")
+    Observable<NameplateAssociateDeviceRsp> doBindDevice(@Body RequestBody requestBody);
 }
 

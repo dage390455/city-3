@@ -466,5 +466,6 @@ public interface Constants {
     String EXTRA_ASSOCIATION_SENSOR_ORIGIN_TYPE = "extra_association_sensor_origin_type";
     String EXTRA_ASSOCIATION_SENSOR_BIND_LIST = "extra_association_sensor_bind_list";
     String EXTRA_ASSOCIATION_SENSOR_ADD_BIND_LIST = "extra_association_sensor_add_bind_list";
+    String EXTRA_ASSOCIATION_SENSOR_NAMEPLATE_ID = "extra_association_sensor_nameplate_id";
 }
 

@@ -42,6 +42,7 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
     private Drawable unCheckedDrawable;
     private boolean isCheckAll = false;
     private String mOriginType;
+    private String mNameplateId;
 
     @Override
     public void initData(Context context) {
@@ -50,6 +51,7 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
         Bundle bundle = getBundle(mActivity);
         if (bundle != null) {
             mOriginType = bundle.getString(Constants.EXTRA_ASSOCIATION_SENSOR_ORIGIN_TYPE);
+            mNameplateId = bundle.getString(Constants.EXTRA_ASSOCIATION_SENSOR_NAMEPLATE_ID);
             Serializable serializable = bundle.getSerializable(Constants.EXTRA_ASSOCIATION_SENSOR_BIND_LIST);
             if (serializable instanceof ArrayList) {
                 mBindList = (ArrayList<NamePlateInfo>) serializable;
@@ -326,5 +328,14 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
         eventData.data = mSelectList;
         EventBus.getDefault().post(eventData);
         getView().finishAc();
+    }
+
+    public void doAssociateSensor() {
+        if (TextUtils.isEmpty(mNameplateId)) {
+            getView().toastShort(mActivity.getString(R.string.nameplate_id_null));
+            return;
+        }
+
+        RetrofitServiceHelper.getInstance().doBindDevices(mNameplateId,mSelectList);
     }
 }

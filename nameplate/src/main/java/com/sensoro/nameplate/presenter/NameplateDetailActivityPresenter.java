@@ -258,6 +258,7 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
             case 1:
                 Bundle bundle = new Bundle();
                 bundle.putString(Constants.EXTRA_ASSOCIATION_SENSOR_ORIGIN_TYPE,"nameplate_detail");
+                bundle.putString(Constants.EXTRA_ASSOCIATION_SENSOR_NAMEPLATE_ID,nameplateId);
                 startActivity(ARouterConstants.ACTIVITY_DEPLOY_ASSOCIATE_SENSOR_FROM_LIST,bundle,mContext);
                 break;
         }

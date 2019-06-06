@@ -64,6 +64,7 @@ import com.sensoro.common.server.response.LoginRsp;
 import com.sensoro.common.server.response.MalfunctionCountRsp;
 import com.sensoro.common.server.response.MalfunctionListRsp;
 import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
+import com.sensoro.common.server.response.NameplateAssociateDeviceRsp;
 import com.sensoro.common.server.response.NameplateBindDeviceRsp;
 import com.sensoro.common.server.response.NamePlateListRsp;
 import com.sensoro.common.server.response.QiNiuToken;
@@ -2032,6 +2033,25 @@ public class RetrofitServiceHelper {
         }
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
         return retrofitService.doUploadDeployNameplate(nameplateId,requestBody);
+    }
+
+    public Observable<NameplateAssociateDeviceRsp> doBindDevices(String nameplateId, ArrayList<NamePlateInfo> snList) {
+        JSONObject jsonObject = new JSONObject();
+        if (snList != null && snList.size() > 0) {
+            try {
+                JSONArray jsonArray = new JSONArray();
+
+                for (int i = 0; i < snList.size(); i++) {
+                    jsonArray.put(snList.get(i));
+                }
+                jsonObject.put("nameplateId", nameplateId);
+                jsonObject.put("snList", jsonArray);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.doBindDevice(requestBody);
     }
 
 }
