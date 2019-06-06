@@ -83,22 +83,6 @@ public class DeployAnalyzerUtils {
                 String[] strings = scanSerialNumber.split(" ");
                 scanSerialNumber = strings[0];
                 if (scanSerialNumber.length() == 16) {
-                    RetrofitServiceHelper.getInstance().getDeployDeviceDetail(scanSerialNumber, null, null).subscribeOn
-                            (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(presenter) {
-
-
-                        @Override
-                        public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
-
-                        }
-
-                        @Override
-                        public void onErrorMsg(int errorCode, String errorMsg) {
-
-                        }
-                    });
-
-
                     nameplateAssociateDevice(nameplateId, scanSerialNumber, listener, activity, presenter);
                 } else {
                     listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
@@ -247,10 +231,7 @@ public class DeployAnalyzerUtils {
      */
 
     private void nameplateAssociateDevice(String nameplateId, String scanSerialNumber, OnDeployAnalyzerListener listener, Activity activity, BasePresenter presenter) {
-
-
         ArrayList arrayList = new ArrayList();
-
         NamePlateInfo info = new NamePlateInfo();
         info.setSn(scanSerialNumber);
         arrayList.add(info);
@@ -261,7 +242,7 @@ public class DeployAnalyzerUtils {
                 if (result.getData() > 0) {
                     listener.onSuccess(null);
                 } else {
-                    listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
+                    listener.onError(0, null, activity.getResources().getString(R.string.equipment_associated));
 
                 }
             }

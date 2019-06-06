@@ -290,6 +290,7 @@
     <string name="next">下一步</string>
     <string name="name_phone">名称</string>
     <string name="invalid_qr_code">无效二维码</string>
+    <string name="equipment_associated">设备已关联</string>
 
     <string name="remarks">备注说明</string>
     <string name="commit">提交</string>
