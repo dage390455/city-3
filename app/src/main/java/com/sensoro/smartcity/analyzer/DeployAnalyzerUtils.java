@@ -83,6 +83,22 @@ public class DeployAnalyzerUtils {
                 String[] strings = scanSerialNumber.split(" ");
                 scanSerialNumber = strings[0];
                 if (scanSerialNumber.length() == 16) {
+                    RetrofitServiceHelper.getInstance().getDeployDeviceDetail(scanSerialNumber, null, null).subscribeOn
+                            (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(presenter) {
+
+
+                        @Override
+                        public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
+
+                        }
+
+                        @Override
+                        public void onErrorMsg(int errorCode, String errorMsg) {
+
+                        }
+                    });
+
+
                     nameplateAssociateDevice(nameplateId, scanSerialNumber, listener, activity, presenter);
                 } else {
                     listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
