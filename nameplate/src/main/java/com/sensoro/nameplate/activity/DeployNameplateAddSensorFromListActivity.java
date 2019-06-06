@@ -126,7 +126,7 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
         mConfirmDialog.setOnListener(new AssociationSensorConfirmDialogUtil.OnListener() {
             @Override
             public void onConfirm() {
-                toastShort("确认关联");
+
             }
         });
         returnTopAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.return_top_in_anim);

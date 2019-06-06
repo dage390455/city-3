@@ -15,22 +15,10 @@ public class NamePlateInfo implements Serializable {
     private String _id;
     private String orientationName;
     private String deviceType;
-    private boolean deployFlag;
-
-    public int getDevicesCount() {
-        return devicesCount;
-    }
-
-    public void setDevicesCount(int devicesCount) {
-        this.devicesCount = devicesCount;
-    }
-
-    private int devicesCount;
-
     //标识是否已经部署过
-    Boolean deployFlag;
+    private Boolean deployFlag;
     //关联传感器的数量
-    Integer devicesCount;
+    private Integer devicesCount;
 
     public String deviceTypeName;
     public String iconUrl;

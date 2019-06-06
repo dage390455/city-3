@@ -190,10 +190,8 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     public void onViewClicked(View view) {
         int id = view.getId();
         if (R.id.include_text_title_imv_arrows_left == id) {
-
             finish();
         } else if (R.id.tv_nameplate_qrcode == id) {
-
 
             dialogUtils.show();
         } else if (R.id.tv_nameplate_edit == id) {

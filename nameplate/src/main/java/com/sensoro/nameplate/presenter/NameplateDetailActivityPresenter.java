@@ -3,9 +3,12 @@ package com.sensoro.nameplate.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
@@ -253,8 +256,9 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
             case 0:
                 break;
             case 1:
-                Intent intent = new Intent(mContext, DeployNameplateAddSensorFromListActivity.class);
-                getView().startAC(intent);
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.EXTRA_ASSOCIATION_SENSOR_ORIGIN_TYPE,"nameplate_detail");
+                startActivity(ARouterConstants.ACTIVITY_DEPLOY_ASSOCIATE_SENSOR_FROM_LIST,bundle,mContext);
                 break;
         }
 

@@ -313,9 +313,9 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
     public void doAddSensorList() {
         if ("deploy".equals(mOriginType)) {
             doDeploy();
-        }/*else if(){
+        }else if("nameplate_detail".equals(mOriginType)){
             getView().showConfirmDialog();
-        }*/else{
+        }else{
             getView().toastShort(mActivity.getString(R.string.unknown_error));
         }
     }
