@@ -590,7 +590,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     public void setUploadBtnStatus(boolean isEnable) {
         mPresenter.updateCheckTipText(isEnable);
         acDeployDeviceDetailTvUpload.setEnabled(isEnable);
-        acDeployDeviceDetailTvUpload.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_solid_df_corner);
+        acDeployDeviceDetailTvUpload.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.filter_corner);
     }
 
     @Override

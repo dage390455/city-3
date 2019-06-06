@@ -1806,8 +1806,8 @@ public class RetrofitServiceHelper {
         return retrofitService.getBaseStationChartDetail(stationsn, type, interval, from, to);
     }
 
-    public Observable<NamePlateListRsp> getNameplateList(Integer pageSize, Integer page, String search, Map<String, String> mapFilter) {
-        return retrofitService.getNameplateList(pageSize, page, search, mapFilter);
+    public Observable<NamePlateListRsp> getNameplateList(Integer pageSize, Integer page, String search, String deviceFlag) {
+        return retrofitService.getNameplateList(pageSize, page, search, deviceFlag);
     }
 
     public Observable<DeleteNamePlateRsp> deleteNameplate(String nameplateId) {

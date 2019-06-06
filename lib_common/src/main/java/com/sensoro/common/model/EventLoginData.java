@@ -34,6 +34,7 @@ public final class EventLoginData implements Serializable {
     public boolean needAuth = false;
     public boolean hasControllerAid = false;
     public boolean hasDeviceCameraList = false;
+    public boolean hasDeviceCameraDeploy = false;
     //TODO 加入本地字段写入支持
     public boolean hasStationList = false;
     public boolean hasNameplateList = false;
@@ -81,6 +82,7 @@ public final class EventLoginData implements Serializable {
                 ", needAuth=" + needAuth +
                 ", hasControllerAid=" + hasControllerAid +
                 ", hasDeviceCameraList=" + hasDeviceCameraList +
+                ", hasDeviceCameraDeploy=" + hasDeviceCameraDeploy +
                 ", hasStationList=" + hasStationList +
                 ", hasNameplateList=" + hasNameplateList +
                 ", hasNameplateDeploy=" + hasNameplateDeploy +

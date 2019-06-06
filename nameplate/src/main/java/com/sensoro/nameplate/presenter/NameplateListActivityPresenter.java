@@ -10,27 +10,22 @@ import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
-import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
-import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
 import com.sensoro.common.server.bean.NamePlateInfo;
-import com.sensoro.common.server.response.CameraFilterRsp;
 import com.sensoro.common.server.response.DeleteNamePlateRsp;
-import com.sensoro.common.server.response.DeviceCameraDetailRsp;
 import com.sensoro.common.server.response.NamePlateListRsp;
-import com.sensoro.common.utils.StringUtils;
 import com.sensoro.nameplate.IMainViews.INameplateListActivityView;
 import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.activity.NameplateDetailActivity;
+import com.sensoro.nameplate.model.FilterModel;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -42,10 +37,8 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
     private final List<NamePlateInfo> plateInfos = new ArrayList<>();
     private final List<String> mSearchHistoryList = new ArrayList<>();
 
-    private final List<CameraFilterModel> cameraFilterModelList = new ArrayList<>();
+    private String deviceFlag = null;
 
-
-    private final HashMap<String, String> selectedHashMap = new HashMap<String, String>();
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
@@ -53,7 +46,7 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
         if (code == EVENT_DATA_UPDATENAMEPALTELIST) {
 
 
-            requestDataByFilter(DIRECTION_DOWN, null);
+            requestDataByFilter(DIRECTION_DOWN, null, deviceFlag);
 
 
         }
@@ -62,6 +55,7 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        initFilterDialog();
         EventBus.getDefault().register(this);
         //TODO 如果需要传递 更改key
         Object bundleValue = getBundleValue(mContext, EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST);
@@ -74,20 +68,43 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
             getView().onPullRefreshComplete();
             getView().dismissProgressDialog();
         } else {
-            requestDataByFilter(DIRECTION_DOWN, null);
+            requestDataByFilter(DIRECTION_DOWN, null, deviceFlag);
         }
-        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERA_LIST);
+        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_NAMEPLATE_LIST);
         if (list != null) {
             mSearchHistoryList.addAll(list);
             getView().updateSearchHistoryList(mSearchHistoryList);
         }
+
+
+    }
+
+
+    public void initFilterDialog() {
+        List<FilterModel> list = new ArrayList<>();
+
+
+        FilterModel filterModel = new FilterModel();
+
+        filterModel.statusTitle = "全部";
+        FilterModel filterModel1 = new FilterModel();
+
+        filterModel1.statusTitle = "已关联";
+        FilterModel filterModel2 = new FilterModel();
+
+        filterModel2.statusTitle = "未关联";
+
+        list.add(filterModel);
+        list.add(filterModel1);
+        list.add(filterModel2);
+        getView().updateSelectDeviceStatusList(list);
     }
 
     public void save(String text) {
         if (TextUtils.isEmpty(text)) {
             return;
         }
-        List<String> warnList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERA_LIST, text);
+        List<String> warnList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_NAMEPLATE_LIST, text);
         mSearchHistoryList.clear();
         mSearchHistoryList.addAll(warnList);
         getView().updateSearchHistoryList(mSearchHistoryList);
@@ -95,69 +112,34 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
     }
 
     public void clearSearchHistory() {
-        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERA_LIST);
+        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_NAMEPLATE_LIST);
         mSearchHistoryList.clear();
         getView().updateSearchHistoryList(mSearchHistoryList);
     }
 
     @Override
     public void onDestroy() {
-        selectedHashMap.clear();
         EventBus.getDefault().unregister(this);
 
     }
 
-    public void onClickDeviceCamera(final NamePlateInfo NamePlateInfo) {
-        final String sn = NamePlateInfo.getSn();
-        final String cid = NamePlateInfo.getCid();
-        getView().showProgressDialog();
-        RetrofitServiceHelper.getInstance().getDeviceCamera(sn).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraDetailRsp>(this) {
-            @Override
-            public void onCompleted(DeviceCameraDetailRsp deviceCameraDetailRsp) {
-                DeviceCameraDetailInfo data = deviceCameraDetailRsp.getData();
-                if (data != null) {
-                    String hls = data.getHls();
-                    DeviceCameraDetailInfo.CameraBean camera = data.getCamera();
-                    String lastCover = data.getLastCover();
-                    Intent intent = new Intent();
-                    //TODO
-//                    intent.setClass(mContext, CameraDetailActivity.class);
-                    intent.putExtra("cid", cid);
-                    intent.putExtra("hls", hls);
-                    intent.putExtra("sn", sn);
-                    if (camera != null) {
-                        String name = camera.getName();
-                        intent.putExtra("cameraName", name);
-                    }
-                    intent.putExtra("lastCover", lastCover);
-                    intent.putExtra("deviceStatus", data.getDeviceStatus());
-                    getView().startAC(intent);
-                } else {
-                    getView().toastShort(mContext.getString(R.string.camera_info_get_failed));
+    public void requestDataByFilter(final int direction, String search) {
 
-                }
-                getView().dismissProgressDialog();
-
-            }
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().dismissProgressDialog();
-                getView().toastShort(errorMsg);
-            }
-        });
-
+        requestDataByFilter(direction, search, deviceFlag);
     }
 
+    public void requestDataByFilter(final int direction, String search, String deviceFlag) {
 
-    public void requestDataByFilter(final int direction, String search) {
+
+        this.deviceFlag = deviceFlag;
+
         switch (direction) {
             case DIRECTION_DOWN:
                 cur_page = 1;
                 if (isAttachedView()) {
                     getView().showProgressDialog();
                 }
-                RetrofitServiceHelper.getInstance().getNameplateList(20, cur_page, search, selectedHashMap).subscribeOn(Schedulers.io())
+                RetrofitServiceHelper.getInstance().getNameplateList(20, cur_page, search, deviceFlag).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<NamePlateListRsp>(this) {
                     @Override
                     public void onCompleted(NamePlateListRsp deviceCameraListRsp) {
@@ -186,7 +168,7 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
                 if (isAttachedView()) {
                     getView().showProgressDialog();
                 }
-                RetrofitServiceHelper.getInstance().getNameplateList(20, cur_page, search, selectedHashMap).subscribeOn(Schedulers.io())
+                RetrofitServiceHelper.getInstance().getNameplateList(20, cur_page, search, deviceFlag).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<NamePlateListRsp>(this) {
                     @Override
                     public void onCompleted(NamePlateListRsp deviceCameraListRsp) {
@@ -216,156 +198,6 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
 
         }
 
-    }
-
-    //展示
-    public void doShowCameraListFilterPopupWindow(boolean isShowing) {
-        //
-        getView().setCameraListFilterPopupWindowSelectState(getCameraFilterModelListState());
-        if (isShowing) {
-            //TODO 当前正在展示,需要消失 考虑回显问题
-            getView().dismissCameraListFilterPopupWindow();
-        } else {
-            //当前已经消失
-            //第一次请求数据
-            if (cameraFilterModelList.size() == 0) {
-                getView().showProgressDialog();
-                RetrofitServiceHelper.getInstance().getCameraFilter().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<CameraFilterRsp>(this) {
-                    @Override
-                    public void onCompleted(CameraFilterRsp cameraFilterRsp) {
-                        List<CameraFilterModel> data = cameraFilterRsp.getData();
-                        if (data != null) {
-                            cameraFilterModelList.addAll(data);
-                        }
-                        getView().showCameraListFilterPopupWindow(cameraFilterModelList);
-                        getView().dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().dismissProgressDialog();
-                        getView().toastShort(errorMsg);
-                    }
-                });
-            } else {
-                //第二次直接展示
-                getView().showCameraListFilterPopupWindow(cameraFilterModelList);
-
-            }
-        }
-    }
-
-    //判断是否有选中
-    private boolean getCameraFilterModelListState() {
-        for (CameraFilterModel cameraFilterModel : cameraFilterModelList) {
-            List<CameraFilterModel.ListBean> list = cameraFilterModel.getList();
-            if (list != null) {
-                for (CameraFilterModel.ListBean listBean : list) {
-                    if (listBean.isSelect()) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    //判断是否有选择
-    private boolean getHasSelect() {
-        return selectedHashMap.size() > 0;
-    }
-
-    //dismiss处理
-    public void onCameraListFilterPopupWindowDismiss() {
-        if (!getHasSelect()) {
-            clearCameraFilterData();
-            getView().updateCameraListFilterPopupWindowStatusList(cameraFilterModelList);
-        }
-        getView().setCameraListFilterPopupWindowSelectState(getHasSelect());
-        getView().dismissCameraListFilterPopupWindow();
-    }
-
-    //重置
-    public void onResetCameraListFilterPopupWindowDismiss(String searchText) {
-        selectedHashMap.clear();
-        //TODO 清空model数据
-        cur_page = 1;
-        if (isAttachedView()) {
-            getView().showProgressDialog();
-        }
-        RetrofitServiceHelper.getInstance().getNameplateList(20, cur_page, searchText, selectedHashMap).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<NamePlateListRsp>(this) {
-            @Override
-            public void onCompleted(NamePlateListRsp deviceCameraListRsp) {
-
-                List<NamePlateInfo> data = deviceCameraListRsp.getData();
-                plateInfos.clear();
-                if (data != null && data.size() > 0) {
-                    plateInfos.addAll(data);
-                }
-                //只在重置成功了进行刷新
-                clearCameraFilterData();
-                getView().updateCameraListFilterPopupWindowStatusList(cameraFilterModelList);
-                getView().updateNameplateAdapter(plateInfos);
-                getView().onPullRefreshComplete();
-                getView().dismissProgressDialog();
-                getView().dismissCameraListFilterPopupWindow();
-            }
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().dismissProgressDialog();
-                getView().toastShort(errorMsg);
-                getView().onPullRefreshComplete();
-
-            }
-        });
-    }
-
-    private void clearCameraFilterData() {
-        for (CameraFilterModel cameraFilterModel : cameraFilterModelList) {
-            List<CameraFilterModel.ListBean> list = cameraFilterModel.getList();
-            if (list != null) {
-                for (CameraFilterModel.ListBean listBean : list) {
-                    listBean.setSelect(false);
-                }
-            }
-        }
-    }
-
-    //保存
-    public void onSaveCameraListFilterPopupWindowDismiss(List<CameraFilterModel> list, String searchText) {
-        selectedHashMap.clear();
-        selectedHashMap.putAll(handleCameraListFilter(list));
-        cur_page = 1;
-        if (isAttachedView()) {
-            getView().showProgressDialog();
-        }
-        RetrofitServiceHelper.getInstance().getNameplateList(20, cur_page, searchText, selectedHashMap).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<NamePlateListRsp>(this) {
-            @Override
-            public void onCompleted(NamePlateListRsp deviceCameraListRsp) {
-
-                List<NamePlateInfo> data = deviceCameraListRsp.getData();
-                plateInfos.clear();
-                if (data != null && data.size() > 0) {
-                    plateInfos.addAll(data);
-                }
-                getView().updateNameplateAdapter(plateInfos);
-                getView().setCameraListFilterPopupWindowSelectState(getHasSelect());
-                getView().onPullRefreshComplete();
-                getView().dismissProgressDialog();
-                getView().dismissCameraListFilterPopupWindow();
-            }
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().dismissProgressDialog();
-                getView().toastShort(errorMsg);
-                getView().onPullRefreshComplete();
-
-            }
-        });
     }
 
 
@@ -409,32 +241,11 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
 
     }
 
-    //处理集合数据
-    private HashMap<String, String> handleCameraListFilter(List<CameraFilterModel> list) {
-        HashMap<String, String> hashMap = new HashMap();
-        if (null != list) {
-            for (CameraFilterModel model : list) {
-                String key = model.getKey();
-                StringBuffer stringBuffer = new StringBuffer();
-                for (CameraFilterModel.ListBean listBean : model.getList()) {
-                    if (listBean.isSelect()) {
-                        stringBuffer.append(listBean.getCode());
-                        stringBuffer.append(",");
-                    }
-                }
-                if (!StringUtils.isEmpty(stringBuffer.toString())) {
-                    stringBuffer.deleteCharAt(stringBuffer.length() - 1).toString();
-                    hashMap.put(key, stringBuffer.toString());
-                }
-            }
-        }
-        return hashMap;
-    }
 
     public void doNameplateDetail(int position) {
 
         if (null != plateInfos.get(position)) {
-            getView().startAC(new Intent(mContext, NameplateDetailActivity.class).putExtra("nameplateId", plateInfos.get(position).getId()));
+            getView().startAC(new Intent(mContext, NameplateDetailActivity.class).putExtra("nameplateId", plateInfos.get(position).get_id()));
         }
 
     }
