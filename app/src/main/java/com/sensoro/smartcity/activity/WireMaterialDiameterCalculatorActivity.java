@@ -416,7 +416,7 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
     @Override
     public void setRecommendBtnStatus(boolean isClickable) {
         tvRecommendTransformerAcWireMaterialDiameter.setClickable(isClickable);
-        tvRecommendTransformerAcWireMaterialDiameter.setBackground(mActivity.getDrawable(isClickable ? R.drawable.shape_bg_corner_4_29c_shadow : R.drawable.shape_bg_solid_df_corner));
+        tvRecommendTransformerAcWireMaterialDiameter.setBackground(mActivity.getDrawable(isClickable ? R.drawable.shape_bg_corner_4_29c_shadow : R.drawable.filter_corner));
     }
 
     @Override

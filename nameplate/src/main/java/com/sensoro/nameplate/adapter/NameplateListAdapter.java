@@ -94,8 +94,22 @@ public class NameplateListAdapter extends RecyclerView.Adapter<NameplateListAdap
         }
 
 
-//        holder.tvNameplateAssociated.setText("已关联");
-//        holder.tvNameplateSensorCount.setText("传感器：5");
+        if (namePlateInfo.isDeployFlag()) {
+            holder.tvNameplateAssociated.setText("已关联");
+            holder.tvNameplateAssociated.setTextColor(mContext.getResources().getColor(R.color.c_1dbb99));
+
+        } else {
+            holder.tvNameplateAssociated.setText("未关联");
+            holder.tvNameplateAssociated.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
+
+        }
+        if (namePlateInfo.getDevicesCount() > 0) {
+            holder.tvNameplateSensorCount.setText("传感器：" + namePlateInfo.getDevicesCount());
+
+        } else {
+            holder.tvNameplateSensorCount.setText("传感器：0");
+
+        }
 
 
         if (!TextUtils.isEmpty(namePlateInfo.get_id())) {

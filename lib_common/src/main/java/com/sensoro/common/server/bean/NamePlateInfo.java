@@ -15,6 +15,17 @@ public class NamePlateInfo implements Serializable {
     private String _id;
     private String orientationName;
     private String deviceType;
+    private boolean deployFlag;
+
+    public int getDevicesCount() {
+        return devicesCount;
+    }
+
+    public void setDevicesCount(int devicesCount) {
+        this.devicesCount = devicesCount;
+    }
+
+    private int devicesCount;
 
     public String deviceTypeName;
     public String iconUrl;
@@ -108,5 +119,13 @@ public class NamePlateInfo implements Serializable {
 
     public void setIconUrl(String iconUrl) {
         this.iconUrl = iconUrl;
+    }
+
+    public boolean isDeployFlag() {
+        return deployFlag;
+    }
+
+    public void setDeployFlag(boolean deployFlag) {
+        this.deployFlag = deployFlag;
     }
 }

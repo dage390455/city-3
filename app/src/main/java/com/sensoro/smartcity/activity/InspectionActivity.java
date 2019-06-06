@@ -206,7 +206,7 @@ public class InspectionActivity extends BaseActivity<IInspectionActivityView, In
             acInspectionTvNormal.setBackgroundResource(R.drawable.shape_bg_corner_29c_shadow);
         } else {
             acInspectionTvNormal.setTextColor(mActivity.getResources().getColor(R.color.white));
-            acInspectionTvNormal.setBackgroundResource(R.drawable.shape_bg_solid_df_corner);
+            acInspectionTvNormal.setBackgroundResource(R.drawable.filter_corner);
         }
 
     }

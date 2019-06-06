@@ -434,7 +434,7 @@ public interface RetrofitService {
 
 
     @GET("nameplates")
-    Observable<NamePlateListRsp> getNameplateList(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
+    Observable<NamePlateListRsp> getNameplateList(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @Query("deviceFlag") String deviceFlag);
 
 
     @DELETE("nameplate/{nameplateId}")
