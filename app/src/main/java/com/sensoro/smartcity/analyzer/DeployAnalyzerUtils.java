@@ -234,7 +234,10 @@ public class DeployAnalyzerUtils {
 
 
         ArrayList arrayList = new ArrayList();
-        arrayList.add(scanSerialNumber);
+
+        NamePlateInfo info = new NamePlateInfo();
+        info.setSn(scanSerialNumber);
+        arrayList.add(info);
         RetrofitServiceHelper.getInstance().doBindDevices(nameplateId, arrayList).subscribeOn
                 (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Integer>>(presenter) {
             @Override
@@ -242,7 +245,7 @@ public class DeployAnalyzerUtils {
                 if (result.getData() > 0) {
                     listener.onSuccess(null);
                 } else {
-                    listener.onError(0, null, activity.getResources().getString(R.string.please_re_scan_try_again));
+                    listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
 
                 }
             }

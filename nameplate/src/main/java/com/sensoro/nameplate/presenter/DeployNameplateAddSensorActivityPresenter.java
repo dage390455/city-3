@@ -16,9 +16,8 @@ import com.sensoro.common.server.bean.DeviceTypeStyles;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.server.response.NameplateBindDeviceRsp;
-import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.IMainViews.IDeployNameplateAddSensorActivityView;
-import com.sensoro.nameplate.model.AddSensorModel;
+import com.sensoro.nameplate.R;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -26,11 +25,12 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.sensoro.common.constant.Constants.EXTRA_SCAN_ORIGIN_TYPE;
 
 public class DeployNameplateAddSensorActivityPresenter extends BasePresenter<IDeployNameplateAddSensorActivityView> {
     private Activity mActivity;
@@ -55,7 +55,6 @@ public class DeployNameplateAddSensorActivityPresenter extends BasePresenter<IDe
         }
 
 
-
 //        getView().showProgressDialog();
 //        getBindDevice(Constants.DIRECTION_DOWN);
     }
@@ -66,18 +65,18 @@ public class DeployNameplateAddSensorActivityPresenter extends BasePresenter<IDe
             getView().toastShort(mActivity.getString(R.string.nameplate_name_empty));
             return;
         }
-        if(direction == Constants.DIRECTION_DOWN){
+        if (direction == Constants.DIRECTION_DOWN) {
             page = 1;
-        }else{
+        } else {
             page++;
         }
 
-        RetrofitServiceHelper.getInstance().getNameplateBindDevices(page,20,mNameplateId)
+        RetrofitServiceHelper.getInstance().getNameplateBindDevices(page, 20, mNameplateId)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<NameplateBindDeviceRsp>(this) {
             @Override
             public void onCompleted(NameplateBindDeviceRsp nameplateBindDeviceRsp) {
                 List<NamePlateInfo> data = nameplateBindDeviceRsp.getData();
-                if(direction == Constants.DIRECTION_DOWN){
+                if (direction == Constants.DIRECTION_DOWN) {
                     mBindList.clear();
                 }
 
@@ -93,7 +92,7 @@ public class DeployNameplateAddSensorActivityPresenter extends BasePresenter<IDe
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                if(direction == Constants.DIRECTION_UP){
+                if (direction == Constants.DIRECTION_UP) {
                     page--;
                 }
                 getView().onPullRefreshComplete();
@@ -142,7 +141,7 @@ public class DeployNameplateAddSensorActivityPresenter extends BasePresenter<IDe
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(EventData eventData){
+    public void onMessageEvent(EventData eventData) {
         if (eventData.code == Constants.EVENT_DATA_DEPLOY_ASSOCIATE_SENSOR_FROM_LIST) {
             Object data = eventData.data;
             if (data instanceof ArrayList) {
@@ -164,10 +163,10 @@ public class DeployNameplateAddSensorActivityPresenter extends BasePresenter<IDe
         }
 
         Bundle bundle = new Bundle();
-        bundle.putString(Constants.EXTRA_ASSOCIATION_SENSOR_ORIGIN_TYPE,"deploy");
-        bundle.putSerializable(Constants.EXTRA_ASSOCIATION_SENSOR_BIND_LIST,mBindList);
-        bundle.putString(Constants.EXTRA_ASSOCIATION_SENSOR_NAMEPLATE_ID,mNameplateId);
-        startActivity(ARouterConstants.ACTIVITY_DEPLOY_ASSOCIATE_SENSOR_FROM_LIST,bundle,mActivity);
+        bundle.putString(Constants.EXTRA_ASSOCIATION_SENSOR_ORIGIN_TYPE, "deploy");
+        bundle.putSerializable(Constants.EXTRA_ASSOCIATION_SENSOR_BIND_LIST, mBindList);
+        bundle.putString(Constants.EXTRA_ASSOCIATION_SENSOR_NAMEPLATE_ID, mNameplateId);
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_ASSOCIATE_SENSOR_FROM_LIST, bundle, mActivity);
     }
 
     public void doDeleteItem(int position) {
@@ -184,8 +183,14 @@ public class DeployNameplateAddSensorActivityPresenter extends BasePresenter<IDe
     }
 
     public void doAddFromScan() {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(Constants.EXTRA_ASSOCIATION_SENSOR_BIND_LIST,mBindList);
-//        startActivity(ARouterConstants.);
+
+        if (!TextUtils.isEmpty(mNameplateId)) {
+
+            Bundle bundle1 = new Bundle();
+            bundle1.putInt(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATEDEVICE);
+            bundle1.putString("nameplateId", mNameplateId);
+
+            startActivity(ARouterConstants.ACTIVITY_SCAN, bundle1, mActivity);
+        }
     }
 }
