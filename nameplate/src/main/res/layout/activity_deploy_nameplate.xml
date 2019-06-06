@@ -239,7 +239,7 @@
         android:gravity="center"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:text="@string/inspection_uploade_exception_uploade"
+        android:text="@string/deploy_device_detail_upload"
         android:textColor="@color/white"
         android:textSize="16dp" />
 

@@ -7,23 +7,28 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SelectDialog;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TouchRecycleView;
 import com.sensoro.common.widgets.dialog.TipDialogUtils;
@@ -44,6 +49,7 @@ import butterknife.OnClick;
 
 import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 
+@Route(path = ARouterConstants.ACTIVITY_NAMEPLATE_DETAIL)
 public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivityView, NameplateDetailActivityPresenter>
         implements INameplateDetailActivityView {
     @BindView(R2.id.include_text_title_imv_arrows_left)
@@ -82,11 +88,14 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     private final List<String> options = new ArrayList<>();
     private TipDialogUtils mDeleteDialog;
     private QrCodeDialogUtils dialogUtils;
+    private ProgressUtils mProgressUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_nameplate_detail);
         ButterKnife.bind(this);
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+
         includeTextTitleTvTitle.setText(R.string.nameplate_manager_detail);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         dialogUtils = new QrCodeDialogUtils(mActivity);
@@ -235,18 +244,24 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     }
 
 
+
     @Override
     public void showProgressDialog() {
-
+        if (mProgressUtils != null) {
+            mProgressUtils.showProgress();
+        }
     }
 
     @Override
     public void dismissProgressDialog() {
-
+        if (mProgressUtils != null) {
+            mProgressUtils.dismissProgress();
+        }
     }
 
     @Override
     public void toastShort(String msg) {
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_SHORT).show();
 
     }
 

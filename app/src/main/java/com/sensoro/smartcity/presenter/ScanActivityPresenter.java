@@ -7,8 +7,11 @@ import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Vibrator;
+import android.text.TextUtils;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.bean.InspectionIndexTaskInfo;
@@ -18,6 +21,7 @@ import com.sensoro.smartcity.activity.DeployManualActivity;
 import com.sensoro.smartcity.analyzer.DeployAnalyzerUtils;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IScanActivityView;
+import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -25,6 +29,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import static android.content.Context.VIBRATOR_SERVICE;
 
@@ -138,8 +143,22 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
             @Override
             public void onSuccess(Intent intent) {
                 getView().dismissProgressDialog();
-//                ARouter.getInstance().build(ARouterConstants.ACTIVITY_NAMEPLATE_LIST).withParcelable("intent",intent).navigation(mContext);
-                getView().startAC(intent);
+                if (intent != null && !TextUtils.isEmpty(intent.getStringExtra(ARouterConstants.AROUTER_PATH))) {
+                    Serializable serializableExtra = intent.getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
+                    if (serializableExtra instanceof DeployAnalyzerModel) {
+                        DeployAnalyzerModel model = (DeployAnalyzerModel) serializableExtra;
+                        if (model.deployNameplateFlag != null && model.deployNameplateFlag) {
+                            startActivity(ARouter.getInstance().build(ARouterConstants.ACTIVITY_NAMEPLATE_DETAIL).withSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, serializableExtra), mContext);
+                        }else{
+                            startActivity(ARouter.getInstance().build(ARouterConstants.ACTIVITY_DEPLOY_NAMEPLATE).withSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, serializableExtra), mContext);
+                        }
+                    } else {
+                        getView().toastShort("error");
+                    }
+                } else {
+                    getView().startAC(intent);
+                }
+//
             }
 
             @Override

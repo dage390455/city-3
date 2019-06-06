@@ -12,4 +12,16 @@ public interface IDeployNameplateActivityView extends IToast, IProgressDialog, I
     void setName(String name, @ColorRes int color);
 
     void updateTagsData(List<String> tagList);
+
+    void setAssociateSensorSize(int size);
+
+    void setDeployPhotoTextSize(int size);
+
+    void setUploadStatus(boolean isUpload);
+
+    void showStartUploadProgressDialog();
+
+    void dismissUploadProgressDialog();
+
+    void showUploadProgressDialog(String content, double percent);
 }

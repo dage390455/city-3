@@ -7,10 +7,8 @@ import android.text.TextUtils;
 
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
 import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
 import com.sensoro.smartcity.activity.DeployMonitorCheckActivity;
-import com.sensoro.smartcity.activity.DeployMonitorDeployPicActivity;
 import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
 import com.sensoro.smartcity.activity.DeployMonitorWeChatRelationActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
@@ -36,7 +34,7 @@ import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.common.model.ImageItem;
-import com.sensoro.smartcity.widget.popup.UpLoadPhotosUtils;
+import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

@@ -67,7 +67,7 @@ public class NameAddressHistoryAdapter extends RecyclerView.Adapter<NameAddressH
 
         NameAddressHistoryHolder(View itemView) {
             super(itemView);
-            itemView.findViewById(R.id.item_adapter_tv);
+            itemAdapterTv=itemView.findViewById(R.id.item_adapter_tv);
         }
     }
 

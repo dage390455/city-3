@@ -46,4 +46,6 @@ public class DeployAnalyzerModel implements Serializable {
     public String currentSignalQuality;
     //白名单类型（默认没有白名单限制）
     public int whiteListDeployType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
+    //铭牌部署 标识该铭牌是否被部署过，被部署过 跳转铭牌详情页
+    public Boolean deployNameplateFlag;
 }

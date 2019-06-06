@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.util.luban;
+package com.sensoro.common.widgets.uploadPhotoUtil.luban;
 
 /**
  * Created on 2018/1/3 19:43

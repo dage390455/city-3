@@ -5,6 +5,9 @@ import android.app.Activity;
 import androidx.multidex.MultiDexApplication;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.qiniu.android.common.FixedZone;
+import com.qiniu.android.storage.Configuration;
+import com.qiniu.android.storage.UploadManager;
 import com.sensoro.common.utils.LogUtils;
 
 import java.util.List;
@@ -29,8 +32,9 @@ public class BaseApplication extends MultiDexApplication {
 
     private List<IApplicationDelegate> mAppDelegateList;
 
+    public UploadManager uploadManager;
 
-    public static BaseApplication getIns() {
+    public static BaseApplication getInstance() {
         return sInstance;
     }
 
@@ -44,6 +48,7 @@ public class BaseApplication extends MultiDexApplication {
             delegate.onCreate();
         }
         initAutoSize();
+        initUploadManager();
         if (ContextUtils.isAppDebug()) {
             //开启InstantRun之后，一定要在ARouter.init之前调用openDebug
             ARouter.openDebug();
@@ -76,6 +81,21 @@ public class BaseApplication extends MultiDexApplication {
         for (IApplicationDelegate delegate : mAppDelegateList) {
             delegate.onTrimMemory(level);
         }
+    }
+
+    private void initUploadManager() {
+        Configuration config = new Configuration.Builder()
+                .chunkSize(512 * 1024)        // 分片上传时，每片的大小。 默认256K
+                .putThreshhold(1024 * 1024)   // 启用分片上传阀值。默认512K
+                .connectTimeout(10)           // 链接超时。默认10秒
+                .useHttps(true)               // 是否使用https上传域名
+                .responseTimeout(60)// 服务器响应超时。默认60秒
+                .recorder(null)           // recorder分片上传时，已上传片记录器。默认null
+//                .recorder(new re, keyGen)   // keyGen 分片上传时，生成标识符，用于片记录器区分是那个文件的上传记录
+                .zone(FixedZone.zone0)// 设置区域，指定不同区域的上传域名、备用域名、备用IP。
+                .build();
+// 重用uploadManager。一般地，只需要创建一个uploadManager对象
+        uploadManager = new UploadManager(config);
     }
 
     private void initAutoSize() {

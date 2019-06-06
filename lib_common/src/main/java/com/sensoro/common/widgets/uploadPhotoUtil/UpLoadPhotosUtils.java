@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.widget.popup;
+package com.sensoro.common.widgets.uploadPhotoUtil;
 
 import android.content.Context;
 import android.os.Handler;
@@ -9,17 +9,17 @@ import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UpProgressHandler;
 import com.qiniu.android.storage.UploadOptions;
+import com.sensoro.common.R;
+import com.sensoro.common.base.BaseApplication;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.QiNiuToken;
 import com.sensoro.common.utils.AESUtil;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.luban.CompressionPredicate;
-import com.sensoro.smartcity.util.luban.Luban;
-import com.sensoro.smartcity.util.luban.OnCompressListener;
+import com.sensoro.common.utils.LogUtils;
+import com.sensoro.common.widgets.uploadPhotoUtil.luban.CompressionPredicate;
+import com.sensoro.common.widgets.uploadPhotoUtil.luban.Luban;
+import com.sensoro.common.widgets.uploadPhotoUtil.luban.OnCompressListener;
 import com.sensoro.common.model.ImageItem;
 
 import org.json.JSONObject;
@@ -108,7 +108,7 @@ public final class UpLoadPhotosUtils {
                     @Override
                     public void onSuccess(File file) {
                         final ScenesData scenesData = new ScenesData();
-                        SensoroCityApplication.getInstance().uploadManager.put(file, thumbKey, token, new
+                        BaseApplication.getInstance().uploadManager.put(file, thumbKey, token, new
                                 UpCompletionHandler() {
                                     @Override
                                     public void complete(String s, ResponseInfo responseInfo, JSONObject jsonObject) {
@@ -120,7 +120,7 @@ public final class UpLoadPhotosUtils {
                                             } catch (Throwable throwable) {
                                                 throwable.printStackTrace();
                                             }
-                                            SensoroCityApplication.getInstance().uploadManager.put(recordPath, recordKey, token, new
+                                            BaseApplication.getInstance().uploadManager.put(recordPath, recordKey, token, new
                                                     UpCompletionHandler() {
                                                         @Override
                                                         public void complete(String s, ResponseInfo responseInfo, JSONObject jsonObject) {
@@ -216,7 +216,7 @@ public final class UpLoadPhotosUtils {
                     @Override
                     public void onSuccess(File file) {
                         final String key = AESUtil.stringToMD5(file.getName());
-                        SensoroCityApplication.getInstance().uploadManager.put(file, key, token, new
+                        BaseApplication.getInstance().uploadManager.put(file, key, token, new
                                 UpCompletionHandler() {
                                     @Override
                                     public void complete(String s, ResponseInfo responseInfo, JSONObject jsonObject) {

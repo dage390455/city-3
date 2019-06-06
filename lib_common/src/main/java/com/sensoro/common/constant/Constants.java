@@ -418,6 +418,8 @@ public interface Constants {
 
     int EVENT_DATA_DEPLOY_ASSOCIATE_SENSOR_FROM_LIST = 0x59;
 
+    int EVENT_DATA_DEPLOY_BIND_LIST = 0x60;
+
     List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{
         add("elec_fire");
         add("smoke");
@@ -462,5 +464,6 @@ public interface Constants {
     //铭牌部署 关联传感器的来源
     String EXTRA_ASSOCIATION_SENSOR_ORIGIN_TYPE = "extra_association_sensor_origin_type";
     String EXTRA_ASSOCIATION_SENSOR_BIND_LIST = "extra_association_sensor_bind_list";
+    String EXTRA_ASSOCIATION_SENSOR_ADD_BIND_LIST = "extra_association_sensor_add_bind_list";
 }
 

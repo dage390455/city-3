@@ -19,6 +19,7 @@ import com.sensoro.common.server.response.ResponseBase;
 import com.sensoro.nameplate.activity.DeployNameplateActivity;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractManagerActivity;
+import com.sensoro.smartcity.activity.DeployRecordActivity;
 import com.sensoro.smartcity.activity.InspectionTaskListActivity;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.MerchantSwitchActivity;
@@ -68,7 +69,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
             //TODO 是否显示基站管理
             getView().setStationManagerVisible(userData.hasStationList);
             //TODO 是否显示铭牌管理
-            getView().setNameplateVisible(true);
+            getView().setNameplateVisible(userData.hasNameplateList);
         }
     }
 
@@ -176,7 +177,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     public void doScanDeploy() {
 //        if (PreferencesHelper.getInstance().getUserData() != null) {
 //            if (!PreferencesHelper.getInstance().getUserData().isSupperAccount) {
-        Intent intent = new Intent(mContext, DeployNameplateActivity.class);
+        Intent intent = new Intent(mContext, DeployRecordActivity.class);
 //                intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
         getView().startAC(intent);
 

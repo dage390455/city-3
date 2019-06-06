@@ -1101,5 +1101,6 @@
     <string name="deploy_pic_look_installation_environmental">需拍摄产品安装位置及周边环境</string>
     <string name="deploy_pic_installation_sit">安装现场</string>
     <string name="deploy_pic_nameplate_look_installation_environmental">需拍摄铭牌安装位置及周边环境</string>
+    <string name="nameplate_base_info">基本信息</string>
 
 </resources>

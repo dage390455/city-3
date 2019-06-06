@@ -148,7 +148,7 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
                 if (isAttachedView()) {
                     getView().showProgressDialog();
                 }
-                RetrofitServiceHelper.getInstance().getNameplateBindDevices(20, cur_page, nameplateId).subscribeOn(Schedulers.io())
+                RetrofitServiceHelper.getInstance().getNameplateBindDevices(cur_page,20,  nameplateId).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<NameplateBindDeviceRsp>(this) {
                     @Override
                     public void onCompleted(NameplateBindDeviceRsp deviceCameraListRsp) {
@@ -179,7 +179,7 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
                 if (isAttachedView()) {
                     getView().showProgressDialog();
                 }
-                RetrofitServiceHelper.getInstance().getNameplateBindDevices(20, cur_page, nameplateId).subscribeOn(Schedulers.io())
+                RetrofitServiceHelper.getInstance().getNameplateBindDevices( cur_page,20, nameplateId).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<NameplateBindDeviceRsp>(this) {
                     @Override
                     public void onCompleted(NameplateBindDeviceRsp deviceCameraListRsp) {

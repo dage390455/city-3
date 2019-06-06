@@ -96,24 +96,28 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
         returnTopInclude.setAnimation(returnTopAnimation);
         returnTopInclude.setVisibility(GONE);
 
+        setBindDeviceSize(0);
+
         initSmartRefresh();
 
         initRvAddedSensorList();
     }
 
     private void initSmartRefresh() {
+        //本来说这里有上拉加载下拉刷新，但是部署的时候不需要了，所以，这里也不改了 只禁用掉相应的功能
         refreshLayoutInclude.setEnableAutoLoadMore(false);//开启自动加载功能（非必须）
-        refreshLayoutInclude.setEnableLoadMore(true);
+        refreshLayoutInclude.setEnableLoadMore(false);
+        refreshLayoutInclude.setEnableRefresh(false);
         refreshLayoutInclude.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
-                mPresenter.getBindDevice(Constants.DIRECTION_DOWN);
+//                mPresenter.getBindDevice(Constants.DIRECTION_DOWN);
             }
         });
         refreshLayoutInclude.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                mPresenter.getBindDevice(Constants.DIRECTION_UP);
+//                mPresenter.getBindDevice(Constants.DIRECTION_UP);
             }
         });
 
@@ -178,11 +182,11 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
         if (id == R.id.include_text_title_tv_cancel) {
             finishAc();
         } else if (id == R.id.include_text_title_tv_subtitle) {
-
+            mPresenter.doSave();
         } else if (id == R.id.ll_from_List_ac_deploy_nameplate_add_sensor) {
             mPresenter.doAddFromList();
         } else if (id == R.id.ll_from_scan_ac_deploy_nameplate_add_sensor) {
-
+            mPresenter.doAddFromScan();
         }else if (id == R.id.return_top_include) {
             rvAddedListAcDeployNameplateAddSensor.smoothScrollToPosition(0);
             returnTopInclude.setVisibility(GONE);
@@ -199,7 +203,7 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
     @Override
     public void updateBindData(List<NamePlateInfo> mBindList) {
         mAddedSensorAdapter.updateData(mBindList);
-        setNoContentVisible(mBindList == null || mBindList.size() < 1);
+//        setNoContentVisible(mBindList == null || mBindList.size() < 1);
         if (mBindList != null) {
             setBindDeviceSize(mBindList.size());
         }

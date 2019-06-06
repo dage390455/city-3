@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.util;
+package com.sensoro.common.widgets.uploadPhotoUtil;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,6 +7,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+
+import com.sensoro.common.utils.AppUtils;
 
 public class ImageUtil {
     /**

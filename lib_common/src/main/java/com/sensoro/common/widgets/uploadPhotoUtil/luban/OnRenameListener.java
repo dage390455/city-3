@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.util.luban;
+package com.sensoro.common.widgets.uploadPhotoUtil.luban;
 
 /**
  * Author: zibin

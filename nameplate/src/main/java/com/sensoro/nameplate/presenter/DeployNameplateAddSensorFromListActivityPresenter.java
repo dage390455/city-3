@@ -89,9 +89,14 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
                 if (direction == Constants.DIRECTION_DOWN) {
                     mList.clear();
                     mSelectList.clear();
+                    if (mBindList != null || mBindList.size() > 0) {
+                        mList.addAll(mBindList);
+                        mSelectList.addAll(mBindList);
+                    }
                 }
                 List<NamePlateInfo> data = nameplateBindDeviceRsp.getData();
                 if (data != null && data.size() > 0) {
+                    //已绑定的设备添加到集合的开始位置，然后从下面的数据中剔除已添加的数据
                     dealData(data);
                 }
                 getView().updateData(mList);
@@ -217,6 +222,10 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
     }
 
     private boolean isBindListContain(NamePlateInfo datum) {
+        if (mBindList == null || mBindList.size() < 1) {
+            return false;
+        }
+
         for (NamePlateInfo namePlateInfo : mBindList) {
             if (namePlateInfo.getSn().equals(datum.getSn())) {
                 return true;
@@ -227,6 +236,9 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
 
     @Override
     public void onDestroy() {
+        mSelectList.clear();
+        mBindList.clear();
+        mList.clear();
 
     }
 

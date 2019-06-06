@@ -402,16 +402,7 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
 
     }
 
-    @Override
-    public void backFromWindowFull() {
-        if (orientationUtils != null) {
-            orientationUtils.backToProtVideo();
-        }
-        orientationUtils.setEnable(false);
-        if (GSYVideoManager.backFromWindowFull(this)) {
-            return;
-        }
-    }
+
 
     @Override
     public void setVerOrientationUtil(boolean enable) {
@@ -457,6 +448,16 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
 
     }
 
+
+    @Override
+    public void backFromWindowFull() {
+        if (orientationUtils != null) {
+            orientationUtils.backToProtVideo();
+        }
+        if (GSYVideoManager.backFromWindowFull(this)) {
+            return;
+        }
+    }
     @Override
     public void onBackPressed() {
         if (orientationUtils != null) {

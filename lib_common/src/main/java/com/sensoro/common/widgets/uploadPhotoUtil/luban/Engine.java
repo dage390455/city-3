@@ -1,14 +1,13 @@
-package com.sensoro.smartcity.util.luban;
+package com.sensoro.common.widgets.uploadPhotoUtil.luban;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 
+import com.sensoro.common.R;
 import com.sensoro.common.base.ContextUtils;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.common.utils.DateUtil;
-import com.sensoro.smartcity.util.ImageUtil;
+import com.sensoro.common.widgets.uploadPhotoUtil.ImageUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

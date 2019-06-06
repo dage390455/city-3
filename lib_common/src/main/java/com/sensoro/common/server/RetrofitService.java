@@ -18,6 +18,7 @@ import com.sensoro.common.server.response.ContractsTemplateRsp;
 import com.sensoro.common.server.response.DeleteNamePlateRsp;
 import com.sensoro.common.server.response.DeployCameraUploadRsp;
 import com.sensoro.common.server.response.DeployDeviceDetailRsp;
+import com.sensoro.common.server.response.DeployNameplateRsp;
 import com.sensoro.common.server.response.DeployRecordRsp;
 import com.sensoro.common.server.response.DeployStationInfoRsp;
 import com.sensoro.common.server.response.DeviceAlarmItemRsp;
@@ -444,8 +445,7 @@ public interface RetrofitService {
     Observable<ResponseResult<NamePlateInfo>> getNameplateDetail(@Path("nameplateId") String nameplateId);
 
     @GET("nameplate/bind/devices")
-    Observable<NameplateBindDeviceRsp> getNameplateBindDevices(@Query("page") Integer pageSize, @Query("count") Integer page, @Query("nameplateId") String nameplateId);
-//    Observable<NameplateBindDeviceRsp> getNameplateBindDevices(@Query("nameplateId") String nameplateId);
+    Observable<NameplateBindDeviceRsp> getNameplateBindDevices(@Query("page") Integer page, @Query("count") Integer count, @Query("nameplateId") String nameplateId);
 
     @PUT("nameplate/unbind/device")
     Observable<ResponseResult<Integer>> unbindNameplateDevice(@Body RequestBody requestBody);
@@ -454,8 +454,9 @@ public interface RetrofitService {
     Observable<ResponseResult<Integer>> updateNameplate(@Path("nameplateId") String nameplateId, @Body RequestBody body);
 
     @GET("nameplate/unbind/devices")
-    Observable<NameplateBindDeviceRsp> getNameplateUnbindDevices(@Query("page") Integer pageSize, @Query("count") Integer page, @Query("nameplateId") String nameplateId);
+    Observable<NameplateBindDeviceRsp> getNameplateUnbindDevices(@Query("page") Integer page, @Query("count") Integer count, @Query("nameplateId") String nameplateId);
 
-
+    @PUT("nameplate/deploy/{nameplateId}")
+    Observable<DeployNameplateRsp> doUploadDeployNameplate(@Path("nameplateId")String nameplateId, @Body RequestBody requestBody);
 }
 

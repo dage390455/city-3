@@ -480,7 +480,6 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
         if (orientationUtils != null) {
             orientationUtils.backToProtVideo();
         }
-        orientationUtils.setEnable(false);
         if (GSYVideoManager.backFromWindowFull(this)) {
             return;
         }

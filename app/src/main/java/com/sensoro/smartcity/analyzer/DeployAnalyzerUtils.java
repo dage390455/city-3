@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
@@ -16,11 +17,13 @@ import com.sensoro.common.server.bean.DeviceTypeStyles;
 import com.sensoro.common.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.common.server.bean.InspectionTaskDeviceDetailModel;
+import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.server.response.DeployDeviceDetailRsp;
 import com.sensoro.common.server.response.DeployStationInfoRsp;
 import com.sensoro.common.server.response.DeviceCameraDetailRsp;
 import com.sensoro.common.server.response.InspectionTaskDeviceDetailRsp;
 import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployCameraDetailActivity;
 import com.sensoro.smartcity.activity.DeployMonitorDetailActivity;
@@ -36,6 +39,7 @@ import com.sensoro.smartcity.model.DeployResultModel;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -75,25 +79,36 @@ public class DeployAnalyzerUtils {
             case Constants.TYPE_SCAN_DEPLOY_STATION:
                 //设备部署
             case Constants.TYPE_SCAN_DEPLOY_DEVICE:
-                String scanSerialNumber = parseResultMac(result);
-                if (TextUtils.isEmpty(scanSerialNumber)) {
-                    listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
-                    return;
-                } else {
+                if (result.startsWith("http")) {
                     try {
-                        String[] strings = scanSerialNumber.split(" ");
-                        scanSerialNumber = strings[0];
-                        if (scanSerialNumber.length() >= 8 && scanSerialNumber.length() <= 32) {
-                            handleDeployDeviceStation(presenter, scanSerialNumber, activity, listener);
-                        } else {
-                            listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
-                            return;
-                        }
+                        String nameplateId = result.substring(result.length() - 24);
+                        handleNameplate(presenter, nameplateId, activity, listener);
                     } catch (Exception e) {
-                        listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
+                        listener.onError(0, null, activity.getResources().getString(R.string.please_re_scan_try_again));
                     }
 
+                } else {
+                    String scanSerialNumber = parseResultMac(result);
+                    if (TextUtils.isEmpty(scanSerialNumber)) {
+                        listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
+                        return;
+                    } else {
+                        try {
+                            String[] strings = scanSerialNumber.split(" ");
+                            scanSerialNumber = strings[0];
+                            if (scanSerialNumber.length() >= 8 && scanSerialNumber.length() <= 32) {
+                                handleDeployDeviceStation(presenter, scanSerialNumber, activity, listener);
+                            } else {
+                                listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
+                                return;
+                            }
+                        } catch (Exception e) {
+                            listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
+                        }
+
+                    }
                 }
+
                 break;
             case Constants.TYPE_SCAN_LOGIN:
                 //登录
@@ -164,6 +179,71 @@ public class DeployAnalyzerUtils {
             default:
                 break;
         }
+    }
+
+    private void handleNameplate(BasePresenter presenter, String nameplateId, Activity activity, OnDeployAnalyzerListener listener) {
+        RetrofitServiceHelper.getInstance().getNameplateDetail(nameplateId).subscribeOn
+                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<NamePlateInfo>>(presenter) {
+            @Override
+            public void onCompleted(ResponseResult<NamePlateInfo> namePlateInfoResponseResult) {
+                NamePlateInfo data = namePlateInfoResponseResult.getData();
+                if (data == null) {
+                    //查找新设备
+                    Intent intent = new Intent();
+                    intent.setClass(activity, DeployResultActivity.class);
+                    DeployResultModel deployResultModel = new DeployResultModel();
+                    deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
+                    deployResultModel.sn = nameplateId;
+                    deployResultModel.scanType = Constants.TYPE_SCAN_NAMEPLATE_DEPLOY;
+                    intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                    listener.onError(0, intent, null);
+                } else {
+                    String name = data.getName();
+                    String sn = data.getSn();
+                    ArrayList<String> tags = data.getTags();
+                    DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
+                    deployAnalyzerModel.nameAndAddress = name;
+                    deployAnalyzerModel.sn = sn;
+                    deployAnalyzerModel.deployNameplateFlag = data.getDeployFlag();
+                    if (tags != null && tags.size() > 0) {
+                        deployAnalyzerModel.tagList.addAll(tags);
+                    }
+                    Intent intent = new Intent();
+                    deployAnalyzerModel.deployType = Constants.TYPE_SCAN_NAMEPLATE_DEPLOY;
+                    intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+                    intent.putExtra(ARouterConstants.AROUTER_PATH, "path");
+                    listener.onSuccess(intent);
+                }
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                    listener.onError(errorCode, null, errorMsg);
+                } else if (errorCode == 4013101 || errorCode == 4000013) {
+                    //查找新设备
+                    Intent intent = new Intent();
+                    intent.setClass(activity, DeployResultActivity.class);
+                    DeployResultModel deployResultModel = new DeployResultModel();
+                    deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
+                    deployResultModel.sn = nameplateId;
+                    deployResultModel.scanType = Constants.TYPE_SCAN_NAMEPLATE_DEPLOY;
+                    intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                    listener.onError(errorCode, intent, errorMsg);
+                } else {
+                    //TODO 控制逻辑
+                    Intent intent = new Intent();
+                    intent.setClass(activity, DeployResultActivity.class);
+                    DeployResultModel deployResultModel = new DeployResultModel();
+                    deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED;
+                    deployResultModel.sn = nameplateId;
+                    deployResultModel.scanType = Constants.TYPE_SCAN_NAMEPLATE_DEPLOY;
+                    deployResultModel.errorMsg = errorMsg;
+                    intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                    listener.onError(errorCode, intent, errorMsg);
+                }
+            }
+        });
     }
 
     private void handleScanSignalCheck(BasePresenter presenter, final String signalCheckNum, final Activity activity, final OnDeployAnalyzerListener listener) {

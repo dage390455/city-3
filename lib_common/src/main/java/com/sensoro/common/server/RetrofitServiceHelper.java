@@ -36,6 +36,7 @@ import com.sensoro.common.server.response.ContractsTemplateRsp;
 import com.sensoro.common.server.response.DeleteNamePlateRsp;
 import com.sensoro.common.server.response.DeployCameraUploadRsp;
 import com.sensoro.common.server.response.DeployDeviceDetailRsp;
+import com.sensoro.common.server.response.DeployNameplateRsp;
 import com.sensoro.common.server.response.DeployRecordRsp;
 import com.sensoro.common.server.response.DeployStationInfoRsp;
 import com.sensoro.common.server.response.DeviceAlarmItemRsp;
@@ -83,6 +84,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -123,6 +125,7 @@ public class RetrofitServiceHelper {
     public static RetrofitServiceHelper getInstance() {
         return RetrofitServiceHelperHolder.instance;
     }
+
 
     private static class RetrofitServiceHelperHolder {
         private static final RetrofitServiceHelper instance = new RetrofitServiceHelper();
@@ -1815,13 +1818,13 @@ public class RetrofitServiceHelper {
         return retrofitService.getNameplateDetail(nameplateId);
     }
 
-    public Observable<NameplateBindDeviceRsp> getNameplateBindDevices(Integer pageSize, Integer page, String nameplateId) {
+    public Observable<NameplateBindDeviceRsp> getNameplateBindDevices(Integer page, Integer count, String nameplateId) {
 //        return retrofitService.getNameplateBindDevices(nameplateId);
-        return retrofitService.getNameplateBindDevices(pageSize, page, nameplateId);
+        return retrofitService.getNameplateBindDevices(page, count, nameplateId);
     }
 
-    public Observable<NameplateBindDeviceRsp> getNameplateUnbindDevices(Integer pageSize, Integer page, String nameplateId) {
-        return retrofitService.getNameplateUnbindDevices(pageSize, page, nameplateId);
+    public Observable<NameplateBindDeviceRsp> getNameplateUnbindDevices(Integer page, Integer count , String nameplateId) {
+        return retrofitService.getNameplateUnbindDevices(page, count, nameplateId);
     }
 
 
@@ -1999,6 +2002,36 @@ public class RetrofitServiceHelper {
         }
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
         return retrofitService.getDeployCameraInfo(requestBody);
+    }
+
+    public Observable<DeployNameplateRsp> doUploadDeployNameplate(@NonNull String nameplateId, String name, List<String> tags, ArrayList<String> imgUrls) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(name)) {
+                jsonObject.put("name",name);
+            }
+
+            if (tags != null && tags.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (String tag : tags) {
+                    jsonArray.put(tag);
+                }
+                jsonObject.put("tags",jsonArray);
+
+            }
+            if(imgUrls != null && imgUrls.size() > 0){
+                JSONArray jsonArray = new JSONArray();
+                for (String imgUrl : imgUrls) {
+                    jsonArray.put(imgUrl);
+                }
+                jsonObject.put("deployPics",jsonArray);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.doUploadDeployNameplate(nameplateId,requestBody);
     }
 
 }
