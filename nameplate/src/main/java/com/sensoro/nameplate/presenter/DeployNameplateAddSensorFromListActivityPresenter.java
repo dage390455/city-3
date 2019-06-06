@@ -17,7 +17,10 @@ import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeviceTypeStyles;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.bean.NamePlateInfo;
+import com.sensoro.common.server.response.NameplateAssociateDeviceRsp;
 import com.sensoro.common.server.response.NameplateBindDeviceRsp;
+import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.IMainViews.IDeployNameplateAddSensorFromListActivityView;
 import com.sensoro.nameplate.R;
 
@@ -42,6 +45,7 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
     private boolean isCheckAll = false;
     private String mOriginType;
     private String mNameplateId;
+    private String mSearchText;
 
     @Override
     public void initData(Context context) {
@@ -65,7 +69,7 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
         initSearchHistoryData();
 
         getView().showProgressDialog();
-        requestWithDirection(Constants.DIRECTION_DOWN, null);
+        requestWithDirection(Constants.DIRECTION_DOWN);
     }
 
     private void initSearchHistoryData() {
@@ -76,21 +80,26 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
         }
     }
 
-    public void requestWithDirection(int direction, String searchText) {
+    public void requestWithDirection(int direction) {
+        if (TextUtils.isEmpty(mNameplateId)) {
+            getView().toastShort(mActivity.getString(R.string.nameplate_name_empty));
+            return;
+        }
+
         if (direction == Constants.DIRECTION_DOWN) {
             page = 1;
         } else {
             page++;
         }
 
-        RetrofitServiceHelper.getInstance().getNameplateUnbindDevices(page, 20, "5cf5e9d4efef53239b5e9625")
+        RetrofitServiceHelper.getInstance().getNameplateUnbindDevices(page, 20, mNameplateId,mSearchText)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<NameplateBindDeviceRsp>(this) {
             @Override
             public void onCompleted(NameplateBindDeviceRsp nameplateBindDeviceRsp) {
                 if (direction == Constants.DIRECTION_DOWN) {
                     mList.clear();
                     mSelectList.clear();
-                    if (mBindList != null || mBindList.size() > 0) {
+                    if (mBindList != null && mBindList.size() > 0) {
                         mList.addAll(mBindList);
                         mSelectList.addAll(mBindList);
                     }
@@ -238,7 +247,9 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
     @Override
     public void onDestroy() {
         mSelectList.clear();
-        mBindList.clear();
+        if (mBindList != null) {
+            mBindList.clear();
+        }
         mList.clear();
 
     }
@@ -259,7 +270,7 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
     }
 
     private void updateStatus() {
-        getView().setSelectSize("" + mSelectList.size());
+        getView().setSelectSize(mSelectList.size());
 
         if (mSelectList.size() != mList.size() || mList.size() == 0) {
             isCheckAll = false;
@@ -306,8 +317,9 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
     }
 
     public void requestSearchData(int directionDown, String text) {
+        mSearchText = text;
         getView().showProgressDialog();
-        requestWithDirection(directionDown, text);
+        requestWithDirection(directionDown);
 
     }
 
@@ -335,6 +347,31 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
             return;
         }
 
-        RetrofitServiceHelper.getInstance().doBindDevices(mNameplateId,mSelectList);
+        getView().showProgressDialog();
+        RetrofitServiceHelper.getInstance().doBindDevices(mNameplateId,mSelectList)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Integer>>(this) {
+            @Override
+            public void onCompleted(ResponseResult<Integer> nameplateAssociateDeviceRsp) {
+                Integer data = nameplateAssociateDeviceRsp.getData();
+                if (data != null && data > 0) {
+                    getView().toastShort(mActivity.getString(R.string.associated_sensor_success));
+
+                    EventData eventData = new EventData();
+                    eventData.code = Constants.EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL;
+                    EventBus.getDefault().post(eventData);
+                    getView().dismissProgressDialog();
+                    getView().finishAc();
+                }else{
+                    getView().dismissProgressDialog();
+                    getView().toastShort(mActivity.getString(R.string.associated_sensor_fail));
+                }
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().toastShort(errorMsg);
+                getView().dismissProgressDialog();
+            }
+        });
     }
 }

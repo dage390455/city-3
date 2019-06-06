@@ -34,7 +34,6 @@ import io.reactivex.schedulers.Schedulers;
 
 import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.common.constant.Constants.DIRECTION_UP;
-import static com.sensoro.common.constant.Constants.EVENT_DATA_UPDATEELIST;
 import static com.sensoro.common.constant.Constants.EVENT_DATA_UPDATENAMEPALTELIST;
 import static com.sensoro.common.constant.Constants.EXTRA_SCAN_ORIGIN_TYPE;
 import static com.sensoro.common.constant.Constants.EXTRA_SETTING_TAG_LIST;
@@ -51,9 +50,7 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
         int code = eventData.code;
         if (code == EVENT_DATA_UPDATENAMEPALTELIST) {
             getNameplateDetail();
-
-        } else if (code == EVENT_DATA_UPDATEELIST) {
-
+        }else if(code == Constants.EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL){
             requestData(DIRECTION_DOWN);
         }
     }

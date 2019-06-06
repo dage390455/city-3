@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.model.DeployContactModel;
+import com.sensoro.common.model.DeployContactModel;
 
 import java.util.ArrayList;
 import java.util.List;

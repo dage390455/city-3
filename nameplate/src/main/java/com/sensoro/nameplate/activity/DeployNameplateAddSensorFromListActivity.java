@@ -94,6 +94,8 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
     SmartRefreshLayout refreshLayoutInclude;
     @BindView(R2.id.return_top_include)
     ImageView returnTopInclude;
+    @BindView(R2.id.view_divider_ac_deploy_nameplate_sensor_list)
+    View viewDividerAcDeployNameplateSensorList;
     @BindView(R2.id.rv_search_history)
     RecyclerView rvSearchHistory;
     @BindView(R2.id.btn_search_clear)
@@ -126,12 +128,15 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
         mConfirmDialog.setOnListener(new AssociationSensorConfirmDialogUtil.OnListener() {
             @Override
             public void onConfirm() {
+                mConfirmDialog.dismiss();
                 mPresenter.doAssociateSensor();
             }
         });
         returnTopAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.return_top_in_anim);
         returnTopInclude.setAnimation(returnTopAnimation);
         returnTopInclude.setVisibility(View.GONE);
+
+        setSelectSize(0);
 
         initOnclick();
 
@@ -245,13 +250,13 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
         refreshLayoutInclude.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
-                mPresenter.requestWithDirection(DIRECTION_DOWN,null);
+                mPresenter.requestWithDirection(DIRECTION_DOWN);
             }
         });
         refreshLayoutInclude.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                mPresenter.requestWithDirection(Constants.DIRECTION_UP,null);
+                mPresenter.requestWithDirection(Constants.DIRECTION_UP);
             }
         });
     }
@@ -279,6 +284,7 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
 //                        toolbarDirection == DIRECTION_DOWN) {
 ////                    mListRecyclerView.setre
 //                }
+
                 if (manager.findFirstVisibleItemPosition() > 4) {
                     if (newState == 0) {
                         returnTopInclude.setVisibility(View.VISIBLE);
@@ -296,7 +302,11 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
+                if (manager.findFirstVisibleItemPosition() == 0 && rvListInclude.getChildAt(0).getTop() == 0) {
+                    viewDividerAcDeployNameplateSensorList.setVisibility(View.GONE);
+                }else{
+                    viewDividerAcDeployNameplateSensorList.setVisibility(View.VISIBLE);
+                }
             }
         });
     }
@@ -372,8 +382,9 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
     }
 
     @Override
-    public void setSelectSize(String size) {
-        tvSelectedCountAcDeployNameplateSensorList.setText(size);
+    public void setSelectSize(int size) {
+        tvSelectedCountAcDeployNameplateSensorList.setTextColor(mActivity.getResources().getColor(size == 0 ? R.color.c_a6a6a6 : R.color.c_1dbb99));
+        tvSelectedCountAcDeployNameplateSensorList.setText(size+"");
     }
 
     @Override
@@ -450,7 +461,7 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
             etSearchAcDeployNameplateSensorList.getText().clear();
         }else if (id == R.id.tv_search_cancel_ac_deploy_nameplate_sensor_list) {
             etSearchAcDeployNameplateSensorList.getText().clear();
-            mPresenter.requestWithDirection(DIRECTION_DOWN,null);
+            mPresenter.requestWithDirection(DIRECTION_DOWN);
             setSearchHistoryVisible(false);
             AppUtils.dismissInputMethodManager(mActivity, etSearchAcDeployNameplateSensorList);
         }else if (id == R.id.rb_select_all_ac_deploy_nameplate_sensor_list) {

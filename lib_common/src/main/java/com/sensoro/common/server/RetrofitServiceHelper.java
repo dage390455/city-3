@@ -1823,8 +1823,8 @@ public class RetrofitServiceHelper {
         return retrofitService.getNameplateBindDevices(page, count, nameplateId);
     }
 
-    public Observable<NameplateBindDeviceRsp> getNameplateUnbindDevices(Integer page, Integer count , String nameplateId) {
-        return retrofitService.getNameplateUnbindDevices(page, count, nameplateId);
+    public Observable<NameplateBindDeviceRsp> getNameplateUnbindDevices(Integer page, Integer count , String nameplateId,String searchText) {
+        return retrofitService.getNameplateUnbindDevices(page, count, nameplateId,searchText);
     }
 
 
@@ -2041,7 +2041,7 @@ public class RetrofitServiceHelper {
                 JSONArray jsonArray = new JSONArray();
 
                 for (int i = 0; i < snList.size(); i++) {
-                    jsonArray.put(snList.get(i));
+                    jsonArray.put(snList.get(i).getSn());
                 }
                 jsonObject.put("nameplateId", nameplateId);
                 jsonObject.put("snList", jsonArray);

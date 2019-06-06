@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.model;
+package com.sensoro.common.model;
 
 import java.io.Serializable;
 

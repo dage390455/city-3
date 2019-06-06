@@ -76,7 +76,7 @@ import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IMonitorPointElectricDetailActivityView;
 import com.sensoro.smartcity.model.BleUpdateModel;
-import com.sensoro.smartcity.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.Elect3DetailModel;
 import com.sensoro.smartcity.model.TaskOptionModel;
 import com.sensoro.smartcity.util.AppUtils;

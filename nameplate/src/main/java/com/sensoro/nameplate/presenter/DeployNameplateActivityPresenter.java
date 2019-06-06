@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
@@ -28,6 +29,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,11 +39,21 @@ import io.reactivex.schedulers.Schedulers;
 public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNameplateActivityView> {
     private Activity mActivity;
     private DeployNameplateModel deployNameplateModel = new DeployNameplateModel();
+    private String mNameplateId;
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
         EventBus.getDefault().register(this);
+        Bundle bundle = getBundle(mActivity);
+        if (bundle != null) {
+            Serializable serializable = bundle.getSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
+            if (serializable instanceof DeployAnalyzerModel) {
+                DeployAnalyzerModel model = (DeployAnalyzerModel) serializable;
+                mNameplateId = model.sn;
+            }
+        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -109,6 +121,7 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
 //        if (deployAnalyzerModel.tagList.size() > 0) {
 //            bundle.putStringArrayList(Constants.EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
 //        }
+        bundle.putSerializable(Constants.EXTRA_SETTING_TAG_LIST,deployNameplateModel.tags);
         startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_TAG,bundle,mActivity);
     }
 
@@ -122,12 +135,18 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
 
         Bundle bundle = new Bundle();
         bundle.putString(Constants.EXTRA_SETTING_DEPLOY_DEVICE_TYPE, "deploy_nameplate");
+        bundle.putSerializable(Constants.EXTRA_DEPLOY_TO_PHOTO,deployNameplateModel.deployPics);
         startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_PIC,bundle,mActivity);
     }
 
     public void doAssociationSensor() {
+        if (TextUtils.isEmpty(mNameplateId)) {
+            getView().toastShort(mActivity.getString(R.string.nameplate_name_empty));
+            return;
+        }
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.EXTRA_ASSOCIATION_SENSOR_ADD_BIND_LIST,deployNameplateModel.bindList);
+        bundle.putString(Constants.EXTRA_ASSOCIATION_SENSOR_NAMEPLATE_ID,mNameplateId);
         startActivity(ARouterConstants.ACTIVITY_DEPLOY_ASSOCIATE_SENSOR,bundle,mActivity);
     }
 

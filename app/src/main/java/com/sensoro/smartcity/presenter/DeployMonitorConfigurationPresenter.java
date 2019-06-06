@@ -14,7 +14,7 @@ import com.sensoro.common.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorConfigurationView;
 import com.sensoro.common.iwidget.IOnCreate;
-import com.sensoro.smartcity.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;

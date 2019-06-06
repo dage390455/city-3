@@ -14,7 +14,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.fragment.DeployMonitorLocalCheckFragment;
 import com.sensoro.smartcity.fragment.DeployMonitorUploadCheckFragment;
 import com.sensoro.smartcity.imainviews.IDeployMonitorCheckActivityView;
-import com.sensoro.smartcity.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.presenter.DeployMonitorCheckActivityPresenter;
 
 import butterknife.BindView;

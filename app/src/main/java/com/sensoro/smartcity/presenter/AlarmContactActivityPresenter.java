@@ -12,7 +12,7 @@ import com.sensoro.common.model.EventData;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAlarmContactActivityView;
-import com.sensoro.smartcity.model.DeployContactModel;
+import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.smartcity.util.RegexUtils;
 
 import org.greenrobot.eventbus.EventBus;

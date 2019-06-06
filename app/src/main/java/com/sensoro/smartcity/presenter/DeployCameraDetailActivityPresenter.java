@@ -43,7 +43,7 @@ import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployCameraDetailActivityView;
-import com.sensoro.smartcity.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.DeployCameraConfigModel;
 import com.sensoro.smartcity.model.DeployResultModel;
 import com.sensoro.smartcity.util.AppUtils;

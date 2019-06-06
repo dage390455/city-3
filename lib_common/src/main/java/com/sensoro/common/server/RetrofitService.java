@@ -454,7 +454,7 @@ public interface RetrofitService {
     Observable<ResponseResult<Integer>> updateNameplate(@Path("nameplateId") String nameplateId, @Body RequestBody body);
 
     @GET("nameplate/unbind/devices")
-    Observable<NameplateBindDeviceRsp> getNameplateUnbindDevices(@Query("page") Integer page, @Query("count") Integer count, @Query("nameplateId") String nameplateId);
+    Observable<NameplateBindDeviceRsp> getNameplateUnbindDevices(@Query("page") Integer page, @Query("count") Integer count, @Query("nameplateId") String nameplateId,@Query("search") String searchText);
 
     @PUT("nameplate/deploy/{nameplateId}")
     Observable<DeployNameplateRsp> doUploadDeployNameplate(@Path("nameplateId") String nameplateId, @Body RequestBody requestBody);

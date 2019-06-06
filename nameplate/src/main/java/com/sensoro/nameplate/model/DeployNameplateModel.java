@@ -8,8 +8,8 @@ import java.util.List;
 
 public class DeployNameplateModel {
     public String name;
-    public List<String> tags = new ArrayList<>();
-    public List<ImageItem> deployPics = new ArrayList<>(1);
+    public ArrayList<String> tags = new ArrayList<>();
+    public ArrayList<ImageItem> deployPics = new ArrayList<>(1);
     public ArrayList<NamePlateInfo> bindList;
 
 }

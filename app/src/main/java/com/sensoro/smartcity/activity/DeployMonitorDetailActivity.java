@@ -35,7 +35,7 @@ import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeployDeviceDetailAlarmContactAdapter;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
-import com.sensoro.smartcity.model.DeployContactModel;
+import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.smartcity.presenter.DeployMonitorDetailActivityPresenter;
 import com.sensoro.smartcity.util.AppUtils;
 

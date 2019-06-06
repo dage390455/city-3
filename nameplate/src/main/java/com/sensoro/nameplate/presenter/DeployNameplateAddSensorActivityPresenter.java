@@ -24,6 +24,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -35,30 +36,43 @@ public class DeployNameplateAddSensorActivityPresenter extends BasePresenter<IDe
     private Activity mActivity;
     private int page = 1;
     private ArrayList<NamePlateInfo> mBindList = new ArrayList<>();
+    private String mNameplateId;
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
         EventBus.getDefault().register(this);
 
-        Object bundleValue = getBundleValue(mActivity, Constants.EXTRA_ASSOCIATION_SENSOR_ADD_BIND_LIST);
-        if (bundleValue instanceof ArrayList) {
-            ArrayList<NamePlateInfo> bindList = (ArrayList<NamePlateInfo>) bundleValue;
-            mBindList.addAll(bindList);
-            getView().updateBindData(mBindList);
+        Bundle bundle = getBundle(mActivity);
+        if (bundle != null) {
+            mNameplateId = bundle.getString(Constants.EXTRA_ASSOCIATION_SENSOR_NAMEPLATE_ID);
+            Serializable serializable = bundle.getSerializable(Constants.EXTRA_ASSOCIATION_SENSOR_ADD_BIND_LIST);
+            if (serializable instanceof ArrayList) {
+                ArrayList<NamePlateInfo> bindList = (ArrayList<NamePlateInfo>) serializable;
+                mBindList.addAll(bindList);
+                getView().updateBindData(mBindList);
+            }
         }
+
+
+
 //        getView().showProgressDialog();
 //        getBindDevice(Constants.DIRECTION_DOWN);
     }
 
     public void getBindDevice(int direction) {
+
+        if (TextUtils.isEmpty(mNameplateId)) {
+            getView().toastShort(mActivity.getString(R.string.nameplate_name_empty));
+            return;
+        }
         if(direction == Constants.DIRECTION_DOWN){
             page = 1;
         }else{
             page++;
         }
 
-        RetrofitServiceHelper.getInstance().getNameplateBindDevices(page,20,"5cf5e9d4efef53239b5e9625")
+        RetrofitServiceHelper.getInstance().getNameplateBindDevices(page,20,mNameplateId)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<NameplateBindDeviceRsp>(this) {
             @Override
             public void onCompleted(NameplateBindDeviceRsp nameplateBindDeviceRsp) {
@@ -144,9 +158,15 @@ public class DeployNameplateAddSensorActivityPresenter extends BasePresenter<IDe
     }
 
     public void doAddFromList() {
+        if (TextUtils.isEmpty(mNameplateId)) {
+            getView().toastShort(mActivity.getString(R.string.nameplate_name_empty));
+            return;
+        }
+
         Bundle bundle = new Bundle();
         bundle.putString(Constants.EXTRA_ASSOCIATION_SENSOR_ORIGIN_TYPE,"deploy");
         bundle.putSerializable(Constants.EXTRA_ASSOCIATION_SENSOR_BIND_LIST,mBindList);
+        bundle.putString(Constants.EXTRA_ASSOCIATION_SENSOR_NAMEPLATE_ID,mNameplateId);
         startActivity(ARouterConstants.ACTIVITY_DEPLOY_ASSOCIATE_SENSOR_FROM_LIST,bundle,mActivity);
     }
 

@@ -423,7 +423,7 @@ public interface Constants {
 
     int TYPE_SCAN_NAMEPLATE_ASSOCIATEDEVICE = 0x61;
 
-    int EVENT_DATA_UPDATEELIST = 0x62;
+    int EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL = 0x62;
 
     List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{
         add("elec_fire");

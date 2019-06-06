@@ -1,6 +1,6 @@
-package com.sensoro.smartcity.model;
+package com.sensoro.common.model;
 
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.DeployControlSettingData;
 import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.common.model.ImageItem;

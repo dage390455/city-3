@@ -21,7 +21,7 @@ import com.sensoro.smartcity.activity.DeployManualActivity;
 import com.sensoro.smartcity.analyzer.DeployAnalyzerUtils;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IScanActivityView;
-import com.sensoro.smartcity.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -32,7 +32,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import static android.content.Context.VIBRATOR_SERVICE;
-import static com.sensoro.common.constant.Constants.EVENT_DATA_UPDATEELIST;
+import static com.sensoro.common.constant.Constants.EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL;
 
 public class ScanActivityPresenter extends BasePresenter<IScanActivityView> implements IOnCreate, Constants,
         MediaPlayer.OnErrorListener {
@@ -154,7 +154,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                     getView().dismissProgressDialog();
                     //更新列表，关闭界面
 
-                    EventData data = new EventData(EVENT_DATA_UPDATEELIST);
+                    EventData data = new EventData(EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL);
                     EventBus.getDefault().post(data);
                     getView().finishAc();
                 }

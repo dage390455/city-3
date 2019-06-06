@@ -21,7 +21,7 @@ public interface IDeployNameplateAddSensorFromListActivityView extends IToast, I
 
     void notifyDataAll();
 
-    void setSelectSize(String size);
+    void setSelectSize(int size);
 
     void setAddStatus(boolean canAdd);
 

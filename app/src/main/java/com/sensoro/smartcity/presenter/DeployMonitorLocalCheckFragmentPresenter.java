@@ -53,7 +53,7 @@ import com.sensoro.smartcity.constant.DeoloyCheckPointConstants;
 import com.sensoro.smartcity.constant.DeployCheckStateEnum;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IDeployMonitorLocalCheckFragmentView;
-import com.sensoro.smartcity.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.MaterialValueModel;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
