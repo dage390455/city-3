@@ -118,19 +118,14 @@
             android:paddingBottom="12dp"
             android:textColor="@color/c_a6a6a6" />
 
-        <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/refreshLayout"
+        <View
+            android:id="@+id/view_divider_ac_nameplate_associated_sensor"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_nameplate_associated_sensor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            </androidx.recyclerview.widget.RecyclerView>
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+            android:layout_height="@dimen/view_divider_height"
+            android:background="@color/c_dfdfdf"
+            android:visibility="gone"
+            />
+        <include layout="@layout/item_include_refresh_layout"/>
 
     </LinearLayout>
 

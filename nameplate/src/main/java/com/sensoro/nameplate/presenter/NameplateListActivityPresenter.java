@@ -44,11 +44,7 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
         if (code == EVENT_DATA_UPDATENAMEPALTELIST || EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL == code) {
-
-
             requestDataByFilter(DIRECTION_DOWN, null, deviceFlag);
-
-
         }
     }
 

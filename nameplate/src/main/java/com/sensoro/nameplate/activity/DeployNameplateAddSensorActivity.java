@@ -55,6 +55,8 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
     View includeTextTitleDivider;
     @BindView(R2.id.include_text_title_cl_root)
     ConstraintLayout includeTextTitleClRoot;
+    @BindView(R2.id.view_divider_ac_deploy_nameplate_add_sensor)
+    View viewDividerAcDeployNameplateAddSensor;
     @BindView(R2.id.ll_from_List_ac_deploy_nameplate_add_sensor)
     LinearLayout llFromListAcDeployNameplateAddSensor;
     @BindView(R2.id.ll_from_scan_ac_deploy_nameplate_add_sensor)
@@ -162,7 +164,11 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
+                if (manager.findFirstVisibleItemPosition() == 0 && rvAddedListAcDeployNameplateAddSensor.getChildAt(0).getTop() == 0) {
+                    viewDividerAcDeployNameplateAddSensor.setVisibility(GONE);
+                }else{
+                    viewDividerAcDeployNameplateAddSensor.setVisibility(VISIBLE);
+                }
             }
         });
 

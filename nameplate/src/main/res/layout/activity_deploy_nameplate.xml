@@ -13,12 +13,22 @@
         android:layout_below="@id/include_text_title_cl_root"
         android:orientation="horizontal"
         android:padding="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nameplate_sn"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            android:textColor="@color/c_a6a6a6"
+            android:textSize="14dp" />
 
         <TextView
+            android:id="@+id/tv_nameplate_id_ac_deploy_nameplate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="铭牌编号"
+            android:singleLine="true"
+            android:ellipsize="middle"
             android:textColor="@color/c_a6a6a6"
             android:textSize="14dp" />
 
@@ -26,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="二维码铭牌"
+            android:text="@string/qr_code_nameplate"
             android:textColor="@color/c_a6a6a6"
             android:textSize="14dp" />
     </LinearLayout>

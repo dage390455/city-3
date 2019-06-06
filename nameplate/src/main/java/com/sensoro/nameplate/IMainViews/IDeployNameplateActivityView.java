@@ -24,4 +24,6 @@ public interface IDeployNameplateActivityView extends IToast, IProgressDialog, I
     void dismissUploadProgressDialog();
 
     void showUploadProgressDialog(String content, double percent);
+
+    void setNameplateId(String mNameplateId);
 }

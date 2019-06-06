@@ -54,6 +54,10 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
             }
         }
 
+        if (!TextUtils.isEmpty(mNameplateId)) {
+            getView().setNameplateId(mNameplateId);
+        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

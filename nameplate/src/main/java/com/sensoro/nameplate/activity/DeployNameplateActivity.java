@@ -71,6 +71,8 @@ public class DeployNameplateActivity extends BaseActivity<IDeployNameplateActivi
     TextView tvUploadAcDeployNameplate;
     @BindView(R2.id.tv_tip_ac_deploy_nameplate)
     TextView tvTipAcDeployNameplate;
+    @BindView(R2.id.tv_nameplate_id_ac_deploy_nameplate)
+    TextView tvNameplateIdAcDeployNameplate;
     private ProgressUtils mProgressUtils;
     private TagAdapter mTagAdapter;
     private ProgressDialog progressDialog;
@@ -216,6 +218,11 @@ public class DeployNameplateActivity extends BaseActivity<IDeployNameplateActivi
             progressDialog.setTitle(content);
             progressDialog.show();
         }
+    }
+
+    @Override
+    public void setNameplateId(String mNameplateId) {
+        tvNameplateIdAcDeployNameplate.setText(mNameplateId);
     }
 
     @Override
