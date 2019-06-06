@@ -275,11 +275,11 @@ public class DeployAnalyzerUtils {
                     listener.onError(0, intent, null);
                 } else {
                     String name = data.getName();
-                    String sn = data.getSn();
+                    String nameplateId = data.get_id();
                     ArrayList<String> tags = data.getTags();
                     DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
                     deployAnalyzerModel.nameAndAddress = name;
-                    deployAnalyzerModel.sn = sn;
+                    deployAnalyzerModel.sn = nameplateId;
                     deployAnalyzerModel.deployNameplateFlag = data.getDeployFlag();
                     if (tags != null && tags.size() > 0) {
                         deployAnalyzerModel.tagList.addAll(tags);
