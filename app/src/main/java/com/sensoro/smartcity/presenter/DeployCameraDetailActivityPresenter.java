@@ -449,12 +449,6 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
         if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
             intent.putExtra(EXTRA_SETTING_NAME_ADDRESS, deployAnalyzerModel.nameAndAddress);
         }
-        intent.putExtra(EXTRA_DEPLOY_TO_SN, deployAnalyzerModel.sn);
-        intent.putExtra(EXTRA_DEPLOY_TYPE, deployAnalyzerModel.deployType);
-        if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
-            intent.putExtra(EXTRA_DEPLOY_ORIGIN_NAME_ADDRESS, deployAnalyzerModel.nameAndAddress);
-        }
-        intent.putExtra(EXTRA_DEPLOY_TYPE, deployAnalyzerModel.deployType);
         getView().startAC(intent);
     }
 

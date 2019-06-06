@@ -23,15 +23,13 @@ import java.util.List;
 public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDeployMonitorNameAddressActivityView> implements Constants {
     private Activity mContext;
     private final List<String> mHistoryKeywords = new ArrayList<>();
-    private int deployType;
-    private String originName;
+//    private int deployType;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        String sn = mContext.getIntent().getStringExtra(EXTRA_DEPLOY_TO_SN);
-        originName = mContext.getIntent().getStringExtra(EXTRA_DEPLOY_ORIGIN_NAME_ADDRESS);
-        deployType = mContext.getIntent().getIntExtra(EXTRA_DEPLOY_TYPE, -1);
+//        String sn = mContext.getIntent().getStringExtra(EXTRA_DEPLOY_TO_SN);
+//        deployType = mContext.getIntent().getIntExtra(EXTRA_DEPLOY_TYPE, -1);
 //        if (!TextUtils.isEmpty(sn)) {
 ////            getView().updateTvTitle(sn);
 //        }
@@ -125,7 +123,7 @@ public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDe
 
     public void doChoose(final String text) {
         if (!TextUtils.isEmpty(text)) {
-            if (text.contains("[")||text.contains("]")||text.contains("】")||text.contains("【")) {
+            if (text.contains("[") || text.contains("]") || text.contains("】") || text.contains("【")) {
                 getView().toastShort(mContext.getString(R.string.name_address_no_contain_brackets));
                 return;
             }

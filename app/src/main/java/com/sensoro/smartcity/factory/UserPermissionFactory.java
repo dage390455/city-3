@@ -16,7 +16,7 @@ public class UserPermissionFactory {
         //
         eventLoginData.userId = userInfo.get_id();
         eventLoginData.userName = userInfo.getNickname();
-        eventLoginData.phone = userInfo.getContacts();
+        eventLoginData.phone = userInfo.getAccount().getContacts();
         eventLoginData.phoneId = phoneId;
         try {
             LogUtils.loge("logPresenter", "phoneId = " + phoneId);

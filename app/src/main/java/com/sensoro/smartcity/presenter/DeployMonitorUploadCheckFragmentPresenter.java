@@ -6,21 +6,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.sensoro.common.constant.ARouterConstants;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
-import com.sensoro.smartcity.activity.DeployMonitorCheckActivity;
-import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
-import com.sensoro.smartcity.activity.DeployMonitorWeChatRelationActivity;
-import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.imainviews.IDeployMonitorUploadCheckFragmentView;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnDestroy;
-import com.sensoro.common.model.DeployAnalyzerModel;
-import com.sensoro.common.model.DeployContactModel;
-import com.sensoro.smartcity.model.DeployResultModel;
 import com.sensoro.common.model.EventData;
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeployControlSettingData;
@@ -29,11 +19,21 @@ import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.DeployStationInfoRsp;
 import com.sensoro.common.server.response.DeviceDeployRsp;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
+import com.sensoro.smartcity.activity.DeployMonitorCheckActivity;
+import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
+import com.sensoro.smartcity.activity.DeployMonitorWeChatRelationActivity;
+import com.sensoro.smartcity.activity.DeployResultActivity;
+import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.imainviews.IDeployMonitorUploadCheckFragmentView;
+import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployContactModel;
+import com.sensoro.smartcity.model.DeployResultModel;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -51,11 +51,9 @@ import static com.sensoro.smartcity.constant.Constants.DEPLOY_RESULT_MODEL_CODE_
 import static com.sensoro.smartcity.constant.Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
 import static com.sensoro.smartcity.constant.Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
 import static com.sensoro.smartcity.constant.Constants.DEVICE_CONTROL_DEVICE_TYPES;
-import static com.sensoro.smartcity.constant.Constants.EXTRA_DEPLOY_ORIGIN_NAME_ADDRESS;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_DEPLOY_RESULT_MODEL;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_DEPLOY_TO_PHOTO;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_DEPLOY_TO_SN;
-import static com.sensoro.smartcity.constant.Constants.EXTRA_DEPLOY_TYPE;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_SETTING_DEPLOY_CONTACT;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_SETTING_DEPLOY_DEVICE_TYPE;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_SETTING_NAME_ADDRESS;
@@ -269,12 +267,6 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
         if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
             intent.putExtra(EXTRA_SETTING_NAME_ADDRESS, deployAnalyzerModel.nameAndAddress);
         }
-        intent.putExtra(EXTRA_DEPLOY_TO_SN, deployAnalyzerModel.sn);
-        intent.putExtra(EXTRA_DEPLOY_TYPE, deployAnalyzerModel.deployType);
-        if (!TextUtils.isEmpty(originName)) {
-            intent.putExtra(EXTRA_DEPLOY_ORIGIN_NAME_ADDRESS, originName);
-        }
-        intent.putExtra(EXTRA_DEPLOY_TYPE, deployAnalyzerModel.deployType);
         getView().startAC(intent);
     }
 
