@@ -268,6 +268,7 @@ public interface Constants {
     String PREFERENCE_SPLASH_LOGIN_DATA = "preference_main_login";
     String PREFERENCE_KEY_NAME = "preference_key_name";
     String PREFERENCE_KEY_SESSION_ID = "preference_key_session_id";
+    String PREFERENCE_KEY_USER_TOKEN = "preference_key_user_token";
     String PREFERENCE_KEY_PASSWORD = "preference_key_password";
 
     String PREFERENCE_KEY_START_TIME = "preference_key_start_time";

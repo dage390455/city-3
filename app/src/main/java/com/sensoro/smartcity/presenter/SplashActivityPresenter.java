@@ -56,8 +56,9 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
         try {
             RetrofitServiceHelper.getInstance().getBaseUrlType();
             String sessionID = RetrofitServiceHelper.getInstance().getSessionId();
+            String sessionToken = RetrofitServiceHelper.getInstance().getSessionToken();
             try {
-                LogUtils.loge("sessionID = " + sessionID);
+                LogUtils.loge("sessionID = " + sessionID + ",token = " + sessionToken);
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
             }
@@ -72,8 +73,8 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
                 openLogin();
                 return;
             }
-            //TODO 做版本校验
-            if (TextUtils.isEmpty(sessionID)) {
+            // 两个都为空时需要重新登录
+            if (TextUtils.isEmpty(sessionToken) && TextUtils.isEmpty(sessionID)) {
                 openLogin();
                 return;
             }

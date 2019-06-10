@@ -111,12 +111,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitServiceHelper {
     private static final long DEFAULT_TIMEOUT = 8 * 1000;
     private final String HEADER_SESSION_ID = "x-session-id";
+    private final String HEADER_SESSION_TOKEN = "Authorization";
     private final String HEADER_USER_AGENT = "User-Agent";
     private final String HEADER_INTERNATIONALIZATION_HEADER = "accept-language";
     private final String HEADER_CONTENT_TYPE = "Content-Type";
     private final String HEADER_ACCEPT = "Accept";
     private volatile int mUrlType = -1;
     private volatile String sessionId = null;
+    private volatile String token = null;
     public volatile String BASE_URL = RetrofitService.SCOPE_MASTER;//http://mocha-iot-api.mocha.server.sensoro.com-----http://iot-api
     private RetrofitService retrofitService;
     private final Retrofit.Builder builder;
@@ -164,13 +166,26 @@ public class RetrofitServiceHelper {
     }
 
     /**
+     * 获取当前的sessionToken（为空时从文件中获取）
+     *
+     * @return
+     */
+    public String getSessionToken() {
+        if (TextUtils.isEmpty(token)) {
+            token = PreferencesHelper.getInstance().getSessionToken();
+        }
+        return token;
+    }
+
+    /**
      * 保存sessionID
      *
      * @param sessionId
      */
-    public void saveSessionId(String sessionId) {
+    public void saveSessionId(String sessionId, String token) {
         this.sessionId = sessionId;
-        PreferencesHelper.getInstance().saveSessionId(sessionId);
+        this.token = token;
+        PreferencesHelper.getInstance().saveSessionId(sessionId, token);
     }
 
     /**
@@ -178,6 +193,7 @@ public class RetrofitServiceHelper {
      */
     public void clearLoginDataSessionId() {
         this.sessionId = null;
+        this.token = null;
         PreferencesHelper.getInstance().clearLoginDataSessionId();
     }
 
@@ -293,7 +309,9 @@ public class RetrofitServiceHelper {
 //                        .addHeader(HEADER_ACCEPT, "application/json")
 //                        .addHeader(HEADER_CONTENT_TYPE, "application/json;charset=UTF-8");
                 }
-
+                if (!TextUtils.isEmpty(getSessionToken())) {
+                    builder.header(HEADER_SESSION_TOKEN, "Bearer " + getSessionToken());
+                }
                 if (!TextUtils.isEmpty(getSessionId())) {
                     builder.header(HEADER_SESSION_ID, getSessionId());
                 }
@@ -380,6 +398,7 @@ public class RetrofitServiceHelper {
     public void cancelAllRsp() {
         RxApiManager.getInstance().cancelAll();
         this.sessionId = null;
+        this.token = null;
     }
 
     /**
@@ -1823,8 +1842,8 @@ public class RetrofitServiceHelper {
         return retrofitService.getNameplateBindDevices(page, count, nameplateId);
     }
 
-    public Observable<NameplateBindDeviceRsp> getNameplateUnbindDevices(Integer page, Integer count , String nameplateId,String searchText) {
-        return retrofitService.getNameplateUnbindDevices(page, count, nameplateId,searchText);
+    public Observable<NameplateBindDeviceRsp> getNameplateUnbindDevices(Integer page, Integer count, String nameplateId, String searchText) {
+        return retrofitService.getNameplateUnbindDevices(page, count, nameplateId, searchText);
     }
 
 
@@ -2008,7 +2027,7 @@ public class RetrofitServiceHelper {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(name)) {
-                jsonObject.put("name",name);
+                jsonObject.put("name", name);
             }
 
             if (tags != null && tags.size() > 0) {
@@ -2016,22 +2035,22 @@ public class RetrofitServiceHelper {
                 for (String tag : tags) {
                     jsonArray.put(tag);
                 }
-                jsonObject.put("tags",jsonArray);
+                jsonObject.put("tags", jsonArray);
 
             }
-            if(imgUrls != null && imgUrls.size() > 0){
+            if (imgUrls != null && imgUrls.size() > 0) {
                 JSONArray jsonArray = new JSONArray();
                 for (String imgUrl : imgUrls) {
                     jsonArray.put(imgUrl);
                 }
-                jsonObject.put("deployPics",jsonArray);
+                jsonObject.put("deployPics", jsonArray);
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        return retrofitService.doUploadDeployNameplate(nameplateId,requestBody);
+        return retrofitService.doUploadDeployNameplate(nameplateId, requestBody);
     }
 
     public Observable<ResponseResult<Integer>> doBindDevices(String nameplateId, ArrayList<NamePlateInfo> snList) {

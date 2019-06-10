@@ -265,16 +265,28 @@ public final class PreferencesHelper implements Constants {
         }
     }
 
-    public boolean saveSessionId(String sessionId) {
-        if (TextUtils.isEmpty(sessionId)) {
+    public boolean saveSessionId(String sessionId, String token) {
+        if (TextUtils.isEmpty(sessionId) && TextUtils.isEmpty(token)) {
             return false;
         }
         SharedPreferences sp = ContextUtils.getContext().getSharedPreferences(PREFERENCE_LOGIN_ID, Context
                 .MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString(PREFERENCE_KEY_SESSION_ID, sessionId);
+        if (!TextUtils.isEmpty(sessionId)) {
+            editor.putString(PREFERENCE_KEY_SESSION_ID, sessionId);
+        }
+        if (!TextUtils.isEmpty(token)) {
+            editor.putString(PREFERENCE_KEY_USER_TOKEN, token);
+        }
         editor.apply();
         return true;
+    }
+
+    public String getSessionToken() {
+        SharedPreferences sp = ContextUtils.getContext().getSharedPreferences(PREFERENCE_LOGIN_ID, Context
+                .MODE_PRIVATE);
+        return sp.getString(PREFERENCE_KEY_USER_TOKEN, null);
+
     }
 
     public String getSessionId() {

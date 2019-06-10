@@ -145,7 +145,9 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
             @Override
             public ObservableSource<DevicesMergeTypesRsp> apply(UserAccountControlRsp userAccountControlRsp) throws Exception {
                 UserInfo userInfo = userAccountControlRsp.getData();
-                RetrofitServiceHelper.getInstance().saveSessionId(userInfo.getSessionID());
+                String sessionID = userInfo.getSessionID();
+                String token = userInfo.getToken();
+                RetrofitServiceHelper.getInstance().saveSessionId(sessionID, token);
                 //
                 eventLoginData = UserPermissionFactory.createLoginData(userInfo, phoneId);
                 return RetrofitServiceHelper.getInstance().getDevicesMergeTypes();
@@ -297,7 +299,8 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
             public ObservableSource<DevicesMergeTypesRsp> apply(LoginRsp loginRsp) throws Exception {
                 //
                 String sessionID = loginRsp.getData().getSessionID();
-                RetrofitServiceHelper.getInstance().saveSessionId(sessionID);
+                String token = loginRsp.getData().getToken();
+                RetrofitServiceHelper.getInstance().saveSessionId(sessionID,token);
                 UserInfo userInfo = loginRsp.getData();
                 eventLoginData = UserPermissionFactory.createLoginData(userInfo, phoneId);
                 PreferencesHelper.getInstance().saveUserData(eventLoginData);

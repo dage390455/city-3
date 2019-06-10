@@ -19,6 +19,7 @@ public class NameplateApp extends BaseApplication {
 
     private void login() {
         PreferencesHelper.getInstance().getSessionId();
+        PreferencesHelper.getInstance().getSessionToken();
         PreferencesHelper.getInstance().saveMyBaseUrl("city-dev-api.sensoro.com/");
         RetrofitServiceHelper.getInstance().saveBaseUrlType(5);
         RetrofitServiceHelper.getInstance().getBaseUrlType();
@@ -27,7 +28,8 @@ public class NameplateApp extends BaseApplication {
             @Override
             public void onCompleted(LoginRsp loginRsp) {
                 String sessionID = loginRsp.getData().getSessionID();
-                RetrofitServiceHelper.getInstance().saveSessionId(sessionID);
+                String token = loginRsp.getData().getToken();
+                RetrofitServiceHelper.getInstance().saveSessionId(sessionID,token);
                 //
 //                UserInfo userInfo = loginRsp.getData();
 //                EventLoginData loginData = UserPermissionFactory.createLoginData(userInfo, phoneId);

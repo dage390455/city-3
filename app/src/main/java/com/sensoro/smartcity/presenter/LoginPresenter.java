@@ -136,7 +136,8 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                 @Override
                 public void onCompleted(LoginRsp loginRsp) {
                     String sessionID = loginRsp.getData().getSessionID();
-                    RetrofitServiceHelper.getInstance().saveSessionId(sessionID);
+                    String token = loginRsp.getData().getToken();
+                    RetrofitServiceHelper.getInstance().saveSessionId(sessionID,token);
                     PreferencesHelper.getInstance().saveLoginNamePwd(account, pwd);
                     //
                     UserInfo userInfo = loginRsp.getData();
