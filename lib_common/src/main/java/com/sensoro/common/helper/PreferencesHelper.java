@@ -61,13 +61,24 @@ public final class PreferencesHelper implements Constants {
         //
         //String loginDataJson = RetrofitServiceHelper.INSTANCE.getGson().toJson(eventLoginData);
         //EventLoginData eventLoginData1 = RetrofitServiceHelper.INSTANCE.getGson().fromJson(loginDataJson, EventLoginData.class);
+        if (!TextUtils.isEmpty(eventLoginData.userId)) {
+            editor.putString(EXTRA_USER_ID, eventLoginData.userId);
+        }
+        if (!TextUtils.isEmpty(eventLoginData.userName)) {
+            editor.putString(EXTRA_USER_NAME, eventLoginData.userName);
+        }
+        if (!TextUtils.isEmpty(eventLoginData.phone)) {
+            editor.putString(EXTRA_PHONE, eventLoginData.phone);
+        }
+        if (!TextUtils.isEmpty(eventLoginData.phoneId)) {
+            editor.putString(EXTRA_PHONE_ID, eventLoginData.phoneId);
+        }
 
-        editor.putString(EXTRA_USER_ID, eventLoginData.userId);
-        editor.putString(EXTRA_USER_NAME, eventLoginData.userName);
-        editor.putString(EXTRA_PHONE, eventLoginData.phone);
-        editor.putString(EXTRA_PHONE_ID, eventLoginData.phoneId);
         //TODO character
-        editor.putString(EXTRA_USER_ROLES, eventLoginData.roles);
+        if (!TextUtils.isEmpty(eventLoginData.roles)) {
+            editor.putString(EXTRA_USER_ROLES, eventLoginData.roles);
+        }
+        //
         editor.putBoolean(EXTRA_IS_SPECIFIC, eventLoginData.isSupperAccount);
         editor.putBoolean(EXTRA_GRANTS_HAS_STATION, eventLoginData.hasStation);
         editor.putBoolean(EXTRA_GRANTS_HAS_CONTRACT, eventLoginData.hasContract);
@@ -764,9 +775,9 @@ public final class PreferencesHelper implements Constants {
         } else {
             ArrayList<SecurityRisksTagModel> list = new ArrayList<>();
             String[] split = location.split("#");
-            for (int i = 0; i < split.length; i++) {
+            for (String s : split) {
                 SecurityRisksTagModel model = new SecurityRisksTagModel();
-                model.tag = split[i];
+                model.tag = s;
                 list.add(model);
             }
             return list;
@@ -775,9 +786,11 @@ public final class PreferencesHelper implements Constants {
 
     public void saveSecurityRiskLocationTag(ArrayList<SecurityRisksTagModel> list) {
         StringBuilder sb = new StringBuilder();
-        for (SecurityRisksTagModel model : list) {
-            sb.append(model.tag);
-            sb.append("#");
+        if (list != null) {
+            for (SecurityRisksTagModel model : list) {
+                sb.append(model.tag);
+                sb.append("#");
+            }
         }
         ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_SECURITY_RISK_TAG, Context.MODE_PRIVATE)
                 .edit().putString(Constants.PREFERENCE_KEY_SECURITY_RISK_LOCATION, sb.toString()).apply();
@@ -831,9 +844,9 @@ public final class PreferencesHelper implements Constants {
         } else {
             ArrayList<SecurityRisksTagModel> list = new ArrayList<>();
             String[] split = location.split("#");
-            for (int i = 0; i < split.length; i++) {
+            for (String s : split) {
                 SecurityRisksTagModel model = new SecurityRisksTagModel();
-                model.tag = split[i];
+                model.tag = s;
                 list.add(model);
             }
             return list;
@@ -842,9 +855,11 @@ public final class PreferencesHelper implements Constants {
 
     public void saveSecurityRiskBehaviorTag(ArrayList<SecurityRisksTagModel> list) {
         StringBuilder sb = new StringBuilder();
-        for (SecurityRisksTagModel model : list) {
-            sb.append(model.tag);
-            sb.append("#");
+        if (list != null) {
+            for (SecurityRisksTagModel model : list) {
+                sb.append(model.tag);
+                sb.append("#");
+            }
         }
         ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_SECURITY_RISK_TAG, Context.MODE_PRIVATE)
                 .edit().putString(Constants.PREFERENCE_KEY_SECURITY_RISK_BEHAVIOR, sb.toString()).apply();
