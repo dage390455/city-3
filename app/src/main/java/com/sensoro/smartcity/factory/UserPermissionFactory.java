@@ -16,7 +16,6 @@ public class UserPermissionFactory {
         //
         eventLoginData.userId = userInfo.get_id();
         eventLoginData.userName = userInfo.getNickname();
-        eventLoginData.phone = userInfo.getContacts();
         eventLoginData.phoneId = phoneId;
         try {
             LogUtils.loge("logPresenter", "phoneId = " + phoneId);
@@ -68,13 +67,16 @@ public class UserPermissionFactory {
         //
         UserInfo.Account account = userInfo.getAccount();
         if (account != null) {
+            String contacts = account.getContacts();
             String id = account.getId();
             boolean totpEnable = account.isTotpEnable();
             try {
-                LogUtils.loge("id = " + id + ",totpEnable = " + totpEnable);
+                LogUtils.loge("login--->>> id = " + id + ",totpEnable = " + totpEnable + ",phone = " + contacts);
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
             }
+            eventLoginData.phone = contacts;
+
             if (totpEnable) {
                 eventLoginData.needAuth = true;
             }

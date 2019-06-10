@@ -352,7 +352,6 @@ implements SecurityRiskContentTouchHelper.ItemTouchHelperAdapter {
 
         SecurityRisksContentHolder(View itemView) {
             super(itemView);
-            itemView.findViewById(R.id.tv_location_adapter_security_risks);
             ButterKnife.bind(this, itemView);
         }
     }

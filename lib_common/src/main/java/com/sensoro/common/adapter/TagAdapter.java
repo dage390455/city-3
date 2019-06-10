@@ -46,7 +46,6 @@ public class TagAdapter extends RecyclerView.
     @Override
     public TagHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_adapter_text_view, parent, false);
-
         return new TagHolder(view);
     }
 

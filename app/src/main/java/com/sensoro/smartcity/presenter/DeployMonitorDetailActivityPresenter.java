@@ -749,8 +749,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
             intent.putExtra(EXTRA_SETTING_NAME_ADDRESS, deployAnalyzerModel.nameAndAddress);
         }
-        intent.putExtra(EXTRA_DEPLOY_TO_SN, deployAnalyzerModel.sn);
-        intent.putExtra(EXTRA_DEPLOY_TYPE, deployAnalyzerModel.deployType);
         getView().startAC(intent);
     }
 
@@ -1547,7 +1545,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     }
 
-    public void initData(Context context,Intent intent) {
+    public void initData(Context context, Intent intent) {
         mContext = (Activity) context;
         mHandler = new Handler(Looper.getMainLooper());
         onCreate();
