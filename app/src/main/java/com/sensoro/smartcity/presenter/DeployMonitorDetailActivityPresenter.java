@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -18,6 +19,7 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.handler.HandlerDeployCheck;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
@@ -47,12 +49,10 @@ import com.sensoro.libbleserver.ble.entity.SensoroDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMapENActivity;
 import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
 import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
-import com.sensoro.smartcity.activity.DeployMonitorDeployPicActivity;
 import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
 import com.sensoro.smartcity.activity.DeployMonitorWeChatRelationActivity;
 import com.sensoro.smartcity.activity.DeployRepairInstructionActivity;
@@ -65,14 +65,14 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.DeoloyCheckPointConstants;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
-import com.sensoro.smartcity.model.DeployAnalyzerModel;
-import com.sensoro.smartcity.model.DeployContactModel;
+import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.smartcity.model.DeployResultModel;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.smartcity.widget.popup.UpLoadPhotosUtils;
+import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -761,20 +761,27 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     }
 
     public void doTag() {
-        Intent intent = new Intent(mContext, DeployDeviceTagActivity.class);
+        Bundle bundle = new Bundle();
         if (deployAnalyzerModel.tagList.size() > 0) {
-            intent.putStringArrayListExtra(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
+            bundle.putStringArrayList(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
         }
-        getView().startAC(intent);
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_TAG,bundle,mContext);
     }
 
     public void doSettingPhoto() {
-        Intent intent = new Intent(mContext, DeployMonitorDeployPicActivity.class);
+        Bundle bundle = new Bundle();
         if (getRealImageSize() > 0) {
-            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
+            bundle.putSerializable(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
         }
-        intent.putExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
-        getView().startAC(intent);
+        bundle.putString(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_PIC,bundle,mContext);
+
+//        Intent intent = new Intent(mContext, DeployMonitorDeployPicActivity.class);
+//        if (getRealImageSize() > 0) {
+//            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
+//        }
+//        intent.putExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
+//        getView().startAC(intent);
     }
 
     public void doDeployMap() {

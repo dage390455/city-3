@@ -95,6 +95,13 @@
             android:textSize="14dp"
             />
 
+        <View
+            android:id="@+id/view_divider_ac_deploy_nameplate_add_sensor"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/view_divider_height"
+            android:background="@color/c_dfdfdf"
+            android:visibility="gone"
+            />
         <include layout="@layout/item_include_refresh_layout"/>
     </LinearLayout>
 

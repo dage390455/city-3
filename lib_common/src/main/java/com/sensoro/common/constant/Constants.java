@@ -417,6 +417,14 @@ public interface Constants {
 
     int EVENT_DATA_UPDATENAMEPALTELIST = 0x58;
 
+    int EVENT_DATA_DEPLOY_ASSOCIATE_SENSOR_FROM_LIST = 0x59;
+
+    int EVENT_DATA_DEPLOY_BIND_LIST = 0x60;
+
+    int TYPE_SCAN_NAMEPLATE_ASSOCIATEDEVICE = 0x61;
+
+    int EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL = 0x62;
+
     List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{
         add("elec_fire");
         add("smoke");
@@ -458,5 +466,10 @@ public interface Constants {
     String PREFERENCE_SECURITY_RISK_TAG = "preference_security_risk_tag";
     String PREFERENCE_KEY_SECURITY_RISK_LOCATION = "preference_key_security_risk_location";
     String PREFERENCE_KEY_SECURITY_RISK_BEHAVIOR = "preference_key_security_risk_behavior";
+    //铭牌部署 关联传感器的来源
+    String EXTRA_ASSOCIATION_SENSOR_ORIGIN_TYPE = "extra_association_sensor_origin_type";
+    String EXTRA_ASSOCIATION_SENSOR_BIND_LIST = "extra_association_sensor_bind_list";
+    String EXTRA_ASSOCIATION_SENSOR_ADD_BIND_LIST = "extra_association_sensor_add_bind_list";
+    String EXTRA_ASSOCIATION_SENSOR_NAMEPLATE_ID = "extra_association_sensor_nameplate_id";
 }
 

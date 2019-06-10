@@ -11,7 +11,7 @@ public class DeployPicInfo {
     @Expose(serialize = false, deserialize = false)
     public ImageItem photoItem;
 
-    public boolean isRequired;
+    public Boolean isRequired;
 
     public DeployPicInfo() {
     }

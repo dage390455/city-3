@@ -2,8 +2,10 @@ package com.sensoro.smartcity.presenter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnDestroy;
@@ -18,23 +20,21 @@ import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.DeployStationInfoRsp;
 import com.sensoro.common.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
 import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
 import com.sensoro.smartcity.activity.DeployMonitorCheckActivity;
-import com.sensoro.smartcity.activity.DeployMonitorDeployPicActivity;
 import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
 import com.sensoro.smartcity.activity.DeployMonitorWeChatRelationActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorUploadCheckFragmentView;
-import com.sensoro.smartcity.model.DeployAnalyzerModel;
-import com.sensoro.smartcity.model.DeployContactModel;
+import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.smartcity.model.DeployResultModel;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.smartcity.widget.popup.UpLoadPhotosUtils;
+import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -271,20 +271,27 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
     }
 
     public void doTag() {
-        Intent intent = new Intent(mActivity, DeployDeviceTagActivity.class);
+        Bundle bundle = new Bundle();
         if (deployAnalyzerModel.tagList.size() > 0) {
-            intent.putStringArrayListExtra(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
+            bundle.putStringArrayList(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
         }
-        getView().startAC(intent);
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_TAG,bundle,mActivity);
     }
 
     public void doSettingPhoto() {
-        Intent intent = new Intent(mActivity, DeployMonitorDeployPicActivity.class);
+        Bundle bundle = new Bundle();
         if (getRealImageSize() > 0) {
-            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
+            bundle.putSerializable(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
         }
-        intent.putExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
-        getView().startAC(intent);
+        bundle.putString(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_PIC,bundle,mActivity);
+
+//        Intent intent = new Intent(mActivity, DeployMonitorDeployPicActivity.class);
+//        if (getRealImageSize() > 0) {
+//            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
+//        }
+//        intent.putExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
+//        getView().startAC(intent);
     }
 
     private int getRealImageSize() {

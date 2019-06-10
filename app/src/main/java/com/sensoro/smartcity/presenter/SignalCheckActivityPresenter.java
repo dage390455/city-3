@@ -22,7 +22,7 @@ import com.sensoro.common.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISignalCheckActivityView;
 import com.sensoro.common.iwidget.IOnStart;
-import com.sensoro.smartcity.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.SignalData;
 import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.common.utils.DateUtil;

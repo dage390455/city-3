@@ -35,7 +35,7 @@ import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeployDeviceDetailAlarmContactAdapter;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
-import com.sensoro.smartcity.model.DeployContactModel;
+import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.smartcity.presenter.DeployMonitorDetailActivityPresenter;
 import com.sensoro.smartcity.util.AppUtils;
 
@@ -45,7 +45,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-//@Route(path = ARouterConstants.activity_deploy_detail)
+//@Route(path = ARouterConstants.ACTIVITY_NAMEPLATE_LIST)
 public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDetailActivityView, DeployMonitorDetailActivityPresenter>
         implements IDeployMonitorDetailActivityView, View.OnClickListener {
 
@@ -590,7 +590,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     public void setUploadBtnStatus(boolean isEnable) {
         mPresenter.updateCheckTipText(isEnable);
         acDeployDeviceDetailTvUpload.setEnabled(isEnable);
-        acDeployDeviceDetailTvUpload.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_solid_df_corner);
+        acDeployDeviceDetailTvUpload.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.filter_corner);
     }
 
     @Override

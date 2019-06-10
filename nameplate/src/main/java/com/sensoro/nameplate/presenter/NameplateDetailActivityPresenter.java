@@ -3,9 +3,12 @@ package com.sensoro.nameplate.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
@@ -17,7 +20,6 @@ import com.sensoro.common.server.response.NameplateBindDeviceRsp;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.nameplate.IMainViews.INameplateDetailActivityView;
 import com.sensoro.nameplate.R;
-import com.sensoro.nameplate.activity.DeployNameplateAddSensorFromListActivity;
 import com.sensoro.nameplate.activity.EditNameplateDetailActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -33,6 +35,7 @@ import io.reactivex.schedulers.Schedulers;
 import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.common.constant.Constants.DIRECTION_UP;
 import static com.sensoro.common.constant.Constants.EVENT_DATA_UPDATENAMEPALTELIST;
+import static com.sensoro.common.constant.Constants.EXTRA_SCAN_ORIGIN_TYPE;
 import static com.sensoro.common.constant.Constants.EXTRA_SETTING_TAG_LIST;
 
 public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDetailActivityView> {
@@ -47,8 +50,8 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
         int code = eventData.code;
         if (code == EVENT_DATA_UPDATENAMEPALTELIST) {
             getNameplateDetail();
-
-
+        } else if (code == Constants.EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL) {
+            requestData(DIRECTION_DOWN);
         }
     }
 
@@ -95,8 +98,10 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
             public void onCompleted(ResponseResult<Integer> result) {
 
                 if (result.getData() > 0) {
+                    plateInfos.remove(pos);
 
                     getView().updateNamePlateStatus(pos);
+                    EventBus.getDefault().post(new EventData(EVENT_DATA_UPDATENAMEPALTELIST));
                 }
                 getView().dismissProgressDialog();
 
@@ -150,7 +155,7 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
                 if (isAttachedView()) {
                     getView().showProgressDialog();
                 }
-                RetrofitServiceHelper.getInstance().getNameplateBindDevices(20, cur_page, nameplateId).subscribeOn(Schedulers.io())
+                RetrofitServiceHelper.getInstance().getNameplateBindDevices(cur_page, 20, nameplateId).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<NameplateBindDeviceRsp>(this) {
                     @Override
                     public void onCompleted(NameplateBindDeviceRsp deviceCameraListRsp) {
@@ -181,7 +186,7 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
                 if (isAttachedView()) {
                     getView().showProgressDialog();
                 }
-                RetrofitServiceHelper.getInstance().getNameplateBindDevices(20, cur_page, nameplateId).subscribeOn(Schedulers.io())
+                RetrofitServiceHelper.getInstance().getNameplateBindDevices(cur_page, 20, nameplateId).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<NameplateBindDeviceRsp>(this) {
                     @Override
                     public void onCompleted(NameplateBindDeviceRsp deviceCameraListRsp) {
@@ -252,10 +257,18 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
     public void doNesSensor(int position) {
         switch (position) {
             case 0:
+                Bundle bundle1 = new Bundle();
+                bundle1.putInt(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATEDEVICE);
+                bundle1.putString("nameplateId", nameplateId);
+
+                startActivity(ARouterConstants.ACTIVITY_SCAN, bundle1, mContext);
+
                 break;
             case 1:
-                Intent intent = new Intent(mContext, DeployNameplateAddSensorFromListActivity.class);
-                getView().startAC(intent);
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.EXTRA_ASSOCIATION_SENSOR_ORIGIN_TYPE, "nameplate_detail");
+                bundle.putString(Constants.EXTRA_ASSOCIATION_SENSOR_NAMEPLATE_ID, nameplateId);
+                startActivity(ARouterConstants.ACTIVITY_DEPLOY_ASSOCIATE_SENSOR_FROM_LIST, bundle, mContext);
                 break;
         }
 

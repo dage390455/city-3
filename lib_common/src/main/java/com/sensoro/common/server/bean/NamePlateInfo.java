@@ -15,9 +15,14 @@ public class NamePlateInfo implements Serializable {
     private String _id;
     private String orientationName;
     private String deviceType;
+    //标识是否已经部署过
+    private Boolean deployFlag;
+    //关联传感器的数量
+    private Integer devicesCount;
 
     public String deviceTypeName;
     public String iconUrl;
+    public boolean isCheck;
 
     private ArrayList<String> tags;
 
@@ -29,6 +34,21 @@ public class NamePlateInfo implements Serializable {
         this.createTime = createTime;
     }
 
+    public Boolean getDeployFlag() {
+        return deployFlag;
+    }
+
+    public void setDeployFlag(Boolean deployFlag) {
+        this.deployFlag = deployFlag;
+    }
+
+    public Integer getDevicesCount() {
+        return devicesCount;
+    }
+
+    public void setDevicesCount(Integer devicesCount) {
+        this.devicesCount = devicesCount;
+    }
 
     public String getSn() {
         return sn;
@@ -108,5 +128,13 @@ public class NamePlateInfo implements Serializable {
 
     public void setIconUrl(String iconUrl) {
         this.iconUrl = iconUrl;
+    }
+
+    public boolean isDeployFlag() {
+        return deployFlag;
+    }
+
+    public void setDeployFlag(boolean deployFlag) {
+        this.deployFlag = deployFlag;
     }
 }

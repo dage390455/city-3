@@ -4,6 +4,7 @@ import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
 import com.sensoro.common.server.bean.NamePlateInfo;
+import com.sensoro.nameplate.model.AddSensorModel;
 
 import java.util.List;
 

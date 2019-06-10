@@ -13,7 +13,7 @@ import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployResultActivityView;
-import com.sensoro.smartcity.model.DeployContactModel;
+import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.smartcity.model.DeployResultModel;
 import com.sensoro.common.utils.DateUtil;
 

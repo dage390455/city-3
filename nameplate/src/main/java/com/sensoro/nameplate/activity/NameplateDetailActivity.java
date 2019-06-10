@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,12 +17,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.bean.NamePlateInfo;
@@ -45,8 +50,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 
+@Route(path = ARouterConstants.ACTIVITY_NAMEPLATE_DETAIL)
 public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivityView, NameplateDetailActivityPresenter>
         implements INameplateDetailActivityView {
     @BindView(R2.id.include_text_title_imv_arrows_left)
@@ -71,14 +79,23 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     TouchRecycleView trvNameplateTag;
     @BindView(R2.id.tv_nameplate_associated_sensor)
     TextView tvNameplateAssociatedSensor;
-    @BindView(R2.id.rv_nameplate_associated_sensor)
+    @BindView(R2.id.rv_list_include)
     RecyclerView rvNameplateAssociatedSensor;
     @BindView(R2.id.tv_nameplate_associated_new_sensor)
     TextView tvNameplateAssociatedNewSensor;
 
-    @BindView(R2.id.refreshLayout)
-
+    @BindView(R2.id.refreshLayout_include)
     SmartRefreshLayout refreshLayout;
+    @BindView(R2.id.no_content)
+    ImageView noContent;
+    @BindView(R2.id.no_content_tip)
+    TextView noContentTip;
+    @BindView(R2.id.ic_no_content)
+    LinearLayout icNoContent;
+    @BindView(R2.id.return_top_include)
+    ImageView returnTopInclude;
+    @BindView(R2.id.view_divider_ac_nameplate_associated_sensor)
+    View viewDividerNameplateAssociatedNewSensor;
 
     private AddedSensorAdapter mAddedSensorAdapter;
     private TagAdapter tagAdapter;
@@ -86,6 +103,7 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     private TipDialogUtils mDeleteDialog;
     private QrCodeDialogUtils dialogUtils;
     private ProgressUtils mProgressUtils;
+    private Animation returnTopAnimation;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -98,6 +116,11 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
         dialogUtils = new QrCodeDialogUtils(mActivity);
         options.add("扫码关联");
         options.add("传感器列表中关联");
+
+        returnTopAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.return_top_in_anim);
+        returnTopInclude.setAnimation(returnTopAnimation);
+        returnTopInclude.setVisibility(GONE);
+
         initNormalDialog();
         initTag();
         initRvAddedSensorList();
@@ -109,7 +132,7 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
-                mPresenter.requestData(Constants.DIRECTION_DOWN);
+                mPresenter.requestData(DIRECTION_DOWN);
             }
         });
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -149,6 +172,35 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
         rvNameplateAssociatedSensor.setLayoutManager(manager);
         rvNameplateAssociatedSensor.setAdapter(mAddedSensorAdapter);
 
+        rvNameplateAssociatedSensor.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (manager.findFirstVisibleItemPosition() > 4) {
+                    if (newState == 0) {
+                        returnTopInclude.setVisibility(VISIBLE);
+                        if (returnTopAnimation != null && returnTopAnimation.hasEnded()) {
+                            returnTopInclude.startAnimation(returnTopAnimation);
+                        }
+                    } else {
+                        returnTopInclude.setVisibility(GONE);
+                    }
+                } else {
+                    returnTopInclude.setVisibility(GONE);
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (manager.findFirstVisibleItemPosition() == 0 && rvNameplateAssociatedSensor.getChildAt(0).getTop() == 0) {
+                    viewDividerNameplateAssociatedNewSensor.setVisibility(GONE);
+                }else{
+                    viewDividerNameplateAssociatedNewSensor.setVisibility(VISIBLE);
+                }
+            }
+        });
+
         mAddedSensorAdapter.setOnDeleteClickListener(new AddedSensorAdapter.onDeleteClickListenre() {
             @Override
             public void onDeleteClick(int position) {
@@ -187,10 +239,8 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     public void onViewClicked(View view) {
         int id = view.getId();
         if (R.id.include_text_title_imv_arrows_left == id) {
-
             finish();
         } else if (R.id.tv_nameplate_qrcode == id) {
-
 
             dialogUtils.show();
         } else if (R.id.tv_nameplate_edit == id) {
@@ -239,7 +289,6 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
             mDeleteDialog.destory();
         }
     }
-
 
 
     @Override
@@ -327,7 +376,9 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
 
         mAddedSensorAdapter.getmList().remove(pos);
 
-        mAddedSensorAdapter.notifyItemRemoved(pos);
+        mAddedSensorAdapter.notifyDataSetChanged();
+//        mAddedSensorAdapter.notifyItemRangeChanged(0, mAddedSensorAdapter.getmList().size());
+
         tvNameplateAssociatedSensor.setText(getResources().getString(R.string.association_sensor) + mAddedSensorAdapter.getmList().size());
 
     }

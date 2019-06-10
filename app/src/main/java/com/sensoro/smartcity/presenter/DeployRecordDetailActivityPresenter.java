@@ -11,7 +11,7 @@ import com.sensoro.smartcity.activity.DeployMapENActivity;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
-import com.sensoro.smartcity.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.server.bean.DeployControlSettingData;
 import com.sensoro.common.server.bean.DeployRecordInfo;
 import com.sensoro.common.server.bean.ScenesData;

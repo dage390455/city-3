@@ -15,11 +15,13 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.widgets.ProgressUtils;
@@ -40,6 +42,7 @@ import butterknife.OnClick;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+@Route(path = ARouterConstants.ACTIVITY_DEPLOY_ASSOCIATE_SENSOR)
 public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNameplateAddSensorActivityView,
         DeployNameplateAddSensorActivityPresenter> implements IDeployNameplateAddSensorActivityView {
     @BindView(R2.id.include_text_title_tv_cancel)
@@ -52,6 +55,8 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
     View includeTextTitleDivider;
     @BindView(R2.id.include_text_title_cl_root)
     ConstraintLayout includeTextTitleClRoot;
+    @BindView(R2.id.view_divider_ac_deploy_nameplate_add_sensor)
+    View viewDividerAcDeployNameplateAddSensor;
     @BindView(R2.id.ll_from_List_ac_deploy_nameplate_add_sensor)
     LinearLayout llFromListAcDeployNameplateAddSensor;
     @BindView(R2.id.ll_from_scan_ac_deploy_nameplate_add_sensor)
@@ -93,24 +98,28 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
         returnTopInclude.setAnimation(returnTopAnimation);
         returnTopInclude.setVisibility(GONE);
 
+        setBindDeviceSize(0);
+
         initSmartRefresh();
 
         initRvAddedSensorList();
     }
 
     private void initSmartRefresh() {
+        //本来说这里有上拉加载下拉刷新，但是部署的时候不需要了，所以，这里也不改了 只禁用掉相应的功能
         refreshLayoutInclude.setEnableAutoLoadMore(false);//开启自动加载功能（非必须）
-        refreshLayoutInclude.setEnableLoadMore(true);
+        refreshLayoutInclude.setEnableLoadMore(false);
+        refreshLayoutInclude.setEnableRefresh(false);
         refreshLayoutInclude.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
-                mPresenter.getBindDevice(Constants.DIRECTION_DOWN);
+//                mPresenter.getBindDevice(Constants.DIRECTION_DOWN);
             }
         });
         refreshLayoutInclude.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                mPresenter.getBindDevice(Constants.DIRECTION_UP);
+//                mPresenter.getBindDevice(Constants.DIRECTION_UP);
             }
         });
 
@@ -128,7 +137,7 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
         mAddedSensorAdapter.setOnDeleteClickListener(new AddedSensorAdapter.onDeleteClickListenre() {
             @Override
             public void onDeleteClick(int position) {
-                toastShort("点击了");
+                mPresenter.doDeleteItem(position);
             }
         });
 
@@ -155,7 +164,11 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
+                if (manager.findFirstVisibleItemPosition() == 0 && rvAddedListAcDeployNameplateAddSensor.getChildAt(0).getTop() == 0) {
+                    viewDividerAcDeployNameplateAddSensor.setVisibility(GONE);
+                }else{
+                    viewDividerAcDeployNameplateAddSensor.setVisibility(VISIBLE);
+                }
             }
         });
 
@@ -175,11 +188,11 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
         if (id == R.id.include_text_title_tv_cancel) {
             finishAc();
         } else if (id == R.id.include_text_title_tv_subtitle) {
-
+            mPresenter.doSave();
         } else if (id == R.id.ll_from_List_ac_deploy_nameplate_add_sensor) {
             mPresenter.doAddFromList();
         } else if (id == R.id.ll_from_scan_ac_deploy_nameplate_add_sensor) {
-
+            mPresenter.doAddFromScan();
         }else if (id == R.id.return_top_include) {
             rvAddedListAcDeployNameplateAddSensor.smoothScrollToPosition(0);
             returnTopInclude.setVisibility(GONE);
@@ -196,7 +209,10 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
     @Override
     public void updateBindData(List<NamePlateInfo> mBindList) {
         mAddedSensorAdapter.updateData(mBindList);
-        setNoContentVisible(mBindList == null || mBindList.size() < 1);
+//        setNoContentVisible(mBindList == null || mBindList.size() < 1);
+        if (mBindList != null) {
+            setBindDeviceSize(mBindList.size());
+        }
     }
 
     @Override
