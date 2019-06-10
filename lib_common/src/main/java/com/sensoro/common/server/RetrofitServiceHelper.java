@@ -2004,7 +2004,7 @@ public class RetrofitServiceHelper {
         return retrofitService.getDeployCameraInfo(requestBody);
     }
 
-    public Observable<DeployNameplateRsp> doUploadDeployNameplate(@NonNull String nameplateId, String name, List<String> tags, ArrayList<String> imgUrls) {
+    public Observable<DeployNameplateRsp> doUploadDeployNameplate(@NonNull String nameplateId, String name, List<String> tags, ArrayList<String> imgUrls, ArrayList<NamePlateInfo> bindList) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(name)) {
@@ -2025,6 +2025,13 @@ public class RetrofitServiceHelper {
                     jsonArray.put(imgUrl);
                 }
                 jsonObject.put("deployPics",jsonArray);
+            }
+            if (bindList != null && bindList.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (NamePlateInfo info : bindList) {
+                    jsonArray.put(info.getSn());
+                }
+                jsonObject.put("snList", jsonArray);
             }
 
         } catch (JSONException e) {

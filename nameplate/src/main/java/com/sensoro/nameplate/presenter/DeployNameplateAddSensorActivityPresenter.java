@@ -153,6 +153,22 @@ public class DeployNameplateAddSensorActivityPresenter extends BasePresenter<IDe
             getView().updateBindData(mBindList);
 
 
+        } else if (eventData.code == Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY) {
+
+            if (eventData.data instanceof NamePlateInfo) {
+                NamePlateInfo info = (NamePlateInfo) eventData.data;
+                for (NamePlateInfo namePlateInfo : mBindList) {
+                    if (namePlateInfo.getSn().equals(info.getSn())) {
+                        getView().toastShort("该设备已添加");
+                        return;
+                    }
+                }
+                info.isCheck = true;
+                mBindList.add(info);
+                dealData(mBindList);
+                getView().updateBindData(mBindList);
+            }
+
         }
     }
 
@@ -187,7 +203,7 @@ public class DeployNameplateAddSensorActivityPresenter extends BasePresenter<IDe
         if (!TextUtils.isEmpty(mNameplateId)) {
 
             Bundle bundle1 = new Bundle();
-            bundle1.putInt(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATEDEVICE);
+            bundle1.putInt(EXTRA_SCAN_ORIGIN_TYPE, Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY);
             bundle1.putString("nameplateId", mNameplateId);
 
             startActivity(ARouterConstants.ACTIVITY_SCAN, bundle1, mActivity);
