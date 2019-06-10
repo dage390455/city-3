@@ -12,7 +12,9 @@ import android.text.TextUtils;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.iwidget.IOnCreate;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
@@ -20,9 +22,7 @@ import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployManualActivity;
 import com.sensoro.smartcity.analyzer.DeployAnalyzerUtils;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IScanActivityView;
-import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import static android.content.Context.VIBRATOR_SERVICE;
-import static com.sensoro.common.constant.Constants.EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL;
 
 public class ScanActivityPresenter extends BasePresenter<IScanActivityView> implements IOnCreate, Constants,
         MediaPlayer.OnErrorListener {
@@ -57,7 +56,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
 
     private void updateTitle() {
         switch (scanType) {
-            case com.sensoro.common.constant.Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATEDEVICE:
+            case Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATEDEVICE:
 
             case TYPE_SCAN_DEPLOY_STATION:
             case TYPE_SCAN_DEPLOY_DEVICE:
@@ -145,7 +144,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
         getView().showProgressDialog();
 
 
-        if (scanType == com.sensoro.common.constant.Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATEDEVICE) {
+        if (scanType == Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATEDEVICE) {
 
             String nameplateId = mContext.getIntent().getStringExtra("nameplateId");
 
@@ -191,7 +190,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                         } else {
                             getView().toastShort("error");
                         }
-                    } else if (scanType == com.sensoro.common.constant.Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY) {
+                    } else if (scanType == Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY) {
                         Serializable serializableExtra = intent.getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
 
                         if (null != serializableExtra && (serializableExtra instanceof DeployAnalyzerModel)) {
