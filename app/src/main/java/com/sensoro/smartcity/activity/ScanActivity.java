@@ -3,7 +3,6 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -11,21 +10,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gyf.barlibrary.ImmersionBar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.gyf.immersionbar.ImmersionBar;
+import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IScanActivityView;
 import com.sensoro.smartcity.presenter.ScanActivityPresenter;
-import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.ViewFinderView;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.szx.simplescanner.zbar.BarcodeFormat;
 import cn.szx.simplescanner.zbar.Result;
 import cn.szx.simplescanner.zbar.ZBarScannerView;
 
@@ -74,11 +72,12 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
         viewFinderView = new ViewFinderView(mActivity);
         zBarScannerView = new ZBarScannerView(mActivity, viewFinderView, this);
         scanQrViewRoot.addView(zBarScannerView);
-        ArrayList<BarcodeFormat> formats = new ArrayList<>(2);
-        formats.add(BarcodeFormat.QRCODE);
-        //支持code39的条形码扫描
-        formats.add(BarcodeFormat.CODE39);
-        zBarScannerView.setFormats(formats);
+        //TODO 暂时添加支持所有类型的扫描
+//        ArrayList<BarcodeFormat> formats = new ArrayList<>(2);
+//        formats.add(BarcodeFormat.QRCODE);
+//        支持code39的条形码扫描
+//        formats.add(BarcodeFormat.CODE39);
+//        zBarScannerView.setFormats(formats);
 
     }
 
@@ -109,9 +108,9 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     protected void onDestroy() {
         mProgressUtils.destroyProgress();
 
-        if (immersionBar != null) {
-            immersionBar.destroy();
-        }
+//        if (immersionBar != null) {
+//            immersionBar.destroy();
+//        }
         super.onDestroy();
     }
 

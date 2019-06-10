@@ -3,10 +3,10 @@ package com.sensoro.common.utils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 
-//import junit.framework.Assert;
+import androidx.annotation.RequiresApi;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -17,27 +17,29 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+//import junit.framework.Assert;
+
 public class Util {
 	
 	private static final String TAG = "SDK_Sample.Util";
-	
-	@RequiresApi(api = Build.VERSION_CODES.KITKAT)
-	public static byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		bmp.compress(Bitmap.CompressFormat.JPEG, 100, output);
-		byte[] result = output.toByteArray();
-		int allocationByteCount = bmp.getAllocationByteCount();
-		if (needRecycle) {
-			bmp.recycle();
-		}
-		try {
-			output.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return result;
-	}
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public static byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, output);
+        byte[] result = output.toByteArray();
+        int allocationByteCount = bmp.getAllocationByteCount();
+        if (needRecycle) {
+            bmp.recycle();
+        }
+        try {
+            output.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
 	
 	public static byte[] getHtmlByteArray(final String url) {
 		 URL htmlUrl = null;     

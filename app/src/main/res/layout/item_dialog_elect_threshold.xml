@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_early_warning_threshold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
                     android:layout_marginTop="8dp"
                     android:contentDescription="@null"
                     android:padding="18dp"
-                    android:src="@drawable/no_content"
+                    android:src="@mipmap/no_content"
                     android:visibility="gone" />
             </RelativeLayout>
 

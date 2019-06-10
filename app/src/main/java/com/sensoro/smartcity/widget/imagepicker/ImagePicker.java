@@ -12,12 +12,12 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
+import androidx.core.content.FileProvider;
 import android.util.Log;
 
+import com.sensoro.common.model.ImageFolder;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageFolder;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.loader.ImageLoader;
 import com.sensoro.smartcity.widget.imagepicker.util.ProviderUtil;
 import com.sensoro.smartcity.widget.imagepicker.util.Utils;

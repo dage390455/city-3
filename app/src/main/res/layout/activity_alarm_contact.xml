@@ -9,7 +9,7 @@
         android:id="@+id/ac_alarm_contact_title"
         layout="@layout/item_include_text_text_title" />
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/item_adapter_alarm_contact_add_ll"
@@ -23,13 +23,13 @@
             android:orientation="vertical">
 
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rc_add_alarm_contact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
 
-            </android.support.v7.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -56,11 +56,11 @@
                     android:contentDescription="@null"
                     android:paddingStart="8dp"
                     android:paddingEnd="12dp"
-                    android:src="@drawable/tag_delete"
+                    android:src="@mipmap/tag_delete"
                     android:visibility="gone" />
             </LinearLayout>
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rc_ac_deploy_alarm_contact_history"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -70,7 +70,7 @@
 
 
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
         android:id="@+id/item_adapter_alarm_contact_add_ll"

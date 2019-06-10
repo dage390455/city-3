@@ -1,22 +1,23 @@
 package com.sensoro.smartcity.adapter;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.server.bean.DeployRecordInfo;
-import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.common.server.bean.DeployRecordInfo;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
-import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.SpacesItemDecoration;
-import com.sensoro.smartcity.widget.TouchRecycleView;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.widgets.SpacesItemDecoration;
+import com.sensoro.common.widgets.TouchRecycleView;
 
 import java.util.ArrayList;
 import java.util.List;

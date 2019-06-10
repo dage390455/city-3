@@ -17,6 +17,6 @@
     <string name="replay">"replay"</string>
     <string name="gsy_video">"video"</string>
     <string name="live">"live"</string>
-    <string name="offline">"camera-off-line"</string>
+    <string name="cameroffline">"camera-off-line"</string>
     <string name="no_vido">Video has expired and the server only keeps video for 7 days</string>
 </resources>

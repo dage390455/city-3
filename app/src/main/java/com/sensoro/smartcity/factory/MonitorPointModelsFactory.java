@@ -3,17 +3,17 @@ package com.sensoro.smartcity.factory;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.server.bean.DeviceAlarmsRecord;
+import com.sensoro.common.server.bean.DeviceInfo;
+import com.sensoro.common.server.bean.DisplayOptionsBean;
+import com.sensoro.common.server.bean.SensorStruct;
+import com.sensoro.common.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.model.Elect3DetailModel;
 import com.sensoro.smartcity.model.TaskOptionModel;
-import com.sensoro.smartcity.server.bean.DeviceAlarmsRecord;
-import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.bean.DisplayOptionsBean;
-import com.sensoro.smartcity.server.bean.SensorStruct;
-import com.sensoro.smartcity.server.bean.SensorTypeStyles;
-import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.HashMap;

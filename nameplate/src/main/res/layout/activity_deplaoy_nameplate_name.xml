@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_f4f4f4">
+
+    <include
+        layout="@layout/item_include_text_text_title" />
+
+    <LinearLayout
+        android:id="@+id/ll_edit_ac_deploy_nameplate_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/include_text_title_cl_root"
+        android:layout_marginTop="12dp"
+        android:background="@color/white"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/name_address"
+            android:textColor="@color/c_a6a6a6"
+            android:textSize="14dp" />
+
+        <EditText
+            android:id="@+id/et_name_ac_deploy_nameplate_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:cursorVisible="true"
+            android:gravity="end"
+            android:singleLine="true"
+            android:textColor="@color/c_252525"
+            android:textCursorDrawable="@drawable/my_cursor"
+            android:textSize="14dp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_tip_ac_deploy_nameplate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12dp"
+        android:textColor="@color/c_f35a58"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/ll_edit_ac_deploy_nameplate_name"
+        android:text="@string/deploy_nameplate_name_tip"/>
+
+    <LinearLayout
+        android:id="@+id/ll_history_ac_deploy_nameplate_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_tip_ac_deploy_nameplate"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_history_ac_deploy_nameplate_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:text="@string/name_address_history_record"
+            android:textColor="@color/c_252525"
+            android:textSize="14dp" />
+
+        <ImageView
+            android:id="@+id/iv_delete_ac_deploy_nameplate_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginEnd="12dp"
+            android:contentDescription="@null"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="8dp"
+            android:src="@mipmap/tag_delete"
+            android:visibility="gone" />
+    </LinearLayout>
+
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_history_ac_deploy_nameplate_name"
+        android:layout_marginTop="16dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rc_history_ac_deploy_nameplate_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="20dp"/>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+</RelativeLayout>

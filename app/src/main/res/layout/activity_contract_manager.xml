@@ -40,7 +40,9 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="20dp"
                 android:layout_weight="1"
-                android:background="@drawable/shape_bg_full_corner">
+                android:background="@drawable/shape_bg_full_corner"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
 
                 <ImageView
                     android:id="@+id/ac_contract_record_search_imv_clear"
@@ -52,7 +54,7 @@
                     android:contentDescription="@null"
                     android:padding="7dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/search_monitor_clear_search"
+                    android:src="@mipmap/search_monitor_clear_search"
                     android:visibility="gone" />
 
                 <EditText
@@ -66,7 +68,7 @@
                     android:layout_toStartOf="@id/ac_contract_record_search_imv_clear"
                     android:background="@null"
                     android:cursorVisible="true"
-                    android:drawableStart="@drawable/main_search"
+                    android:drawableStart="@mipmap/main_search"
                     android:drawablePadding="8dp"
                     android:hint="@string/legal_representative_name"
                     android:imeOptions="actionSearch"
@@ -103,7 +105,7 @@
 
         </LinearLayout>
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/contract_cl_select_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -150,7 +152,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/center_line"
                 app:layout_constraintTop_toTopOf="parent" />
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
             android:layout_width="match_parent"
@@ -200,7 +202,7 @@
                 android:orientation="vertical">
 
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/contract_ptr_list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -250,7 +252,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="14.5dp"
-            android:src="@drawable/ic_return_to_top"
+            android:src="@mipmap/ic_return_to_top"
             android:visibility="gone" />
     </LinearLayout>
 

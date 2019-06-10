@@ -1,6 +1,6 @@
 package com.sensoro.smartcity.model;
 
-import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
+import com.sensoro.common.server.response.DeviceAlarmLogRsp;
 
 public class SearchAlarmResultModel {
     public DeviceAlarmLogRsp deviceAlarmLogRsp;

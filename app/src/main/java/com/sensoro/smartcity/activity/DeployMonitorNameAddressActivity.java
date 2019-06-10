@@ -3,8 +3,8 @@ package com.sensoro.smartcity.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -16,16 +16,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.NameAddressHistoryAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.adapter.NameAddressHistoryAdapter;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorNameAddressActivityView;
 import com.sensoro.smartcity.presenter.DeployMonitorNameAddressActivityPresenter;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
-import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.widgets.TipOperationDialogUtils;
+import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.List;
 

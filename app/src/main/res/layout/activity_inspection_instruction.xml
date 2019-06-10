@@ -9,7 +9,7 @@
 
     <include
         layout="@layout/item_include_text_title"/>
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/ac_inspection_instruction_rc_tab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,15 +18,15 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="20dp">
 
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
-   <android.support.v7.widget.RecyclerView
+   <androidx.recyclerview.widget.RecyclerView
        android:id="@+id/ac_inspection_instruction_rc_content"
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        >
 
 
-   </android.support.v7.widget.RecyclerView>
+   </androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>

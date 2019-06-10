@@ -1,22 +1,22 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.server.bean.MalfunctionListInfo;
+import com.sensoro.common.server.bean.MalfunctionTypeStyles;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
-import com.sensoro.smartcity.server.bean.MalfunctionTypeStyles;
-import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;

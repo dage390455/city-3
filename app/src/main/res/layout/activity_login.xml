@@ -14,79 +14,79 @@
             android:id="@+id/login_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="58dp"
-            android:scaleType="fitXY"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="58dp"
             android:contentDescription="@null"
+            android:scaleType="fitXY"
             android:src="@mipmap/ic_login_logo" />
+
         <TextView
             android:id="@+id/ac_login_tv_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sensoro_city"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="36dp"
-            android:textSize="20dp"
+            android:text="@string/sensoro_city"
             android:textColor="@color/c_252525"
-            />
+            android:textSize="20dp" />
+
         <TextView
             android:id="@+id/ac_login_tv_logo_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/login_tip"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="4dp"
-            android:textSize="12dp"
+            android:text="@string/login_tip"
             android:textColor="@color/c_252525"
-            />
+            android:textSize="12dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
             android:layout_marginTop="50dp"
+            android:layout_marginEnd="40dp"
             android:background="@drawable/shape_bg_solid_f7_corner"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/ac_login_imv_account_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@null"
-                android:src="@drawable/login_user_lighted"
+                android:layout_gravity="center_vertical"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="14dp"
-                android:layout_gravity="center_vertical"
                 android:layout_marginBottom="14dp"
-                />
+                android:contentDescription="@null"
+                android:src="@drawable/login_user_lighted" />
+
             <EditText
                 android:id="@+id/ac_login_et_account"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:cursorVisible="true"
-                android:textCursorDrawable="@drawable/my_cursor"
                 android:hint="@string/login_input_account_tip"
                 android:singleLine="true"
-                android:layout_gravity="center_vertical"
-                android:textSize="14dp"
-                android:textColorHint="@color/c_a6a6a6"
                 android:textColor="@color/c_252525"
-                android:layout_marginStart="16dp"/>
+                android:textColorHint="@color/c_a6a6a6"
+                android:textCursorDrawable="@drawable/my_cursor"
+                android:textSize="14dp" />
+
             <ImageView
                 android:id="@+id/ac_login_imv_account_clear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@null"
-                android:src="@drawable/login_clear"
                 android:layout_gravity="center_vertical"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="@null"
                 android:padding="8dp"
-                android:visibility="gone"
-                android:layout_marginEnd="10dp"/>
+                android:src="@drawable/login_clear"
+                android:visibility="gone" />
 
 
         </LinearLayout>
@@ -96,49 +96,49 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="40dp"
             android:background="@drawable/shape_bg_solid_f7_corner"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/ac_login_imv_psd_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@null"
-                android:src="@drawable/login_pwd_lighted"
+                android:layout_gravity="center_vertical"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="14dp"
-                android:layout_gravity="center_vertical"
                 android:layout_marginBottom="14dp"
-                />
+                android:contentDescription="@null"
+                android:src="@drawable/login_pwd_lighted" />
+
             <EditText
                 android:id="@+id/ac_login_et_psd"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:cursorVisible="true"
-                android:textCursorDrawable="@drawable/my_cursor"
                 android:hint="@string/login_input_password_tip"
-                android:singleLine="true"
                 android:inputType="textPassword"
-                android:layout_gravity="center_vertical"
-                android:textSize="14dp"
-                android:textColorHint="@color/c_a6a6a6"
+                android:singleLine="true"
                 android:textColor="@color/c_252525"
-                android:layout_marginStart="16dp"/>
+                android:textColorHint="@color/c_a6a6a6"
+                android:textCursorDrawable="@drawable/my_cursor"
+                android:textSize="14dp" />
+
             <ImageView
                 android:id="@+id/ac_login_imv_psd_clear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@null"
-                android:src="@drawable/login_clear"
                 android:layout_gravity="center_vertical"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="@null"
                 android:padding="8dp"
-                android:visibility="gone"
-                android:layout_marginEnd="10dp"/>
+                android:src="@drawable/login_clear"
+                android:visibility="gone" />
 
 
         </LinearLayout>
@@ -147,7 +147,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <Button
                 android:id="@+id/login_btn"
@@ -161,6 +162,16 @@
                 android:text="@string/login"
                 android:textColor="@color/white"
                 android:textSize="@dimen/city_btn_text_size" />
+
+            <TextView
+                android:id="@+id/tv_url_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/c_a6a6a6"
+                android:textSize="10dp"
+                android:visibility="gone" />
         </LinearLayout>
 
     </LinearLayout>

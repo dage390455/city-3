@@ -20,6 +20,8 @@ public class OperationCmdAnalyzer {
                 doSmoke(mOperationType, sensoroDeviceConnection, callback);
                 break;
             case "fhsj_smoke":
+            case "n16w_smoke":
+//            case "lite_smoke":
                 doFhsjSmoke(mOperationType, sensoroDeviceConnection, callback);
                 break;
             case "cayman_smoke":
@@ -38,7 +40,7 @@ public class OperationCmdAnalyzer {
                 break;
             case "baymax_lpg":
             case "baymax_ch4":
-                doBaymax(mOperationType,sensoroDeviceConnection,callback);
+                doBaymax(mOperationType, sensoroDeviceConnection, callback);
                 break;
 
         }

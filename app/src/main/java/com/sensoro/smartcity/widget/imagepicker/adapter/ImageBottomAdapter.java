@@ -2,7 +2,7 @@ package com.sensoro.smartcity.widget.imagepicker.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +10,7 @@ import android.widget.ImageView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.common.model.ImageItem;
 
 import java.util.List;
 

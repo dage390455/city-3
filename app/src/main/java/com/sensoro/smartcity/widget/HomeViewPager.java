@@ -1,9 +1,10 @@
 package com.sensoro.smartcity.widget;
 
 import android.content.Context;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * Created by JL-DDONG on 2017/7/25 0025.

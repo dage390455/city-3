@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/c_f4f4f4"
+    >
+    <View
+        android:id="@+id/view_top_ac_deploy_camera_live_detail"
+        android:layout_width="match_parent"
+        android:layout_height="22dp"
+        android:background="@color/white"/>
+    <include layout="@layout/item_include_imv_title"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer
+            android:id="@+id/gsy_player_ac_deploy_camera_live_detail"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="16:9"
+            >
+
+        </com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,36 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
+    <dimen name="city_btn_text_size">16dp</dimen>
+    <dimen name="tag_default_size">13dp</dimen>
+    <dimen name="grid_sensor_value">25dp</dimen>
+    <dimen name="grid_sensor_unit">10dp</dimen>
+    <dimen name="city_small_size">@dimen/x35</dimen>
+    <dimen name="city_size">@dimen/x40</dimen>
+    <dimen name="city_normal_size">@dimen/x42</dimen>
+    <dimen name="city_tiny_large_size">@dimen/x50</dimen>
+    <dimen name="city_small_large_size">@dimen/x55</dimen>
+    <dimen name="city_large_size">@dimen/x60</dimen>
+    <dimen name="city_super_size">@dimen/x80</dimen>
+    <dimen name="city_super_large_size">@dimen/x120</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="navigation_bar_exist">44dp</dimen>
+    //
+    <dimen name="index_top_alarm_size">12dp</dimen>
+    <dimen name="index_top_other_size">10dp</dimen>
+    <dimen name="dp5">5dp</dimen>
+    <dimen name="dp100">100dp</dimen>
+    <dimen name="index_top_alarm_title_size">10dp</dimen>
+    <dimen name="index_top_alarm_title_large_size">15dp</dimen>
+    <dimen name="index_top_alarm_title_normal_size">6dp</dimen>
+
+    //分割线的高度
+    <dimen name="view_divider_height">0.5dp</dimen>
+    <dimen name="view_divider_width">0.5dp</dimen>
+    <dimen name="dp58">58dp</dimen>
+
+</resources>

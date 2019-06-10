@@ -17,9 +17,28 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
+import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.handler.HandlerDeployCheck;
+import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnStart;
+import com.sensoro.common.model.EventData;
+import com.sensoro.common.model.ImageItem;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.RetryWithDelay;
+import com.sensoro.common.server.bean.DeployControlSettingData;
+import com.sensoro.common.server.bean.DeployStationInfo;
+import com.sensoro.common.server.bean.DeviceInfo;
+import com.sensoro.common.server.bean.DeviceTypeStyles;
+import com.sensoro.common.server.bean.MalfunctionDataBean;
+import com.sensoro.common.server.bean.MalfunctionTypeStyles;
+import com.sensoro.common.server.bean.MergeTypeStyles;
+import com.sensoro.common.server.bean.ScenesData;
+import com.sensoro.common.server.bean.SensorStruct;
+import com.sensoro.common.server.bean.SensorTypeStyles;
+import com.sensoro.common.server.response.DeployStationInfoRsp;
+import com.sensoro.common.server.response.DeviceDeployRsp;
 import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
 import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
 import com.sensoro.libbleserver.ble.connection.SensoroDeviceConnection;
@@ -40,7 +59,6 @@ import com.sensoro.smartcity.activity.DeployRepairInstructionActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
-import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.callback.OnConfigInfoObserver;
 import com.sensoro.smartcity.constant.Constants;
@@ -50,28 +68,10 @@ import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.model.DeployResultModel;
-import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.RetryWithDelay;
-import com.sensoro.smartcity.server.bean.DeployControlSettingData;
-import com.sensoro.smartcity.server.bean.DeployStationInfo;
-import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
-import com.sensoro.smartcity.server.bean.MalfunctionDataBean;
-import com.sensoro.smartcity.server.bean.MalfunctionTypeStyles;
-import com.sensoro.smartcity.server.bean.MergeTypeStyles;
-import com.sensoro.smartcity.server.bean.ScenesData;
-import com.sensoro.smartcity.server.bean.SensorStruct;
-import com.sensoro.smartcity.server.bean.SensorTypeStyles;
-import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
-import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.RegexUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.popup.UpLoadPhotosUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -399,14 +399,14 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             public void onFailed(String errorMsg) {
                 tempForceReason = "config";
                 getView().dismissBleConfigDialog();
-                getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_device_detail_check_config_failed) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
+                getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, mContext.getString(R.string.deploy_device_detail_check_config_failed) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
             }
 
             @Override
             public void onOverTime(String overTimeMsg) {
                 tempForceReason = "config";
                 getView().dismissBleConfigDialog();
-                getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_device_detail_check_config_failed) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
+                getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, mContext.getString(R.string.deploy_device_detail_check_config_failed) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
             }
         };
         if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
@@ -428,7 +428,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 } else {
                     //不在附近
                     tempForceReason = "lonlat";
-                    getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_device_detail_check_not_nearby), "");
+                    getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, mContext.getString(R.string.deploy_device_detail_check_not_nearby), "");
                 }
             } else {
                 getView().toastShort(mContext.getString(R.string.channel_mask_error_tip));
@@ -442,7 +442,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 } else {
                     //不在附近
                     tempForceReason = "lonlat";
-                    getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_device_detail_check_not_nearby), "");
+                    getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, mContext.getString(R.string.deploy_device_detail_check_not_nearby), "");
                 }
                 return;
             }
@@ -479,19 +479,19 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         tempForceReason = "signalQuality";
                         tempSignalQuality = "none";
                         getView().dismissBleConfigDialog();
-                        getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_check_dialog_quality_bad_signal) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
+                        getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, mContext.getString(R.string.deploy_check_dialog_quality_bad_signal) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
                         return;
                     case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD:
                         tempForceReason = "signalQuality";
                         tempSignalQuality = "bad";
                         getView().dismissBleConfigDialog();
-                        getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_check_dialog_quality_bad_signal) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
+                        getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, mContext.getString(R.string.deploy_check_dialog_quality_bad_signal) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
                         return;
                 }
                 tempForceReason = "signalQuality";
                 tempSignalQuality = "none";
                 getView().dismissBleConfigDialog();
-                getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, mContext.getString(R.string.deploy_check_dialog_quality_bad_signal) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
+                getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, mContext.getString(R.string.deploy_check_dialog_quality_bad_signal) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
             }
         };
         checkHandler.init(1000, 10);
@@ -749,8 +749,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
             intent.putExtra(EXTRA_SETTING_NAME_ADDRESS, deployAnalyzerModel.nameAndAddress);
         }
-        intent.putExtra(EXTRA_DEPLOY_TO_SN, deployAnalyzerModel.sn);
-        intent.putExtra(EXTRA_DEPLOY_TYPE, deployAnalyzerModel.deployType);
         getView().startAC(intent);
     }
 
@@ -1431,14 +1429,14 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     tempStatus = data.getData().getStatus();
                     String alarmReason = handleAlarmReason(data.getData());
                     getView().dismissBleConfigDialog();
-                    getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, alarmReason, mContext.getString(R.string.deploy_check_suggest_repair_instruction));
+                    getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, alarmReason, mContext.getString(R.string.deploy_check_suggest_repair_instruction));
                     break;
                 case SENSOR_STATUS_MALFUNCTION:
                     tempForceReason = "status";
                     tempStatus = data.getData().getStatus();
                     String reason = handleMalfunctionReason(data.getData());
                     getView().dismissBleConfigDialog();
-                    getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasBadSignalUpload, reason, mContext.getString(R.string.deploy_check_suggest_repair_instruction));
+                    getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, reason, mContext.getString(R.string.deploy_check_suggest_repair_instruction));
                     break;
                 default:
                     tempForceReason = null;
@@ -1545,6 +1543,122 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deployAnalyzerModel.currentStatus = tempStatus;
         doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
 
+    }
+
+    public void initData(Context context, Intent intent) {
+        mContext = (Activity) context;
+        mHandler = new Handler(Looper.getMainLooper());
+        onCreate();
+        deployAnalyzerModel = (DeployAnalyzerModel) intent.getSerializableExtra(EXTRA_DEPLOY_ANALYZER_MODEL);
+        //TODO 暂时用烟感做测试
+//        PreferencesHelper.getInstance().getUserData().hasSignalConfig = true;
+        //
+//        deployAnalyzerModel.deviceType ="acrel_single";
+        //
+        getView().setNotOwnVisible(deployAnalyzerModel.notOwn);
+        init();
+        if ((PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION && deployAnalyzerModel.whiteListDeployType != Constants.TYPE_SCAN_DEPLOY_WHITE_LIST) || Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+            mHandler.post(this);
+        }
+        BleObserver.getInstance().registerBleObserver(this);
+        mHandler.post(signalTask);
+        //默认显示已定位
+        deployAnalyzerModel.address = mContext.getString(R.string.positioned);
+        //
+        //获取一次临时的位置信息
+        GeocodeSearch geocoderSearch = new GeocodeSearch(mContext);
+        geocoderSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
+            @Override
+            public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
+                try {
+                    RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
+
+                    StringBuilder stringBuilder = new StringBuilder();
+                    //
+                    String province = regeocodeAddress.getProvince();
+                    //
+                    String district = regeocodeAddress.getDistrict();// 区或县或县级市
+                    //
+                    //
+                    String township = regeocodeAddress.getTownship();// 乡镇
+                    //
+                    String streetName = null;// 道路
+                    List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
+                    if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
+                        RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
+                        if (regeocodeRoad != null) {
+                            streetName = regeocodeRoad.getName();
+                        }
+                    }
+                    //
+                    String streetNumber = null;// 门牌号
+                    StreetNumber number = regeocodeAddress.getStreetNumber();
+                    if (number != null) {
+                        String street = number.getStreet();
+                        if (street != null) {
+                            streetNumber = street + number.getNumber();
+                        } else {
+                            streetNumber = number.getNumber();
+                        }
+                    }
+                    //
+                    String building = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
+                    //区县
+                    if (!TextUtils.isEmpty(province)) {
+                        stringBuilder.append(province);
+                    }
+                    if (!TextUtils.isEmpty(district)) {
+                        stringBuilder.append(district);
+                    }
+                    //乡镇
+                    if (!TextUtils.isEmpty(township)) {
+                        stringBuilder.append(township);
+                    }
+                    //道路
+                    if (!TextUtils.isEmpty(streetName)) {
+                        stringBuilder.append(streetName);
+                    }
+                    //标志性建筑
+                    if (!TextUtils.isEmpty(building)) {
+                        stringBuilder.append(building);
+                    } else {
+                        //门牌号
+                        if (!TextUtils.isEmpty(streetNumber)) {
+                            stringBuilder.append(streetNumber);
+                        }
+                    }
+                    String address;
+                    if (TextUtils.isEmpty(stringBuilder)) {
+                        address = township;
+                    } else {
+                        address = stringBuilder.append("附近").toString();
+                    }
+                    if (!TextUtils.isEmpty(address)) {
+                        deployAnalyzerModel.address = address;
+                    }
+                    try {
+                        LogUtils.loge("deployMapModel", "----" + deployAnalyzerModel.address);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+
+                    //
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
+
+            }
+        });
+        //查询一次地址信息
+        if (deployAnalyzerModel.latLng.size() == 2) {
+            LatLonPoint lp = new LatLonPoint(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
+            RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
+            geocoderSearch.getFromLocationAsyn(query);
+        }
     }
 
     /////////////////////////////////////////////////////////////////////////////////////

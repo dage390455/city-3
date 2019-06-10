@@ -6,30 +6,30 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.igexin.sdk.PushManager;
+import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.iwidget.IOnCreate;
+import com.sensoro.common.model.EventData;
+import com.sensoro.common.model.EventLoginData;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.DeviceMergeTypesInfo;
+import com.sensoro.common.server.bean.DeviceTypeStyles;
+import com.sensoro.common.server.bean.MergeTypeStyles;
+import com.sensoro.common.server.bean.SensorTypeStyles;
+import com.sensoro.common.server.bean.UserInfo;
+import com.sensoro.common.server.response.DevicesMergeTypesRsp;
+import com.sensoro.common.server.response.LoginRsp;
 import com.sensoro.smartcity.BuildConfig;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.AuthActivity;
 import com.sensoro.smartcity.activity.MainActivity;
-import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.factory.UserPermissionFactory;
 import com.sensoro.smartcity.imainviews.ILoginView;
-import com.sensoro.common.iwidget.IOnCreate;
-import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.model.EventLoginData;
-import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
-import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
-import com.sensoro.smartcity.server.bean.MergeTypeStyles;
-import com.sensoro.smartcity.server.bean.SensorTypeStyles;
-import com.sensoro.smartcity.server.bean.UserInfo;
-import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
-import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.PreferencesHelper;
 import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
@@ -50,6 +50,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        onCreate();
         Beta.checkUpgrade(false, false);
         readLoginData();
         initSeverUrl();
@@ -106,8 +107,13 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     }
 
     public void saveScopeData(int which) {
-        RetrofitServiceHelper.getInstance().saveBaseUrlType(which);
-        getView().setLogButtonState(which);
+        if (5 == which) {
+            getView().showMyBaseUrlDialog(PreferencesHelper.getInstance().getMyBaseUrl());
+        } else {
+            RetrofitServiceHelper.getInstance().saveBaseUrlType(which);
+            getView().setLogButtonState(which);
+        }
+
 
     }
 
@@ -260,4 +266,10 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     }
 
 
+    public void doSaveMyBaseUrl(String text) {
+        PreferencesHelper.getInstance().saveMyBaseUrl(text);
+        RetrofitServiceHelper.getInstance().saveBaseUrlType(5);
+        getView().setLogButtonState(5);
+        getView().dismissLoginDialog();
+    }
 }

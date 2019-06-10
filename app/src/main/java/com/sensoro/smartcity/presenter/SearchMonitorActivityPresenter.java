@@ -6,27 +6,25 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.iwidget.IOnStart;
+import com.sensoro.common.manger.ThreadPoolManager;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
+import com.sensoro.common.server.bean.DeviceInfo;
+import com.sensoro.common.server.response.DeviceAlarmLogRsp;
+import com.sensoro.common.server.response.DeviceInfoListRsp;
+import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
-import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
-import com.sensoro.common.iwidget.IOnStart;
-import com.sensoro.smartcity.model.AlarmPopModel;
-import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.push.ThreadPoolManager;
-import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
-import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
-import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
-import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.smartcity.model.AlarmPopupModel;
+import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,8 +34,6 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
-
-import static com.sensoro.smartcity.widget.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
 
 
 public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitorActivityView> implements Constants,
@@ -60,7 +56,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-//        originHistoryList.addAll(SensoroCityApplication.getInstance().getData());
+//        originHistoryList.addAll(ContextUtils.getContext().getData());
         currentList.addAll(originHistoryList);
         mPref = mContext.getSharedPreferences(PREFERENCE_DEVICE_HISTORY, Activity.MODE_PRIVATE);
         mEditor = mPref.edit();
@@ -395,78 +391,53 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         });
     }
 
-    private void enterAlarmLogPop(DeviceAlarmLogInfo deviceAlarmLogInfo) {
-        AlarmLogPopUtils mAlarmLogPop = new AlarmLogPopUtils(mContext);
+    private void enterAlarmLogPop(final DeviceAlarmLogInfo deviceAlarmLogInfo) {
+        final AlarmLogPopUtils mAlarmLogPop = new AlarmLogPopUtils(mContext);
         mAlarmLogPop.refreshData(deviceAlarmLogInfo);
-        mAlarmLogPop.show();
-
-    }
-
-    public void handlerActivityResult(int requestCode, int resultCode, Intent data) {
-        // 对照片信息统一处理
-        if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
-            //添加图片返回
-            if (data != null && requestCode == REQUEST_CODE_SELECT) {
-                ArrayList<ImageItem> tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                if (tempImages != null) {
-                    boolean fromTakePhoto = data.getBooleanExtra(EXTRA_RESULT_BY_TAKE_PHOTO, false);
-                    EventData eventData = new EventData();
-                    eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
-                    AlarmPopModel alarmPopModel = new AlarmPopModel();
-                    alarmPopModel.requestCode = requestCode;
-                    alarmPopModel.resultCode = resultCode;
-                    alarmPopModel.fromTakePhoto = fromTakePhoto;
-                    alarmPopModel.imageItems = tempImages;
-                    eventData.data = alarmPopModel;
-                    EventBus.getDefault().post(eventData);
-                }
-            }
-        } else if (resultCode == ImagePicker.RESULT_CODE_BACK) {
-            //预览图片返回
-            if (requestCode == REQUEST_CODE_PREVIEW && data != null) {
-                ArrayList<ImageItem> tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
-                if (tempImages != null) {
-                    EventData eventData = new EventData();
-                    eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
-                    AlarmPopModel alarmPopModel = new AlarmPopModel();
-                    alarmPopModel.requestCode = requestCode;
-                    alarmPopModel.resultCode = resultCode;
-                    alarmPopModel.imageItems = tempImages;
-                    eventData.data = alarmPopModel;
-                    EventBus.getDefault().post(eventData);
-                }
-            }
-        } else if (resultCode == RESULT_CODE_RECORD) {
-            //拍视频
-            if (data != null && requestCode == REQUEST_CODE_RECORD) {
-                ImageItem imageItem = (ImageItem) data.getSerializableExtra("path_record");
-                if (imageItem != null) {
-                    try {
-                        LogUtils.loge("--- 从视频返回  path = " + imageItem.path);
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
+        if (PreferencesHelper.getInstance().getAlarmPopupDataBeanCache() == null) {
+            RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesAlarmPopupConfigRsp>(this) {
+                @Override
+                public void onCompleted(DevicesAlarmPopupConfigRsp devicesAlarmPopupConfigRsp) {
+                    PreferencesHelper.getInstance().saveAlarmPopupDataBeanCache(devicesAlarmPopupConfigRsp.getData());
+                    final AlarmPopupModel alarmPopupModel = new AlarmPopupModel();
+                    String deviceName = deviceAlarmLogInfo.getDeviceName();
+                    if (TextUtils.isEmpty(deviceName)) {
+                        alarmPopupModel.title = deviceAlarmLogInfo.getDeviceSN();
+                    } else {
+                        alarmPopupModel.title = deviceName;
                     }
-                    ArrayList<ImageItem> tempImages = new ArrayList<>();
-                    tempImages.add(imageItem);
-                    EventData eventData = new EventData();
-                    eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
-                    AlarmPopModel alarmPopModel = new AlarmPopModel();
-                    alarmPopModel.requestCode = requestCode;
-                    alarmPopModel.resultCode = resultCode;
-                    alarmPopModel.imageItems = tempImages;
-                    eventData.data = alarmPopModel;
-                    EventBus.getDefault().post(eventData);
-                }
-            } else if (requestCode == REQUEST_CODE_PLAY_RECORD) {
-                EventData eventData = new EventData();
-                eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
-                AlarmPopModel alarmPopModel = new AlarmPopModel();
-                alarmPopModel.requestCode = requestCode;
-                alarmPopModel.resultCode = resultCode;
-                eventData.data = alarmPopModel;
-                EventBus.getDefault().post(eventData);
-            }
+                    alarmPopupModel.alarmStatus = deviceAlarmLogInfo.getAlarmStatus();
+                    alarmPopupModel.updateTime = deviceAlarmLogInfo.getUpdatedTime();
+                    alarmPopupModel.mergeType = WidgetUtil.handleMergeType(deviceAlarmLogInfo.getDeviceType());
+                    alarmPopupModel.sensorType = deviceAlarmLogInfo.getSensorType();
+                    //
+                    AlarmPopupConfigAnalyzer.handleAlarmPopupModel(null, alarmPopupModel);
+                    mAlarmLogPop.show(alarmPopupModel);
+                    getView().dismissProgressDialog();
 
+                }
+
+                @Override
+                public void onErrorMsg(int errorCode, String errorMsg) {
+                    getView().toastShort(errorMsg);
+                    getView().dismissProgressDialog();
+                }
+            });
+        } else {
+            final AlarmPopupModel alarmPopupModel = new AlarmPopupModel();
+            String deviceName = deviceAlarmLogInfo.getDeviceName();
+            if (TextUtils.isEmpty(deviceName)) {
+                alarmPopupModel.title = deviceAlarmLogInfo.getDeviceSN();
+            } else {
+                alarmPopupModel.title = deviceName;
+            }
+            alarmPopupModel.alarmStatus = deviceAlarmLogInfo.getAlarmStatus();
+            alarmPopupModel.updateTime = deviceAlarmLogInfo.getUpdatedTime();
+            alarmPopupModel.mergeType = WidgetUtil.handleMergeType(deviceAlarmLogInfo.getDeviceType());
+            alarmPopupModel.sensorType = deviceAlarmLogInfo.getSensorType();
+            //
+            AlarmPopupConfigAnalyzer.handleAlarmPopupModel(null, alarmPopupModel);
+            mAlarmLogPop.show(alarmPopupModel);
         }
     }
 

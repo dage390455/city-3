@@ -2,10 +2,10 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -13,15 +13,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.TagAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.adapter.TagAdapter;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IInspectionTaskDetailActivityView;
 import com.sensoro.smartcity.presenter.InspectionTaskDetailActivityPresenter;
 import com.sensoro.smartcity.util.ViewHelper;
-import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
-import com.sensoro.smartcity.widget.SpacesItemDecoration;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.common.widgets.SpacesItemDecoration;
 
 import java.util.List;
 

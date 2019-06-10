@@ -6,7 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.constraint.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,14 +22,14 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.Polyline;
 import com.amap.api.maps.model.PolylineOptions;
-import com.gyf.barlibrary.ImmersionBar;
+import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.PersonLocusCameraGaoDeAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ICameraPersonLocusActivityView;
 import com.sensoro.smartcity.presenter.CameraPersonLocusActivityPresenter;
-import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
 import com.warkiz.widget.IndicatorSeekBar;
 
 import java.util.List;
@@ -443,13 +443,70 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
     }
 
     @Override
+    public void setCityPlayState(int state) {
+        if (mGaoDeInfoAdapter != null) {
+            mGaoDeInfoAdapter.setCityPlayState(state);
+        }
+    }
+
+    @Override
+    public void setVerOrientationUtil(boolean enable) {
+        if (mGaoDeInfoAdapter != null) {
+            mGaoDeInfoAdapter.setVerOrientationUtil(enable);
+
+        }
+    }
+
+    @Override
+    public int getCurrentState() {
+        return mGaoDeInfoAdapter.getCurrentState();
+    }
+
+    @Override
+    public void clickCityStartIcon() {
+        if (mGaoDeInfoAdapter != null) {
+            mGaoDeInfoAdapter.clickCityStartIcon();
+
+        }
+    }
+
+    @Override
+    public View getPlayAndRetryBtn() {
+        return mGaoDeInfoAdapter.getPlayAndRetryBtn();
+    }
+
+    @Override
+    public void backFromWindowFull() {
+        if (mGaoDeInfoAdapter != null) {
+            mGaoDeInfoAdapter.backFromWindowFull();
+
+        }
+
+    }
+
+    @Override
+    public void onVideoResume() {
+        if (mGaoDeInfoAdapter != null) {
+            mGaoDeInfoAdapter.onResume();
+        }
+    }
+
+    @Override
+    public void onVideoPause() {
+        if (mGaoDeInfoAdapter != null) {
+            mGaoDeInfoAdapter.onPause();
+        }
+    }
+
+    @Override
     public void setMarkerTime(String time) {
         tvTimeRightAcPersonLocus.setText(time);
     }
 
     @OnClick({R.id.iv_move_left_ac_person_locus, R.id.iv_move_right_ac_person_locus
             , R.id.tv_one_day_ac_person_locus, R.id.tv_three_day_ac_person_locus
-            , R.id.tv_seven_day_ac_person_locus, R.id.iv_monitor_map_location_ac_person_locus, R.id.include_text_title_imv_arrows_left})
+            , R.id.tv_seven_day_ac_person_locus, R.id.iv_monitor_map_location_ac_person_locus,
+            R.id.include_text_title_imv_arrows_left,R.id.ll_bottom_ac_person_locus})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_move_left_ac_person_locus:
@@ -472,6 +529,9 @@ public class CameraPersonLocusActivity extends BaseActivity<ICameraPersonLocusAc
                 break;
             case R.id.include_text_title_imv_arrows_left:
                 finishAc();
+                break;
+            case R.id.ll_bottom_ac_person_locus:
+                //添加点击事件仅仅为了拦截掉手势，不让map获取事件，所以这里不做任何事情
                 break;
         }
     }

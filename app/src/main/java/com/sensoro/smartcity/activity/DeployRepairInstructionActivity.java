@@ -4,8 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -23,12 +21,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployRepairInstructionView;
 import com.sensoro.smartcity.presenter.DeployRepairInstructionPresenter;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

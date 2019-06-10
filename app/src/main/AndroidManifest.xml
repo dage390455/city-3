@@ -86,8 +86,20 @@
         android:label="@string/app_name"
         android:roundIcon="${APP_ROUND_ICON}"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/MyTheme"
         tools:replace="android:theme">
+        <!--适配华为（huawei）刘海屏-->
+        <meta-data
+            android:name="android.notch_support"
+            android:value="true" />
+        <!--适配小米（xiaomi）刘海屏-->
+        <meta-data
+            android:name="notch.config"
+            android:value="portrait|landscape" />
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.4" />
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="feb394e9f7754ae572cc77a0bfc723e5" />
@@ -100,9 +112,6 @@
         <meta-data
             android:name="design_height_in_dp"
             android:value="667" />
-        <meta-data
-            android:name="android.max_aspect"
-            android:value="2.1" />
 
         <activity
             android:name=".activity.SplashActivity"
@@ -217,8 +226,6 @@
         <activity android:name=".activity.MerchantSwitchActivity" />
         <activity
             android:name=".activity.DeployMonitorAlarmContactActivity"
-
-
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activity.DeployMonitorNameAddressActivity" />
         <activity android:name=".activity.DeployResultActivity" />
@@ -275,41 +282,41 @@
         <meta-data
             android:name="InstallChannel"
             android:value="${AVOS_CHANNEL_VALUE}" />
-        <!-- 您从百度网站获取的APP KEY -->
-        <meta-data
-            android:name="BaiduMobAd_STAT_ID"
-            android:value="bb510e227a" /> <!-- abcd1234 -->
-        <!-- 渠道商编号 -->
-        <meta-data
-            android:name="BaiduMobAd_CHANNEL"
-            android:value="Baidu Market" />
+        <!--&lt;!&ndash; 您从百度网站获取的APP KEY &ndash;&gt;-->
+        <!--<meta-data-->
+        <!--android:name="BaiduMobAd_STAT_ID"-->
+        <!--android:value="bb510e227a" /> &lt;!&ndash; abcd1234 &ndash;&gt;-->
+        <!--&lt;!&ndash; 渠道商编号 &ndash;&gt;-->
+        <!--<meta-data-->
+        <!--android:name="BaiduMobAd_CHANNEL"-->
+        <!--android:value="Baidu Market" />-->
 
-        <!-- 是否开启错误日志统计，默认为false -->
-        <meta-data
-            android:name="BaiduMobAd_EXCEPTION_LOG"
-            android:value="true" />
-        <!-- 日志发送策略，可选值：APP_START、ONCE_A_DAY、SET_TIME_INTERVAL，默认为APP_START -->
-        <meta-data
-            android:name="BaiduMobAd_SEND_STRATEGY"
-            android:value="APP_START" />
-        <!-- 日志发送策略 为SET_TIME_INTERVAL时，需设定时间间隔(取消下行注释)。取值为1-24的整数，默认为1 -->
-        <!-- <meta-data android:name="BaiduMobAd_TIME_INTERVAL" android:value="2" /> -->
-        <!-- 日志仅在wifi网络下发送，默认为false -->
-        <meta-data
-            android:name="BaiduMobAd_ONLY_WIFI"
-            android:value="false" />
-        <!-- 是否获取基站位置信息 ,默认为true -->
-        <meta-data
-            android:name="BaiduMobAd_CELL_LOCATION"
-            android:value="true" />
-        <!-- 是否获取GPS位置信息，默认为true -->
-        <meta-data
-            android:name="BaiduMobAd_GPS_LOCATION"
-            android:value="true" />
-        <!-- 是否获取WIFI位置信息，默认为true -->
-        <meta-data
-            android:name="BaiduMobAd_WIFI_LOCATION"
-            android:value="true" />
+        <!--&lt;!&ndash; 是否开启错误日志统计，默认为false &ndash;&gt;-->
+        <!--<meta-data-->
+        <!--android:name="BaiduMobAd_EXCEPTION_LOG"-->
+        <!--android:value="true" />-->
+        <!--&lt;!&ndash; 日志发送策略，可选值：APP_START、ONCE_A_DAY、SET_TIME_INTERVAL，默认为APP_START &ndash;&gt;-->
+        <!--<meta-data-->
+        <!--android:name="BaiduMobAd_SEND_STRATEGY"-->
+        <!--android:value="APP_START" />-->
+        <!--&lt;!&ndash; 日志发送策略 为SET_TIME_INTERVAL时，需设定时间间隔(取消下行注释)。取值为1-24的整数，默认为1 &ndash;&gt;-->
+        <!--&lt;!&ndash; <meta-data android:name="BaiduMobAd_TIME_INTERVAL" android:value="2" /> &ndash;&gt;-->
+        <!--&lt;!&ndash; 日志仅在wifi网络下发送，默认为false &ndash;&gt;-->
+        <!--<meta-data-->
+        <!--android:name="BaiduMobAd_ONLY_WIFI"-->
+        <!--android:value="false" />-->
+        <!--&lt;!&ndash; 是否获取基站位置信息 ,默认为true &ndash;&gt;-->
+        <!--<meta-data-->
+        <!--android:name="BaiduMobAd_CELL_LOCATION"-->
+        <!--android:value="true" />-->
+        <!--&lt;!&ndash; 是否获取GPS位置信息，默认为true &ndash;&gt;-->
+        <!--<meta-data-->
+        <!--android:name="BaiduMobAd_GPS_LOCATION"-->
+        <!--android:value="true" />-->
+        <!--&lt;!&ndash; 是否获取WIFI位置信息，默认为true &ndash;&gt;-->
+        <!--<meta-data-->
+        <!--android:name="BaiduMobAd_WIFI_LOCATION"-->
+        <!--android:value="true" />-->
         <meta-data
             android:name="com.fengmap.mapapi.appkey"
             android:value="7b11a3fcdc47cdacf522976dd5ca4c61" />
@@ -362,13 +369,19 @@
         <activity android:name=".temp.TestUpdateActivity" />
         <activity android:name=".activity.DeployMonitorCheckActivity" />
         <activity android:name=".activity.DeployRepairInstructionActivity" />
-        <activity android:name=".temp.CameraTest" />
+
+        <activity android:name=".activity.SecurityRisksActivity" />
+        <activity android:name=".activity.SecurityRiskTagManagerActivity" />
+
         <activity android:name=".temp.RecyclerViewActivity" />
         <activity android:name=".activity.CameraListActivity" />
+        <activity android:name=".activity.BaseStationListActivity" />
+        <activity android:name=".activity.BaseStationDetailActivity" />
         <activity
             android:name=".activity.CameraDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
+
         <activity android:name=".activity.WireMaterialDiameterCalculatorActivity" />
         <activity
             android:name=".activity.CameraPersonLocusActivity"
@@ -378,7 +391,25 @@
             android:name=".activity.CameraPersonDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".activity.DeployCameraDetailActivity" />
+        <activity
+            android:name=".activity.AlarmCameraLiveDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity
+            android:name=".activity.AlarmCameraVideoDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".temp.LineChartActivity2" />
+
+
+        <activity android:name=".activity.SelfCheckActivity" />
+        <activity android:name=".activity.FrequencyPointActivity" />
+        <activity android:name=".activity.NetWorkInfoActivity" />
+
+
+        <activity
+            android:name=".activity.DeployCameraLiveDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"
@@ -389,6 +420,14 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
+
+        <receiver android:name="com.sensoro.smartcity.util.PhoneReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" />
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

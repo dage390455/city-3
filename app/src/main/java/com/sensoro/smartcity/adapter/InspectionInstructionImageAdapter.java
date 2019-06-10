@@ -3,7 +3,9 @@ package com.sensoro.smartcity.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +16,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.server.bean.ScenesData;
-
+import com.sensoro.common.server.bean.ScenesData;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;

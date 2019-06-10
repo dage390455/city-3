@@ -3,8 +3,6 @@ package com.sensoro.smartcity.widget.popup;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,31 +11,42 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.amap.api.maps.model.LatLng;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.model.ImageItem;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.AlarmInfo;
+import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
+import com.sensoro.common.server.bean.ScenesData;
+import com.sensoro.common.server.response.AlarmCloudVideoRsp;
+import com.sensoro.common.server.response.AlarmCountRsp;
+import com.sensoro.common.server.response.DeviceAlarmItemRsp;
+import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.AlarmCameraLiveDetailActivity;
+import com.sensoro.smartcity.activity.AlarmCameraVideoDetailActivity;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.adapter.AlertLogRcContentAdapter;
+import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.AlarmInfo;
-import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
-import com.sensoro.smartcity.server.bean.ScenesData;
-import com.sensoro.smartcity.server.response.AlarmCountRsp;
-import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
-import com.sensoro.smartcity.server.response.ResponseBase;
+import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,7 +54,7 @@ import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
+public class AlarmLogPopUtils implements AlarmPopUtilsTest.OnPopupCallbackListener,
         AlertLogRcContentAdapter.OnPhotoClickListener, Constants {
 
     private final FixHeightBottomSheetDialog mAlarmLogDialog;
@@ -54,24 +63,18 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
     TextView acAlertLogTvName;
     @BindView(R.id.ac_alert_tv_sn)
     TextView acAlertTvSn;
-    @BindView(R.id.ac_alert_imv_alert_icon)
+    @BindView(R.id.iv_alarm_time_ac_alert)
     ImageView acAlertImvAlertIcon;
     @BindView(R.id.ac_alert_tv_alert_time)
     TextView acAlertTvAlertTime;
     @BindView(R.id.ac_alert_tv_alert_time_text)
     TextView acAlertTvAlertTimeText;
-    @BindView(R.id.ac_alert_ll_alert_time)
-    LinearLayout acAlertLlAlertTime;
-    @BindView(R.id.ac_alert_imv_alert_count_icon)
+    @BindView(R.id.iv_alarm_count_ac_alert)
     ImageView acAlertImvAlertCountIcon;
     @BindView(R.id.ac_alert_tv_alert_count)
     TextView acAlertTvAlertCount;
     @BindView(R.id.ac_alert_tv_alert_count_text)
     TextView acAlertTvAlertCountText;
-    @BindView(R.id.ac_alert_ll_alert_count)
-    LinearLayout acAlertLlAlertCount;
-    @BindView(R.id.ac_alert_ll_card)
-    LinearLayout acAlertLlCard;
     @BindView(R.id.ac_alert_rc_content)
     RecyclerView acAlertRcContent;
     @BindView(R.id.ac_alert_tv_contact_owner)
@@ -84,13 +87,23 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
     LinearLayout acAlertLlBottom;
     @BindView(R.id.alarm_log_close)
     ImageView alarmLogClose;
-    private AlarmPopUtils mAlarmPopUtils;
+    @BindView(R.id.tv_live_camera_count_ac_alert)
+    TextView tvLiveCameraCountAcAlert;
+    @BindView(R.id.ll_camera_live_ac_alert)
+    LinearLayout llCameraLiveAcAlert;
+    @BindView(R.id.tv_video_camera_count_ac_alert)
+    TextView tvVideoCameraCountAcAlert;
+    @BindView(R.id.ll_camera_video_ac_alert)
+    LinearLayout llCameraVideoAcAlert;
+    private AlarmPopUtilsTest mAlarmPopUtils;
     private List<AlarmInfo.RecordInfo> mList = new ArrayList<>();
     private AlertLogRcContentAdapter alertLogRcContentAdapter;
     private DeviceAlarmLogInfo mDeviceAlarmLogInfo;
     private LatLng destPosition;
     private boolean isReConfirm = false;
     private ProgressUtils mProgressUtils;
+    private AlarmCloudVideoRsp.DataBean mVideoBean;
+    private AlarmPopupModel mAlarmPopupModel;
 
     public AlarmLogPopUtils(Activity activity) {
         mActivity = activity;
@@ -135,7 +148,8 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         acAlertRcContent.setLayoutParams(layoutParams);
     }
 
-    public void show() {
+    public void show(AlarmPopupModel alarmPopupModel) {
+        this.mAlarmPopupModel = alarmPopupModel;
         if (mAlarmLogDialog != null) {
             mAlarmLogDialog.show();
         }
@@ -150,13 +164,28 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         String deviceSN = deviceAlarmLogInfo.getDeviceSN();
         if (TextUtils.isEmpty(deviceSN)) {
             deviceSN = mActivity.getString(R.string.device_number) + mActivity.getString(R.string.unknown);
-        }else{
+        } else {
             deviceSN = mActivity.getString(R.string.device_number) + deviceSN;
         }
         acAlertTvSn.setText(deviceSN);
 
+        if (PreferencesHelper.getInstance().getUserData().hasDeviceCameraList) {
+            List<String> cameras = deviceAlarmLogInfo.getCameras();
+            if (cameras != null && cameras.size() > 0) {
+                llCameraLiveAcAlert.setVisibility(View.VISIBLE);
+                tvLiveCameraCountAcAlert.setText(
+                        String.format(Locale.ROOT, "%s%d%s", mActivity.getString(R.string.relation_camera)
+                                , cameras.size(), mActivity.getString(R.string.upload_photo_dialog_append_title3)));
+            } else {
+                llCameraLiveAcAlert.setVisibility(View.GONE);
+            }
 
-        acAlertTvAlertTime.setText(DateUtil.getStrTimeToday(mActivity,mDeviceAlarmLogInfo.getCreatedTime(), 1));
+        } else {
+            llCameraVideoAcAlert.setVisibility(View.GONE);
+        }
+
+
+        acAlertTvAlertTime.setText(DateUtil.getStrTimeToday(mActivity, mDeviceAlarmLogInfo.getCreatedTime(), 1));
 
         acAlertTvAlertCount.setText(mDeviceAlarmLogInfo.getDisplayStatus() + 10 + "");
 
@@ -197,22 +226,62 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
             }
         }
         long current = System.currentTimeMillis();
-        mProgressUtils.showProgress();
-        RetrofitServiceHelper.getInstance().getAlarmCount(current - 3600 * 24 * 180 * 1000L, current, null, mDeviceAlarmLogInfo.getDeviceSN()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>(null) {
-            @Override
-            public void onCompleted(AlarmCountRsp alarmCountRsp) {
-                int count = alarmCountRsp.getCount();
-                acAlertTvAlertCount.setText(count + "");
-                mProgressUtils.dismissProgress();
-            }
 
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-                SensoroToast.getInstance().makeText(errorMsg, Toast.LENGTH_SHORT).show();
-                mProgressUtils.dismissProgress();
-            }
-        });
+        getCloudVideo();
+
+        RetrofitServiceHelper.getInstance()
+                .getAlarmCount(current - 3600 * 24 * 180 * 1000L, current, null,
+                        mDeviceAlarmLogInfo.getDeviceSN())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CityObserver<AlarmCountRsp>(null) {
+                    @Override
+                    public void onCompleted(AlarmCountRsp alarmCountRsp) {
+                        int count = alarmCountRsp.getCount();
+                        acAlertTvAlertCount.setText(count + "");
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        SensoroToast.getInstance().makeText(errorMsg, Toast.LENGTH_SHORT).show();
+                    }
+                });
         updateAlertLogContentAdapter(mList);
+    }
+
+    private void getCloudVideo() {
+        if (!PreferencesHelper.getInstance().getUserData().hasDeviceCameraList) {
+            llCameraVideoAcAlert.setVisibility(View.GONE);
+            return;
+        }
+        String[] eventIds = {mDeviceAlarmLogInfo.get_id()};
+        RetrofitServiceHelper.getInstance().getCloudVideo(eventIds)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CityObserver<AlarmCloudVideoRsp>(null) {
+                    @Override
+                    public void onCompleted(AlarmCloudVideoRsp response) {
+                        List<AlarmCloudVideoRsp.DataBean> data = response.getData();
+                        if (data != null && data.size() > 0) {
+                            mVideoBean = data.get(0);
+                            List<AlarmCloudVideoRsp.DataBean.MediasBean> mMedias = mVideoBean.getMedias();
+                            if (mMedias != null && mMedias.size() > 0) {
+                                tvVideoCameraCountAcAlert.setText(String.format(Locale.ROOT, "%s%d%s",
+                                        mActivity.getString(R.string.alarm_camera_video),
+                                        mMedias.size(), mActivity.getString(R.string.video_unit_duan)));
+                                llCameraVideoAcAlert.setVisibility(View.VISIBLE);
+                            } else {
+                                llCameraVideoAcAlert.setVisibility(View.GONE);
+                            }
+                        } else {
+                            llCameraVideoAcAlert.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        llCameraVideoAcAlert.setVisibility(View.GONE);
+                    }
+                });
     }
 
     private void updateAlertLogContentAdapter(List<AlarmInfo.RecordInfo> recordInfoList) {
@@ -220,7 +289,8 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         alertLogRcContentAdapter.notifyDataSetChanged();
     }
 
-    @OnClick({R.id.alarm_log_close, R.id.ac_alert_tv_contact_owner, R.id.ac_alert_tv_quick_navigation, R.id.ac_alert_tv_alert_confirm})
+    @OnClick({R.id.alarm_log_close, R.id.ac_alert_tv_contact_owner, R.id.ac_alert_tv_quick_navigation,
+            R.id.ac_alert_tv_alert_confirm, R.id.ll_camera_video_ac_alert, R.id.ll_camera_live_ac_alert})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.alarm_log_close:
@@ -235,7 +305,26 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
             case R.id.ac_alert_tv_alert_confirm:
                 doConfirm();
                 break;
+            case R.id.ll_camera_video_ac_alert:
+                doVideo();
+                break;
+            case R.id.ll_camera_live_ac_alert:
+                doLive();
+                break;
         }
+    }
+
+    private void doLive() {
+        Intent intent = new Intent(mActivity, AlarmCameraLiveDetailActivity.class);
+        ArrayList<String> cameras = new ArrayList<>(mDeviceAlarmLogInfo.getCameras());
+        intent.putExtra(Constants.EXTRA_ALARM_CAMERAS, cameras);
+        mActivity.startActivity(intent);
+    }
+
+    private void doVideo() {
+        Intent intent = new Intent(mActivity, AlarmCameraVideoDetailActivity.class);
+        intent.putExtra(Constants.EXTRA_ALARM_CAMERA_VIDEO, mVideoBean);
+        mActivity.startActivity(intent);
     }
 
     public void doContactOwner() {
@@ -300,45 +389,11 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
     }
 
     private void doConfirm() {
-        mAlarmPopUtils = new AlarmPopUtils(mActivity);
+        mAlarmPopUtils = new AlarmPopUtilsTest(mActivity);
         mAlarmPopUtils.setOnPopupCallbackListener(this);
-        mAlarmPopUtils.show();
+        mAlarmPopUtils.show(mAlarmPopupModel);
     }
 
-    @Override
-    public void onPopupCallback(int statusResult, int statusType, int statusPlace, List<ScenesData> scenesDataList, String remark) {
-        mAlarmPopUtils.setUpdateButtonClickable(false);
-        mProgressUtils.showProgress();
-        RetrofitServiceHelper.getInstance().doUpdatePhotosUrl(mDeviceAlarmLogInfo.get_id(), statusResult, statusType,
-                statusPlace,
-                remark, isReConfirm, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe
-                        (new CityObserver<DeviceAlarmItemRsp>(null) {
-
-
-                            @Override
-                            public void onCompleted(DeviceAlarmItemRsp deviceAlarmItemRsp) {
-                                if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                                    SensoroToast.getInstance().makeText(mActivity.getResources().
-                                            getString(R.string.tips_commit_success), Toast.LENGTH_SHORT).show();
-                                    mDeviceAlarmLogInfo = deviceAlarmItemRsp.getData();
-                                    refreshData(mDeviceAlarmLogInfo);
-                                } else {
-                                    SensoroToast.getInstance().makeText(mActivity.getResources().
-                                            getString(R.string.tips_commit_failed), Toast.LENGTH_SHORT).show();
-                                }
-                                mProgressUtils.dismissProgress();
-                                mAlarmPopUtils.dismiss();
-                            }
-
-                            @Override
-                            public void onErrorMsg(int errorCode, String errorMsg) {
-                                mProgressUtils.dismissProgress();
-                                mAlarmPopUtils.dismiss();
-                                mAlarmPopUtils.setUpdateButtonClickable(true);
-                            }
-                        });
-    }
 
     @Override
     public void onPhotoItemClick(int position, List<ScenesData> scenesDataList) {
@@ -374,6 +429,44 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
             }
 
         }
+    }
+
+    @Override
+    public void onPopupCallback(AlarmPopupModel alarmPopupModel, List<ScenesData> scenesDataList) {
+        mAlarmPopUtils.setUpdateButtonClickable(false);
+        mProgressUtils.showProgress();
+        Map<String, Integer> alarmPopupServerData = AlarmPopupConfigAnalyzer.createAlarmPopupServerData(alarmPopupModel);
+        RetrofitServiceHelper.getInstance().doUpdatePhotosUrl(mDeviceAlarmLogInfo.get_id(), alarmPopupServerData, alarmPopupModel.securityRisksList,
+                alarmPopupModel.mRemark, false, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CityObserver<DeviceAlarmItemRsp>(null) {
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        if (mAlarmLogDialog != null && mAlarmPopUtils != null) {
+                            mProgressUtils.dismissProgress();
+                            mAlarmPopUtils.dismiss();
+                            mAlarmPopUtils.setUpdateButtonClickable(true);
+                        }
+                    }
+
+                    @Override
+                    public void onCompleted(DeviceAlarmItemRsp deviceAlarmItemRsp) {
+                        if (mProgressUtils != null && mAlarmLogDialog != null) {
+                            if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
+
+                                SensoroToast.getInstance().makeText(mActivity.getResources().
+                                        getString(R.string.tips_commit_success), Toast.LENGTH_SHORT).show();
+                                mDeviceAlarmLogInfo = deviceAlarmItemRsp.getData();
+                                refreshData(mDeviceAlarmLogInfo);
+                            } else {
+                                SensoroToast.getInstance().makeText(mActivity.getResources().
+                                        getString(R.string.tips_commit_failed), Toast.LENGTH_SHORT).show();
+                            }
+                            mProgressUtils.dismissProgress();
+                            mAlarmPopUtils.dismiss();
+                        }
+                    }
+                });
     }
 
     public interface DialogDisplayStatusListener {

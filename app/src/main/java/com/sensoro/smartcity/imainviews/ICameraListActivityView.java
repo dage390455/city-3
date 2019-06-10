@@ -3,13 +3,18 @@ package com.sensoro.smartcity.imainviews;
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
-import com.sensoro.smartcity.model.CameraFilterModel;
-import com.sensoro.smartcity.server.bean.DeviceCameraInfo;
+import com.sensoro.common.model.CameraFilterModel;
+import com.sensoro.common.server.bean.BaseStationInfo;
+import com.sensoro.common.server.bean.DeviceCameraInfo;
 
 import java.util.List;
 
 public interface ICameraListActivityView extends IToast, IProgressDialog, IActivityIntent {
     void updateDeviceCameraAdapter(List<DeviceCameraInfo> data);
+
+    void updateBaseStationAdapter(List<BaseStationInfo> data);
+
+    void setBaseStationType(List<CameraFilterModel.ListBean> data);
 
     void onPullRefreshCompleteNoMoreData();
 

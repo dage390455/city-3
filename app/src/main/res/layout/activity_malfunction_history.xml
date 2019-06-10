@@ -63,7 +63,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/fg_history_log_rc_content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -85,6 +85,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:contentDescription="@null"
-        android:src="@drawable/ic_return_to_top"
+        android:src="@mipmap/ic_return_to_top"
         android:visibility="gone"/>
 </RelativeLayout>

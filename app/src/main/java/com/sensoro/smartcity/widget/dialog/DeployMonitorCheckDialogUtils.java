@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.DeoloyCheckPointConstants;
 

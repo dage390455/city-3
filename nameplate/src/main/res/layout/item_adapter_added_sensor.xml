@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/tv_name_item_adapter_added_sensor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/c_252525"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/iv_icon_item_adapter_added_sensor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/iv_icon_item_adapter_added_sensor"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/tv_name_item_adapter_added_sensor"
+        app:layout_constraintTop_toBottomOf="@id/tv_name_item_adapter_added_sensor"/>
+
+    <TextView
+        android:id="@+id/tv_device_name_item_adapter_added_sensor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="12dp"
+        android:layout_marginStart="4dp"
+        app:layout_constraintStart_toEndOf="@id/iv_icon_item_adapter_added_sensor"
+        app:layout_constraintTop_toTopOf="@id/iv_icon_item_adapter_added_sensor"
+        app:layout_constraintBottom_toBottomOf="@id/iv_icon_item_adapter_added_sensor"
+        />
+    <TextView
+        android:id="@+id/tv_device_sn_item_adapter_added_sensor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="12dp"
+        android:layout_marginStart="12dp"
+        app:layout_constraintStart_toEndOf="@id/tv_device_name_item_adapter_added_sensor"
+        app:layout_constraintTop_toTopOf="@id/iv_icon_item_adapter_added_sensor"
+        app:layout_constraintBottom_toBottomOf="@id/iv_icon_item_adapter_added_sensor"
+        app:layout_constraintEnd_toStartOf="@+id/tv_delete_item_adapter_added_sensor"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintHorizontal_bias="0"
+        />
+
+    <TextView
+        android:id="@+id/tv_delete_item_adapter_added_sensor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/c_252525"
+        android:textSize="12dp"
+        android:paddingStart="8dp"
+        android:text="@string/delete"
+        android:paddingEnd="8dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:background="@drawable/shape_bg_solid_fa_stroke_df_corner_2dp"
+        android:layout_marginStart="12dp"
+        app:layout_constraintTop_toTopOf="@id/iv_icon_item_adapter_added_sensor"
+        app:layout_constraintBottom_toBottomOf="@id/iv_icon_item_adapter_added_sensor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1"
+
+        />
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

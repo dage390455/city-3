@@ -30,6 +30,7 @@ public interface Constants {
     String PREFERENCE_DEPLOY_CONTACT_HISTORY = "city_deploy_contact_history";
     String PREFERENCE_DEPLOY_CONTENT_HISTORY = "city_deploy_content_history";
     String PREFERENCE_KEY_DEVICE = "key_search_history_keyword";
+
     //
     String PREFERENCE_KEY_DEPLOY_NAME = "preference_key_deploy_name";
     String PREFERENCE_KEY_DEPLOY_NAME_ADDRESS = "preference_key_deploy_name_address";
@@ -38,6 +39,7 @@ public interface Constants {
     String PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_NAME = "preference_key_deploy_alarm_contact_name";
     String PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_PHONE = "preference_key_deploy_alarm_contact_phone";
     String PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES = "preference_key_local_devices_mergetypes";
+
     //
     String PREFERENCE_KEY_DEPLOY_PHONE = "preference_key_deploy_phone";
     //
@@ -252,7 +254,7 @@ public interface Constants {
     //部署相关
     String EXTRA_DEPLOY_PHOTO = "extra_deploy_photo";
     String EXTRA_DEPLOY_TYPE = "extra_deploy_type";
-    String EXTRA_DEPLOY_ORIGIN_NAME_ADDRESS = "extra_deploy_origin_name_address";
+//    String EXTRA_DEPLOY_ORIGIN_NAME_ADDRESS = "extra_deploy_origin_name_address";
     String EXTRA_DEPLOY_TO_PHOTO = "extra_deploy_to_photo";
     String EXTRA_DEPLOY_TO_MAP = "extra_deploy_to_map";
     String EXTRA_DEPLOY_TO_SN = "extra_deploy_to_sn";
@@ -266,6 +268,8 @@ public interface Constants {
     String EXTRA_INSPECTION_INDEX_TASK_INFO = "extra_inspection_index_task_info";
     String EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE = "extra_inspection_instruction_device_type";
     int CONTRACT_ORIGIN_TYPE_EDIT = 0x200;
+
+    String EXTRA_SECURITY_RISK = "extra_security_risk";
 
     //合同相关
     String EXTRA_CONTRACT_TYPE = "extra_contract_type";
@@ -283,7 +287,8 @@ public interface Constants {
     String EXTRA_CONTRACT_RESULT_TYPE = "extra_contract_result_type";
     //
     String PREFERENCE_LOGIN_ID = "preference_login_id";
-    String PREFERENCE_LOCAL_DEVICES_MERGETYPES = "preference_local_devices_mergetypes";
+    String PREFERENCE_LOCAL_DEVICES_MERGE_TYPES = "preference_local_devices_mergetypes";
+
     String PREFERENCE_LOGIN_NAME_PWD = "preference_login_name_pwd";
     String PREFERENCE_SPLASH_LOGIN_DATA = "preference_main_login";
     String PREFERENCE_KEY_NAME = "preference_key_name";
@@ -388,20 +393,38 @@ public interface Constants {
 
     int EVENT_DATA__CONTRACT_EDIT_REFRESH_CODE = 0x45;
     int EVENT_DATA_DEPLOY_INIT_CONFIG_CODE = 0x47;
+    int EVENT_DATA_DEPLOY_SETTING_WE_CHAT_RELATION = 0x48;
+    int EVENT_DATA_DEVICE_POSITION_CALIBRATION = 0x49;
+    int EVENT_DATA_DEVICE_SOCKET_FLUSH = 0x50;
+    int EVENT_DATA_LOCK_SCREEN_ON = 0x51;
+    int EVENT_DATA_NET_WORK_CHANGE = 0x52;
+    int EVENT_DATA_UPDATEBASESTATION = 0x53;
+
+    //合同
+    int EVENT_DATA_CONTRACT_CREATION_SUCCESS = 0X53;
+
+    int EVENT_DATA_CHECK_MERGE_TYPE_CONFIG_DATA = 0X54;
+    int EVENT_DATA_APP_CRASH = 0x56;
+
+
+    int EVENT_DATA_DEPLOY_NAMEPLATE_NAME = 0x57;
+
+
+    int EVENT_DATA_SECURITY_RISK_TAG_MANAGER = 0x57;
+    int EVENT_DATA_SECURITY_RISK_TAG = 0x58;
 
 
     int TYPE_SCAN_DEPLOY_DEVICE = 0x29;
     int TYPE_SCAN_DEPLOY_STATION = 0x39;
+    int TYPE_SCAN_DEPLOY_CAMERA = 0x58;
     int TYPE_SCAN_DEPLOY_WHITE_LIST = 0x55;
     int TYPE_SCAN_DEPLOY_WHITE_LIST_HAS_SIGNAL_CONFIG = 0x56;
     int TYPE_SCAN_LOGIN = 0x30;
     int TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE = 0X37;
     int TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE = 0X44;
-    int EVENT_DATA_DEPLOY_SETTING_WE_CHAT_RELATION = 0x48;
     int TYPE_SCAN_INSPECTION = 0X38;
     int TYPE_SCAN_DEPLOY_POINT_DISPLAY = 0x41;
     int TYPE_SCAN_SIGNAL_CHECK = 0x42;
-    int EVENT_DATA_DEVICE_POSITION_CALIBRATION = 0x49;
     //部署结果
     int DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED = -1;
     int DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT = -2;
@@ -411,17 +434,12 @@ public interface Constants {
     int DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL = 1;
     int DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD = 2;
     int DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM = 3;
+    int DEPLOY_MAP_SOURCE_TYPE_BASESTATION = 4;
 
     int DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE = 1;
     int DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL = 2;
 
-    int EVENT_DATA_DEVICE_SOCKET_FLUSH = 0x50;
-    int EVENT_DATA_LOCK_SCREEN_ON = 0x51;
-    int EVENT_DATA_NET_WORK_CHANGE = 0x52;
-    //合同
-    int EVENT_DATA_CONTRACT_CREATION_SUCCESS = 0X53;
 
-    int EVENT_DATA_CHECK_MERGE_TYPE_CONFIG_DATA = 0X54;
     //
     int DEVICE_DEMO_MODE_NOT_SUPPORT = 0;
     int DEVICE_DEMO_MODE_NO_PERMISSION = 1;
@@ -431,8 +449,9 @@ public interface Constants {
 
     int NetworkInfo = 0X55;
 
-    int EVENT_DATA_APP_CRASH = 0x56;
-
+    //监听电话广播
+    int VIDEO_START = 0X60;
+    int VIDEO_STOP = 0X61;
 
     List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{
         add("elec_fire");
@@ -480,6 +499,8 @@ public interface Constants {
 
         }
     };
+
+
     //camera
     String EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST = "extra_device_camera_detail_info_list";
     String EXTRA_PERSON_AVATAR_HISTORY_FACE_ID = "extra_person_avatar_history_face_id";
@@ -488,5 +509,11 @@ public interface Constants {
     String LIVE_URL = "http://wdquan-space.b0.upaiyun.com/VIDEO/2018/11/22/ae0645396048_hls_time10.m3u8";
     String EXTRA_CAMERA_PERSON_DETAIL = "extra_camera_person_detail";
     String EXTRA_CAMERA_PERSON_AVATAR_HISTORY_FACE_URL = "EXTRA_CAMERA_PERSON_AVATAR_HISTORY_FACE_URL";
+
+    String EXTRA_DEPLOY_NAMEPLATE_NAME = "extra_deploy_nameplate_name";
+    String EXTRA_ALARM_CAMERAS = "extra_alarm_cameras";
+    String EXTRA_ALARM_CAMERA_VIDEO = "extra_alarm_camera_video";
+
+
 }
 

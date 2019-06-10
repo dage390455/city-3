@@ -2,26 +2,22 @@ package com.sensoro.smartcity.widget.popup;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialog;
-import android.support.design.widget.CoordinatorLayout;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
-import com.gyf.barlibrary.ImmersionBar;
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.smartcity.util.WidgetUtil;
-import com.tencent.bugly.crashreport.common.info.AppInfo;
 
 public class FixHeightBottomSheetDialog extends BottomSheetDialog {
 
     private Activity mActivity;
     private View mContentView;
+    private OnBottomSheetDialogBackPressedListener mListener;
 
     public FixHeightBottomSheetDialog(@NonNull Context context) {
         super(context);
@@ -72,5 +68,24 @@ public class FixHeightBottomSheetDialog extends BottomSheetDialog {
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) parent.getLayoutParams();
         params.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
         parent.setLayoutParams(params);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mListener != null) {
+            mListener.onBottomSheetDialogBackPressed();
+        }else{
+            cancel();
+        }
+
+
+    }
+
+    public void setOnBottomSheetDialogBackPressedListener(OnBottomSheetDialogBackPressedListener listener){
+        mListener = listener;
+    }
+
+    interface OnBottomSheetDialogBackPressedListener{
+        void onBottomSheetDialogBackPressed();
     }
 }

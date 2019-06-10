@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.widget.imagepicker.adapter;
 
 import android.app.Activity;
-import android.support.v4.view.PagerAdapter;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
@@ -9,10 +8,12 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.sensoro.smartcity.R;
+import androidx.viewpager.widget.PagerAdapter;
+
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.utils.DpUtils;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.util.Utils;
 
 import java.io.File;

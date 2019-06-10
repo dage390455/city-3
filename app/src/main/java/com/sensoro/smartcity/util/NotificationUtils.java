@@ -12,8 +12,9 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
+
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MainActivity;
@@ -59,7 +60,7 @@ public class NotificationUtils extends ContextWrapper {
                 | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);// 关键的一步，设置启动模式，两种情况
         final PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
         Notification.Builder builder = new Notification.Builder(getApplicationContext(), id)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setAutoCancel(false)
                 .setContentTitle("Sensoro City")

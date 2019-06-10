@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageFolder;
+import com.sensoro.common.model.ImageFolder;
 import com.sensoro.smartcity.widget.imagepicker.util.Utils;
 
 import java.util.ArrayList;

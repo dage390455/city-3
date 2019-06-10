@@ -6,10 +6,10 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.common.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractResultActivityView;
-import com.sensoro.smartcity.model.EventData;
+import com.sensoro.common.model.EventData;
 import com.sensoro.common.utils.ImageFactory;
 import com.sensoro.smartcity.util.LogUtils;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
@@ -63,7 +63,7 @@ public class ContractResultActivityPresenter extends BasePresenter<IContractResu
     public void sharePic() {
         boolean wxAppInstalled = SensoroCityApplication.getInstance().api.isWXAppInstalled();
         if (wxAppInstalled) {
-//            boolean wxAppSupportAPI = SensoroCityApplication.getInstance().api.isWXAppSupportAPI();
+//            boolean wxAppSupportAPI = ContextUtils.getContext().api.isWXAppSupportAPI();
 //            if (wxAppSupportAPI) {
                 toShareWeChat();
 //            } else {

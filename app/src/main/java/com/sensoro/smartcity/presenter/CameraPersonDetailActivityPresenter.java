@@ -2,25 +2,38 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.sensoro.common.model.EventData;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.common.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraPersonDetailActivityView;
-import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.DeviceCameraHistoryBean;
-import com.sensoro.smartcity.server.response.DeviceCameraHistoryRsp;
-import com.sensoro.smartcity.server.response.DeviceCameraPersonFaceRsp;
-import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.DeviceCameraHistoryBean;
+import com.sensoro.common.server.response.DeviceCameraHistoryRsp;
+import com.sensoro.common.server.response.DeviceCameraPersonFaceRsp;
+import com.sensoro.common.utils.DateUtil;
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
+import static com.sensoro.smartcity.constant.Constants.VIDEO_START;
+import static com.sensoro.smartcity.constant.Constants.VIDEO_STOP;
+import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAUSE;
 
 public class CameraPersonDetailActivityPresenter extends BasePresenter<ICameraPersonDetailActivityView> {
     private Activity mActivity;
@@ -29,6 +42,7 @@ public class CameraPersonDetailActivityPresenter extends BasePresenter<ICameraPe
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
+        EventBus.getDefault().register(this);
         Serializable extra = mActivity.getIntent().getSerializableExtra(Constants.EXTRA_CAMERA_PERSON_DETAIL);
         if (extra instanceof DeviceCameraPersonFaceRsp.DataBean) {
 //            getView().initVideoOption(extra.get);
@@ -38,16 +52,111 @@ public class CameraPersonDetailActivityPresenter extends BasePresenter<ICameraPe
 
             setLastCover();
             requestVideo(dataBean);
-        }else{
+        } else {
             getView().toastShort(mActivity.getString(R.string.tips_data_error));
         }
     }
 
     private void setLastCover() {
-        Glide.with(mActivity).load(Constants.CAMERA_BASE_URL+dataBean.getSceneUrl())
+        Glide.with(mActivity).load(Constants.CAMERA_BASE_URL + dataBean.getSceneUrl())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
                 .into(getView().getImageView());
 
+    }
+
+    /**
+     * 网络改变状态
+     *
+     * @param eventData
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        int code = eventData.code;
+        if (code == NetworkInfo) {
+            int data = (int) eventData.data;
+
+            switch (data) {
+
+                case ConnectivityManager.TYPE_WIFI:
+                    getView().getPlayView().setCityPlayState(-1);
+                    getView().setVerOrientationUtil(true);
+
+                    if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
+                        getView().getPlayView().clickCityStartIcon();
+
+                        GSYVideoManager.onResume();
+
+                    } else {
+                        doRetry();
+
+                    }
+
+                    break;
+
+                case ConnectivityManager.TYPE_MOBILE:
+                    getView().setVerOrientationUtil(false);
+
+                    if (isAttachedView()) {
+                        getView().getPlayView().setCityPlayState(2);
+
+                        getView().getPlayView().getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                getView().getPlayView().setCityPlayState(-1);
+                                if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
+                                    getView().getPlayView().clickCityStartIcon();
+                                    getView().setVerOrientationUtil(true);
+
+                                }
+                                GSYVideoManager.onResume(true);
+
+
+                            }
+                        });
+
+                        getView().backFromWindowFull();
+
+                    }
+
+                    break;
+
+                default:
+                    if (isAttachedView()) {
+
+
+                        getView().backFromWindowFull();
+                        getView().getPlayView().setCityPlayState(1);
+                        getView().setVerOrientationUtil(false);
+                    }
+                    break;
+
+
+            }
+        } else if (code == VIDEO_START) {
+
+            getView().setVerOrientationUtil(true);
+
+            if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
+                getView().getPlayView().clickCityStartIcon();
+
+                GSYVideoManager.onResume();
+
+            } else {
+                doRetry();
+
+            }
+
+        } else if (code == VIDEO_STOP) {
+
+            getView().setVerOrientationUtil(false);
+            GSYVideoManager.onPause();
+
+            getView().backFromWindowFull();
+
+
+
+        }
     }
 
     private void setTitle() {
@@ -87,7 +196,7 @@ public class CameraPersonDetailActivityPresenter extends BasePresenter<ICameraPe
                         getView().startPlayLogic(url1);
                     }
 
-                }else{
+                } else {
                     if (isAttachedView()) {
                         getView().toastShort(mActivity.getString(R.string.obtain_video_fail));
                     }
@@ -112,7 +221,7 @@ public class CameraPersonDetailActivityPresenter extends BasePresenter<ICameraPe
 
     @Override
     public void onDestroy() {
-
+        EventBus.getDefault().unregister(this);
     }
 
     public void doRetry() {

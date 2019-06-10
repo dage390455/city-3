@@ -1,6 +1,6 @@
 package com.sensoro.smartcity.widget.calendar.cardgallery;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 

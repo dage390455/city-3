@@ -3,7 +3,10 @@
     android:id="@+id/camera_list_ll_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/c_f4f4f4">
+
+    android:background="@color/c_f4f4f4"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,9 +36,9 @@
 
             <RelativeLayout
                 android:layout_width="0dp"
-                android:layout_marginEnd="8dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp"
                 android:layout_weight="1">
 
 
@@ -62,7 +65,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:cursorVisible="true"
-                        android:drawableStart="@drawable/main_search"
+                        android:drawableStart="@mipmap/main_search"
                         android:drawablePadding="8dp"
                         android:hint="@string/camera_name_sn"
                         android:imeOptions="actionSearch"
@@ -82,7 +85,7 @@
                         android:contentDescription="@null"
                         android:padding="7dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/search_monitor_clear_search"
+                        android:src="@mipmap/search_monitor_clear_search"
                         android:visibility="gone" />
                 </LinearLayout>
 
@@ -168,10 +171,13 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/fg_history_log_rc_content"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp" />
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
             <include layout="@layout/item_include_search_history_rv" />
@@ -189,6 +195,6 @@
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="14.5dp"
         android:contentDescription="@null"
-        android:src="@drawable/ic_return_to_top"
+        android:src="@mipmap/ic_return_to_top"
         android:visibility="gone" />
 </RelativeLayout>

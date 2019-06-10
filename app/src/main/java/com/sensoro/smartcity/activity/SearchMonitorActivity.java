@@ -3,9 +3,9 @@ package com.sensoro.smartcity.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -30,20 +30,21 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
 import com.sensoro.smartcity.adapter.RelationAdapter;
-import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.adapter.SearchHistoryAdapter;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
 import com.sensoro.smartcity.presenter.SearchMonitorActivityPresenter;
-import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
-import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
-import com.sensoro.smartcity.widget.SpacesItemDecoration;
-import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.SpacesItemDecoration;
+import com.sensoro.common.widgets.TipOperationDialogUtils;
+import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.smartcity.widget.popup.AlarmPopUtilsTest;
 
 import java.util.Collections;
 import java.util.List;
@@ -565,7 +566,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mPresenter.handlerActivityResult(requestCode, resultCode, data);
+        AlarmPopUtilsTest.handlePhotoIntent(requestCode,resultCode,data);
     }
 
     @Override

@@ -20,22 +20,22 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.iwidget.IOnCreate;
+import com.sensoro.common.model.EventData;
+import com.sensoro.common.model.EventLoginData;
+import com.sensoro.common.server.bean.DeviceInfo;
+import com.sensoro.common.utils.ImageFactory;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.DeployMapActivity;
-import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMonitorPointMapActivityView;
-import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.DeployContactModel;
-import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.model.EventLoginData;
-import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.common.utils.ImageFactory;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.PreferencesHelper;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXMiniProgramObject;
@@ -48,6 +48,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.amap.api.maps.AMap.MAP_TYPE_NORMAL;
@@ -167,12 +168,20 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
                     }
                 }
                 break;
+
+            case EVENT_DATA_UPDATEBASESTATION:
+                final ArrayList<Double> pushDeviceInfo = (ArrayList<Double>) data;
+
+                mDeviceInfo.setLonlat(pushDeviceInfo);
+                refreshMap();
+                break;
         }
+
     }
 
     private void refreshMap() {
         List<Double> lonlat = mDeviceInfo.getLonlat();
-        if (aMap != null && mDeviceInfo.getSensorTypes().length > 0 && lonlat != null && lonlat.size() > 1) {
+        if (aMap != null && lonlat != null && lonlat.size() > 1) {
             UiSettings uiSettings = aMap.getUiSettings();
             // 通过UISettings.setZoomControlsEnabled(boolean)来设置缩放按钮是否能显示
             uiSettings.setZoomControlsEnabled(false);
@@ -259,7 +268,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
     public void doDetailShare() {
         boolean wxAppInstalled = SensoroCityApplication.getInstance().api.isWXAppInstalled();
         if (wxAppInstalled) {
-//            boolean wxAppSupportAPI = SensoroCityApplication.getInstance().api.isWXAppSupportAPI();
+//            boolean wxAppSupportAPI = ContextUtils.getContext().api.isWXAppSupportAPI();
 //            if (wxAppSupportAPI) {
             toShareWeChat();
 //            } else {
@@ -297,7 +306,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         if (TextUtils.isEmpty(tempAddress)) {
             tempAddress = mContext.getString(R.string.unknown_street);
         }
-        final String tempData = "/pages/location?lon=" + mDeviceInfo.getLonlat().get(0) + "&lat=" + mDeviceInfo.getLonlat().get(1)
+        final String tempData = "/pages/place?lon=" + mDeviceInfo.getLonlat().get(0) + "&lat=" + mDeviceInfo.getLonlat().get(1)
                 + "&name=" + name + "&address=" + tempAddress + "&status=" + status + "&tags=" + tempTagStr + "&uptime=" +
                 updatedTime;
         miniProgramObj.path = tempData;            //小程序页面路径
@@ -357,6 +366,8 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
     }
 
     public void doPositionConfirm() {
+
+
         Intent intent = new Intent();
         DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
         deployAnalyzerModel.sn = mDeviceInfo.getSn();
@@ -381,7 +392,13 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         if (TextUtils.isEmpty(tempAddress)) {
             deployAnalyzerModel.address = tempAddress;
         }
-        deployAnalyzerModel.mapSourceType = DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM;
+
+        if (mDeviceInfo.getSourceType() > 0) {
+            deployAnalyzerModel.mapSourceType = mDeviceInfo.getSourceType();
+        } else {
+            deployAnalyzerModel.mapSourceType = DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM;
+
+        }
         deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_DEVICE;
         intent.setClass(mContext, DeployMapActivity.class);
         intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);

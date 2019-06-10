@@ -2,8 +2,8 @@ package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import android.support.annotation.ColorRes;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.ColorRes;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +12,9 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.server.bean.AlarmInfo;
-import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
-import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.common.server.bean.AlarmInfo;
+import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.ArrayList;

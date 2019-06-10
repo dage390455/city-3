@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,9 +20,8 @@ import android.widget.RelativeLayout;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.InspectionTaskStateSelectAdapter;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
 
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 public class InspectionTaskStatePopUtils {

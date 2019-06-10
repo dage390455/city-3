@@ -3,9 +3,8 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 
-import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.common.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorCheckActivityView;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;

@@ -23,12 +23,10 @@ import com.sensoro.smartcity.calendarview.customview.CustomRangeMonthView;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.smartcity.util.DateUtil;
-import com.sensoro.smartcity.widget.MapContainer;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.Calendar;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -264,6 +262,18 @@ public class CalendarPopUtils implements
         setSelectTime(temp_startTime, temp_endTime);
         calendarViewLl.startAnimation(showTranslateAnimation);
     }
+
+    public void showFalseClip(final View viewLocation, long temp_startTime, long temp_endTime) {
+        if (mPopupWindow == null) {
+            init();
+        }
+        //多了这一行，不能超出屏幕边界，都是白色，所以看不到状态栏的变化
+        mPopupWindow.setClippingEnabled(false);
+        mPopupWindow.showAtLocation(viewLocation, Gravity.TOP, 0, 0);
+        setSelectTime(temp_startTime, temp_endTime);
+        calendarViewLl.startAnimation(showTranslateAnimation);
+    }
+
 
     @OnClick({R.id.ac_calendar_tv_cancel, R.id.ac_calendar_tv_save, R.id.ac_calendar_view_dismiss, R.id.ac_calendar_imv_arrow_left, R.id.ac_calendar_imv_arrow_right})
     public void onViewClicked(View view) {

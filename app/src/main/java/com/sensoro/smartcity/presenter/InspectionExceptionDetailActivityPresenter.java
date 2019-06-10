@@ -4,20 +4,20 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
+import com.sensoro.common.server.bean.InspectionTaskExceptionDeviceModel;
+import com.sensoro.common.server.bean.ScenesData;
+import com.sensoro.common.server.response.InspectionTaskExceptionDeviceRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
-import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionExceptionDetailActivityView;
-import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
-import com.sensoro.smartcity.server.bean.InspectionTaskExceptionDeviceModel;
-import com.sensoro.smartcity.server.bean.ScenesData;
-import com.sensoro.smartcity.server.response.InspectionTaskExceptionDeviceRsp;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 
 import java.io.Serializable;

@@ -13,12 +13,12 @@
         android:background="@color/white"/>
     <include layout="@layout/item_include_imv_title"/>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer
-            android:id="@+id/gsy_player_ac_camera_person_detail"
+            android:id="@+id/gsy_player_ac_camera_person_detailq"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +29,7 @@
             >
 
         </com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer>
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </LinearLayout>

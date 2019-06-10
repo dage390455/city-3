@@ -2,21 +2,22 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.fragment.BusinessContractFragment;
 import com.sensoro.smartcity.fragment.PersonalContractFragment;
 import com.sensoro.smartcity.imainviews.IContractEditorView;
 import com.sensoro.smartcity.presenter.ContractEditorPresenter;
-import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -197,7 +198,9 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
         if (isFormList) {
             includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
             includeTextTitleTvSubtitle.setText(mActivity.getResources().getString(R.string.cancel));
-            includeTextTitleImvArrowsLeft.setVisibility(View.GONE);
+            //这里为了要保持边距，所以需要设置invisible，可是不能隐藏掉，所以下面调用绘制的方法，使其隐藏
+            includeTextTitleImvArrowsLeft.setVisibility(View.INVISIBLE);
+            includeTextTitleImvArrowsLeft.postInvalidate();
         } else {
             includeTextTitleImvArrowsLeft.setVisibility(View.VISIBLE);
             includeTextTitleTvSubtitle.setVisibility(View.GONE);

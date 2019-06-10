@@ -1,9 +1,10 @@
 package com.sensoro.smartcity.imainviews;
 
+import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
-import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
+import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface IWarnFragmentView extends IToast, IActivityIntent, IProgressDia
 
     void updateAlarmListAdapter(List<DeviceAlarmLogInfo> deviceAlarmLogInfoList);
 
-    void showAlarmPopupView();
+    void showAlarmPopupView(AlarmPopupModel alarmPopupModel);
 
     void dismissAlarmPopupView();
 

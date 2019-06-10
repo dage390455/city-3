@@ -8,42 +8,45 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 
+import androidx.fragment.app.Fragment;
+
 import com.igexin.sdk.PushManager;
+import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.base.ContextUtils;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.iwidget.IOnCreate;
+import com.sensoro.common.manger.ActivityTaskManager;
+import com.sensoro.common.manger.ThreadPoolManager;
+import com.sensoro.common.model.EventData;
+import com.sensoro.common.model.EventLoginData;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.NetWorkUtils;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.AlarmDeviceCountsBean;
+import com.sensoro.common.server.bean.DeviceAlarmCount;
+import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
+import com.sensoro.common.server.bean.DeviceInfo;
+import com.sensoro.common.server.bean.DeviceMergeTypesInfo;
+import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
+import com.sensoro.common.server.response.AlarmCountRsp;
+import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
+import com.sensoro.common.server.response.DevicesMergeTypesRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
-import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.fragment.HomeFragment;
 import com.sensoro.smartcity.fragment.MalfunctionFragment;
 import com.sensoro.smartcity.fragment.ManagerFragment;
 import com.sensoro.smartcity.fragment.WarnFragment;
 import com.sensoro.smartcity.imainviews.IMainView;
-import com.sensoro.common.iwidget.IOnCreate;
-import com.sensoro.smartcity.model.AlarmDeviceCountsBean;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
-import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.model.EventLoginData;
-import com.sensoro.smartcity.push.ThreadPoolManager;
-import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.NetWorkUtils;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.DeviceAlarmCount;
-import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
-import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
-import com.sensoro.smartcity.server.bean.MonitorPointOperationTaskResultInfo;
-import com.sensoro.smartcity.server.response.AlarmCountRsp;
-import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
-import com.sensoro.smartcity.util.ActivityTaskManager;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.PreferencesHelper;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
+import com.sensoro.smartcity.widget.popup.AlarmPopUtilsTest;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -254,6 +257,18 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 mContext.registerReceiver(mScreenReceiver, intentFilter);
             }
         }, 500);
+        //每次初始化静默拉取一次预警弹窗的配置项
+        RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesAlarmPopupConfigRsp>(this) {
+            @Override
+            public void onCompleted(DevicesAlarmPopupConfigRsp devicesAlarmPopupConfigRsp) {
+                PreferencesHelper.getInstance().saveAlarmPopupDataBeanCache(devicesAlarmPopupConfigRsp.getData());
+
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+            }
+        });
     }
 
     private void initViewPager() {
@@ -284,8 +299,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             //显示账户信息
 //            getView().showAccountInfo(mEventLoginData.userName, mEventLoginData.phone);
             freshAccountType();
-            if (!PushManager.getInstance().isPushTurnedOn(SensoroCityApplication.getInstance())) {
-                PushManager.getInstance().turnOnPush(SensoroCityApplication.getInstance());
+            if (!PushManager.getInstance().isPushTurnedOn(ContextUtils.getContext())) {
+                PushManager.getInstance().turnOnPush(ContextUtils.getContext());
             }
             mHandler.postDelayed(mRunnable, 3000L);
             mHandler.postDelayed(mNetWorkTaskRunnable, 10 * 1000L);
@@ -830,7 +845,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
         // 对照片信息统一处理
-        AlarmPopUtils.handlePhotoIntent(requestCode, resultCode, data);
+        AlarmPopUtilsTest.handlePhotoIntent(requestCode, resultCode, data);
         if (managerFragment != null) {
             managerFragment.handlerActivityResult(requestCode, resultCode, data);
         }

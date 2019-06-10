@@ -86,7 +86,7 @@
             android:layout_marginEnd="20dp"
             android:background="@color/c_dfdfdf"
             android:layout_marginBottom="12dp"/>
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/ac_signal_check_tv_rc_tag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="12dp">
 
-        </android.support.v7.widget.RecyclerView>
+        </androidx.recyclerview.widget.RecyclerView>
 
     </LinearLayout>
     <ImageView
@@ -130,7 +130,7 @@
                 android:layout_marginTop="20dp"
                 android:textColor="@color/c_252525"
                 />
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/ac_signal_check_tv_rc_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -140,7 +140,7 @@
                 android:layout_marginBottom="10dp"
                >
 
-            </android.support.v7.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
         </LinearLayout>
 
        <LinearLayout

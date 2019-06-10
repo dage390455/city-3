@@ -10,6 +10,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 
 import com.amap.api.services.core.LatLonPoint;
@@ -20,6 +21,35 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
+import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.iwidget.IOnCreate;
+import com.sensoro.common.iwidget.IOnResume;
+import com.sensoro.common.iwidget.IOnStart;
+import com.sensoro.common.manger.ThreadPoolManager;
+import com.sensoro.common.model.EventData;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.AlarmInfo;
+import com.sensoro.common.server.bean.DeployControlSettingData;
+import com.sensoro.common.server.bean.DeviceCameraInfo;
+import com.sensoro.common.server.bean.DeviceInfo;
+import com.sensoro.common.server.bean.DeviceTypeStyles;
+import com.sensoro.common.server.bean.DeviceUpdateFirmwareData;
+import com.sensoro.common.server.bean.DisplayOptionsBean;
+import com.sensoro.common.server.bean.MalfunctionDataBean;
+import com.sensoro.common.server.bean.MalfunctionTypeStyles;
+import com.sensoro.common.server.bean.MergeTypeStyles;
+import com.sensoro.common.server.bean.MonitorOptionsBean;
+import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
+import com.sensoro.common.server.bean.ScenesData;
+import com.sensoro.common.server.bean.SensorStruct;
+import com.sensoro.common.server.bean.SensorTypeStyles;
+import com.sensoro.common.server.response.DeployDeviceDetailRsp;
+import com.sensoro.common.server.response.DeviceCameraListRsp;
+import com.sensoro.common.server.response.DeviceUpdateFirmwareDataRsp;
+import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
+import com.sensoro.common.server.response.ResponseBase;
 import com.sensoro.libbleserver.ble.callback.OnDeviceUpdateObserver;
 import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
 import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
@@ -39,52 +69,23 @@ import com.sensoro.smartcity.adapter.MonitorDetailOperationAdapter;
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.analyzer.OperationCmdAnalyzer;
-import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.callback.OnConfigInfoObserver;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IMonitorPointElectricDetailActivityView;
-import com.sensoro.common.iwidget.IOnCreate;
-import com.sensoro.common.iwidget.IOnResume;
-import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.smartcity.model.BleUpdateModel;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.Elect3DetailModel;
-import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.TaskOptionModel;
-import com.sensoro.smartcity.push.ThreadPoolManager;
-import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.AlarmInfo;
-import com.sensoro.smartcity.server.bean.DeployControlSettingData;
-import com.sensoro.smartcity.server.bean.DeviceCameraInfo;
-import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
-import com.sensoro.smartcity.server.bean.DeviceUpdateFirmwareData;
-import com.sensoro.smartcity.server.bean.DisplayOptionsBean;
-import com.sensoro.smartcity.server.bean.MalfunctionDataBean;
-import com.sensoro.smartcity.server.bean.MalfunctionTypeStyles;
-import com.sensoro.smartcity.server.bean.MergeTypeStyles;
-import com.sensoro.smartcity.server.bean.MonitorOptionsBean;
-import com.sensoro.smartcity.server.bean.MonitorPointOperationTaskResultInfo;
-import com.sensoro.smartcity.server.bean.ScenesData;
-import com.sensoro.smartcity.server.bean.SensorStruct;
-import com.sensoro.smartcity.server.bean.SensorTypeStyles;
-import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
-import com.sensoro.smartcity.server.response.DeviceCameraListRsp;
-import com.sensoro.smartcity.server.response.DeviceUpdateFirmwareDataRsp;
-import com.sensoro.smartcity.server.response.MonitorPointOperationRequestRsp;
-import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.smartcity.callback.BleObserver;
-import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.dialog.TipDeviceUpdateDialogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -455,8 +456,33 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     private void handleDeviceModeInfo() {
         if (mDeviceInfo != null) {
             if (Objects.requireNonNull(PreferencesHelper.getInstance().getConfigDeviceType(mDeviceInfo.getDeviceType())).isDemoSupported()) {
-                if ("fhsj_smoke".equals(mDeviceInfo.getDeviceType()) && WidgetUtil.isContainVersion("2.1.1", bleUpdateModel.currentFirmVersion)) {
-                    //只针对泛海三江烟感并且在2.1.1版本及以上
+                if ("fhsj_smoke".equals(mDeviceInfo.getDeviceType())) {
+                    if( WidgetUtil.isContainVersion("2.1.1", bleUpdateModel.currentFirmVersion)){
+                        //只针对泛海三江烟感并且在2.1.1版本及以上
+                        if (PreferencesHelper.getInstance().getUserData().hasDeviceDemoMode) {
+                            Integer demoMode = mDeviceInfo.getDemoMode();
+                            if (demoMode != null) {
+                                switch (demoMode) {
+                                    case 0:
+                                        //正常模式
+                                        deviceDemoMode = DEVICE_DEMO_MODE_CLOSE;
+                                        break;
+                                    case 1:
+                                        //演示模式
+                                        deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        } else {
+                            deviceDemoMode = DEVICE_DEMO_MODE_NO_PERMISSION;
+                        }
+                    }else{
+                        deviceDemoMode =  DEVICE_DEMO_MODE_NOT_SUPPORT;
+                    }
+
+                } else {
                     if (PreferencesHelper.getInstance().getUserData().hasDeviceDemoMode) {
                         Integer demoMode = mDeviceInfo.getDemoMode();
                         if (demoMode != null) {
@@ -477,7 +503,8 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         deviceDemoMode = DEVICE_DEMO_MODE_NO_PERMISSION;
                     }
                 }
-
+            }else{
+                deviceDemoMode =  DEVICE_DEMO_MODE_NOT_SUPPORT;
             }
             //TODO delete
 //            deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
@@ -1350,6 +1377,8 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             getView().toastShort(mContext.getString(R.string.location_information_not_set));
             return;
         }
+
+        Log.d("************", lonlat.get(0) + "**********" + lonlat.get(1) + "*******");
         Intent intent = new Intent();
         if (AppUtils.isChineseLanguage()) {
             intent.setClass(mContext, MonitorPointMapActivity.class);
@@ -1477,86 +1506,91 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     }
 
     private boolean doBleMuteOperation(final OnConfigInfoObserver onConfigInfoObserver) {
-        if (bleDeviceMap.containsKey(mDeviceInfo.getSn()) && !TextUtils.isEmpty(bleUpdateModel.blePassword)) {
-            String macAddress = bleDeviceMap.get(mDeviceInfo.getSn()).getMacAddress();
-            if (!TextUtils.isEmpty(macAddress)) {
-                if (sensoroDeviceConnection != null) {
-                    sensoroDeviceConnection.disconnect();
-                }
-                final Runnable configOvertime = new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isAttachedView()) {
-                            if (sensoroDeviceConnection != null) {
-                                sensoroDeviceConnection.disconnect();
-                            }
-                            if (onConfigInfoObserver != null) {
-                                onConfigInfoObserver.onOverTime(mContext.getString(R.string.init_config_over_time));
-                            }
-                        }
+        String sn = mDeviceInfo.getSn();
+        if (bleDeviceMap.containsKey(sn) && !TextUtils.isEmpty(bleUpdateModel.blePassword)) {
+            BLEDevice bleDevice = bleDeviceMap.get(sn);
+            if (bleDevice != null) {
+                String macAddress = bleDevice.getMacAddress();
+                if (!TextUtils.isEmpty(macAddress)) {
+                    if (sensoroDeviceConnection != null) {
+                        sensoroDeviceConnection.disconnect();
                     }
-                };
-                try {
-                    onConfigInfoObserver.onStart(null);
-                    sensoroDeviceConnection = new SensoroDeviceConnection(mContext, macAddress);
-                    final SensoroWriteCallback bleMuteOperationWriteCallback = new SensoroWriteCallback() {
+                    final Runnable configOvertime = new Runnable() {
                         @Override
-                        public void onWriteSuccess(Object o, int cmd) {
+                        public void run() {
                             if (isAttachedView()) {
                                 if (sensoroDeviceConnection != null) {
                                     sensoroDeviceConnection.disconnect();
                                 }
-                                mHandler.removeCallbacks(configOvertime);
-                                onConfigInfoObserver.onSuccess(null);
-                            }
-
-                        }
-
-                        @Override
-                        public void onWriteFailure(int errorCode, int cmd) {
-                            if (isAttachedView()) {
-                                if (sensoroDeviceConnection != null) {
-                                    sensoroDeviceConnection.disconnect();
+                                if (onConfigInfoObserver != null) {
+                                    onConfigInfoObserver.onOverTime(mContext.getString(R.string.init_config_over_time));
                                 }
-                                mHandler.removeCallbacks(configOvertime);
-                                onConfigInfoObserver.onFailed("写入失败");
                             }
-
                         }
                     };
-                    final SensoroConnectionCallback bleMuteOperationConnectionCallback = new SensoroConnectionCallback() {
-                        @Override
-                        public void onConnectedSuccess(BLEDevice bleDevice, int cmd) {
-                            if (isAttachedView()) {
-                                OperationCmdAnalyzer.doOperation(mDeviceInfo.getDeviceType(), mOperationType, sensoroDeviceConnection, bleMuteOperationWriteCallback);
+                    try {
+                        onConfigInfoObserver.onStart(null);
+                        sensoroDeviceConnection = new SensoroDeviceConnection(mContext, macAddress);
+                        final SensoroWriteCallback bleMuteOperationWriteCallback = new SensoroWriteCallback() {
+                            @Override
+                            public void onWriteSuccess(Object o, int cmd) {
+                                if (isAttachedView()) {
+                                    if (sensoroDeviceConnection != null) {
+                                        sensoroDeviceConnection.disconnect();
+                                    }
+                                    mHandler.removeCallbacks(configOvertime);
+                                    onConfigInfoObserver.onSuccess(null);
+                                }
+
                             }
 
-                        }
+                            @Override
+                            public void onWriteFailure(int errorCode, int cmd) {
+                                if (isAttachedView()) {
+                                    if (sensoroDeviceConnection != null) {
+                                        sensoroDeviceConnection.disconnect();
+                                    }
+                                    mHandler.removeCallbacks(configOvertime);
+                                    onConfigInfoObserver.onFailed("写入失败");
+                                }
 
-                        @Override
-                        public void onConnectedFailure(int errorCode) {
-                            if (isAttachedView()) {
-                                mHandler.removeCallbacks(configOvertime);
-                                onConfigInfoObserver.onFailed("连接失败");
+                            }
+                        };
+                        final SensoroConnectionCallback bleMuteOperationConnectionCallback = new SensoroConnectionCallback() {
+                            @Override
+                            public void onConnectedSuccess(BLEDevice bleDevice, int cmd) {
+                                if (isAttachedView()) {
+                                    OperationCmdAnalyzer.doOperation(mDeviceInfo.getDeviceType(), mOperationType, sensoroDeviceConnection, bleMuteOperationWriteCallback);
+                                }
+
                             }
 
-                        }
+                            @Override
+                            public void onConnectedFailure(int errorCode) {
+                                if (isAttachedView()) {
+                                    mHandler.removeCallbacks(configOvertime);
+                                    onConfigInfoObserver.onFailed("连接失败");
+                                }
 
-                        @Override
-                        public void onDisconnected() {
+                            }
 
-                        }
-                    };
-                    sensoroDeviceConnection.connect(bleUpdateModel.blePassword, bleMuteOperationConnectionCallback);
-                    mHandler.postDelayed(configOvertime, 10 * 1000);
-                    LogUtils.loge("--->>  蓝牙消音");
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                    mHandler.removeCallbacks(configOvertime);
-                    bleRequestCmd();
+                            @Override
+                            public void onDisconnected() {
+
+                            }
+                        };
+                        sensoroDeviceConnection.connect(bleUpdateModel.blePassword, bleMuteOperationConnectionCallback);
+                        mHandler.postDelayed(configOvertime, 10 * 1000);
+                        LogUtils.loge("--->>  蓝牙消音");
+                    } catch (Throwable e) {
+                        e.printStackTrace();
+                        mHandler.removeCallbacks(configOvertime);
+                        bleRequestCmd();
+                    }
+                    return true;
                 }
-                return true;
             }
+
         }
         return false;
     }

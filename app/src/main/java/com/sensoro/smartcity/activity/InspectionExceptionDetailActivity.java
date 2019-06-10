@@ -2,24 +2,25 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.sensoro.common.adapter.TagAdapter;
+import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.server.bean.ScenesData;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.InspectionExceptionThumbnailAdapter;
-import com.sensoro.smartcity.adapter.TagAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IInspectionExceptionDetailActivityView;
 import com.sensoro.smartcity.presenter.InspectionExceptionDetailActivityPresenter;
-import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
 

@@ -5,8 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.sensoro.common.server.bean.DeviceCameraInfo;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.server.bean.DeviceCameraInfo;
 import com.sensoro.smartcity.temp.entity.VideoModel;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;

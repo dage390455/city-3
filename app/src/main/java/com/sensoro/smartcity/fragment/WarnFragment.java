@@ -3,9 +3,9 @@ package com.sensoro.smartcity.fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -29,21 +29,22 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainWarnFragRcContentAdapter;
-import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
-import com.sensoro.smartcity.base.BaseFragment;
+import com.sensoro.common.adapter.SearchHistoryAdapter;
+import com.sensoro.common.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IWarnFragmentView;
+import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.presenter.WarnFragmentPresenter;
-import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
+import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
-import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
-import com.sensoro.smartcity.widget.SpacesItemDecoration;
-import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.SpacesItemDecoration;
+import com.sensoro.common.widgets.TipOperationDialogUtils;
+import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.smartcity.widget.popup.AlarmPopUtilsTest;
 
 import java.util.List;
 import java.util.Objects;
@@ -55,7 +56,7 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPresenter> implements
-        IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener,TipOperationDialogUtils.TipDialogUtilsClickListener {
+        IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.fg_main_top_search_title_root)
     LinearLayout fgMainWarnTitleRoot;
     @BindView(R.id.fg_main_top_search_frame_search)
@@ -93,7 +94,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     private MainWarnFragRcContentAdapter mRcContentAdapter;
     private boolean isShowDialog = true;
     private ProgressUtils mProgressUtils;
-    private AlarmPopUtils mAlarmPopUtils;
+    private AlarmPopUtilsTest mAlarmPopUtils;
     private Animation returnTopAnimation;
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private TipOperationDialogUtils historyClearDialog;
@@ -108,7 +109,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     @SuppressLint("ClickableViewAccessibility")
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
-        mAlarmPopUtils = new AlarmPopUtils(mRootFragment.getActivity());
+        mAlarmPopUtils = new AlarmPopUtilsTest(mRootFragment.getActivity());
         mAlarmPopUtils.setOnPopupCallbackListener(mPresenter);
         returnTopAnimation = AnimationUtils.loadAnimation(mRootFragment.getContext(), R.anim.return_top_in_anim);
         mReturnTopImageView.setAnimation(returnTopAnimation);
@@ -465,6 +466,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
                 break;
         }
     }
+
     @Override
     public void cancelSearchData() {
         doCancelSearch();
@@ -496,8 +498,8 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     }
 
     @Override
-    public void showAlarmPopupView() {
-        mAlarmPopUtils.show();
+    public void showAlarmPopupView(AlarmPopupModel alarmPopupModel) {
+        mAlarmPopUtils.show(alarmPopupModel);
     }
 
     @Override

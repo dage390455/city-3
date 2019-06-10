@@ -5,16 +5,16 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.util.ActivityTaskManager;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.manger.ActivityTaskManager;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.view.SystemBarTintManager;
 

@@ -41,7 +41,7 @@ public class WaterImageTools {
                 Canvas cv = new Canvas(newb);
                 cv.drawBitmap(comBit, 0, 0, null);// 在 0，0坐标开始画入src
                 cv.drawBitmap(comWatermark, 0, 0, null);// 在0，0坐标画入水印，可根据需求自行设置
-                cv.save(Canvas.ALL_SAVE_FLAG);// 保存
+                cv.save();// 保存
                 cv.restore();// 存储
 
             }

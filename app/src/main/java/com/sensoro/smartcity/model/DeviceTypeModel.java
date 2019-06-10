@@ -1,6 +1,6 @@
 package com.sensoro.smartcity.model;
 
-import android.support.annotation.DrawableRes;
+import androidx.annotation.DrawableRes;
 
 import java.util.List;
 

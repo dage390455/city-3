@@ -5,6 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.iwidget.IOnCreate;
+import com.sensoro.common.iwidget.IOnFragmentStart;
+import com.sensoro.common.model.EventData;
+import com.sensoro.common.model.EventLoginData;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.nameplate.activity.DeployNameplateActivity;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractManagerActivity;
 import com.sensoro.smartcity.activity.DeployRecordActivity;
@@ -13,19 +23,10 @@ import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.MerchantSwitchActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.activity.WireMaterialDiameterCalculatorActivity;
-import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
-import com.sensoro.common.iwidget.IOnCreate;
-import com.sensoro.common.iwidget.IOnFragmentStart;
-import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.model.EventLoginData;
-import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.PreferencesHelper;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 
@@ -61,6 +62,10 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
             getView().changeMerchantTitle(userData.hasSubMerchant);
             getView().setSignalCheckVisible(userData.hasSignalCheck);
             getView().setDeviceCameraVisible(userData.hasDeviceCameraList && chineseLanguage);
+            //TODO 是否显示基站管理
+            getView().setStationManagerVisible(userData.hasStationList);
+            //TODO 是否显示铭牌管理
+            getView().setNameplateVisible(userData.hasNameplateList);
         }
     }
 
@@ -171,10 +176,9 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         Intent intent = new Intent(mContext, DeployRecordActivity.class);
 //                intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
         getView().startAC(intent);
-//                return;
-//            }
-//        }
-//        getView().toastShort(mContext.getString(R.string.no_such_permission));
+
+//        Intent intent = new Intent(mContext, DeployNameplateActivity.class);
+//        getView().startAC(intent);
 
     }
 
@@ -212,8 +216,6 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         } else {
             AppUtils.openNetPage(mContext, "https://www.sensoro.com/en/about.html");
         }
-//        Intent intent = new Intent(mContext, LineChartActivity2.class);
-//        getView().startAC(intent);
     }
 
     public void doVersionInfo() {

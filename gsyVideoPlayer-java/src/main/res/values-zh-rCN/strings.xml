@@ -19,7 +19,7 @@
     <string name="replay">"重播"</string>
     <string name="gsy_video">"录像"</string>
     <string name="live">"直播"</string>
-    <string name="offline">"摄像机已离线"</string>
+    <string name="cameroffline">"摄像机已离线"</string>
 
     <string name="no_vido">视频已过期，服务器仅保留7天内视频</string>
 </resources>

@@ -10,8 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -20,12 +18,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.gyf.barlibrary.ImmersionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.gyf.immersionbar.ImmersionBar;
+import com.sensoro.common.manger.ActivityTaskManager;
+import com.sensoro.common.model.ImageItem;
+import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.util.ActivityTaskManager;
 import com.sensoro.smartcity.widget.MyVideoView;
-import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.util.NavigationBarChangeListener;
 import com.sensoro.smartcity.widget.imagepicker.view.SystemBarTintManager;
 
@@ -210,9 +211,9 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
         mProgressUtils.destroyProgress();
         vv_play.release();
 
-        if (immersionBar != null) {
-            immersionBar.destroy();
-        }
+//        if (immersionBar != null) {
+//            immersionBar.destroy();
+//        }
         super.onDestroy();
         ActivityTaskManager.getInstance().popActivity(this);
     }

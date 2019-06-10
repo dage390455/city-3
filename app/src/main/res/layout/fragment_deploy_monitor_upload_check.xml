@@ -5,7 +5,7 @@
     android:background="@color/c_f4f4f4"
     android:clickable="true">
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/tv_fg_deploy_upload_check_upload_tip">
@@ -145,7 +145,7 @@
                             android:textSize="14dp"
                             android:visibility="visible" />
 
-                        <com.sensoro.smartcity.widget.TouchRecycleView
+                        <com.sensoro.common.widgets.TouchRecycleView
                             android:id="@+id/rc_fg_deploy_upload_check_tag"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -154,7 +154,7 @@
                             android:layout_alignParentEnd="true"
                             android:visibility="gone">
 
-                        </com.sensoro.smartcity.widget.TouchRecycleView>
+                        </com.sensoro.common.widgets.TouchRecycleView>
                     </RelativeLayout>
 
 
@@ -205,13 +205,13 @@
                             android:textSize="14dp"
                             android:visibility="visible" />
 
-                        <com.sensoro.smartcity.widget.TouchRecycleView
+                        <com.sensoro.common.widgets.TouchRecycleView
                             android:id="@+id/rc_fg_deploy_upload_check_alarm_contact"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:visibility="gone">
 
-                        </com.sensoro.smartcity.widget.TouchRecycleView>
+                        </com.sensoro.common.widgets.TouchRecycleView>
                     </RelativeLayout>
 
 
@@ -329,7 +329,7 @@
                 android:textColor="@color/c_a6a6a6"
                 android:textSize="12dp" />
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <TextView
         android:id="@+id/tv_fg_deploy_upload_check_upload"

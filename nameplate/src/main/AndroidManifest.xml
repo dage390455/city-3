@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.sensoro.nameplate">
+
+    <application>
+        <activity android:name=".activity.NameplateDetailActivity"/>
+        <activity android:name=".activity.NameplateListActivity" />
+        <activity android:name=".activity.EditNameplateDetailActivity" />
+        <activity android:name=".activity.DeployNameplateAddSensorFromListActivity" />
+        <activity android:name=".activity.DeployNameplateActivity" />
+        <activity android:name=".activity.DeployNameplateAddSensorActivity" />
+        <activity android:name=".activity.DeployNameplateNameActivity" />
+
+    </application>
+
+</manifest>

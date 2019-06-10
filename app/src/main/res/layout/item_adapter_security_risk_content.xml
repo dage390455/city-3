@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="12dp"
+    android:orientation="vertical"
+    android:background="@color/white"
+
+    >
+
+    <LinearLayout
+        android:id="@+id/ll_location_name_adapter_security_risks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        >
+        <TextView
+            android:id="@+id/tv_location_adapter_security_risks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/c_a6a6a6"
+            android:textSize="14dp"
+            android:layout_gravity="center_vertical"
+            android:text="@string/security_location"
+
+            />
+        <LinearLayout
+            android:id="@+id/ll_location_name_content_adapter_security_risks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_gravity="center_vertical"
+            android:paddingBottom="4dp"
+            android:background="@drawable/shape_bg_solid_29c_full_corner"
+            android:visibility="gone"
+            >
+            <TextView
+                android:id="@+id/tv_location_name_adapter_security_risks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|start"
+                android:textSize="12dp"
+                android:textColor="@color/white"
+                />
+            <ImageView
+                android:id="@+id/iv_del_adapter_security_risks_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:src="@drawable/security_tag_del"
+                android:contentDescription="@null"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+    <View
+        android:id="@+id/view_divider_adapter_security_risks"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_divider_height"
+        android:background="@color/c_dfdfdf"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+         />
+
+    <LinearLayout
+        android:id="@+id/ll_behavior_adapter_security_risks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
+        <TextView
+            android:id="@+id/tv_behavior_adapter_security_risks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/c_a6a6a6"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
+            android:textSize="14dp"
+            android:text="@string/security_behavior"
+
+            />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_behaviors_adapter_security_risks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_marginBottom="4dp"
+            android:layout_marginStart="16dp"
+            >
+
+        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

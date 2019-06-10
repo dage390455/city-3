@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
     android:layout_marginEnd="8dp"
     android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:layout_marginTop="16dp">
+    android:focusableInTouchMode="true">
 
     <ImageView
         android:id="@+id/item_alert_content_imv_icon"
@@ -23,8 +23,8 @@
         android:id="@+id/item_alert_content_tv_content"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:lineSpacingExtra="4dp"
         android:text="@string/alarm_log_alarm_call"
         android:textColor="@color/c_a6a6a6"
@@ -32,6 +32,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/item_alert_content_imv_icon"
         app:layout_constraintTop_toTopOf="@id/item_alert_content_imv_icon" />
+
     <TextView
         android:id="@+id/item_alert_content_tv_time"
         android:layout_width="wrap_content"
@@ -47,9 +48,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/item_alert_content_tv_content"
-        app:layout_constraintTop_toBottomOf="@id/item_alert_content_tv_time"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/item_alert_content_tv_time">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -77,6 +79,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_item_alarm_detail_child_alarm_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
@@ -102,10 +105,39 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_item_alarm_detail_child_alarm_fire_phase"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/alarm_pop_text_fire_phase"
+                android:textColor="@color/c_626262"
+                android:textSize="@dimen/city_size" />
+
+            <TextView
+                android:id="@+id/item_alarm_detail_child_alarm_fire_phase"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:inputType="textMultiLine"
+                android:textColor="@color/c_626262"
+                android:textSize="@dimen/city_size" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_item_alarm_detail_child_alarm_place"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -127,6 +159,60 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_item_alarm_detail_child_alarm_fire_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/alarm_pop_text_fire_type"
+                android:textColor="@color/c_626262"
+                android:textSize="@dimen/city_size" />
+
+            <TextView
+                android:id="@+id/item_alarm_detail_child_alarm_fire_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:inputType="textMultiLine"
+                android:textColor="@color/c_626262"
+                android:textSize="@dimen/city_size" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_item_alarm_detail_child_alarm_risk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/alarm_detail_security_risks"
+                android:textColor="@color/c_626262"
+                android:textSize="@dimen/city_size" />
+
+            <TextView
+                android:id="@+id/item_alarm_detail_child_alarm_risk"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:inputType="textMultiLine"
+                android:textColor="@color/c_626262"
+                android:textSize="@dimen/city_size" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
@@ -135,9 +221,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_marginRight="10dp"
                 android:text="@string/alarm_log_alarm_remark"
-                android:layout_gravity="center_vertical"
                 android:textColor="@color/c_626262"
                 android:textSize="@dimen/city_size" />
 
@@ -145,9 +231,9 @@
                 android:id="@+id/item_alarm_detail_child_alarm_remarks"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:layout_gravity="center_vertical"
                 android:inputType="textMultiLine"
                 android:textColor="@color/c_626262"
                 android:textSize="@dimen/city_size" />
@@ -156,10 +242,10 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="6dp">
+            android:layout_marginTop="6dp"
+            android:layout_marginRight="10dp">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_alarm_photo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -173,6 +259,4 @@
 
     </LinearLayout>
 
-
-
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

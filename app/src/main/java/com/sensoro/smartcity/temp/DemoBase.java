@@ -5,15 +5,16 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.github.mikephil.charting.charts.Chart;
+import com.google.android.material.snackbar.Snackbar;
 
 /**
  * Base class of all Activities of the Demo Application.

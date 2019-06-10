@@ -1,7 +1,7 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
+import com.sensoro.common.server.bean.ContractsTemplateInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;

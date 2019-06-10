@@ -3,9 +3,9 @@ package com.sensoro.smartcity.adapter;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
-import android.support.annotation.ColorRes;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
+import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 

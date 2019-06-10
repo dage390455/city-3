@@ -2,9 +2,9 @@ package com.sensoro.smartcity.factory;
 
 import android.text.TextUtils;
 
-import com.sensoro.smartcity.model.EventLoginData;
-import com.sensoro.smartcity.server.bean.GrantsInfo;
-import com.sensoro.smartcity.server.bean.UserInfo;
+import com.sensoro.common.model.EventLoginData;
+import com.sensoro.common.server.bean.GrantsInfo;
+import com.sensoro.common.server.bean.UserInfo;
 import com.sensoro.smartcity.util.LogUtils;
 
 import java.util.List;
@@ -16,7 +16,6 @@ public class UserPermissionFactory {
         //
         eventLoginData.userId = userInfo.get_id();
         eventLoginData.userName = userInfo.getNickname();
-        eventLoginData.phone = userInfo.getContacts();
         eventLoginData.phoneId = phoneId;
         try {
             LogUtils.loge("logPresenter", "phoneId = " + phoneId);
@@ -47,13 +46,14 @@ public class UserPermissionFactory {
         //TODO 统一去掉信号配置
 //        eventLoginData.hasSignalConfig = getHasSignalConfig(grants);
         eventLoginData.hasSignalConfig = false;
-        eventLoginData.hasBadSignalUpload = getHasBadSignalUpload(grants);
+        eventLoginData.hasForceUpload = getHasBadSignalUpload(grants);
         eventLoginData.hasDevicePositionCalibration = getHasDevicePositionCalibration(grants);
         eventLoginData.hasDeviceMuteShort = getHasMuteShort(grants);
         eventLoginData.hasDeviceMuteLong = getHasMuteLong(grants);
         eventLoginData.hasDeviceFirmwareUpdate = getHasDeviceFirmUpdate(grants);
         eventLoginData.hasDeviceDemoMode = getHasDeviceDemoMode(grants);
         eventLoginData.hasDeviceCameraList = getHasDeviceCameraList(grants);
+        eventLoginData.hasDeviceCameraDeploy = getHasDeviceCameraDeploy(grants);
         String controllerAid = userInfo.getControllerAid();
         //通过controllerAid来判断是否可以返回主账户
         eventLoginData.hasControllerAid = !TextUtils.isEmpty(controllerAid);
@@ -65,13 +65,16 @@ public class UserPermissionFactory {
         //
         UserInfo.Account account = userInfo.getAccount();
         if (account != null) {
+            String contacts = account.getContacts();
             String id = account.getId();
             boolean totpEnable = account.isTotpEnable();
             try {
-                LogUtils.loge("id = " + id + ",totpEnable = " + totpEnable);
+                LogUtils.loge("login--->>> id = " + id + ",totpEnable = " + totpEnable + ",phone = " + contacts);
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
             }
+            eventLoginData.phone = contacts;
+
             if (totpEnable) {
                 eventLoginData.needAuth = true;
             }
@@ -448,6 +451,22 @@ public class UserPermissionFactory {
             List<String> grantsCamera = grants.getCamera();
             if (grantsCamera != null) {
                 return grantsCamera.contains("list");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 用户是否有摄像头deploy权限
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasDeviceCameraDeploy(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsCamera = grants.getCamera();
+            if (grantsCamera != null) {
+                return grantsCamera.contains("deploy");
             }
         }
         return false;

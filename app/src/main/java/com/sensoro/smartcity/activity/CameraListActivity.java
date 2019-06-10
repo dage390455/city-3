@@ -2,10 +2,6 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -20,28 +16,34 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.sensoro.common.adapter.SearchHistoryAdapter;
+import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.model.CameraFilterModel;
+import com.sensoro.common.server.bean.BaseStationInfo;
+import com.sensoro.common.server.bean.DeviceCameraInfo;
+import com.sensoro.common.widgets.CustomDivider;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.common.widgets.SpacesItemDecoration;
+import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeviceCameraContentAdapter;
-import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
-import com.sensoro.smartcity.model.CameraFilterModel;
 import com.sensoro.smartcity.presenter.CameraListActivityPresenter;
-import com.sensoro.smartcity.server.bean.DeviceCameraInfo;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
-import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.SpacesItemDecoration;
-import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
-import com.sensoro.smartcity.widget.divider.CustomDivider;
 import com.sensoro.smartcity.widget.popup.CameraListFilterPopupWindowTest;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
 
@@ -119,6 +121,7 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
         acHistoryLogRcContent.setLayoutManager(linearLayoutManager);
         acHistoryLogRcContent.setAdapter(mDeviceCameraContentAdapter);
         CustomDivider dividerItemDecoration = new CustomDivider(mActivity, DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setSideWith(0);
         acHistoryLogRcContent.addItemDecoration(dividerItemDecoration);
         //
         returnTopAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.return_top_in_anim);
@@ -366,6 +369,16 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
             mDeviceCameraContentAdapter.updateAdapter(data);
         }
         setNoContentVisible(data == null || data.size() < 1);
+    }
+
+    @Override
+    public void updateBaseStationAdapter(List<BaseStationInfo> data) {
+
+    }
+
+    @Override
+    public void setBaseStationType(List<CameraFilterModel.ListBean> data) {
+
     }
 
 

@@ -2,8 +2,6 @@ package com.sensoro.smartcity.fragment;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +14,14 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.gyf.barlibrary.ImmersionBar;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+
+import com.gyf.immersionbar.ImmersionBar;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.model.EventLoginData;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.smartcity.util.PreferencesHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -165,9 +166,9 @@ public class MenuDialogFragment extends DialogFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (immersionBar != null) {
-            immersionBar.destroy();
-        }
+//        if (immersionBar != null) {
+//            immersionBar.destroy();
+//        }
         unbinder.unbind();
     }
 

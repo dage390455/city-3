@@ -2,7 +2,7 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,10 +10,10 @@ import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IMonitorPointMapENActivityView;
 import com.sensoro.smartcity.presenter.MonitorPointMapENActivityPresenter;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.widgets.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

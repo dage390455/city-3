@@ -3,8 +3,8 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,12 +13,12 @@ import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MalfunctionDetailRcContentAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IMalfunctionDetailActivityView;
 import com.sensoro.smartcity.presenter.MalfunctionDetailActivityPresenter;
-import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
-import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.server.bean.MalfunctionListInfo;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.List;
 
@@ -44,18 +44,12 @@ public class MalfunctionDetailActivity extends BaseActivity<IMalfunctionDetailAc
     TextView acMalfunctionDetailTvTime;
     @BindView(R.id.ac_malfunction_detail_tv_time_text)
     TextView acMalfunctionDetailTvTimeText;
-    @BindView(R.id.ac_malfunction_detail_ll_time)
-    LinearLayout acMalfunctionDetailLlTime;
     @BindView(R.id.ac_malfunction_detail_imv_count_icon)
     ImageView acMalfunctionDetailImCountIcon;
     @BindView(R.id.ac_malfunction_detail_tv_count)
     TextView acMalfunctionDetailTvCount;
     @BindView(R.id.ac_malfunction_detail_tv_count_text)
     TextView acMalfunctionDetailTvCountText;
-    @BindView(R.id.ac_malfunction_detail_ll_count)
-    LinearLayout acMalfunctionDetailLlCount;
-    @BindView(R.id.ac_malfunction_detail_ll_card)
-    LinearLayout acMalfunctionDetailLlCard;
     @BindView(R.id.ac_malfunction_detail_tv_contact_owner)
     TextView acMalfunctionDetailTvContactOwner;
     @BindView(R.id.ac_malfunction_detail_tv_quick_navigation)
@@ -179,20 +173,20 @@ public class MalfunctionDetailActivity extends BaseActivity<IMalfunctionDetailAc
 
     @Override
     public void setMalfunctionStatus(int malfunctionStatus, String time) {
-        switch (malfunctionStatus) {
-            case 1:
-                acMalfunctionDetailLlTime.setBackgroundResource(R.drawable.shape_bg_corner_f4_shadow);
-                acMalfunctionDetailImvIcon.setImageResource(R.drawable.alert_time_normal);
-                acMalfunctionDetailTvTime.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
-                acMalfunctionDetailTvTimeText.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
-                break;
-            case 2:
-                acMalfunctionDetailLlTime.setBackgroundResource(R.drawable.shape_bg_corner_fdc83b_shadow);
-                acMalfunctionDetailImvIcon.setImageResource(R.drawable.alert_time_white);
-                acMalfunctionDetailTvTime.setTextColor(Color.WHITE);
-                acMalfunctionDetailTvTimeText.setTextColor(Color.WHITE);
-                break;
-        }
+//        switch (malfunctionStatus) {
+//            case 1:
+//                acMalfunctionDetailLlTime.setBackgroundResource(R.drawable.shape_bg_corner_f4_shadow);
+//                acMalfunctionDetailImvIcon.setImageResource(R.drawable.alert_time_normal);
+//                acMalfunctionDetailTvTime.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+//                acMalfunctionDetailTvTimeText.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+//                break;
+//            case 2:
+//                acMalfunctionDetailLlTime.setBackgroundResource(R.drawable.shape_bg_corner_fdc83b_shadow);
+//                acMalfunctionDetailImvIcon.setImageResource(R.drawable.alert_time_white);
+//                acMalfunctionDetailTvTime.setTextColor(Color.WHITE);
+//                acMalfunctionDetailTvTimeText.setTextColor(Color.WHITE);
+//                break;
+//        }
         acMalfunctionDetailTvTime.setText(time);
 
     }

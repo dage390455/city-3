@@ -1,9 +1,9 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +11,8 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.server.bean.InspectionTaskInstructionModel;
-import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.common.server.bean.InspectionTaskInstructionModel;
+import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.divider.TopSpaceItemDecoration;
 

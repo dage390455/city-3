@@ -1,8 +1,8 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +13,8 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.ContractOrderInfo;
-import com.sensoro.smartcity.server.bean.ContractListInfo;
-import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.common.server.bean.ContractListInfo;
+import com.sensoro.common.utils.DateUtil;
 
 import java.util.ArrayList;
 import java.util.List;

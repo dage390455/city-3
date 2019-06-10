@@ -1,7 +1,7 @@
 package com.sensoro.common.utils;
 
 import android.content.Context;
-import android.support.annotation.DimenRes;
+import androidx.annotation.DimenRes;
 
 import java.io.UnsupportedEncodingException;
 

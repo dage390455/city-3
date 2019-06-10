@@ -7,28 +7,28 @@ import android.os.Handler;
 import android.text.TextUtils;
 
 import com.igexin.sdk.PushManager;
+import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.iwidget.IOnStart;
+import com.sensoro.common.model.EventLoginData;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.widgets.PermissionDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.MainActivity;
-import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISplashActivityView;
-import com.sensoro.common.iwidget.IOnStart;
-import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.push.SensoroPushIntentService;
 import com.sensoro.smartcity.push.SensoroPushService;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.MyPermissionManager;
-import com.sensoro.smartcity.util.PreferencesHelper;
-import com.sensoro.smartcity.widget.dialog.PermissionDialogUtils;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.permission.Rationale;
 import com.yanzhenjie.permission.RequestExecutor;
+import com.yanzhenjie.permission.runtime.Permission;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
     private final Handler handler = new Handler();
 
     private PermissionDialogUtils permissionDialogUtils;
-    private final String[] requestPermissions = {Permission.READ_PHONE_STATE, Permission.ACCESS_COARSE_LOCATION, Permission.ACCESS_FINE_LOCATION, Permission.WRITE_EXTERNAL_STORAGE, Permission.WRITE_CONTACTS, Permission.CAMERA, Permission.RECORD_AUDIO, Permission.CALL_PHONE};
+    private final String[] requestPermissions = {Permission.READ_PHONE_STATE, Permission.ACCESS_COARSE_LOCATION, Permission.ACCESS_FINE_LOCATION, Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE, Permission.WRITE_CONTACTS, Permission.READ_CONTACTS, Permission.CAMERA, Permission.RECORD_AUDIO, Permission.CALL_PHONE};
 
     @Override
     public void initData(Context context) {
@@ -48,7 +48,7 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
 //        }
         mContext = (Activity) context;
         permissionDialogUtils = new PermissionDialogUtils(mContext);
-//        getView().startAC(new Intent(mContext, DeployMonitorCheckActivity.class));
+//        getView().startAC(new Intent(mContext, SecurityRisksActivity.class));
 //        getView().finishAc();
     }
 

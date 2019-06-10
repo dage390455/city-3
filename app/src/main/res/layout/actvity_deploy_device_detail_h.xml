@@ -38,7 +38,7 @@
         android:textColor="@color/c_a6a6a6"
         android:textSize="14dp" />
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/ac_deploy_device_detail_tv_upload_tip"
@@ -181,14 +181,14 @@
                             android:textSize="14dp"
                             android:visibility="visible" />
 
-                        <com.sensoro.smartcity.widget.TouchRecycleView
+                        <com.sensoro.common.widgets.TouchRecycleView
                             android:id="@+id/ac_deploy_device_detail_rc_tag"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:visibility="gone">
 
-                        </com.sensoro.smartcity.widget.TouchRecycleView>
+                        </com.sensoro.common.widgets.TouchRecycleView>
                     </RelativeLayout>
 
 
@@ -237,7 +237,7 @@
                             android:textSize="14dp"
                             android:visibility="visible" />
 
-                        <com.sensoro.smartcity.widget.TouchRecycleView
+                        <com.sensoro.common.widgets.TouchRecycleView
                             android:id="@+id/ac_deploy_device_detail_rc_alarm_contact"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -245,7 +245,7 @@
                             android:layout_marginBottom="4dp"
                             android:visibility="gone">
 
-                        </com.sensoro.smartcity.widget.TouchRecycleView>
+                        </com.sensoro.common.widgets.TouchRecycleView>
                     </RelativeLayout>
 
 
@@ -505,7 +505,7 @@
 
         </LinearLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 
 </RelativeLayout>

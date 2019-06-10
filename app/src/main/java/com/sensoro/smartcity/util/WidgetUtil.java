@@ -18,8 +18,8 @@ import android.graphics.drawable.GradientDrawable;
 import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.v4.graphics.drawable.DrawableCompat;
+import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.DrawableCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -32,14 +32,15 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sensoro.common.base.ContextUtils;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.server.bean.DeviceTypeStyles;
+import com.sensoro.common.server.bean.MergeTypeStyles;
+import com.sensoro.common.server.bean.SensorStruct;
+import com.sensoro.common.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.model.Elect3DetailModel;
-import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
-import com.sensoro.smartcity.server.bean.MergeTypeStyles;
-import com.sensoro.smartcity.server.bean.SensorStruct;
-import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -1301,7 +1302,7 @@ public class WidgetUtil {
 
         canvas.drawBitmap(newbm, width / 5 - x_offset, height / 5 - 5 - y_offset,
                 textPaint);
-        canvas.save(Canvas.ALL_SAVE_FLAG);
+        canvas.save();
         canvas.restore();
 
         return new BitmapDrawable(context.getResources(), imgTemp);
@@ -1340,11 +1341,11 @@ public class WidgetUtil {
             }
 
         }
-        return SensoroCityApplication.getInstance().getResources().getString(R.string.unknown);
+        return ContextUtils.getContext().getResources().getString(R.string.unknown);
 
 
 //        if (!TextUtils.isEmpty(deviceType)) {
-//            List<DeviceTypeMutualModel.MergeTypeInfosBean> mergeTypeInfos = SensoroCityApplication.getInstance().mDeviceTypeMutualModel.getMergeTypeInfos();
+//            List<DeviceTypeMutualModel.MergeTypeInfosBean> mergeTypeInfos = ContextUtils.getContext().mDeviceTypeMutualModel.getMergeTypeInfos();
 //            if (mergeTypeInfos != null) {
 //                for (DeviceTypeMutualModel.MergeTypeInfosBean mergeTypeInfosBean : mergeTypeInfos) {
 //                    List<String> deviceTypes = mergeTypeInfosBean.getDeviceTypes();
@@ -1425,7 +1426,7 @@ public class WidgetUtil {
                 return name;
             }
         }
-        return SensoroCityApplication.getInstance().getResources().getString(R.string.unknown);
+        return ContextUtils.getContext().getResources().getString(R.string.unknown);
     }
 
     public static String handlerNumber(String text) {

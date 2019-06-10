@@ -201,7 +201,7 @@ public class SensoroPushIntentService extends GTIntentService {
 //        Message msg = Message.obtain();
 //        msg.what = what;
 //        msg.obj = data;
-//        SensoroCityApplication.getInstance().pushNotification(msg);
+//        ContextUtils.getContext().pushNotification(msg);
 //    }
     private void sendMessage(String data) {
         Message msg = Message.obtain();
@@ -213,6 +213,6 @@ public class SensoroPushIntentService extends GTIntentService {
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
-//        SensoroCityApplication.getInstance().pushNotification(data);
+//        ContextUtils.getContext().pushNotification(data);
     }
 }

@@ -5,7 +5,7 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <TextView
+    <com.sensoro.smartcity.widget.BoldTextView
         android:id="@+id/ac_deploy_result_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,7 +24,7 @@
         android:layout_height="@dimen/view_divider_height"
         android:background="@color/c_dfdfdf" />
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
@@ -324,7 +324,7 @@
 
         </LinearLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
         android:id="@+id/ac_deploy_result_bottom"

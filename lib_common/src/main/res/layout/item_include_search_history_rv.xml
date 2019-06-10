@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_search_history"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_f4f4f4"
+    android:orientation="vertical"
+    android:visibility="gone">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:id="@+id/tv_search_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/recent"
+            android:textColor="@color/c_252525"
+            android:textSize="14dp" />
+
+        <ImageView
+            android:id="@+id/btn_search_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@null"
+            android:src="@mipmap/tag_delete"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_search_history"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp" />
+</LinearLayout>

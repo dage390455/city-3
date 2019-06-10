@@ -8,13 +8,16 @@ def keystoreProperties = new Properties()
 // Load your keystore.properties file into the keystoreProperties object.
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 android {
-    def verName = "3.3.1"
+    def verName = "3.3.2"
     def verCode = 1
     def buildCode = 1
     def connector = '_v'
     def versionPropsFile = file('version.properties')
 
-
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     signingConfigs {
         release {
             keyAlias keystoreProperties['keyAlias']
@@ -46,6 +49,10 @@ android {
                 GETUI_APP_ID    : "2VjnktTwteAnEZ1aMZCB53",
                 GETUI_APP_KEY   : "zrfWS690Dh7r9bPUUfh1o2",
                 GETUI_APP_SECRET: "fN5extdlmHA5NDbdKPkP6A",
+
+//              GETUI_APP_ID    : "g5ikHO2m7DAZ0oY4BrXNE",
+//              GETUI_APP_KEY   : "BkwqeevSYj8fQTO47FsXGA",
+//              GETUI_APP_SECRET: "Z41MlQj5AC8JwUzxEm2081",
                 //TODO 测试版/正式版 使用其中一个
 //                APP_ICON        : "@mipmap/ic_launcher_beta",
 //                APP_ROUND_ICON  : "@mipmap/ic_launcher_beta_round"
@@ -71,6 +78,11 @@ android {
 //                options.compilerArgs << "-Xbootclasspath/a:" + System.properties.get("java.home") + "/lib/rt.jar"
 //            }
 //        }
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
     }
     buildTypes {
         debug {
@@ -143,8 +155,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     sourceSets {
         main {
@@ -208,38 +220,45 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     //
-    //    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
+    implementation deps.arouter_api
+    annotationProcessor deps.arouter_compiler
     //
-    //    compile 'com.github.PhilJay:MPAndroidChart:v3.0.3'
-    //    compile project(':cosmocalendar')
     implementation deps.support.design
     implementation deps.support.multidex
     implementation deps.support.cardview
     implementation deps.support.constraint_layout
     implementation deps.support.app_compat
     implementation deps.support.recyclerview
-
+    //
     implementation deps.butterknife
     annotationProcessor deps.butterknife_compiler
+    //
+    testImplementation deps.junit
+    //
+    implementation deps.smartrefresh
+    //
+    implementation deps.photoview
+    //
+    implementation(deps.immersionbar) {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+    }
+    //
+    implementation deps.autosize
+    //
+    implementation deps.permission
+    //消息组件
+    implementation deps.event_bus
+    //
+    implementation project(path: ':lib_common')
+    //
     implementation(deps.socket_io) {
         exclude group: 'org.json', module: 'json'
     }
-//    implementation 'de.hdodenhof:circleimageview:2.1.0'
-
-    //    compile 'com.squareup.okio:okio:1.5.0'
-    testImplementation deps.junit
-    //    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.1.2'
-    //    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
-
     debugImplementation deps.leakcanary_debug
     releaseImplementation deps.leakcanary_release
-    //
-
     //  更改扫描二维码为maven库
     implementation deps.bga_qrcode_zxing
-//    implementation 'cn.bingoogolapple:bga-qrcode-zbar:1.3.6'
     //
-    //    compile project(':imagepicker')
     implementation deps.glide
     //网络组件
     implementation deps.okhttp3_logging
@@ -249,63 +268,89 @@ dependencies {
     implementation deps.retrofit.adapter
     implementation deps.rxjava2
     implementation deps.rx_android
-    //消息组件
-    implementation deps.event_bus
-
-    //    compile 'com.gyf.immersionbar:immersionbar:2.3.2-beta01'
+    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
     //protobuf
     implementation deps.protobuf
-
-    //bottom bar
-    implementation deps.autosize
-    implementation deps.permission
-    implementation deps.smartrefresh
+    implementation deps.protobuf_java_format
+    //
     implementation deps.dfu
+    //
     debugImplementation deps.blockcanary_debug
     releaseImplementation deps.blockcanary_release
-    //    compile 'com.hjq:toast:5.2'
-    implementation files('libs/Baidu_Mtj_3.8.2.1.jar')
+    //
     implementation files('libs/ocr-sdk.jar')
     implementation project(':ocr_ui')
-    implementation files('libs/GetuiSDK2.12.4.0.jar')
-    implementation files('libs/AMap3DMap_6.4.1_AMapSearch_6.1.0_AMapLocation_4.2.0_20180906.jar')
+    //
+//    implementation files('libs/GetuiSDK2.12.4.0.jar')
+    //
+//    implementation files('libs/AMap3DMap_6.4.1_AMapSearch_6.1.0_AMapLocation_4.2.0_20180906.jar')
+    //
     implementation project(':sensor-kit')
+    //
     implementation project(':bottomnavigation')
     //Calendar view
     implementation project(':calendarview')
     //
-    implementation project(path: ':lib_common')
     implementation project(path: ':pickerview')
-
+    //
     implementation(deps.mapbox) {
         transitive = true
     }
-    implementation deps.protobuf_java_format
-    implementation deps.photoview
-    implementation(deps.immersionbar) {
-        exclude group: 'com.android.support', module: 'appcompat-v7'
-    }
+    //统计
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
-    implementation 'com.qiniu:qiniu-android-sdk:7.3.+'
-    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'
     implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
+    implementation 'com.baidu.mobstat:mtj-sdk-circle:latest.integration'
+    //
+    implementation 'com.qiniu:qiniu-android-sdk:7.3.+'
+    //
     implementation project(':indicatorseekbar')
-
+    //
     implementation('com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.3') {
         transitive = true
     }
-    //    compile 'com.hjq:toast:5.2'
+    //mp表格组件
+    implementation deps.MPAndroidChart
+    //二维码扫描
     api(project(':simplescanner')) {
         exclude group: "com.amap.api"
     }
-    implementation files('libs/player.jar')
+    //播放器
+//    implementation files('libs/player.jar')
     implementation project(path: ':gsyVideoPlayer-base')
     implementation project(path: ':gsyVideoPlayer-proxy_cache')
     implementation project(path: ':gsyVideoPlayer-java')
     implementation project(path: ':gsyVideoPlayer-armv7a')
-    //mp表格组件
-    implementation deps.MPAndroidChart
+    //
+    implementation project(':nameplate')
+//    implementation "com.afollestad.material-dialogs:core:0.9.1.0"
+    implementation deps.getui
+    //3D地图so及jar
+    implementation deps.amap_3dmap
+    //定位功能
+    implementation deps.amap_location
+    //搜索功能
+    implementation deps.amap_search
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //    compile 'com.hjq:toast:5.2'
+    //    compile 'com.gyf.immersionbar:immersionbar:2.3.2-beta01'
+    //    implementation 'cn.bingoogolapple:bga-qrcode-zbar:1.3.6'
+    //
+    //    compile project(':imagepicker')
+//    implementation 'de.hdodenhof:circleimageview:2.1.0'
+
+    //    compile 'com.squareup.okio:okio:1.5.0'
+
+    //    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.1.2'
+    //    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+    //
+    //    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
+    //
+    //    compile 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    //    compile project(':cosmocalendar')
+    //
 
 //    implementation androidDependencies.appcompat_v7
 //
@@ -316,6 +361,7 @@ dependencies {
 //    implementation 'com.shuyu:GSYVideoPlayer:6.0.3'
 //    implementation 'com.shuyu:gsyVideoPlayer-java:6.0.3'
 //    implementation 'com.shuyu:gsyVideoPlayer-armv7a:6.0.3'
+    //    compile 'com.hjq:toast:5.2'
 }
 //获取编译时间
 static def releaseTime() {

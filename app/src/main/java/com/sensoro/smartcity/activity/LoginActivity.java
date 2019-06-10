@@ -20,15 +20,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ILoginView;
 import com.sensoro.smartcity.presenter.LoginPresenter;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.smartcity.widget.dialog.LoginUrlDialogUtils;
 
 import java.util.Locale;
 
@@ -40,7 +42,7 @@ import butterknife.OnClick;
  * Created by sensoro on 17/7/24.
  */
 
-public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> implements ILoginView {
+public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> implements ILoginView, LoginUrlDialogUtils.OnLoginUrlDialogListener {
 
     @BindView(R.id.login_btn)
     Button login_btn;
@@ -64,13 +66,22 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     TextView acLoginTvLogoDescription;
     @BindView(R.id.ac_login_root)
     FrameLayout acLoginRoot;
+    @BindView(R.id.tv_url_desc)
+    TextView tvUrlDesc;
     private ProgressUtils mProgressUtils;
+    private LoginUrlDialogUtils loginUrlDialogUtils;
+    //
+    private final String[] urlArr = new String[]{"正式版", "Demo版", "测试版", "预发布", "Dev", "自定义"};
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(mActivity);
-        mPresenter.onCreate();
+        //地址修改
+        String myBaseUrl = PreferencesHelper.getInstance().getMyBaseUrl();
+        if (!TextUtils.isEmpty(myBaseUrl)) {
+            urlArr[5] = "自定义：" + myBaseUrl;
+        }
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mPresenter.initData(mActivity);
         initView();
@@ -83,7 +94,9 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     }
 
     private void initView() {
-
+        loginUrlDialogUtils = new LoginUrlDialogUtils(mActivity);
+        loginUrlDialogUtils.registerListener(this);
+        loginUrlDialogUtils.setTitle("自定义例如：\ncity-dev-api.sensoro.com");
         acLoginTvLogoBottom.setText(String.format(Locale.ROOT, "Copyright \u00a9 %s SENSORO", DateUtil.getStrTime_yy(System.currentTimeMillis())));
         if (acLoginEtAccount.getText().length() > 0 || acLoginEtPsd.getText().length() > 0) {
             updateLogoDescriptionState(false);
@@ -202,7 +215,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
                     if (str.equals("SENSORO")) {
                         switchApi();
                     } else {
-                        toastLong(mActivity.getString(R.string.wrong_password));
+                        toastShort(mActivity.getString(R.string.wrong_password));
                     }
                     dialog.cancel();
                     isShowPasswordDialog = true;
@@ -222,7 +235,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     private int scope_selectedIndex = 0;
 
     private void switchApi() {
-        final String[] urlArr = new String[]{"正式版", "Demo版", "测试版", "预发布","Dev"};
+
         //
         scope_selectedIndex = RetrofitServiceHelper.getInstance().getBaseUrlType();
         Dialog alertDialog = new AlertDialog.Builder(mActivity).
@@ -238,10 +251,8 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mPresenter.saveScopeData(scope_selectedIndex);
-                        toastShort(urlArr[scope_selectedIndex]);
                     }
-                }).
-                        setNegativeButton("取消", null).
+                }).setNegativeButton("取消", null).
                         create();
         alertDialog.show();
     }
@@ -250,6 +261,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     @Override
     protected void onDestroy() {
         mProgressUtils.destroyProgress();
+        loginUrlDialogUtils.unregisterListener();
         try {
             LogUtils.loge("onDestroy");
         } catch (Throwable throwable) {
@@ -321,23 +333,52 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     public void setLogButtonState(int which) {
         switch (which) {
             case 0:
+                tvUrlDesc.setVisibility(View.GONE);
                 login_btn.setBackground(getResources().getDrawable(R.drawable.shape_button));
                 break;
             case 1:
+                tvUrlDesc.setVisibility(View.VISIBLE);
+                tvUrlDesc.setText(urlArr[which]);
                 login_btn.setBackground(getResources().getDrawable(R.drawable.shape_button_demo));
                 break;
             case 2:
+                tvUrlDesc.setVisibility(View.VISIBLE);
+                tvUrlDesc.setText(urlArr[which]);
                 login_btn.setBackground(getResources().getDrawable(R.drawable.shape_button_test));
                 break;
             case 3:
+                tvUrlDesc.setVisibility(View.VISIBLE);
+                tvUrlDesc.setText(urlArr[which]);
                 login_btn.setBackground(getResources().getDrawable(R.drawable.shape_button_mocha));
                 break;
             case 4:
+                tvUrlDesc.setVisibility(View.VISIBLE);
+                tvUrlDesc.setText(urlArr[which]);
                 login_btn.setBackground(getResources().getDrawable(R.drawable.shape_button_dev));
                 break;
+            case 5:
+                tvUrlDesc.setVisibility(View.VISIBLE);
+                tvUrlDesc.setText(urlArr[which]);
+                login_btn.setBackground(getResources().getDrawable(R.drawable.shape_button_custom));
+                break;
             default:
+                tvUrlDesc.setVisibility(View.GONE);
                 login_btn.setBackground(getResources().getDrawable(R.drawable.shape_button));
                 break;
+        }
+    }
+
+    @Override
+    public void showMyBaseUrlDialog(String url) {
+        if (loginUrlDialogUtils != null) {
+            loginUrlDialogUtils.show(url);
+        }
+    }
+
+    @Override
+    public void dismissLoginDialog() {
+        if (loginUrlDialogUtils != null) {
+            loginUrlDialogUtils.dismissDialog();
         }
     }
 
@@ -395,4 +436,14 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
         acLoginTvLogoDescription.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
+    @Override
+    public void onConfirm(String text) {
+        //dialog
+        if (!TextUtils.isEmpty(text)) {
+            urlArr[5] = "自定义：" + text;
+            mPresenter.doSaveMyBaseUrl(text);
+        } else {
+            toastShort("输入不能为空");
+        }
+    }
 }

@@ -2,13 +2,8 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -17,31 +12,31 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gyf.barlibrary.ImmersionBar;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.gyf.immersionbar.ImmersionBar;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.server.bean.DeviceCameraFacePic;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.CameraDetailListAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ICameraDetailActivityView;
-import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.presenter.CameraDetailActivityPresenter;
-import com.sensoro.smartcity.server.bean.DeviceCameraFacePic;
-import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
+import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -51,7 +46,6 @@ import butterknife.OnClick;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
 
 
 /**
@@ -100,66 +94,15 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     private Animation returnTopAnimation;
 
 
-    /**
-     * 网络改变状态
-     *
-     * @param eventData
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(EventData eventData) {
-        int code = eventData.code;
-        if (code == NetworkInfo) {
-            int data = (int) eventData.data;
-
-            switch (data) {
-
-                case ConnectivityManager.TYPE_WIFI:
-//                    if (gsyPlayerAcCameraDetail..getVisibility() == VISIBLE) {
-//                        rMobileData.setVisibility(GONE);
-//                        GSYVideoManager.onResume();
-//                    }
-
-                    break;
-
-                case ConnectivityManager.TYPE_MOBILE:
-
-                    GSYVideoManager.onPause();
-                    gsyPlayerAcCameraDetail.setCityPlayState(2);
-                    gsyPlayerAcCameraDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            GSYVideoManager.onResume();
-//                            gsyPlayerAcCameraDetail.startPlayLogic();
-
-                        }
-                    });
-                    break;
-
-                case -1:
-                    gsyPlayerAcCameraDetail.setCityPlayState(1);
-
-                    break;
-
-
-                default:
-                    break;
-
-            }
-        }
-    }
-
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_simple_detail_player);
         ButterKnife.bind(this);
         initView();
-        EventBus.getDefault().register(this);
         mPresenter.initData(mActivity);
-
     }
 
     private void initView() {
-
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
 
         //外部辅助的旋转，帮助全屏
@@ -208,6 +151,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     public void initVideoOption() {
+        getPlayView().setIsShowBackMaskTv(true);
+
         gsyPlayerAcCameraDetail.setIsLive(View.INVISIBLE);
         gsyPlayerAcCameraDetail.setHideActionBar(true);
         //增加封面
@@ -233,6 +178,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
                     public void onPlayError(final String url, Object... objects) {
 
                         gsyPlayerAcCameraDetail.setCityPlayState(3);
+                        orientationUtils.setEnable(false);
+                        backFromWindowFull();
                         gsyPlayerAcCameraDetail.getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -244,7 +191,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
                     @Override
                     public void onAutoComplete(final String url, Object... objects) {
-
+                        orientationUtils.setEnable(false);
+                        backFromWindowFull();
 //
                     }
 
@@ -465,6 +413,10 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     @Override
     public void doPlayLive(final String url, String cameraName, final boolean isLive) {
+
+        if ((!NetworkUtils.isAvailable(mActivity) || !NetworkUtils.isWifiConnected(mActivity))) {
+            orientationUtils.setEnable(false);
+        }
         gsyVideoOption.setUrl(url).setVideoTitle(cameraName).build(getCurPlay());
         gsyPlayerAcCameraDetail.setIsLive(isLive ? View.INVISIBLE : VISIBLE);
         getCurPlay().startPlayLogic();
@@ -476,6 +428,47 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     public void setGsyVideoNoVideo() {
         gsyPlayerAcCameraDetail.onVideoPause();
         gsyPlayerAcCameraDetail.setNoVideo();
+    }
+
+
+    @Override
+    public CityStandardGSYVideoPlayer getPlayView() {
+        return gsyPlayerAcCameraDetail;
+    }
+
+    @Override
+    public void backFromWindowFull() {
+        if (orientationUtils != null) {
+            orientationUtils.backToProtVideo();
+        }
+        orientationUtils.setEnable(false);
+        if (GSYVideoManager.backFromWindowFull(this)) {
+            return;
+        }
+    }
+
+    @Override
+    public void onVideoPause() {
+
+        onPause();
+
+    }
+
+    @Override
+    public void onVideoResume(boolean isLive) {
+        if (isLive) {
+            onRestart();
+        } else {
+            onResume();
+        }
+
+    }
+
+    @Override
+    public void setVerOrientationUtilEnable(boolean enable) {
+        if (orientationUtils != null) {
+            orientationUtils.setEnable(enable);
+        }
     }
 
     private void initRvCameraList() {
@@ -525,18 +518,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
             }
         });
-        rvDeviceCameraAcCameraDetail.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-            }
-        });
 
     }
 
@@ -555,9 +536,10 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     @Override
     protected void onPause() {
-        getCurPlay().onVideoPause();
         super.onPause();
         isPause = true;
+        GSYVideoManager.onPause();
+
     }
 
     @Override
@@ -567,9 +549,11 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 
     @Override
     protected void onResume() {
-        getCurPlay().onVideoResume();
         super.onResume();
         isPause = false;
+
+        GSYVideoManager.onResume();
+
     }
 
     @Override
@@ -587,7 +571,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         }
 
         GSYVideoManager.releaseAllVideos();
-        EventBus.getDefault().unregister(this);
 
     }
 
@@ -596,7 +579,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         //如果旋转了就全屏
-        if (isPlay && !isPause) {
+        if (isPlay && !isPause && orientationUtils.isEnable()) {
             getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
         }
     }

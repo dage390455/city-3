@@ -24,7 +24,7 @@
         android:textColor="@color/white"
         android:textSize="16dp" />
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/ac_inspection_detail_btn_start"
@@ -127,13 +127,13 @@
                     android:layout_marginStart="8dp"
                     android:layout_toEndOf="@id/ac_inspection_detail_task_tv_device_count">
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/ac_inspection_detail_task_rc_device_count_tag"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true">
 
-                    </android.support.v7.widget.RecyclerView>
+                    </androidx.recyclerview.widget.RecyclerView>
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -202,7 +202,7 @@
                     android:textSize="12dp" />
             </RelativeLayout>
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 
 </RelativeLayout>

@@ -2,9 +2,9 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -21,15 +21,15 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.PersonAvatarHistoryAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraPersonAvatarHistoryActivityView;
 import com.sensoro.smartcity.presenter.CameraPersonAvatarHistoryActivityPresenter;
-import com.sensoro.smartcity.server.response.DeviceCameraPersonFaceRsp;
-import com.sensoro.smartcity.widget.GlideRoundTransform;
-import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.server.response.DeviceCameraPersonFaceRsp;
+import com.sensoro.smartcity.widget.GlideCircleTransform;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.List;
 
@@ -253,7 +253,7 @@ implements ICameraPersonAvatarHistoryActivityView{
     @Override
     public void loadTitleAvatar(String faceUrl) {
         Glide.with(mActivity).load(Constants.CAMERA_BASE_URL+faceUrl)
-                .bitmapTransform(new GlideRoundTransform(mActivity))
+                .bitmapTransform(new GlideCircleTransform(mActivity))
                 .placeholder(R.drawable.person_locus_placeholder)
                 .error(R.drawable.person_locus_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

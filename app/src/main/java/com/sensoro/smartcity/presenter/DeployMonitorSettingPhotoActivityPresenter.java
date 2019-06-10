@@ -8,15 +8,15 @@ import android.widget.AdapterView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.TakeRecordActivity;
-import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.common.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorSettingPhotoActivityView;
-import com.sensoro.smartcity.model.EventData;
+import com.sensoro.common.model.EventData;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
-import com.sensoro.smartcity.widget.popup.SelectDialog;
+import com.sensoro.common.widgets.SelectDialog;
 
 import org.greenrobot.eventbus.EventBus;
 

@@ -1,9 +1,9 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
-import android.support.annotation.ColorRes;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.ColorRes;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +12,10 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
-import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.common.server.bean.InspectionIndexTaskInfo;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;

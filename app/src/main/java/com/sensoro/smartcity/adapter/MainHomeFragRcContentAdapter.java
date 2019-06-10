@@ -1,8 +1,8 @@
 package com.sensoro.smartcity.adapter;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +15,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.server.bean.DeviceInfo;
+import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.bean.MergeTypeStyles;
-import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.ArrayList;

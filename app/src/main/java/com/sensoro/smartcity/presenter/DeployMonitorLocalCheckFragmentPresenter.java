@@ -14,6 +14,23 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
+import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.handler.HandlerDeployCheck;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.iwidget.IOnCreate;
+import com.sensoro.common.iwidget.IOnStart;
+import com.sensoro.common.model.EventData;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.RetryWithDelay;
+import com.sensoro.common.server.bean.DeployControlSettingData;
+import com.sensoro.common.server.bean.DeviceInfo;
+import com.sensoro.common.server.bean.DeviceTypeStyles;
+import com.sensoro.common.server.bean.MalfunctionDataBean;
+import com.sensoro.common.server.bean.MalfunctionTypeStyles;
+import com.sensoro.common.server.bean.MergeTypeStyles;
+import com.sensoro.common.server.bean.SensorStruct;
+import com.sensoro.common.server.response.DeviceDeployRsp;
 import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
 import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
 import com.sensoro.libbleserver.ble.connection.SensoroDeviceConnection;
@@ -29,34 +46,17 @@ import com.sensoro.smartcity.activity.DeployRepairInstructionActivity;
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
-import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.callback.OnConfigInfoObserver;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.DeoloyCheckPointConstants;
 import com.sensoro.smartcity.constant.DeployCheckStateEnum;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IDeployMonitorLocalCheckFragmentView;
-import com.sensoro.common.iwidget.IOnCreate;
-import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
-import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.MaterialValueModel;
-import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.RetryWithDelay;
-import com.sensoro.smartcity.server.bean.DeployControlSettingData;
-import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
-import com.sensoro.smartcity.server.bean.MalfunctionDataBean;
-import com.sensoro.smartcity.server.bean.MalfunctionTypeStyles;
-import com.sensoro.smartcity.server.bean.MergeTypeStyles;
-import com.sensoro.smartcity.server.bean.SensorStruct;
-import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.smartcity.callback.BleObserver;
-import com.sensoro.common.handler.HandlerDeployCheck;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -920,17 +920,17 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                             case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NONE:
                                                 tempForceReason = "signalQuality";
                                                 tempSignalQuality = "none";
-                                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, mActivity.getString(R.string.deploy_check_dialog_quality_bad_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, mActivity.getString(R.string.deploy_check_dialog_quality_bad_signal), PreferencesHelper.getInstance().getUserData().hasForceUpload);
                                                 return;
                                             case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD:
                                                 tempForceReason = "signalQuality";
                                                 tempSignalQuality = "bad";
-                                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_BAD, mActivity.getString(R.string.deploy_check_dialog_quality_bad_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_BAD, mActivity.getString(R.string.deploy_check_dialog_quality_bad_signal), PreferencesHelper.getInstance().getUserData().hasForceUpload);
                                                 return;
                                         }
                                         tempForceReason = "signalQuality";
                                         tempSignalQuality = "none";
-                                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, mActivity.getString(R.string.deploy_check_dialog_quality_bad_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, mActivity.getString(R.string.deploy_check_dialog_quality_bad_signal), PreferencesHelper.getInstance().getUserData().hasForceUpload);
                                     }
                                 };
                                 checkHandler.init(1000, 10);
@@ -945,7 +945,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                         public void onFailed(String errorMsg) {
                             if (isAttachedView()) {
                                 tempForceReason = "config";
-                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_FAIL, mActivity.getString(R.string.installation_config_failed) + errorMsg, PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_FAIL, mActivity.getString(R.string.installation_config_failed) + errorMsg, PreferencesHelper.getInstance().getUserData().hasForceUpload);
                             }
 
                         }
@@ -954,7 +954,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                         public void onOverTime(String overTimeMsg) {
                             if (isAttachedView()) {
                                 tempForceReason = "config";
-                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_FAIL, mActivity.getString(R.string.installation_config_failed) + overTimeMsg, PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_FAIL, mActivity.getString(R.string.installation_config_failed) + overTimeMsg, PreferencesHelper.getInstance().getUserData().hasForceUpload);
                             }
                         }
                     });
@@ -966,7 +966,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             @Override
             public void onFinish() {
                 tempForceReason = "lonlat";
-                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_FAIL, mActivity.getString(R.string.installation_test_not_nearby), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_FAIL, mActivity.getString(R.string.installation_test_not_nearby), PreferencesHelper.getInstance().getUserData().hasForceUpload);
             }
         };
         checkHandler.removeAllMessage();
@@ -1003,7 +1003,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                 // 获取不到当前状态是否强制上传
                 getView().toastShort(errorMsg);
                 getView().dismissDeployMonitorCheckDialogUtils();
-//                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_INTERNET, mActivity.getString(R.string.get_device_status_failed), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+//                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_INTERNET, mActivity.getString(R.string.get_device_status_failed), PreferencesHelper.getInstance().getUserData().hasForceUpload);
             }
         });
     }
@@ -1019,13 +1019,13 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                     tempStatus = data.getData().getStatus();
                     String alarmReason = handleAlarmReason(data.getData());
                     getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_ALARM,
-                            alarmReason, PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                            alarmReason, PreferencesHelper.getInstance().getUserData().hasForceUpload);
                     break;
                 case SENSOR_STATUS_MALFUNCTION:
                     tempForceReason = "status";
                     tempStatus = data.getData().getStatus();
                     String reason = handleMalfunctionReason(data.getData());
-                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_MALFUNCTION, reason, PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                    getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_MALFUNCTION, reason, PreferencesHelper.getInstance().getUserData().hasForceUpload);
                     break;
                 default:
                     tempForceReason = null;
@@ -1044,7 +1044,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             }
             getView().toastShort(errMsg);
             getView().dismissDeployMonitorCheckDialogUtils();
-//            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_INTERNET, mActivity.getString(R.string.get_device_status_failed), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+//            getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_INTERNET, mActivity.getString(R.string.get_device_status_failed), PreferencesHelper.getInstance().getUserData().hasForceUpload);
 
         }
     }
@@ -1081,17 +1081,17 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                     case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NONE:
                         tempForceReason = "signalQuality";
                         tempSignalQuality = "none";
-                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, mActivity.getString(R.string.deploy_check_dialog_quality_bad_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, mActivity.getString(R.string.deploy_check_dialog_quality_bad_signal), PreferencesHelper.getInstance().getUserData().hasForceUpload);
                         return;
                     case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD:
                         tempForceReason = "signalQuality";
                         tempSignalQuality = "bad";
-                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_BAD, mActivity.getString(R.string.deploy_check_dialog_quality_bad_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                        getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_BAD, mActivity.getString(R.string.deploy_check_dialog_quality_bad_signal), PreferencesHelper.getInstance().getUserData().hasForceUpload);
                         return;
                 }
                 tempForceReason = "signalQuality";
                 tempSignalQuality = "none";
-                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, mActivity.getString(R.string.deploy_check_dialog_quality_bad_signal), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_SIGNAL_FAIL_NONE, mActivity.getString(R.string.deploy_check_dialog_quality_bad_signal), PreferencesHelper.getInstance().getUserData().hasForceUpload);
 
             }
         };
@@ -1125,7 +1125,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                         public void onFailed(String errorMsg) {
                             if (isAttachedView()) {
                                 tempForceReason = "config";
-                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_FAIL, mActivity.getString(R.string.installation_config_failed) + errorMsg, PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_FAIL, mActivity.getString(R.string.installation_config_failed) + errorMsg, PreferencesHelper.getInstance().getUserData().hasForceUpload);
                             }
 
                         }
@@ -1134,7 +1134,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                         public void onOverTime(String overTimeMsg) {
                             if (isAttachedView()) {
                                 tempForceReason = "config";
-                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_FAIL, mActivity.getString(R.string.installation_config_failed) + overTimeMsg, PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_CONFIG_FAIL, mActivity.getString(R.string.installation_config_failed) + overTimeMsg, PreferencesHelper.getInstance().getUserData().hasForceUpload);
                             }
                         }
                     });
@@ -1146,7 +1146,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             @Override
             public void onFinish() {
                 tempForceReason = "lonlat";
-                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_FAIL, mActivity.getString(R.string.installation_test_not_nearby), PreferencesHelper.getInstance().getUserData().hasBadSignalUpload);
+                getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_NEARBY_FAIL, mActivity.getString(R.string.installation_test_not_nearby), PreferencesHelper.getInstance().getUserData().hasForceUpload);
             }
         };
         checkHandler.removeAllMessage();

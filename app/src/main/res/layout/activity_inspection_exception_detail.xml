@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/ac_inspection_exception_detail_rc_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
                     android:paddingBottom="4dp"
                     android:layout_alignParentEnd="true">
 
-                </android.support.v7.widget.RecyclerView>
+                </androidx.recyclerview.widget.RecyclerView>
             </RelativeLayout>
         </LinearLayout>
 
@@ -154,7 +154,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_weight="1">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/ac_inspection_exception_detail_rc_exception_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -162,7 +162,7 @@
                     android:paddingBottom="4dp"
                     android:layout_alignParentEnd="true">
 
-                </android.support.v7.widget.RecyclerView>
+                </androidx.recyclerview.widget.RecyclerView>
             </RelativeLayout>
         </LinearLayout>
         <View
@@ -228,12 +228,12 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:layout_weight="1">
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/ac_inspection_exception_detail_rc_photo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true">
-                    </android.support.v7.widget.RecyclerView>
+                    </androidx.recyclerview.widget.RecyclerView>
 
             </RelativeLayout>
         </LinearLayout>
@@ -264,17 +264,17 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/ac_inspection_exception_detail_rc_camera"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true">
 
-                </android.support.v7.widget.RecyclerView>
+                </androidx.recyclerview.widget.RecyclerView>
             </RelativeLayout>
 
         </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>
-</android.support.v4.widget.NestedScrollView>
+</androidx.core.widget.NestedScrollView>

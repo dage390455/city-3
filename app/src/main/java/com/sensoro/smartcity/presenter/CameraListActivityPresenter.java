@@ -5,23 +5,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
+import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.SearchHistoryTypeConstants;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.model.CameraFilterModel;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
+import com.sensoro.common.server.bean.DeviceCameraInfo;
+import com.sensoro.common.server.response.CameraFilterRsp;
+import com.sensoro.common.server.response.DeviceCameraDetailRsp;
+import com.sensoro.common.server.response.DeviceCameraListRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.CameraDetailActivity;
-import com.sensoro.smartcity.analyzer.PreferencesSaveAnalyzer;
-import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
-import com.sensoro.smartcity.model.CameraFilterModel;
-import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.DeviceCameraDetailInfo;
-import com.sensoro.smartcity.server.bean.DeviceCameraInfo;
-import com.sensoro.smartcity.server.response.CameraFilterRsp;
-import com.sensoro.smartcity.server.response.DeviceCameraDetailRsp;
-import com.sensoro.smartcity.server.response.DeviceCameraListRsp;
-import com.sensoro.smartcity.util.PreferencesHelper;
-import com.yixia.camera.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -58,7 +57,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
         } else {
             requestDataByFilter(DIRECTION_DOWN, null);
         }
-        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST);
+        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERA_LIST);
         if (list != null) {
             mSearchHistoryList.addAll(list);
             getView().updateSearchHistoryList(mSearchHistoryList);
@@ -69,7 +68,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
         if (TextUtils.isEmpty(text)) {
             return;
         }
-        List<String> warnList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST, text);
+        List<String> warnList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERA_LIST, text);
         mSearchHistoryList.clear();
         mSearchHistoryList.addAll(warnList);
         getView().updateSearchHistoryList(mSearchHistoryList);
@@ -77,7 +76,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
     }
 
     public void clearSearchHistory() {
-        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERALIST);
+        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERA_LIST);
         mSearchHistoryList.clear();
         getView().updateSearchHistoryList(mSearchHistoryList);
     }
@@ -212,6 +211,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                 RetrofitServiceHelper.getInstance().getCameraFilter().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<CameraFilterRsp>(this) {
                     @Override
                     public void onCompleted(CameraFilterRsp cameraFilterRsp) {
+                        cameraFilterModelList.clear();
                         List<CameraFilterModel> data = cameraFilterRsp.getData();
                         if (data != null) {
                             cameraFilterModelList.addAll(data);
@@ -360,7 +360,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                         stringBuffer.append(",");
                     }
                 }
-                if (!StringUtils.isEmpty(stringBuffer.toString())) {
+                if (!TextUtils.isEmpty(stringBuffer.toString())) {
                     stringBuffer.deleteCharAt(stringBuffer.length() - 1).toString();
                     hashMap.put(key, stringBuffer.toString());
                 }

@@ -25,7 +25,7 @@
         android:textColor="@color/white"
         android:textSize="16dp" />
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/ac_inspection_upload_exception_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -38,14 +38,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/ac_inspection_upload_exception_rc_tag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp">
 
-            </android.support.v7.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -110,7 +110,7 @@
                 android:textColor="@color/c_252525"
                 android:textSize="14dp" />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/ac_inspection_upload_exception_rc_pic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -119,12 +119,12 @@
                 android:layout_marginEnd="20dp"
                 android:background="@color/c_f4f4f4">
 
-            </android.support.v7.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="40dp"/>
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </RelativeLayout>
 

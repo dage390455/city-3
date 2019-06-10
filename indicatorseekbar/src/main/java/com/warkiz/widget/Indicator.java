@@ -3,15 +3,16 @@ package com.warkiz.widget;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
-import android.support.annotation.IdRes;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
+import androidx.annotation.IdRes;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
 
 /**
  * created by ZhuangGuangquan on 2017/9/9

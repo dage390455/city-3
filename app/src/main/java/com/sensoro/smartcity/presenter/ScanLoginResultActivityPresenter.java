@@ -5,13 +5,13 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.common.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IScanLoginResultActivityView;
-import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.response.ResponseBase;
+import com.sensoro.common.model.EventData;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.response.ResponseBase;
 
 import org.greenrobot.eventbus.EventBus;
 

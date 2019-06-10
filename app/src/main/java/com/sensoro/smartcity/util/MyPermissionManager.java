@@ -13,11 +13,11 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 
+import com.sensoro.common.base.ContextUtils;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -28,7 +28,7 @@ public final class MyPermissionManager {
 
     public static String getPermissionTips(List<String> permission) {
         LinkedHashSet<String> perStr = new LinkedHashSet<>();
-        SensoroCityApplication app = SensoroCityApplication.getInstance();
+        Context app = ContextUtils.getContext();
         if (permission != null && permission.size() > 0) {
             for (String p : permission) {
                 if (!TextUtils.isEmpty(p)) {

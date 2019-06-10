@@ -2,8 +2,8 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,16 +13,16 @@ import android.widget.Toast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.AlarmContactHistoryAdapter;
 import com.sensoro.smartcity.adapter.AlarmContactRcContentAdapter;
-import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IAlarmContactActivityView;
 import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.presenter.AlarmContactActivityPresenter;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.common.utils.SoftHideKeyBoardUtil;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
-import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.widgets.TipOperationDialogUtils;
+import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.ArrayList;
 

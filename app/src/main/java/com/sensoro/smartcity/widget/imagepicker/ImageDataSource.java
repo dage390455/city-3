@@ -3,14 +3,15 @@ package com.sensoro.smartcity.widget.imagepicker;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 
+import androidx.fragment.app.FragmentActivity;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
+
+import com.sensoro.common.model.ImageFolder;
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageFolder;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 
 import java.io.File;
 import java.util.ArrayList;

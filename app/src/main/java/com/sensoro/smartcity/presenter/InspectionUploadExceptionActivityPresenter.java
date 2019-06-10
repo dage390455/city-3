@@ -10,24 +10,24 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.activity.TakeRecordActivity;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
-import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.common.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionUploadExceptionActivityView;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.AlarmPopModel;
-import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
-import com.sensoro.smartcity.server.bean.ScenesData;
-import com.sensoro.smartcity.server.response.ResponseBase;
+import com.sensoro.common.model.EventData;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
+import com.sensoro.common.server.bean.ScenesData;
+import com.sensoro.common.server.response.ResponseBase;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
-import com.sensoro.smartcity.widget.popup.SelectDialog;
+import com.sensoro.common.widgets.SelectDialog;
+import com.sensoro.smartcity.widget.popup.AlarmPopUtilsTest;
 import com.sensoro.smartcity.widget.popup.UpLoadPhotosUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -202,7 +202,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
     }
 
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
-        AlarmPopUtils.handlePhotoIntent(requestCode, resultCode, data);
+        AlarmPopUtilsTest.handlePhotoIntent(requestCode, resultCode, data);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

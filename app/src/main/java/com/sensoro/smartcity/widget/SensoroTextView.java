@@ -2,7 +2,7 @@ package com.sensoro.smartcity.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ScaleXSpan;

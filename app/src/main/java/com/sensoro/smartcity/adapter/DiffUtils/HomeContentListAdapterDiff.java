@@ -2,7 +2,7 @@ package com.sensoro.smartcity.adapter.DiffUtils;
 
 import android.text.TextUtils;
 
-import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.common.server.bean.DeviceInfo;
 
 import java.util.HashMap;
 import java.util.List;

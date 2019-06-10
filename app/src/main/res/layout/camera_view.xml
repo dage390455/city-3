@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <VideoView
+            android:id="@+id/video_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp">
+
+        <TextView
+            android:id="@+id/tv_record_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="18dp"
+            android:shadowColor="#B3000000"
+            android:shadowDy="2"
+            android:shadowRadius="2"
+            android:textColor="@color/white"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/tv_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_record_time"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:shadowDy="2"
+            android:shadowRadius="2"
+            android:text="@string/please_record_at_least_5_seconds"
+            android:textColor="@color/white"
+            android:textSize="14dp"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/imv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="6dp"
+            android:contentDescription="@null"
+            android:padding="10dp"
+            android:src="@drawable/arrows_left_white" />
+    </RelativeLayout>
+
+
+    <com.sensoro.smartcity.cameralibrary.FoucsView
+        android:id="@+id/fouce_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible" />
+
+
+    <RelativeLayout
+        android:id="@+id/rl_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="32dp"
+        android:background="@color/transparent">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerInParent="true"
+            android:contentDescription="@null"
+            android:src="@drawable/record_retake"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/iv_finish"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerInParent="true"
+            android:contentDescription="@null"
+            android:src="@drawable/record_save"
+            android:visibility="gone" />
+
+        <com.sensoro.smartcity.widget.RecordedButton
+            android:id="@+id/rb_start"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerInParent="true" />
+
+        <TextView
+            android:id="@+id/tv_retake"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="18dp"
+            android:layout_toStartOf="@id/rb_start"
+            android:gravity="center"
+            android:padding="8dp"
+            android:shadowColor="#B3000000"
+            android:shadowDy="2"
+            android:shadowRadius="2"
+            android:text="@string/contract_service_retake"
+            android:textColor="@color/white"
+            android:textSize="16dp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</FrameLayout>
