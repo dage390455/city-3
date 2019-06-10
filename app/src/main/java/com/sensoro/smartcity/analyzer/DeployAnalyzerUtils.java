@@ -116,6 +116,8 @@ public class DeployAnalyzerUtils {
 
             //基站部署
             case Constants.TYPE_SCAN_DEPLOY_STATION:
+                //铭牌部署扫码关联传感器
+            case Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY:
                 //设备部署
             case Constants.TYPE_SCAN_DEPLOY_DEVICE:
                 if (result.startsWith("http")) {

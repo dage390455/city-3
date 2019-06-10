@@ -17,10 +17,8 @@ import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeviceTypeStyles;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.bean.NamePlateInfo;
-import com.sensoro.common.server.response.NameplateAssociateDeviceRsp;
 import com.sensoro.common.server.response.NameplateBindDeviceRsp;
 import com.sensoro.common.server.response.ResponseResult;
-import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.IMainViews.IDeployNameplateAddSensorFromListActivityView;
 import com.sensoro.nameplate.R;
 
@@ -80,7 +78,14 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
         }
     }
 
-    public void requestWithDirection(int direction) {
+    /**
+     * 下拉清除选中状态
+     *
+     * @param direction
+     * @param isClearBindList
+     */
+    public void requestWithDirection(int direction, boolean isClearBindList) {
+
         if (TextUtils.isEmpty(mNameplateId)) {
             getView().toastShort(mActivity.getString(R.string.nameplate_name_empty));
             return;
@@ -92,13 +97,16 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
             page++;
         }
 
-        RetrofitServiceHelper.getInstance().getNameplateUnbindDevices(page, 20, mNameplateId,mSearchText)
+        RetrofitServiceHelper.getInstance().getNameplateUnbindDevices(page, 20, mNameplateId, mSearchText)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<NameplateBindDeviceRsp>(this) {
             @Override
             public void onCompleted(NameplateBindDeviceRsp nameplateBindDeviceRsp) {
                 if (direction == Constants.DIRECTION_DOWN) {
                     mList.clear();
                     mSelectList.clear();
+                    if (isClearBindList) {
+                        mBindList.clear();
+                    }
                     if (mBindList != null && mBindList.size() > 0) {
                         mList.addAll(mBindList);
                         mSelectList.addAll(mBindList);
@@ -128,6 +136,12 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
                 getView().toastShort(errorMsg);
             }
         });
+
+    }
+
+    public void requestWithDirection(int direction) {
+
+        requestWithDirection(direction, false);
     }
 
 //    public void requestWithDirection(int direction,String text) {
@@ -348,7 +362,7 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
         }
 
         getView().showProgressDialog();
-        RetrofitServiceHelper.getInstance().doBindDevices(mNameplateId,mSelectList)
+        RetrofitServiceHelper.getInstance().doBindDevices(mNameplateId, mSelectList)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Integer>>(this) {
             @Override
             public void onCompleted(ResponseResult<Integer> nameplateAssociateDeviceRsp) {
@@ -361,7 +375,7 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
                     EventBus.getDefault().post(eventData);
                     getView().dismissProgressDialog();
                     getView().finishAc();
-                }else{
+                } else {
                     getView().dismissProgressDialog();
                     getView().toastShort(mActivity.getString(R.string.associated_sensor_fail));
                 }

@@ -16,6 +16,7 @@ import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
+import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployManualActivity;
 import com.sensoro.smartcity.analyzer.DeployAnalyzerUtils;
@@ -190,6 +191,27 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                         } else {
                             getView().toastShort("error");
                         }
+                    } else if (scanType == com.sensoro.common.constant.Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY) {
+                        Serializable serializableExtra = intent.getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
+
+                        if (null != serializableExtra && (serializableExtra instanceof DeployAnalyzerModel)) {
+                            DeployAnalyzerModel model = (DeployAnalyzerModel) serializableExtra;
+
+                            NamePlateInfo namePlateInfo = new NamePlateInfo();
+
+                            namePlateInfo.setSn(model.sn);
+                            namePlateInfo.setDeviceType(model.deviceType);
+                            namePlateInfo.setName(model.nameAndAddress);
+
+
+                            EventData data = new EventData(EVENT_DATA_ADD_SENSOR_FROM_DEPLOY);
+                            data.data = namePlateInfo;
+                            EventBus.getDefault().post(data);
+                            getView().finishAc();
+
+                        }
+
+
                     } else {
                         getView().startAC(intent);
                     }

@@ -19,10 +19,9 @@ import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.DeployNameplateRsp;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
-import com.sensoro.nameplate.R;
-import com.sensoro.nameplate.activity.DeployNameplateAddSensorActivity;
-import com.sensoro.nameplate.activity.DeployNameplateNameActivity;
 import com.sensoro.nameplate.IMainViews.IDeployNameplateActivityView;
+import com.sensoro.nameplate.R;
+import com.sensoro.nameplate.activity.DeployNameplateNameActivity;
 import com.sensoro.nameplate.model.DeployNameplateModel;
 
 import org.greenrobot.eventbus.EventBus;
@@ -69,14 +68,14 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
                     String text = (String) data;
                     if (TextUtils.isEmpty(text)) {
                         getView().setUploadStatus(false);
-                        getView().setName(mActivity.getString(R.string.required),R.color.c_a6a6a6);
-                    }else{
+                        getView().setName(mActivity.getString(R.string.required), R.color.c_a6a6a6);
+                    } else {
                         getView().setUploadStatus(true);
                         getView().setName(text, R.color.c_252525);
                     }
-                }else{
+                } else {
                     getView().setUploadStatus(false);
-                    getView().setName(mActivity.getString(R.string.required),R.color.c_a6a6a6);
+                    getView().setName(mActivity.getString(R.string.required), R.color.c_a6a6a6);
                 }
 
 
@@ -116,7 +115,7 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
 
     public void doName(String name) {
         Intent intent = new Intent(mActivity, DeployNameplateNameActivity.class);
-        intent.putExtra(Constants.EXTRA_DEPLOY_NAMEPLATE_NAME,name);
+        intent.putExtra(Constants.EXTRA_DEPLOY_NAMEPLATE_NAME, name);
         getView().startAC(intent);
     }
 
@@ -125,8 +124,8 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
 //        if (deployAnalyzerModel.tagList.size() > 0) {
 //            bundle.putStringArrayList(Constants.EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
 //        }
-        bundle.putSerializable(Constants.EXTRA_SETTING_TAG_LIST,deployNameplateModel.tags);
-        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_TAG,bundle,mActivity);
+        bundle.putSerializable(Constants.EXTRA_SETTING_TAG_LIST, deployNameplateModel.tags);
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_TAG, bundle, mActivity);
     }
 
     public void doPic() {
@@ -139,8 +138,8 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
 
         Bundle bundle = new Bundle();
         bundle.putString(Constants.EXTRA_SETTING_DEPLOY_DEVICE_TYPE, "deploy_nameplate");
-        bundle.putSerializable(Constants.EXTRA_DEPLOY_TO_PHOTO,deployNameplateModel.deployPics);
-        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_PIC,bundle,mActivity);
+        bundle.putSerializable(Constants.EXTRA_DEPLOY_TO_PHOTO, deployNameplateModel.deployPics);
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_PIC, bundle, mActivity);
     }
 
     public void doAssociationSensor() {
@@ -149,15 +148,15 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
             return;
         }
         Bundle bundle = new Bundle();
-        bundle.putSerializable(Constants.EXTRA_ASSOCIATION_SENSOR_ADD_BIND_LIST,deployNameplateModel.bindList);
-        bundle.putString(Constants.EXTRA_ASSOCIATION_SENSOR_NAMEPLATE_ID,mNameplateId);
-        startActivity(ARouterConstants.ACTIVITY_DEPLOY_ASSOCIATE_SENSOR,bundle,mActivity);
+        bundle.putSerializable(Constants.EXTRA_ASSOCIATION_SENSOR_ADD_BIND_LIST, deployNameplateModel.bindList);
+        bundle.putString(Constants.EXTRA_ASSOCIATION_SENSOR_NAMEPLATE_ID, mNameplateId);
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_ASSOCIATE_SENSOR, bundle, mActivity);
     }
 
     public void doUpload() {
         if (deployNameplateModel.deployPics.size() > 0) {
             doUploadPic();
-        }else{
+        } else {
             doDeployNameplate(null);
         }
     }
@@ -223,8 +222,8 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
     }
 
     private void doDeployNameplate(ArrayList<String> strings) {
-        RetrofitServiceHelper.getInstance().doUploadDeployNameplate("5cf5e9d4efef53239b5e9625",deployNameplateModel.name,deployNameplateModel.tags,strings)
-        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployNameplateRsp>(this) {
+        RetrofitServiceHelper.getInstance().doUploadDeployNameplate(mNameplateId, deployNameplateModel.name, deployNameplateModel.tags, strings, deployNameplateModel.bindList)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployNameplateRsp>(this) {
 
             @Override
             public void onCompleted(DeployNameplateRsp deployNameplateRsp) {
