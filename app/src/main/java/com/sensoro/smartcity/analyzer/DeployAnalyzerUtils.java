@@ -72,7 +72,6 @@ public class DeployAnalyzerUtils {
         if (TextUtils.isEmpty(result)) {
             listener.onError(0, null, activity.getResources().getString(R.string.please_re_scan_try_again));
             return;
-
         }
         String scanSerialNumber = parseResultMac(result);
         if (TextUtils.isEmpty(scanSerialNumber)) {
@@ -81,8 +80,19 @@ public class DeployAnalyzerUtils {
             try {
                 String[] strings = scanSerialNumber.split(" ");
                 scanSerialNumber = strings[0];
-                if (scanSerialNumber.length() == 16) {
-                    nameplateAssociateDevice(nameplateId, scanSerialNumber, listener, activity, presenter);
+                if (scanSerialNumber.length() >= 8 && scanSerialNumber.length() <= 32) {
+                    String finalScanSerialNumber = scanSerialNumber;
+                    handleDeployDeviceStation(presenter, scanSerialNumber, activity, new OnDeployAnalyzerListener() {
+                        @Override
+                        public void onSuccess(Intent intent) {
+                            nameplateAssociateDevice(nameplateId, finalScanSerialNumber, listener, activity, presenter);
+                        }
+
+                        @Override
+                        public void onError(int errType, Intent intent, String errMsg) {
+                            listener.onError(0, intent, errMsg);
+                        }
+                    });
                 } else {
                     listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
                 }
@@ -91,6 +101,24 @@ public class DeployAnalyzerUtils {
             }
 
         }
+        //
+//        String scanSerialNumber = parseResultMac(result);
+//        if (TextUtils.isEmpty(scanSerialNumber)) {
+//            listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
+//        } else {
+//            try {
+//                String[] strings = scanSerialNumber.split(" ");
+//                scanSerialNumber = strings[0];
+//                if (scanSerialNumber.length() == 16) {
+//
+//                } else {
+//                    listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
+//                }
+//            } catch (Exception e) {
+//                listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
+//            }
+//
+//        }
     }
 
     /**
@@ -111,9 +139,21 @@ public class DeployAnalyzerUtils {
 
         }
         switch (scanType) {
-            //铭牌部署扫码关联传感器
+            //搜索铭牌
             case Constants.EVENT_DATA_SEARCH_NAMEPLAGE:
-                //基站部署
+                if (result.startsWith("http")) {
+                    try {
+                        String nameplateId = result.substring(result.length() - 24);
+                        handleNameplate(presenter, nameplateId, activity, listener);
+                    } catch (Exception e) {
+                        listener.onError(0, null, activity.getResources().getString(R.string.please_re_scan_try_again));
+                    }
+
+                } else {
+                    listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
+                }
+                break;
+            //基站部署
             case Constants.TYPE_SCAN_DEPLOY_STATION:
                 //铭牌部署扫码关联传感器
             case Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY:
@@ -232,6 +272,7 @@ public class DeployAnalyzerUtils {
      */
 
     private void nameplateAssociateDevice(String nameplateId, String scanSerialNumber, OnDeployAnalyzerListener listener, Activity activity, BasePresenter presenter) {
+
         ArrayList<NamePlateInfo> arrayList = new ArrayList<>();
         NamePlateInfo info = new NamePlateInfo();
         info.setSn(scanSerialNumber);
@@ -259,7 +300,7 @@ public class DeployAnalyzerUtils {
     }
 
     private void handleNameplate(BasePresenter presenter, String nameplateId, Activity activity, OnDeployAnalyzerListener listener) {
-        RetrofitServiceHelper.getInstance().getNameplateDetail(nameplateId).subscribeOn
+        RetrofitServiceHelper.getInstance().getNameplateDetail(nameplateId, true).subscribeOn
                 (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<NamePlateInfo>>(presenter) {
             @Override
             public void onCompleted(ResponseResult<NamePlateInfo> namePlateInfoResponseResult) {

@@ -56,14 +56,14 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
 
     private void updateTitle() {
         switch (scanType) {
-            case Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATE_DEVICE:
+
             case Constants.EVENT_DATA_SEARCH_NAMEPLAGE:
                 getView().updateTitleText(mContext.getString(R.string.search_nameplate));
                 getView().updateQrTipText(mContext.getString(R.string.device_nameplate_tip));
                 getView().setScanTvInputSnVisible(false);
 
                 break;
-
+            case Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATE_DEVICE:
             case Constants.TYPE_SCAN_DEPLOY_STATION:
             case Constants.TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
@@ -154,28 +154,31 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
 
             String nameplateId = mContext.getIntent().getStringExtra("nameplateId");
 
-            DeployAnalyzerUtils.getInstance().handlerDeployAnalyzerResult(this, result, mContext, nameplateId, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
-                @Override
-                public void onSuccess(Intent intent) {
-                    getView().dismissProgressDialog();
-                    //更新列表，关闭界面
+            if (!TextUtils.isEmpty(nameplateId)) {
 
-                    EventData data = new EventData(Constants.EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL);
-                    EventBus.getDefault().post(data);
-                    getView().finishAc();
-                }
 
-                @Override
-                public void onError(int errType, Intent intent, String errMsg) {
-                    getView().dismissProgressDialog();
-                    if (intent != null) {
-                        getView().startAC(intent);
-                    } else {
-                        getView().toastShort(errMsg);
-                        getView().startScan();
+                DeployAnalyzerUtils.getInstance().handlerDeployAnalyzerResult(this, result, mContext, nameplateId, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
+                    @Override
+                    public void onSuccess(Intent intent) {
+                        getView().dismissProgressDialog();
+                        //更新列表，关闭界面
+                        EventData data = new EventData(Constants.EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL);
+                        EventBus.getDefault().post(data);
+                        getView().finishAc();
                     }
-                }
-            });
+
+                    @Override
+                    public void onError(int errType, Intent intent, String errMsg) {
+                        getView().dismissProgressDialog();
+                        if (intent != null) {
+                            getView().startAC(intent);
+                        } else {
+                            getView().toastShort(errMsg);
+                            getView().startScan();
+                        }
+                    }
+                });
+            }
 
         } else {
 
@@ -194,7 +197,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
 
                                 //搜索铭牌，未部署
                                 if (scanType == Constants.EVENT_DATA_SEARCH_NAMEPLAGE) {
-                                    getView().toastShort("该铭牌未部署");
+                                    getView().toastShort(mContext.getResources().getString(R.string.The_nameplate_is_not_deployed));
                                     getView().startScan();
 
                                 } else {

@@ -354,13 +354,6 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     }
 
     @Override
-    public void updateUploadState(boolean isAvailable) {
-        acDeployDeviceDetailTvUpload.setEnabled(isAvailable);
-        acDeployDeviceDetailTvUpload.setBackgroundResource(isAvailable ? R.drawable.shape_bg_corner_29c_shadow :
-                R.drawable.shape_bg_corner_dfdf_shadow);
-    }
-
-    @Override
     public void setDeviceSn(String sn) {
         acDeployDeviceDetailTvDeviceSn.setText(sn);
     }
@@ -590,7 +583,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     public void setUploadBtnStatus(boolean isEnable) {
         mPresenter.updateCheckTipText(isEnable);
         acDeployDeviceDetailTvUpload.setEnabled(isEnable);
-        acDeployDeviceDetailTvUpload.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.filter_corner);
+        acDeployDeviceDetailTvUpload.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_corner_dfdf_shadow);
     }
 
     @Override

@@ -1833,8 +1833,8 @@ public class RetrofitServiceHelper {
         return retrofitService.deleteNameplate(nameplateId);
     }
 
-    public Observable<ResponseResult<NamePlateInfo>> getNameplateDetail(String nameplateId) {
-        return retrofitService.getNameplateDetail(nameplateId);
+    public Observable<ResponseResult<NamePlateInfo>> getNameplateDetail(String nameplateId,Boolean isAuthUser) {
+        return retrofitService.getNameplateDetail(nameplateId,isAuthUser);
     }
 
     public Observable<NameplateBindDeviceRsp> getNameplateBindDevices(Integer page, Integer count, String nameplateId) {

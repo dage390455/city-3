@@ -442,7 +442,7 @@ public interface RetrofitService {
     Observable<DeleteNamePlateRsp> deleteNameplate(@Path("nameplateId") String nameplateId);
 
     @GET("nameplate/{nameplateId}")
-    Observable<ResponseResult<NamePlateInfo>> getNameplateDetail(@Path("nameplateId") String nameplateId);
+    Observable<ResponseResult<NamePlateInfo>> getNameplateDetail(@Path("nameplateId") String nameplateId, @Query("isAuthUser") Boolean isAuthUser);
 
     @GET("nameplate/bind/devices")
     Observable<NameplateBindDeviceRsp> getNameplateBindDevices(@Query("page") Integer page, @Query("count") Integer count, @Query("nameplateId") String nameplateId);
@@ -454,7 +454,7 @@ public interface RetrofitService {
     Observable<ResponseResult<Integer>> updateNameplate(@Path("nameplateId") String nameplateId, @Body RequestBody body);
 
     @GET("nameplate/unbind/devices")
-    Observable<NameplateBindDeviceRsp> getNameplateUnbindDevices(@Query("page") Integer page, @Query("count") Integer count, @Query("nameplateId") String nameplateId,@Query("search") String searchText);
+    Observable<NameplateBindDeviceRsp> getNameplateUnbindDevices(@Query("page") Integer page, @Query("count") Integer count, @Query("nameplateId") String nameplateId, @Query("search") String searchText);
 
     @PUT("nameplate/deploy/{nameplateId}")
     Observable<DeployNameplateRsp> doUploadDeployNameplate(@Path("nameplateId") String nameplateId, @Body RequestBody requestBody);

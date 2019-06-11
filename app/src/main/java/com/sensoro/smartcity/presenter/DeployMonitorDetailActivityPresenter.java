@@ -343,7 +343,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
                                 getView().dismissProgressDialog();
-                                getView().updateUploadState(true);
+                                getView().setUploadBtnStatus(true);
                                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                                     getView().toastShort(errorMsg);
                                 } else if (errorCode == 4013101 || errorCode == 4000013) {
@@ -537,7 +537,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 @Override
                 public void onError(String errMsg) {
                     if (isAttachedView()) {
-                        getView().updateUploadState(true);
+                        getView().setUploadBtnStatus(true);
                         getView().dismissUploadProgressDialog();
                         getView().toastShort(errMsg);
                     }
@@ -584,7 +584,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
                                 getView().dismissProgressDialog();
-                                getView().updateUploadState(true);
+                                getView().setUploadBtnStatus(true);
                                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                                     getView().toastShort(errorMsg);
                                 } else if (errorCode == 4013101 || errorCode == 4000013) {
@@ -618,7 +618,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
                         getView().dismissProgressDialog();
-                        getView().updateUploadState(true);
+                        getView().setUploadBtnStatus(true);
                         if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                             getView().toastShort(errorMsg);
                         } else if (errorCode == 4013101 || errorCode == 4000013) {
@@ -646,7 +646,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
                         getView().dismissProgressDialog();
-                        getView().updateUploadState(true);
+                        getView().setUploadBtnStatus(true);
                         if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                             getView().toastShort(errorMsg);
                         } else if (errorCode == 4013101 || errorCode == 4000013) {
@@ -1011,17 +1011,17 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
             if (TextUtils.isEmpty(deployContactModel.name) || TextUtils.isEmpty(deployContactModel.phone)) {
                 getView().toastShort(mContext.getString(R.string.please_enter_contact_phone));
-                getView().updateUploadState(true);
+                getView().setUploadBtnStatus(true);
                 return true;
             }
             if (!RegexUtils.checkPhone(deployContactModel.phone)) {
                 getView().toastShort(mContext.getResources().getString(R.string.tips_phone_empty));
-                getView().updateUploadState(true);
+                getView().setUploadBtnStatus(true);
                 return true;
             }
         } else {
             getView().toastShort(mContext.getString(R.string.please_enter_contact_phone));
-            getView().updateUploadState(true);
+            getView().setUploadBtnStatus(true);
             return true;
         }
         return false;
@@ -1035,7 +1035,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     private boolean checkHasNoLatLng() {
         if (deployAnalyzerModel.latLng.size() != 2) {
             getView().toastShort(mContext.getString(R.string.please_specify_the_deployment_location));
-            getView().updateUploadState(true);
+            getView().setUploadBtnStatus(true);
             return true;
         }
         return false;
@@ -1049,7 +1049,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     private boolean checkHasPhoto() {
         if (getRealImageSize() == 0 && deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION) {
             getView().toastShort(mContext.getString(R.string.please_add_at_least_one_image));
-            getView().updateUploadState(true);
+            getView().setUploadBtnStatus(true);
             return true;
         }
         return false;

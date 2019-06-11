@@ -125,7 +125,7 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
         if (isAttachedView()) {
             getView().showProgressDialog();
         }
-        RetrofitServiceHelper.getInstance().getNameplateDetail(nameplateId).subscribeOn(Schedulers.io())
+        RetrofitServiceHelper.getInstance().getNameplateDetail(nameplateId, null).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<NamePlateInfo>>(this) {
 
             @Override

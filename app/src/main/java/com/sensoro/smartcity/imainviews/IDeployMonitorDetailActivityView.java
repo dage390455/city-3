@@ -11,8 +11,6 @@ import com.sensoro.common.model.DeployContactModel;
 import java.util.List;
 
 public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialog, IActivityIntent {
-    void updateUploadState(boolean isAvailable);
-
     void setDeviceSn(String sn);
 
     //

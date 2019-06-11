@@ -236,6 +236,8 @@
     <string name="send">发送</string>
     <string name="receive">接收</string>
     <string name="success_rate">成功率</string>
+    <string name="The_nameplate_is_not_deployed">该铭牌未部署</string>
+
     //
 
     //
