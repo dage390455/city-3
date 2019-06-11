@@ -1,10 +1,11 @@
-package com.sensoro.smartcity.util;
+package com.sensoro.common.utils;
 
 import android.content.res.Resources;
+
 import androidx.annotation.NonNull;
 
+import com.sensoro.common.R;
 import com.sensoro.common.base.ContextUtils;
-import com.sensoro.smartcity.R;
 
 import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
