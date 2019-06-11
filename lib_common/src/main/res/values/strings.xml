@@ -1086,6 +1086,7 @@
     <string name="αbasestation">α BaseStation</string>
     <string name="αgateway">α GatewWay</string>
     <string name="αroute">α Route</string>
+    <string name="The_nameplate_is_not_deployed">The nameplate is not deployed</string>
 
 
     <string name="nameplate_name">铭牌名称</string>
