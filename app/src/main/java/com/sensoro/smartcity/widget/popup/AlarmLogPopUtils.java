@@ -35,7 +35,7 @@ import com.sensoro.smartcity.activity.AlarmCameraVideoDetailActivity;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.adapter.AlertLogRcContentAdapter;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;

@@ -15,13 +15,8 @@ import com.baidu.ocr.sdk.model.IDCardParams;
 import com.baidu.ocr.sdk.model.IDCardResult;
 import com.baidu.ocr.sdk.model.Word;
 import com.baidu.ocr.ui.camera.CameraActivity;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.activity.ContractCreationSuccessActivity;
-import com.sensoro.smartcity.activity.ContractEditorActivity;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.imainviews.IPersonalContractView;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
@@ -31,6 +26,11 @@ import com.sensoro.common.server.bean.ContractsTemplateInfo;
 import com.sensoro.common.server.response.ContractAddRsp;
 import com.sensoro.common.server.response.ContractsTemplateRsp;
 import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.activity.ContractCreationSuccessActivity;
+import com.sensoro.smartcity.activity.ContractEditorActivity;
+import com.sensoro.smartcity.imainviews.IPersonalContractView;
 import com.sensoro.smartcity.util.FileUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
@@ -48,12 +48,9 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.sensoro.smartcity.constant.Constants.EXTRA_CONTRACT_ID;
-
 public class PersonalContractPresenter extends BasePresenter<IPersonalContractView> {
     private Activity mActivity;
     private ContractListInfo mContractInfo = new ContractListInfo();
-    ;
     private int submitStatus = 1;
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
@@ -463,7 +460,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
                 }
                 String url = data.getFdd_viewpdf_url();
                 Intent intent = new Intent(mActivity, ContractCreationSuccessActivity.class);
-                intent.putExtra(EXTRA_CONTRACT_ID, id);
+                intent.putExtra(Constants.EXTRA_CONTRACT_ID, id);
                 if (!TextUtils.isEmpty(url)) {
                     intent.putExtra(Constants.EXTRA_CONTRACT_PREVIEW_URL, url);
                 }

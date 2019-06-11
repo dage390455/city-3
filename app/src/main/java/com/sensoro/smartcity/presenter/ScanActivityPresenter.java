@@ -34,7 +34,7 @@ import java.io.Serializable;
 
 import static android.content.Context.VIBRATOR_SERVICE;
 
-public class ScanActivityPresenter extends BasePresenter<IScanActivityView> implements IOnCreate, Constants,
+public class ScanActivityPresenter extends BasePresenter<IScanActivityView> implements IOnCreate,
         MediaPlayer.OnErrorListener {
     private Activity mContext;
     private static final float BEEP_VOLUME = 0.10f;
@@ -47,40 +47,40 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        scanType = mContext.getIntent().getIntExtra(EXTRA_SCAN_ORIGIN_TYPE, -1);
-        mDeviceDetail = (InspectionTaskDeviceDetail) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO);
-        mTaskInfo = (InspectionIndexTaskInfo) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_INDEX_TASK_INFO);
+        scanType = mContext.getIntent().getIntExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, -1);
+        mDeviceDetail = (InspectionTaskDeviceDetail) mContext.getIntent().getSerializableExtra(Constants.EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO);
+        mTaskInfo = (InspectionIndexTaskInfo) mContext.getIntent().getSerializableExtra(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO);
         mediaPlayer = buildMediaPlayer(mContext);
         updateTitle();
     }
 
     private void updateTitle() {
         switch (scanType) {
-            case Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATEDEVICE:
+            case Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATE_DEVICE:
 
-            case TYPE_SCAN_DEPLOY_STATION:
-            case TYPE_SCAN_DEPLOY_DEVICE:
+            case Constants.TYPE_SCAN_DEPLOY_STATION:
+            case Constants.TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
                 getView().updateTitleText(mContext.getString(R.string.device_deployment));
                 getView().updateQrTipText(mContext.getString(R.string.device_deployment_tip));
                 break;
-            case TYPE_SCAN_LOGIN:
+            case Constants.TYPE_SCAN_LOGIN:
                 getView().updateTitleText(mContext.getString(R.string.scan_login));
                 getView().updateQrTipText(mContext.getString(R.string.scan_login_tip));
                 getView().setBottomVisible(false);
                 break;
-            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
-            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+            case Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 //巡检/故障设备更换
                 getView().updateTitleText(mContext.getString(R.string.device_change));
                 getView().updateQrTipText(mContext.getString(R.string.device_change_tip));
                 break;
-            case TYPE_SCAN_INSPECTION:
+            case Constants.TYPE_SCAN_INSPECTION:
                 //扫描巡检设备
                 getView().updateTitleText(mContext.getString(R.string.device_inspetion));
                 getView().updateQrTipText(mContext.getString(R.string.device_inspetion_tip));
                 break;
-            case TYPE_SCAN_SIGNAL_CHECK:
+            case Constants.TYPE_SCAN_SIGNAL_CHECK:
                 //信号测试
                 getView().updateTitleText(mContext.getString(R.string.signal_test));
                 getView().updateQrTipText(mContext.getString(R.string.signal_test_tip));
@@ -94,15 +94,15 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
         switch (code) {
-            case EVENT_DATA_DEPLOY_RESULT_FINISH:
+            case Constants.EVENT_DATA_DEPLOY_RESULT_FINISH:
                 getView().finishAc();
                 break;
-            case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
-                if (TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE == scanType || TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE == scanType) {
+            case Constants.EVENT_DATA_DEPLOY_RESULT_CONTINUE:
+                if (Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE == scanType || Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE == scanType) {
                     getView().finishAc();
                 }
                 break;
-            case EVENT_DATA_SCAN_LOGIN_SUCCESS:
+            case Constants.EVENT_DATA_SCAN_LOGIN_SUCCESS:
                 getView().finishAc();
                 break;
         }
@@ -119,9 +119,9 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
 
     public void openSNTextAc() {
         Intent intent = new Intent(mContext, DeployManualActivity.class);
-        intent.putExtra(EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
-        intent.putExtra(EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO, mDeviceDetail);
-        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, scanType);
+        intent.putExtra(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
+        intent.putExtra(Constants.EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO, mDeviceDetail);
+        intent.putExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, scanType);
         getView().startAC(intent);
     }
 
@@ -144,7 +144,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
         getView().showProgressDialog();
 
 
-        if (scanType == Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATEDEVICE) {
+        if (scanType == Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATE_DEVICE) {
 
             String nameplateId = mContext.getIntent().getStringExtra("nameplateId");
 
@@ -154,7 +154,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                     getView().dismissProgressDialog();
                     //更新列表，关闭界面
 
-                    EventData data = new EventData(EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL);
+                    EventData data = new EventData(Constants.EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL);
                     EventBus.getDefault().post(data);
                     getView().finishAc();
                 }
@@ -203,7 +203,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                             namePlateInfo.setName(model.nameAndAddress);
 
 
-                            EventData data = new EventData(EVENT_DATA_ADD_SENSOR_FROM_DEPLOY);
+                            EventData data = new EventData(Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY);
                             data.data = namePlateInfo;
                             EventBus.getDefault().post(data);
                             getView().finishAc();

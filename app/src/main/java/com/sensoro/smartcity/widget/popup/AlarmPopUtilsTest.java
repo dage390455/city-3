@@ -43,7 +43,7 @@ import com.sensoro.smartcity.adapter.AlarmPopupContentAdapter;
 import com.sensoro.smartcity.adapter.AlarmPopupMainTagAdapter;
 import com.sensoro.smartcity.adapter.ImagePickerAdapter;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.model.AlarmPopModel;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.util.LogUtils;

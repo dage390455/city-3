@@ -6,7 +6,7 @@ import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IScanLoginResultActivityView;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
@@ -18,7 +18,7 @@ import org.greenrobot.eventbus.EventBus;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class ScanLoginResultActivityPresenter extends BasePresenter<IScanLoginResultActivityView> implements Constants {
+public class ScanLoginResultActivityPresenter extends BasePresenter<IScanLoginResultActivityView> {
     private String qrcodeId;
     private Activity mContext;
 
@@ -37,7 +37,7 @@ public class ScanLoginResultActivityPresenter extends BasePresenter<IScanLoginRe
                 public void onCompleted(ResponseBase responseBase) {
                     if (responseBase.getErrcode() == 0) {
                         EventData eventData = new EventData();
-                        eventData.code = EVENT_DATA_SCAN_LOGIN_SUCCESS;
+                        eventData.code = Constants.EVENT_DATA_SCAN_LOGIN_SUCCESS;
                         EventBus.getDefault().post(eventData);
                     } else {
                         getView().toastShort(mContext.getString(R.string.login_failed_please_rescan));

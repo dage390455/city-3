@@ -6,11 +6,11 @@ import android.text.TextUtils;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.EventData;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAlarmContactActivityView;
 import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.smartcity.util.RegexUtils;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactActivityView> implements Constants {
+public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactActivityView>  {
     private Activity mContext;
     private final List<DeployContactModel> deployContactModelList = new ArrayList<>();
     private ArrayList<String> mNameKeywords = new ArrayList<>();
@@ -32,7 +32,7 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        ArrayList<DeployContactModel> deployContactModels = (ArrayList<DeployContactModel>) mContext.getIntent().getSerializableExtra(EXTRA_SETTING_DEPLOY_CONTACT);
+        ArrayList<DeployContactModel> deployContactModels = (ArrayList<DeployContactModel>) mContext.getIntent().getSerializableExtra(Constants.EXTRA_SETTING_DEPLOY_CONTACT);
         if (deployContactModels != null && deployContactModels.size() > 0) {
             deployContactModelList.clear();
             deployContactModelList.addAll(deployContactModels);
@@ -84,7 +84,7 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
             save(deployContactModel.name, deployContactModel.phone);
         }
         EventData eventData = new EventData();
-        eventData.code = EVENT_DATA_DEPLOY_SETTING_CONTACT;
+        eventData.code = Constants.EVENT_DATA_DEPLOY_SETTING_CONTACT;
         eventData.data = deployContactModelList;
         EventBus.getDefault().post(eventData);
         if (isAttachedView()) {

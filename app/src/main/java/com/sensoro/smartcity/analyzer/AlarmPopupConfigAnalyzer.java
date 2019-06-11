@@ -15,13 +15,15 @@ import com.sensoro.common.server.bean.AlarmPopupDataGroupsBean;
 import com.sensoro.common.server.bean.AlarmPopupDataLabelsBean;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.sensoro.smartcity.constant.CityConstants.confirmAlarmPlaceArray;
+import static com.sensoro.smartcity.constant.CityConstants.confirmAlarmTypeArray;
 
 public class AlarmPopupConfigAnalyzer {
     /**
@@ -217,7 +219,7 @@ public class AlarmPopupConfigAnalyzer {
         switch (type) {
             case "place":
                 try {
-                    defaultText = context.getString(Constants.confirmAlarmPlaceArray[id]);
+                    defaultText = context.getString(confirmAlarmPlaceArray[id]);
                 } catch (Exception e) {
                     if (alarmPopupDataBeanCache != null) {
                         Map<String, AlarmPopupDataConfigBean> config = alarmPopupDataBeanCache.getConfig();
@@ -233,7 +235,7 @@ public class AlarmPopupConfigAnalyzer {
                 break;
             case "reason":
                 try {
-                    defaultText = context.getString(Constants.confirmAlarmTypeArray[id]);
+                    defaultText = context.getString(confirmAlarmTypeArray[id]);
                 } catch (Exception e) {
                     if (alarmPopupDataBeanCache != null) {
                         Map<String, AlarmPopupDataConfigBean> config = alarmPopupDataBeanCache.getConfig();

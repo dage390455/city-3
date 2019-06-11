@@ -6,7 +6,7 @@ import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployRepairInstructionView;
 
 public class DeployRepairInstructionPresenter extends BasePresenter<IDeployRepairInstructionView> {

@@ -11,7 +11,7 @@ import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.activity.TakeRecordActivity;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionUploadExceptionActivityView;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.AlarmPopModel;
@@ -42,8 +42,10 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.sensoro.smartcity.constant.CityConstants.INSPECTION_EXCEPTION_TAGS;
+
 public class InspectionUploadExceptionActivityPresenter extends BasePresenter<IInspectionUploadExceptionActivityView>
-        implements View.OnClickListener, IOnCreate, Constants, SelectDialog.SelectDialogListener, UpLoadPhotosUtils.UpLoadPhotoListener {
+        implements View.OnClickListener, IOnCreate, SelectDialog.SelectDialogListener, UpLoadPhotosUtils.UpLoadPhotoListener {
     private Activity mContext;
     private List<String> exceptionTags = new ArrayList<>();
     private long startTime;
@@ -60,8 +62,8 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
         onCreate();
         upLoadPhotosUtils = new UpLoadPhotosUtils(mContext, this);
         initExceptionTag();
-        mDeviceDetail = (InspectionTaskDeviceDetail) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL);
-        startTime = mContext.getIntent().getLongExtra(EXTRA_INSPECTION_START_TIME, 0);
+        mDeviceDetail = (InspectionTaskDeviceDetail) mContext.getIntent().getSerializableExtra(Constants.EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL);
+        startTime = mContext.getIntent().getLongExtra(Constants.EXTRA_INSPECTION_START_TIME, 0);
     }
 
     private void initExceptionTag() {
@@ -96,7 +98,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
             }
             getView().updateImageList(selImageList);
 //            updateButton();
-        } else if (IMAGE_ITEM_ADD == position) {
+        } else if (Constants.IMAGE_ITEM_ADD == position) {
             List<String> names = new ArrayList<>();
             names.add(mContext.getString(R.string.take_photo));
 //            names.add("相册");
@@ -109,14 +111,14 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                 Intent intent = new Intent();
                 intent.setClass(mContext, VideoPlayActivity.class);
                 intent.putExtra("path_record", (Serializable) imageItem);
-                intent.putExtra("video_del",true);
-                mContext.startActivityForResult(intent, REQUEST_CODE_PLAY_RECORD);
+                intent.putExtra("video_del", true);
+                mContext.startActivityForResult(intent, Constants.REQUEST_CODE_PLAY_RECORD);
             } else {
                 Intent intentPreview = new Intent(mContext, ImagePreviewDelActivity.class);
                 intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, selImageList);
                 intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
                 intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
-                mContext.startActivityForResult(intentPreview, REQUEST_CODE_PREVIEW);
+                mContext.startActivityForResult(intentPreview, Constants.REQUEST_CODE_PREVIEW);
             }
 
         }
@@ -157,8 +159,8 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
     private void doUploadAndChange() {
         //TODO 更换设备 上传异常
         Intent intent = new Intent(mContext, ScanActivity.class);
-        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE);
-        intent.putExtra(EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO, mDeviceDetail);
+        intent.putExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE);
+        intent.putExtra(Constants.EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO, mDeviceDetail);
         getView().startAC(intent);
     }
 
@@ -182,7 +184,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                             } else {
                                 getView().toastShort(mContext.getString(R.string.abnormal_reporting_success));
                                 EventData eventData = new EventData();
-                                eventData.code = EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE;
+                                eventData.code = Constants.EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE;
                                 EventBus.getDefault().post(eventData);
                                 getView().finishAc();
                             }
@@ -209,12 +211,12 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
         Object data = eventData.data;
-        if (code == EVENT_DATA_ALARM_POP_IMAGES) {
+        if (code == Constants.EVENT_DATA_ALARM_POP_IMAGES) {
             if (data instanceof AlarmPopModel) {
                 AlarmPopModel alarmPopModel = (AlarmPopModel) data;
                 if (alarmPopModel.resultCode == ImagePicker.RESULT_CODE_ITEMS) {
                     //添加图片返回
-                    if (alarmPopModel.requestCode == REQUEST_CODE_SELECT) {
+                    if (alarmPopModel.requestCode == Constants.REQUEST_CODE_SELECT) {
                         if (alarmPopModel.imageItems != null) {
 //                            adapter.setMaxImgCount(9);
                             if (!alarmPopModel.fromTakePhoto) {
@@ -227,7 +229,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                     }
                 } else if (alarmPopModel.resultCode == ImagePicker.RESULT_CODE_BACK) {
                     //预览图片返回
-                    if (alarmPopModel.requestCode == REQUEST_CODE_PREVIEW) {
+                    if (alarmPopModel.requestCode == Constants.REQUEST_CODE_PREVIEW) {
                         if (alarmPopModel.imageItems != null) {
 //                            adapter.setMaxImgCount(9);
                             selImageList.clear();
@@ -236,16 +238,16 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                             getView().updateImageList(selImageList);
                         }
                     }
-                } else if (alarmPopModel.resultCode == RESULT_CODE_RECORD) {
+                } else if (alarmPopModel.resultCode == Constants.RESULT_CODE_RECORD) {
                     //拍视频
-                    if (alarmPopModel.requestCode == REQUEST_CODE_RECORD) {
+                    if (alarmPopModel.requestCode == Constants.REQUEST_CODE_RECORD) {
                         if (alarmPopModel.imageItems != null) {
 //                            adapter.setMaxImgCount(9);
                             selImageList.addAll(alarmPopModel.imageItems);
 //                            adapter.updateImages(selImageList);
                             getView().updateImageList(selImageList);
                         }
-                    } else if (alarmPopModel.requestCode == REQUEST_CODE_PLAY_RECORD) {
+                    } else if (alarmPopModel.requestCode == Constants.REQUEST_CODE_PLAY_RECORD) {
 //                        adapter.setMaxImgCount(9);
 //                        selImageList.clear();
 //                        adapter.updateImages(selImageList);
@@ -253,9 +255,9 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
 
                 }
             }
-        } else if (code == EVENT_DATA_DEPLOY_RESULT_FINISH) {
+        } else if (code == Constants.EVENT_DATA_DEPLOY_RESULT_FINISH) {
             getView().finishAc();
-        } else if (code == EVENT_DATA_DEPLOY_RESULT_CONTINUE) {
+        } else if (code == Constants.EVENT_DATA_DEPLOY_RESULT_CONTINUE) {
             getView().finishAc();
         }
     }
@@ -275,7 +277,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                 ImagePicker.getInstance().setSelectLimit(maxImgCount - selImageList.size());
                 Intent intent = new Intent(mContext, ImageGridActivity.class);
                 intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
-                mContext.startActivityForResult(intent, REQUEST_CODE_SELECT);
+                mContext.startActivityForResult(intent, Constants.REQUEST_CODE_SELECT);
                 break;
 //            case 1:
 //                //打开选择,本次允许选择的数量
@@ -292,7 +294,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
             case 1:
                 Intent intent2 = new Intent(mContext, TakeRecordActivity.class);
 //                                    intent2.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
-                mContext.startActivityForResult(intent2, REQUEST_CODE_RECORD);
+                mContext.startActivityForResult(intent2, Constants.REQUEST_CODE_RECORD);
                 break;
             default:
                 break;

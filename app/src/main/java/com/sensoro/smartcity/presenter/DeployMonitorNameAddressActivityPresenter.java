@@ -10,7 +10,7 @@ import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.EventData;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorNameAddressActivityView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDeployMonitorNameAddressActivityView> implements Constants {
+public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDeployMonitorNameAddressActivityView>  {
     private Activity mContext;
     private final List<String> mHistoryKeywords = new ArrayList<>();
 //    private int deployType;
@@ -33,7 +33,7 @@ public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDe
 //        if (!TextUtils.isEmpty(sn)) {
 ////            getView().updateTvTitle(sn);
 //        }
-        String name = mContext.getIntent().getStringExtra(EXTRA_SETTING_NAME_ADDRESS);
+        String name = mContext.getIntent().getStringExtra(Constants.EXTRA_SETTING_NAME_ADDRESS);
         String history = PreferencesHelper.getInstance().getDeployNameAddressHistory();
         if (!TextUtils.isEmpty(history)) {
             mHistoryKeywords.clear();
@@ -184,7 +184,7 @@ public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDe
         save(text);
 //        mKeywordEt.clearFocus();
         EventData eventData = new EventData();
-        eventData.code = EVENT_DATA_DEPLOY_SETTING_NAME_ADDRESS;
+        eventData.code = Constants.EVENT_DATA_DEPLOY_SETTING_NAME_ADDRESS;
         eventData.data = text;
         EventBus.getDefault().post(eventData);
         getView().finishAc();

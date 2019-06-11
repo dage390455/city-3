@@ -32,7 +32,7 @@ import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
 import com.sensoro.smartcity.adapter.RelationAdapter;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
 import com.sensoro.smartcity.presenter.SearchMonitorActivityPresenter;
 import com.sensoro.common.server.bean.DeviceInfo;
@@ -53,7 +53,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.view.View.VISIBLE;
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
+import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 
 /**
  * Created by sensoro on 17/7/11.

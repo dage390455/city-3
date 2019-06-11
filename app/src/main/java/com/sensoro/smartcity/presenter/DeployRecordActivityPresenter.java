@@ -20,7 +20,7 @@ import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployRecordDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployRecordActivityView;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
@@ -36,7 +36,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordActivityView>
-        implements Constants, IOnCreate, CalendarPopUtils.OnCalendarPopupCallbackListener {
+        implements IOnCreate, CalendarPopUtils.OnCalendarPopupCallbackListener {
     private String tempSearch;
     private Long startTime;
     private Long endTime;
@@ -59,7 +59,7 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
             getView().updateSearchHistoryList(mSearchHistoryList);
         }
 
-        requestSearchData(DIRECTION_DOWN, null);
+        requestSearchData(Constants.DIRECTION_DOWN, null);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
         }
 
         switch (direction) {
-            case DIRECTION_DOWN:
+            case Constants.DIRECTION_DOWN:
                 cur_page = 0;
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getDeployRecordList(null, searchText, temp_startTime, temp_endTime, null, null, 20, cur_page * 20, null)
@@ -116,7 +116,7 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
                     }
                 });
                 break;
-            case DIRECTION_UP:
+            case Constants.DIRECTION_UP:
                 cur_page++;
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getDeployRecordList(null, searchText, temp_startTime, temp_endTime, null, null, 20, 20 * cur_page, null).subscribeOn(Schedulers.io())
@@ -156,13 +156,13 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
 
     public void doRecordDetail(DeployRecordInfo deployRecordInfo) {
         Intent intent = new Intent(mActivity, DeployRecordDetailActivity.class);
-        intent.putExtra(EXTRA_DEPLOY_RECORD_DETAIL, deployRecordInfo);
+        intent.putExtra(Constants.EXTRA_DEPLOY_RECORD_DETAIL, deployRecordInfo);
         getView().startAC(intent);
     }
 
     public void doDeployNewDevice() {
         Intent intent = new Intent(mActivity, ScanActivity.class);
-        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
+        intent.putExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
         getView().startAC(intent);
     }
 
@@ -193,24 +193,24 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
             save(tempSearch);
 
         }
-        requestSearchData(DIRECTION_DOWN, getView().getSearchText());
+        requestSearchData(Constants.DIRECTION_DOWN, getView().getSearchText());
 
     }
 
     public void doCancelSearch() {
         tempSearch = null;
-        requestSearchData(DIRECTION_DOWN, null);
+        requestSearchData(Constants.DIRECTION_DOWN, null);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
         switch (code) {
-            case EVENT_DATA_DEPLOY_RESULT_FINISH:
+            case Constants.EVENT_DATA_DEPLOY_RESULT_FINISH:
                 getView().finishAc();
                 break;
-            case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
-                requestSearchData(DIRECTION_DOWN, null);
+            case Constants.EVENT_DATA_DEPLOY_RESULT_CONTINUE:
+                requestSearchData(Constants.DIRECTION_DOWN, null);
                 break;
         }
 //        LogUtils.loge(this, eventData.toString());

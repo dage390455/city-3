@@ -30,7 +30,7 @@ import com.sensoro.smartcity.util.WidgetUtil;
 import java.io.File;
 import java.io.Serializable;
 
-import static com.sensoro.smartcity.constant.Constants.RESULT_CODE_RECORD;
+import static com.sensoro.common.constant.Constants.RESULT_CODE_RECORD;
 
 public class TakeRecordActivity extends BaseActivity<ITakeRecordActivityView, TakeRecordActivityPresenter> implements ITakeRecordActivityView, View.OnClickListener {
 

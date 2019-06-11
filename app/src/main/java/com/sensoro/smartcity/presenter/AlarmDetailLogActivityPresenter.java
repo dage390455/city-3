@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.model.EventData;
@@ -28,7 +29,6 @@ import com.sensoro.smartcity.activity.AlarmCameraVideoDetailActivity;
 import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAlarmDetailLogActivityView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
@@ -50,7 +50,7 @@ import java.util.Map;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailLogActivityView> implements Constants, IOnCreate, AlarmPopUtilsTest.OnPopupCallbackListener {
+public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailLogActivityView> implements IOnCreate, AlarmPopUtilsTest.OnPopupCallbackListener {
     private final List<AlarmInfo.RecordInfo> mList = new ArrayList<>();
     private DeviceAlarmLogInfo deviceAlarmLogInfo;
     private boolean isReConfirm = false;
@@ -62,7 +62,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        deviceAlarmLogInfo = (DeviceAlarmLogInfo) mContext.getIntent().getSerializableExtra(EXTRA_ALARM_INFO);
+        deviceAlarmLogInfo = (DeviceAlarmLogInfo) mContext.getIntent().getSerializableExtra(Constants.EXTRA_ALARM_INFO);
 
         getAlarmCount();
 
@@ -108,7 +108,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
 
     public void doBack() {
         EventData eventData = new EventData();
-        eventData.code = EVENT_DATA_ALARM_DETAIL_RESULT;
+        eventData.code = Constants.EVENT_DATA_ALARM_DETAIL_RESULT;
         eventData.data = deviceAlarmLogInfo;
         EventBus.getDefault().post(eventData);
         if (isAttachedView()) {
@@ -122,7 +122,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         Object data = eventData.data;
         //
         switch (code) {
-            case EVENT_DATA_ALARM_FRESH_ALARM_DATA:
+            case Constants.EVENT_DATA_ALARM_FRESH_ALARM_DATA:
                 if (data instanceof DeviceAlarmLogInfo) {
                     if (this.deviceAlarmLogInfo.get_id().equals(((DeviceAlarmLogInfo) data).get_id())) {
                         this.deviceAlarmLogInfo = (DeviceAlarmLogInfo) data;
@@ -131,16 +131,16 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
 
                 }
                 break;
-            case EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS:
+            case Constants.EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS:
                 if (data instanceof EventAlarmStatusModel) {
                     EventAlarmStatusModel tempEventAlarmStatusModel = (EventAlarmStatusModel) data;
                     if (deviceAlarmLogInfo.get_id().equals(tempEventAlarmStatusModel.deviceAlarmLogInfo.get_id())) {
                         switch (tempEventAlarmStatusModel.status) {
-                            case MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
+                            case Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
                                 // 做一些预警恢复的逻辑
-                            case MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
+                            case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
                                 // 做一些预警被确认的逻辑
-                            case MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
+                            case Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
                                 // 做一些预警被再次确认的逻辑
                                 deviceAlarmLogInfo = tempEventAlarmStatusModel.deviceAlarmLogInfo;
                                 refreshData(false);
@@ -197,7 +197,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
             }
             //
             switch (deviceAlarmLogInfo.getDisplayStatus()) {
-                case DISPLAY_STATUS_CONFIRM:
+                case Constants.DISPLAY_STATUS_CONFIRM:
                     isReConfirm = false;
                     if (isAttachedView()) {
                         getView().setConfirmColor(mContext.getResources().getColor(R.color.white));
@@ -205,10 +205,10 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                         getView().setConfirmText(mContext.getString(R.string.alarm_log_alarm_warn_confirm));
                     }
                     break;
-                case DISPLAY_STATUS_ALARM:
-                case DISPLAY_STATUS_MIS_DESCRIPTION:
-                case DISPLAY_STATUS_TEST:
-                case DISPLAY_STATUS_RISKS:
+                case Constants.DISPLAY_STATUS_ALARM:
+                case Constants.DISPLAY_STATUS_MIS_DESCRIPTION:
+                case Constants.DISPLAY_STATUS_TEST:
+                case Constants.DISPLAY_STATUS_RISKS:
                     isReConfirm = true;
                     if (isAttachedView()) {
                         getView().setConfirmColor(mContext.getResources().getColor(R.color.c_252525));
@@ -339,7 +339,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
 
     public void doAlarmHistory() {
         Intent intent = new Intent(mContext, AlarmHistoryLogActivity.class);
-        intent.putExtra(EXTRA_SENSOR_SN, deviceAlarmLogInfo.getDeviceSN());
+        intent.putExtra(Constants.EXTRA_SENSOR_SN, deviceAlarmLogInfo.getDeviceSN());
         if (isAttachedView()) {
             getView().startAC(intent);
         }

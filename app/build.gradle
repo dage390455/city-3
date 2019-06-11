@@ -220,34 +220,11 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     //
-    implementation deps.arouter_api
     annotationProcessor deps.arouter_compiler
-    //
-    implementation deps.support.design
-    implementation deps.support.multidex
-    implementation deps.support.cardview
-    implementation deps.support.constraint_layout
-    implementation deps.support.app_compat
-    implementation deps.support.recyclerview
-    //
-    implementation deps.butterknife
+
     annotationProcessor deps.butterknife_compiler
     //
     testImplementation deps.junit
-    //
-    implementation deps.smartrefresh
-    //
-    implementation deps.photoview
-    //
-    implementation(deps.immersionbar) {
-        exclude group: 'com.android.support', module: 'appcompat-v7'
-    }
-    //
-    implementation deps.autosize
-    //
-    implementation deps.permission
-    //消息组件
-    implementation deps.event_bus
     //
     implementation project(path: ':lib_common')
     //
@@ -259,16 +236,6 @@ dependencies {
     //  更改扫描二维码为maven库
     implementation deps.bga_qrcode_zxing
     //
-    implementation deps.glide
-    //网络组件
-    implementation deps.okhttp3_logging
-    implementation deps.okhttp3
-    implementation deps.retrofit.runtime
-    implementation deps.retrofit.gson
-    implementation deps.retrofit.adapter
-    implementation deps.rxjava2
-    implementation deps.rx_android
-    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
     //protobuf
     implementation deps.protobuf
     implementation deps.protobuf_java_format
@@ -281,10 +248,6 @@ dependencies {
     implementation files('libs/ocr-sdk.jar')
     implementation project(':ocr_ui')
     //
-//    implementation files('libs/GetuiSDK2.12.4.0.jar')
-    //
-//    implementation files('libs/AMap3DMap_6.4.1_AMapSearch_6.1.0_AMapLocation_4.2.0_20180906.jar')
-    //
     implementation project(':sensor-kit')
     //
     implementation project(':bottomnavigation')
@@ -296,11 +259,6 @@ dependencies {
     implementation(deps.mapbox) {
         transitive = true
     }
-    //统计
-    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
-    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
-    implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
-    implementation 'com.baidu.mobstat:mtj-sdk-circle:latest.integration'
     //
     implementation 'com.qiniu:qiniu-android-sdk:7.3.+'
     //

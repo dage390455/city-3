@@ -10,7 +10,7 @@ import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.EventData;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorWeChatRelationActivityView;
 import com.sensoro.smartcity.util.RegexUtils;
 
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DeployMonitorWeChatRelationActivityPresenter extends BasePresenter<IDeployMonitorWeChatRelationActivityView> implements Constants {
+public class DeployMonitorWeChatRelationActivityPresenter extends BasePresenter<IDeployMonitorWeChatRelationActivityView> {
     private Activity mContext;
     private final List<String> mHistoryKeywords = new ArrayList<>();
 
@@ -32,7 +32,7 @@ public class DeployMonitorWeChatRelationActivityPresenter extends BasePresenter<
 //        if (!TextUtils.isEmpty(sn)) {
 //            getView().updateTvTitle(sn);
 //        }
-        String account = mContext.getIntent().getStringExtra(EXTRA_SETTING_WE_CHAT_RELATION);
+        String account = mContext.getIntent().getStringExtra(Constants.EXTRA_SETTING_WE_CHAT_RELATION);
         String history = PreferencesHelper.getInstance().getDeployWeChatRelationHistory();
         if (!TextUtils.isEmpty(history)) {
             mHistoryKeywords.clear();
@@ -97,7 +97,7 @@ public class DeployMonitorWeChatRelationActivityPresenter extends BasePresenter<
             save(text);
         }
         EventData eventData = new EventData();
-        eventData.code = EVENT_DATA_DEPLOY_SETTING_WE_CHAT_RELATION;
+        eventData.code = Constants.EVENT_DATA_DEPLOY_SETTING_WE_CHAT_RELATION;
         eventData.data = text;
         EventBus.getDefault().post(eventData);
         getView().finishAc();

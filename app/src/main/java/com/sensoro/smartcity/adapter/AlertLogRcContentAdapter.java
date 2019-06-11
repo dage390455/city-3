@@ -24,7 +24,7 @@ import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.common.model.SecurityRisksAdapterModel;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.ArrayList;
@@ -32,6 +32,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.sensoro.smartcity.constant.CityConstants.confirmAlarmResultInfoArray;
+import static com.sensoro.smartcity.constant.CityConstants.confirmStatusArray;
+import static com.sensoro.smartcity.constant.CityConstants.confirmStatusTextColorArray;
 
 public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcContentAdapter.AlertLogRcContentHolder> implements Constants {
     private final Context mContext;

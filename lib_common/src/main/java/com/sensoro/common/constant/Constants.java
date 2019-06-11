@@ -3,10 +3,6 @@ package com.sensoro.common.constant;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by sensoro on 17/7/27.
- */
-
 public interface Constants {
     //
     String SOCKET_EVENT_DEVICE_INFO = "city-device-update-series";
@@ -34,7 +30,7 @@ public interface Constants {
     String PREFERENCE_KEY_DEPLOY_TAG = "preference_key_deploy_tag";
     String PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_NAME = "preference_key_deploy_alarm_contact_name";
     String PREFERENCE_KEY_DEPLOY_ALARM_CONTACT_PHONE = "preference_key_deploy_alarm_contact_phone";
-    String PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES = "preference_key_local_devices_mergetypes";
+    String PREFERENCE_KEY_LOCAL_DEVICES_MERGE_TYPES = "preference_key_local_devices_mergetypes";
     //
     String PREFERENCE_KEY_DEPLOY_PHONE = "preference_key_deploy_phone";
     //
@@ -43,113 +39,8 @@ public interface Constants {
     String PREFERENCE_KEY_DEVICE_PHONE = "preference_key_device_phone";
     String PREFERENCE_KEY_VERSION_CODE = "preference_key_version_code";
     String INPUT = "INPUT";
-    //    int LEFT_MENU_ICON_UNSELECT[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm, R.mipmap.ic_menu_switch,
-//            R.mipmap.ic_menu_location, R.mipmap.ic_menu_location};
-//    int LEFT_MENU_ICON_UNSELECT_BUSSIES[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm,
-//            R.mipmap.ic_menu_location, R.mipmap.ic_menu_location};
-//    //
-//    int LEFT_MENU_ICON_UNSELECT_NO_STATION[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm, R.mipmap
-// .ic_menu_switch,
-//            R.mipmap.ic_menu_location};
-//    int LEFT_MENU_ICON_UNSELECT_BUSSIES_NO_STATION[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm,
-//            R.mipmap.ic_menu_location};
-//    //
-//    int LEFT_MENU_ICON_UNSELECT_SUPPER = R.mipmap.ic_menu_switch;
+
     int[] INDEX_STATUS_VALUES = {0, 1, 2, 3};
-    //    String[] INDEX_TYPE_ARRAY = {
-//            "全部类型",
-//            "紧急呼叫", "追踪器", "甲烷",
-//            "一氧化碳", "二氧化碳", "倾角",
-//            "井位", "水位检测", "地磁", "门锁检测", "跑冒滴漏",
-//            "火焰", "光线", "液化石油气", "二氧化氮",
-//            "PM2.5/10", "烟感", "温湿度",
-//            "消防液压", "温度贴片", "通断检测", "电表", "电气火灾", "红外线", "手动报警", "声光报警"
-//    };
-//    String[] SELECT_TYPE = {
-//            "全部类型",
-//            "甲烷", "一氧化碳", "二氧化碳",
-//            "二氧化氮", "PM2.5/10", "光线",
-//            "井位", "烟感", "温湿度", "倾角", "火焰",
-//            "水位监测", "跑冒滴漏", "液化石油气", "紧急呼叫",
-//            "追踪器", "消防液压", "地磁",
-//            "门锁监测", "温度贴片", "通断检测", "电表", "电气火灾", "红外线", "手动报警", "声光报警"
-//    };
-
-//    Integer[] SELECT_TYPE_RESOURCE = {
-//            R.drawable.type_all, R.drawable.type_ch4, R.drawable.type_co, R.drawable.type_co2,
-//            R.drawable.type_no2, R.drawable.type_pm, R.drawable.type_light, R.drawable.type_well_position,
-//            R.drawable.type_smoke, R.drawable.type_tempature_humidity, R.drawable.type_inclination,
-//            R.drawable.type_flame, R.drawable.type_water_monitoring, R.drawable.type_leak,
-//            R.drawable.type_gas, R.drawable.type_emergency_call, R.drawable.type_tracking_device,
-//            R.drawable.type_fire_hydraulic, R.drawable.type_geomagnetic, R.drawable.type_lock_monitoring,
-//            R.drawable.type_tempature, R.drawable.type_on_off_monitoring, R.drawable.type_ammeter
-//            , R.mipmap.ic_sensor_electric_alarm, R.mipmap.ic_sensor_infrared,
-//            R.mipmap.ic_sensor_manual_alarm, R.mipmap.ic_sensor_sound_light_alarm
-//    };
-
-//    String SELECT_TYPE_VALUES[] = {
-//            "all", "ch4", "co", "co2", "no2", "pm10,pm2_5", "light", "cover,level", "smoke",
-//            "humidity,temperature", "collision,pitch,roll", "flame", "distance", "drop", "lpg",
-//            "alarm", "altitude,latitude,longitude", "waterPressure", "magnetic", "door",
-//            "humidity,temp1,temperature", "connection", "CURRENT_A,CURRENT_B,CURRENT_C,ID," +
-//            "TOTAL_POWER,VOLTAGE_A," +
-//            "VOLTAGE_B,VOLTAGE_C", "curr_val,elec_energy_val,leakage_val,power_val,temp_val,vol_val", "infrared",
-//            "manual_alarm", "sound_light_alarm"
-//    };
-//    String SENSOR_MENU_MATCHER_ARRAY[] = {
-//            "all", "ch4", "co", "co2", "no2", "pm10|pm2_5",
-//            "light", "cover|level", "smoke", "humidity|temperature", "collision|pitch|roll", "flame",
-//            "distance", "drop", "lpg", "alarm", "latitude|longitude|altitude", "waterPressure", "magnetic",
-//            "door", "temp1", "connection", "CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C",
-//            "curr_val|elec_energy_val|leakage_val|power_val|temp_val|vol_val", "infrared",
-//            "manual_alarm", "sound_light_alarm"
-//    };
-    //    String INDEX_TYPE_VALUES[] = {
-//            "all",
-//            "alarm", "altitude,latitude,longitude", "ch4",
-//            "co", "co2", "collision,pitch,roll",
-//            "cover,level", "distance", "magnetic", "door", "drop",
-//            "flame", "light", "lpg", "no2",
-//            "pm10,pm2_5", "smoke", "humidity,temperature",
-//            "waterPressure", "humidity,temp1,temperature", "connection", "CURRENT_A,CURRENT_B,CURRENT_C,ID," +
-//            "TOTAL_POWER,VOLTAGE_A," +
-//            "VOLTAGE_B,VOLTAGE_C", "curr_val,elec_energy_val,leakage_val,power_val,temp_val,vol_val", "infrared",
-//            "manual_alarm", "sound_light_alarm"
-//
-//    };
-//    String SENSOR_MENU_ARRAY[] = {
-//            "all",
-//            "alarm", "latitude|longitude|altitude", "ch4",
-//            "co", "co2", "collision|pitch|roll",
-//            "cover|level", "distance", "magnetic", "door", "drop",
-//            "flame", "light", "lpg", "no2",
-//            "pm10|pm2_5", "smoke", "humidity|temperature",
-//            "waterPressure", "temp1", "connection",
-//            "CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C",
-//            "curr_val|elec_energy_val|leakage_val|power_val|temp_val|vol_val", "infrared",
-//            "manual_alarm", "sound_light_alarm"
-//    };
-//    Integer[] TYPE_MENU_RESOURCE = {
-//            R.mipmap.ic_sensor_call, R.mipmap.ic_sensor_tracker, R.mipmap.ic_sensor_ch4,
-//            R.mipmap.ic_sensor_co, R.mipmap.ic_sensor_co2, R.mipmap.ic_sensor_angle,
-//            R.mipmap.ic_sensor_cover, R.mipmap.ic_sensor_level, R.mipmap.ic_sensor_magnetic, R.mipmap.ic_sensor_lock,
-//            R.mipmap.ic_sensor_drop, R.mipmap.ic_sensor_flame, R.mipmap.ic_sensor_light,
-//            R.mipmap.ic_sensor_lpg, R.mipmap.ic_sensor_no2, R.mipmap.ic_sensor_pm,
-//            R.mipmap.ic_sensor_smoke, R.mipmap.ic_sensor_temp_humi, R.mipmap.ic_sensor_water_pressure, R.mipmap
-//            .ic_sensor_temp_humi, R.mipmap.ic_sensor_connection, R.mipmap.ic_sensor_electric_meter, R.mipmap
-//            .ic_sensor_electric_alarm, R.mipmap
-//            .ic_sensor_infrared, R.mipmap.ic_sensor_manual_alarm, R.mipmap.ic_sensor_sound_light_alarm
-//
-//    };
-//    String[] ALARM_TAG_ARRAY = {"一氧化碳", "二氧化碳", "甲烷", "液化石油气", "二氧化氮", "跑冒滴漏", "灯井监控",
-//            "PM2.5/10", "烟雾", "温湿度", "火焰", "倾角", "水压",
-//            "门锁检测", "追踪器", "水位检测", "光线"
-//    };
-//    String[] ALARM_TAG_EN_ARRAY = {"co", "co2", "ch4", "lpg", "no2", "drop", "cover,level",
-//            "pm2_5,pm10", "smoke", "temperature,humidity", "flame", "collision|pitch|roll", "waterPressure",
-//            "magnetic", "tracker", "distance", "light"
-//    };
-
     //
     String EXTRA_USER_ID = "extra_user_id";
     //
@@ -422,11 +313,10 @@ public interface Constants {
 
     int EVENT_DATA_DEPLOY_BIND_LIST = 0x60;
 
-    int TYPE_SCAN_NAMEPLATE_ASSOCIATEDEVICE = 0x61;
+    int TYPE_SCAN_NAMEPLATE_ASSOCIATE_DEVICE = 0x61;
 
     int EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL = 0x62;
     int EVENT_DATA_ADD_SENSOR_FROM_DEPLOY = 0x63;
-
 
 
     List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{
@@ -460,6 +350,7 @@ public interface Constants {
     String LIVE_URL = "http://wdquan-space.b0.upaiyun.com/VIDEO/2018/11/22/ae0645396048_hls_time10.m3u8";
     String EXTRA_CAMERA_PERSON_DETAIL = "extra_camera_person_detail";
     String EXTRA_CAMERA_PERSON_AVATAR_HISTORY_FACE_URL = "EXTRA_CAMERA_PERSON_AVATAR_HISTORY_FACE_URL";
+    //
     String EXTRA_DEPLOY_NAMEPLATE_NAME = "extra_deploy_nameplate_name";
 
 
@@ -475,5 +366,247 @@ public interface Constants {
     String EXTRA_ASSOCIATION_SENSOR_BIND_LIST = "extra_association_sensor_bind_list";
     String EXTRA_ASSOCIATION_SENSOR_ADD_BIND_LIST = "extra_association_sensor_add_bind_list";
     String EXTRA_ASSOCIATION_SENSOR_NAMEPLATE_ID = "extra_association_sensor_nameplate_id";
+    //
+    String EXTRA_SECURITY_RISK = "extra_security_risk";
+
+    String PREFERENCE_LOCAL_DEVICES_MERGE_TYPES = "preference_local_devices_mergetypes";
+
+    int EVENT_DATA_SECURITY_RISK_TAG_MANAGER = 0x57;
+    int EVENT_DATA_SECURITY_RISK_TAG = 0x58;
+
+    int TYPE_SCAN_NAMEPLATE_DEPLOY = 0x59;
+    //部署结果
+    //地图部署回显来源
+    int DEPLOY_MAP_SOURCE_TYPE_BASE_STATION = 4;
+
+    //监听电话广播
+    int VIDEO_START = 0X60;
+    int VIDEO_STOP = 0X61;
+
+    String EXTRA_ALARM_CAMERAS = "extra_alarm_cameras";
+    String EXTRA_ALARM_CAMERA_VIDEO = "extra_alarm_camera_video";
+    //
+    String[] INDEX_STATUS_ARRAY = {"全部状态", "预警", "正常", "失联", "未激活"};
+    int EVENT_DATA_UPDATE_BASE_STATION = 0x64;
+    int TYPE_SCAN_DEPLOY_CAMERA = 0x65;
+    //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //
+    //    int LEFT_MENU_ICON_UNSELECT[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm, R.mipmap.ic_menu_switch,
+//            R.mipmap.ic_menu_location, R.mipmap.ic_menu_location};
+//    int LEFT_MENU_ICON_UNSELECT_BUSSIES[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm,
+//            R.mipmap.ic_menu_location, R.mipmap.ic_menu_location};
+//    //
+//    int LEFT_MENU_ICON_UNSELECT_NO_STATION[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm, R.mipmap
+// .ic_menu_switch,
+//            R.mipmap.ic_menu_location};
+//    int LEFT_MENU_ICON_UNSELECT_BUSSIES_NO_STATION[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm,
+//            R.mipmap.ic_menu_location};
+//    //
+//    int LEFT_MENU_ICON_UNSELECT_SUPPER = R.mipmap.ic_menu_switch;
+
+
+    //    String[] INDEX_TYPE_ARRAY = {
+//            "全部类型",
+//            "紧急呼叫", "追踪器", "甲烷",
+//            "一氧化碳", "二氧化碳", "倾角",
+//            "井位", "水位检测", "地磁", "门锁检测", "跑冒滴漏",
+//            "火焰", "光线", "液化石油气", "二氧化氮",
+//            "PM2.5/10", "烟感", "温湿度",
+//            "消防液压", "温度贴片", "通断检测", "电表", "电气火灾", "红外线", "手动报警", "声光报警"
+//    };
+//    String[] SELECT_TYPE = {
+//            "全部类型",
+//            "甲烷", "一氧化碳", "二氧化碳",
+//            "二氧化氮", "PM2.5/10", "光线",
+//            "井位", "烟感", "温湿度", "倾角", "火焰",
+//            "水位监测", "跑冒滴漏", "液化石油气", "紧急呼叫",
+//            "追踪器", "消防液压", "地磁",
+//            "门锁监测", "温度贴片", "通断检测", "电表", "电气火灾", "红外线", "手动报警", "声光报警"
+//    };
+
+//    Integer[] SELECT_TYPE_RESOURCE = {
+//            R.drawable.type_all, R.drawable.type_ch4, R.drawable.type_co, R.drawable.type_co2,
+//            R.drawable.type_no2, R.drawable.type_pm, R.drawable.type_light, R.drawable.type_well_position,
+//            R.drawable.type_smoke, R.drawable.type_tempature_humidity, R.drawable.type_inclination,
+//            R.drawable.type_flame, R.drawable.type_water_monitoring, R.drawable.type_leak,
+//            R.drawable.type_gas, R.drawable.type_emergency_call, R.drawable.type_tracking_device,
+//            R.drawable.type_fire_hydraulic, R.drawable.type_geomagnetic, R.drawable.type_lock_monitoring,
+//            R.drawable.type_tempature, R.drawable.type_on_off_monitoring, R.drawable.type_ammeter
+//            , R.mipmap.ic_sensor_electric_alarm, R.mipmap.ic_sensor_infrared,
+//            R.mipmap.ic_sensor_manual_alarm, R.mipmap.ic_sensor_sound_light_alarm
+//    };
+
+    //    String SELECT_TYPE_VALUES[] = {
+//            "all", "ch4", "co", "co2", "no2", "pm10,pm2_5", "light", "cover,level", "smoke",
+//            "humidity,temperature", "collision,pitch,roll", "flame", "distance", "drop", "lpg",
+//            "alarm", "altitude,latitude,longitude", "waterPressure", "magnetic", "door",
+//            "humidity,temp1,temperature", "connection", "CURRENT_A,CURRENT_B,CURRENT_C,ID," +
+//            "TOTAL_POWER,VOLTAGE_A," +
+//            "VOLTAGE_B,VOLTAGE_C", "curr_val,elec_energy_val,leakage_val,power_val,temp_val,vol_val", "infrared",
+//            "manual_alarm", "sound_light_alarm"
+//    };
+//    String SENSOR_MENU_MATCHER_ARRAY[] = {
+//            "all", "ch4", "co", "co2", "no2", "pm10|pm2_5",
+//            "light", "cover|level", "smoke", "humidity|temperature", "collision|pitch|roll", "flame",
+//            "distance", "drop", "lpg", "alarm", "latitude|longitude|altitude", "waterPressure", "magnetic",
+//            "door", "temp1", "connection", "CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C",
+//            "curr_val|elec_energy_val|leakage_val|power_val|temp_val|vol_val", "infrared",
+//            "manual_alarm", "sound_light_alarm"
+//    };
+    //    String INDEX_TYPE_VALUES[] = {
+//            "all",
+//            "alarm", "altitude,latitude,longitude", "ch4",
+//            "co", "co2", "collision,pitch,roll",
+//            "cover,level", "distance", "magnetic", "door", "drop",
+//            "flame", "light", "lpg", "no2",
+//            "pm10,pm2_5", "smoke", "humidity,temperature",
+//            "waterPressure", "humidity,temp1,temperature", "connection", "CURRENT_A,CURRENT_B,CURRENT_C,ID," +
+//            "TOTAL_POWER,VOLTAGE_A," +
+//            "VOLTAGE_B,VOLTAGE_C", "curr_val,elec_energy_val,leakage_val,power_val,temp_val,vol_val", "infrared",
+//            "manual_alarm", "sound_light_alarm"
+//
+//    };
+//    String SENSOR_MENU_ARRAY[] = {
+//            "all",
+//            "alarm", "latitude|longitude|altitude", "ch4",
+//            "co", "co2", "collision|pitch|roll",
+//            "cover|level", "distance", "magnetic", "door", "drop",
+//            "flame", "light", "lpg", "no2",
+//            "pm10|pm2_5", "smoke", "humidity|temperature",
+//            "waterPressure", "temp1", "connection",
+//            "CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C",
+//            "curr_val|elec_energy_val|leakage_val|power_val|temp_val|vol_val", "infrared",
+//            "manual_alarm", "sound_light_alarm"
+//    };
+//    Integer[] TYPE_MENU_RESOURCE = {
+//            R.mipmap.ic_sensor_call, R.mipmap.ic_sensor_tracker, R.mipmap.ic_sensor_ch4,
+//            R.mipmap.ic_sensor_co, R.mipmap.ic_sensor_co2, R.mipmap.ic_sensor_angle,
+//            R.mipmap.ic_sensor_cover, R.mipmap.ic_sensor_level, R.mipmap.ic_sensor_magnetic, R.mipmap.ic_sensor_lock,
+//            R.mipmap.ic_sensor_drop, R.mipmap.ic_sensor_flame, R.mipmap.ic_sensor_light,
+//            R.mipmap.ic_sensor_lpg, R.mipmap.ic_sensor_no2, R.mipmap.ic_sensor_pm,
+//            R.mipmap.ic_sensor_smoke, R.mipmap.ic_sensor_temp_humi, R.mipmap.ic_sensor_water_pressure, R.mipmap
+//            .ic_sensor_temp_humi, R.mipmap.ic_sensor_connection, R.mipmap.ic_sensor_electric_meter, R.mipmap
+//            .ic_sensor_electric_alarm, R.mipmap
+//            .ic_sensor_infrared, R.mipmap.ic_sensor_manual_alarm, R.mipmap.ic_sensor_sound_light_alarm
+//
+//    };
+//    String[] ALARM_TAG_ARRAY = {"一氧化碳", "二氧化碳", "甲烷", "液化石油气", "二氧化氮", "跑冒滴漏", "灯井监控",
+//            "PM2.5/10", "烟雾", "温湿度", "火焰", "倾角", "水压",
+//            "门锁检测", "追踪器", "水位检测", "光线"
+//    };
+//    String[] ALARM_TAG_EN_ARRAY = {"co", "co2", "ch4", "lpg", "no2", "drop", "cover,level",
+//            "pm2_5,pm10", "smoke", "temperature,humidity", "flame", "collision|pitch|roll", "waterPressure",
+//            "magnetic", "tracker", "distance", "light"
+//    };
+    //
+    //    String EXTRA_DEPLOY_ORIGIN_NAME_ADDRESS = "extra_deploy_origin_name_address";
+
+//    int LEFT_MENU_ICON_UNSELECT[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm, R.mipmap.ic_menu_switch,
+//            R.mipmap.ic_menu_location, R.mipmap.ic_menu_location};
+//    int LEFT_MENU_ICON_UNSELECT_BUSSIES[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm,
+//            R.mipmap.ic_menu_location, R.mipmap.ic_menu_location};
+//    //
+//    int LEFT_MENU_ICON_UNSELECT_NO_STATION[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm, R.mipmap
+// .ic_menu_switch,
+//            R.mipmap.ic_menu_location};
+//    int LEFT_MENU_ICON_UNSELECT_BUSSIES_NO_STATION[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm,
+//            R.mipmap.ic_menu_location};
+//    //
+//    int LEFT_MENU_ICON_UNSELECT_SUPPER = R.mipmap.ic_menu_switch;
+    //    String[] INDEX_TYPE_ARRAY = {
+//            "全部类型",
+//            "紧急呼叫", "追踪器", "甲烷",
+//            "一氧化碳", "二氧化碳", "倾角",
+//            "井位", "水位检测", "地磁", "门锁检测", "跑冒滴漏",
+//            "火焰", "光线", "液化石油气", "二氧化氮",
+//            "PM2.5/10", "烟感", "温湿度",
+//            "消防液压", "温度贴片", "通断检测", "电表", "电气火灾", "红外线", "手动报警", "声光报警"
+//    };
+//    String[] SELECT_TYPE = {
+//            "全部类型",
+//            "甲烷", "一氧化碳", "二氧化碳",
+//            "二氧化氮", "PM2.5/10", "光线",
+//            "井位", "烟感", "温湿度", "倾角", "火焰",
+//            "水位监测", "跑冒滴漏", "液化石油气", "紧急呼叫",
+//            "追踪器", "消防液压", "地磁",
+//            "门锁监测", "温度贴片", "通断检测", "电表", "电气火灾", "红外线", "手动报警", "声光报警"
+//    };
+
+//    Integer[] SELECT_TYPE_RESOURCE = {
+//            R.drawable.type_all, R.drawable.type_ch4, R.drawable.type_co, R.drawable.type_co2,
+//            R.drawable.type_no2, R.drawable.type_pm, R.drawable.type_light, R.drawable.type_well_position,
+//            R.drawable.type_smoke, R.drawable.type_tempature_humidity, R.drawable.type_inclination,
+//            R.drawable.type_flame, R.drawable.type_water_monitoring, R.drawable.type_leak,
+//            R.drawable.type_gas, R.drawable.type_emergency_call, R.drawable.type_tracking_device,
+//            R.drawable.type_fire_hydraulic, R.drawable.type_geomagnetic, R.drawable.type_lock_monitoring,
+//            R.drawable.type_tempature, R.drawable.type_on_off_monitoring, R.drawable.type_ammeter
+//            , R.mipmap.ic_sensor_electric_alarm, R.mipmap.ic_sensor_infrared,
+//            R.mipmap.ic_sensor_manual_alarm, R.mipmap.ic_sensor_sound_light_alarm
+//    };
+
+//    String SELECT_TYPE_VALUES[] = {
+//            "all", "ch4", "co", "co2", "no2", "pm10,pm2_5", "light", "cover,level", "smoke",
+//            "humidity,temperature", "collision,pitch,roll", "flame", "distance", "drop", "lpg",
+//            "alarm", "altitude,latitude,longitude", "waterPressure", "magnetic", "door",
+//            "humidity,temp1,temperature", "connection", "CURRENT_A,CURRENT_B,CURRENT_C,ID," +
+//            "TOTAL_POWER,VOLTAGE_A," +
+//            "VOLTAGE_B,VOLTAGE_C", "curr_val,elec_energy_val,leakage_val,power_val,temp_val,vol_val", "infrared",
+//            "manual_alarm", "sound_light_alarm"
+//    };
+//    String SENSOR_MENU_MATCHER_ARRAY[] = {
+//            "all", "ch4", "co", "co2", "no2", "pm10|pm2_5",
+//            "light", "cover|level", "smoke", "humidity|temperature", "collision|pitch|roll", "flame",
+//            "distance", "drop", "lpg", "alarm", "latitude|longitude|altitude", "waterPressure", "magnetic",
+//            "door", "temp1", "connection", "CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C",
+//            "curr_val|elec_energy_val|leakage_val|power_val|temp_val|vol_val", "infrared",
+//            "manual_alarm", "sound_light_alarm"
+//    };
+    //    String INDEX_TYPE_VALUES[] = {
+//            "all",
+//            "alarm", "altitude,latitude,longitude", "ch4",
+//            "co", "co2", "collision,pitch,roll",
+//            "cover,level", "distance", "magnetic", "door", "drop",
+//            "flame", "light", "lpg", "no2",
+//            "pm10,pm2_5", "smoke", "humidity,temperature",
+//            "waterPressure", "humidity,temp1,temperature", "connection", "CURRENT_A,CURRENT_B,CURRENT_C,ID," +
+//            "TOTAL_POWER,VOLTAGE_A," +
+//            "VOLTAGE_B,VOLTAGE_C", "curr_val,elec_energy_val,leakage_val,power_val,temp_val,vol_val", "infrared",
+//            "manual_alarm", "sound_light_alarm"
+//
+//    };
+//    String SENSOR_MENU_ARRAY[] = {
+//            "all",
+//            "alarm", "latitude|longitude|altitude", "ch4",
+//            "co", "co2", "collision|pitch|roll",
+//            "cover|level", "distance", "magnetic", "door", "drop",
+//            "flame", "light", "lpg", "no2",
+//            "pm10|pm2_5", "smoke", "humidity|temperature",
+//            "waterPressure", "temp1", "connection",
+//            "CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C",
+//            "curr_val|elec_energy_val|leakage_val|power_val|temp_val|vol_val", "infrared",
+//            "manual_alarm", "sound_light_alarm"
+//    };
+//    Integer[] TYPE_MENU_RESOURCE = {
+//            R.mipmap.ic_sensor_call, R.mipmap.ic_sensor_tracker, R.mipmap.ic_sensor_ch4,
+//            R.mipmap.ic_sensor_co, R.mipmap.ic_sensor_co2, R.mipmap.ic_sensor_angle,
+//            R.mipmap.ic_sensor_cover, R.mipmap.ic_sensor_level, R.mipmap.ic_sensor_magnetic, R.mipmap.ic_sensor_lock,
+//            R.mipmap.ic_sensor_drop, R.mipmap.ic_sensor_flame, R.mipmap.ic_sensor_light,
+//            R.mipmap.ic_sensor_lpg, R.mipmap.ic_sensor_no2, R.mipmap.ic_sensor_pm,
+//            R.mipmap.ic_sensor_smoke, R.mipmap.ic_sensor_temp_humi, R.mipmap.ic_sensor_water_pressure, R.mipmap
+//            .ic_sensor_temp_humi, R.mipmap.ic_sensor_connection, R.mipmap.ic_sensor_electric_meter, R.mipmap
+//            .ic_sensor_electric_alarm, R.mipmap
+//            .ic_sensor_infrared, R.mipmap.ic_sensor_manual_alarm, R.mipmap.ic_sensor_sound_light_alarm
+//
+//    };
+//    String[] ALARM_TAG_ARRAY = {"一氧化碳", "二氧化碳", "甲烷", "液化石油气", "二氧化氮", "跑冒滴漏", "灯井监控",
+//            "PM2.5/10", "烟雾", "温湿度", "火焰", "倾角", "水压",
+//            "门锁检测", "追踪器", "水位检测", "光线"
+//    };
+//    String[] ALARM_TAG_EN_ARRAY = {"co", "co2", "ch4", "lpg", "no2", "drop", "cover,level",
+//            "pm2_5,pm10", "smoke", "temperature,humidity", "flame", "collision|pitch|roll", "waterPressure",
+//            "magnetic", "tracker", "distance", "light"
+//    };
 }
 

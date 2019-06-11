@@ -19,6 +19,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
@@ -36,7 +37,6 @@ import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapENActivity;
 import com.sensoro.smartcity.activity.NetWorkInfoActivity;
 import com.sensoro.smartcity.activity.SelfCheckActivity;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IBaseStationDetailActivityView;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
@@ -56,11 +56,6 @@ import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-
-import static com.sensoro.smartcity.constant.Constants.EVENT_DATA_UPDATEBASESTATION;
-import static com.sensoro.smartcity.constant.Constants.EXTRA_DEVICE_INFO;
-import static com.sensoro.smartcity.constant.Constants.EXTRA_JUST_DISPLAY_PIC;
-import static com.sensoro.smartcity.constant.Constants.REQUEST_CODE_PREVIEW;
 
 public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStationDetailActivityView> implements GeocodeSearch.OnGeocodeSearchListener {
     private Activity mContext;
@@ -82,7 +77,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         switch (code) {
 
             //位置校准的逻辑更新
-            case EVENT_DATA_UPDATEBASESTATION:
+            case Constants.EVENT_DATA_UPDATE_BASE_STATION:
 
 
                 final ArrayList<Double> pushDeviceInfo = (ArrayList<Double>) dataevent;
@@ -504,9 +499,9 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
 
 
         mDeviceInfo.setLonlat(data.getLonlatLabel());
-        mDeviceInfo.setSourceType(Constants.DEPLOY_MAP_SOURCE_TYPE_BASESTATION);
+        mDeviceInfo.setSourceType(Constants.DEPLOY_MAP_SOURCE_TYPE_BASE_STATION);
         mDeviceInfo.setSn(sn);
-        intent.putExtra(EXTRA_DEVICE_INFO, mDeviceInfo);
+        intent.putExtra(Constants.EXTRA_DEVICE_INFO, mDeviceInfo);
         getView().startAC(intent);
     }
 
@@ -655,8 +650,8 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
             intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, items);
             intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
             intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
-            intentPreview.putExtra(EXTRA_JUST_DISPLAY_PIC, true);
-            getView().startACForResult(intentPreview, REQUEST_CODE_PREVIEW);
+            intentPreview.putExtra(Constants.EXTRA_JUST_DISPLAY_PIC, true);
+            getView().startACForResult(intentPreview, Constants.REQUEST_CODE_PREVIEW);
         } else {
             getView().toastShort(mContext.getString(R.string.no_photos_added));
         }

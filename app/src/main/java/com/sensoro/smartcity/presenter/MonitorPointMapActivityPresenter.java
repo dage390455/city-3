@@ -30,7 +30,7 @@ import com.sensoro.common.utils.ImageFactory;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.DeployMapActivity;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMonitorPointMapActivityView;
 import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.DeployContactModel;
@@ -53,7 +53,7 @@ import java.util.List;
 
 import static com.amap.api.maps.AMap.MAP_TYPE_NORMAL;
 
-public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPointMapActivityView> implements Constants,
+public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPointMapActivityView> implements
         AMap.OnMapLoadedListener, IOnCreate {
 
     private Activity mContext;
@@ -66,7 +66,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        mDeviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
+        mDeviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(Constants.EXTRA_DEVICE_INFO);
         EventLoginData userData = PreferencesHelper.getInstance().getUserData();
         if (userData != null) {
             getView().setPositionCalibrationVisible(userData.hasDevicePositionCalibration);
@@ -159,7 +159,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
-            case EVENT_DATA_DEVICE_POSITION_CALIBRATION:
+            case Constants.EVENT_DATA_DEVICE_POSITION_CALIBRATION:
                 if (data instanceof DeviceInfo) {
                     DeviceInfo pushDeviceInfo = (DeviceInfo) data;
                     if (pushDeviceInfo.getSn().equalsIgnoreCase(mDeviceInfo.getSn())) {
@@ -169,7 +169,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
                 }
                 break;
 
-            case EVENT_DATA_UPDATEBASESTATION:
+            case Constants.EVENT_DATA_UPDATE_BASE_STATION:
                 final ArrayList<Double> pushDeviceInfo = (ArrayList<Double>) data;
 
                 mDeviceInfo.setLonlat(pushDeviceInfo);
@@ -396,12 +396,12 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         if (mDeviceInfo.getSourceType() > 0) {
             deployAnalyzerModel.mapSourceType = mDeviceInfo.getSourceType();
         } else {
-            deployAnalyzerModel.mapSourceType = DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM;
+            deployAnalyzerModel.mapSourceType = Constants.DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM;
 
         }
-        deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_DEVICE;
+        deployAnalyzerModel.deployType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
         intent.setClass(mContext, DeployMapActivity.class);
-        intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+        intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
         getView().startAC(intent);
     }
 

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.manger.ThreadPoolManager;
@@ -21,7 +22,6 @@ import com.sensoro.common.server.response.ResponseBase;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAlarmHistoryLogActivityView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.CalendarDateModel;
@@ -42,7 +42,7 @@ import java.util.Map;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistoryLogActivityView> implements IOnCreate, Constants, AlarmPopUtilsTest.OnPopupCallbackListener {
+public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistoryLogActivityView> implements IOnCreate, AlarmPopUtilsTest.OnPopupCallbackListener {
     private Activity mContext;
     private Long startTime;
     private Long endTime;
@@ -70,10 +70,10 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        mSn = mContext.getIntent().getStringExtra(EXTRA_SENSOR_SN);
+        mSn = mContext.getIntent().getStringExtra(Constants.EXTRA_SENSOR_SN);
         alarmPopUtils = new AlarmPopUtilsTest(mContext);
         alarmPopUtils.setOnPopupCallbackListener(this);
-        requestDataByFilter(DIRECTION_DOWN);
+        requestDataByFilter(Constants.DIRECTION_DOWN);
 
     }
 
@@ -141,22 +141,22 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
         Object data = eventData.data;
         //
         switch (code) {
-            case EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS:
+            case Constants.EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS:
                 if (data instanceof EventAlarmStatusModel) {
                     EventAlarmStatusModel tempEventAlarmStatusModel = (EventAlarmStatusModel) data;
                     switch (tempEventAlarmStatusModel.status) {
-                        case MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
+                        case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
                             // 做一些预警发生的逻辑
                             handleSocketData(tempEventAlarmStatusModel.deviceAlarmLogInfo, true);
                             break;
-                        case MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
+                        case Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
                             break;
                         // 做一些预警恢复的逻辑
-                        case MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
+                        case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
                             handleSocketData(tempEventAlarmStatusModel.deviceAlarmLogInfo, false);
                             break;
                         // 做一些预警被确认的逻辑
-                        case MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
+                        case Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
                             // 做一些预警被再次确认的逻辑
                             break;
                         default:
@@ -218,12 +218,12 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
 //        getView().setSelectedDateSearchText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil
 //                .getMothDayFormatDate(endTime));
         endTime += 1000 * 60 * 60 * 24;
-        requestDataByFilter(DIRECTION_DOWN);
+        requestDataByFilter(Constants.DIRECTION_DOWN);
     }
 
     public void requestDataByFilter(final int direction) {
         switch (direction) {
-            case DIRECTION_DOWN:
+            case Constants.DIRECTION_DOWN:
                 cur_page = 1;
                 if (isAttachedView()) {
                     getView().showProgressDialog();
@@ -251,7 +251,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
                     }
                 });
                 break;
-            case DIRECTION_UP:
+            case Constants.DIRECTION_UP:
                 cur_page++;
                 if (isAttachedView()) {
                     getView().showProgressDialog();
@@ -299,7 +299,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
     }
 
     private void freshUI(int direction, DeviceAlarmLogRsp deviceAlarmLogRsp) {
-        if (direction == DIRECTION_DOWN) {
+        if (direction == Constants.DIRECTION_DOWN) {
             mDeviceAlarmLogInfoList.clear();
         }
         final List<DeviceAlarmLogInfo> deviceAlarmLogInfoList = deviceAlarmLogRsp.getData();
@@ -336,7 +336,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
 
     private void pushAlarmFresh(DeviceAlarmLogInfo deviceAlarmLogInfo) {
         EventData eventData = new EventData();
-        eventData.code = EVENT_DATA_ALARM_FRESH_ALARM_DATA;
+        eventData.code = Constants.EVENT_DATA_ALARM_FRESH_ALARM_DATA;
         eventData.data = deviceAlarmLogInfo;
         EventBus.getDefault().post(eventData);
     }
@@ -382,7 +382,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
         }
         startTime = null;
         endTime = null;
-        requestDataByFilter(DIRECTION_DOWN);
+        requestDataByFilter(Constants.DIRECTION_DOWN);
     }
 
     public void doSelectDate() {

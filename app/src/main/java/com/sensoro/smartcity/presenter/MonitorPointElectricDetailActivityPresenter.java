@@ -71,7 +71,7 @@ import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.analyzer.OperationCmdAnalyzer;
 import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.callback.OnConfigInfoObserver;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IMonitorPointElectricDetailActivityView;
@@ -108,7 +108,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<IMonitorPointElectricDetailActivityView> implements IOnCreate, Constants, IOnResume,
+public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<IMonitorPointElectricDetailActivityView> implements IOnCreate, IOnResume,
         GeocodeSearch.OnGeocodeSearchListener, MonitorDetailOperationAdapter.OnMonitorDetailOperationAdapterListener, BLEDeviceListener<BLEDevice>
         , TipDeviceUpdateDialogUtils.TipDialogUpdateClickListener, IOnStart {
     private Activity mContext;
@@ -149,14 +149,14 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     private final ArrayList<EarlyWarningthresholdDialogUtilsAdapterModel> mEarlyWarningThresholdDialogUtilsAdapterModels = new ArrayList<>();
     private SensoroDeviceConnection sensoroDeviceConnection;
     private String mOperationType;
-    private volatile int deviceDemoMode = DEVICE_DEMO_MODE_NOT_SUPPORT;
+    private volatile int deviceDemoMode = Constants.DEVICE_DEMO_MODE_NOT_SUPPORT;
     private ArrayList<DeviceCameraInfo> deviceCameras;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        mDeviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
+        mDeviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(Constants.EXTRA_DEVICE_INFO);
         geocoderSearch = new GeocodeSearch(mContext);
         geocoderSearch.setOnGeocodeSearchListener(this);
         bleUpdateModel.sn = mDeviceInfo.getSn();
@@ -202,7 +202,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         }
         int status = mDeviceInfo.getStatus();
         int resId = R.drawable.signal_none;
-        if (SENSOR_STATUS_LOST == status || SENSOR_STATUS_INACTIVE == status) {
+        if (Constants.SENSOR_STATUS_LOST == status || Constants.SENSOR_STATUS_INACTIVE == status) {
             getView().setSignalStatus(resId, mContext.getString(R.string.s_none));
         } else {
             if (!TextUtils.isEmpty(signal)) {
@@ -231,23 +231,23 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         String statusText;
         int textColor;
         switch (status) {
-            case SENSOR_STATUS_ALARM:
+            case Constants.SENSOR_STATUS_ALARM:
                 textColor = mContext.getResources().getColor(R.color.c_f34a4a);
                 statusText = mContext.getString(R.string.main_page_warn);
                 break;
-            case SENSOR_STATUS_NORMAL:
+            case Constants.SENSOR_STATUS_NORMAL:
                 textColor = mContext.getResources().getColor(R.color.c_1dbb99);
                 statusText = mContext.getString(R.string.normal);
                 break;
-            case SENSOR_STATUS_LOST:
+            case Constants.SENSOR_STATUS_LOST:
                 textColor = mContext.getResources().getColor(R.color.c_5d5d5d);
                 statusText = mContext.getString(R.string.status_lost);
                 break;
-            case SENSOR_STATUS_INACTIVE:
+            case Constants.SENSOR_STATUS_INACTIVE:
                 textColor = mContext.getResources().getColor(R.color.c_b6b6b6);
                 statusText = mContext.getString(R.string.status_inactive);
                 break;
-            case SENSOR_STATUS_MALFUNCTION:
+            case Constants.SENSOR_STATUS_MALFUNCTION:
                 textColor = mContext.getResources().getColor(R.color.c_fdc83b);
                 statusText = mContext.getString(R.string.status_malfunction);
                 break;
@@ -465,21 +465,21 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                 switch (demoMode) {
                                     case 0:
                                         //正常模式
-                                        deviceDemoMode = DEVICE_DEMO_MODE_CLOSE;
+                                        deviceDemoMode = Constants.DEVICE_DEMO_MODE_CLOSE;
                                         break;
                                     case 1:
                                         //演示模式
-                                        deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
+                                        deviceDemoMode = Constants.DEVICE_DEMO_MODE_OPEN;
                                         break;
                                     default:
                                         break;
                                 }
                             }
                         } else {
-                            deviceDemoMode = DEVICE_DEMO_MODE_NO_PERMISSION;
+                            deviceDemoMode = Constants.DEVICE_DEMO_MODE_NO_PERMISSION;
                         }
                     }else{
-                        deviceDemoMode =  DEVICE_DEMO_MODE_NOT_SUPPORT;
+                        deviceDemoMode =  Constants.DEVICE_DEMO_MODE_NOT_SUPPORT;
                     }
 
                 } else {
@@ -489,22 +489,22 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             switch (demoMode) {
                                 case 0:
                                     //正常模式
-                                    deviceDemoMode = DEVICE_DEMO_MODE_CLOSE;
+                                    deviceDemoMode = Constants.DEVICE_DEMO_MODE_CLOSE;
                                     break;
                                 case 1:
                                     //演示模式
-                                    deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
+                                    deviceDemoMode = Constants.DEVICE_DEMO_MODE_OPEN;
                                     break;
                                 default:
                                     break;
                             }
                         }
                     } else {
-                        deviceDemoMode = DEVICE_DEMO_MODE_NO_PERMISSION;
+                        deviceDemoMode = Constants.DEVICE_DEMO_MODE_NO_PERMISSION;
                     }
                 }
             }else{
-                deviceDemoMode =  DEVICE_DEMO_MODE_NOT_SUPPORT;
+                deviceDemoMode =  Constants.DEVICE_DEMO_MODE_NOT_SUPPORT;
             }
             //TODO delete
 //            deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
@@ -525,7 +525,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     }
 
     private void setMonitorConfigInfo(DeployControlSettingData deployControlSettingData) {
-        if (DEVICE_CONTROL_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
+        if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
             final String[] switchSpecStr = {"-", "-", "-"};
             if (deployControlSettingData != null) {
                 Integer switchSpec = deployControlSettingData.getSwitchSpec();
@@ -675,7 +675,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             public void run() {
                 if (mDeviceInfo != null) {
                     final ArrayList<MonitoringPointRcContentAdapterModel> malfunctionBeanData = new ArrayList<>();
-                    if (mDeviceInfo.getStatus() == SENSOR_STATUS_MALFUNCTION) {
+                    if (mDeviceInfo.getStatus() == Constants.SENSOR_STATUS_MALFUNCTION) {
                         Map<String, MalfunctionDataBean> malfunctionData = mDeviceInfo.getMalfunctionData();
                         //TODO 添加故障字段数组
                         if (malfunctionData != null) {
@@ -1138,7 +1138,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
-            case EVENT_DATA_SOCKET_DATA_INFO:
+            case Constants.EVENT_DATA_SOCKET_DATA_INFO:
                 if (data instanceof DeviceInfo) {
                     final DeviceInfo pushDeviceInfo = (DeviceInfo) data;
                     if (pushDeviceInfo.getSn().equalsIgnoreCase(mDeviceInfo.getSn())) {
@@ -1162,12 +1162,12 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     }
                 }
                 break;
-            case EVENT_DATA_DEPLOY_INIT_CONFIG_CODE:
+            case Constants.EVENT_DATA_DEPLOY_INIT_CONFIG_CODE:
                 if (data instanceof DeployControlSettingData) {
                     DeployControlSettingData deployControlSettingData = (DeployControlSettingData) data;
                     setMonitorConfigInfo(deployControlSettingData);
                 }
-            case EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT:
+            case Constants.EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT:
                 if (data instanceof MonitorPointOperationTaskResultInfo) {
                     MonitorPointOperationTaskResultInfo info = (MonitorPointOperationTaskResultInfo) data;
                     final String scheduleNo = info.getScheduleNo();
@@ -1196,7 +1196,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     }
                 }
                 break;
-            case EVENT_DATA_DEVICE_POSITION_CALIBRATION:
+            case Constants.EVENT_DATA_DEVICE_POSITION_CALIBRATION:
                 if (data instanceof DeviceInfo) {
                     final DeviceInfo pushDeviceInfo = (DeviceInfo) data;
                     if (pushDeviceInfo.getSn().equals(mDeviceInfo.getSn())) {
@@ -1385,7 +1385,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         } else {
             intent.setClass(mContext, MonitorPointMapENActivity.class);
         }
-        intent.putExtra(EXTRA_DEVICE_INFO, mDeviceInfo);
+        intent.putExtra(Constants.EXTRA_DEVICE_INFO, mDeviceInfo);
         getView().startAC(intent);
     }
 
@@ -1403,7 +1403,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     public void doMonitorHistory() {
         String sn = mDeviceInfo.getSn();
         Intent intent = new Intent(mContext, AlarmHistoryLogActivity.class);
-        intent.putExtra(EXTRA_SENSOR_SN, sn);
+        intent.putExtra(Constants.EXTRA_SENSOR_SN, sn);
         getView().startAC(intent);
     }
 
@@ -1668,8 +1668,8 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, items);
             intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
             intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
-            intentPreview.putExtra(EXTRA_JUST_DISPLAY_PIC, true);
-            getView().startACForResult(intentPreview, REQUEST_CODE_PREVIEW);
+            intentPreview.putExtra(Constants.EXTRA_JUST_DISPLAY_PIC, true);
+            getView().startACForResult(intentPreview, Constants.REQUEST_CODE_PREVIEW);
         } else {
             getView().toastShort(mContext.getString(R.string.no_photos_added));
         }
@@ -1720,11 +1720,11 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 break;
             case MonitorPointOperationCode.AIR_SWITCH_CONFIG:
                 Intent intent = new Intent(mContext, DeployMonitorConfigurationActivity.class);
-                intent.putExtra(EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
+                intent.putExtra(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
                 DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
                 deployAnalyzerModel.deviceType = mDeviceInfo.getDeviceType();
                 deployAnalyzerModel.sn = mDeviceInfo.getSn();
-                intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+                intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                 getView().startAC(intent);
                 break;
             case MonitorPointOperationCode.AIR_SWITCH_POWER_OFF:
@@ -1836,7 +1836,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                 }
                             }
                         };
-                        if (DEVICE_UPDATE_FIRMWARE_CHIP_TYPES.contains(bleUpdateModel.deviceType)) {
+                        if (Constants.DEVICE_UPDATE_FIRMWARE_CHIP_TYPES.contains(bleUpdateModel.deviceType)) {
                             sensoroDeviceConnection.startChipEUpdate(bleUpdateModel.filePath, bleUpdateModel.blePassword, onDeviceUpdateObserver);
                         } else {
                             sensoroDeviceConnection.startUpdate(bleUpdateModel.filePath, bleUpdateModel.blePassword, onDeviceUpdateObserver);
@@ -2047,12 +2047,12 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             case 0:
                                 //演示模式关闭成功
                                 finalTipText = mContext.getString(R.string.demo_mode_has_close);
-                                deviceDemoMode = DEVICE_DEMO_MODE_CLOSE;
+                                deviceDemoMode = Constants.DEVICE_DEMO_MODE_CLOSE;
                                 break;
                             case 1:
                                 //演示模式开启成功
                                 finalTipText = mContext.getString(R.string.demo_mode_has_open);
-                                deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
+                                deviceDemoMode = Constants.DEVICE_DEMO_MODE_OPEN;
                                 break;
                         }
 
@@ -2113,7 +2113,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         if (deviceCameras != null && deviceCameras.size() > 0) {
             //TODO 去摄像头列表
             Intent intent = new Intent();
-            intent.putExtra(EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST, deviceCameras);
+            intent.putExtra(Constants.EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST, deviceCameras);
             intent.setClass(mContext, CameraListActivity.class);
             getView().startAC(intent);
         } else {

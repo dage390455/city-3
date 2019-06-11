@@ -20,7 +20,7 @@ import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.util.WidgetUtil;
@@ -36,8 +36,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitorActivityView> implements Constants,
-        IOnStart {
+public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitorActivityView> implements IOnStart {
     private SharedPreferences mPref;
     private SharedPreferences.Editor mEditor;
     private String history;
@@ -58,9 +57,9 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         mContext = (Activity) context;
 //        originHistoryList.addAll(ContextUtils.getContext().getData());
         currentList.addAll(originHistoryList);
-        mPref = mContext.getSharedPreferences(PREFERENCE_DEVICE_HISTORY, Activity.MODE_PRIVATE);
+        mPref = mContext.getSharedPreferences(Constants.PREFERENCE_DEVICE_HISTORY, Activity.MODE_PRIVATE);
         mEditor = mPref.edit();
-        history = mPref.getString(PREFERENCE_KEY_DEVICE, "");
+        history = mPref.getString(Constants.PREFERENCE_KEY_DEVICE, "");
         if (!TextUtils.isEmpty(history)) {
             mHistoryKeywords.clear();
             mHistoryKeywords.addAll(Arrays.asList(history.split(",")));
@@ -129,7 +128,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
     public void clickRelationItem(int position) {
         String s = searchStrList.get(position);
         save(s);
-        requestWithDirection(DIRECTION_DOWN, s);
+        requestWithDirection(Constants.DIRECTION_DOWN, s);
     }
 
 
@@ -141,19 +140,19 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         for (int i = 0; i < currentList.size(); i++) {
             DeviceInfo deviceInfo = currentList.get(i);
             switch (deviceInfo.getStatus()) {
-                case SENSOR_STATUS_ALARM:
+                case Constants.SENSOR_STATUS_ALARM:
                     deviceInfo.setSort(1);
                     break;
-                case SENSOR_STATUS_MALFUNCTION:
+                case Constants.SENSOR_STATUS_MALFUNCTION:
                     deviceInfo.setSort(2);
                     break;
-                case SENSOR_STATUS_NORMAL:
+                case Constants.SENSOR_STATUS_NORMAL:
                     deviceInfo.setSort(3);
                     break;
-                case SENSOR_STATUS_LOST:
+                case Constants.SENSOR_STATUS_LOST:
                     deviceInfo.setSort(4);
                     break;
-                case SENSOR_STATUS_INACTIVE:
+                case Constants.SENSOR_STATUS_INACTIVE:
                     deviceInfo.setSort(5);
                     break;
                 default:
@@ -212,7 +211,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
     }
 
     public void save(String text) {
-        String oldText = mPref.getString(PREFERENCE_KEY_DEVICE, "");
+        String oldText = mPref.getString(Constants.PREFERENCE_KEY_DEVICE, "");
         //
         List<String> oldHistoryList = new ArrayList<String>();
         if (!TextUtils.isEmpty(oldText)) {
@@ -236,7 +235,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
                 stringBuilder.append(tempList.get(i)).append(",");
             }
         }
-        mEditor.putString(PREFERENCE_KEY_DEVICE, stringBuilder.toString());
+        mEditor.putString(Constants.PREFERENCE_KEY_DEVICE, stringBuilder.toString());
         mEditor.commit();
         //
 
@@ -255,7 +254,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
 //        getView().setRelationLayoutVisible(false);
         getView().setIndexListLayoutVisible(true);
         getView().showProgressDialog();
-        if (direction == DIRECTION_DOWN) {
+        if (direction == Constants.DIRECTION_DOWN) {
             page = 1;
             RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, null, null, searchText).subscribeOn
                     (Schedulers.io()).doOnNext(new Consumer<DeviceInfoListRsp>() {
@@ -340,12 +339,12 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
             DeviceInfo deviceInfo = mDataList.get(position);
             Intent intent = new Intent();
             intent.setClass(mContext, MonitorPointElectricDetailActivity.class);
-            intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
-            intent.putExtra(EXTRA_SENSOR_NAME, deviceInfo.getName());
-            intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
-            intent.putExtra(EXTRA_SENSOR_STATUS, deviceInfo.getStatus());
-            intent.putExtra(EXTRA_SENSOR_TIME, deviceInfo.getUpdatedTime());
-            intent.putExtra(EXTRA_SENSOR_LOCATION, deviceInfo.getLonlat().toArray());
+            intent.putExtra(Constants.EXTRA_DEVICE_INFO, deviceInfo);
+            intent.putExtra(Constants.EXTRA_SENSOR_NAME, deviceInfo.getName());
+            intent.putExtra(Constants.EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
+            intent.putExtra(Constants.EXTRA_SENSOR_STATUS, deviceInfo.getStatus());
+            intent.putExtra(Constants.EXTRA_SENSOR_TIME, deviceInfo.getUpdatedTime());
+            intent.putExtra(Constants.EXTRA_SENSOR_LOCATION, deviceInfo.getLonlat().toArray());
             getView().startAC(intent);
         }
     }

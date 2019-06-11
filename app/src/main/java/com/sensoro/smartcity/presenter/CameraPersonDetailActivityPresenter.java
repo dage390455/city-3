@@ -7,17 +7,17 @@ import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.sensoro.common.model.EventData;
-import com.sensoro.smartcity.R;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.imainviews.ICameraPersonDetailActivityView;
+import com.sensoro.common.constant.Constants;
+import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeviceCameraHistoryBean;
 import com.sensoro.common.server.response.DeviceCameraHistoryRsp;
 import com.sensoro.common.server.response.DeviceCameraPersonFaceRsp;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.imainviews.ICameraPersonDetailActivityView;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -30,9 +30,6 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
-import static com.sensoro.smartcity.constant.Constants.VIDEO_START;
-import static com.sensoro.smartcity.constant.Constants.VIDEO_STOP;
 import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAUSE;
 
 public class CameraPersonDetailActivityPresenter extends BasePresenter<ICameraPersonDetailActivityView> {
@@ -72,7 +69,7 @@ public class CameraPersonDetailActivityPresenter extends BasePresenter<ICameraPe
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
-        if (code == NetworkInfo) {
+        if (code == Constants.NetworkInfo) {
             int data = (int) eventData.data;
 
             switch (data) {
@@ -133,7 +130,7 @@ public class CameraPersonDetailActivityPresenter extends BasePresenter<ICameraPe
 
 
             }
-        } else if (code == VIDEO_START) {
+        } else if (code == Constants.VIDEO_START) {
 
             getView().setVerOrientationUtil(true);
 
@@ -147,7 +144,7 @@ public class CameraPersonDetailActivityPresenter extends BasePresenter<ICameraPe
 
             }
 
-        } else if (code == VIDEO_STOP) {
+        } else if (code == Constants.VIDEO_STOP) {
 
             getView().setVerOrientationUtil(false);
             GSYVideoManager.onPause();

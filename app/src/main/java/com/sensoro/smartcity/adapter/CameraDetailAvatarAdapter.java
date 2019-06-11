@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.DeviceCameraFacePic;
 import com.sensoro.smartcity.widget.GlideCircleTransform;
 

@@ -8,7 +8,7 @@ import android.view.View;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.model.EventData;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployCameraLiveDetailActivityView;
 import com.sensoro.common.model.DeployAnalyzerModel;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
@@ -19,7 +19,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 
-import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
 
 public class DeployCameraLiveDetailActivityPresenter extends BasePresenter<IDeployCameraLiveDetailActivityView> {
     private Activity mActivity;
@@ -53,7 +52,7 @@ public class DeployCameraLiveDetailActivityPresenter extends BasePresenter<IDepl
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
-        if (code == NetworkInfo) {
+        if (code == Constants.NetworkInfo) {
             int data = (int) eventData.data;
 
             switch (data) {

@@ -46,8 +46,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
+import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
+import static com.sensoro.common.constant.Constants.DIRECTION_UP;
 
 public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivityView, MerchantSwitchActivityPresenter> implements IMerchantSwitchActivityView
         , View.OnClickListener, AbsListView.OnScrollListener, AdapterView.OnItemClickListener,TipOperationDialogUtils.TipDialogUtilsClickListener {

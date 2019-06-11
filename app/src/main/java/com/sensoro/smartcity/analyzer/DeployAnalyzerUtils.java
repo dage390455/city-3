@@ -32,7 +32,7 @@ import com.sensoro.smartcity.activity.InspectionActivity;
 import com.sensoro.smartcity.activity.InspectionExceptionDetailActivity;
 import com.sensoro.smartcity.activity.ScanLoginResultActivity;
 import com.sensoro.smartcity.activity.SignalCheckActivity;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.smartcity.model.DeployResultModel;

@@ -17,7 +17,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.MainActivity;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISplashActivityView;
 import com.sensoro.smartcity.push.SensoroPushIntentService;
 import com.sensoro.smartcity.push.SensoroPushService;
@@ -32,7 +32,7 @@ import com.yanzhenjie.permission.runtime.Permission;
 
 import java.util.List;
 
-public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> implements Constants, IOnStart {
+public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> implements IOnStart {
     private Activity mContext;
     private final Handler handler = new Handler();
 
@@ -118,7 +118,7 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
             public void run() {
                 Intent mainIntent = new Intent();
                 mainIntent.setClass(mContext, MainActivity.class);
-                mainIntent.putExtra(EXTRA_EVENT_LOGIN_DATA, eventLoginData);
+                mainIntent.putExtra(Constants.EXTRA_EVENT_LOGIN_DATA, eventLoginData);
                 getView().startAC(mainIntent);
                 getView().finishAc();
             }

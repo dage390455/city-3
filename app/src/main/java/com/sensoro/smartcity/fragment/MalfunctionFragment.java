@@ -47,8 +47,8 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
+import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
+import static com.sensoro.common.constant.Constants.DIRECTION_UP;
 
 public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, MalfunctionFragmentPresenter>
         implements IMalfunctionFragmentView,TipOperationDialogUtils.TipDialogUtilsClickListener {

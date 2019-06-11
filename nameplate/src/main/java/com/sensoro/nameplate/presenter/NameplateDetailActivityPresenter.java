@@ -258,7 +258,7 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
         switch (position) {
             case 0:
                 Bundle bundle1 = new Bundle();
-                bundle1.putInt(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATEDEVICE);
+                bundle1.putInt(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATE_DEVICE);
                 bundle1.putString("nameplateId", nameplateId);
 
                 startActivity(ARouterConstants.ACTIVITY_SCAN, bundle1, mContext);

@@ -343,7 +343,7 @@ public final class PreferencesHelper implements Constants {
     public DeviceMergeTypesInfo getLocalDevicesMergeTypes() {
         try {
             if (mDeviceMergeTypesInfo == null) {
-                String json = ContextUtils.getContext().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, null);
+                String json = ContextUtils.getContext().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_LOCAL_DEVICES_MERGE_TYPES, null);
                 LogUtils.loge("DeviceMergeTypesInfo json : " + json);
                 if (!TextUtils.isEmpty(json)) {
                     mDeviceMergeTypesInfo = RetrofitServiceHelper.getInstance().getGson().fromJson(json, DeviceMergeTypesInfo.class);
@@ -397,7 +397,7 @@ public final class PreferencesHelper implements Constants {
         SharedPreferences sp = ContextUtils.getContext().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Context
                 .MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, json);
+        editor.putString(PREFERENCE_KEY_LOCAL_DEVICES_MERGE_TYPES, json);
         editor.apply();
         return true;
     }

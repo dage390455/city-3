@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.ContractTemplateAdapter;
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractServiceActivityView;
 import com.sensoro.smartcity.presenter.ContractServiceActivityPresenter;
 import com.sensoro.common.server.bean.ContractsTemplateInfo;

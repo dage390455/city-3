@@ -28,7 +28,7 @@ import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmDetailLogActivity;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IWarnFragmentView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.CalendarDateModel;
@@ -51,8 +51,7 @@ import java.util.Map;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> implements IOnCreate, Constants,
-        AlarmPopUtilsTest.OnPopupCallbackListener, CalendarPopUtils.OnCalendarPopupCallbackListener, Runnable {
+public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> implements IOnCreate, AlarmPopUtilsTest.OnPopupCallbackListener, CalendarPopUtils.OnCalendarPopupCallbackListener, Runnable {
     private final List<DeviceAlarmLogInfo> mDeviceAlarmLogInfoList = new ArrayList<>();
     private final List<String> mSearchHistoryList = new ArrayList<>();
     private volatile int cur_page = 1;
@@ -89,7 +88,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 .setMonthStatus(1)
                 .setOnCalendarPopupCallbackListener(this);
         if (PreferencesHelper.getInstance().getUserData().hasAlarmInfo) {
-            requestSearchData(DIRECTION_DOWN, null);
+            requestSearchData(Constants.DIRECTION_DOWN, null);
             mHandler.post(this);
         }
         List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
@@ -120,7 +119,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         ThreadPoolManager.getInstance().execute(new Runnable() {
             @Override
             public void run() {
-                if (direction == DIRECTION_DOWN) {
+                if (direction == Constants.DIRECTION_DOWN) {
                     mDeviceAlarmLogInfoList.clear();
                 }
                 synchronized (mDeviceAlarmLogInfoList) {
@@ -181,7 +180,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
             temp_endTime = endTime;
         }
         switch (direction) {
-            case DIRECTION_DOWN:
+            case Constants.DIRECTION_DOWN:
                 cur_page = 1;
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getDeviceAlarmLogList(cur_page, null, null, null, tempSearch, temp_startTime,
@@ -204,7 +203,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                     }
                 });
                 break;
-            case DIRECTION_UP:
+            case Constants.DIRECTION_UP:
                 cur_page++;
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getDeviceAlarmLogList(cur_page, null, null, null, tempSearch, temp_startTime,
@@ -264,7 +263,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 if (deviceAlarmLogRsp.getData().size() == 0) {
                     getView().toastShort(mContext.getString(R.string.no_more_data));
                 }
-                freshUI(DIRECTION_DOWN, deviceAlarmLogRsp);
+                freshUI(Constants.DIRECTION_DOWN, deviceAlarmLogRsp);
                 getView().onPullRefreshComplete();
             }
 
@@ -281,7 +280,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
     public void clickItem(DeviceAlarmLogInfo deviceAlarmLogInfo, boolean isReConfirm) {
         this.isReConfirm = isReConfirm;
         Intent intent = new Intent(mContext, AlarmDetailLogActivity.class);
-        intent.putExtra(EXTRA_ALARM_INFO, deviceAlarmLogInfo);
+        intent.putExtra(Constants.EXTRA_ALARM_INFO, deviceAlarmLogInfo);
         getView().startAC(intent);
     }
 
@@ -383,14 +382,14 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
-            case EVENT_DATA_ALARM_DETAIL_RESULT:
+            case Constants.EVENT_DATA_ALARM_DETAIL_RESULT:
                 if (TextUtils.isEmpty(tempSearch) && !getView().getSearchTextVisible()) {
                     if (data instanceof DeviceAlarmLogInfo) {
                         freshDeviceAlarmLogInfo((DeviceAlarmLogInfo) data);
                     }
                 }
                 break;
-            case EVENT_DATA_SEARCH_MERCHANT:
+            case Constants.EVENT_DATA_SEARCH_MERCHANT:
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -400,7 +399,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                     }
                 });
                 break;
-            case EVENT_DATA_ALARM_FRESH_ALARM_DATA:
+            case Constants.EVENT_DATA_ALARM_FRESH_ALARM_DATA:
                 //仅在无搜索状态和日历选择时进行刷新
                 if (TextUtils.isEmpty(tempSearch) && !getView().getSearchTextVisible()) {
                     if (data instanceof DeviceAlarmLogInfo) {
@@ -408,22 +407,22 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                     }
                 }
                 break;
-            case EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS:
+            case Constants.EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS:
                 //仅在无搜索状态和日历选择时进行刷新
                 if (TextUtils.isEmpty(tempSearch) && !getView().getSearchTextVisible()) {
                     if (data instanceof EventAlarmStatusModel) {
                         EventAlarmStatusModel tempEventAlarmStatusModel = (EventAlarmStatusModel) data;
                         switch (tempEventAlarmStatusModel.status) {
                             // 做一些预警发生的逻辑
-                            case MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
+                            case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
                                 handleSocketData(tempEventAlarmStatusModel.deviceAlarmLogInfo, true);
                                 break;
                             // 做一些预警恢复的逻辑
-                            case MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
+                            case Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
                                 // 做一些预警被确认的逻辑
-                            case MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
+                            case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
                                 // 做一些预警被再次确认的逻辑
-                            case MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
+                            case Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
                                 handleSocketData(tempEventAlarmStatusModel.deviceAlarmLogInfo, false);
                                 break;
                             default:
@@ -440,7 +439,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
 
     public void doCancelSearch() {
         tempSearch = null;
-        requestSearchData(DIRECTION_DOWN, null);
+        requestSearchData(Constants.DIRECTION_DOWN, null);
     }
 
     public void doCalendar(LinearLayout fgMainWarnTitleRoot) {

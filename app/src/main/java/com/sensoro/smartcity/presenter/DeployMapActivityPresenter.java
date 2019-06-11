@@ -41,7 +41,7 @@ import com.sensoro.common.server.response.DeviceDeployRsp;
 import com.sensoro.common.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMapActivityView;
 import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.util.LogUtils;
@@ -55,7 +55,7 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivityView> implements IOnCreate, AMap.OnCameraChangeListener, AMap.OnMarkerClickListener, AMap.OnMapLoadedListener, AMap.OnMapTouchListener, AMap.InfoWindowAdapter, GeocodeSearch.OnGeocodeSearchListener, Constants {
+public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivityView> implements IOnCreate, AMap.OnCameraChangeListener, AMap.OnMarkerClickListener, AMap.OnMapLoadedListener, AMap.OnMapTouchListener, AMap.InfoWindowAdapter, GeocodeSearch.OnGeocodeSearchListener {
     private AMap aMap;
     private Marker deviceMarker;
     private GeocodeSearch geocoderSearch;
@@ -70,25 +70,25 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
         onCreate();
         geocoderSearch = new GeocodeSearch(mContext);
         geocoderSearch.setOnGeocodeSearchListener(this);
-        deployAnalyzerModel = (DeployAnalyzerModel) mContext.getIntent().getSerializableExtra(EXTRA_DEPLOY_ANALYZER_MODEL);
+        deployAnalyzerModel = (DeployAnalyzerModel) mContext.getIntent().getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
         switch (deployAnalyzerModel.deployType) {
-            case TYPE_SCAN_DEPLOY_STATION:
+            case Constants.TYPE_SCAN_DEPLOY_STATION:
                 //基站部署
                 getView().setSignalVisible(false);
                 break;
-            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
                 //巡检设备更换
-            case TYPE_SCAN_DEPLOY_DEVICE:
+            case Constants.TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
                 getView().setSignalVisible(false);
                 getView().refreshSignal(deployAnalyzerModel.updatedTime, deployAnalyzerModel.signal);
                 break;
-            case TYPE_SCAN_LOGIN:
+            case Constants.TYPE_SCAN_LOGIN:
                 break;
-            case TYPE_SCAN_INSPECTION:
+            case Constants.TYPE_SCAN_INSPECTION:
                 //扫描巡检设备
                 break;
-            case TYPE_SCAN_DEPLOY_POINT_DISPLAY:
+            case Constants.TYPE_SCAN_DEPLOY_POINT_DISPLAY:
                 //回显地图数据
                 getView().setSaveVisible(false);
                 getView().refreshSignal(deployAnalyzerModel.signal);
@@ -262,9 +262,9 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     public void doSaveLocation() {
         if (deployAnalyzerModel.latLng.size() == 2) {
             switch (deployAnalyzerModel.mapSourceType) {
-                case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
+                case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
                     getView().showProgressDialog();
-                    if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+                    if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION) {
                         RetrofitServiceHelper.getInstance().getDeployDeviceDetail(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1))
                                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(this) {
                             @Override
@@ -290,9 +290,9 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                         handlerResult();
                     }
                     break;
-                case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
+                case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
                     break;
-                case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+                case Constants.DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
                     getView().showProgressDialog();
                     RetrofitServiceHelper.getInstance().doDevicePositionCalibration(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
                         @Override
@@ -300,7 +300,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                             getView().dismissProgressDialog();
                             DeviceInfo data = deviceDeployRsp.getData();
                             EventData eventData = new EventData();
-                            eventData.code = EVENT_DATA_DEVICE_POSITION_CALIBRATION;
+                            eventData.code = Constants.EVENT_DATA_DEVICE_POSITION_CALIBRATION;
                             eventData.data = data;
                             EventBus.getDefault().post(eventData);
                             getView().finishAc();
@@ -314,7 +314,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                     });
                     break;
 
-                case DEPLOY_MAP_SOURCE_TYPE_BASESTATION:
+                case Constants.DEPLOY_MAP_SOURCE_TYPE_BASE_STATION:
                     getView().showProgressDialog();
                     RetrofitServiceHelper.getInstance().updateStationLocation(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<BaseStationDetailRsp>(this) {
                         @Override
@@ -323,7 +323,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
 
 
                             EventData eventData = new EventData();
-                            eventData.code = EVENT_DATA_UPDATEBASESTATION;
+                            eventData.code = Constants.EVENT_DATA_UPDATE_BASE_STATION;
                             eventData.data = deviceDeployRsp.getData().getLonlatLabel();
                             EventBus.getDefault().post(eventData);
                             getView().finishAc();
@@ -343,7 +343,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
 
     private void handlerResult() {
         EventData eventData = new EventData();
-        eventData.code = EVENT_DATA_DEPLOY_MAP;
+        eventData.code = Constants.EVENT_DATA_DEPLOY_MAP;
         eventData.data = deployAnalyzerModel;
         EventBus.getDefault().post(eventData);
         getView().finishAc();
@@ -351,7 +351,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
 
     public void refreshSignal() {
         switch (deployAnalyzerModel.mapSourceType) {
-            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
+            case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getDeviceDetailInfoList(deployAnalyzerModel.sn, null, 1).subscribeOn(Schedulers.io()).observeOn
                         (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
@@ -374,9 +374,9 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                     }
                 });
                 break;
-            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
+            case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
                 break;
-            case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+            case Constants.DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
                 break;
         }
 
@@ -385,11 +385,11 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
         switch (deployAnalyzerModel.mapSourceType) {
-            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
+            case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
                 break;
-            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
-            case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
-            case DEPLOY_MAP_SOURCE_TYPE_BASESTATION:
+            case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
+            case Constants.DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+            case Constants.DEPLOY_MAP_SOURCE_TYPE_BASE_STATION:
                 if (cameraPosition != null) {
                     //解决不能回显的bug 不能直接赋值
                     deviceMarker.setPosition(cameraPosition.target);
@@ -403,7 +403,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     @Override
     public void onCameraChangeFinish(CameraPosition cameraPosition) {
         switch (deployAnalyzerModel.mapSourceType) {
-            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
+            case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
                 if (deployAnalyzerModel.latLng.size() == 2) {
                     LatLonPoint lp = new LatLonPoint(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
                     RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
@@ -413,9 +413,9 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                 }
 
                 break;
-            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
-            case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
-            case DEPLOY_MAP_SOURCE_TYPE_BASESTATION:
+            case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
+            case Constants.DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+            case Constants.DEPLOY_MAP_SOURCE_TYPE_BASE_STATION:
                 if (cameraPosition != null) {
                     deployAnalyzerModel.latLng.clear();
                     deployAnalyzerModel.latLng.add(cameraPosition.target.longitude);
@@ -556,7 +556,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
             LatLng latLng;
             CameraUpdate update;
             switch (deployAnalyzerModel.mapSourceType) {
-                case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
+                case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
                     if (deployAnalyzerModel.latLng.size() == 2) {
                         latLng = new LatLng(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
                         update = CameraUpdateFactory
@@ -565,8 +565,8 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                         deviceMarker.setPosition(latLng);
                     }
                     break;
-                case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
-                case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+                case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
+                case Constants.DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
                     AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
                     if (lastKnownLocation != null) {
                         double lat = lastKnownLocation.getLatitude();//获取纬度
@@ -593,7 +593,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
         Object data = eventData.data;
         //上报异常结果成功
         switch (code) {
-            case EVENT_DATA_SOCKET_DATA_INFO:
+            case Constants.EVENT_DATA_SOCKET_DATA_INFO:
                 if (data instanceof DeviceInfo) {
                     DeviceInfo deviceInfo = (DeviceInfo) data;
                     String sn = deviceInfo.getSn();

@@ -6,20 +6,20 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.ContractListInfo;
 import com.sensoro.common.server.response.ContractInfoRsp;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractEditorActivity;
 import com.sensoro.smartcity.activity.ContractPreviewActivity;
 import com.sensoro.smartcity.activity.ContractResultActivity;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.ContractOrderInfo;
 import com.sensoro.smartcity.imainviews.IContractDetailView;
-import com.sensoro.common.utils.DateUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

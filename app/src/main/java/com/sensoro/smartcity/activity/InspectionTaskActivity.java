@@ -30,7 +30,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.InspectionTaskRcContentAdapter;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionTaskActivityView;
 import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;

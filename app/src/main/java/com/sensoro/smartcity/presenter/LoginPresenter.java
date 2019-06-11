@@ -25,7 +25,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.AuthActivity;
 import com.sensoro.smartcity.activity.MainActivity;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.factory.UserPermissionFactory;
 import com.sensoro.smartcity.imainviews.ILoginView;
 import com.sensoro.smartcity.util.AppUtils;
@@ -44,7 +44,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class LoginPresenter extends BasePresenter<ILoginView> implements Constants, IOnCreate {
+public class LoginPresenter extends BasePresenter<ILoginView> implements IOnCreate {
     private Activity mContext;
 
     @Override
@@ -63,8 +63,8 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     }
 
     private void readLoginData() {
-        String name = PreferencesHelper.getInstance().getLoginNamePwd().get(PREFERENCE_KEY_NAME);
-        String pwd = PreferencesHelper.getInstance().getLoginNamePwd().get(PREFERENCE_KEY_PASSWORD);
+        String name = PreferencesHelper.getInstance().getLoginNamePwd().get(Constants.PREFERENCE_KEY_NAME);
+        String pwd = PreferencesHelper.getInstance().getLoginNamePwd().get(Constants.PREFERENCE_KEY_PASSWORD);
         if (!TextUtils.isEmpty(name)) {
             getView().showAccountName(name);
         }
@@ -228,7 +228,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
 
     private void openNextActivity(EventLoginData eventLoginData) {
         Intent mainIntent = new Intent();
-        mainIntent.putExtra(EXTRA_EVENT_LOGIN_DATA, eventLoginData);
+        mainIntent.putExtra(Constants.EXTRA_EVENT_LOGIN_DATA, eventLoginData);
         if (eventLoginData.needAuth) {
             mainIntent.setClass(mContext, AuthActivity.class);
             getView().startAC(mainIntent);
@@ -245,10 +245,10 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
         int code = eventData.code;
 //        Object data = eventData.data;
         switch (code) {
-            case EVENT_DATA_CANCEL_AUTH:
+            case Constants.EVENT_DATA_CANCEL_AUTH:
                 getView().dismissProgressDialog();
                 break;
-            case EVENT_DATA_AUTH_SUC:
+            case Constants.EVENT_DATA_AUTH_SUC:
                 getView().dismissProgressDialog();
                 getView().finishAc();
                 break;

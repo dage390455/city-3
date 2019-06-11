@@ -8,11 +8,12 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import android.view.View;
-import android.widget.TextView;
 
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
@@ -26,8 +27,10 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.UiSettings;
 import com.mapbox.mapboxsdk.maps.widgets.MyLocationViewSettings;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
@@ -37,9 +40,7 @@ import com.sensoro.common.server.response.DeviceDeployRsp;
 import com.sensoro.common.server.response.DeviceInfoListRsp;
 import com.sensoro.common.utils.GPSUtil;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMapENActivityView;
-import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -52,7 +53,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActivityView> implements IOnCreate, Constants, OnMapReadyCallback, MapboxMap.InfoWindowAdapter, MapboxMap.OnCameraChangeListener {
+public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActivityView> implements IOnCreate, OnMapReadyCallback, MapboxMap.InfoWindowAdapter, MapboxMap.OnCameraChangeListener {
     private MapboxMap aMap;
     private Activity mContext;
     private Handler mHandler = new Handler(Looper.getMainLooper());
@@ -63,25 +64,25 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        deployAnalyzerModel = (DeployAnalyzerModel) mContext.getIntent().getSerializableExtra(EXTRA_DEPLOY_ANALYZER_MODEL);
+        deployAnalyzerModel = (DeployAnalyzerModel) mContext.getIntent().getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
         switch (deployAnalyzerModel.deployType) {
-            case TYPE_SCAN_DEPLOY_STATION:
+            case Constants.TYPE_SCAN_DEPLOY_STATION:
                 //基站部署
                 getView().setSignalVisible(false);
                 break;
-            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
                 //巡检设备更换
-            case TYPE_SCAN_DEPLOY_DEVICE:
+            case Constants.TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
                 getView().setSignalVisible(false);
                 getView().refreshSignal(deployAnalyzerModel.updatedTime, deployAnalyzerModel.signal);
                 break;
-            case TYPE_SCAN_LOGIN:
+            case Constants.TYPE_SCAN_LOGIN:
                 break;
-            case TYPE_SCAN_INSPECTION:
+            case Constants.TYPE_SCAN_INSPECTION:
                 //扫描巡检设备
                 break;
-            case TYPE_SCAN_DEPLOY_POINT_DISPLAY:
+            case Constants.TYPE_SCAN_DEPLOY_POINT_DISPLAY:
                 //回显地图数据
                 getView().setSaveVisible(false);
                 getView().refreshSignal(deployAnalyzerModel.signal);
@@ -104,8 +105,8 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
     public void doSaveLocation() {
         if (deployAnalyzerModel.latLng.size() == 2) {
             switch (deployAnalyzerModel.mapSourceType) {
-                case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
-                    if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+                case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
+                    if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION) {
                         getView().showProgressDialog();
                         RetrofitServiceHelper.getInstance().getDeployDeviceDetail(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1))
                                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(this) {
@@ -132,9 +133,9 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
                         handlerResult();
                     }
                     break;
-                case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
+                case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
                     break;
-                case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+                case Constants.DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
                     getView().showProgressDialog();
                     RetrofitServiceHelper.getInstance().doDevicePositionCalibration(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
                         @Override
@@ -142,7 +143,7 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
                             getView().dismissProgressDialog();
                             DeviceInfo data = deviceDeployRsp.getData();
                             EventData eventData = new EventData();
-                            eventData.code = EVENT_DATA_DEVICE_POSITION_CALIBRATION;
+                            eventData.code = Constants.EVENT_DATA_DEVICE_POSITION_CALIBRATION;
                             eventData.data = data;
                             EventBus.getDefault().post(eventData);
                             getView().finishAc();
@@ -161,7 +162,7 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
 
     private void handlerResult() {
         EventData eventData = new EventData();
-        eventData.code = EVENT_DATA_DEPLOY_MAP;
+        eventData.code = Constants.EVENT_DATA_DEPLOY_MAP;
         eventData.data = deployAnalyzerModel;
         EventBus.getDefault().post(eventData);
         getView().finishAc();
@@ -169,7 +170,7 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
 
     public void refreshSignal() {
         switch (deployAnalyzerModel.mapSourceType) {
-            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
+            case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getDeviceDetailInfoList(deployAnalyzerModel.sn, null, 1).subscribeOn(Schedulers.io()).observeOn
                         (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
@@ -192,9 +193,9 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
                     }
                 });
                 break;
-            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
+            case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
                 break;
-            case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+            case Constants.DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
                 break;
         }
 
@@ -205,10 +206,10 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
         if (cameraPosition != null) {
             LatLng target = cameraPosition.target;
             switch (deployAnalyzerModel.mapSourceType) {
-                case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
+                case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
                     break;
-                case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
-                case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+                case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
+                case Constants.DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
                     double latitude = target.getLatitude();
                     double longitude = target.getLongitude();
                     double[] doubles = GPSUtil.gps84_To_Gcj02(latitude, longitude);
@@ -229,13 +230,13 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
 
     public void backToCurrentLocation() {
         switch (deployAnalyzerModel.mapSourceType) {
-            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
+            case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
                 if (deployAnalyzerModel.latLng.size() == 2) {
                     freshMap();
                 }
                 break;
-            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
-            case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+            case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
+            case Constants.DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
                 if (aMap != null) {
                     aMap.clear();
                     Location lastLocation = aMap.getMyLocation();
@@ -273,7 +274,7 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
         Object data = eventData.data;
         //上报异常结果成功
         switch (code) {
-            case EVENT_DATA_SOCKET_DATA_INFO:
+            case Constants.EVENT_DATA_SOCKET_DATA_INFO:
                 if (data instanceof DeviceInfo) {
                     DeviceInfo deviceInfo = (DeviceInfo) data;
                     String sn = deviceInfo.getSn();

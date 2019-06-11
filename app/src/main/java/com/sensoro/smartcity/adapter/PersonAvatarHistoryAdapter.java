@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sensoro.common.server.response.DeviceCameraPersonFaceRsp;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.GlideCircleTransform;

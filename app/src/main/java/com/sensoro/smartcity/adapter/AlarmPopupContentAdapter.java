@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 
 import java.util.ArrayList;

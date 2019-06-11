@@ -14,7 +14,7 @@ import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.bean.DeployPicInfo;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.TakeRecordActivity;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDeployPicView;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.WidgetUtil;
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonitorDeployPicView>
-        implements SelectDialog.SelectDialogListener, Constants, DeployPicExampleDialogUtils.DeployPicExampleClickListener {
+        implements SelectDialog.SelectDialogListener, DeployPicExampleDialogUtils.DeployPicExampleClickListener {
     private Activity mActivity;
     //    private final ImageItem[] selImages = new ImageItem[3];
     private volatile int mAddPicIndex = -1;
@@ -48,9 +48,9 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
         if (bundle != null) {
             deviceType = bundle.getString(Constants.EXTRA_SETTING_DEPLOY_DEVICE_TYPE);
             mergeType = WidgetUtil.handleMergeType(deviceType);
-            getView().setDeployPicTvInstallationSiteTipVisible(DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType));
+            getView().setDeployPicTvInstallationSiteTipVisible(Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType));
 
-            Serializable serializable = bundle.getSerializable(EXTRA_DEPLOY_TO_PHOTO);
+            Serializable serializable = bundle.getSerializable(Constants.EXTRA_DEPLOY_TO_PHOTO);
             if (serializable instanceof ArrayList) {
                 imageList = (ArrayList<ImageItem>) serializable;
             }
@@ -147,7 +147,7 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
         mAddPicIndex = index;
         Intent intent = new Intent(mActivity, ImageGridActivity.class);
         intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
-        mActivity.startActivityForResult(intent, REQUEST_CODE_SELECT);
+        mActivity.startActivityForResult(intent, Constants.REQUEST_CODE_SELECT);
     }
 
     @Override
@@ -156,18 +156,18 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
             case 0: // 直接调起相机
                 Intent intent = new Intent(mActivity, ImageGridActivity.class);
                 intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
-                mActivity.startActivityForResult(intent, REQUEST_CODE_SELECT);
+                mActivity.startActivityForResult(intent, Constants.REQUEST_CODE_SELECT);
                 break;
             case 1:
                 ImagePicker.getInstance().setSelectLimit(1);
                 Intent intent1 = new Intent(mActivity, ImageGridActivity.class);
 //                intent1.putExtra(ImageGridActivity.EXTRAS_IMAGES, selImages);
-                mActivity.startActivityForResult(intent1, REQUEST_CODE_SELECT);
+                mActivity.startActivityForResult(intent1, Constants.REQUEST_CODE_SELECT);
                 break;
             case 2:
                 Intent intent2 = new Intent(mActivity, TakeRecordActivity.class);
 //                                    intent2.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
-                mActivity.startActivityForResult(intent2, REQUEST_CODE_RECORD);
+                mActivity.startActivityForResult(intent2, Constants.REQUEST_CODE_RECORD);
                 break;
             default:
                 break;
@@ -177,7 +177,7 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
             //添加图片返回
-            if (data != null && requestCode == REQUEST_CODE_SELECT) {
+            if (data != null && requestCode == Constants.REQUEST_CODE_SELECT) {
                 ArrayList<ImageItem> tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                 if (tempImages != null && tempImages.size() > 0) {
                     if (mAddPicIndex == -1) {
@@ -269,7 +269,7 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
         }
 
         EventData eventData = new EventData();
-        eventData.code = EVENT_DATA_DEPLOY_SETTING_PHOTO;
+        eventData.code = Constants.EVENT_DATA_DEPLOY_SETTING_PHOTO;
         eventData.data = imageItems;
         EventBus.getDefault().post(eventData);
         getView().finishAc();
@@ -307,8 +307,8 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
         intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, list);
         intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, index);
         intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
-        intentPreview.putExtra(EXTRA_JUST_DISPLAY_PIC, true);
-        getView().startACForResult(intentPreview, REQUEST_CODE_PREVIEW);
+        intentPreview.putExtra(Constants.EXTRA_JUST_DISPLAY_PIC, true);
+        getView().startACForResult(intentPreview, Constants.REQUEST_CODE_PREVIEW);
     }
 
     /**

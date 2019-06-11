@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.CameraFilterModel;
@@ -17,7 +18,6 @@ import com.sensoro.common.server.response.BaseStationListRsp;
 import com.sensoro.common.server.response.CameraFilterRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.BaseStationDetailActivity;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class BaseStationListActivityPresenter extends BasePresenter<ICameraListActivityView> implements Constants {
+public class BaseStationListActivityPresenter extends BasePresenter<ICameraListActivityView>  {
     private Activity mContext;
     private volatile int cur_page = 1;
     private final List<BaseStationInfo> deviceCameraInfos = new ArrayList<>();
@@ -72,14 +72,14 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
                             }
                         }
                     }
-                    requestDataByFilter(DIRECTION_DOWN, null);
+                    requestDataByFilter(Constants.DIRECTION_DOWN, null);
 
                 }
 
                 @Override
                 public void onErrorMsg(int errorCode, String errorMsg) {
                     getView().toastShort(errorMsg);
-                    requestDataByFilter(DIRECTION_DOWN, null);
+                    requestDataByFilter(Constants.DIRECTION_DOWN, null);
 
                 }
             });
@@ -121,7 +121,7 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
 
     public void requestDataByFilter(final int direction, String search) {
         switch (direction) {
-            case DIRECTION_DOWN:
+            case Constants.DIRECTION_DOWN:
                 cur_page = 1;
                 if (isAttachedView()) {
                     getView().showProgressDialog();
@@ -151,7 +151,7 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
                     }
                 });
                 break;
-            case DIRECTION_UP:
+            case Constants.DIRECTION_UP:
                 cur_page++;
                 if (isAttachedView()) {
                     getView().showProgressDialog();

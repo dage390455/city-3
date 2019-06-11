@@ -39,7 +39,7 @@ import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.BaseStationListAdapter;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
 import com.sensoro.smartcity.presenter.BaseStationListActivityPresenter;
 import com.sensoro.smartcity.util.AppUtils;

@@ -49,8 +49,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
+import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
+import static com.sensoro.common.constant.Constants.DIRECTION_UP;
 
 public class ContractManagerActivity extends BaseActivity<IContractManagerActivityView, ContractManagerActivityPresenter> implements IContractManagerActivityView, View.OnClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.contract_iv_menu_list)

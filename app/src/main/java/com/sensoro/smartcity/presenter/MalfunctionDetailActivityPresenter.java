@@ -10,7 +10,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MalfunctionHistoryActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMalfunctionDetailActivityView;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.model.EventData;
@@ -37,7 +37,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfunctionDetailActivityView> implements Constants, IOnCreate {
+public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfunctionDetailActivityView> implements IOnCreate {
     private Activity mActivity;
     private MalfunctionListInfo mMalfunctionInfo;
     private LatLng destPosition;
@@ -169,8 +169,8 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
         inspectionTaskDeviceDetail.setSn(deviceSN);
         //
         Intent intent = new Intent(mActivity, ScanActivity.class);
-        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE);
-        intent.putExtra(EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO, inspectionTaskDeviceDetail);
+        intent.putExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE);
+        intent.putExtra(Constants.EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO, inspectionTaskDeviceDetail);
         getView().startAC(intent);
 
     }
@@ -180,19 +180,19 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
-            case EVENT_DATA_DEPLOY_RESULT_FINISH:
+            case Constants.EVENT_DATA_DEPLOY_RESULT_FINISH:
                 getView().finishAc();
                 break;
-            case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
+            case Constants.EVENT_DATA_DEPLOY_RESULT_CONTINUE:
                 if (data instanceof Integer) {
                     int resultCode = (Integer) data;
                     //TODO 判断结果控制界面是否消失
-                    if (resultCode == DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS) {
+                    if (resultCode == Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS) {
                         getView().finishAc();
                     }
                 }
                 break;
-            case EVENT_DATA_SCAN_LOGIN_SUCCESS:
+            case Constants.EVENT_DATA_SCAN_LOGIN_SUCCESS:
                 getView().finishAc();
                 break;
         }

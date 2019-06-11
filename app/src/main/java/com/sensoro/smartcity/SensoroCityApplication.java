@@ -37,7 +37,7 @@ import com.sensoro.common.model.EventData;
 import com.sensoro.common.utils.Repause;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceManager;
 import com.sensoro.smartcity.callback.BleObserver;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.push.AppBlockCanaryContext;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;

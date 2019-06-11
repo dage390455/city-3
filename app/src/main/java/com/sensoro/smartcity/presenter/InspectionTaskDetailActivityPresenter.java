@@ -19,7 +19,7 @@ import com.sensoro.common.server.response.InspectionTaskExecutionRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.InspectionInstructionActivity;
 import com.sensoro.smartcity.activity.InspectionTaskActivity;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionTaskDetailActivityView;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.WidgetUtil;
@@ -34,8 +34,12 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.sensoro.smartcity.constant.CityConstants.INSPECTION_STATUS_COLORS;
+import static com.sensoro.smartcity.constant.CityConstants.INSPECTION_STATUS_TEXTS;
+
+
 public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspectionTaskDetailActivityView>
-        implements Constants, IOnCreate {
+        implements IOnCreate {
     private Activity mContext;
     private InspectionIndexTaskInfo mTaskInfo;
 
@@ -43,7 +47,7 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        mTaskInfo = (InspectionIndexTaskInfo) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_INDEX_TASK_INFO);
+        mTaskInfo = (InspectionIndexTaskInfo) mContext.getIntent().getSerializableExtra(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO);
         if (mTaskInfo != null) {
             String identifier = mTaskInfo.getIdentifier();
             if (!TextUtils.isEmpty(identifier)) {
@@ -95,12 +99,12 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
         Object data = eventData.data;
         //上报异常结果成功
         switch (code) {
-            case EVENT_DATA_DEPLOY_RESULT_FINISH:
+            case Constants.EVENT_DATA_DEPLOY_RESULT_FINISH:
                 getView().finishAc();
                 break;
-            case EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE:
-            case EVENT_DATA_INSPECTION_UPLOAD_NORMAL_CODE:
-            case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
+            case Constants.EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE:
+            case Constants.EVENT_DATA_INSPECTION_UPLOAD_NORMAL_CODE:
+            case Constants.EVENT_DATA_DEPLOY_RESULT_CONTINUE:
                 // todo 刷新任务状态
                 refreshTaskState();
                 break;
@@ -126,12 +130,12 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
                     changeTaskState();
                 } else {
                     Intent intent = new Intent(mContext, InspectionTaskActivity.class);
-                    intent.putExtra(EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
+                    intent.putExtra(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
                     getView().startAC(intent);
                 }
             } else {
                 Intent intent = new Intent(mContext, InspectionTaskActivity.class);
-                intent.putExtra(EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
+                intent.putExtra(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
                 getView().startAC(intent);
             }
         } else {
@@ -148,11 +152,11 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
                 ChangeInspectionTaskStateInfo data = changeInspectionTaskStateRsp.getData();
                 int status = data.getStatus();
                 Intent intent = new Intent(mContext, InspectionTaskActivity.class);
-                intent.putExtra(EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
+                intent.putExtra(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
                 getView().startAC(intent);
                 freshTvState(status);
                 EventData eventData = new EventData();
-                eventData.code = EVENT_DATA_INSPECTION_TASK_STATUS_CHANGE;
+                eventData.code = Constants.EVENT_DATA_INSPECTION_TASK_STATUS_CHANGE;
                 EventBus.getDefault().post(eventData);
                 getView().dismissProgressDialog();
             }

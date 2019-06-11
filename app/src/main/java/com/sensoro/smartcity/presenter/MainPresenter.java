@@ -37,7 +37,7 @@ import com.sensoro.common.server.response.DevicesMergeTypesRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.fragment.HomeFragment;
 import com.sensoro.smartcity.fragment.MalfunctionFragment;
 import com.sensoro.smartcity.fragment.ManagerFragment;
@@ -67,7 +67,7 @@ import io.socket.emitter.Emitter;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
 
-public class MainPresenter extends BasePresenter<IMainView> implements Constants, IOnCreate {
+public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate {
 
     private final ArrayList<Fragment> mFragmentList = new ArrayList<>();
     private Activity mContext;
@@ -101,7 +101,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 switch (action) {
                     case Intent.ACTION_USER_PRESENT:
                         final EventData eventData = new EventData();
-                        eventData.code = EVENT_DATA_LOCK_SCREEN_ON;
+                        eventData.code = Constants.EVENT_DATA_LOCK_SCREEN_ON;
                         eventData.data = true;
                         EventBus.getDefault().post(eventData);
                         break;
@@ -118,7 +118,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
                         if (manager != null) {
                             EventData netCanUseData = new EventData();
-                            netCanUseData.code = NetworkInfo;
+                            netCanUseData.code = Constants.NetworkInfo;
                             NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
                             if (activeNetwork != null) {
                                 if (activeNetwork.isConnected()) {
@@ -183,7 +183,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                                         pingNetCanUse = NetWorkUtils.ping();
                                         if (pingNetCanUse) {
                                             EventData eventData2 = new EventData();
-                                            eventData2.code = EVENT_DATA_NET_WORK_CHANGE;
+                                            eventData2.code = Constants.EVENT_DATA_NET_WORK_CHANGE;
                                             try {
                                                 LogUtils.loge("CONNECTIVITY_ACTION--->>重新拉取");
                                             } catch (Throwable throwable) {
@@ -286,7 +286,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         mFragmentList.add(managerFragment);
         getView().updateMainPageAdapterData(mFragmentList);
         //
-        final EventLoginData eventLoginData = (EventLoginData) mContext.getIntent().getSerializableExtra(EXTRA_EVENT_LOGIN_DATA);
+        final EventLoginData eventLoginData = (EventLoginData) mContext.getIntent().getSerializableExtra(Constants.EXTRA_EVENT_LOGIN_DATA);
         //
         if (null != eventLoginData) {
             //赋值
@@ -350,7 +350,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                                     DeviceInfo data = RetrofitServiceHelper.getInstance().getGson().fromJson(json,
                                             DeviceInfo.class);
                                     final EventData eventData = new EventData();
-                                    eventData.code = EVENT_DATA_SOCKET_DATA_INFO;
+                                    eventData.code = Constants.EVENT_DATA_SOCKET_DATA_INFO;
                                     eventData.data = data;
                                     EventBus.getDefault().post(eventData);
                                 } catch (Exception e) {
@@ -391,7 +391,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                                     DeviceAlarmCount.AllBean allBean = all.get(0);
                                     AlarmDeviceCountsBean counts = allBean.getCounts();
                                     final EventData eventData = new EventData();
-                                    eventData.code = EVENT_DATA_SOCKET_DATA_COUNT;
+                                    eventData.code = Constants.EVENT_DATA_SOCKET_DATA_COUNT;
                                     eventData.data = counts;
                                     EventBus.getDefault().post(eventData);
                                 } catch (Exception e) {
@@ -433,26 +433,26 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                                     switch (event) {
                                         case "create":
                                             // 做一些预警发生的逻辑
-                                            eventAlarmStatusModel.status = MODEL_ALARM_STATUS_EVENT_CODE_CREATE;
+                                            eventAlarmStatusModel.status = Constants.MODEL_ALARM_STATUS_EVENT_CODE_CREATE;
                                             break;
                                         case "recovery":
                                             // 做一些预警恢复的逻辑
-                                            eventAlarmStatusModel.status = MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY;
+                                            eventAlarmStatusModel.status =Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY;
                                             break;
                                         case "confirm":
                                             // 做一些预警被确认的逻辑
-                                            eventAlarmStatusModel.status = MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM;
+                                            eventAlarmStatusModel.status = Constants.MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM;
                                             break;
                                         case "reconfirm":
                                             // 做一些预警被再次确认的逻辑
-                                            eventAlarmStatusModel.status = MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM;
+                                            eventAlarmStatusModel.status = Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM;
                                             break;
                                         default:
                                             // 未知逻辑 可以联系我确认 有可能是bug
                                             break;
                                     }
                                     EventData eventData = new EventData();
-                                    eventData.code = EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS;
+                                    eventData.code = Constants.EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS;
                                     eventData.data = eventAlarmStatusModel;
                                     EventBus.getDefault().post(eventData);
                                 } catch (Exception e) {
@@ -478,7 +478,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 synchronized (MainPresenter.DeviceFlushListener.class) {
                     //TODO 设备删除做的操作
                     EventData eventData = new EventData();
-                    eventData.code = EVENT_DATA_DEVICE_SOCKET_FLUSH;
+                    eventData.code = Constants.EVENT_DATA_DEVICE_SOCKET_FLUSH;
                     EventBus.getDefault().post(eventData);
                 }
             } catch (Exception e) {
@@ -505,7 +505,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                             }
                             MonitorPointOperationTaskResultInfo monitorPointOperationTaskResultInfo = RetrofitServiceHelper.getInstance().getGson().fromJson(json, MonitorPointOperationTaskResultInfo.class);
                             EventData eventData = new EventData();
-                            eventData.code = EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT;
+                            eventData.code = Constants.EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT;
                             eventData.data = monitorPointOperationTaskResultInfo;
                             EventBus.getDefault().post(eventData);
                         }
@@ -554,7 +554,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                                     }
                                 }
                                 EventData eventData = new EventData();
-                                eventData.code = EVENT_DATA_NET_WORK_CHANGE;
+                                eventData.code = Constants.EVENT_DATA_NET_WORK_CHANGE;
                                 try {
                                     LogUtils.loge("CONNECTIVITY_ACTION--->>重新拉取");
                                 } catch (Throwable throwable) {
@@ -587,13 +587,13 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             options.path = "/city";
             mSocket = IO.socket(RetrofitServiceHelper.getInstance().BASE_URL + "app", options);
             if (hasDeviceBriefControl()) {
-                mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
-                mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
-                mSocket.on(SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
-                mSocket.on(SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
+                mSocket.on(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);
+                mSocket.on(Constants.SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+                mSocket.on(Constants.SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
+                mSocket.on(Constants.SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
             }
             if (hasAlarmInfoControl()) {
-                mSocket.on(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
+                mSocket.on(Constants.SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
             }
             if (hasAlarmInfoControl() || hasDeviceBriefControl()) {
                 mSocket.connect();
@@ -664,13 +664,13 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             if (mSocket != null) {
                 mSocket.disconnect();
                 if (hasDeviceBriefControl()) {
-                    mSocket.off(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
-                    mSocket.off(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
-                    mSocket.off(SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
-                    mSocket.off(SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
+                    mSocket.off(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);
+                    mSocket.off(Constants.SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+                    mSocket.off(Constants.SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
+                    mSocket.off(Constants.SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
                 }
                 if (hasAlarmInfoControl()) {
-                    mSocket.off(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
+                    mSocket.off(Constants.SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
                 }
 
                 mSocket = null;
@@ -683,13 +683,13 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             options.path = "/city";
             mSocket = IO.socket(RetrofitServiceHelper.getInstance().BASE_URL + "app", options);
             if (hasDeviceBriefControl()) {
-                mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
-                mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
-                mSocket.on(SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
-                mSocket.on(SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
+                mSocket.on(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);
+                mSocket.on(Constants.SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+                mSocket.on(Constants.SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
+                mSocket.on(Constants.SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
             }
             if (hasAlarmInfoControl()) {
-                mSocket.on(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
+                mSocket.on(Constants.SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
             }
             if (hasAlarmInfoControl() || hasDeviceBriefControl()) {
                 return mSocket.connect().connected();
@@ -713,13 +713,13 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         if (mSocket != null) {
             mSocket.disconnect();
             if (hasDeviceBriefControl()) {
-                mSocket.off(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
-                mSocket.off(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
-                mSocket.off(SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
-                mSocket.off(SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
+                mSocket.off(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);
+                mSocket.off(Constants.SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+                mSocket.off(Constants.SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
+                mSocket.off(Constants.SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
             }
             if (hasAlarmInfoControl()) {
-                mSocket.off(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
+                mSocket.off(Constants.SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
             }
             mSocket = null;
         }
@@ -736,10 +736,10 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
-            case EVENT_DATA_SESSION_ID_OVERTIME:
+            case Constants.EVENT_DATA_SESSION_ID_OVERTIME:
                 reLogin(false);
                 break;
-            case EVENT_DATA_APP_CRASH:
+            case Constants.EVENT_DATA_APP_CRASH:
                 //APP 崩溃
                 try {
                     LogUtils.loge("app crash ------>>>> EVENT_DATA_APP_CRASH");
@@ -748,20 +748,20 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 }
                 reLogin(true);
                 break;
-            case EVENT_DATA_DEPLOY_RESULT_FINISH:
+            case Constants.EVENT_DATA_DEPLOY_RESULT_FINISH:
                 getView().setBottomBarSelected(0);
                 break;
-            case EVENT_DATA_SEARCH_MERCHANT:
+            case Constants.EVENT_DATA_SEARCH_MERCHANT:
                 if (data instanceof EventLoginData) {
                     EventLoginData eventLoginData = (EventLoginData) data;
                     changeAccount(eventLoginData);
                 }
                 break;
-            case EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS:
+            case Constants.EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS:
                 if (data instanceof EventAlarmStatusModel) {
                     switch (((EventAlarmStatusModel) data).status) {
-                        case MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
-                        case MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
+                        case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
+                        case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
                             freshAlarmCount();
                             break;
                         default:
@@ -770,7 +770,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
                 }
                 break;
-            case EVENT_DATA_CHECK_MERGE_TYPE_CONFIG_DATA:
+            case Constants.EVENT_DATA_CHECK_MERGE_TYPE_CONFIG_DATA:
                 //mergeTypeConfig配置参数需要更新
                 RetrofitServiceHelper.getInstance().getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Consumer<DevicesMergeTypesRsp>() {
                     @Override

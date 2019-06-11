@@ -21,6 +21,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -36,9 +37,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivityView, AlarmHistoryLogActivityPresenter>
         implements IAlarmHistoryLogActivityView, AlarmHistoryLogRcContentAdapter.OnAlarmHistoryLogConfirmListener, CalendarPopUtils.OnCalendarPopupCallbackListener, View.OnClickListener {
@@ -108,14 +106,14 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
                 isShowDialog = false;
-                mPresenter.requestDataByFilter(DIRECTION_DOWN);
+                mPresenter.requestDataByFilter(Constants.DIRECTION_DOWN);
             }
         });
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
                 isShowDialog = false;
-                mPresenter.requestDataByFilter(DIRECTION_UP);
+                mPresenter.requestDataByFilter(Constants.DIRECTION_UP);
             }
         });
         //
