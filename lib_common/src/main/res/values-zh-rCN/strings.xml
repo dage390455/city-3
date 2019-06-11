@@ -216,9 +216,9 @@
     <string name="wechat_not_installed">当前手机未安装微信，请安装后重试</string>
     <string name="sensor_location">传感器位置</string>
     <string name="sensor_location_desc">通过此工具，可以查看，以及导航到相应的传感器设备</string>
-    <string name="device_deployment">设备部署</string>
+    <string name="device_deployment">部署</string>
     <string name="search_nameplate">搜索铭牌</string>
-    <string name="device_deployment_tip">对准传感器上的二维码，即可自动扫描</string>
+    <string name="device_deployment_tip">对准设备/铭牌上的二维码，即可扫码部署</string>
     <string name="device_nameplate_tip">对准铭牌上的二维码，即可自动扫描</string>
     <string name="scan_login">扫码登录</string>
     <string name="scan_login_tip">对准登录用二维码，即可自动扫描</string>

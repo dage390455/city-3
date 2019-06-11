@@ -219,7 +219,7 @@
     <string name="search_nameplate">search nameplate</string>
     <string name="device_nameplate_tip">Please scan the QRCode</string>
 
-    <string name="device_deployment_tip">Please scan the QRCode</string>
+    <string name="device_deployment_tip">The qr code on the nameplate can be scanned and deployed</string>
     <string name="scan_login">Scan QRCode</string>
     <string name="scan_login_tip">Please scan the QRCode to login</string>
     <string name="device_change">Device Replacement</string>
