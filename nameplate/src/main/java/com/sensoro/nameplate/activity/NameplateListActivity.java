@@ -368,8 +368,14 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
 
 
                 }
+                if (position != 0) {
+                    ivNameplateListFilter.setImageResource(R.mipmap.namepalte_filter_selected);
+                } else {
+                    ivNameplateListFilter.setImageResource(R.mipmap.camera_filter_unselected);
 
-                ivNameplateListFilter.setImageResource(R.mipmap.namepalte_filter_selected);
+
+                }
+
 
                 mPresenter.requestDataByFilter(DIRECTION_DOWN, getSearchText(), deviceFlag);
                 filterPopUtils.dismiss();
@@ -583,10 +589,6 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
         } else if (i == R.id.iv_nameplate_list_scan) {
 
             mPresenter.doScanSearch();
-
-
-
-
 
 
         } else if (i == R.id.btn_search_clear) {//
