@@ -3,10 +3,12 @@ package com.sensoro.nameplate.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
@@ -45,6 +47,8 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
         int code = eventData.code;
         if (code == EVENT_DATA_UPDATENAMEPALTELIST || EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL == code) {
             requestDataByFilter(DIRECTION_DOWN, null, deviceFlag);
+        } else if (code == EVENT_DATA_DEPLOY_RESULT_FINISH) {
+            getView().finishAc();
         }
     }
 
@@ -238,6 +242,12 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
 
     }
 
+
+    public void doScanSearch() {
+        Bundle bundle1 = new Bundle();
+        bundle1.putInt(EXTRA_SCAN_ORIGIN_TYPE, Constants.EVENT_DATA_SEARCH_NAMEPLAGE);
+        startActivity(ARouterConstants.ACTIVITY_SCAN, bundle1, mContext);
+    }
 
     public void doNameplateDetail(int position) {
 

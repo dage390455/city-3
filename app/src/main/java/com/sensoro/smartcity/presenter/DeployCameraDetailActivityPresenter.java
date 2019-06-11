@@ -45,7 +45,7 @@ import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployCameraDetailActivityView;
 import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.DeployCameraConfigModel;
-import com.sensoro.smartcity.model.DeployResultModel;
+import com.sensoro.common.model.DeployResultModel;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;

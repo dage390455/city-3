@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
-import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployResultModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
@@ -28,12 +28,15 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.sensoro.common.constant.Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
+import static com.sensoro.common.constant.Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY;
+import static com.sensoro.common.constant.Constants.EXTRA_DEPLOY_RESULT_MODEL;
 
 public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNameplateActivityView> {
     private Activity mActivity;
@@ -46,17 +49,11 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
         EventBus.getDefault().register(this);
         Bundle bundle = getBundle(mActivity);
         if (bundle != null) {
-            Serializable serializable = bundle.getSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
-            if (serializable instanceof DeployAnalyzerModel) {
-                DeployAnalyzerModel model = (DeployAnalyzerModel) serializable;
-                mNameplateId = model.sn;
+            mNameplateId = bundle.getString("nameplateId");
+            if (!TextUtils.isEmpty(mNameplateId)) {
+                getView().setNameplateId(mNameplateId);
             }
         }
-
-        if (!TextUtils.isEmpty(mNameplateId)) {
-            getView().setNameplateId(mNameplateId);
-        }
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -102,6 +99,10 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
                     deployNameplateModel.bindList = (ArrayList<NamePlateInfo>) eventData.data;
                     getView().setAssociateSensorSize(deployNameplateModel.bindList.size());
                 }
+            case Constants.EVENT_DATA_DEPLOY_RESULT_CONTINUE:
+                getView().finishAc();
+            case Constants.EVENT_DATA_DEPLOY_CHANGE_RESULT_CONTINUE:
+                getView().finishAc();
 
                 break;
         }
@@ -153,6 +154,7 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
         startActivity(ARouterConstants.ACTIVITY_DEPLOY_ASSOCIATE_SENSOR, bundle, mActivity);
     }
 
+    //必传字段判空
     public void doUpload() {
         if (deployNameplateModel.deployPics.size() > 0) {
             doUploadPic();
@@ -227,12 +229,37 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
 
             @Override
             public void onCompleted(DeployNameplateRsp deployNameplateRsp) {
-                getView().toastShort("部署成功了");
+
+
+                DeployResultModel deployResultModel = new DeployResultModel();
+                Bundle bundle = new Bundle();
+                //
+                deployResultModel.sn = mNameplateId;
+                deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
+                deployResultModel.scanType = EVENT_DATA_ADD_SENSOR_FROM_DEPLOY;
+                deployResultModel.updateTime = System.currentTimeMillis();
+                deployResultModel.name = deployNameplateModel.name;
+                bundle.putSerializable(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+
+                startActivity(ARouterConstants.ACTIVITY_DEPLOYRESULT, bundle, mActivity);
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().toastShort(errorMsg);
+
+
+                DeployResultModel deployResultModel = new DeployResultModel();
+                Bundle bundle = new Bundle();
+                deployResultModel.sn = mNameplateId;
+                deployResultModel.errorMsg = errorMsg;
+                deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED;
+                deployResultModel.scanType = EVENT_DATA_ADD_SENSOR_FROM_DEPLOY;
+                deployResultModel.updateTime = System.currentTimeMillis();
+                deployResultModel.name = deployNameplateModel.name;
+                bundle.putSerializable(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+
+                startActivity(ARouterConstants.ACTIVITY_DEPLOYRESULT, bundle, mActivity);
             }
         });
     }

@@ -6,16 +6,16 @@ import android.text.TextUtils;
 
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.model.DeployContactModel;
+import com.sensoro.common.model.DeployResultModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.bean.DeployControlSettingData;
 import com.sensoro.common.server.bean.DeviceTypeStyles;
 import com.sensoro.common.server.bean.MergeTypeStyles;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployResultActivityView;
-import com.sensoro.common.model.DeployContactModel;
-import com.sensoro.smartcity.model.DeployResultModel;
-import com.sensoro.common.utils.DateUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -169,15 +169,34 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
 
     }
 
+    /**
+     * 部署成功
+     */
     private void setDeployResultSuccessDetail() {
         switch (deployResultModel.scanType) {
             //基站部署
             case Constants.TYPE_SCAN_DEPLOY_STATION:
+
+                //铭牌部署
+            case Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY://基站部署
                 getView().setResultImageView(R.drawable.deploy_succeed);
                 getView().setStateTextView(mContext.getString(R.string.success));
                 getView().setDeployResultTvStateTextColor(R.color.c_1dbb99);
-                getView().setTipsTextView(mContext.getResources().getString(R.string
-                        .tips_deploy_station_success), R.color.c_a6a6a6);
+                switch (deployResultModel.scanType) {
+                    case Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY:
+
+                        getView().setTipsTextView(mContext.getResources().getString(R.string
+                                .tips_deploy_nameplate_success), R.color.c_a6a6a6);
+                        break;
+                    //基站部署
+                    case Constants.TYPE_SCAN_DEPLOY_STATION:
+                        getView().setTipsTextView(mContext.getResources().getString(R.string
+                                .tips_deploy_station_success), R.color.c_a6a6a6);
+
+                        break;
+                }
+
+
                 if (!TextUtils.isEmpty(deployResultModel.sn)) {
                     getView().setSnTextView(deployResultModel.sn);
                 }
@@ -314,8 +333,38 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         }
     }
 
+    /**
+     * 部署失败
+     */
     private void setDeployResultFailedDetail() {
         switch (deployResultModel.scanType) {
+
+
+            //铭牌部署失败
+            case Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY:
+                getView().setResultImageView(R.drawable.deploy_fail);
+                getView().setTipsTextView(mContext.getResources().getString(R.string
+                        .tips_deploy_station_failed), R.color.c_a6a6a6);
+                getView().setStateTextView(mContext.getString(R.string.failed));
+                getView().setDeployResultTvStateTextColor(R.color.c_f34a4a);
+                if (!TextUtils.isEmpty(deployResultModel.sn)) {
+                    getView().setSnTextView(deployResultModel.sn);
+                }
+                if (!TextUtils.isEmpty(deployResultModel.errorMsg)) {
+                    getView().setTipsTextView(mContext.getString(R.string.reason) + "：" + deployResultModel.errorMsg, R.color.c_a6a6a6);
+                }
+                if (!TextUtils.isEmpty(deployResultModel.name)) {
+                    getView().setNameTextView(deployResultModel.name);
+                }
+                if (!TextUtils.isEmpty(deployResultModel.address)) {
+                    getView().setAddressTextView(deployResultModel.address);
+                }
+                getView().setContactAndSignalVisible(false);
+
+
+                break;
+
+
             //基站部署
             case Constants.TYPE_SCAN_DEPLOY_STATION:
                 getView().setResultImageView(R.drawable.deploy_fail);

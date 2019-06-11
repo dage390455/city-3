@@ -11,12 +11,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sensoro.smartcity.R;
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IDeployResultActivityView;
 import com.sensoro.smartcity.presenter.DeployResultActivityPresenter;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.common.widgets.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,6 +27,7 @@ import butterknife.OnClick;
 /**
  * Created by sensoro on 17/8/4.
  */
+@Route(path = ARouterConstants.ACTIVITY_DEPLOYRESULT)
 
 public class DeployResultActivity extends BaseActivity<IDeployResultActivityView, DeployResultActivityPresenter>
         implements IDeployResultActivityView {

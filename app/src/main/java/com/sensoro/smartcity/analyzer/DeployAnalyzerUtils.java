@@ -35,7 +35,7 @@ import com.sensoro.smartcity.activity.SignalCheckActivity;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.DeployContactModel;
-import com.sensoro.smartcity.model.DeployResultModel;
+import com.sensoro.common.model.DeployResultModel;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 
@@ -113,8 +113,9 @@ public class DeployAnalyzerUtils {
 
         }
         switch (scanType) {
-
-            //基站部署
+            //铭牌部署扫码关联传感器
+            case Constants.EVENT_DATA_SEARCH_NAMEPLAGE:
+                //基站部署
             case Constants.TYPE_SCAN_DEPLOY_STATION:
                 //铭牌部署扫码关联传感器
             case Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY:
