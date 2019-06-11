@@ -77,7 +77,6 @@ public class DeployAnalyzerUtils {
         String scanSerialNumber = parseResultMac(result);
         if (TextUtils.isEmpty(scanSerialNumber)) {
             listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
-            return;
         } else {
             try {
                 String[] strings = scanSerialNumber.split(" ");
@@ -86,7 +85,6 @@ public class DeployAnalyzerUtils {
                     nameplateAssociateDevice(nameplateId, scanSerialNumber, listener, activity, presenter);
                 } else {
                     listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
-                    return;
                 }
             } catch (Exception e) {
                 listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
@@ -234,7 +232,7 @@ public class DeployAnalyzerUtils {
      */
 
     private void nameplateAssociateDevice(String nameplateId, String scanSerialNumber, OnDeployAnalyzerListener listener, Activity activity, BasePresenter presenter) {
-        ArrayList arrayList = new ArrayList();
+        ArrayList<NamePlateInfo> arrayList = new ArrayList<>();
         NamePlateInfo info = new NamePlateInfo();
         info.setSn(scanSerialNumber);
         arrayList.add(info);
