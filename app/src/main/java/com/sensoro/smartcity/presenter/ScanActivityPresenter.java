@@ -56,14 +56,14 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
 
     private void updateTitle() {
         switch (scanType) {
-            case Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATE_DEVICE:
+
             case Constants.EVENT_DATA_SEARCH_NAMEPLAGE:
                 getView().updateTitleText(mContext.getString(R.string.search_nameplate));
                 getView().updateQrTipText(mContext.getString(R.string.device_nameplate_tip));
                 getView().setScanTvInputSnVisible(false);
 
                 break;
-
+            case Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATE_DEVICE:
             case Constants.TYPE_SCAN_DEPLOY_STATION:
             case Constants.TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
