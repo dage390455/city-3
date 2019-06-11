@@ -1,6 +1,5 @@
-package com.sensoro.smartcity.model;
+package com.sensoro.common.model;
 
-import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.common.server.bean.DeployControlSettingData;
 import com.sensoro.common.server.bean.DeviceInfo;
 

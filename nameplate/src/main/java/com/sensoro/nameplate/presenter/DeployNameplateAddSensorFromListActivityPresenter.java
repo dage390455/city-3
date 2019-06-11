@@ -333,7 +333,7 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
     public void requestSearchData(int directionDown, String text) {
         mSearchText = text;
         getView().showProgressDialog();
-        requestWithDirection(directionDown);
+        requestWithDirection(directionDown, true);
 
     }
 

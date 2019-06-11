@@ -425,7 +425,7 @@ public interface Constants {
 
     int EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL = 0x62;
     int EVENT_DATA_ADD_SENSOR_FROM_DEPLOY = 0x63;
-
+    int EVENT_DATA_SEARCH_NAMEPLAGE = 0x64;
 
 
     List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{

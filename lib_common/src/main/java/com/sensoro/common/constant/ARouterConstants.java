@@ -6,6 +6,7 @@ public interface ARouterConstants {
     String ACTIVITY_DEPLOY_DEVICE_TAG = "/app/activity/DeployDeviceTagActivity";
 
     String ACTIVITY_SCAN = "/app/activity/ScanActivity";
+    String ACTIVITY_DEPLOYRESULT = "/app/activity/DeployResultActivity";
 
     String ACTIVITY_DEPLOY_DEVICE_PIC = "/app/activity/DeployMonitorDeployPicActivity";
 

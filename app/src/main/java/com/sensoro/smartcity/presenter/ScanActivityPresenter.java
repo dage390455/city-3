@@ -56,6 +56,12 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
 
     private void updateTitle() {
         switch (scanType) {
+            case Constants.EVENT_DATA_SEARCH_NAMEPLAGE:
+                getView().updateTitleText(mContext.getString(R.string.search_nameplate));
+                getView().updateQrTipText(mContext.getString(R.string.device_nameplate_tip));
+                getView().setScanTvInputSnVisible(false);
+
+                break;
             case Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATEDEVICE:
 
             case TYPE_SCAN_DEPLOY_STATION:
@@ -183,9 +189,17 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                         if (serializableExtra instanceof DeployAnalyzerModel) {
                             DeployAnalyzerModel model = (DeployAnalyzerModel) serializableExtra;
                             if (model.deployNameplateFlag != null && model.deployNameplateFlag) {
-                                startActivity(ARouter.getInstance().build(ARouterConstants.ACTIVITY_NAMEPLATE_DETAIL).withSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, serializableExtra), mContext);
+                                startActivity(ARouter.getInstance().build(ARouterConstants.ACTIVITY_NAMEPLATE_DETAIL).withString("nameplateId", model.sn), mContext);
                             } else {
-                                startActivity(ARouter.getInstance().build(ARouterConstants.ACTIVITY_DEPLOY_NAMEPLATE).withSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, serializableExtra), mContext);
+
+                                //搜索铭牌，未部署
+                                if (scanType == Constants.EVENT_DATA_SEARCH_NAMEPLAGE) {
+                                    getView().toastShort("该铭牌未部署");
+                                    getView().startScan();
+
+                                } else {
+                                    startActivity(ARouter.getInstance().build(ARouterConstants.ACTIVITY_DEPLOY_NAMEPLATE).withString("nameplateId", model.sn), mContext);
+                                }
                             }
                         } else {
                             getView().toastShort("error");

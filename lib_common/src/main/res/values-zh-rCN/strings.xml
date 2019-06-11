@@ -217,7 +217,9 @@
     <string name="sensor_location">传感器位置</string>
     <string name="sensor_location_desc">通过此工具，可以查看，以及导航到相应的传感器设备</string>
     <string name="device_deployment">设备部署</string>
+    <string name="search_nameplate">搜索铭牌</string>
     <string name="device_deployment_tip">对准传感器上的二维码，即可自动扫描</string>
+    <string name="device_nameplate_tip">对准铭牌上的二维码，即可自动扫描</string>
     <string name="scan_login">扫码登录</string>
     <string name="scan_login_tip">对准登录用二维码，即可自动扫描</string>
     <string name="device_change">设备更换</string>
@@ -304,6 +306,7 @@
     <string name="tips_phone_empty">请输入有效电话号码</string>
     <string name="tips_login_pwd_empty">请输入登录密码</string>
     <string name="tips_deploy_success">恭喜! 传感器点位部署成功</string>
+    <string name="tips_deploy_nameplate_success">恭喜! 铭牌部署成功</string>
     <string name="tips_deploy_station_success">恭喜! 基站部署成功</string>
     <string name="tips_deploy_failed">很遗憾! 传感器点位部署失败</string>
     <string name="tips_deploy_station_failed">很遗憾! 基站部署失败</string>

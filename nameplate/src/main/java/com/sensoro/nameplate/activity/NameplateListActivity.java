@@ -581,6 +581,14 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
             }
 
         } else if (i == R.id.iv_nameplate_list_scan) {
+
+            mPresenter.doScanSearch();
+
+
+
+
+
+
         } else if (i == R.id.btn_search_clear) {//
 
 

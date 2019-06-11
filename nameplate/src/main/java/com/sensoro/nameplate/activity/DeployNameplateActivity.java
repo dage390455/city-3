@@ -172,8 +172,8 @@ public class DeployNameplateActivity extends BaseActivity<IDeployNameplateActivi
         if (size == 0) {
             tvAssociationSensorOptionAcDeployNameplate.setText(mActivity.getString(R.string.optional));
             tvAssociationSensorOptionAcDeployNameplate.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
-        }else{
-            tvAssociationSensorOptionAcDeployNameplate.setText(mActivity.getString(R.string.selected_device_size)+size);
+        } else {
+            tvAssociationSensorOptionAcDeployNameplate.setText(mActivity.getString(R.string.selected_device_size) + size);
             tvAssociationSensorOptionAcDeployNameplate.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
         }
 
@@ -182,12 +182,12 @@ public class DeployNameplateActivity extends BaseActivity<IDeployNameplateActivi
 
     @Override
     public void setDeployPhotoTextSize(int size) {
-        if(size > 0){
+        if (size > 0) {
             StringBuilder sb = new StringBuilder();
             sb.append(mActivity.getString(R.string.added)).append(size).append(mActivity.getString(R.string.images));
             tvPicOptionAcDeployNameplate.setText(sb.toString());
             tvPicOptionAcDeployNameplate.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
-        }else{
+        } else {
             tvPicOptionAcDeployNameplate.setText(mActivity.getString(R.string.optional));
             tvPicOptionAcDeployNameplate.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
         }
@@ -195,6 +195,12 @@ public class DeployNameplateActivity extends BaseActivity<IDeployNameplateActivi
 
     @Override
     public void setUploadStatus(boolean isUpload) {
+        if (isUpload) {
+            tvUploadAcDeployNameplate.setClickable(true);
+        } else {
+            tvUploadAcDeployNameplate.setClickable(false);
+
+        }
         tvUploadAcDeployNameplate.setBackgroundResource(isUpload ? R.drawable.shape_bg_corner_4_29c_shadow : R.drawable.shape_bg_corner_4_dfdf_shadow);
     }
 
@@ -266,19 +272,19 @@ public class DeployNameplateActivity extends BaseActivity<IDeployNameplateActivi
         int id = view.getId();
         if (id == R.id.include_text_title_imv_arrows_left) {
             finishAc();
-        }else if (id == R.id.ll_name_ac_deploy_nameplate) {
+        } else if (id == R.id.ll_name_ac_deploy_nameplate) {
             mPresenter.doName(tvNameOptionAcDeployNameplate.getText().toString());
 
-        }else if (id == R.id.ll_tag_ac_deploy_nameplate) {
+        } else if (id == R.id.ll_tag_ac_deploy_nameplate) {
             mPresenter.doTag();
 
-        }else if (id == R.id.ll_pic_ac_deploy_nameplate) {
+        } else if (id == R.id.ll_pic_ac_deploy_nameplate) {
             mPresenter.doPic();
 
-        }else if (id == R.id.ll_association_sensor_ac_deploy_nameplate) {
+        } else if (id == R.id.ll_association_sensor_ac_deploy_nameplate) {
             mPresenter.doAssociationSensor();
 
-        }else if (id == R.id.tv_upload_ac_deploy_nameplate) {
+        } else if (id == R.id.tv_upload_ac_deploy_nameplate) {
             mPresenter.doUpload();
         }
 

@@ -216,6 +216,9 @@
     <string name="sensor_location">sensor location</string>
     <string name="sensor_location_desc">View and navigate to the sensor device with the tool</string>
     <string name="device_deployment">Deploy</string>
+    <string name="search_nameplate">search nameplate</string>
+    <string name="device_nameplate_tip">Please scan the QRCode</string>
+
     <string name="device_deployment_tip">Please scan the QRCode</string>
     <string name="scan_login">Scan QRCode</string>
     <string name="scan_login_tip">Please scan the QRCode to login</string>
@@ -304,6 +307,8 @@
     <string name="tips_phone_empty">Please enter a valid phone number</string>
     <string name="tips_login_pwd_empty">Please enter your password</string>
     <string name="tips_deploy_success">Congratulations! Deployment Successful</string>
+
+    <string name="tips_deploy_nameplate_success">Congratulations! Deployment Successful</string>
     <string name="tips_deploy_station_success">Congratulations! Deployment Successful</string>
     <string name="tips_deploy_failed">Sorry! Sensor point deployment failed</string>
     <string name="tips_deploy_station_failed">Sorry! Station deployment failed</string>

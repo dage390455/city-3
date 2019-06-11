@@ -458,9 +458,15 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
             mActivity.finish();
         } else if (id == R.id.iv_clear_ac_deploy_nameplate_sensor_list) {
             etSearchAcDeployNameplateSensorList.getText().clear();
+
+            etSearchAcDeployNameplateSensorList.setText("");
+            etSearchAcDeployNameplateSensorList.requestFocus();
+            AppUtils.openInputMethodManager(DeployNameplateAddSensorFromListActivity.this, etSearchAcDeployNameplateSensorList);
+            setSearchHistoryVisible(true);
+
         } else if (id == R.id.tv_search_cancel_ac_deploy_nameplate_sensor_list) {
             etSearchAcDeployNameplateSensorList.getText().clear();
-            mPresenter.requestWithDirection(DIRECTION_DOWN);
+            mPresenter.requestSearchData(DIRECTION_DOWN, "");
             setSearchHistoryVisible(false);
             AppUtils.dismissInputMethodManager(mActivity, etSearchAcDeployNameplateSensorList);
         } else if (id == R.id.rb_select_all_ac_deploy_nameplate_sensor_list) {

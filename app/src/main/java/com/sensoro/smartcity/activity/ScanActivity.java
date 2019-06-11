@@ -200,6 +200,11 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     }
 
     @Override
+    public void setScanTvInputSnVisible(boolean isVisible) {
+        acScanTvInputSn.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
     public void updateQrTipText(String tip) {
         viewFinderView.setTipText(tip);
     }
