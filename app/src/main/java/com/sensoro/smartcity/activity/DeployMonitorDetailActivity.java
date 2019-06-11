@@ -581,6 +581,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
     @Override
     public void setUploadBtnStatus(boolean isEnable) {
+        //TODO  分离 结构
         mPresenter.updateCheckTipText(isEnable);
         acDeployDeviceDetailTvUpload.setEnabled(isEnable);
         acDeployDeviceDetailTvUpload.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_corner_dfdf_shadow);
