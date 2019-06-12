@@ -72,10 +72,15 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
         if (deviceCameraInfo != null) {
             //
             String name = deviceCameraInfo.getName();
+            String type = deviceCameraInfo.getType();
             if (TextUtils.isEmpty(name)) {
-                name = mContext.getString(R.string.unknown);
+                name = deviceCameraInfo.getSn();
             }
-            holder.itemDeviceCameraTvDeviceName.setText(name);
+            if (!TextUtils.isEmpty(type)) {
+                holder.itemDeviceCameraTvDeviceName.setText(type);
+
+            }
+            holder.itemDeviceCameraTvDeviceName.append(name);
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

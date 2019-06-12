@@ -169,6 +169,9 @@ public class DeployNameplateAddSensorActivityPresenter extends BasePresenter<IDe
                 getView().updateBindData(mBindList);
             }
 
+        } else if (eventData.code == Constants.EVENT_DATA_DEPLOY_RESULT_FINISH) {
+
+            getView().finishAc();
         }
     }
 

@@ -458,15 +458,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         }
 
 
-        if ("station".equals(model.getType())) {
-            acBasestationTvTypetime.setText(R.string.αbasestation);
-        } else if ("gateway".equals(model.getType())) {
-            acBasestationTvTypetime.setText(R.string.αgateway);
-        } else if ("scgateway".equals(model.getType())) {
-            acBasestationTvTypetime.setText(R.string.αroute);
-        } else if ("ai_camera".equals(model.getType())) {
-            acBasestationTvTypetime.setText("AI_CAMERA");
-        }
+        acBasestationTvTypetime.setText(model.getType());
 
         if (!TextUtils.isEmpty(model.getUpdatedTime())) {
             acBasestationTvTypetime.append(" " + DateUtil.getDate(Long.parseLong(model.getUpdatedTime())));
@@ -506,7 +498,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     @Override
     public void updateNetDelay(String delay, int color) {
         acBasestationTvNetdelay.setTextColor(getResources().getColor(color));
-        acBasestationTvNetdelay.setText(delay);
+        acBasestationTvNetdelay.setText(delay + "ms");
 
 
     }

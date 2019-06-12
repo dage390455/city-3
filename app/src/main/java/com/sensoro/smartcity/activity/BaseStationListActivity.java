@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -179,6 +180,23 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
         mCameraListFilterPopupWindow.setOnCameraListFilterPopupWindowListener(this);
 
 
+        cameraListEtSearch.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if (mCameraListFilterPopupWindow.isShowing()) {
+
+                    mCameraListFilterPopupWindow.dismiss();
+
+                }
+
+
+                cameraListEtSearch.requestFocus();
+                cameraListEtSearch.setCursorVisible(true);
+                setSearchHistoryVisible(true);
+                return false;
+            }
+        });
         cameraListEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -518,15 +536,7 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
 
             case R.id.camera_list_et_search:
 
-                if (mCameraListFilterPopupWindow.isShowing()) {
 
-                    mCameraListFilterPopupWindow.dismiss();
-
-                }
-
-                cameraListEtSearch.requestFocus();
-                cameraListEtSearch.setCursorVisible(true);
-                setSearchHistoryVisible(true);
 //                forceOpenSoftKeyboard();
                 break;
             case R.id.camera_list_iv_search_clear:

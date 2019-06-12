@@ -545,7 +545,7 @@
     <string name="contract_created_time">生成时间</string>
     <string name="contract_signed_time">签订时间</string>
     <string name="co2">二氧化碳</string>
-    <string name="no_content">无内容</string>
+    <string name="no_content">暂无相关内容</string>
     <string name="alarm_result_type">预警结果类型</string>
     <string name="alarm_cause_type">预警成因类型</string>
     <string name="alarm_place">预警场所</string>
@@ -1053,7 +1053,7 @@
     <string name="The_network_information">网络信息</string>
     <string name="Self_check_state">自检状态</string>
     <string name="networking_mode">联网方式</string>
-    <string name="ip">Ip</string>
+    <string name="ip">IP</string>
     <string name="gateway">网关</string>
     <string name="subnet_mask">子网掩码</string>
     <string name="primary_dns">主DNS</string>

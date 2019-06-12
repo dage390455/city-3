@@ -590,6 +590,9 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 break;
             case Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED:
             case Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT:
+            case Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY://铭牌部署扫码关联传感器
+
+            case Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATE_DEVICE:
                 break;
             default:
                 break;
