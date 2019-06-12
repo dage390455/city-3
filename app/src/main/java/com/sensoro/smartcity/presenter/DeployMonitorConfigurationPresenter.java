@@ -285,52 +285,43 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onMessageEvent(EventData eventData) {
-        int code = eventData.code;
-        Object data = eventData.data;
-        switch (code) {
-            case Constants.EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT:
-                if (data instanceof MonitorPointOperationTaskResultInfo) {
-                    try {
-                        LogUtils.loge("EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT --->>");
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                    MonitorPointOperationTaskResultInfo info = (MonitorPointOperationTaskResultInfo) data;
-                    final String scheduleNo = info.getScheduleNo();
-                    if (!TextUtils.isEmpty(scheduleNo) && info.getTotal() == info.getComplete()) {
-                        String[] split = scheduleNo.split(",");
-                        if (split.length > 0) {
-                            final String temp = split[0];
-                            if (!TextUtils.isEmpty(temp)) {
-                                if (AppUtils.isActivityTop(mActivity, DeployMonitorConfigurationActivity.class)) {
-                                    mActivity.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
-                                                mHandler.removeCallbacks(DeviceTaskOvertime);
-                                                if (isAttachedView()) {
-                                                    getView().dismissOperatingLoadingDialog();
-                                                    getView().showOperationSuccessToast();
-                                                    //
-                                                    pushConfigResult();
-                                                    mHandler.postDelayed(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            getView().finishAc();
-                                                        }
-                                                    }, 1000);
-                                                }
+    public void onMessageEvent(MonitorPointOperationTaskResultInfo monitorPointOperationTaskResultInfo) {
+        try {
+            LogUtils.loge("EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT --->>");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        final String scheduleNo = monitorPointOperationTaskResultInfo.getScheduleNo();
+        if (!TextUtils.isEmpty(scheduleNo) && monitorPointOperationTaskResultInfo.getTotal() == monitorPointOperationTaskResultInfo.getComplete()) {
+            String[] split = scheduleNo.split(",");
+            if (split.length > 0) {
+                final String temp = split[0];
+                if (!TextUtils.isEmpty(temp)) {
+                    if (AppUtils.isActivityTop(mActivity, DeployMonitorConfigurationActivity.class)) {
+                        mActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
+                                    mHandler.removeCallbacks(DeviceTaskOvertime);
+                                    if (isAttachedView()) {
+                                        getView().dismissOperatingLoadingDialog();
+                                        getView().showOperationSuccessToast();
+                                        //
+                                        pushConfigResult();
+                                        mHandler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                getView().finishAc();
                                             }
-                                        }
-                                    });
+                                        }, 1000);
+                                    }
                                 }
                             }
-                        }
-
+                        });
                     }
                 }
-                break;
+            }
+
         }
     }
 

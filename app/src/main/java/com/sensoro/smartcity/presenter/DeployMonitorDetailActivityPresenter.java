@@ -765,7 +765,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         if (deployAnalyzerModel.tagList.size() > 0) {
             bundle.putStringArrayList(Constants.EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
         }
-        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_TAG,bundle,mContext);
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_TAG, bundle, mContext);
     }
 
     public void doSettingPhoto() {
@@ -774,7 +774,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             bundle.putSerializable(Constants.EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
         }
         bundle.putString(Constants.EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
-        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_PIC,bundle,mContext);
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_PIC, bundle, mContext);
 
 //        Intent intent = new Intent(mContext, DeployMonitorDeployPicActivity.class);
 //        if (getRealImageSize() > 0) {
@@ -795,6 +795,27 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
         getView().startAC(intent);
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(DeviceInfo deviceInfo) {
+        String sn = deviceInfo.getSn();
+        try {
+            if (deployAnalyzerModel.sn.equalsIgnoreCase(sn)) {
+                deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
+                tempSignal = deviceInfo.getSignal();
+                freshSignalInfo();
+//                            getView().toastLong("信号-->>time = " + deployAnalyzerModel.updatedTime + ",signal = " + deployAnalyzerModel.signal);
+                try {
+                    LogUtils.loge(this, "部署页刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + deployAnalyzerModel.signal);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
@@ -849,27 +870,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     freshSignalInfo();
                 }
                 getView().setUploadBtnStatus(checkCanUpload());
-                break;
-            case Constants.EVENT_DATA_SOCKET_DATA_INFO:
-                if (data instanceof DeviceInfo) {
-                    DeviceInfo deviceInfo = (DeviceInfo) data;
-                    String sn = deviceInfo.getSn();
-                    try {
-                        if (deployAnalyzerModel.sn.equalsIgnoreCase(sn)) {
-                            deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
-                            tempSignal = deviceInfo.getSignal();
-                            freshSignalInfo();
-//                            getView().toastLong("信号-->>time = " + deployAnalyzerModel.updatedTime + ",signal = " + deployAnalyzerModel.signal);
-                            try {
-                                LogUtils.loge(this, "部署页刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + deployAnalyzerModel.signal);
-                            } catch (Throwable throwable) {
-                                throwable.printStackTrace();
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
                 break;
             case Constants.EVENT_DATA_DEPLOY_SETTING_WE_CHAT_RELATION:
                 if (data instanceof String) {

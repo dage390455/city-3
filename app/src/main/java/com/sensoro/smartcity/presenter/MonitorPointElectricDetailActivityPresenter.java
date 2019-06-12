@@ -457,7 +457,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         if (mDeviceInfo != null) {
             if (Objects.requireNonNull(PreferencesHelper.getInstance().getConfigDeviceType(mDeviceInfo.getDeviceType())).isDemoSupported()) {
                 if ("fhsj_smoke".equals(mDeviceInfo.getDeviceType())) {
-                    if( WidgetUtil.isContainVersion("2.1.1", bleUpdateModel.currentFirmVersion)){
+                    if (WidgetUtil.isContainVersion("2.1.1", bleUpdateModel.currentFirmVersion)) {
                         //只针对泛海三江烟感并且在2.1.1版本及以上
                         if (PreferencesHelper.getInstance().getUserData().hasDeviceDemoMode) {
                             Integer demoMode = mDeviceInfo.getDemoMode();
@@ -478,8 +478,8 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         } else {
                             deviceDemoMode = Constants.DEVICE_DEMO_MODE_NO_PERMISSION;
                         }
-                    }else{
-                        deviceDemoMode =  Constants.DEVICE_DEMO_MODE_NOT_SUPPORT;
+                    } else {
+                        deviceDemoMode = Constants.DEVICE_DEMO_MODE_NOT_SUPPORT;
                     }
 
                 } else {
@@ -503,8 +503,8 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         deviceDemoMode = Constants.DEVICE_DEMO_MODE_NO_PERMISSION;
                     }
                 }
-            }else{
-                deviceDemoMode =  Constants.DEVICE_DEMO_MODE_NOT_SUPPORT;
+            } else {
+                deviceDemoMode = Constants.DEVICE_DEMO_MODE_NOT_SUPPORT;
             }
             //TODO delete
 //            deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
@@ -1132,70 +1132,67 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     }
 
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(DeviceInfo deviceInfo) {
+        if (deviceInfo.getSn().equalsIgnoreCase(mDeviceInfo.getSn())) {
+            if (AppUtils.isActivityTop(mContext, MonitorPointElectricDetailActivity.class)) {
+                mContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isAttachedView()) {
+                            mDeviceInfo.cloneSocketData(deviceInfo);
+                            // 单项数值设置
+                            if (isAttachedView()) {
+                                freshLocationDeviceInfo();
+                                freshTopData();
+                                handleDeviceInfoAdapter();
+                            }
+
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(MonitorPointOperationTaskResultInfo monitorPointOperationTaskResultInfo) {
+        final String scheduleNo = monitorPointOperationTaskResultInfo.getScheduleNo();
+        if (!TextUtils.isEmpty(scheduleNo) && monitorPointOperationTaskResultInfo.getTotal() == monitorPointOperationTaskResultInfo.getComplete()) {
+            String[] split = scheduleNo.split(",");
+            if (split.length > 0) {
+                final String temp = split[0];
+                if (!TextUtils.isEmpty(temp)) {
+                    if (AppUtils.isActivityTop(mContext, MonitorPointElectricDetailActivity.class)) {
+                        mContext.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
+                                    mHandler.removeCallbacks(DeviceTaskOvertime);
+                                    if (isAttachedView()) {
+                                        getView().dismissOperatingLoadingDialog();
+                                        getView().showOperationSuccessToast();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+
+        }
+    }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
-            case Constants.EVENT_DATA_SOCKET_DATA_INFO:
-                if (data instanceof DeviceInfo) {
-                    final DeviceInfo pushDeviceInfo = (DeviceInfo) data;
-                    if (pushDeviceInfo.getSn().equalsIgnoreCase(mDeviceInfo.getSn())) {
-                        if (AppUtils.isActivityTop(mContext, MonitorPointElectricDetailActivity.class)) {
-                            mContext.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (isAttachedView()) {
-                                        mDeviceInfo.cloneSocketData(pushDeviceInfo);
-                                        // 单项数值设置
-                                        if (isAttachedView()) {
-                                            freshLocationDeviceInfo();
-                                            freshTopData();
-                                            handleDeviceInfoAdapter();
-                                        }
-
-                                    }
-                                }
-                            });
-                        }
-                    }
-                }
-                break;
             case Constants.EVENT_DATA_DEPLOY_INIT_CONFIG_CODE:
                 if (data instanceof DeployControlSettingData) {
                     DeployControlSettingData deployControlSettingData = (DeployControlSettingData) data;
                     setMonitorConfigInfo(deployControlSettingData);
                 }
-            case Constants.EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT:
-                if (data instanceof MonitorPointOperationTaskResultInfo) {
-                    MonitorPointOperationTaskResultInfo info = (MonitorPointOperationTaskResultInfo) data;
-                    final String scheduleNo = info.getScheduleNo();
-                    if (!TextUtils.isEmpty(scheduleNo) && info.getTotal() == info.getComplete()) {
-                        String[] split = scheduleNo.split(",");
-                        if (split.length > 0) {
-                            final String temp = split[0];
-                            if (!TextUtils.isEmpty(temp)) {
-                                if (AppUtils.isActivityTop(mContext, MonitorPointElectricDetailActivity.class)) {
-                                    mContext.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
-                                                mHandler.removeCallbacks(DeviceTaskOvertime);
-                                                if (isAttachedView()) {
-                                                    getView().dismissOperatingLoadingDialog();
-                                                    getView().showOperationSuccessToast();
-                                                }
-                                            }
-                                        }
-                                    });
-                                }
-                            }
-                        }
-
-                    }
-                }
-                break;
             case Constants.EVENT_DATA_DEVICE_POSITION_CALIBRATION:
                 if (data instanceof DeviceInfo) {
                     final DeviceInfo pushDeviceInfo = (DeviceInfo) data;

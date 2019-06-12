@@ -445,69 +445,84 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     //子线程处理
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(DeviceInfo deviceInfo) {
+        if (needHandleDevicePush(deviceInfo)) {
+            needRefreshContent = true;
+        }
+    }
+
+    //子线程处理
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(AlarmDeviceCountsBean alarmDeviceCountsBean) {
+        int currentAlarmCount = alarmDeviceCountsBean.get_$0();
+        int normalCount = alarmDeviceCountsBean.get_$1();
+        int lostCount = alarmDeviceCountsBean.get_$2();
+        int inactiveCount = alarmDeviceCountsBean.get_$3();
+        int malfunctionCount = alarmDeviceCountsBean.get_$4();
+        //
+        if (tempAlarmCount == 0 && currentAlarmCount > 0) {
+            needAlarmPlay = true;
+        }
+        try {
+            LogUtils.loge("malfunctionCount = " + malfunctionCount);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        needShowAlarmWindow = currentAlarmCount > tempAlarmCount;
+        try {
+            LogUtils.loge("EVENT_DATA_SOCKET_DATA_COUNT-->> tempAlarmCount = " + tempAlarmCount + ",currentAlarmCount = " + currentAlarmCount + ",mCurrentHomeTopModel.type = " + mCurrentHomeTopModel.type);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        tempAlarmCount = currentAlarmCount;
+        //
+        mHomeTopModels.clear();
+        if (currentAlarmCount > 0) {
+            alarmModel.value = tempAlarmCount;
+            mHomeTopModels.add(alarmModel);
+        }
+        if (malfunctionCount > 0) {
+            malfunctionModel.value = malfunctionCount;
+            mHomeTopModels.add(malfunctionModel);
+        }
+        if (normalCount > 0) {
+            normalModel.value = normalCount;
+            mHomeTopModels.add(normalModel);
+        }
+        if (lostCount > 0) {
+            lostModel.value = lostCount;
+            mHomeTopModels.add(lostModel);
+        }
+        if (inactiveCount > 0) {
+            inactiveModel.value = inactiveCount;
+            mHomeTopModels.add(inactiveModel);
+        }
+        totalMonitorPoint = currentAlarmCount + normalCount + lostCount + inactiveCount + malfunctionCount;
+        needRefreshHeader = true;
+    }
+
+    //子线程处理
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(int code) {
+        if (Constants.EVENT_DATA_DEVICE_SOCKET_FLUSH == code) {
+            //TODO
+            needFreshAll = true;
+            try {
+                LogUtils.loge("EVENT_DATA_DEVICE_SOCKET_FLUSH --->> 添加、删除、迁移设备");
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        }
+    }
+
+    //子线程处理
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventData eventData) {
         //后台线程处理消息
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
             case Constants.EVENT_DATA_DEPLOY_RESULT_FINISH:
-                break;
-            case Constants.EVENT_DATA_SOCKET_DATA_INFO:
-                if (data instanceof DeviceInfo) {
-                    if (needHandleDevicePush((DeviceInfo) data)) {
-                        needRefreshContent = true;
-                    }
-                }
-                break;
-            case Constants.EVENT_DATA_SOCKET_DATA_COUNT:
-                if (data instanceof AlarmDeviceCountsBean) {
-                    AlarmDeviceCountsBean alarmDeviceCountsBean = (AlarmDeviceCountsBean) data;
-                    int currentAlarmCount = alarmDeviceCountsBean.get_$0();
-                    int normalCount = alarmDeviceCountsBean.get_$1();
-                    int lostCount = alarmDeviceCountsBean.get_$2();
-                    int inactiveCount = alarmDeviceCountsBean.get_$3();
-                    int malfunctionCount = alarmDeviceCountsBean.get_$4();
-                    //
-                    if (tempAlarmCount == 0 && currentAlarmCount > 0) {
-                        needAlarmPlay = true;
-                    }
-                    try {
-                        LogUtils.loge("malfunctionCount = " + malfunctionCount);
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                    needShowAlarmWindow = currentAlarmCount > tempAlarmCount;
-                    try {
-                        LogUtils.loge("EVENT_DATA_SOCKET_DATA_COUNT-->> tempAlarmCount = " + tempAlarmCount + ",currentAlarmCount = " + currentAlarmCount + ",mCurrentHomeTopModel.type = " + mCurrentHomeTopModel.type);
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                    tempAlarmCount = currentAlarmCount;
-                    //
-                    mHomeTopModels.clear();
-                    if (currentAlarmCount > 0) {
-                        alarmModel.value = tempAlarmCount;
-                        mHomeTopModels.add(alarmModel);
-                    }
-                    if (malfunctionCount > 0) {
-                        malfunctionModel.value = malfunctionCount;
-                        mHomeTopModels.add(malfunctionModel);
-                    }
-                    if (normalCount > 0) {
-                        normalModel.value = normalCount;
-                        mHomeTopModels.add(normalModel);
-                    }
-                    if (lostCount > 0) {
-                        lostModel.value = lostCount;
-                        mHomeTopModels.add(lostModel);
-                    }
-                    if (inactiveCount > 0) {
-                        inactiveModel.value = inactiveCount;
-                        mHomeTopModels.add(inactiveModel);
-                    }
-                    totalMonitorPoint = currentAlarmCount + normalCount + lostCount + inactiveCount + malfunctionCount;
-                    needRefreshHeader = true;
-                }
                 break;
             case Constants.EVENT_DATA_SEARCH_MERCHANT:
                 mContext.runOnUiThread(new Runnable() {
@@ -519,15 +534,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
                     }
                 });
-                break;
-            case Constants.EVENT_DATA_DEVICE_SOCKET_FLUSH:
-                //TODO
-                needFreshAll = true;
-                try {
-                    LogUtils.loge("EVENT_DATA_DEVICE_SOCKET_FLUSH --->> 添加、删除、迁移设备");
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
-                }
                 break;
             case Constants.EVENT_DATA_LOCK_SCREEN_ON:
                 //TODO 暂时不加

@@ -378,6 +378,31 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(EventAlarmStatusModel eventAlarmStatusModel) {
+        //仅在无搜索状态和日历选择时进行刷新
+        if (TextUtils.isEmpty(tempSearch) && !getView().getSearchTextVisible()) {
+            switch (eventAlarmStatusModel.status) {
+                // 做一些预警发生的逻辑
+                case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
+                    handleSocketData(eventAlarmStatusModel.deviceAlarmLogInfo, true);
+                    break;
+                // 做一些预警恢复的逻辑
+                case Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
+                    // 做一些预警被确认的逻辑
+                case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
+                    // 做一些预警被再次确认的逻辑
+                case Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
+                    handleSocketData(eventAlarmStatusModel.deviceAlarmLogInfo, false);
+                    break;
+                default:
+                    // 未知逻辑 可以联系我确认 有可能是bug
+                    handleSocketData(eventAlarmStatusModel.deviceAlarmLogInfo, false);
+                    break;
+            }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
         Object data = eventData.data;
@@ -404,32 +429,6 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 if (TextUtils.isEmpty(tempSearch) && !getView().getSearchTextVisible()) {
                     if (data instanceof DeviceAlarmLogInfo) {
                         freshDeviceAlarmLogInfo((DeviceAlarmLogInfo) data);
-                    }
-                }
-                break;
-            case Constants.EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS:
-                //仅在无搜索状态和日历选择时进行刷新
-                if (TextUtils.isEmpty(tempSearch) && !getView().getSearchTextVisible()) {
-                    if (data instanceof EventAlarmStatusModel) {
-                        EventAlarmStatusModel tempEventAlarmStatusModel = (EventAlarmStatusModel) data;
-                        switch (tempEventAlarmStatusModel.status) {
-                            // 做一些预警发生的逻辑
-                            case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
-                                handleSocketData(tempEventAlarmStatusModel.deviceAlarmLogInfo, true);
-                                break;
-                            // 做一些预警恢复的逻辑
-                            case Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
-                                // 做一些预警被确认的逻辑
-                            case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
-                                // 做一些预警被再次确认的逻辑
-                            case Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
-                                handleSocketData(tempEventAlarmStatusModel.deviceAlarmLogInfo, false);
-                                break;
-                            default:
-                                // 未知逻辑 可以联系我确认 有可能是bug
-                                handleSocketData(tempEventAlarmStatusModel.deviceAlarmLogInfo, false);
-                                break;
-                        }
                     }
                 }
                 break;

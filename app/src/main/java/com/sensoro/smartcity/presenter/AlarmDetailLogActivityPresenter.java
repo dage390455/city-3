@@ -117,6 +117,34 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(EventAlarmStatusModel eventAlarmStatusModel) {
+        if (deviceAlarmLogInfo.get_id().equals(eventAlarmStatusModel.deviceAlarmLogInfo.get_id())) {
+            switch (eventAlarmStatusModel.status) {
+                case Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
+                    // 做一些预警恢复的逻辑
+                case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
+                    // 做一些预警被确认的逻辑
+                case Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
+                    // 做一些预警被再次确认的逻辑
+                    deviceAlarmLogInfo = eventAlarmStatusModel.deviceAlarmLogInfo;
+                    mContext.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (isAttachedView()){
+                                refreshData(false);
+                            }
+
+                        }
+                    });
+                    break;
+                default:
+                    // 未知逻辑 可以联系我确认 有可能是bug
+                    break;
+            }
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
@@ -130,27 +158,6 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                         refreshData(false);
                     }
 
-                }
-                break;
-            case Constants.EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS:
-                if (data instanceof EventAlarmStatusModel) {
-                    EventAlarmStatusModel tempEventAlarmStatusModel = (EventAlarmStatusModel) data;
-                    if (deviceAlarmLogInfo.get_id().equals(tempEventAlarmStatusModel.deviceAlarmLogInfo.get_id())) {
-                        switch (tempEventAlarmStatusModel.status) {
-                            case Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
-                                // 做一些预警恢复的逻辑
-                            case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
-                                // 做一些预警被确认的逻辑
-                            case Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
-                                // 做一些预警被再次确认的逻辑
-                                deviceAlarmLogInfo = tempEventAlarmStatusModel.deviceAlarmLogInfo;
-                                refreshData(false);
-                                break;
-                            default:
-                                // 未知逻辑 可以联系我确认 有可能是bug
-                                break;
-                        }
-                    }
                 }
                 break;
         }

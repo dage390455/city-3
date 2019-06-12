@@ -136,34 +136,24 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onMessageEvent(EventData eventData) {
-        int code = eventData.code;
-        Object data = eventData.data;
-        //
-        switch (code) {
-            case Constants.EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS:
-                if (data instanceof EventAlarmStatusModel) {
-                    EventAlarmStatusModel tempEventAlarmStatusModel = (EventAlarmStatusModel) data;
-                    switch (tempEventAlarmStatusModel.status) {
-                        case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
-                            // 做一些预警发生的逻辑
-                            handleSocketData(tempEventAlarmStatusModel.deviceAlarmLogInfo, true);
-                            break;
-                        case Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
-                            break;
-                        // 做一些预警恢复的逻辑
-                        case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
-                            handleSocketData(tempEventAlarmStatusModel.deviceAlarmLogInfo, false);
-                            break;
-                        // 做一些预警被确认的逻辑
-                        case Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
-                            // 做一些预警被再次确认的逻辑
-                            break;
-                        default:
-                            // 未知逻辑 可以联系我确认 有可能是bug
-                            break;
-                    }
-                }
+    public void onMessageEvent(EventAlarmStatusModel eventAlarmStatusModel) {
+        switch (eventAlarmStatusModel.status) {
+            case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
+                // 做一些预警发生的逻辑
+                handleSocketData(eventAlarmStatusModel.deviceAlarmLogInfo, true);
+                break;
+            case Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
+                break;
+            // 做一些预警恢复的逻辑
+            case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
+                handleSocketData(eventAlarmStatusModel.deviceAlarmLogInfo, false);
+                break;
+            // 做一些预警被确认的逻辑
+            case Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
+                // 做一些预警被再次确认的逻辑
+                break;
+            default:
+                // 未知逻辑 可以联系我确认 有可能是bug
                 break;
         }
     }

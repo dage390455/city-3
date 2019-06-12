@@ -349,10 +349,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                                 try {
                                     DeviceInfo data = RetrofitServiceHelper.getInstance().getGson().fromJson(json,
                                             DeviceInfo.class);
-                                    final EventData eventData = new EventData();
-                                    eventData.code = Constants.EVENT_DATA_SOCKET_DATA_INFO;
-                                    eventData.data = data;
-                                    EventBus.getDefault().post(eventData);
+                                    EventBus.getDefault().post(data);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -389,11 +386,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                                     DeviceAlarmCount deviceAlarmCount = RetrofitServiceHelper.getInstance().getGson().fromJson(json, DeviceAlarmCount.class);
                                     List<DeviceAlarmCount.AllBean> all = deviceAlarmCount.getAll();
                                     DeviceAlarmCount.AllBean allBean = all.get(0);
-                                    AlarmDeviceCountsBean counts = allBean.getCounts();
-                                    final EventData eventData = new EventData();
-                                    eventData.code = Constants.EVENT_DATA_SOCKET_DATA_COUNT;
-                                    eventData.data = counts;
-                                    EventBus.getDefault().post(eventData);
+                                    AlarmDeviceCountsBean alarmDeviceCountsBean = allBean.getCounts();
+                                    EventBus.getDefault().post(alarmDeviceCountsBean);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -437,7 +431,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                                             break;
                                         case "recovery":
                                             // 做一些预警恢复的逻辑
-                                            eventAlarmStatusModel.status =Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY;
+                                            eventAlarmStatusModel.status = Constants.MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY;
                                             break;
                                         case "confirm":
                                             // 做一些预警被确认的逻辑
@@ -451,10 +445,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                                             // 未知逻辑 可以联系我确认 有可能是bug
                                             break;
                                     }
-                                    EventData eventData = new EventData();
-                                    eventData.code = Constants.EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS;
-                                    eventData.data = eventAlarmStatusModel;
-                                    EventBus.getDefault().post(eventData);
+                                    EventBus.getDefault().post(eventAlarmStatusModel);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -477,9 +468,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             try {
                 synchronized (MainPresenter.DeviceFlushListener.class) {
                     //TODO 设备删除做的操作
-                    EventData eventData = new EventData();
-                    eventData.code = Constants.EVENT_DATA_DEVICE_SOCKET_FLUSH;
-                    EventBus.getDefault().post(eventData);
+                    EventBus.getDefault().post(Constants.EVENT_DATA_DEVICE_SOCKET_FLUSH);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -504,10 +493,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                                 throwable.printStackTrace();
                             }
                             MonitorPointOperationTaskResultInfo monitorPointOperationTaskResultInfo = RetrofitServiceHelper.getInstance().getGson().fromJson(json, MonitorPointOperationTaskResultInfo.class);
-                            EventData eventData = new EventData();
-                            eventData.code = Constants.EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT;
-                            eventData.data = monitorPointOperationTaskResultInfo;
-                            EventBus.getDefault().post(eventData);
+                            EventBus.getDefault().post(monitorPointOperationTaskResultInfo);
                         }
                     }
                 }
@@ -731,6 +717,27 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(EventAlarmStatusModel eventAlarmStatusModel) {
+        switch (eventAlarmStatusModel.status) {
+            case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
+            case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
+                mContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isAttachedView()) {
+                            freshAlarmCount();
+                        }
+                    }
+                });
+
+                break;
+            default:
+                break;
+        }
+
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
@@ -755,19 +762,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                 if (data instanceof EventLoginData) {
                     EventLoginData eventLoginData = (EventLoginData) data;
                     changeAccount(eventLoginData);
-                }
-                break;
-            case Constants.EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS:
-                if (data instanceof EventAlarmStatusModel) {
-                    switch (((EventAlarmStatusModel) data).status) {
-                        case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
-                        case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
-                            freshAlarmCount();
-                            break;
-                        default:
-                            break;
-                    }
-
                 }
                 break;
             case Constants.EVENT_DATA_CHECK_MERGE_TYPE_CONFIG_DATA:

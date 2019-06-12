@@ -299,6 +299,24 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(DeviceInfo deviceInfo) {
+        String sn = deviceInfo.getSn();
+        try {
+            if (deployAnalyzerModel.sn.equalsIgnoreCase(sn)) {
+                deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
+                tempSignal = deviceInfo.getSignal();
+                try {
+                    LogUtils.loge(this, "部署页刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + tempSignal);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
         Object data = eventData.data;
@@ -315,26 +333,6 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                     getView().setDeployPosition(checkHasLatLng(), deployAnalyzerModel.address);
                 }
                 getView().updateBtnStatus(canDoOneNextTest());
-                break;
-            case Constants.EVENT_DATA_SOCKET_DATA_INFO:
-                //信号刷新推送
-                if (data instanceof DeviceInfo) {
-                    DeviceInfo deviceInfo = (DeviceInfo) data;
-                    String sn = deviceInfo.getSn();
-                    try {
-                        if (deployAnalyzerModel.sn.equalsIgnoreCase(sn)) {
-                            deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
-                            tempSignal = deviceInfo.getSignal();
-                            try {
-                                LogUtils.loge(this, "部署页刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + tempSignal);
-                            } catch (Throwable throwable) {
-                                throwable.printStackTrace();
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
                 break;
             default:
                 break;

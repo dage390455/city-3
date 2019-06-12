@@ -269,33 +269,22 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(EventData eventData) {
-        int code = eventData.code;
-        Object data = eventData.data;
+    public void onMessageEvent(DeviceInfo deviceInfo) {
         //上报异常结果成功
-        switch (code) {
-            case Constants.EVENT_DATA_SOCKET_DATA_INFO:
-                if (data instanceof DeviceInfo) {
-                    DeviceInfo deviceInfo = (DeviceInfo) data;
-                    String sn = deviceInfo.getSn();
-                    try {
-                        if (deployAnalyzerModel.sn.equalsIgnoreCase(sn)) {
-                            deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
-                            deployAnalyzerModel.signal = deviceInfo.getSignal();
-                            try {
-                                LogUtils.loge(this, "地图也刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + deployAnalyzerModel.signal);
-                            } catch (Throwable throwable) {
-                                throwable.printStackTrace();
-                            }
-                            getView().refreshSignal(deployAnalyzerModel.updatedTime, deployAnalyzerModel.signal);
-                        }
-                    } catch (NullPointerException e) {
-                        e.printStackTrace();
-                    }
+        String sn = deviceInfo.getSn();
+        try {
+            if (deployAnalyzerModel.sn.equalsIgnoreCase(sn)) {
+                deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
+                deployAnalyzerModel.signal = deviceInfo.getSignal();
+                try {
+                    LogUtils.loge(this, "地图也刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + deployAnalyzerModel.signal);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
                 }
-                break;
-            default:
-                break;
+                getView().refreshSignal(deployAnalyzerModel.updatedTime, deployAnalyzerModel.signal);
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
     }
 
