@@ -242,7 +242,7 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     }
 
     @Override
-    public void setDeployResultContinueVisible(boolean isVisible) {
+    public void setDeployResultRightButtonVisible(boolean isVisible) {
         acDeployResultTvContinue.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 

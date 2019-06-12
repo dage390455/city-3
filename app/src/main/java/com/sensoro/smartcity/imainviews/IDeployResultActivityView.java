@@ -37,7 +37,7 @@ public interface IDeployResultActivityView extends IToast, IActivityIntent {
 
     void setDeployResultLeftButtonText(String text);
 
-    void setDeployResultContinueVisible(boolean isVisible);
+    void setDeployResultRightButtonVisible(boolean isVisible);
 
     void setStateTextViewVisible(boolean isVisible);
 

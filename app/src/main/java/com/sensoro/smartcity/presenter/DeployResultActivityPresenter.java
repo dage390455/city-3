@@ -84,12 +84,12 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 switch (deployResultModel.scanType) {
                     case Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
                         getView().setDeployResultLeftButtonText(mContext.getString(R.string.continue_inspection));
-                        getView().setDeployResultContinueVisible(false);
+                        getView().setDeployResultRightButtonVisible(false);
                         break;
                     case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                         //TODO 成功是返回
                         getView().setDeployResultLeftButtonText(mContext.getString(R.string.back));
-                        getView().setDeployResultContinueVisible(false);
+                        getView().setDeployResultRightButtonVisible(false);
                         break;
                     case Constants.TYPE_SCAN_SIGNAL_CHECK:
                         break;
