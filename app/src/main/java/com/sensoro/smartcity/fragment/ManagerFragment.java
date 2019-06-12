@@ -344,14 +344,14 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
 
     @Override
     public void setStationManagerVisible(boolean hasStationList) {
-        line9.setVisibility(hasStationList?View.VISIBLE:View.GONE);
+        line9.setVisibility(hasStationList ? View.VISIBLE : View.GONE);
         fgMainManageLlBasestation.setVisibility(hasStationList ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void setNameplateVisible(boolean hasNameplate) {
-        line10.setVisibility(hasNameplate?View.VISIBLE:View.GONE);
-//        fgMainManageLlNameplate.setVisibility(hasNameplate?View.VISIBLE:View.GONE);
+        line10.setVisibility(hasNameplate ? View.VISIBLE : View.GONE);
+        fgMainManageLlNameplate.setVisibility(hasNameplate ? View.VISIBLE : View.GONE);
     }
 
     @Override
