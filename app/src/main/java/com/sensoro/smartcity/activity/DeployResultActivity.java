@@ -232,12 +232,12 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     }
 
     @Override
-    public void setDeployResultContinueText(String text) {
+    public void setDeployResultRightButtonText(String text) {
         acDeployResultTvContinue.setText(text);
     }
 
     @Override
-    public void setDeployResultBackHomeText(String text) {
+    public void setDeployResultLeftButtonText(String text) {
         acDeployResultTvBackHome.setText(text);
     }
 
@@ -281,7 +281,7 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     }
 
     @Override
-    public void setDeployResultContinueTextBackground(Drawable drawable) {
+    public void setDeployResultRightButtonTextBackground(Drawable drawable) {
         acDeployResultTvContinue.setBackground(drawable);
     }
 
@@ -325,10 +325,10 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_deploy_result_tv_back_home:
-                mPresenter.backHome();
+                mPresenter.doLeftButton();
                 break;
             case R.id.ac_deploy_result_tv_continue:
-                mPresenter.gotoContinue();
+                mPresenter.doRightButton();
                 break;
         }
     }

@@ -33,9 +33,9 @@ public interface IDeployResultActivityView extends IToast, IActivityIntent {
 
     void setStateTextView(String msg);
 
-    void setDeployResultContinueText(String text);
+    void setDeployResultRightButtonText(String text);
 
-    void setDeployResultBackHomeText(String text);
+    void setDeployResultLeftButtonText(String text);
 
     void setDeployResultContinueVisible(boolean isVisible);
 
@@ -51,5 +51,5 @@ public interface IDeployResultActivityView extends IToast, IActivityIntent {
 
     void setDeployResultDividerVisible(boolean isVisible);
 
-    void setDeployResultContinueTextBackground(Drawable drawable);
+    void setDeployResultRightButtonTextBackground(Drawable drawable);
 }

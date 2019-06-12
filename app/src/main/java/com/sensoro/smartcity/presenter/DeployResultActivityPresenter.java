@@ -36,25 +36,25 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         //
         switch (deployResultModel.resultCode) {
             case Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED:
-                getView().setDeployResultContinueText(mContext.getString(R.string.modify_deploy_info));
-                getView().setDeployResultContinueTextBackground(mContext.getResources().getDrawable(R.drawable.shape_bg_corner_f34_shadow));
-                getView().setDeployResultBackHomeText(mContext.getString(R.string.deploy_result_back_home));
+                getView().setDeployResultRightButtonText(mContext.getString(R.string.modify_deploy_info));
+                getView().setDeployResultRightButtonTextBackground(mContext.getResources().getDrawable(R.drawable.shape_bg_corner_f34_shadow));
+                getView().setDeployResultLeftButtonText(mContext.getString(R.string.deploy_result_back_home));
                 break;
             case Constants.DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED:
                 getView().setTitleText(mContext.getString(R.string.scan_code_failed));
                 getView().setStateTextViewVisible(false);
                 switch (deployResultModel.scanType) {
                     case Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
-                        getView().setDeployResultContinueText(mContext.getString(R.string.continue_to_replace));
-                        getView().setDeployResultBackHomeText(mContext.getString(R.string.continue_inspection));
+                        getView().setDeployResultRightButtonText(mContext.getString(R.string.continue_to_replace));
+                        getView().setDeployResultLeftButtonText(mContext.getString(R.string.continue_inspection));
                         break;
                     case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                         //TODO 失败是返回到哪
-                        getView().setDeployResultContinueText(mContext.getString(R.string.continue_to_replace));
-                        getView().setDeployResultBackHomeText(mContext.getString(R.string.back));
+                        getView().setDeployResultRightButtonText(mContext.getString(R.string.continue_to_replace));
+                        getView().setDeployResultLeftButtonText(mContext.getString(R.string.back));
                         break;
                     case Constants.TYPE_SCAN_SIGNAL_CHECK:
-                        getView().setDeployResultContinueText(mContext.getString(R.string.rescan_code));
+                        getView().setDeployResultRightButtonText(mContext.getString(R.string.rescan_code));
                         break;
                 }
                 break;
@@ -65,16 +65,16 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 switch (deployResultModel.scanType) {
                     case Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
 
-                        getView().setDeployResultContinueText(mContext.getString(R.string.continue_to_replace));
-                        getView().setDeployResultBackHomeText(mContext.getString(R.string.continue_inspection));
+                        getView().setDeployResultRightButtonText(mContext.getString(R.string.continue_to_replace));
+                        getView().setDeployResultLeftButtonText(mContext.getString(R.string.continue_inspection));
                         break;
                     case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                         //TODO 失败是返回到哪
-                        getView().setDeployResultContinueText(mContext.getString(R.string.continue_to_replace));
-                        getView().setDeployResultBackHomeText(mContext.getString(R.string.back));
+                        getView().setDeployResultRightButtonText(mContext.getString(R.string.continue_to_replace));
+                        getView().setDeployResultLeftButtonText(mContext.getString(R.string.back));
                         break;
                     case Constants.TYPE_SCAN_SIGNAL_CHECK:
-                        getView().setDeployResultContinueText(mContext.getString(R.string.rescan_code));
+                        getView().setDeployResultRightButtonText(mContext.getString(R.string.rescan_code));
                         getView().setTitleText(mContext.getString(R.string.scan_code_failed));
                         break;
                 }
@@ -83,12 +83,12 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 //成功
                 switch (deployResultModel.scanType) {
                     case Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
-                        getView().setDeployResultBackHomeText(mContext.getString(R.string.continue_inspection));
+                        getView().setDeployResultLeftButtonText(mContext.getString(R.string.continue_inspection));
                         getView().setDeployResultContinueVisible(false);
                         break;
                     case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                         //TODO 成功是返回
-                        getView().setDeployResultBackHomeText(mContext.getString(R.string.back));
+                        getView().setDeployResultLeftButtonText(mContext.getString(R.string.back));
                         getView().setDeployResultContinueVisible(false);
                         break;
                     case Constants.TYPE_SCAN_SIGNAL_CHECK:
@@ -533,7 +533,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         EventBus.getDefault().post(eventData);
     }
 
-    public void gotoContinue() {
+    public void doRightButton() {
         EventData eventData = new EventData();
         eventData.code = Constants.EVENT_DATA_DEPLOY_RESULT_CONTINUE;
         switch (deployResultModel.resultCode) {
@@ -560,7 +560,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         getView().finishAc();
     }
 
-    public void backHome() {
+    public void doLeftButton() {
         EventData eventData = new EventData();
         if (deployResultModel.scanType == Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE || deployResultModel.scanType == Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE) {
             //todo 部署失败，返回巡检
