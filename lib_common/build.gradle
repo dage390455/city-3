@@ -34,14 +34,12 @@ android {
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     //
-    //
     api deps.support.app_compat
     api deps.support.multidex
     api deps.support.recyclerview
     api deps.support.design
     api deps.support.cardview
     api deps.support.constraint_layout
-    //
     //
     api deps.permission
     //
@@ -72,14 +70,14 @@ dependencies {
     api(deps.immersionbar) {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
-    api 'com.baidu.mobstat:mtj-sdk-circle:latest.integration'
-
+    //七牛sdk
     api 'com.qiniu:qiniu-android-sdk:7.3.+'
-
-    //统计
+    //微信
     api 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
+    //bugly
     api 'com.tencent.bugly:nativecrashreport:latest.release'
     api 'com.tencent.bugly:crashreport_upgrade:latest.release'
+    //百度统计
     api 'com.baidu.mobstat:mtj-sdk-circle:latest.integration'
 
     androidTestImplementation deps.support.test_espresso

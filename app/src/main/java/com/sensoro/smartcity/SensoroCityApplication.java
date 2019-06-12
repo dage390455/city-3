@@ -56,10 +56,6 @@ public class SensoroCityApplication extends BaseApplication implements Repause
     public AMapLocationClient mLocationClient;
     public BLEDeviceManager bleDeviceManager;
 
-//    static {
-//        initSmartRefresh();
-//    }
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -261,7 +257,6 @@ public class SensoroCityApplication extends BaseApplication implements Repause
         OCR.getInstance(getApplicationContext()).initAccessTokenWithAkSk(this, getApplicationContext(),
                 "D1T3OGkU9CzoVaEBnQ8ie2xG", "YD1WmK9CG2TVUDwt2MuT2XswNkimCEf7");
     }
-
 
 
     private void initImagePicker() {

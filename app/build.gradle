@@ -260,8 +260,6 @@ dependencies {
         transitive = true
     }
     //
-    implementation 'com.qiniu:qiniu-android-sdk:7.3.+'
-    //
     implementation project(':indicatorseekbar')
     //
     implementation('com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.3') {
@@ -274,7 +272,6 @@ dependencies {
         exclude group: "com.amap.api"
     }
     //播放器
-//    implementation files('libs/player.jar')
     implementation project(path: ':gsyVideoPlayer-base')
     implementation project(path: ':gsyVideoPlayer-proxy_cache')
     implementation project(path: ':gsyVideoPlayer-java')
@@ -283,7 +280,7 @@ dependencies {
     if (!isModule.toBoolean()) {
         implementation project(':nameplate')
     }
-//    implementation "com.afollestad.material-dialogs:core:0.9.1.0"
+    //个推
     implementation deps.getui
     //3D地图so及jar
     implementation deps.amap_3dmap
