@@ -77,7 +77,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                         getView().setDeployResultRightButtonText(mContext.getString(R.string.rescan_code));
                         getView().setTitleText(mContext.getString(R.string.scan_code_failed));
                         break;
-                    case Constants.EVENT_DATA_SEARCH_NAMEPLAGE:
+                    case Constants.EVENT_DATA_SEARCH_NAMEPLATE:
                         getView().setDeployResultRightButtonText(mContext.getString(R.string.rescan_code));
                         getView().setTitleText(mContext.getString(R.string.scan_code_failed));
                         break;

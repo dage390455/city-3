@@ -245,7 +245,7 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
 
     public void doScanSearch() {
         Bundle bundle1 = new Bundle();
-        bundle1.putInt(EXTRA_SCAN_ORIGIN_TYPE, Constants.EVENT_DATA_SEARCH_NAMEPLAGE);
+        bundle1.putInt(EXTRA_SCAN_ORIGIN_TYPE, Constants.EVENT_DATA_SEARCH_NAMEPLATE);
         startActivity(ARouterConstants.ACTIVITY_SCAN, bundle1, mContext);
     }
 

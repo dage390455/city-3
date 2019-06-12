@@ -68,7 +68,7 @@ public class DeployAnalyzerUtils {
      * @param nameplateId
      * @param listener
      */
-    public void handlerDeployAnalyzerResult(int scanType, BasePresenter presenter, final String result, final Activity activity, String nameplateId, final OnDeployAnalyzerListener listener) {
+    public void handlerDeployAnalyzerResult(int scanType, boolean needAssociate, BasePresenter presenter, final String result, final Activity activity, String nameplateId, final OnDeployAnalyzerListener listener) {
         if (TextUtils.isEmpty(result)) {
             listener.onError(0, null, activity.getResources().getString(R.string.please_re_scan_try_again));
             return;
@@ -142,7 +142,18 @@ public class DeployAnalyzerUtils {
                                     listener.onError(0, intent, null);
                                 } else {
                                     //在账户下 即可关联
-                                    nameplateAssociateDevice(nameplateId, finalScanSerialNumber, listener, activity, presenter);
+                                    if (needAssociate) {
+                                        nameplateAssociateDevice(nameplateId, finalScanSerialNumber, listener, activity, presenter);
+                                    } else {
+                                        //目前只取需要的字段
+                                        DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
+                                        deployAnalyzerModel.sn = sn;
+                                        deployAnalyzerModel.deviceType = data.getDeviceType();
+                                        deployAnalyzerModel.nameAndAddress = data.getName();
+                                        Intent intent = new Intent();
+                                        intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+                                        listener.onSuccess(intent);
+                                    }
                                 }
                             }
 
@@ -178,7 +189,7 @@ public class DeployAnalyzerUtils {
         }
         switch (scanType) {
             //搜索铭牌
-            case Constants.EVENT_DATA_SEARCH_NAMEPLAGE:
+            case Constants.EVENT_DATA_SEARCH_NAMEPLATE:
                 if (result.startsWith("http")) {
                     try {
                         String nameplateId = result.substring(result.length() - 24);

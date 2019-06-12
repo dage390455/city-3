@@ -57,7 +57,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
     private void updateTitle() {
         switch (scanType) {
 
-            case Constants.EVENT_DATA_SEARCH_NAMEPLAGE:
+            case Constants.EVENT_DATA_SEARCH_NAMEPLATE:
                 getView().updateTitleText(mContext.getString(R.string.search_nameplate));
                 getView().updateQrTipText(mContext.getString(R.string.device_nameplate_tip));
                 getView().setScanTvInputSnVisible(false);
@@ -152,23 +152,53 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
     public void processResult(String result) {
         playVoice();
         getView().showProgressDialog();
+        switch (scanType) {
+            //铭牌详情扫码关联
+            case Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATE_DEVICE:
+                String nameplateId = mContext.getIntent().getStringExtra("nameplateId");
+                if (!TextUtils.isEmpty(nameplateId)) {
+                    DeployAnalyzerUtils.getInstance().handlerDeployAnalyzerResult(scanType, true, this, result, mContext, nameplateId, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
+                        @Override
+                        public void onSuccess(Intent intent) {
+                            getView().dismissProgressDialog();
+                            //更新列表，关闭界面
+                            EventData data = new EventData(Constants.EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL);
+                            EventBus.getDefault().post(data);
+                            getView().finishAc();
+                        }
 
-
-        if (scanType == Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATE_DEVICE) {
-
-            String nameplateId = mContext.getIntent().getStringExtra("nameplateId");
-
-            if (!TextUtils.isEmpty(nameplateId)) {
-
-
-                DeployAnalyzerUtils.getInstance().handlerDeployAnalyzerResult(scanType, this, result, mContext, nameplateId, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
+                        @Override
+                        public void onError(int errType, Intent intent, String errMsg) {
+                            getView().dismissProgressDialog();
+                            if (intent != null) {
+                                getView().startAC(intent);
+                            } else {
+                                getView().toastShort(errMsg);
+                                getView().startScan();
+                            }
+                        }
+                    });
+                }
+                break;
+            //铭牌部署扫码关联传感器
+            case Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY:
+                DeployAnalyzerUtils.getInstance().handlerDeployAnalyzerResult(scanType, true, this, result, mContext, null, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
                     @Override
                     public void onSuccess(Intent intent) {
                         getView().dismissProgressDialog();
-                        //更新列表，关闭界面
-                        EventData data = new EventData(Constants.EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL);
-                        EventBus.getDefault().post(data);
-                        getView().finishAc();
+                        //
+                        Serializable serializableExtra = intent.getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
+                        if (serializableExtra instanceof DeployAnalyzerModel) {
+                            DeployAnalyzerModel model = (DeployAnalyzerModel) serializableExtra;
+                            NamePlateInfo namePlateInfo = new NamePlateInfo();
+                            namePlateInfo.setSn(model.sn);
+                            namePlateInfo.setDeviceType(model.deviceType);
+                            namePlateInfo.setName(model.nameAndAddress);
+                            EventData data = new EventData(Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY);
+                            data.data = namePlateInfo;
+                            EventBus.getDefault().post(data);
+                            getView().finishAc();
+                        }
                     }
 
                     @Override
@@ -182,73 +212,49 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                         }
                     }
                 });
-            }
-
-        } else {
-
-
-            DeployAnalyzerUtils.getInstance().handlerDeployAnalyzerResult(this, scanType, result, mContext, mTaskInfo, mDeviceDetail, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
-                @Override
-                public void onSuccess(Intent intent) {
-                    getView().dismissProgressDialog();
-                    if (intent != null && !TextUtils.isEmpty(intent.getStringExtra(ARouterConstants.AROUTER_PATH))) {
-                        Serializable serializableExtra = intent.getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
-                        if (serializableExtra instanceof DeployAnalyzerModel) {
-                            DeployAnalyzerModel model = (DeployAnalyzerModel) serializableExtra;
-                            if (model.deployNameplateFlag != null && model.deployNameplateFlag) {
-                                startActivity(ARouter.getInstance().build(ARouterConstants.ACTIVITY_NAMEPLATE_DETAIL).withString("nameplateId", model.sn), mContext);
-                            } else {
-
-                                //搜索铭牌，未部署
-                                if (scanType == Constants.EVENT_DATA_SEARCH_NAMEPLAGE) {
-                                    getView().toastShort(mContext.getResources().getString(R.string.The_nameplate_is_not_deployed));
-                                    getView().startScan();
-
+                break;
+            default:
+                //默认认为是部署相关
+                DeployAnalyzerUtils.getInstance().handlerDeployAnalyzerResult(this, scanType, result, mContext, mTaskInfo, mDeviceDetail, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
+                    @Override
+                    public void onSuccess(Intent intent) {
+                        getView().dismissProgressDialog();
+                        if (intent != null && !TextUtils.isEmpty(intent.getStringExtra(ARouterConstants.AROUTER_PATH))) {
+                            Serializable serializableExtra = intent.getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
+                            if (serializableExtra instanceof DeployAnalyzerModel) {
+                                DeployAnalyzerModel model = (DeployAnalyzerModel) serializableExtra;
+                                if (model.deployNameplateFlag != null && model.deployNameplateFlag) {
+                                    startActivity(ARouter.getInstance().build(ARouterConstants.ACTIVITY_NAMEPLATE_DETAIL).withString("nameplateId", model.sn), mContext);
                                 } else {
-                                    startActivity(ARouter.getInstance().build(ARouterConstants.ACTIVITY_DEPLOY_NAMEPLATE).withString("nameplateId", model.sn), mContext);
+                                    //搜索铭牌，未部署
+                                    if (scanType == Constants.EVENT_DATA_SEARCH_NAMEPLATE) {
+                                        getView().toastShort(mContext.getResources().getString(R.string.The_nameplate_is_not_deployed));
+                                        getView().startScan();
+                                    } else {
+                                        startActivity(ARouter.getInstance().build(ARouterConstants.ACTIVITY_DEPLOY_NAMEPLATE).withString("nameplateId", model.sn), mContext);
+                                    }
                                 }
+                            } else {
+                                getView().toastShort(mContext.getResources().getString(R.string.please_re_scan_try_again));
                             }
                         } else {
-                            getView().toastShort("error");
+                            getView().startAC(intent);
                         }
-                    } else if (scanType == Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY) {
-                        Serializable serializableExtra = intent.getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
-
-                        if (serializableExtra instanceof DeployAnalyzerModel) {
-                            DeployAnalyzerModel model = (DeployAnalyzerModel) serializableExtra;
-
-                            NamePlateInfo namePlateInfo = new NamePlateInfo();
-
-                            namePlateInfo.setSn(model.sn);
-                            namePlateInfo.setDeviceType(model.deviceType);
-                            namePlateInfo.setName(model.nameAndAddress);
-
-
-                            EventData data = new EventData(Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY);
-                            data.data = namePlateInfo;
-                            EventBus.getDefault().post(data);
-                            getView().finishAc();
-
-                        }
-
-
-                    } else {
-                        getView().startAC(intent);
-                    }
 //
-                }
-
-                @Override
-                public void onError(int errType, Intent intent, String errMsg) {
-                    getView().dismissProgressDialog();
-                    if (intent != null) {
-                        getView().startAC(intent);
-                    } else {
-                        getView().toastShort(errMsg);
-                        getView().startScan();
                     }
-                }
-            });
+
+                    @Override
+                    public void onError(int errType, Intent intent, String errMsg) {
+                        getView().dismissProgressDialog();
+                        if (intent != null) {
+                            getView().startAC(intent);
+                        } else {
+                            getView().toastShort(errMsg);
+                            getView().startScan();
+                        }
+                    }
+                });
+                break;
         }
     }
 
