@@ -189,6 +189,7 @@
     <string name="no_photos_added">未添加照片</string>
     <string name="continue_to_replace">继续更换</string>
     <string name="continue_inspection">继续巡检</string>
+    <string name="continue_associate">继续关联</string>
     <string name="rescan_code">重新扫码</string>
     <string name="scan_code_failed">扫码失败</string>
     <string name="failed">失败</string>
@@ -1085,7 +1086,7 @@
     <string name="add_sensor">添加传感器</string>
     <string name="delete">删除</string>
     <string name="sensor_name_sn_tag">传感器名称/编号/标签</string>
-    <string name="add">添加</string>
+    <string name="add">关联</string>
     <string name="select_all">全选</string>
     <string name="selected">已选择:</string>
 

@@ -1,7 +1,9 @@
 package com.sensoro.nameplate.widget;
 
 import android.app.Activity;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -9,9 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.widgets.CustomCornerDialog;
+import com.sensoro.common.widgets.MaxHeightRecyclerView;
 import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.adapter.AssociationSensorDialogAdapter;
-import com.sensoro.nameplate.model.AddSensorModel;
 
 import java.util.List;
 
@@ -20,7 +22,7 @@ public class AssociationSensorConfirmDialogUtil {
     private final ImageView mIvClose;
     private final TextView mTvCancel;
     private final TextView mTvConfirm;
-    private final RecyclerView mRvContent;
+    private final MaxHeightRecyclerView mRvContent;
     private final CustomCornerDialog mDialog;
     private final TextView mTvCount;
     private AssociationSensorDialogAdapter mAdapter;
@@ -34,7 +36,9 @@ public class AssociationSensorConfirmDialogUtil {
     public AssociationSensorConfirmDialogUtil(Activity activity) {
         mActivity = activity;
         final View view = View.inflate(activity, R.layout.item_dialog_association_sensor_confirm, null);
-
+        WindowManager m = mActivity.getWindow().getWindowManager();
+        Display d = m.getDefaultDisplay();
+        int maxHeight = (int) (d.getHeight() * 0.35);
         mIvClose = view.findViewById(R.id.iv_close_item_dialog_associate_sensor_confirm);
         mTvCancel = view.findViewById(R.id.tv_cancel_item_dialog_associate_sensor_confirm);
         mTvConfirm = view.findViewById(R.id.tv_confirm_item_dialog_associate_sensor_confirm);
@@ -43,10 +47,16 @@ public class AssociationSensorConfirmDialogUtil {
 
         mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view, true);
 
-        MaxHeightLinearLayoutManager manager = new MaxHeightLinearLayoutManager(mActivity, RecyclerView.VERTICAL,false);
+        MaxHeightLinearLayoutManager manager = new MaxHeightLinearLayoutManager(mActivity, RecyclerView.VERTICAL, false);
         mAdapter = new AssociationSensorDialogAdapter(mActivity);
         mRvContent.setLayoutManager(manager);
         mRvContent.setAdapter(mAdapter);
+        mRvContent.setMaxHeight(maxHeight);
+
+
+
+
+
 
         mIvClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,13 +82,14 @@ public class AssociationSensorConfirmDialogUtil {
         });
     }
 
-   public void setOnListener(OnListener listener){
+    public void setOnListener(OnListener listener) {
         mListener = listener;
-   }
+    }
 
-   public interface OnListener{
+    public interface OnListener {
         void onConfirm();
-   }
+    }
+
     public boolean isShowing() {
         if (mDialog != null) {
             return mDialog.isShowing();

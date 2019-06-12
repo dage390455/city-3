@@ -99,6 +99,8 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
                     deployNameplateModel.bindList = (ArrayList<NamePlateInfo>) eventData.data;
                     getView().setAssociateSensorSize(deployNameplateModel.bindList.size());
                 }
+
+                break;
             case Constants.EVENT_DATA_DEPLOY_RESULT_CONTINUE:
                 getView().finishAc();
             case Constants.EVENT_DATA_DEPLOY_CHANGE_RESULT_CONTINUE:

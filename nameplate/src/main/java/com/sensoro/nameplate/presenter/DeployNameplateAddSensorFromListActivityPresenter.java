@@ -224,9 +224,6 @@ public class DeployNameplateAddSensorFromListActivityPresenter extends BasePrese
                 MergeTypeStyles mergeTypeStyles = PreferencesHelper.getInstance().getConfigMergeType(mergeType);
                 if (mergeTypeStyles != null) {
                     datum.deviceTypeName = mergeTypeStyles.getName();
-                    if (!TextUtils.isEmpty(category)) {
-                        datum.deviceTypeName = datum.deviceTypeName + category;
-                    }
                     if (TextUtils.isEmpty(mergeTypeStyles.getImage())) {
                         datum.iconUrl = "";
                     } else {

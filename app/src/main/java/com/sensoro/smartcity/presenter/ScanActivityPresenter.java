@@ -64,6 +64,10 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
 
                 break;
             case Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATE_DEVICE:
+            case Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY:
+                getView().updateTitleText(mContext.getString(R.string.associated_sensor));
+                getView().updateQrTipText(mContext.getString(R.string.device_nameplate_tip));
+                break;
             case Constants.TYPE_SCAN_DEPLOY_STATION:
             case Constants.TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
@@ -210,7 +214,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                     } else if (scanType == Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY) {
                         Serializable serializableExtra = intent.getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
 
-                        if (null != serializableExtra && (serializableExtra instanceof DeployAnalyzerModel)) {
+                        if (serializableExtra instanceof DeployAnalyzerModel) {
                             DeployAnalyzerModel model = (DeployAnalyzerModel) serializableExtra;
 
                             NamePlateInfo namePlateInfo = new NamePlateInfo();

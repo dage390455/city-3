@@ -1,6 +1,7 @@
 package com.sensoro.nameplate.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,6 +75,7 @@ public class AddedSensorAdapter extends RecyclerView.Adapter<AddedSensorAdapter.
             holder.tvDeviceNameItemAdapterAddedSensor.setText("");
 
         }
+        holder.ivIconItemAdapterAddedSensor.setColorFilter(Color.parseColor("#a6a6a6"));
 
 
         Glide.with(mContext)

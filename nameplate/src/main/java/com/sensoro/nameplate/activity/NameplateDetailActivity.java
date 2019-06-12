@@ -235,7 +235,7 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     }
 
 
-    @OnClick({R2.id.include_text_title_imv_arrows_left, R2.id.tv_nameplate_qrcode, R2.id.tv_nameplate_edit, R2.id.tv_nameplate_associated_new_sensor})
+    @OnClick({R2.id.return_top_include, R2.id.include_text_title_imv_arrows_left, R2.id.tv_nameplate_qrcode, R2.id.tv_nameplate_edit, R2.id.tv_nameplate_associated_new_sensor})
     public void onViewClicked(View view) {
         int id = view.getId();
         if (R.id.include_text_title_imv_arrows_left == id) {
@@ -254,8 +254,10 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
                     mPresenter.doNesSensor(position);
                 }
             }, options, getResources().getString(R.string.association_sensort)).show();
-        } else {
-
+        } else if (id == R.id.return_top_include) {
+            rvNameplateAssociatedSensor.smoothScrollToPosition(0);
+            returnTopInclude.setVisibility(GONE);
+            refreshLayout.closeHeaderOrFooter();
         }
     }
 

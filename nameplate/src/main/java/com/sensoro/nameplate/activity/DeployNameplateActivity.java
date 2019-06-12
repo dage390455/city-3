@@ -196,9 +196,9 @@ public class DeployNameplateActivity extends BaseActivity<IDeployNameplateActivi
     @Override
     public void setUploadStatus(boolean isUpload) {
         if (isUpload) {
-            tvUploadAcDeployNameplate.setClickable(true);
+            tvUploadAcDeployNameplate.setEnabled(true);
         } else {
-            tvUploadAcDeployNameplate.setClickable(false);
+            tvUploadAcDeployNameplate.setEnabled(false);
 
         }
         tvUploadAcDeployNameplate.setBackgroundResource(isUpload ? R.drawable.shape_bg_corner_4_29c_shadow : R.drawable.shape_bg_corner_4_dfdf_shadow);

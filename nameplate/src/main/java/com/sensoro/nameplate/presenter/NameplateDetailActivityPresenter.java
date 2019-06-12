@@ -64,7 +64,11 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
 
 
             RetrofitServiceHelper.getInstance().getBaseUrlType();
-            String s = RetrofitServiceHelper.getInstance().BASE_URL + "/nameplate/" + nameplateId;
+
+            String baseUrl = RetrofitServiceHelper.getInstance().BASE_URL;
+            String replace = baseUrl.replace("-api", "");
+
+            String s = replace + "/nameplate/" + nameplateId;
             getView().setQrCodeUrl(s);
 
             getNameplateDetail();
@@ -236,9 +240,6 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
                 MergeTypeStyles mergeTypeStyles = PreferencesHelper.getInstance().getConfigMergeType(mergeType);
                 if (mergeTypeStyles != null) {
                     model.deviceTypeName = mergeTypeStyles.getName();
-                    if (!TextUtils.isEmpty(category)) {
-                        model.deviceTypeName = model.deviceTypeName + category;
-                    }
                     if (TextUtils.isEmpty(mergeTypeStyles.getImage())) {
                         model.iconUrl = "";
                     } else {

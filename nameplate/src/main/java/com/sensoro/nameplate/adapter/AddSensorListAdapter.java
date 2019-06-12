@@ -1,6 +1,7 @@
 package com.sensoro.nameplate.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,6 @@ import com.bumptech.glide.Glide;
 import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.R2;
-import com.sensoro.nameplate.model.AddSensorModel;
 
 import java.util.ArrayList;
 
@@ -66,6 +66,9 @@ public class AddSensorListAdapter extends RecyclerView.Adapter<AddSensorListAdap
                 .error(R.drawable.ic_default_image)
                 .placeholder(R.drawable.ic_default_image)
                 .into(holder.ivIconItemAdapterAddSensorList);
+
+        holder.ivIconItemAdapterAddSensorList.setColorFilter(Color.parseColor("#a6a6a6"));
+
         holder.ivStatusItemAdapterAddSensorList.setImageResource(model.isCheck ? R.mipmap.radio_btn_checked : R.mipmap.radio_btn_unchecked);
     }
 

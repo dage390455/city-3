@@ -77,6 +77,18 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                         getView().setDeployResultRightButtonText(mContext.getString(R.string.rescan_code));
                         getView().setTitleText(mContext.getString(R.string.scan_code_failed));
                         break;
+                    case Constants.EVENT_DATA_SEARCH_NAMEPLAGE:
+                        getView().setDeployResultRightButtonText(mContext.getString(R.string.rescan_code));
+                        getView().setTitleText(mContext.getString(R.string.scan_code_failed));
+                        break;
+                    case Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY://铭牌部署扫码关联传感器
+
+                    case Constants.TYPE_SCAN_NAMEPLATE_ASSOCIATE_DEVICE:
+                        getView().setDeployResultRightButtonText(mContext.getString(R.string.continue_associate));
+                        getView().setTitleText(mContext.getString(R.string.scan_code_failed));
+                        break;
+
+
                 }
                 break;
             case Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS:

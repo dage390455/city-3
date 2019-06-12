@@ -247,6 +247,7 @@
         android:layout_marginBottom="20dp"
         android:background="@drawable/shape_bg_corner_4_dfdf_shadow"
         android:clickable="false"
+        android:enabled="false"
         android:gravity="center"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
