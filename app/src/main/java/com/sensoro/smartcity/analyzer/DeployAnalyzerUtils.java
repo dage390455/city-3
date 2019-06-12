@@ -160,13 +160,31 @@ public class DeployAnalyzerUtils {
                 //设备部署
             case Constants.TYPE_SCAN_DEPLOY_DEVICE:
                 if (result.startsWith("http")) {
-                    try {
-                        String nameplateId = result.substring(result.length() - 24);
-                        handleNameplate(presenter, nameplateId, activity, listener);
-                    } catch (Exception e) {
-                        listener.onError(0, null, activity.getResources().getString(R.string.please_re_scan_try_again));
+                    if (PreferencesHelper.getInstance().getUserData().hasNameplateDeploy) {
+                        try {
+                            String nameplateId = result.substring(result.lastIndexOf("/") + 1);
+                            handleNameplate(presenter, nameplateId, activity, listener);
+                        } catch (Exception e) {
+                            listener.onError(0, null, activity.getResources().getString(R.string.please_re_scan_try_again));
+                        }
+                    } else {
+                        //无权限不在账户下
+                        Intent intent = new Intent();
+                        intent.setClass(activity, DeployResultActivity.class);
+                        DeployResultModel deployResultModel = new DeployResultModel();
+                        deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
+                        //
+                        String sn = result;
+                        try {
+                            sn = result.substring(result.lastIndexOf("/") + 1);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        deployResultModel.sn = sn;
+                        deployResultModel.scanType = Constants.TYPE_SCAN_NAMEPLATE_DEPLOY;
+                        intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                        listener.onError(0, intent, null);
                     }
-
                 } else {
                     String scanSerialNumber = parseResultMac(result);
                     if (TextUtils.isEmpty(scanSerialNumber)) {

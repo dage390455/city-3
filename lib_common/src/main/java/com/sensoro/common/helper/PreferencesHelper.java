@@ -80,7 +80,8 @@ public final class PreferencesHelper implements Constants {
         }
         //
         editor.putBoolean(EXTRA_IS_SPECIFIC, eventLoginData.isSupperAccount);
-        editor.putBoolean(EXTRA_GRANTS_HAS_STATION, eventLoginData.hasStation);
+        editor.putBoolean(EXTRA_GRANTS_HAS_STATION_DEPLOY, eventLoginData.hasStationDeploy);
+        editor.putBoolean(EXTRA_GRANTS_HAS_STATION_LIST, eventLoginData.hasStationList);
         editor.putBoolean(EXTRA_GRANTS_HAS_CONTRACT, eventLoginData.hasContract);
         editor.putBoolean(EXTRA_GRANTS_HAS_CONTRACT_CREATE, eventLoginData.hasContractCreate);
         editor.putBoolean(EXTRA_GRANTS_HAS_CONTRACT_MODIFY, eventLoginData.hasContractModify);
@@ -126,7 +127,8 @@ public final class PreferencesHelper implements Constants {
             String phone = sp.getString(EXTRA_PHONE, null);
             String roles = sp.getString(EXTRA_USER_ROLES, null);
             boolean isSupperAccount = sp.getBoolean(EXTRA_IS_SPECIFIC, false);
-            boolean hasStation = sp.getBoolean(EXTRA_GRANTS_HAS_STATION, false);
+            boolean hasStationDeploy = sp.getBoolean(EXTRA_GRANTS_HAS_STATION_DEPLOY, false);
+            boolean hasStationList = sp.getBoolean(EXTRA_GRANTS_HAS_STATION_LIST, false);
             boolean hasContract = sp.getBoolean(EXTRA_GRANTS_HAS_CONTRACT, false);
             boolean hasContractCreate = sp.getBoolean(EXTRA_GRANTS_HAS_CONTRACT_CREATE, false);
             boolean hasContractModify = sp.getBoolean(EXTRA_GRANTS_HAS_CONTRACT_MODIFY, false);
@@ -162,7 +164,8 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasSubMerchant = hasSubMerchant;
             eventLoginData.hasMerchantChange = hasMerchantChange;
             eventLoginData.isSupperAccount = isSupperAccount;
-            eventLoginData.hasStation = hasStation;
+            eventLoginData.hasStationDeploy = hasStationDeploy;
+            eventLoginData.hasStationList = hasStationList;
             eventLoginData.hasContract = hasContract;
             eventLoginData.hasContractCreate = hasContractCreate;
             eventLoginData.hasContractModify = hasContractModify;

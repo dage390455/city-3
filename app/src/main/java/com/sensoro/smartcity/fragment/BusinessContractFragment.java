@@ -241,7 +241,7 @@ public class BusinessContractFragment extends BaseFragment<IBusinessContractView
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         setSiteNature(sites.get(position));
                     }
-                }, sites);
+                }, sites, getResources().getString(R.string.contract_info_site_nature));
                 break;
             case R.id.iv_contract_age_del:
                 contractAgeAddOrSubtract(etContractAge,false);

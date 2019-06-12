@@ -458,7 +458,7 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
             bundle.putStringArrayList(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
         }
 
-        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_TAG,bundle,mContext);
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_TAG, bundle, mContext);
     }
 
     public void doSettingPhoto() {
@@ -467,7 +467,7 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
             bundle.putSerializable(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
         }
         bundle.putString(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, "deploy_camera");
-        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_PIC,bundle,mContext);
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_PIC, bundle, mContext);
 
 //        Intent intent = new Intent(mContext, DeployMonitorDeployPicActivity.class);
 //        if (getRealImageSize() > 0) {
@@ -718,7 +718,7 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
                 getView().setUploadBtnStatus(checkCanUpload());
 
             }
-        }, strings);
+        }, strings, mContext.getResources().getString(R.string.deploy_camera_sets_lens_orientation));
     }
 
     //处理安装方式
@@ -735,7 +735,7 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
                 getView().setDeployMethod(method);
                 getView().setUploadBtnStatus(checkCanUpload());
             }
-        }, strings);
+        }, strings, mContext.getResources().getString(R.string.deploy_camera_install_method));
     }
 
     public void doDeployCameraLive() {

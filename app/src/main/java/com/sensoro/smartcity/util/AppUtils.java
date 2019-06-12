@@ -20,7 +20,6 @@ import android.os.RemoteException;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -32,9 +31,9 @@ import com.amap.api.maps.model.LatLng;
 import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.server.bean.AlarmInfo;
 import com.sensoro.common.utils.GPSUtil;
+import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.common.widgets.SelectDialog;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -425,7 +424,7 @@ public class AppUtils {
         editText.setCursorVisible(false);
     }
 
-    public static void dismissInputMethodManager(Context context, EditText editText,boolean cursorVisible) {
+    public static void dismissInputMethodManager(Context context, EditText editText, boolean cursorVisible) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);//从控件所在的窗口中隐藏
         editText.setCursorVisible(cursorVisible);
@@ -672,10 +671,10 @@ public class AppUtils {
     /**
      * 合同选择场地性质dialog
      */
-    public static SelectDialog showDialog(Activity activity, SelectDialog.SelectDialogListener listener, List<String> items) {
+    public static SelectDialog showDialog(Activity activity, SelectDialog.SelectDialogListener listener, List<String> items, String title) {
         SelectDialog dialog = new SelectDialog(activity, R.style
                 .transparentFrameWindowStyle,
-                listener, items);
+                listener, items, title);
         if (!activity.isFinishing()) {
             dialog.show();
         }

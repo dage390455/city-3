@@ -1113,5 +1113,8 @@
     <string name="associated_sensor_fail">关联传感器失败</string>
     <string name="qr_code_nameplate">二维码铭牌</string>
     <string name="nameplate_sn">铭牌编号：</string>
+    <string name="association_sensort">关联传感器</string>
+    <string name="sweep_code_associated">扫码关联</string>
+    <string name="sensor_list">传感器列表中关联</string>
 
 </resources>

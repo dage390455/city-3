@@ -60,7 +60,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 break;
             case Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT:
                 //失败
-                getView().setTitleText(mContext.getString(R.string.scan_code_failed));
+//                getView().setTitleText(mContext.getString(R.string.scan_code_failed));
                 getView().setStateTextViewVisible(false);
                 switch (deployResultModel.scanType) {
                     case Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:

@@ -2,8 +2,10 @@ package com.sensoro.smartcity.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -241,7 +243,7 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         setSiteNature(sites.get(position));
                     }
-                }, sites);
+                }, sites, getResources().getString(R.string.contract_info_site_nature));
                 break;
             case R.id.iv_contract_age_del:
                 contractAgeAddOrSubtract(etContractAge, false);

@@ -130,9 +130,12 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
 
             @Override
             public void onCompleted(ResponseResult<NamePlateInfo> namePlateInfoResponse) {
+                getView().dismissProgressDialog();
 
-                namePlateInfo = namePlateInfoResponse.getData();
-                getView().updateTopDetail(namePlateInfo);
+                if (null != namePlateInfoResponse) {
+                    namePlateInfo = namePlateInfoResponse.getData();
+                    getView().updateTopDetail(namePlateInfo);
+                }
             }
 
             @Override

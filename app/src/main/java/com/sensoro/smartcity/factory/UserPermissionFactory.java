@@ -28,7 +28,8 @@ public class UserPermissionFactory {
         eventLoginData.roles = userInfo.getRoles();
         String isSpecific = userInfo.getIsSpecific();
         eventLoginData.isSupperAccount = getIsSupperAccount(isSpecific);
-        eventLoginData.hasStation = getHasStationDeploy(grants);
+        eventLoginData.hasStationDeploy = getHasStationDeploy(grants);
+        eventLoginData.hasStationList = getHasStationList(grants);
         eventLoginData.hasContract = getHasContract(grants);
         eventLoginData.hasContractCreate = getHasContractCreate(grants);
         eventLoginData.hasContractModify = getHasContractModify(grants);
@@ -85,7 +86,7 @@ public class UserPermissionFactory {
     }
 
     /**
-     * 判断基站权限
+     * 判断基站部署权限
      *
      * @param grants
      * @return
@@ -95,6 +96,23 @@ public class UserPermissionFactory {
             List<String> station = grants.getStation();
             if (station != null) {
                 return station.contains("deploy");
+            }
+
+        }
+        return false;
+    }
+
+    /**
+     * 基站列表权限
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasStationList(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> station = grants.getStation();
+            if (station != null) {
+                return station.contains("list");
             }
 
         }

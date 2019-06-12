@@ -94,7 +94,7 @@ public class DeployMonitorSettingPhotoActivityPresenter extends BasePresenter<ID
             List<String> names = new ArrayList<>();
             names.add(mContext.getString(R.string.take_photo));
             names.add(mContext.getString(R.string.album));
-            getView().showDialog(this, names);
+            getView().showDialog(this, names, mContext.getResources().getString(R.string.camera_photo));
         } else {
             //打开预览
 
@@ -102,7 +102,7 @@ public class DeployMonitorSettingPhotoActivityPresenter extends BasePresenter<ID
             intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, (ArrayList<ImageItem>) images);
             intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
             intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
-            intentPreview.putExtra(Constants.EXTRA_JUST_DISPLAY_PIC,isJustDisplay);
+            intentPreview.putExtra(Constants.EXTRA_JUST_DISPLAY_PIC, isJustDisplay);
             getView().startACForResult(intentPreview, Constants.REQUEST_CODE_PREVIEW);
         }
     }

@@ -9,7 +9,7 @@ public final class EventLoginData implements Serializable {
     public String phone;
     public String roles;
     public boolean isSupperAccount;
-    public boolean hasStation;
+    public boolean hasStationDeploy;
     public boolean hasContract;
     public boolean hasContractCreate;
     public boolean hasContractModify;
@@ -57,7 +57,7 @@ public final class EventLoginData implements Serializable {
                 ", phone='" + phone + '\'' +
                 ", roles='" + roles + '\'' +
                 ", isSupperAccount=" + isSupperAccount +
-                ", hasStation=" + hasStation +
+                ", hasStationDeploy=" + hasStationDeploy +
                 ", hasContract=" + hasContract +
                 ", hasContractCreate=" + hasContractCreate +
                 ", hasContractModify=" + hasContractModify +

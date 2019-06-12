@@ -53,7 +53,8 @@ public interface Constants {
     String EXTRA_PHONE_ID = "extra_phone_id";
     String EXTRA_IS_SPECIFIC = "extra_is_specific";
     String EXTRA_EVENT_LOGIN_DATA = "extra_event_login_data";
-    String EXTRA_GRANTS_HAS_STATION = "extra_grants_has_station";
+    String EXTRA_GRANTS_HAS_STATION_DEPLOY = "extra_grants_has_station_deploy";
+    String EXTRA_GRANTS_HAS_STATION_LIST = "extra_grants_has_station_list";
     String EXTRA_GRANTS_HAS_CONTRACT = "extra_grants_has_contract";
     String EXTRA_GRANTS_HAS_CONTRACT_CREATE = "extra_grants_has_contract_create";
     String EXTRA_GRANTS_HAS_CONTRACT_MODIFY = "extra_grants_has_contract_modify";
@@ -389,17 +390,6 @@ public interface Constants {
     String[] INDEX_STATUS_ARRAY = {"全部状态", "预警", "正常", "失联", "未激活"};
     int EVENT_DATA_UPDATE_BASE_STATION = 0x64;
     int TYPE_SCAN_DEPLOY_CAMERA = 0x65;
-
-
-
-
-
-
-
-
-
-
-
 
 
     //
