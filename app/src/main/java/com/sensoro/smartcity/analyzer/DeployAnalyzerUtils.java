@@ -144,7 +144,7 @@ public class DeployAnalyzerUtils {
                 if (result.startsWith("http")) {
                     try {
                         String nameplateId = result.substring(result.length() - 24);
-                        handleNameplate(presenter, nameplateId, activity, listener);
+                        handleNameplate(scanType, presenter, nameplateId, activity, listener);
                     } catch (Exception e) {
                         listener.onError(0, null, activity.getResources().getString(R.string.please_re_scan_try_again));
                     }
@@ -163,7 +163,8 @@ public class DeployAnalyzerUtils {
                     if (PreferencesHelper.getInstance().getUserData().hasNameplateDeploy) {
                         try {
                             String nameplateId = result.substring(result.lastIndexOf("/") + 1);
-                            handleNameplate(presenter, nameplateId, activity, listener);
+                            //目前只要是以http开头的部署 暂认为为铭牌部署
+                            handleNameplate(Constants.TYPE_SCAN_NAMEPLATE_DEPLOY, presenter, nameplateId, activity, listener);
                         } catch (Exception e) {
                             listener.onError(0, null, activity.getResources().getString(R.string.please_re_scan_try_again));
                         }
@@ -317,7 +318,7 @@ public class DeployAnalyzerUtils {
 
     }
 
-    private void handleNameplate(BasePresenter presenter, String nameplateId, Activity activity, OnDeployAnalyzerListener listener) {
+    private void handleNameplate(int scanType, BasePresenter presenter, String nameplateId, Activity activity, OnDeployAnalyzerListener listener) {
         RetrofitServiceHelper.getInstance().getNameplateDetail(nameplateId, true).subscribeOn
                 (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<NamePlateInfo>>(presenter) {
             @Override
@@ -330,7 +331,7 @@ public class DeployAnalyzerUtils {
                     DeployResultModel deployResultModel = new DeployResultModel();
                     deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
                     deployResultModel.sn = nameplateId;
-                    deployResultModel.scanType = Constants.TYPE_SCAN_NAMEPLATE_DEPLOY;
+                    deployResultModel.scanType = scanType;
                     intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
                     listener.onError(0, intent, null);
                 } else {
@@ -345,7 +346,7 @@ public class DeployAnalyzerUtils {
                         deployAnalyzerModel.tagList.addAll(tags);
                     }
                     Intent intent = new Intent();
-                    deployAnalyzerModel.deployType = Constants.TYPE_SCAN_NAMEPLATE_DEPLOY;
+                    deployAnalyzerModel.deployType = scanType;
                     intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                     intent.putExtra(ARouterConstants.AROUTER_PATH, "path");
                     listener.onSuccess(intent);
@@ -363,7 +364,7 @@ public class DeployAnalyzerUtils {
                     DeployResultModel deployResultModel = new DeployResultModel();
                     deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
                     deployResultModel.sn = nameplateId;
-                    deployResultModel.scanType = Constants.TYPE_SCAN_NAMEPLATE_DEPLOY;
+                    deployResultModel.scanType = scanType;
                     intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
                     listener.onError(errorCode, intent, errorMsg);
                 } else {
@@ -373,7 +374,7 @@ public class DeployAnalyzerUtils {
                     DeployResultModel deployResultModel = new DeployResultModel();
                     deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED;
                     deployResultModel.sn = nameplateId;
-                    deployResultModel.scanType = Constants.TYPE_SCAN_NAMEPLATE_DEPLOY;
+                    deployResultModel.scanType = scanType;
                     deployResultModel.errorMsg = errorMsg;
                     intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
                     listener.onError(errorCode, intent, errorMsg);
