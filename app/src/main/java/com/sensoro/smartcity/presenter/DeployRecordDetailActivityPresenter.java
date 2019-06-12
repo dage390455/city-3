@@ -15,7 +15,7 @@ import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.server.bean.DeployControlSettingData;
 import com.sensoro.common.server.bean.DeployRecordInfo;
 import com.sensoro.common.server.bean.ScenesData;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;

@@ -35,7 +35,7 @@ import com.sensoro.common.utils.GPSUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployMapENActivity;
 import com.sensoro.smartcity.imainviews.IMonitorPointMapENActivityView;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 

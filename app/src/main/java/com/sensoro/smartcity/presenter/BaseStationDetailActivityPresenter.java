@@ -38,7 +38,7 @@ import com.sensoro.smartcity.activity.MonitorPointMapENActivity;
 import com.sensoro.smartcity.activity.NetWorkInfoActivity;
 import com.sensoro.smartcity.activity.SelfCheckActivity;
 import com.sensoro.smartcity.imainviews.IBaseStationDetailActivityView;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;

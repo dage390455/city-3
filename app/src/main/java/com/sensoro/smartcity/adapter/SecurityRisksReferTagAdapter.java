@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sensoro.common.model.SecurityRisksTagModel;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 
 import java.util.ArrayList;
 

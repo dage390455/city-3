@@ -32,7 +32,7 @@ import com.sensoro.common.server.response.DeviceCameraPersonFaceRsp;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.ICameraPersonLocusActivityView;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.widget.GlideCircleTransform;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 

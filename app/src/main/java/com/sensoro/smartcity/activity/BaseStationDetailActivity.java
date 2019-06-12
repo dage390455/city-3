@@ -48,7 +48,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MonitorDeployDetailPhotoAdapter;
 import com.sensoro.smartcity.imainviews.IBaseStationDetailActivityView;
 import com.sensoro.smartcity.presenter.BaseStationDetailActivityPresenter;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 
 import java.text.DecimalFormat;
 import java.util.Date;

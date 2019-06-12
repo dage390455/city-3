@@ -32,7 +32,8 @@ import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.imainviews.IAlarmDetailLogActivityView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
+import com.sensoro.smartcity.util.CityAppUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
@@ -321,7 +322,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         double[] deviceLonlat = deviceAlarmLogInfo.getDeviceLonlat();
         if (deviceLonlat != null && deviceLonlat.length > 1) {
             destPosition = new LatLng(deviceLonlat[1], deviceLonlat[0]);
-            if (AppUtils.doNavigation(mContext, destPosition)) {
+            if (CityAppUtils.doNavigation(mContext, destPosition)) {
                 return;
             } else {
                 if (isAttachedView()) {

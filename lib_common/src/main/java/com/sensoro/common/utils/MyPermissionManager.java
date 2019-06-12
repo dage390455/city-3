@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.util;
+package com.sensoro.common.utils;
 
 import android.Manifest;
 import android.app.Activity;
@@ -13,11 +13,12 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.sensoro.common.R;
 import com.sensoro.common.base.ContextUtils;
-import com.sensoro.smartcity.R;
 
 import java.util.LinkedHashSet;
 import java.util.List;

@@ -21,7 +21,7 @@ import com.sensoro.smartcity.activity.BaseStationListActivity;
 import com.sensoro.smartcity.activity.CameraListActivity;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
 import com.sensoro.smartcity.presenter.ManagerFragmentPresenter;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.widget.dialog.VersionDialogUtils;
 
 import java.util.Objects;

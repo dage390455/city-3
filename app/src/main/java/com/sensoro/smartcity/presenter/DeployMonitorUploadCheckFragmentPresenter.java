@@ -30,12 +30,10 @@ import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
 import com.sensoro.smartcity.activity.DeployMonitorWeChatRelationActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorUploadCheckFragmentView;
-import com.sensoro.common.model.DeployAnalyzerModel;
-import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.common.model.DeployResultModel;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.RegexUtils;
+import com.sensoro.common.utils.RegexUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import org.greenrobot.eventbus.EventBus;

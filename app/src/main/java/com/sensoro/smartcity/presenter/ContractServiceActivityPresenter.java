@@ -29,7 +29,7 @@ import com.sensoro.common.server.bean.ContractsTemplateInfo;
 import com.sensoro.common.server.response.ContractsTemplateRsp;
 import com.sensoro.smartcity.util.FileUtil;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.RegexUtils;
+import com.sensoro.common.utils.RegexUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

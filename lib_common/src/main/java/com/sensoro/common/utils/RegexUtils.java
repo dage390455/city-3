@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.util;
+package com.sensoro.common.utils;
 
 import android.text.TextUtils;
 

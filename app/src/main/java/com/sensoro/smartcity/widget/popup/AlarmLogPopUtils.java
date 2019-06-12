@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.maps.model.LatLng;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
@@ -26,6 +27,7 @@ import com.sensoro.common.server.response.AlarmCloudVideoRsp;
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.DeviceAlarmItemRsp;
 import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -35,9 +37,8 @@ import com.sensoro.smartcity.activity.AlarmCameraVideoDetailActivity;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.adapter.AlertLogRcContentAdapter;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.model.AlarmPopupModel;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.smartcity.util.CityAppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
@@ -381,7 +382,7 @@ public class AlarmLogPopUtils implements AlarmPopUtilsTest.OnPopupCallbackListen
         double[] deviceLonlat = mDeviceAlarmLogInfo.getDeviceLonlat();
         if (deviceLonlat != null && deviceLonlat.length > 1) {
             destPosition = new LatLng(deviceLonlat[1], deviceLonlat[0]);
-            if (AppUtils.doNavigation(mActivity, destPosition)) {
+            if (CityAppUtils.doNavigation(mActivity, destPosition)) {
                 return;
             }
         }

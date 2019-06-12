@@ -36,7 +36,7 @@ import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.common.model.DeployResultModel;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 
 import java.util.ArrayList;

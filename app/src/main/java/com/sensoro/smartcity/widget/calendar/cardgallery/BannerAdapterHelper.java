@@ -1,10 +1,11 @@
 package com.sensoro.smartcity.widget.calendar.cardgallery;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sensoro.smartcity.util.AppUtils;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.sensoro.common.utils.AppUtils;
 
 /**
  * adapter中调用onCreateViewHolder, onBindViewHolder

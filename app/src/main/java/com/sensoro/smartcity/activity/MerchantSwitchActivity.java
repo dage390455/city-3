@@ -32,7 +32,7 @@ import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IMerchantSwitchActivityView;
 import com.sensoro.smartcity.presenter.MerchantSwitchActivityPresenter;
 import com.sensoro.common.server.bean.UserInfo;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;

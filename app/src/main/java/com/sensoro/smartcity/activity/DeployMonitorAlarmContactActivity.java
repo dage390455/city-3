@@ -17,7 +17,7 @@ import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IAlarmContactActivityView;
 import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.smartcity.presenter.AlarmContactActivityPresenter;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.SoftHideKeyBoardUtil;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;

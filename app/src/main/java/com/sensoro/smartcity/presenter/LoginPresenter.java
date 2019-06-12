@@ -28,7 +28,7 @@ import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.factory.UserPermissionFactory;
 import com.sensoro.smartcity.imainviews.ILoginView;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.tencent.bugly.beta.Beta;
 

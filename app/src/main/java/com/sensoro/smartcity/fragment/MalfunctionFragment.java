@@ -32,7 +32,7 @@ import com.sensoro.common.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IMalfunctionFragmentView;
 import com.sensoro.smartcity.presenter.MalfunctionFragmentPresenter;
 import com.sensoro.common.server.bean.MalfunctionListInfo;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;

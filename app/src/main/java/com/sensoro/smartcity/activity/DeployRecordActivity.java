@@ -40,7 +40,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeployRecordContentAdapter;
 import com.sensoro.smartcity.imainviews.IDeployRecordActivityView;
 import com.sensoro.smartcity.presenter.DeployRecordActivityPresenter;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 
 import java.util.List;
 

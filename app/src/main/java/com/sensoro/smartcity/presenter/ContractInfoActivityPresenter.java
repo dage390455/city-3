@@ -21,7 +21,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractResultActivity;
 import com.sensoro.smartcity.activity.ContractServiceActivity;
 import com.sensoro.smartcity.imainviews.IContractInfoActivityView;
-import com.sensoro.smartcity.util.RegexUtils;
+import com.sensoro.common.utils.RegexUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

@@ -42,7 +42,7 @@ import com.sensoro.smartcity.adapter.DeviceCameraContentAdapter;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
 import com.sensoro.smartcity.presenter.CameraListActivityPresenter;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.widget.popup.CameraListFilterPopupWindowTest;
 
 import java.util.List;

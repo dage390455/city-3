@@ -1,11 +1,11 @@
-package com.sensoro.smartcity.util;
+package com.sensoro.common.utils;
 
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 
-import com.sensoro.smartcity.R;
+import com.sensoro.common.R;
 
 import java.util.HashMap;
 

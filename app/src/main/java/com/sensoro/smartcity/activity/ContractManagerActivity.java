@@ -35,7 +35,7 @@ import com.sensoro.smartcity.imainviews.IContractManagerActivityView;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
 import com.sensoro.smartcity.presenter.ContractManagerActivityPresenter;
 import com.sensoro.common.server.bean.ContractListInfo;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;

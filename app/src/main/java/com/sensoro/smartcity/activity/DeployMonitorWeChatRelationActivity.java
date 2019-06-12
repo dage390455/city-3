@@ -23,7 +23,7 @@ import com.sensoro.common.adapter.NameAddressHistoryAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorWeChatRelationActivityView;
 import com.sensoro.smartcity.presenter.DeployMonitorWeChatRelationActivityPresenter;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.widgets.TipOperationDialogUtils;

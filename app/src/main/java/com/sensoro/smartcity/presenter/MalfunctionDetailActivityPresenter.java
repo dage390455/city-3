@@ -21,8 +21,9 @@ import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.common.server.bean.MalfunctionListInfo;
 import com.sensoro.common.server.response.DeviceInfoListRsp;
 import com.sensoro.common.server.response.MalfunctionCountRsp;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.smartcity.util.CityAppUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -150,7 +151,7 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
         List<Double> deviceLonlat = mMalfunctionInfo.getDeviceLonlat();
         if (deviceLonlat != null && deviceLonlat.size() > 1) {
             destPosition = new LatLng(deviceLonlat.get(1), deviceLonlat.get(0));
-            if (AppUtils.doNavigation(mActivity, destPosition)) {
+            if (CityAppUtils.doNavigation(mActivity, destPosition)) {
                 return;
             }
         }

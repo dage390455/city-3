@@ -68,9 +68,9 @@ import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
 import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.common.model.DeployResultModel;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.RegexUtils;
+import com.sensoro.common.utils.RegexUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 

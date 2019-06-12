@@ -21,8 +21,11 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
+import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.server.bean.DeviceInfo;
@@ -30,11 +33,8 @@ import com.sensoro.common.utils.ImageFactory;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.DeployMapActivity;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMonitorPointMapActivityView;
-import com.sensoro.common.model.DeployAnalyzerModel;
-import com.sensoro.common.model.DeployContactModel;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.smartcity.util.CityAppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
@@ -259,7 +259,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
     }
 
     public void doNavigation() {
-        if (!AppUtils.doNavigation(mContext, destPosition)) {
+        if (!CityAppUtils.doNavigation(mContext, destPosition)) {
             getView().toastShort(mContext.getString(R.string.location_not_obtained));
         }
     }

@@ -36,7 +36,8 @@ import com.sensoro.smartcity.imainviews.IInspectionTaskActivityView;
 import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
 import com.sensoro.smartcity.temp.TestUpdateActivity;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
+import com.sensoro.smartcity.util.CityAppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -475,7 +476,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         List<Double> lonlat = deviceDetail.getLonlat();
         if (lonlat != null && lonlat.size() > 1) {
             LatLng destPosition = new LatLng(lonlat.get(1), lonlat.get(0));
-            if (AppUtils.doNavigation(mContext, destPosition)) {
+            if (CityAppUtils.doNavigation(mContext, destPosition)) {
                 return;
             }
         }

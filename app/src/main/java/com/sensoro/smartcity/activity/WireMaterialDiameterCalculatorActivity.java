@@ -29,7 +29,7 @@ import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IWireMaterialDiameterCalculatorView;
 import com.sensoro.smartcity.model.WireMaterialDiameterModel;
 import com.sensoro.smartcity.presenter.WireMaterialDiameterCalculatorPresenter;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.ArrayList;

@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 
 /**
  * recyclerview 不通屏的分割线边距20dp,最后一条没有分割线，且只限竖直方向的recyclerview，这里距离两边的距离是写死在drawable里面，而且是白色

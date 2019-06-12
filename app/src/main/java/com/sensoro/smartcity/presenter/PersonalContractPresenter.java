@@ -33,7 +33,7 @@ import com.sensoro.smartcity.activity.ContractEditorActivity;
 import com.sensoro.smartcity.imainviews.IPersonalContractView;
 import com.sensoro.smartcity.util.FileUtil;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.RegexUtils;
+import com.sensoro.common.utils.RegexUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
