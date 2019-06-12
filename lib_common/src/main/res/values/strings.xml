@@ -1131,5 +1131,8 @@
     <string name="equipment_associated">equipment associated</string>
     <string name="qr_code_nameplate">二维码铭牌</string>
     <string name="nameplate_sn">铭牌编号：</string>
+    <string name="association_sensort">Association sensor</string>
+    <string name="sweep_code_associated">Sweep code associated</string>
+    <string name="sensor_list">Sensor list</string>
 
 </resources>

@@ -16,16 +16,20 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/shape_nameplate_detail_bg">
+        android:background="@drawable/shape_nameplate_detail_bg"
+        android:minHeight="122dp">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="55dp"
+            android:layout_alignBottom="@+id/ll_nameplate_detail"
+
+            android:layout_alignParentRight="true"
+
             android:src="@mipmap/ic_nameplate_detail_bg" />
 
         <LinearLayout
+            android:id="@+id/ll_nameplate_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -123,9 +127,9 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/view_divider_height"
             android:background="@color/c_dfdfdf"
-            android:visibility="gone"
-            />
-        <include layout="@layout/item_include_refresh_layout"/>
+            android:visibility="gone" />
+
+        <include layout="@layout/item_include_refresh_layout" />
 
     </LinearLayout>
 
@@ -149,7 +153,7 @@
             android:layout_marginBottom="13dp"
             android:drawableLeft="@mipmap/ic_nameplate_new_sensor"
             android:drawablePadding="2dp"
-            android:text="关联传感器"
+            android:text="@string/association_sensort"
             android:textColor="@color/c_252525"
             android:textSize="16dp" />
     </LinearLayout>

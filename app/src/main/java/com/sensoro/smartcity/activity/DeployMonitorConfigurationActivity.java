@@ -306,7 +306,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         setMaterial(marterials.get(position));
                     }
-                }, marterials);
+                }, marterials, getResources().getString(R.string.diameter_material));
                 break;
             case R.id.ll_wire_diameter:
                 pvCustomOptions.show(); //弹出自定义条件选择器

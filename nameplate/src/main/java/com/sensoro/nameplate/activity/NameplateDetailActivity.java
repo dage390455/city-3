@@ -114,8 +114,8 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
         includeTextTitleTvTitle.setText(R.string.nameplate_manager_detail);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         dialogUtils = new QrCodeDialogUtils(mActivity);
-        options.add("扫码关联");
-        options.add("传感器列表中关联");
+        options.add(getResources().getString(R.string.sweep_code_associated));
+        options.add(getResources().getString(R.string.sensor_list));
 
         returnTopAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.return_top_in_anim);
         returnTopInclude.setAnimation(returnTopAnimation);
@@ -195,7 +195,7 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
                 super.onScrolled(recyclerView, dx, dy);
                 if (manager.findFirstVisibleItemPosition() == 0 && rvNameplateAssociatedSensor.getChildAt(0).getTop() == 0) {
                     viewDividerNameplateAssociatedNewSensor.setVisibility(GONE);
-                }else{
+                } else {
                     viewDividerNameplateAssociatedNewSensor.setVisibility(VISIBLE);
                 }
             }
@@ -246,12 +246,14 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
         } else if (R.id.tv_nameplate_edit == id) {
             mPresenter.doEditNameplate();
         } else if (R.id.tv_nameplate_associated_new_sensor == id) {
+
+
             AppUtils.showDialog(mActivity, new SelectDialog.SelectDialogListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     mPresenter.doNesSensor(position);
                 }
-            }, options).show();
+            }, options, getResources().getString(R.string.association_sensort)).show();
         } else {
 
         }

@@ -103,7 +103,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
             names.add(mContext.getString(R.string.take_photo));
 //            names.add("相册");
             names.add(mContext.getString(R.string.shooting_video));
-            getView().showDialog(this, names);
+            getView().showDialog(this, names, mContext.getResources().getString(R.string.camera_photo));
         } else {
             //打开预览
             ImageItem imageItem = selImageList.get(position);

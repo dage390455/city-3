@@ -3,8 +3,6 @@ package com.sensoro.smartcity.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,21 +10,24 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.bean.DeployPicInfo;
+import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeployPicAdapter;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDeployPicView;
 import com.sensoro.smartcity.presenter.DeployMonitorDeployPicPresenter;
 import com.sensoro.smartcity.widget.dialog.DeployPicExampleDialogUtils;
-import com.sensoro.common.model.ImageItem;
-import com.sensoro.common.widgets.SelectDialog;
 
 import java.util.List;
 
@@ -249,12 +250,12 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
 
     @Override
     public void showSelectDialog(SelectDialog.SelectDialogListener listener, List<String> names) {
-        SelectDialog dialog = new SelectDialog(mActivity, R.style
-                .transparentFrameWindowStyle,
-                listener, names);
-        if (!mActivity.isFinishing()) {
-            dialog.show();
-        }
+//        SelectDialog dialog = new SelectDialog(mActivity, R.style
+//                .transparentFrameWindowStyle,
+//                listener, names);
+//        if (!mActivity.isFinishing()) {
+//            dialog.show();
+//        }
     }
 
 

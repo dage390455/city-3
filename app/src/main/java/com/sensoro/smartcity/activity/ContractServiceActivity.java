@@ -2,8 +2,10 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -267,13 +269,13 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     }
 
     @Override
-    public void showContentText(int originType,int type, String line1, String phone, String line2, String line3, String line4,
+    public void showContentText(int originType, int type, String line1, String phone, String line2, String line3, String line4,
                                 String line5,
                                 String line6, String place, int service_life, int service_life_first, int service_life_period) {
         showContentText(type, line1, phone, line2, line3, line4,
                 line5, line6, place);
 
-        if(originType == Constants.CONTRACT_ORIGIN_TYPE_EDIT){
+        if (originType == Constants.CONTRACT_ORIGIN_TYPE_EDIT) {
             includeTextTitleTvSubtitle.setVisibility(View.GONE);
         }
         tvContractServicePlace.setText(place);
@@ -286,10 +288,10 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
 
     }
 
-    private SelectDialog showDialog(SelectDialog.SelectDialogListener listener, List<String> items) {
+    private SelectDialog showDialog(SelectDialog.SelectDialogListener listener, List<String> items, String title) {
         SelectDialog dialog = new SelectDialog(mActivity, R.style
                 .transparentFrameWindowStyle,
-                listener, items);
+                listener, items, title);
         if (!mActivity.isFinishing()) {
             dialog.show();
         }
@@ -350,7 +352,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 tvShowContractService_line2.setText(sexList.get(position));
                             }
-                        }, sexList);
+                        }, sexList, getResources().getString(R.string.company_name));
                     }
                 });
                 //
@@ -431,7 +433,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     @Override
     public String getPhoneNumber(int createType) {
         // createTy是3的时候，phone number 跟1 2 不是一个控件，所以这里，用switch 以备扩展
-        switch (createType){
+        switch (createType) {
             case 1:
             case 2:
                 return etContractServicePhone.getText().toString();
@@ -441,7 +443,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     }
 
 
-    @OnClick({R.id.include_text_title_imv_arrows_left,R.id.include_text_title_tv_subtitle, R.id.iv_contract_service_line1, R
+    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.include_text_title_tv_subtitle, R.id.iv_contract_service_line1, R
             .id.iv_contract_service_line2, R.id.iv_contract_service_line3, R.id.iv_contract_service_line4, R.id
             .iv_contract_service_line5, R.id.iv_contract_service_line6, R.id.ll_contract_service_place_type, R.id
             .iv_contract_age_del, R.id.iv_contract_age_add, R.id.bt_next, R.id.iv_contract_age_first_del, R.id.iv_contract_age_first_add
@@ -472,7 +474,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         tvContractServicePlace.setText(names.get(position));
                     }
-                }, names);
+                }, names, getResources().getString(R.string.contract_info_site_nature));
                 break;
             case R.id.iv_contract_age_del:
                 String contractAgeDel = etContractAge.getText().toString();

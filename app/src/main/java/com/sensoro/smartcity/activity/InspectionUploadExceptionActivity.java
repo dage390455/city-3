@@ -3,10 +3,6 @@ package com.sensoro.smartcity.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -18,19 +14,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.model.ImageItem;
+import com.sensoro.common.widgets.CustomCornerDialog;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SelectDialog;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.ImagePickerAdapter;
 import com.sensoro.smartcity.adapter.InspectionUploadExceptionTagAdapter;
-import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IInspectionUploadExceptionActivityView;
 import com.sensoro.smartcity.presenter.InspectionUploadExceptionActivityPresenter;
-import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.smartcity.widget.ScrollFrameLayout;
-import com.sensoro.common.manger.SensoroLinearLayoutManager;
-import com.sensoro.common.widgets.SensoroToast;
-import com.sensoro.common.widgets.CustomCornerDialog;
-import com.sensoro.common.model.ImageItem;
-import com.sensoro.common.widgets.SelectDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -322,10 +323,10 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
     }
 
     @Override
-    public void showDialog(SelectDialog.SelectDialogListener listener, List<String> names) {
+    public void showDialog(SelectDialog.SelectDialogListener listener, List<String> names, String string) {
         SelectDialog dialog = new SelectDialog(mActivity, R.style
                 .transparentFrameWindowStyle,
-                listener, names);
+                listener, names, string);
         if (!mActivity.isFinishing()) {
             dialog.show();
         }

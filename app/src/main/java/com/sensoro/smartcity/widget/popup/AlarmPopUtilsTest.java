@@ -154,10 +154,10 @@ public class AlarmPopUtilsTest implements Constants,
 
     }
 
-    private SelectDialog showDialog(SelectDialog.SelectDialogListener listener, List<String> names) {
+    private SelectDialog showDialog(SelectDialog.SelectDialogListener listener, List<String> names, String string) {
         SelectDialog dialog = new SelectDialog(mActivity, R.style
                 .transparentFrameWindowStyle,
-                listener, names);
+                listener, names, string);
         if (!mActivity.isFinishing()) {
             dialog.show();
         }
@@ -492,7 +492,7 @@ public class AlarmPopUtilsTest implements Constants,
             names.add(mActivity.getString(R.string.take_photo));
             names.add(mActivity.getString(R.string.shooting_video));
             names.add(mActivity.getString(R.string.album));
-            showDialog(this, names);
+            showDialog(this, names, mActivity.getResources().getString(R.string.camera_photo));
         } else {
             //打开预览
             ImageItem imageItem = selImageList.get(position);
