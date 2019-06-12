@@ -68,7 +68,7 @@ public class DeployAnalyzerUtils {
      * @param nameplateId
      * @param listener
      */
-    public void handlerDeployAnalyzerResult(BasePresenter presenter, final String result, final Activity activity, String nameplateId, final OnDeployAnalyzerListener listener) {
+    public void handlerDeployAnalyzerResult(int scanType, BasePresenter presenter, final String result, final Activity activity, String nameplateId, final OnDeployAnalyzerListener listener) {
         if (TextUtils.isEmpty(result)) {
             listener.onError(0, null, activity.getResources().getString(R.string.please_re_scan_try_again));
             return;
@@ -82,16 +82,72 @@ public class DeployAnalyzerUtils {
                 scanSerialNumber = strings[0];
                 if (scanSerialNumber.length() >= 8 && scanSerialNumber.length() <= 32) {
                     String finalScanSerialNumber = scanSerialNumber;
-                    handleDeployDeviceStation(presenter, scanSerialNumber, activity, new OnDeployAnalyzerListener() {
+                    //
+                    RetrofitServiceHelper.getInstance().getDeployDeviceDetail(finalScanSerialNumber, null, null).subscribeOn
+                            (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(presenter) {
                         @Override
-                        public void onSuccess(Intent intent) {
-                            nameplateAssociateDevice(nameplateId, finalScanSerialNumber, listener, activity, presenter);
+                        public void onErrorMsg(int errorCode, String errorMsg) {
+                            if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                                listener.onError(errorCode, null, errorMsg);
+                            } else if (errorCode == 4013101 || errorCode == 4000013) {
+                                //TODO 不在账户下
+                                //不在账户下
+                                Intent intent = new Intent();
+                                intent.setClass(activity, DeployResultActivity.class);
+                                DeployResultModel deployResultModel = new DeployResultModel();
+                                deployResultModel.scanType = scanType;
+                                deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
+                                deployResultModel.sn = finalScanSerialNumber;
+                                intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                                listener.onError(errorCode, intent, errorMsg);
+                            } else {
+                                //TODO 控制逻辑
+                                Intent intent = new Intent();
+                                intent.setClass(activity, DeployResultActivity.class);
+                                DeployResultModel deployResultModel = new DeployResultModel();
+                                deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_SCAN_FAILED;
+                                deployResultModel.sn = finalScanSerialNumber;
+                                deployResultModel.scanType = scanType;
+                                deployResultModel.errorMsg = errorMsg;
+                                intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                                listener.onError(errorCode, intent, errorMsg);
+                            }
                         }
 
                         @Override
-                        public void onError(int errType, Intent intent, String errMsg) {
-                            listener.onError(0, intent, errMsg);
+                        public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
+                            DeviceInfo data = deployDeviceDetailRsp.getData();
+                            if (data == null) {
+                                //不在账户下
+                                Intent intent = new Intent();
+                                intent.setClass(activity, DeployResultActivity.class);
+                                DeployResultModel deployResultModel = new DeployResultModel();
+                                deployResultModel.scanType = scanType;
+                                deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
+                                deployResultModel.sn = finalScanSerialNumber;
+                                intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                                listener.onError(0, intent, null);
+                            } else {
+                                String sn = data.getSn();
+                                if (TextUtils.isEmpty(sn)) {
+                                    //拿不到sn认为为空对象
+                                    //不在账户下
+                                    Intent intent = new Intent();
+                                    intent.setClass(activity, DeployResultActivity.class);
+                                    DeployResultModel deployResultModel = new DeployResultModel();
+                                    deployResultModel.scanType = scanType;
+                                    deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
+                                    deployResultModel.sn = finalScanSerialNumber;
+                                    intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                                    listener.onError(0, intent, null);
+                                } else {
+                                    //在账户下 即可关联
+                                    nameplateAssociateDevice(nameplateId, finalScanSerialNumber, listener, activity, presenter);
+                                }
+                            }
+
                         }
+
                     });
                 } else {
                     listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
@@ -101,24 +157,6 @@ public class DeployAnalyzerUtils {
             }
 
         }
-        //
-//        String scanSerialNumber = parseResultMac(result);
-//        if (TextUtils.isEmpty(scanSerialNumber)) {
-//            listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
-//        } else {
-//            try {
-//                String[] strings = scanSerialNumber.split(" ");
-//                scanSerialNumber = strings[0];
-//                if (scanSerialNumber.length() == 16) {
-//
-//                } else {
-//                    listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
-//                }
-//            } catch (Exception e) {
-//                listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
-//            }
-//
-//        }
     }
 
     /**

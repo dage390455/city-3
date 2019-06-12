@@ -157,7 +157,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
             if (!TextUtils.isEmpty(nameplateId)) {
 
 
-                DeployAnalyzerUtils.getInstance().handlerDeployAnalyzerResult(this, result, mContext, nameplateId, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
+                DeployAnalyzerUtils.getInstance().handlerDeployAnalyzerResult(scanType, this, result, mContext, nameplateId, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
                     @Override
                     public void onSuccess(Intent intent) {
                         getView().dismissProgressDialog();
