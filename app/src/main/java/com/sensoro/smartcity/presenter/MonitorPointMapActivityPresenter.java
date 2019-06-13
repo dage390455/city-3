@@ -91,7 +91,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         aMap.getUiSettings().setMyLocationButtonEnabled(false);
         aMap.getUiSettings().setLogoBottomMargin(-100);
         aMap.setMapCustomEnable(true);
-        aMap.setMyLocationEnabled(true);
+        aMap.setMyLocationEnabled(false);
 //        aMap.getUiSettings().setCompassEnabled(true);
         aMap.setOnMapLoadedListener(this);
         aMap.moveCamera(CameraUpdateFactory.zoomTo(15));

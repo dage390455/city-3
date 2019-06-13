@@ -182,7 +182,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                 break;
             //铭牌部署扫码关联传感器
             case Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY:
-                DeployAnalyzerUtils.getInstance().handlerDeployAnalyzerResult(scanType, true, this, result, mContext, null, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
+                DeployAnalyzerUtils.getInstance().handlerDeployAnalyzerResult(scanType, false, this, result, mContext, null, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
                     @Override
                     public void onSuccess(Intent intent) {
                         getView().dismissProgressDialog();
