@@ -81,8 +81,6 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     TextView tvNameplateAssociatedSensor;
     @BindView(R2.id.rv_list_include)
     RecyclerView rvNameplateAssociatedSensor;
-    @BindView(R2.id.tv_nameplate_associated_new_sensor)
-    TextView tvNameplateAssociatedNewSensor;
 
     @BindView(R2.id.refreshLayout_include)
     SmartRefreshLayout refreshLayout;
@@ -235,7 +233,7 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
     }
 
 
-    @OnClick({R2.id.return_top_include, R2.id.include_text_title_imv_arrows_left, R2.id.tv_nameplate_qrcode, R2.id.tv_nameplate_edit, R2.id.tv_nameplate_associated_new_sensor})
+    @OnClick({R2.id.return_top_include, R2.id.include_text_title_imv_arrows_left, R2.id.tv_nameplate_qrcode, R2.id.tv_nameplate_edit, R2.id.ll_association_sensor_ac_deploy_nameplate})
     public void onViewClicked(View view) {
         int id = view.getId();
         if (R.id.include_text_title_imv_arrows_left == id) {
@@ -245,7 +243,7 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
             dialogUtils.show();
         } else if (R.id.tv_nameplate_edit == id) {
             mPresenter.doEditNameplate();
-        } else if (R.id.tv_nameplate_associated_new_sensor == id) {
+        } else if (R.id.ll_association_sensor_ac_deploy_nameplate == id) {
 
 
             AppUtils.showDialog(mActivity, new SelectDialog.SelectDialogListener() {

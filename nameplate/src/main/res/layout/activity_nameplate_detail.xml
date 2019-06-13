@@ -134,9 +134,11 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_association_sensor_ac_deploy_nameplate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
+
         android:orientation="vertical">
 
         <View
@@ -145,7 +147,6 @@
             android:background="@color/c_dfdfdf" />
 
         <TextView
-            android:id="@+id/tv_nameplate_associated_new_sensor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
