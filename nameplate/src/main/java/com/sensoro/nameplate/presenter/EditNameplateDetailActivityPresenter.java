@@ -121,7 +121,7 @@ public class EditNameplateDetailActivityPresenter extends BasePresenter<IEditNam
                         getView().finishAc();
                         //更新
                         EventData eventData = new EventData();
-                        eventData.code = EVENT_DATA_UPDATENAMEPALTELIST;
+                        eventData.code = EVENT_DATA_UPDATE_NAMEPLATE_LIST;
                         EventBus.getDefault().post(eventData);
                     }
 

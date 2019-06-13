@@ -45,7 +45,7 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
-        if (code == EVENT_DATA_UPDATENAMEPALTELIST || EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL == code) {
+        if (code == EVENT_DATA_UPDATE_NAMEPLATE_LIST || EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL == code) {
             requestDataByFilter(DIRECTION_DOWN, null, deviceFlag);
         } else if (code == EVENT_DATA_DEPLOY_RESULT_FINISH) {
             getView().finishAc();

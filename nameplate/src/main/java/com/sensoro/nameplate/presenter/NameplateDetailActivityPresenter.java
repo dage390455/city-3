@@ -34,7 +34,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.common.constant.Constants.DIRECTION_UP;
-import static com.sensoro.common.constant.Constants.EVENT_DATA_UPDATENAMEPALTELIST;
+import static com.sensoro.common.constant.Constants.EVENT_DATA_UPDATE_NAMEPLATE_LIST;
 import static com.sensoro.common.constant.Constants.EXTRA_SCAN_ORIGIN_TYPE;
 import static com.sensoro.common.constant.Constants.EXTRA_SETTING_TAG_LIST;
 
@@ -48,7 +48,7 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
-        if (code == EVENT_DATA_UPDATENAMEPALTELIST) {
+        if (code == EVENT_DATA_UPDATE_NAMEPLATE_LIST) {
             getNameplateDetail();
         } else if (code == Constants.EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL) {
             requestData(DIRECTION_DOWN);
@@ -107,7 +107,7 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
                     plateInfos.remove(pos);
 
                     getView().updateNamePlateStatus(pos);
-                    EventBus.getDefault().post(new EventData(EVENT_DATA_UPDATENAMEPALTELIST));
+                    EventBus.getDefault().post(new EventData(EVENT_DATA_UPDATE_NAMEPLATE_LIST));
                 }
                 getView().dismissProgressDialog();
 
