@@ -1071,7 +1071,7 @@
     <string name="Self_check_state">Self-check state</string>
     <string name="networking_mode">Networking Mode</string>
     <string name="network_info">Networking Info</string>
-    <string name="ip">Ip</string>
+    <string name="ip">IP</string>
     <string name="gateway">GateWay</string>
     <string name="subnet_mask">Subnet Mask</string>
     <string name="primary_dns">Primary DNS</string>

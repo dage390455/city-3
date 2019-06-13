@@ -51,6 +51,7 @@
                 android:layout_marginEnd="20dp"
                 android:ellipsize="end"
                 android:singleLine="true"
+                android:text="-"
                 android:textColor="@color/c_252525"
                 android:textSize="14dp" />
 
@@ -91,6 +92,8 @@
                 android:layout_marginEnd="20dp"
                 android:ellipsize="end"
                 android:singleLine="true"
+                android:text="-"
+
                 android:textColor="@color/c_252525"
                 android:textSize="14dp" />
 
@@ -125,6 +128,7 @@
             <TextView
                 android:id="@+id/tv_gateway"
                 android:layout_width="wrap_content"
+
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
@@ -132,6 +136,7 @@
                 android:layout_marginEnd="20dp"
                 android:ellipsize="end"
                 android:singleLine="true"
+                android:text="-"
                 android:textColor="@color/c_252525"
                 android:textSize="14dp" />
 
@@ -172,6 +177,8 @@
                 android:layout_marginEnd="20dp"
                 android:ellipsize="end"
                 android:singleLine="true"
+
+                android:text="-"
                 android:textColor="@color/c_252525"
                 android:textSize="14dp" />
 
@@ -207,11 +214,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+
                 android:layout_centerVertical="true"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="20dp"
                 android:ellipsize="end"
                 android:singleLine="true"
+                android:text="-"
                 android:textColor="@color/c_252525"
                 android:textSize="14dp" />
 
@@ -247,11 +256,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+
                 android:layout_centerVertical="true"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="20dp"
                 android:ellipsize="end"
                 android:singleLine="true"
+                android:text="-"
                 android:textColor="@color/c_252525"
                 android:textSize="14dp" />
 
@@ -292,6 +303,8 @@
                 android:layout_marginEnd="20dp"
                 android:ellipsize="end"
                 android:singleLine="true"
+
+                android:text="-"
                 android:textColor="@color/c_252525"
                 android:textSize="14dp" />
 

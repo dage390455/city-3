@@ -567,6 +567,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                     break;
                 case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
                 case Constants.DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+                case Constants.DEPLOY_MAP_SOURCE_TYPE_BASE_STATION:
                     AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
                     if (lastKnownLocation != null) {
                         double lat = lastKnownLocation.getLatitude();//获取纬度

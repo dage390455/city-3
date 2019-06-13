@@ -195,6 +195,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
+                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/chartname_ll"
                     android:background="#ffffff">
@@ -383,8 +384,6 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="16dp"
-                    android:lineSpacingMultiplier="1.5"
                     android:textColor="@color/c_252525"
                     android:textSize="16dp"
                     app:layout_constraintBottom_toBottomOf="parent"

@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -242,6 +243,16 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
 //        mCameraListFilterPopupWindow = new CameraListFilterPopupWindowTest(mActivity);
 //        mCameraListFilterPopupWindow.setOnCameraListFilterPopupWindowListener(this);
 
+        etNameplateListSearch.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                etNameplateListSearch.setText("");
+                etNameplateListSearch.requestFocus();
+                AppUtils.openInputMethodManager(NameplateListActivity.this, etNameplateListSearch);
+                setSearchHistoryVisible(true);
+                return false;
+            }
+        });
         etNameplateListSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -566,10 +577,7 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
             etNameplateListSearch.setCursorVisible(true);
             setSearchHistoryVisible(true);
         } else if (i == R.id.iv_nameplate_list_search_clear) {
-            etNameplateListSearch.setText("");
-            etNameplateListSearch.requestFocus();
-            AppUtils.openInputMethodManager(NameplateListActivity.this, etNameplateListSearch);
-            setSearchHistoryVisible(true);
+
         } else if (i == R.id.tv_nameplate_list_search_cancel) {
             if (tvNameplateListSearchCancel.getVisibility() == View.VISIBLE) {
                 etNameplateListSearch.getText().clear();

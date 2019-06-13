@@ -52,6 +52,8 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
             getNameplateDetail();
         } else if (code == Constants.EVENT_DATA_ASSOCIATE_SENSOR_FROM_DETAIL) {
             requestData(DIRECTION_DOWN);
+        } else if (eventData.code == Constants.EVENT_DATA_DEPLOY_RESULT_FINISH) {
+            getView().finishAc();
         }
     }
 
