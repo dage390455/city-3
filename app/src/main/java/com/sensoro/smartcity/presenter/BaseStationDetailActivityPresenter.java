@@ -239,6 +239,8 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
                 List<BaseStationChartDetailModel> data = deviceCameraListRsp.getData();
                 if (null != data && data.size() > 0) {
                     processChartData(data);
+                    System.out.println("====" + data.size());
+
                 } else {
                     getView().updateCharEmpty();
 

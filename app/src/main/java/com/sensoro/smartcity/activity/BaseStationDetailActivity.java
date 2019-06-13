@@ -49,6 +49,7 @@ import com.sensoro.smartcity.adapter.MonitorDeployDetailPhotoAdapter;
 import com.sensoro.smartcity.imainviews.IBaseStationDetailActivityView;
 import com.sensoro.smartcity.presenter.BaseStationDetailActivityPresenter;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.smartcity.widget.CityLineChartRenderer;
 
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -202,6 +203,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         chart = findViewById(R.id.chart1);
         chart.setOnChartValueSelectedListener(this);
 
+        chart.setRenderer(new CityLineChartRenderer(chart, chart.getAnimator(), chart.getViewPortHandler()));
         // no description text
         chart.getDescription().setEnabled(false);
 
