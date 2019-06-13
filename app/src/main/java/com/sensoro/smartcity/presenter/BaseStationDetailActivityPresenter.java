@@ -497,7 +497,6 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         }
 
 
-
         mDeviceInfo.setLonlat(data.getLonlatLabel());
         mDeviceInfo.setSourceType(Constants.DEPLOY_MAP_SOURCE_TYPE_BASE_STATION);
         mDeviceInfo.setSn(sn);
@@ -505,118 +504,131 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         getView().startAC(intent);
     }
 
+    /**
+     * 逆地理编码（坐标转地址）
+     * 1）可以在回调中解析result，获取地址、adcode等等信息。
+     * <p>
+     * 2）返回结果成功或者失败的响应码。1000为成功，其他为失败
+     */
+
     @Override
     public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
-        RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
-        String address;
-        if (AppUtils.isChineseLanguage()) {
+        String address = "";
+        if (i == 1000) {
+            RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
+            if (AppUtils.isChineseLanguage()) {
 //            address = regeocodeResult.getRegeocodeAddress().getFormatAddress();
 
 //                改为自定义
-            StringBuilder stringBuilder = new StringBuilder();
-            //
-            String province = regeocodeAddress.getProvince();
-            //
-            String district = regeocodeAddress.getDistrict();// 区或县或县级市
-            //
-            //
-            String township = regeocodeAddress.getTownship();// 乡镇
-            //
-            String streetName = null;// 道路
-            List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
-            if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
-                RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
-                if (regeocodeRoad != null) {
-                    streetName = regeocodeRoad.getName();
+                StringBuilder stringBuilder = new StringBuilder();
+                //
+                String province = regeocodeAddress.getProvince();
+                //
+                String district = regeocodeAddress.getDistrict();// 区或县或县级市
+                //
+                //
+                String township = regeocodeAddress.getTownship();// 乡镇
+                //
+                String streetName = null;// 道路
+                List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
+                if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
+                    RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
+                    if (regeocodeRoad != null) {
+                        streetName = regeocodeRoad.getName();
+                    }
                 }
-            }
-            //
-            String streetNumber = null;// 门牌号
-            StreetNumber number = regeocodeAddress.getStreetNumber();
-            if (number != null) {
-                String street = number.getStreet();
-                if (street != null) {
-                    streetNumber = street + number.getNumber();
+                //
+                String streetNumber = null;// 门牌号
+                StreetNumber number = regeocodeAddress.getStreetNumber();
+                if (number != null) {
+                    String street = number.getStreet();
+                    if (street != null) {
+                        streetNumber = street + number.getNumber();
+                    } else {
+                        streetNumber = number.getNumber();
+                    }
+                }
+                //
+                String building = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
+                //区县
+                if (!TextUtils.isEmpty(province)) {
+                    stringBuilder.append(province);
+                }
+                if (!TextUtils.isEmpty(district)) {
+                    stringBuilder.append(district);
+                }
+                //乡镇
+                if (!TextUtils.isEmpty(township)) {
+                    stringBuilder.append(township);
+                }
+                //道路
+                if (!TextUtils.isEmpty(streetName)) {
+                    stringBuilder.append(streetName);
+                }
+                //标志性建筑
+                if (!TextUtils.isEmpty(building)) {
+                    stringBuilder.append(building);
                 } else {
-                    streetNumber = number.getNumber();
+                    //门牌号
+                    if (!TextUtils.isEmpty(streetNumber)) {
+                        stringBuilder.append(streetNumber);
+                    }
                 }
-            }
-            //
-            String building = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
-            //区县
-            if (!TextUtils.isEmpty(province)) {
-                stringBuilder.append(province);
-            }
-            if (!TextUtils.isEmpty(district)) {
-                stringBuilder.append(district);
-            }
-            //乡镇
-            if (!TextUtils.isEmpty(township)) {
-                stringBuilder.append(township);
-            }
-            //道路
-            if (!TextUtils.isEmpty(streetName)) {
-                stringBuilder.append(streetName);
-            }
-            //标志性建筑
-            if (!TextUtils.isEmpty(building)) {
-                stringBuilder.append(building);
-            } else {
-                //门牌号
-                if (!TextUtils.isEmpty(streetNumber)) {
-                    stringBuilder.append(streetNumber);
+                if (TextUtils.isEmpty(stringBuilder)) {
+                    address = township;
+                } else {
+                    address = stringBuilder.append("附近").toString();
                 }
-            }
-            if (TextUtils.isEmpty(stringBuilder)) {
-                address = township;
+                //
+                try {
+                    LogUtils.loge(this, "onRegeocodeSearched: " + "code = " + i + ",address = " + address);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             } else {
-                address = stringBuilder.append("附近").toString();
-            }
-            //
-            try {
-                LogUtils.loge(this, "onRegeocodeSearched: " + "code = " + i + ",address = " + address);
-            } catch (Throwable throwable) {
-                throwable.printStackTrace();
+                StringBuilder stringBuilder = new StringBuilder();
+                String subLoc = regeocodeAddress.getDistrict();// 区或县或县级市
+                String ts = regeocodeAddress.getTownship();// 乡镇
+                String thf = null;// 道路
+                List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
+                if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
+                    RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
+                    if (regeocodeRoad != null) {
+                        thf = regeocodeRoad.getName();
+                    }
+                }
+                String subthf = null;// 门牌号
+                StreetNumber streetNumber = regeocodeAddress.getStreetNumber();
+                if (streetNumber != null) {
+                    subthf = streetNumber.getNumber();
+                }
+                String fn = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
+                if (TextUtils.isEmpty(thf)) {
+                    if (!TextUtils.isEmpty(fn)) {
+                        stringBuilder.append(fn);
+                    }
+                }
+                if (subLoc != null) {
+                    stringBuilder.append(subLoc);
+                }
+                if (ts != null) {
+                    stringBuilder.append(ts);
+                }
+                if (thf != null) {
+                    stringBuilder.append(thf);
+                }
+                if (subthf != null) {
+                    stringBuilder.append(subthf);
+                }
+                address = stringBuilder.toString();
+                if (TextUtils.isEmpty(address)) {
+                    address = ts;
+                }
             }
         } else {
-            StringBuilder stringBuilder = new StringBuilder();
-            String subLoc = regeocodeAddress.getDistrict();// 区或县或县级市
-            String ts = regeocodeAddress.getTownship();// 乡镇
-            String thf = null;// 道路
-            List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
-            if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
-                RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
-                if (regeocodeRoad != null) {
-                    thf = regeocodeRoad.getName();
-                }
-            }
-            String subthf = null;// 门牌号
-            StreetNumber streetNumber = regeocodeAddress.getStreetNumber();
-            if (streetNumber != null) {
-                subthf = streetNumber.getNumber();
-            }
-            String fn = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
-            if (TextUtils.isEmpty(thf)) {
-                if (!TextUtils.isEmpty(fn)) {
-                    stringBuilder.append(fn);
-                }
-            }
-            if (subLoc != null) {
-                stringBuilder.append(subLoc);
-            }
-            if (ts != null) {
-                stringBuilder.append(ts);
-            }
-            if (thf != null) {
-                stringBuilder.append(thf);
-            }
-            if (subthf != null) {
-                stringBuilder.append(subthf);
-            }
-            address = stringBuilder.toString();
-            if (TextUtils.isEmpty(address)) {
-                address = ts;
-            }
+            //转换失败
+            address = mContext.getString(R.string.not_positioned);
+
         }
         if (TextUtils.isEmpty(address)) {
             address = mContext.getString(R.string.unknown_street);

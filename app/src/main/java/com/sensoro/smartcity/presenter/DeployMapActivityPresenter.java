@@ -251,8 +251,8 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
         aMap.getUiSettings().setLogoBottomMargin(-50);
         aMap.setMyLocationEnabled(false);
         aMap.setMapCustomEnable(true);
-        String styleName = "custom_config.data";
-        aMap.setCustomMapStylePath(mContext.getFilesDir().getAbsolutePath() + "/" + styleName);
+//        String styleName = "custom_config.data";
+//        aMap.setCustomMapStylePath(mContext.getFilesDir().getAbsolutePath() + "/" + styleName);
         aMap.setOnMapLoadedListener(this);
         aMap.setOnMarkerClickListener(this);
         aMap.setInfoWindowAdapter(this);
@@ -460,7 +460,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
 //可视化区域，将指定位置指定到屏幕中心位置
             LatLng latLng = new LatLng(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
             CameraUpdate update = CameraUpdateFactory
-                    .newCameraPosition(new CameraPosition(latLng, 15, 0, 30));
+                    .newCameraPosition(new CameraPosition(latLng, 15, 0, 0));
             aMap.moveCamera(update);
             deviceMarker.setPosition(latLng);
             LatLonPoint lp = new LatLonPoint(latLng.latitude, latLng.longitude);
@@ -481,9 +481,10 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     public void onRegeocodeSearched(RegeocodeResult result, int i) {
         System.out.println("====>onRegeocodeSearched");
         try {
-
-            RegeocodeAddress regeocodeAddress = result.getRegeocodeAddress();
-            setMarkerAddress(regeocodeAddress);
+            if (i == 1000) {
+                RegeocodeAddress regeocodeAddress = result.getRegeocodeAddress();
+                setMarkerAddress(regeocodeAddress);
+            }
 //            updateAddressInfo(result, i);
             //
         } catch (Exception e) {
@@ -557,15 +558,16 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
             CameraUpdate update;
             switch (deployAnalyzerModel.mapSourceType) {
                 case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
+                case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
+
                     if (deployAnalyzerModel.latLng.size() == 2) {
                         latLng = new LatLng(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
                         update = CameraUpdateFactory
-                                .newCameraPosition(new CameraPosition(latLng, 15, 0, 30));
+                                .newCameraPosition(new CameraPosition(latLng, 15, 0, 0));
                         aMap.moveCamera(update);
                         deviceMarker.setPosition(latLng);
                     }
                     break;
-                case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
                 case Constants.DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
                 case Constants.DEPLOY_MAP_SOURCE_TYPE_BASE_STATION:
                     AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
@@ -575,7 +577,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                         latLng = new LatLng(lat, lon);
                         //可视化区域，将指定位置指定到屏幕中心位置
                         update = CameraUpdateFactory
-                                .newCameraPosition(new CameraPosition(latLng, 15, 0, 30));
+                                .newCameraPosition(new CameraPosition(latLng, 15, 0, 0));
                         aMap.moveCamera(update);
                         if (locationMarker != null) {
                             locationMarker.setPosition(latLng);

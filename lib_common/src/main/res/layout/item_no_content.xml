@@ -3,8 +3,8 @@
     android:id="@+id/ic_no_content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="55dp"
     android:orientation="vertical"
+    android:paddingTop="55dp"
     android:visibility="gone">
 
     <ImageView
@@ -22,10 +22,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="38dp"
         android:gravity="center_horizontal"
         android:text="@string/no_content"
-        android:textColor="@color/c_252525"
+        android:textColor="@color/c_a6a6a6"
         android:textSize="16dp" />
 
 </LinearLayout>
