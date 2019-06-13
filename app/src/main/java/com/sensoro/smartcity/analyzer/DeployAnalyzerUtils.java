@@ -81,8 +81,8 @@ public class DeployAnalyzerUtils {
                 String[] strings = scanSerialNumber.split(" ");
                 scanSerialNumber = strings[0];
                 if (scanSerialNumber.length() >= 8 && scanSerialNumber.length() <= 32) {
-                    String finalScanSerialNumber = scanSerialNumber;
-                    //
+                    //转换大写
+                    String finalScanSerialNumber = scanSerialNumber.toUpperCase();
                     RetrofitServiceHelper.getInstance().getDeployDeviceDetail(finalScanSerialNumber, null, null).subscribeOn
                             (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(presenter) {
                         @Override
@@ -245,6 +245,8 @@ public class DeployAnalyzerUtils {
                             String[] strings = scanSerialNumber.split(" ");
                             scanSerialNumber = strings[0];
                             if (scanSerialNumber.length() >= 8 && scanSerialNumber.length() <= 32) {
+                                //大小写转换
+                                scanSerialNumber = scanSerialNumber.toUpperCase();
                                 handleDeployDeviceStation(presenter, scanSerialNumber, activity, listener);
                             } else {
                                 listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
@@ -279,7 +281,10 @@ public class DeployAnalyzerUtils {
                     return;
                 } else {
                     if (scanNewDeviceSN.length() >= 8 && scanNewDeviceSN.length() <= 32) {
-                        if (scanNewDeviceSN.equalsIgnoreCase(oldDeviceDetail.getSn())) {
+                        //大小写转换
+                        scanNewDeviceSN = scanNewDeviceSN.toUpperCase();
+                        String oldDeviceDetailSn = oldDeviceDetail.getSn();
+                        if (scanNewDeviceSN.equalsIgnoreCase(oldDeviceDetailSn)) {
                             listener.onError(scanType, null, "请使用不同的设备进行更换");
                             return;
                         }
@@ -302,6 +307,7 @@ public class DeployAnalyzerUtils {
                     return;
                 } else {
                     if (scanInspectionDeviceSn.length() >= 8 && scanInspectionDeviceSn.length() <= 32) {
+                        scanInspectionDeviceSn = scanInspectionDeviceSn.toLowerCase();
                         handleScanInspectionDevice(presenter, scanInspectionDeviceSn, inspectionIndexTaskInfo.getId(), activity, listener);
                     } else {
                         listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
@@ -317,6 +323,7 @@ public class DeployAnalyzerUtils {
                     return;
                 } else {
                     if (signalCheckNum.length() == 16) {
+                        signalCheckNum = signalCheckNum.toUpperCase();
                         handleScanSignalCheck(presenter, signalCheckNum, activity, listener);
                     } else {
                         listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
