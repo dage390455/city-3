@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -29,8 +28,10 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
@@ -41,9 +42,7 @@ import com.sensoro.common.server.response.DeviceDeployRsp;
 import com.sensoro.common.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMapActivityView;
-import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -55,7 +54,7 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivityView> implements IOnCreate, AMap.OnCameraChangeListener, AMap.OnMarkerClickListener, AMap.OnMapLoadedListener, AMap.OnMapTouchListener, AMap.InfoWindowAdapter, GeocodeSearch.OnGeocodeSearchListener {
+public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivityView> implements IOnCreate, AMap.OnCameraChangeListener, AMap.OnMarkerClickListener, AMap.OnMapLoadedListener, AMap.InfoWindowAdapter, GeocodeSearch.OnGeocodeSearchListener {
     private AMap aMap;
     private Marker deviceMarker;
     private GeocodeSearch geocoderSearch;
@@ -249,14 +248,16 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
         aMap.getUiSettings().setZoomControlsEnabled(false);
         aMap.getUiSettings().setMyLocationButtonEnabled(false);
         aMap.getUiSettings().setLogoBottomMargin(-50);
-        aMap.setMyLocationEnabled(false);
-        aMap.setMapCustomEnable(true);
+//        aMap.setMyLocationEnabled(false);
+//        aMap.setMapCustomEnable(true);
 //        String styleName = "custom_config.data";
 //        aMap.setCustomMapStylePath(mContext.getFilesDir().getAbsolutePath() + "/" + styleName);
         aMap.setOnMapLoadedListener(this);
         aMap.setOnMarkerClickListener(this);
         aMap.setInfoWindowAdapter(this);
-        aMap.setOnMapTouchListener(this);
+        aMap.setOnCameraChangeListener(this);
+
+//        aMap.setOnMapTouchListener(this);
     }
 
     public void doSaveLocation() {
@@ -393,7 +394,8 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                 if (cameraPosition != null) {
                     //解决不能回显的bug 不能直接赋值
                     deviceMarker.setPosition(cameraPosition.target);
-                    System.out.println("====>onCameraChange");
+                    System.out.println("====>onCameraChange=>" + cameraPosition.target.latitude + "=====" + cameraPosition.target.longitude);
+
                 }
                 break;
         }
@@ -423,8 +425,8 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                     //
                     LatLonPoint lp = new LatLonPoint(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
                     RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
-                    System.out.println("====>onCameraChangeFinish=>" + lp.getLatitude() + "&" + lp.getLongitude());
-                    deviceMarker.setPosition(cameraPosition.target);
+                    System.out.println("====>onCameraChangeFinish=>" + lp.getLatitude() + "=====" + lp.getLongitude());
+//                    deviceMarker.setPosition(cameraPosition.target);
                     geocoderSearch.getFromLocationAsyn(query);
                 }
                 break;
@@ -438,7 +440,6 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
 
     @Override
     public void onMapLoaded() {
-        aMap.setOnCameraChangeListener(this);
         //
         MarkerOptions locationOption = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.deploy_map_location))
                 .anchor(0.5f, 0.6f)
@@ -534,10 +535,6 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
 
     }
 
-    @Override
-    public void onTouch(MotionEvent motionEvent) {
-
-    }
 
     @Override
     public View getInfoWindow(Marker marker) {

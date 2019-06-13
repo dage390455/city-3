@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -10,9 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
-import com.sensoro.smartcity.R;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.sensoro.common.model.DeployContactModel;
+import com.sensoro.smartcity.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -207,6 +209,10 @@ public class AlarmContactRcContentAdapter extends RecyclerView.Adapter<AlarmCont
     }
 
     public void addNewDataAdapter() {
+        if (mList.size() >= 10) {
+            Toast.makeText(mContext, "最多添加10个联系人", Toast.LENGTH_SHORT).show();
+            return;
+        }
         DeployContactModel deployContactModel = new DeployContactModel();
         deployContactModel.name = "";
         deployContactModel.phone = "";
