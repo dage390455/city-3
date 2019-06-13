@@ -260,7 +260,9 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                                         mActivity.runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                getView().addMarker(avatarMarkerOptions, -1);
+                                                if (isAttachedView()){
+                                                    getView().addMarker(avatarMarkerOptions, -1);
+                                                }
                                             }
                                         });
 
@@ -353,7 +355,9 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                                 mActivity.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        getView().addMarker(avatarMarkerOptions, tag);
+                                        if (isAttachedView()){
+                                            getView().addMarker(avatarMarkerOptions, tag);
+                                        }
                                     }
                                 });
 
