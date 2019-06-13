@@ -520,6 +520,12 @@ public class CityLineChartRenderer extends LineRadarRenderer {
         filled.close();
     }
 
+    /**
+     * 注释限制个数
+     *
+     * @param c
+     */
+
     @Override
     public void drawValues(Canvas c) {
 
