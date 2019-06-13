@@ -225,7 +225,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
 
             from = DateUtil.getPastDate(7).getTime();
 
-            interval = "1h";
+            interval = "3h";
 
         }
         getView().showProgressDialog();
@@ -239,6 +239,8 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
                 List<BaseStationChartDetailModel> data = deviceCameraListRsp.getData();
                 if (null != data && data.size() > 0) {
                     processChartData(data);
+                    System.out.println("====" + data.size());
+
                 } else {
                     getView().updateCharEmpty();
 
