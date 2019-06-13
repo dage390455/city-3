@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sensoro.common.R;
@@ -137,13 +137,19 @@ public class SelectDialog extends Dialog implements OnClickListener, OnItemClick
     }
 
     private void initViews() {
+        WindowManager m = mActivity.getWindow().getWindowManager();
+        Display d = m.getDefaultDisplay();
+        int maxHeight = (int) (d.getHeight() * 0.7);
+
+
         DialogAdapter dialogAdapter = new DialogAdapter(mName);
-        ListView dialogList = (ListView) findViewById(R.id.dialog_list);
+        MaxHeightListView dialogList = (MaxHeightListView) findViewById(R.id.dialog_list);
         dialogList.setOnItemClickListener(this);
         dialogList.setAdapter(dialogAdapter);
         mMBtn_Cancel = (Button) findViewById(R.id.mBtn_Cancel);
         mTv_Title = (TextView) findViewById(R.id.mTv_Title);
 
+        dialogList.setMaxHeight(maxHeight);
 
         mMBtn_Cancel.setOnClickListener(new View.OnClickListener() {
 
