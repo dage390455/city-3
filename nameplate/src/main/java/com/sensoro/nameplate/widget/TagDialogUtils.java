@@ -100,8 +100,7 @@ public class TagDialogUtils implements View.OnClickListener {
         } else if (R.id.dialog_add_tag_et_input == id) {
             mDialogEtInput.requestFocus();
             mDialogEtInput.setCursorVisible(true);
-            InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(INPUT_METHOD_SERVICE);
-            imm.showSoftInput(mDialogEtInput, InputMethodManager.SHOW_IMPLICIT);
+
         } else if (R.id.dialog_add_tag_imv_clear == id) {
             if (mDialogEtInput != null) {
                 mDialogEtInput.getText().clear();
@@ -127,6 +126,7 @@ public class TagDialogUtils implements View.OnClickListener {
             mDialogEtInput.setCursorVisible(true);
             InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(INPUT_METHOD_SERVICE);
             imm.showSoftInput(mDialogEtInput, InputMethodManager.SHOW_IMPLICIT);
+            showSoftKeyboard();
         }
     }
 
@@ -139,8 +139,7 @@ public class TagDialogUtils implements View.OnClickListener {
             currentPosition = position;
             mAddTagDialog.show();
             mDialogEtInput.setCursorVisible(true);
-            InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(INPUT_METHOD_SERVICE);
-            imm.showSoftInput(mDialogEtInput, InputMethodManager.SHOW_IMPLICIT);
+            showSoftKeyboard();
         }
 
     }
@@ -150,6 +149,19 @@ public class TagDialogUtils implements View.OnClickListener {
             mAddTagDialog.dismiss();
             hideSoftKeyboard(mActivity);
         }
+
+    }
+
+
+    public void showSoftKeyboard() {
+
+        mDialogEtInput.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(INPUT_METHOD_SERVICE);
+                imm.showSoftInput(mDialogEtInput, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }, 300);
 
     }
 

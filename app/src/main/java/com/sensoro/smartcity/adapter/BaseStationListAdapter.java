@@ -77,7 +77,7 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
                 name = deviceCameraInfo.getSn();
             }
             if (!TextUtils.isEmpty(type)) {
-                holder.itemDeviceCameraTvDeviceName.setText(type);
+                holder.itemDeviceCameraTvDeviceName.setText(type + " ");
 
             }
             holder.itemDeviceCameraTvDeviceName.append(name);
@@ -92,19 +92,19 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
         });
 
 
-        if (null != types && types.size() > 0) {
-            for (CameraFilterModel.ListBean type : types) {
-                if (deviceCameraInfo.getType().equals(type.getCode())) {
-
-                    holder.item_basestation_tv_type.setVisibility(View.VISIBLE);
-                    holder.item_basestation_tv_type.setText(type.getTitle());
-                    break;
-                } else {
-                    holder.item_basestation_tv_type.setVisibility(View.GONE);
-
-                }
-            }
-        }
+//        if (null != types && types.size() > 0) {
+//            for (CameraFilterModel.ListBean type : types) {
+//                if (deviceCameraInfo.getType().equals(type.getCode())) {
+//
+//                    holder.item_basestation_tv_type.setVisibility(View.VISIBLE);
+//                    holder.item_basestation_tv_type.setText(type.getTitle());
+//                    break;
+//                } else {
+//                    holder.item_basestation_tv_type.setVisibility(View.GONE);
+//
+//                }
+//            }
+//        }
 
 
         if (!TextUtils.isEmpty(deviceCameraInfo.getSn())) {
