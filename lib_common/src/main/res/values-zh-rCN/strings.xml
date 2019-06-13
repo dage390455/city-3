@@ -211,7 +211,7 @@
     <string name="account_has_been_disabled">账户已停用</string>
     <string name="not_set">未设定</string>
     <string name="power_supply">电源供电</string>
-    <string name="unknown_street">未知街道</string>
+    <string name="unknown_street">国外</string>
     <string name="location_information_not_set">未设置定位信息</string>
     <string name="phone_contact_not_set">未设置电话联系人</string>
     <string name="wechat_not_installed">当前手机未安装微信，请安装后重试</string>

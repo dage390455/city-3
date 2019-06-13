@@ -44,10 +44,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,13 +85,14 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 
     private void initMap() {
         //自定义地图风格
-        setMapCustomStyleFile();
+//        setMapCustomStyleFile();
         aMap.getUiSettings().setTiltGesturesEnabled(false);
         aMap.getUiSettings().setZoomControlsEnabled(false);
         aMap.getUiSettings().setMyLocationButtonEnabled(false);
         aMap.getUiSettings().setLogoBottomMargin(-100);
         aMap.setMapCustomEnable(true);
         aMap.setMyLocationEnabled(true);
+//        aMap.getUiSettings().setCompassEnabled(true);
         aMap.setOnMapLoadedListener(this);
         aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
 //        aMap.getUiSettings().setScaleControlsEnabled(true);
@@ -108,46 +105,47 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         myLocationStyle.strokeWidth(0);
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.deploy_map_location));
-        myLocationStyle.showMyLocation(true);
+//        myLocationStyle.showMyLocation(true);
         aMap.setMyLocationStyle(myLocationStyle);
-    }
-
-    private void setMapCustomStyleFile() {
-        String styleName = "custom_config.data";
-        FileOutputStream outputStream = null;
-        InputStream inputStream = null;
-        String filePath = null;
-        try {
-            inputStream = mContext.getAssets().open(styleName);
-            byte[] b = new byte[inputStream.available()];
-            inputStream.read(b);
-
-            filePath = mContext.getFilesDir().getAbsolutePath();
-            File file = new File(filePath + "/" + styleName);
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            outputStream = new FileOutputStream(file);
-            outputStream.write(b);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-
-                if (outputStream != null) {
-                    outputStream.close();
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        aMap.setCustomMapStylePath(filePath + "/" + styleName);
 
     }
+
+//    private void setMapCustomStyleFile() {
+//        String styleName = "custom_config.data";
+//        FileOutputStream outputStream = null;
+//        InputStream inputStream = null;
+//        String filePath = null;
+//        try {
+//            inputStream = mContext.getAssets().open(styleName);
+//            byte[] b = new byte[inputStream.available()];
+//            inputStream.read(b);
+//
+//            filePath = mContext.getFilesDir().getAbsolutePath();
+//            File file = new File(filePath + "/" + styleName);
+//            if (!file.exists()) {
+//                file.createNewFile();
+//            }
+//            outputStream = new FileOutputStream(file);
+//            outputStream.write(b);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                if (inputStream != null) {
+//                    inputStream.close();
+//                }
+//
+//                if (outputStream != null) {
+//                    outputStream.close();
+//                }
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        aMap.setCustomMapStylePath(filePath + "/" + styleName);
+//
+//    }
 
     @Override
     public void onMapLoaded() {
@@ -198,7 +196,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 //                notDeployLayout.setVisibility(View.GONE);
                 //可视化区域，将指定位置指定到屏幕中心位置
                 final CameraUpdate mUpdata = CameraUpdateFactory
-                        .newCameraPosition(new CameraPosition(destPosition, 15, 0, 30));
+                        .newCameraPosition(new CameraPosition(destPosition, 15, 0, 0));
                 aMap.moveCamera(mUpdata);
 
                 freshMarker();
@@ -357,7 +355,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
             if (aMap != null) {
                 //可视化区域，将指定位置指定到屏幕中心位置
                 CameraUpdate update = CameraUpdateFactory
-                        .newCameraPosition(new CameraPosition(latLng, 15, 0, 30));
+                        .newCameraPosition(new CameraPosition(latLng, 15, 0, 0));
                 aMap.moveCamera(update);
             } else {
                 getView().toastShort(mContext.getString(R.string.tips_data_error));

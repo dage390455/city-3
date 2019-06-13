@@ -137,7 +137,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         geocoderSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
             @Override
             public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
-                try {
+                String address;
+
+                if (i == 1000) {
+
                     RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
 
                     StringBuilder stringBuilder = new StringBuilder();
@@ -194,25 +197,20 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             stringBuilder.append(streetNumber);
                         }
                     }
-                    String address;
                     if (TextUtils.isEmpty(stringBuilder)) {
                         address = township;
                     } else {
                         address = stringBuilder.append("附近").toString();
                     }
-                    if (!TextUtils.isEmpty(address)) {
-                        deployAnalyzerModel.address = address;
-                    }
-                    try {
-                        LogUtils.loge("deployMapModel", "----" + deployAnalyzerModel.address);
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
 
-                    //
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else {
+                    address = mContext.getString(R.string.not_positioned);
+
                 }
+                if (TextUtils.isEmpty(address)) {
+                    address = mContext.getString(R.string.unknown_street);
+                }
+                deployAnalyzerModel.address = address;
             }
 
             @Override
@@ -1577,7 +1575,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         geocoderSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
             @Override
             public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
-                try {
+                String address = "";
+
+                if (i == 1000) {
+
                     RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
 
                     StringBuilder stringBuilder = new StringBuilder();
@@ -1634,25 +1635,19 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             stringBuilder.append(streetNumber);
                         }
                     }
-                    String address;
                     if (TextUtils.isEmpty(stringBuilder)) {
                         address = township;
                     } else {
                         address = stringBuilder.append("附近").toString();
                     }
-                    if (!TextUtils.isEmpty(address)) {
-                        deployAnalyzerModel.address = address;
-                    }
-                    try {
-                        LogUtils.loge("deployMapModel", "----" + deployAnalyzerModel.address);
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
+                } else {
+                    address = mContext.getString(R.string.not_positioned);
 
-                    //
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+                if (TextUtils.isEmpty(address)) {
+                    address = mContext.getString(R.string.unknown_street);
+                }
+                deployAnalyzerModel.address = address;
             }
 
             @Override

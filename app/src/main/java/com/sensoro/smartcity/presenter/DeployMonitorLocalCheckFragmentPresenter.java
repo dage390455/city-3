@@ -125,7 +125,9 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         geocoderSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
             @Override
             public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
-                try {
+                String address = "";
+
+                if (i == 1000) {
                     RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
 
                     StringBuilder stringBuilder = new StringBuilder();
@@ -182,26 +184,22 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                             stringBuilder.append(streetNumber);
                         }
                     }
-                    String address;
                     if (TextUtils.isEmpty(stringBuilder)) {
                         address = township;
                     } else {
                         address = stringBuilder.append("附近").toString();
                     }
-                    if (!TextUtils.isEmpty(address)) {
-                        deployAnalyzerModel.address = address;
-                        getView().setDeployPosition(true, address);
-                    }
-                    try {
-                        LogUtils.loge("deployMapModel", "----" + deployAnalyzerModel.address);
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
 
-                    //
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else {
+                    //转换失败
+                    address = mActivity.getString(R.string.not_positioned);
+
                 }
+                if (TextUtils.isEmpty(address)) {
+                    address = mActivity.getString(R.string.unknown_street);
+                }
+                deployAnalyzerModel.address = address;
+                getView().setDeployPosition(true, address);
             }
 
             @Override
