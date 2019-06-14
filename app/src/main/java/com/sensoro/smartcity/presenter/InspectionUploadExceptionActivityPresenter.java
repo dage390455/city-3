@@ -27,7 +27,7 @@ import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
 import com.sensoro.common.widgets.SelectDialog;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtilsTest;
+import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -204,7 +204,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
     }
 
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
-        AlarmPopUtilsTest.handlePhotoIntent(requestCode, resultCode, data);
+        AlarmPopUtils.handlePhotoIntent(requestCode, resultCode, data);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

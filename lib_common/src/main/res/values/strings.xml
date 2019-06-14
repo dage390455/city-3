@@ -53,7 +53,7 @@
     <string name="alert_log">Alarm Log</string>
     <string name="no_contact_added">Contact is not added</string>
     <string name="location_navigation">Location navigation</string>
-    <string name="location_confirm">Location Calibration</string>
+    <string name="location_confirm">Calibration</string>
     <string name="cant_find_related_content">Can not find related content</string>
     <string name="enter_search_content">Enter search content</string>
     <string name="signal_test">Signal Test</string>
@@ -209,7 +209,7 @@
     <string name="account_has_been_disabled">The account is disabled</string>
     <string name="not_set">Not set</string>
     <string name="power_supply">Power supply</string>
-    <string name="unknown_street">Unknown street</string>
+    <string name="unknown_street">foreign</string>
     <string name="location_information_not_set">Location information not set</string>
     <string name="phone_contact_not_set">Contact not set</string>
     <string name="wechat_not_installed">Please try again after Wechat installation</string>
@@ -474,7 +474,7 @@
     //设备部署 详情
     <string name="deploy_device_detail_name_address">Name/Address</string>
     <string name="deploy_device_detail_deploy_photo">Deploy Photos</string>
-    <string name="deploy_device_detail_deploy_location">Deploy Location</string>
+    <string name="deploy_device_detail_deploy_location">Location</string>
     <string name="deploy_device_detail_upload">Upload</string>
     //部署记录详情
     <string name="deploy_record_name_address">Name/Address</string>
@@ -1135,5 +1135,7 @@
     <string name="sweep_code_associated">Sweep code associated</string>
     <string name="sensor_list">Sensor list</string>
     <string name="continue_associate">continue associate</string>
+    <string name="network_delay">Network delay</string>
+    <string name="temperature_information">Temperature</string>
 
 </resources>

@@ -55,7 +55,7 @@ import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class AlarmLogPopUtils implements AlarmPopUtilsTest.OnPopupCallbackListener,
+public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         AlertLogRcContentAdapter.OnPhotoClickListener, Constants {
 
     private final FixHeightBottomSheetDialog mAlarmLogDialog;
@@ -96,7 +96,7 @@ public class AlarmLogPopUtils implements AlarmPopUtilsTest.OnPopupCallbackListen
     TextView tvVideoCameraCountAcAlert;
     @BindView(R.id.ll_camera_video_ac_alert)
     LinearLayout llCameraVideoAcAlert;
-    private AlarmPopUtilsTest mAlarmPopUtils;
+    private AlarmPopUtils mAlarmPopUtils;
     private List<AlarmInfo.RecordInfo> mList = new ArrayList<>();
     private AlertLogRcContentAdapter alertLogRcContentAdapter;
     private DeviceAlarmLogInfo mDeviceAlarmLogInfo;
@@ -390,7 +390,7 @@ public class AlarmLogPopUtils implements AlarmPopUtilsTest.OnPopupCallbackListen
     }
 
     private void doConfirm() {
-        mAlarmPopUtils = new AlarmPopUtilsTest(mActivity);
+        mAlarmPopUtils = new AlarmPopUtils(mActivity);
         mAlarmPopUtils.setOnPopupCallbackListener(this);
         mAlarmPopUtils.show(mAlarmPopupModel);
     }

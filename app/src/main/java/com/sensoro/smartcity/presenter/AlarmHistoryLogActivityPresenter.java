@@ -27,7 +27,7 @@ import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtilsTest;
+import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -42,14 +42,14 @@ import java.util.Map;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistoryLogActivityView> implements IOnCreate, AlarmPopUtilsTest.OnPopupCallbackListener {
+public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistoryLogActivityView> implements IOnCreate, AlarmPopUtils.OnPopupCallbackListener {
     private Activity mContext;
     private Long startTime;
     private Long endTime;
     private volatile int cur_page = 1;
     private String mSn;
     private final List<DeviceAlarmLogInfo> mDeviceAlarmLogInfoList = new ArrayList<>();
-    private AlarmPopUtilsTest alarmPopUtils;
+    private AlarmPopUtils alarmPopUtils;
     private DeviceAlarmLogInfo mCurrentDeviceAlarmLogInfo;
     private final Comparator<DeviceAlarmLogInfo> deviceAlarmLogInfoComparator = new Comparator<DeviceAlarmLogInfo>() {
         @Override
@@ -71,7 +71,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
         mContext = (Activity) context;
         onCreate();
         mSn = mContext.getIntent().getStringExtra(Constants.EXTRA_SENSOR_SN);
-        alarmPopUtils = new AlarmPopUtilsTest(mContext);
+        alarmPopUtils = new AlarmPopUtils(mContext);
         alarmPopUtils.setOnPopupCallbackListener(this);
         requestDataByFilter(Constants.DIRECTION_DOWN);
 

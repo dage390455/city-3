@@ -20,7 +20,8 @@ import com.sensoro.common.server.bean.AlarmInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtilsTest;
+import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -73,7 +74,7 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     @BindView(R.id.ll_camera_video_ac_alert)
     LinearLayout llCameraVideoAcAlert;
     private AlertLogRcContentAdapter alertLogRcContentAdapter;
-    private AlarmPopUtilsTest mAlarmPopUtils;
+    private AlarmPopUtils mAlarmPopUtils;
     private ProgressUtils mProgressUtils;
 
     @Override
@@ -86,7 +87,7 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
 
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        mAlarmPopUtils = new AlarmPopUtilsTest(mActivity);
+        mAlarmPopUtils = new AlarmPopUtils(mActivity);
         mAlarmPopUtils.setOnPopupCallbackListener(mPresenter);
         initRcContent();
     }
@@ -108,7 +109,7 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        AlarmPopUtilsTest.handlePhotoIntent(requestCode,resultCode,data);
+        AlarmPopUtils.handlePhotoIntent(requestCode,resultCode,data);
     }
 
     @Override

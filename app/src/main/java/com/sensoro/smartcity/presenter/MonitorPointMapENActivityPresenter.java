@@ -103,7 +103,7 @@ public class MonitorPointMapENActivityPresenter extends BasePresenter<IMonitorPo
             Icon icon = iconFactory.fromResource(R.drawable.deploy_map_cur);
 
             MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.icon(icon).title("国外")
+            markerOptions.icon(icon).title(mContext.getString(R.string.unknown_street))
                     .position(latLng);
             Marker markerView = aMap.addMarker(markerOptions);
             aMap.setInfoWindowAdapter(this);

@@ -245,7 +245,7 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
                         IconFactory iconFactory = IconFactory.getInstance(mContext);
                         Icon icon = iconFactory.fromResource(R.drawable.deploy_map_cur);
                         MarkerOptions markerOptions = new MarkerOptions();
-                        markerOptions.icon(icon).title("国外")
+                        markerOptions.icon(icon).title(mContext.getString(R.string.unknown_street))
                                 .position(latLng);
                         markerView = aMap.addMarker(markerOptions);
                         markerView.setPosition(latLng);
@@ -328,7 +328,7 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
                 IconFactory iconFactory = IconFactory.getInstance(mContext);
                 Icon icon = iconFactory.fromResource(R.drawable.deploy_map_cur);
                 MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.icon(icon).title("国外")
+                markerOptions.icon(icon).title(mContext.getString(R.string.unknown_street))
                         .position(latLng);
                 markerView = aMap.addMarker(markerOptions);
                 markerView.setPosition(latLng);

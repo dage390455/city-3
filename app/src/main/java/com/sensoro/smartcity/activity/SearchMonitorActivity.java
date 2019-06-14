@@ -44,7 +44,7 @@ import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.common.widgets.SensoroToast;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtilsTest;
+import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -566,7 +566,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        AlarmPopUtilsTest.handlePhotoIntent(requestCode,resultCode,data);
+        AlarmPopUtils.handlePhotoIntent(requestCode,resultCode,data);
     }
 
     @Override
