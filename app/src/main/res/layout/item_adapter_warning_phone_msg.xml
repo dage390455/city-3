@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tv_content_item_adapter_associate_sensor_dialog"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
+
+    <TextView
+        android:id="@+id/tv_warning_contact_phone_msg_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="发送中"
+        android:textColor="@color/c_37B0E9"
+        android:textSize="14dp"
+        android:textStyle="bold"></TextView>
+
+    <LinearLayout
+        android:id="@+id/ll_warning_contact_phone_msg_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:orientation="vertical"
+        android:paddingBottom="16dp">
+
+
+    </LinearLayout>
+</LinearLayout>

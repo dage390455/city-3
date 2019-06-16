@@ -341,6 +341,7 @@
     <string name="alarm_contact_btn_save">Save</string>
     <string name="alarm_contact_tip_sample">e.g:XX</string>
     <string name="alarm_contact_tip_phone">Mobile</string>
+    <string name="alarm_contact_tip_msg">Msg</string>
     <string name="alarm_contact_tip_phone_sample">e.g.18600000000</string>
     //预警日志xml
     <string name="alarm_log_alarm_time">ALARM TIME</string>
@@ -1135,5 +1136,6 @@
     <string name="sweep_code_associated">Sweep code associated</string>
     <string name="sensor_list">Sensor list</string>
     <string name="continue_associate">continue associate</string>
+    <string name="warning_contact">warning contact</string>
 
 </resources>

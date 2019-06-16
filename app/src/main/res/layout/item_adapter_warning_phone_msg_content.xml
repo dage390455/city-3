@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tv_warning_contact_phone_msg"
+
+
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+
+    android:layout_marginTop="8dp"
+    android:text="汤普森(18512345678)"
+    android:textColor="@color/c_252525"
+    android:textSize="14dp">
+
+
+</TextView>

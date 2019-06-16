@@ -1,6 +1,8 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -16,16 +18,17 @@ import androidx.annotation.ColorRes;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.model.SecurityRisksAdapterModel;
 import com.sensoro.common.server.bean.AlarmInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.bean.SensorTypeStyles;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
-import com.sensoro.common.model.SecurityRisksAdapterModel;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.smartcity.widget.HtmlImageSpan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -310,7 +313,12 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.msg_icon);
             final StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(mContext.getString(R.string.the_system_sends_msg_to)).append(":");
+//            holder.itemAlertContentTvContent.setText();
+
+
             holder.itemAlertContentTvContent.setText(appendResult(stringBuilder, 1, recordInfo.getPhoneList()));
+
+
             holder.llConfirm.setVisibility(View.GONE);
         } else if ("alarm".equals(recordInfo.getType())) {
             //TODO 设置图标
@@ -441,6 +449,12 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 tempList.add(temp);
             }
         }
+
+        String lookDetail = mContext.getResources().getString(R.string.look_detail);
+        stringBuffer.append("\t");
+        stringBuffer.append(lookDetail);
+        stringBuffer.append("   ");
+
         SpannableString spannableString = new SpannableString(stringBuffer);
 
         for (StringBuilder sb : tempList) {
@@ -456,6 +470,19 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             }
         }
 
+
+        int indexOfLookDetail = stringBuffer.indexOf(lookDetail);
+        ForegroundColorSpan lookdetailfcs = new ForegroundColorSpan(mContext.getResources().getColor(R.color.c_1dbb99));
+        spannableString.setSpan(lookdetailfcs, indexOfLookDetail, indexOfLookDetail + lookDetail.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+
+
+        //获取一张图片
+        Drawable drawable = mContext.getDrawable(R.mipmap.see_detail_rightarrow);
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+
+        //居中对齐imageSpan
+        HtmlImageSpan imageSpan = new HtmlImageSpan(drawable);
+        spannableString.setSpan(imageSpan, spannableString.length() - 1, spannableString.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         return spannableString;
     }
 

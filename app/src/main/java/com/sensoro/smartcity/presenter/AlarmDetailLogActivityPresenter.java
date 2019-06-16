@@ -22,6 +22,7 @@ import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.DeviceAlarmItemRsp;
 import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
 import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmCameraLiveDetailActivity;
@@ -32,9 +33,10 @@ import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.imainviews.IAlarmDetailLogActivityView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.CityAppUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.smartcity.widget.dialog.WarnPhoneMsgDialogUtil;
+import com.sensoro.smartcity.widget.dialog.WarningContactDialogUtil;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtilsTest;
@@ -131,7 +133,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                     mContext.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (isAttachedView()){
+                            if (isAttachedView()) {
                                 refreshData(false);
                             }
 
@@ -314,6 +316,11 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     }
 
     public void doContactOwner() {
+
+        WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
+        dialogUtil.show();
+        WarnPhoneMsgDialogUtil dialogUtil2 = new WarnPhoneMsgDialogUtil(mContext);
+        dialogUtil2.show();
         String tempNumber = deviceAlarmLogInfo.getDeviceNotification().getContent();
 
         if (TextUtils.isEmpty(tempNumber)) {

@@ -355,6 +355,7 @@
     <string name="alarm_contact_btn_save">保存</string>
     <string name="alarm_contact_tip_sample">例：某某</string>
     <string name="alarm_contact_tip_phone">预警电话</string>
+    <string name="alarm_contact_tip_msg">预警短信</string>
     <string name="alarm_contact_tip_phone_sample">例：18600000000</string>
     //预警日志xml
     <string name="alarm_log_alarm_time">报警时间</string>
@@ -1117,5 +1118,6 @@
     <string name="association_sensort">关联传感器</string>
     <string name="sweep_code_associated">扫码关联</string>
     <string name="sensor_list">传感器列表中关联</string>
+    <string name="warning_contact">位预警联系人</string>
 
 </resources>

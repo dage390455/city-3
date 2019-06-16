@@ -272,6 +272,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         } catch (Exception e) {
             e.printStackTrace();
         }
+        //设置共x人
         if (TextUtils.isEmpty(contact) && TextUtils.isEmpty(phone)) {
             getView().setNoContact();
             hasPhoneNumber = false;
