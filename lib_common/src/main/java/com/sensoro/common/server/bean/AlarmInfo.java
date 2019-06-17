@@ -11,6 +11,8 @@ import java.util.List;
 
 public class AlarmInfo implements Serializable {
     private NotificationInfo notification;
+
+    private List<NotificationInfo> notifications;
     private RuleInfo rules[];
     private BatteryInfo battery[];
     private String createTime;
@@ -45,6 +47,14 @@ public class AlarmInfo implements Serializable {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public List<NotificationInfo> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<NotificationInfo> notifications) {
+        this.notifications = notifications;
     }
 
     public class BatteryInfo implements Serializable {

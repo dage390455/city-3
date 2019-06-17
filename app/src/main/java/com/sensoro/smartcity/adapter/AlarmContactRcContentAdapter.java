@@ -26,6 +26,7 @@ public class AlarmContactRcContentAdapter extends RecyclerView.Adapter<AlarmCont
 
     private final Context mContext;
     public final List<DeployContactModel> mList = new ArrayList<>();
+    public final List<Integer> mRepeatList = new ArrayList<>();
 
     private OnAlarmContactAdapterListener listener;
 
@@ -165,9 +166,28 @@ public class AlarmContactRcContentAdapter extends RecyclerView.Adapter<AlarmCont
                     mFocusPos = position;
                     mList.get(position).clickType = 2;
 
+                    if (mRepeatList.contains(position)) {
+                        itemHolder.itemAdapterEtAlarmContactPhone.setTextColor(mContext.getResources().getColor(R.color.c_252525));
+                        mRepeatList.remove(mRepeatList.indexOf(position));
+                    }
+
+//                    Toast.makeText(mContext, "---" + hasFocus, Toast.LENGTH_SHORT).show();
+                } else {
+//                    itemHolder.itemAdapterEtAlarmContactPhone.setTextColor(mContext.getResources().getColor(R.color.c_252525));
+
                 }
+
+
             }
         });
+
+        if (mRepeatList.contains(position)) {
+            itemHolder.itemAdapterEtAlarmContactPhone.setTextColor(mContext.getResources().getColor(R.color.c_f34a4a));
+
+        } else {
+            itemHolder.itemAdapterEtAlarmContactPhone.setTextColor(mContext.getResources().getColor(R.color.c_252525));
+
+        }
 
 
         itemHolder.itemAdapterEtAlarmContactName.addTextChangedListener(watcherContactName);
@@ -205,6 +225,13 @@ public class AlarmContactRcContentAdapter extends RecyclerView.Adapter<AlarmCont
     public void updateAdapter(List<DeployContactModel> list) {
         this.mList.clear();
         this.mList.addAll(list);
+        notifyDataSetChanged();
+    }
+
+    public void updateRepeatAdapter(List<Integer> list) {
+        this.mRepeatList.clear();
+        this.mRepeatList.addAll(list);
+
         notifyDataSetChanged();
     }
 

@@ -9,17 +9,21 @@
         android:id="@+id/ac_alarm_contact_title"
         layout="@layout/item_include_text_text_title" />
 
+
     <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_above="@+id/item_adapter_alarm_contact_add_ll"
-        android:layout_below="@+id/ac_alarm_contact_title"
 
-        android:background="@color/c_f4f4f4">
+
+        android:layout_below="@+id/ac_alarm_contact_title"
+        android:background="@color/c_f4f4f4"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+
             android:orientation="vertical">
 
 
@@ -72,15 +76,19 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+
     <LinearLayout
         android:id="@+id/item_adapter_alarm_contact_add_ll"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="45dp"
         android:layout_alignParentBottom="true"
         android:background="@color/white"
-        android:visibility="gone"
-        android:gravity="center">
+        android:orientation="vertical">
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/c_f4f4f4" />
 
         <TextView
             android:id="@+id/alarm_contact_tv_add"
@@ -93,7 +101,7 @@
             android:padding="10dp"
             android:text="@string/new_contact"
             android:textColor="@color/c_252525"
-            android:textSize="40px" />
+            android:textSize="16dp" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -86,8 +86,8 @@
         android:label="@string/app_name"
         android:roundIcon="${APP_ROUND_ICON}"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
         android:theme="@style/MyTheme"
+        android:usesCleartextTraffic="true"
         tools:replace="android:theme">
         <!--适配华为（huawei）刘海屏-->
         <meta-data
@@ -226,7 +226,7 @@
         <activity android:name=".activity.MerchantSwitchActivity" />
         <activity
             android:name=".activity.DeployMonitorAlarmContactActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".activity.DeployMonitorNameAddressActivity" />
         <activity android:name=".activity.DeployResultActivity" />
         <activity android:name=".activity.SearchMonitorActivity" />

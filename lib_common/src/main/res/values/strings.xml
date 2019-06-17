@@ -1140,6 +1140,7 @@
     <string name="warning_contact">warning contact</string>
 
     <string name="add_up_to_10_contacts">Add up to 10 contacts</string>
+    <string name="duplicate_phone_number">Duplicate phone number</string>
 
     <string name="network_delay">Network delay</string>
     <string name="temperature_information">Temperature</string>

@@ -14,6 +14,7 @@ public class DeployRecordInfo implements Serializable {
     private long createdTime;
     private String deployStaff;
     private NotificationBean notification;
+    private List<NotificationBean> notifications;
     private String signalQuality;
     private String deviceType;
     private String deviceOwners;
@@ -194,6 +195,14 @@ public class DeployRecordInfo implements Serializable {
 
     public void setDeployPics(List<String> deployPics) {
         this.deployPics = deployPics;
+    }
+
+    public List<NotificationBean> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<NotificationBean> notifications) {
+        this.notifications = notifications;
     }
 
     public static class NotificationBean implements Serializable {
