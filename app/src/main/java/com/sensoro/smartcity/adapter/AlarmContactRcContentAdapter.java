@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -209,10 +208,6 @@ public class AlarmContactRcContentAdapter extends RecyclerView.Adapter<AlarmCont
     }
 
     public void addNewDataAdapter() {
-        if (mList.size() >= 10) {
-            Toast.makeText(mContext, "最多添加10个联系人", Toast.LENGTH_SHORT).show();
-            return;
-        }
         DeployContactModel deployContactModel = new DeployContactModel();
         deployContactModel.name = "";
         deployContactModel.phone = "";
