@@ -37,7 +37,7 @@ import com.sensoro.smartcity.util.CityAppUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtilsTest;
+import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -51,7 +51,7 @@ import java.util.Map;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailLogActivityView> implements IOnCreate, AlarmPopUtilsTest.OnPopupCallbackListener {
+public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailLogActivityView> implements IOnCreate, AlarmPopUtils.OnPopupCallbackListener {
     private final List<AlarmInfo.RecordInfo> mList = new ArrayList<>();
     private DeviceAlarmLogInfo deviceAlarmLogInfo;
     private boolean isReConfirm = false;

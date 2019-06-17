@@ -330,47 +330,47 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
      * 处理事件冲突
      */
 
-    View.OnTouchListener touchListener = new View.OnTouchListener() {
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-                scrollView.requestDisallowInterceptTouchEvent(false);
-            } else {
-                scrollView.requestDisallowInterceptTouchEvent(true);
-
-            }
-
-            return false;
-        }
-    };
-
-
 //    View.OnTouchListener touchListener = new View.OnTouchListener() {
-//        float ratio = 12f;
-//        float x0 = 0f;
-//        float y0 = 0f;
 //
 //        @Override
 //        public boolean onTouch(View v, MotionEvent event) {
-//            switch (event.getAction()) {
-//                case MotionEvent.ACTION_DOWN:
-//                    x0 = event.getX();
-//                    y0 = event.getY();
-//                    break;
-//                case MotionEvent.ACTION_MOVE:
-//                    float dx = Math.abs(event.getX() - x0);
-//                    float dy = Math.abs(event.getY() - y0);
-//                    x0 = event.getX();
-//                    y0 = event.getY();
-//                    scrollView.requestDisallowInterceptTouchEvent(dx * ratio > dy);
-//                    break;
+//
+//            if (event.getAction() == MotionEvent.ACTION_UP) {
+//
+//                scrollView.requestDisallowInterceptTouchEvent(false);
+//            } else {
+//                scrollView.requestDisallowInterceptTouchEvent(true);
+//
 //            }
+//
 //            return false;
 //        }
 //    };
+
+
+    View.OnTouchListener touchListener = new View.OnTouchListener() {
+        float ratio = 12f;
+        float x0 = 0f;
+        float y0 = 0f;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    x0 = event.getX();
+                    y0 = event.getY();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    float dx = Math.abs(event.getX() - x0);
+                    float dy = Math.abs(event.getY() - y0);
+                    x0 = event.getX();
+                    y0 = event.getY();
+                    scrollView.requestDisallowInterceptTouchEvent(dx * ratio > dy);
+                    break;
+            }
+            return false;
+        }
+    };
 
 
     private void initRcDeployDeviceTag() {
@@ -460,7 +460,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         }
 
 
-        acBasestationTvTypetime.setText(model.getType());
+        acBasestationTvTypetime.setText(model.getTypeName());
 
         if (!TextUtils.isEmpty(model.getUpdatedTime())) {
             acBasestationTvTypetime.append(" " + DateUtil.getHourFormatDate(Long.parseLong(model.getUpdatedTime())));

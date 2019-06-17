@@ -44,7 +44,7 @@ import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.common.widgets.SensoroToast;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtilsTest;
+import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -94,7 +94,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     private MainWarnFragRcContentAdapter mRcContentAdapter;
     private boolean isShowDialog = true;
     private ProgressUtils mProgressUtils;
-    private AlarmPopUtilsTest mAlarmPopUtils;
+    private AlarmPopUtils mAlarmPopUtils;
     private Animation returnTopAnimation;
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private TipOperationDialogUtils historyClearDialog;
@@ -109,7 +109,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     @SuppressLint("ClickableViewAccessibility")
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
-        mAlarmPopUtils = new AlarmPopUtilsTest(mRootFragment.getActivity());
+        mAlarmPopUtils = new AlarmPopUtils(mRootFragment.getActivity());
         mAlarmPopUtils.setOnPopupCallbackListener(mPresenter);
         returnTopAnimation = AnimationUtils.loadAnimation(mRootFragment.getContext(), R.anim.return_top_in_anim);
         mReturnTopImageView.setAnimation(returnTopAnimation);

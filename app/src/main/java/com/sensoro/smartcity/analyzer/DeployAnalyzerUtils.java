@@ -208,56 +208,57 @@ public class DeployAnalyzerUtils {
             case Constants.EVENT_DATA_ADD_SENSOR_FROM_DEPLOY:
                 //设备部署
             case Constants.TYPE_SCAN_DEPLOY_DEVICE:
-                if (result.startsWith("http")) {
-                    if (PreferencesHelper.getInstance().getUserData().hasNameplateDeploy) {
-                        try {
-                            String nameplateId = result.substring(result.lastIndexOf("/") + 1);
-                            //目前只要是以http开头的部署 暂认为为铭牌部署
-                            handleNameplate(Constants.TYPE_SCAN_NAMEPLATE_DEPLOY, presenter, nameplateId, activity, listener);
-                        } catch (Exception e) {
-                            listener.onError(0, null, activity.getResources().getString(R.string.please_re_scan_try_again));
-                        }
-                    } else {
-                        //无权限不在账户下
-                        Intent intent = new Intent();
-                        intent.setClass(activity, DeployResultActivity.class);
-                        DeployResultModel deployResultModel = new DeployResultModel();
-                        deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
-                        //
-                        String sn = result;
-                        try {
-                            sn = result.substring(result.lastIndexOf("/") + 1);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        deployResultModel.sn = sn;
-                        deployResultModel.scanType = Constants.TYPE_SCAN_NAMEPLATE_DEPLOY;
-                        intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
-                        listener.onError(0, intent, null);
-                    }
+                //TODO 暂时去掉铭牌部署
+//                if (result.startsWith("http")) {
+//                    if (PreferencesHelper.getInstance().getUserData().hasNameplateDeploy) {
+//                        try {
+//                            String nameplateId = result.substring(result.lastIndexOf("/") + 1);
+//                            //目前只要是以http开头的部署 暂认为为铭牌部署
+//                            handleNameplate(Constants.TYPE_SCAN_NAMEPLATE_DEPLOY, presenter, nameplateId, activity, listener);
+//                        } catch (Exception e) {
+//                            listener.onError(0, null, activity.getResources().getString(R.string.please_re_scan_try_again));
+//                        }
+//                    } else {
+//                        //无权限不在账户下
+//                        Intent intent = new Intent();
+//                        intent.setClass(activity, DeployResultActivity.class);
+//                        DeployResultModel deployResultModel = new DeployResultModel();
+//                        deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
+//                        //
+//                        String sn = result;
+//                        try {
+//                            sn = result.substring(result.lastIndexOf("/") + 1);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                        deployResultModel.sn = sn;
+//                        deployResultModel.scanType = Constants.TYPE_SCAN_NAMEPLATE_DEPLOY;
+//                        intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+//                        listener.onError(0, intent, null);
+//                    }
+//                } else {
+                String scanSerialNumber = parseResultMac(result);
+                if (TextUtils.isEmpty(scanSerialNumber)) {
+                    listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
+                    return;
                 } else {
-                    String scanSerialNumber = parseResultMac(result);
-                    if (TextUtils.isEmpty(scanSerialNumber)) {
-                        listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
-                        return;
-                    } else {
-                        try {
-                            String[] strings = scanSerialNumber.split(" ");
-                            scanSerialNumber = strings[0];
-                            if (scanSerialNumber.length() >= 8 && scanSerialNumber.length() <= 32) {
-                                //大小写转换
-                                scanSerialNumber = scanSerialNumber.toUpperCase();
-                                handleDeployDeviceStation(presenter, scanSerialNumber, activity, listener);
-                            } else {
-                                listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
-                                return;
-                            }
-                        } catch (Exception e) {
+                    try {
+                        String[] strings = scanSerialNumber.split(" ");
+                        scanSerialNumber = strings[0];
+                        if (scanSerialNumber.length() >= 8 && scanSerialNumber.length() <= 32) {
+                            //大小写转换
+                            scanSerialNumber = scanSerialNumber.toUpperCase();
+                            handleDeployDeviceStation(presenter, scanSerialNumber, activity, listener);
+                        } else {
                             listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
+                            return;
                         }
-
+                    } catch (Exception e) {
+                        listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
                     }
+
                 }
+//                }
 
                 break;
             case Constants.TYPE_SCAN_LOGIN:

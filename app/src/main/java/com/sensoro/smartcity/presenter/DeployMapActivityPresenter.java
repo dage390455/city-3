@@ -555,8 +555,6 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
             CameraUpdate update;
             switch (deployAnalyzerModel.mapSourceType) {
                 case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
-                case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
-
                     if (deployAnalyzerModel.latLng.size() == 2) {
                         latLng = new LatLng(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
                         update = CameraUpdateFactory
@@ -565,6 +563,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                         deviceMarker.setPosition(latLng);
                     }
                     break;
+                case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
                 case Constants.DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
                 case Constants.DEPLOY_MAP_SOURCE_TYPE_BASE_STATION:
                     AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();

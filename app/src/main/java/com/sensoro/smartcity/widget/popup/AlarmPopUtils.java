@@ -67,7 +67,7 @@ import butterknife.Unbinder;
 
 import static com.sensoro.smartcity.widget.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
 
-public class AlarmPopUtilsTest implements Constants,
+public class AlarmPopUtils implements Constants,
         ImagePickerAdapter.OnRecyclerViewItemClickListener, UpLoadPhotosUtils.UpLoadPhotoListener, SelectDialog.SelectDialogListener, DialogInterface.OnDismissListener, DialogInterface.OnCancelListener {
     @BindView(R.id.iv_alarm_popup_close)
     ImageView ivAlarmPopupClose;
@@ -119,7 +119,7 @@ public class AlarmPopUtilsTest implements Constants,
     private TipDialogUtils mRealFireDialog;
     private TipDialogUtils mExitDialog;
 
-    public AlarmPopUtilsTest(Activity activity) {
+    public AlarmPopUtils(Activity activity) {
         mActivity = activity;
         initView();
         intData();

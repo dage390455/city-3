@@ -46,7 +46,7 @@ import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtilsTest;
+import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -839,7 +839,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
 
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
         // 对照片信息统一处理
-        AlarmPopUtilsTest.handlePhotoIntent(requestCode, resultCode, data);
+        AlarmPopUtils.handlePhotoIntent(requestCode, resultCode, data);
         if (managerFragment != null) {
             managerFragment.handlerActivityResult(requestCode, resultCode, data);
         }

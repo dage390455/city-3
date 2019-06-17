@@ -1118,8 +1118,13 @@
     <string name="association_sensort">关联传感器</string>
     <string name="sweep_code_associated">扫码关联</string>
     <string name="sensor_list">传感器列表中关联</string>
+
     <string name="warning_contact">位预警联系人</string>
 
     <string name="add_up_to_10_contacts">最多添加10个联系人</string>
+
+    <string name="network_delay">网络时延</string>
+    <string name="temperature_information">温度信息</string>
+
 
 </resources>
