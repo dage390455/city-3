@@ -35,8 +35,6 @@ import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
 import com.sensoro.smartcity.util.CityAppUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.smartcity.widget.dialog.WarnPhoneMsgDialogUtil;
-import com.sensoro.smartcity.widget.dialog.WarningContactDialogUtil;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtilsTest;
@@ -317,10 +315,10 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
 
     public void doContactOwner() {
 
-        WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
-        dialogUtil.show();
-        WarnPhoneMsgDialogUtil dialogUtil2 = new WarnPhoneMsgDialogUtil(mContext);
-        dialogUtil2.show();
+//        WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
+//        dialogUtil.show();
+//        WarnPhoneMsgDialogUtil dialogUtil2 = new WarnPhoneMsgDialogUtil(mContext);
+//        dialogUtil2.show();
         String tempNumber = deviceAlarmLogInfo.getDeviceNotification().getContent();
 
         if (TextUtils.isEmpty(tempNumber)) {
