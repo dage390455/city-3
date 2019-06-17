@@ -460,7 +460,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         }
 
 
-        acBasestationTvTypetime.setText(model.getType());
+        acBasestationTvTypetime.setText(model.getTypeName());
 
         if (!TextUtils.isEmpty(model.getUpdatedTime())) {
             acBasestationTvTypetime.append(" " + DateUtil.getHourFormatDate(Long.parseLong(model.getUpdatedTime())));
