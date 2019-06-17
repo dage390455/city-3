@@ -1138,4 +1138,6 @@
     <string name="continue_associate">continue associate</string>
     <string name="warning_contact">warning contact</string>
 
+    <string name="add_up_to_10_contacts">Add up to 10 contacts</string>
+
 </resources>

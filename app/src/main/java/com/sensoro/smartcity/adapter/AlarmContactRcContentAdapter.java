@@ -210,7 +210,7 @@ public class AlarmContactRcContentAdapter extends RecyclerView.Adapter<AlarmCont
 
     public void addNewDataAdapter() {
         if (mList.size() >= 10) {
-            Toast.makeText(mContext, "最多添加10个联系人", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, mContext.getResources().getString(R.string.add_up_to_10_contacts), Toast.LENGTH_SHORT).show();
             return;
         }
         DeployContactModel deployContactModel = new DeployContactModel();
