@@ -17,7 +17,7 @@
         android:contentDescription="@null"
         android:src="@drawable/phone_icon"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/item_alert_content_tv_content" />
 
     <TextView
         android:id="@+id/item_alert_content_tv_content"

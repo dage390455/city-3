@@ -307,7 +307,29 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             //TODO 设置图标
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.phone_icon);
             StringBuilder stringBuffer = new StringBuilder();
-            stringBuffer.append(mContext.getString(R.string.the_system_calls_to)).append(":");
+
+            switch (recordInfo.getStatus()) {
+                case "alarm":
+                    stringBuffer.append(mContext.getString(R.string.alarm_phone_sent_tip_new));
+
+                    break;
+                case "recovery":
+                    stringBuffer.append(mContext.getString(R.string.alarm_phone_reciver_sent_tip_new));
+
+                    break;
+                case "timeout":
+                    stringBuffer.append(mContext.getString(R.string.alarm_phone_timeout_sent_tip_new));
+
+                    break;
+                case "real":
+                    stringBuffer.append(mContext.getString(R.string.alarm_phone_real_sent_tip_new));
+                    break;
+                default:
+                    stringBuffer.append(mContext.getString(R.string.the_system_calls_to)).append(":");
+
+                    break;
+            }
+
 
             holder.itemAlertContentTvContent.setText(appendResult(stringBuffer, 0, recordInfo.getPhoneList()));
             holder.llConfirm.setVisibility(View.GONE);
@@ -325,12 +347,34 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         } else if ("sendSMS".equals(recordInfo.getType())) {
             //TODO 设置图标
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.msg_icon);
-            final StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(mContext.getString(R.string.the_system_sends_msg_to)).append(":");
+            final StringBuilder stringBuffer = new StringBuilder();
+            switch (recordInfo.getStatus()) {
+                case "alarm":
+                    stringBuffer.append(mContext.getString(R.string.alarm_sms_sent_tip_new));
+
+                    break;
+                case "recovery":
+                    stringBuffer.append(mContext.getString(R.string.alarm_sms_reciver_sent_tip_new));
+
+                    break;
+                case "timeout":
+                    stringBuffer.append(mContext.getString(R.string.alarm_sms_timeout_sent_tip_new));
+
+                    break;
+                case "real":
+                    stringBuffer.append(mContext.getString(R.string.alarm_sms_real_sent_tip_new));
+                    break;
+                default:
+                    stringBuffer.append(mContext.getString(R.string.the_system_sends_msg_to)).append(":");
+
+                    break;
+            }
+
+
 //            holder.itemAlertContentTvContent.setText();
 
 
-            holder.itemAlertContentTvContent.setText(appendResult(stringBuilder, 1, recordInfo.getPhoneList()));
+            holder.itemAlertContentTvContent.setText(appendResult(stringBuffer, 1, recordInfo.getPhoneList()));
 
 
             holder.llConfirm.setVisibility(View.GONE);

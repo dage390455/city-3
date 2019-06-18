@@ -127,6 +127,7 @@ public class AlarmInfo implements Serializable {
         private int thresholds;
         private long updatedTime;
         private String source;
+        private String status;
         //
         private Integer displayStatus;
         private Integer place;
@@ -279,6 +280,14 @@ public class AlarmInfo implements Serializable {
 
         public Integer getFireStage() {
             return fireStage;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
         }
 
         public class Event implements Serializable {
