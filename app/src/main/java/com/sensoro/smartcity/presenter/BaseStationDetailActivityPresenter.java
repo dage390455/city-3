@@ -118,6 +118,9 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
                 getView().setDeviceLocation(mContext.getString(R.string.not_positioned), false);
                 getView().setDeviceLocationTextColor(R.color.c_a6a6a6);
                 return;
+            } else {
+                getView().setDeviceLocationTextColor(R.color.c_252525);
+
             }
             RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(v, v1), 200, GeocodeSearch.AMAP);
             geocoderSearch.getFromLocationAsyn(query);
@@ -642,6 +645,8 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
             address = mContext.getString(R.string.unknown_street);
         }
         mDeviceInfo.setAddress(address);
+//        getView().setDeviceLocationTextColor(R.color.c_252525);
+
         if (isAttachedView()) {
             getView().setDeviceLocation(address, true);
         }
