@@ -480,16 +480,22 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
 
     public void doNavigation() {
         List<Double> lonlat = data.getLonlatLabel();
+        ArrayList<Double> lonNew = new ArrayList<>();
+
+        lonNew.add(0d);
+        lonNew.add(0d);
         if (lonlat.size() == 2) {
             double v = lonlat.get(1);
             double v1 = lonlat.get(0);
             if (v == 0 || v1 == 0) {
-                getView().toastShort(mContext.getString(R.string.location_information_not_set));
-                return;
+                data.setLonlatLabel(lonNew);
+//                getView().toastShort(mContext.getString(R.string.location_information_not_set));
+//                return;
             }
         } else {
-            getView().toastShort(mContext.getString(R.string.location_information_not_set));
-            return;
+            data.setLonlatLabel(lonNew);
+//            getView().toastShort(mContext.getString(R.string.location_information_not_set));
+//            return;
         }
         Intent intent = new Intent();
         if (AppUtils.isChineseLanguage()) {
