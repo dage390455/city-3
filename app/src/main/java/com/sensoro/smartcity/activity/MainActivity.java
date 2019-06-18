@@ -65,10 +65,12 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         warnItem.setBadgeItem(new TextBadgeItem());
         BottomNavigationItem malfunctionItem = new BottomNavigationItem(R.drawable.selector_ac_main_malfunction, mActivity.getString(R.string.main_page_malfunction));
         BottomNavigationItem managerItem = new BottomNavigationItem(R.drawable.selector_ac_main_manage, mActivity.getString(R.string.main_page_manage));
+        BottomNavigationItem cameraItem = new BottomNavigationItem(R.drawable.selector_ac_main_home, getString(R.string.main_page_camera));
         acMainBottomBar.setTabSelectedListener(this);
         acMainBottomBar
                 .addItem(homeItem)
                 .addItem(warnItem)
+                .addItem(cameraItem)
                 .addItem(malfunctionItem)
                 .addItem(managerItem)
                 .setFirstSelectedPosition(0)

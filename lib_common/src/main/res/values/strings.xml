@@ -110,6 +110,7 @@
     <string name="main_page_warn">Alarm</string>
     <string name="main_page_malfunction">Malfunction</string>
     <string name="main_page_manage">Manage</string>
+    <string name="main_page_camera">Camera</string>
     <string name="confirming">Alarm confirm</string>
     <string name="confirming_again">Reconfirm</string>
     <string name="to_be_confirmed">Uncofirmed</string>

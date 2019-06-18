@@ -109,6 +109,7 @@
     <string name="main_page_warn">预警</string>
     <string name="main_page_malfunction">故障</string>
     <string name="main_page_manage">管理</string>
+    <string name="main_page_camera">摄像机</string>
     <string name="confirming">预警确认</string>
     <string name="confirming_again">再次确认</string>
     <string name="to_be_confirmed">待确认</string>

@@ -13,9 +13,12 @@ import android.view.KeyEvent;
 
 import androidx.fragment.app.Fragment;
 
+import com.alibaba.android.arouter.launcher.ARouter;
+import com.example.city_camera.fragment.CameraListFragment;
 import com.igexin.sdk.PushManager;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.base.ContextUtils;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.manger.ActivityTaskManager;
@@ -87,6 +90,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private HomeFragment homeFragment;
     private ManagerFragment managerFragment;
     private MalfunctionFragment malfunctionFragment;
+    private CameraListFragment mCameraListFragment;
     private ScreenBroadcastReceiver mScreenReceiver;
     private volatile boolean pingNetCanUse;
 
@@ -277,11 +281,13 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
         warnFragment = new WarnFragment();
         managerFragment = new ManagerFragment();
         malfunctionFragment = new MalfunctionFragment();
+        mCameraListFragment = (CameraListFragment) ARouter.getInstance().build(ARouterConstants.FRAGMENT_CAMERA_LIST).navigation();
         if (mFragmentList.size() > 0) {
             mFragmentList.clear();
         }
         mFragmentList.add(homeFragment);
         mFragmentList.add(warnFragment);
+        mFragmentList.add(mCameraListFragment);
         mFragmentList.add(malfunctionFragment);
         mFragmentList.add(managerFragment);
         getView().updateMainPageAdapterData(mFragmentList);

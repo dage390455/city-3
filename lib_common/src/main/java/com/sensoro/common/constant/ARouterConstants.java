@@ -19,4 +19,6 @@ public interface ARouterConstants {
     String ACTIVITY_DEPLOY_NAMEPLATE = "/nameplate/activity/DeployNameplateActivity";
 
     String ACTIVITY_NAMEPLATE_DETAIL = "/nameplate/activity/NameplateDetailActivity";
+
+    String FRAGMENT_CAMERA_LIST = "/city_camera/fragment/CameraListFragment";
 }
