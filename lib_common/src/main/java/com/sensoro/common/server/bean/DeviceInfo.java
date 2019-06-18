@@ -4,6 +4,8 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import com.sensoro.common.model.DeviceNotificationBean;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -404,7 +406,7 @@ public class DeviceInfo implements Serializable, Comparable {
                     if (battery != null) {
                         this.alarms.setBattery(battery);
                     }
-                    AlarmInfo.NotificationInfo notification = alarms.getNotification();
+                    DeviceNotificationBean notification = alarms.getNotification();
                     if (notification != null) {
                         this.alarms.setNotification(notification);
                     }

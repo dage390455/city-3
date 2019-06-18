@@ -22,12 +22,16 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnResume;
 import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.common.manger.ThreadPoolManager;
+import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeviceNotificationBean;
 import com.sensoro.common.model.EventData;
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.AlarmInfo;
@@ -50,6 +54,8 @@ import com.sensoro.common.server.response.DeviceCameraListRsp;
 import com.sensoro.common.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
 import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.libbleserver.ble.callback.OnDeviceUpdateObserver;
 import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
 import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
@@ -71,21 +77,17 @@ import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.analyzer.OperationCmdAnalyzer;
 import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.callback.OnConfigInfoObserver;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IMonitorPointElectricDetailActivityView;
 import com.sensoro.smartcity.model.BleUpdateModel;
-import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.Elect3DetailModel;
 import com.sensoro.smartcity.model.TaskOptionModel;
-import com.sensoro.common.utils.AppUtils;
-import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.dialog.TipDeviceUpdateDialogUtils;
+import com.sensoro.smartcity.widget.dialog.WarningContactDialogUtil;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -113,8 +115,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         , TipDeviceUpdateDialogUtils.TipDialogUpdateClickListener, IOnStart {
     private Activity mContext;
     private volatile DeviceInfo mDeviceInfo;
-    private String content;
-    private boolean hasPhoneNumber;
     private String mScheduleNo;
     private GeocodeSearch geocoderSearch;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
@@ -259,37 +259,20 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         String name = mDeviceInfo.getName();
         getView().setStatusInfo(statusText, textColor);
         getView().setTitleNameTextView(TextUtils.isEmpty(name) ? sn : name);
-        //
-        String contact = null;
-        String phone = null;
-        try {
-            contact = mDeviceInfo.getAlarms().getNotification().getContact();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            phone = mDeviceInfo.getAlarms().getNotification().getContent();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+
+        List<DeviceNotificationBean> notifications = mDeviceInfo.getAlarms().getNotifications();
+
         //设置共x人
-        if (TextUtils.isEmpty(contact) && TextUtils.isEmpty(phone)) {
+        if (notifications.size() == 0) {
             getView().setNoContact();
-            hasPhoneNumber = false;
         } else {
-            if (TextUtils.isEmpty(contact)) {
-                contact = mContext.getString(R.string.not_set);
-            }
-            hasPhoneNumber = !TextUtils.isEmpty(phone);
-            getView().setContactPhoneIconVisible(hasPhoneNumber);
-            if (hasPhoneNumber) {
-                this.content = phone;
-            } else {
-                this.content = mContext.getString(R.string.not_set);
-            }
-            getView().setContractName(contact);
-            getView().setContractPhone(content);
+            getView().setContractName(notifications.get(0).getContact());
+            getView().setContractPhone(notifications.get(0).getContent());
+            getView().setContractCount(notifications.size());
         }
+
+
         long updatedTime = mDeviceInfo.getUpdatedTime();
         if (updatedTime == 0) {
             getView().setUpdateTime("-");
@@ -1392,13 +1375,23 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     }
 
     public void doContact() {
-        if (hasPhoneNumber) {
-            if (TextUtils.isEmpty(content) || mContext.getString(R.string.not_set).equals(content)) {
-                getView().toastShort(mContext.getString(R.string.phone_contact_not_set));
-                return;
+
+        List<DeviceNotificationBean> notifications = mDeviceInfo.getAlarms().getNotifications();
+
+        if (null != notifications) {
+            if (notifications.size() > 1) {
+                WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
+                dialogUtil.show(notifications);
+            } else if (notifications.size() == 1) {
+                DeviceNotificationBean notificationBean = notifications.get(0);
+                if (TextUtils.isEmpty(notificationBean.getContent()) || mContext.getString(R.string.not_set).equals(notificationBean.getContent())) {
+                    getView().toastShort(mContext.getString(R.string.phone_contact_not_set));
+                    return;
+                }
+                AppUtils.diallPhone(notificationBean.getContent(), mContext);
             }
-            AppUtils.diallPhone(content, mContext);
         }
+
 
     }
 

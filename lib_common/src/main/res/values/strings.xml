@@ -1144,6 +1144,9 @@
 
     <string name="network_delay">Network delay</string>
     <string name="temperature_information">Temperature</string>
-
+    <string name="contacts">contacts</string>
+    <string name="etc">Etc</string>
+    <string name="total">total</string>
+    <string name="person">person</string>
 
 </resources>

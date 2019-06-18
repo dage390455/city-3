@@ -8,8 +8,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
 
-    android:layout_marginTop="8dp"
-    android:text="汤普森(18512345678)"
+    android:paddingTop="8dp"
     android:textColor="@color/c_252525"
     android:textSize="14dp">
 

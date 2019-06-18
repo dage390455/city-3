@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.sensoro.common.server.bean.AlarmInfo;
+import com.sensoro.common.model.DeviceNotificationBean;
 import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.common.widgets.MaxHeightRecyclerView;
 import com.sensoro.nameplate.widget.MaxHeightLinearLayoutManager;
@@ -67,7 +67,7 @@ public class WarningContactDialogUtil {
         return false;
     }
 
-    public void show(List<AlarmInfo.NotificationInfo> data) {
+    public void show(List<DeviceNotificationBean> data) {
         if (mDialog != null) {
             mAdapter.updateData(data);
             StringBuilder sb = new StringBuilder();
@@ -77,11 +77,11 @@ public class WarningContactDialogUtil {
         }
     }
 
-    public void show() {
-        if (mDialog != null) {
-            mDialog.show();
-        }
-    }
+//    public void show() {
+//        if (mDialog != null) {
+//            mDialog.show();
+//        }
+//    }
 
     public void dismiss() {
         if (mDialog != null) {

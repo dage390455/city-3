@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
@@ -29,6 +30,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.HtmlImageSpan;
+import com.sensoro.smartcity.widget.dialog.WarnPhoneMsgDialogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +85,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         AlarmInfo.RecordInfo recordInfo = timeShaftParentBeans.get(position);
         String time = DateUtil.getStrTimeToday(mContext, recordInfo.getUpdatedTime(), 0);
         holder.itemAlertContentTvTime.setText(time);
+        holder.itemAlertContentTvContent.setOnClickListener(null);
         //
         if ("confirm".equals(recordInfo.getType())) {
             //TODO 设置图标
@@ -308,6 +311,17 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
 
             holder.itemAlertContentTvContent.setText(appendResult(stringBuffer, 0, recordInfo.getPhoneList()));
             holder.llConfirm.setVisibility(View.GONE);
+
+            holder.itemAlertContentTvContent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    List[] receiveStautus = {receiveStautus0, receiveStautus1, receiveStautus2, receiveStautus3};
+
+                    WarnPhoneMsgDialogUtil phoneMsgDialogUtil = new WarnPhoneMsgDialogUtil((Activity) mContext);
+                    phoneMsgDialogUtil.setTitleTv(mContext.getResources().getString(R.string.alarm_contact_tip_phone));
+                    phoneMsgDialogUtil.show(0, receiveStautus);
+                }
+            });
         } else if ("sendSMS".equals(recordInfo.getType())) {
             //TODO 设置图标
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.msg_icon);
@@ -320,6 +334,17 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
 
 
             holder.llConfirm.setVisibility(View.GONE);
+
+            holder.itemAlertContentTvContent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    List[] receiveStautus = {receiveStautus0, receiveStautus1, receiveStautus2, receiveStautus3};
+
+                    WarnPhoneMsgDialogUtil phoneMsgDialogUtil = new WarnPhoneMsgDialogUtil((Activity) mContext);
+                    phoneMsgDialogUtil.setTitleTv(mContext.getResources().getString(R.string.alarm_contact_tip_msg));
+                    phoneMsgDialogUtil.show(1, receiveStautus);
+                }
+            });
         } else if ("alarm".equals(recordInfo.getType())) {
             //TODO 设置图标
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.smoke_icon);
@@ -408,50 +433,67 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             if (stautus.size() > 0) {
                 temp = new StringBuilder();
                 for (int i = 0; i < stautus.size(); i++) {
-                    String number = ((AlarmInfo.RecordInfo.Event) stautus.get(i)).getNumber();
+                    AlarmInfo.RecordInfo.Event event = (AlarmInfo.RecordInfo.Event) stautus.get(i);
+                    String number = event.getNumber();
+                    String name = event.getName();
                     if (i != (stautus.size() - 1)) {
-                        temp.append(" ").append(number).append(" ;");
+                        temp.append(" ").append(name).append("(").append(number).append(")").append(" ;");
                     } else {
-                        temp.append(" ").append(number).append(" ");
+                        temp.append(" ").append(name).append("(").append(number).append(")").append(" ");
                     }
                 }
-                if (type == 0) {
-                    switch (((AlarmInfo.RecordInfo.Event) stautus.get(0)).getReciveStatus()) {
-                        case 0:
-                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.telephone_call));
-                            break;
-                        case 1:
-                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.telephone_answer_success));
-                            break;
-                        case 2:
-                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.telephone_answer_failed));
-                            break;
-                        default:
-                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.telephone_answer_unknow));
-                            break;
-                    }
-                } else if (type == 1) {
-                    switch (((AlarmInfo.RecordInfo.Event) stautus.get(0)).getReciveStatus()) {
-                        case 0:
-                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.sms_sending));
-                            break;
-                        case 1:
-                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.sms_received_successfully));
-                            break;
-                        case 2:
-                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.sms_received_failed));
-                            break;
-                        default:
-                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.sms_received_unknow));
-                            break;
-                    }
-                }
+
+                stringBuffer.append(temp).append(" ");
+
+//                if (type == 0) {
+//                    switch (((AlarmInfo.RecordInfo.Event) stautus.get(0)).getReciveStatus()) {
+//                        case 0:
+////                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.telephone_call));
+//                            stringBuffer.append(temp).append(" ");
+//                            break;
+//                        case 1:
+////                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.telephone_answer_success));
+//                            stringBuffer.append(temp).append(" ");
+//                            break;
+//                        case 2:
+////                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.telephone_answer_failed));
+//                            stringBuffer.append(temp).append(" ");
+//                            break;
+//                        default:
+////                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.telephone_answer_unknow));
+//                            stringBuffer.append(temp).append(" ");
+//                            break;
+//                    }
+//                } else if (type == 1) {
+//                    switch (((AlarmInfo.RecordInfo.Event) stautus.get(0)).getReciveStatus()) {
+//                        case 0:
+////                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.sms_sending));
+//                            stringBuffer.append(temp).append(" ");
+//                            break;
+//                        case 1:
+////                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.sms_received_successfully));
+//                            stringBuffer.append(temp).append(" ");
+//                            break;
+//                        case 2:
+////                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.sms_received_failed));
+//                            stringBuffer.append(temp).append(" ");
+//                            break;
+//                        default:
+////                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.sms_received_unknow));
+//                            stringBuffer.append(temp).append(" ");
+//                            break;
+//                    }
+//                }
                 tempList.add(temp);
+            }
+            if (stautus.size() > 2) {
+                stringBuffer.append(mContext.getString(R.string.etc) + stautus.size() + mContext.getString(R.string.contacts));
             }
         }
 
+
         String lookDetail = mContext.getResources().getString(R.string.look_detail);
-        stringBuffer.append("\t");
+        stringBuffer.append(" ");
         stringBuffer.append(lookDetail);
         stringBuffer.append("   ");
 

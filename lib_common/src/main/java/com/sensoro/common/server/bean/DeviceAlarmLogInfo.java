@@ -3,8 +3,9 @@ package com.sensoro.common.server.bean;
 
 import androidx.annotation.NonNull;
 
+import com.sensoro.common.model.DeviceNotificationBean;
+
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -30,6 +31,7 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
     private double[] deviceLonlat;
 
     private DeviceNotificationBean deviceNotification;
+    private List<DeviceNotificationBean> deviceNotifications;
     private AlarmInfo.OwnerInfo owners;
     private boolean isDeleted;
     private int displayStatus;
@@ -215,41 +217,14 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
         this.alarmStatus = alarmStatus;
     }
 
-
-    public static class DeviceNotificationBean implements Serializable {
-
-        /**
-         * types : phone
-         */
-
-        private String types;
-        private String contact;
-        private String content;
-
-        public String getTypes() {
-            return types;
-        }
-
-        public void setTypes(String types) {
-            this.types = types;
-        }
-
-        public String getContact() {
-            return contact;
-        }
-
-        public void setContact(String contact) {
-            this.contact = contact;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
+    public List<DeviceNotificationBean> getDeviceNotifications() {
+        return deviceNotifications;
     }
+
+    public void setDeviceNotifications(List<DeviceNotificationBean> deviceNotifications) {
+        this.deviceNotifications = deviceNotifications;
+    }
+
 
     @Override
     public int compareTo(@NonNull DeviceAlarmLogInfo anotherAlarmLogInfo) {

@@ -10,6 +10,7 @@ import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
+import com.sensoro.common.model.DeviceNotificationBean;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
@@ -22,7 +23,6 @@ import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.DeviceAlarmItemRsp;
 import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
 import com.sensoro.common.server.response.ResponseBase;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmCameraLiveDetailActivity;
@@ -35,6 +35,7 @@ import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
 import com.sensoro.smartcity.util.CityAppUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.smartcity.widget.dialog.WarningContactDialogUtil;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
@@ -315,19 +316,14 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
 
     public void doContactOwner() {
 
-//        WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
-//        dialogUtil.show();
-//        WarnPhoneMsgDialogUtil dialogUtil2 = new WarnPhoneMsgDialogUtil(mContext);
-//        dialogUtil2.show();
-        String tempNumber = deviceAlarmLogInfo.getDeviceNotification().getContent();
-
-        if (TextUtils.isEmpty(tempNumber)) {
-            if (isAttachedView()) {
-                getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
-            }
+        List<DeviceNotificationBean> deviceNotifications = deviceAlarmLogInfo.getDeviceNotifications();
+        if (deviceNotifications.size() > 0) {
+            WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
+            dialogUtil.show(deviceNotifications);
         } else {
-            AppUtils.diallPhone(tempNumber, mContext);
+            getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
         }
+
     }
 
     public void doNavigation() {

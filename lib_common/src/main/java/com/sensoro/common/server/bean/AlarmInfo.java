@@ -1,5 +1,6 @@
 package com.sensoro.common.server.bean;
 
+import com.sensoro.common.model.DeviceNotificationBean;
 import com.sensoro.common.model.SecurityRisksAdapterModel;
 
 import java.io.Serializable;
@@ -10,20 +11,13 @@ import java.util.List;
  */
 
 public class AlarmInfo implements Serializable {
-    private NotificationInfo notification;
 
-    private List<NotificationInfo> notifications;
+    private List<DeviceNotificationBean> notifications;
+    private DeviceNotificationBean notification;
     private RuleInfo rules[];
     private BatteryInfo battery[];
     private String createTime;
 
-    public NotificationInfo getNotification() {
-        return notification;
-    }
-
-    public void setNotification(NotificationInfo notification) {
-        this.notification = notification;
-    }
 
     public RuleInfo[] getRules() {
         return rules;
@@ -49,12 +43,20 @@ public class AlarmInfo implements Serializable {
         this.createTime = createTime;
     }
 
-    public List<NotificationInfo> getNotifications() {
+    public List<DeviceNotificationBean> getNotifications() {
         return notifications;
     }
 
-    public void setNotifications(List<NotificationInfo> notifications) {
+    public void setNotifications(List<DeviceNotificationBean> notifications) {
         this.notifications = notifications;
+    }
+
+    public DeviceNotificationBean getNotification() {
+        return notification;
+    }
+
+    public void setNotification(DeviceNotificationBean notification) {
+        this.notification = notification;
     }
 
     public class BatteryInfo implements Serializable {
@@ -88,36 +90,6 @@ public class AlarmInfo implements Serializable {
         }
     }
 
-    public class NotificationInfo implements Serializable {
-
-        private String contact;
-        private String content;
-        private String types;
-
-        public String getContact() {
-            return contact;
-        }
-
-        public void setContact(String contact) {
-            this.contact = contact;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
-
-        public String getTypes() {
-            return types;
-        }
-
-        public void setTypes(String types) {
-            this.types = types;
-        }
-    }
 
     public class RuleInfo implements Serializable {
         private String sensorTypes;

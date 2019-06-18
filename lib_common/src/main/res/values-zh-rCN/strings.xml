@@ -79,14 +79,14 @@
     <string name="the_system_sends_msg_to">系统发送短信至</string>
     <string name="equipment_warning">设备预警</string>
     <string name="value_is">值为</string>
-    <string name="telephone_call">电话拨打中</string>
-    <string name="telephone_answer_success">电话接听成功</string>
-    <string name="telephone_answer_failed">电话接听失败</string>
-    <string name="telephone_answer_unknow">电话接听结果未知</string>
-    <string name="sms_sending">短信发送中</string>
-    <string name="sms_received_successfully">短信接收成功</string>
-    <string name="sms_received_failed">短信接收失败</string>
-    <string name="sms_received_unknow">短信接收结果未知</string>
+    <string name="telephone_call">拨打中</string>
+    <string name="telephone_answer_success">接收成功</string>
+    <string name="telephone_answer_failed">接收失败</string>
+    <string name="telephone_answer_unknow">结果未知</string>
+    <string name="sms_sending">发送中</string>
+    <string name="sms_received_successfully">接收成功</string>
+    <string name="sms_received_failed">接收失败</string>
+    <string name="sms_received_unknow">结果未知</string>
     <string name="personal">个人</string>
     <string name="legal_representative">法定代表人</string>
     <string name="inspection">巡检</string>
@@ -1126,6 +1126,10 @@
 
     <string name="network_delay">网络时延</string>
     <string name="temperature_information">温度信息</string>
+    <string name="contacts">个联系人 </string>
+    <string name="etc">等</string>
+    <string name="total">共</string>
+    <string name="person">人</string>
 
 
 </resources>
