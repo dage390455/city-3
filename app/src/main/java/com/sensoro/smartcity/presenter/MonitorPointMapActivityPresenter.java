@@ -180,6 +180,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
     private void refreshMap() {
         List<Double> lonlat = mDeviceInfo.getLonlat();
         if (aMap != null && lonlat != null && lonlat.size() > 1) {
+            aMap.clear();
             UiSettings uiSettings = aMap.getUiSettings();
             // 通过UISettings.setZoomControlsEnabled(boolean)来设置缩放按钮是否能显示
             uiSettings.setZoomControlsEnabled(false);

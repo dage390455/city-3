@@ -325,7 +325,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
 
                             EventData eventData = new EventData();
                             eventData.code = Constants.EVENT_DATA_UPDATE_BASE_STATION;
-                            eventData.data = deviceDeployRsp.getData().getLonlatLabel();
+                            eventData.data = deviceDeployRsp.getData().getLonlat();
                             EventBus.getDefault().post(eventData);
                             getView().finishAc();
                         }

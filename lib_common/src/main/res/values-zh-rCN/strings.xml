@@ -546,7 +546,7 @@
     //warn framgen
     <string name="warn_fragment_search_tip">设备名称/设备编号/手机号</string>
 
-    <string name="basestation_search_tip">基站名称/基站标号/标签</string>
+    <string name="basestation_search_tip">基站名称/基站编号/标签</string>
 
 
     //

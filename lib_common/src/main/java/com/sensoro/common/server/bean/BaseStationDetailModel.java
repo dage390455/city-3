@@ -146,6 +146,7 @@ public class BaseStationDetailModel {
     private Vpn vpn;
     private ArrayList<String> tags;
     private ArrayList<Double> lonlatLabel;
+    private ArrayList<Double> lonlat;
     private ArrayList<String> channels;
     private ArrayList<String> selftest;
     private ArrayList<String> images;
@@ -174,6 +175,14 @@ public class BaseStationDetailModel {
 
     public void setTypeName(String typeName) {
         this.typeName = typeName;
+    }
+
+    public ArrayList<Double> getLonlat() {
+        return lonlat;
+    }
+
+    public void setLonlat(ArrayList<Double> lonlat) {
+        this.lonlat = lonlat;
     }
 
     public static class NetDelay implements Parcelable {
