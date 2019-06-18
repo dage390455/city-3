@@ -1,10 +1,13 @@
 package com.sensoro.smartcity.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Rect;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -165,21 +168,26 @@ public class AlarmContactRcContentAdapter extends RecyclerView.Adapter<AlarmCont
                 if (hasFocus) {
                     mFocusPos = position;
                     mList.get(position).clickType = 2;
-
-                    if (mRepeatList.contains(position)) {
-                        itemHolder.itemAdapterEtAlarmContactPhone.setTextColor(mContext.getResources().getColor(R.color.c_252525));
-                        mRepeatList.remove(mRepeatList.indexOf(position));
-                    }
-
-//                    Toast.makeText(mContext, "---" + hasFocus, Toast.LENGTH_SHORT).show();
-                } else {
-//                    itemHolder.itemAdapterEtAlarmContactPhone.setTextColor(mContext.getResources().getColor(R.color.c_252525));
-
                 }
 
 
             }
         });
+
+        itemHolder.itemAdapterEtAlarmContactPhone.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+
+                //有焦点且软键盘弹出
+                if (mRepeatList.contains(position)) {
+                    itemHolder.itemAdapterEtAlarmContactPhone.setTextColor(mContext.getResources().getColor(R.color.c_252525));
+                    mRepeatList.remove(mRepeatList.indexOf(position));
+                }
+                return false;
+            }
+        });
+
 
         if (mRepeatList.contains(position)) {
             itemHolder.itemAdapterEtAlarmContactPhone.setTextColor(mContext.getResources().getColor(R.color.c_f34a4a));
@@ -246,5 +254,20 @@ public class AlarmContactRcContentAdapter extends RecyclerView.Adapter<AlarmCont
         this.mList.add(deployContactModel);
         notifyDataSetChanged();
 //        notifyItemInserted(mList.size()-1);
+    }
+
+
+    private boolean isSoftShowing() {
+        if (mContext instanceof Activity) {
+
+            //获取当前屏幕内容的高度
+            int screenHeight = ((Activity) mContext).getWindow().getDecorView().getHeight();
+            //获取View可见区域的bottom
+            Rect rect = new Rect();
+            ((Activity) mContext).getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
+
+            return screenHeight - rect.bottom != 0;
+        }
+        return false;
     }
 }

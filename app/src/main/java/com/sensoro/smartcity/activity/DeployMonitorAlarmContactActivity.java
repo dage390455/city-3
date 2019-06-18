@@ -229,6 +229,7 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
 
     @Override
     public void updateRepeatAdapter(List<Integer> list) {
+
         mAlarmContactRcContentAdapter.updateRepeatAdapter(list);
 
     }
