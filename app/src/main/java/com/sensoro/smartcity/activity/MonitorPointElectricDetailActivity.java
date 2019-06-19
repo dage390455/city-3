@@ -455,6 +455,18 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     @Override
+    public void setContractCount(int count) {
+
+        if (count > 1) {
+            setContactPhoneIconVisible(true);
+            acMonitoringPointTvPhoneCount.setText(getResources().getString(R.string.total) + count + getResources().getString(R.string.person));
+        } else {
+            acMonitoringPointTvPhoneCount.setText("");
+            setContactPhoneIconVisible(false);
+        }
+    }
+
+    @Override
     public void setDeviceLocation(String location, boolean isArrowsRight) {
         acMonitoringPointTvLocation.setText(location);
         acMonitoringPointImvLocation.setVisibility(isArrowsRight ? View.VISIBLE : View.GONE);

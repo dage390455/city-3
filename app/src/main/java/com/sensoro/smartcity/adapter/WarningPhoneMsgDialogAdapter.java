@@ -10,15 +10,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.sensoro.common.server.bean.NamePlateInfo;
+import com.sensoro.common.server.bean.AlarmInfo;
 import com.sensoro.smartcity.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class WarningPhoneMsgDialogAdapter extends RecyclerView.Adapter<WarningPhoneMsgDialogAdapter.AssociationSensorDialogViewHolder> {
     private final Context mContext;
-    private ArrayList<NamePlateInfo> mList = new ArrayList<>();
+    private List[] mList = new List[]{};
+
+    private int type;
 
     public WarningPhoneMsgDialogAdapter(Context context) {
         mContext = context;
@@ -33,29 +34,77 @@ public class WarningPhoneMsgDialogAdapter extends RecyclerView.Adapter<WarningPh
 
     @Override
     public void onBindViewHolder(@NonNull AssociationSensorDialogViewHolder holder, int position) {
-//        NamePlateInfo model = mList.get(position);
-//
-//
-//        sb.append(model.deviceTypeName).append(mContext.getString(R.string.monitor))
-//                .append("(").append(TextUtils.isEmpty(model.getName()) ? model.getSn() : model.getName()).append(")");
-//
-//
-//        holder.tvPhone.setText(sb.toString());
+        List stautus = mList[position];
+        if (null != stautus && stautus.size() > 0) {
+
+            holder.tvState.setVisibility(View.VISIBLE);
+            holder.llPhoneContent.setVisibility(View.VISIBLE);
+            holder.llPhoneContent.removeAllViews();
+
+            for (int i = 0; i < stautus.size(); i++) {
+                AlarmInfo.RecordInfo.Event event = (AlarmInfo.RecordInfo.Event) stautus.get(i);
+                String number = event.getNumber();
+                String name = event.getName();
+                View inflate = LayoutInflater.from(mContext).inflate(R.layout.item_adapter_warning_phone_msg_content, null);
+                TextView textView = inflate.findViewById(R.id.tv_warning_contact_phone_msg);
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append(" ").append(name).append("(").append(number).append(")");
+                textView.setText(stringBuilder.toString());
+                holder.llPhoneContent.addView(textView);
+
+            }
 
 
-        holder.tvState.setText("title==" + position);
+            if (type == 0) {
+                switch (((AlarmInfo.RecordInfo.Event) stautus.get(0)).getReciveStatus()) {
+                    case 0:
+                        holder.tvState.setText(mContext.getString(R.string.telephone_call));
+                        holder.tvState.setTextColor(mContext.getResources().getColor(R.color.c_37B0E9));
+                        break;
+                    case 1:
+                        holder.tvState.setText(mContext.getString(R.string.telephone_answer_success));
+                        holder.tvState.setTextColor(mContext.getResources().getColor(R.color.c_1dbb99));
+                        break;
+                    case 2:
+                        holder.tvState.setText(mContext.getString(R.string.telephone_answer_failed));
+                        holder.tvState.setTextColor(mContext.getResources().getColor(R.color.color_alarm_pup_red));
+
+                        break;
+                    default:
+                        holder.tvState.setText(mContext.getString(R.string.telephone_answer_unknow));
+                        holder.tvState.setTextColor(mContext.getResources().getColor(R.color.c_6D5EAC));
+
+                        break;
+                }
+            } else if (type == 1) {
+                switch (((AlarmInfo.RecordInfo.Event) stautus.get(0)).getReciveStatus()) {
+                    case 0:
+                        holder.tvState.setText(mContext.getString(R.string.sms_sending));
+                        holder.tvState.setTextColor(mContext.getResources().getColor(R.color.c_37B0E9));
 
 
-//        Random random = new Random();
-//        random.nextInt(position);
+                        break;
+                    case 1:
+                        holder.tvState.setText(mContext.getString(R.string.sms_received_successfully));
+                        holder.tvState.setTextColor(mContext.getResources().getColor(R.color.c_1dbb99));
 
-        holder.llPhoneContent.removeAllViews();
-        for (int i = 0; i < position; i++) {
-            View inflate = LayoutInflater.from(mContext).inflate(R.layout.item_adapter_warning_phone_msg_content, null);
-            TextView textView = inflate.findViewById(R.id.tv_warning_contact_phone_msg);
-            textView.setText("詹姆斯(18689721456)" + position + "==" + i);
-            holder.llPhoneContent.addView(textView);
+                        break;
+                    case 2:
+                        holder.tvState.setText(mContext.getString(R.string.sms_received_failed));
+                        holder.tvState.setTextColor(mContext.getResources().getColor(R.color.color_alarm_pup_red));
 
+                        break;
+                    default:
+
+                        holder.tvState.setText(mContext.getString(R.string.sms_received_unknow));
+                        holder.tvState.setTextColor(mContext.getResources().getColor(R.color.c_6D5EAC));
+
+                        break;
+                }
+            }
+        } else {
+            holder.tvState.setVisibility(View.GONE);
+            holder.llPhoneContent.setVisibility(View.GONE);
         }
 
 
@@ -63,12 +112,12 @@ public class WarningPhoneMsgDialogAdapter extends RecyclerView.Adapter<WarningPh
 
     @Override
     public int getItemCount() {
-        return 10;
+        return mList.length;
     }
 
-    public void updateData(List<NamePlateInfo> data) {
-        mList.clear();
-        mList.addAll(data);
+    public void updateData(int type, List[] data) {
+        mList = data;
+        this.type = type;
         notifyDataSetChanged();
     }
 

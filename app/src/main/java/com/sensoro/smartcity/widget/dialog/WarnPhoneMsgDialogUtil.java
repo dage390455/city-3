@@ -5,10 +5,10 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.common.widgets.MaxHeightRecyclerView;
 import com.sensoro.nameplate.widget.MaxHeightLinearLayoutManager;
@@ -22,6 +22,7 @@ public class WarnPhoneMsgDialogUtil {
     private final ImageView mIvClose;
     private final MaxHeightRecyclerView mRvContent;
     private final CustomCornerDialog mDialog;
+    private TextView titleTv;
     private WarningPhoneMsgDialogAdapter mAdapter;
 
     public WarnPhoneMsgDialogUtil(Activity activity, boolean cancelable) {
@@ -36,6 +37,7 @@ public class WarnPhoneMsgDialogUtil {
         Display d = m.getDefaultDisplay();
         int maxHeight = (int) (d.getHeight() * 0.35);
         mIvClose = view.findViewById(R.id.close_iv);
+        titleTv = view.findViewById(R.id.tv_title_warning_contact);
         mRvContent = view.findViewById(R.id.rv_content_item_dialog_warning_contact);
 
         mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view, true);
@@ -64,16 +66,26 @@ public class WarnPhoneMsgDialogUtil {
         return false;
     }
 
-    public void show(List<NamePlateInfo> data) {
+    /**
+     * @param type 0电话 1短信
+     * @param data
+     */
+    public void show(int type, List[] data) {
         if (mDialog != null) {
-            mAdapter.updateData(data);
+            mAdapter.updateData(type, data);
             mDialog.show();
         }
     }
 
-    public void show() {
+//    public void show() {
+//        if (mDialog != null) {
+//            mDialog.show();
+//        }
+//    }
+
+    public void setTitleTv(String title) {
         if (mDialog != null) {
-            mDialog.show();
+            titleTv.setText(title);
         }
     }
 

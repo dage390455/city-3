@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
+import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -89,6 +91,12 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        Window win = getWindow();
+        win.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED //锁屏状态下显示
+                | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD //解锁
+                | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON //保持屏幕长亮
+                | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON); //打开屏幕
+        //
         mPresenter = createPresenter();
         mPresenter.attachView((V) this);
         V view = mPresenter.getView();

@@ -81,7 +81,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
 
 
                 final ArrayList<Double> pushDeviceInfo = (ArrayList<Double>) dataevent;
-                data.setLonlatLabel(pushDeviceInfo);
+                data.setLonlat(pushDeviceInfo);
                 freshLocationDeviceInfo();
 
 
@@ -110,7 +110,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
     private void freshLocationDeviceInfo() {
 
 
-        List<Double> lonlat = data.getLonlatLabel();
+        List<Double> lonlat = data.getLonlat();
         try {
             double v = lonlat.get(1);
             double v1 = lonlat.get(0);
@@ -118,6 +118,9 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
                 getView().setDeviceLocation(mContext.getString(R.string.not_positioned), false);
                 getView().setDeviceLocationTextColor(R.color.c_a6a6a6);
                 return;
+            } else {
+                getView().setDeviceLocationTextColor(R.color.c_252525);
+
             }
             RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(v, v1), 200, GeocodeSearch.AMAP);
             geocoderSearch.getFromLocationAsyn(query);
@@ -479,17 +482,23 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
 
 
     public void doNavigation() {
-        List<Double> lonlat = data.getLonlatLabel();
+        List<Double> lonlat = data.getLonlat();
+        ArrayList<Double> lonNew = new ArrayList<>();
+
+        lonNew.add(0d);
+        lonNew.add(0d);
         if (lonlat.size() == 2) {
             double v = lonlat.get(1);
             double v1 = lonlat.get(0);
             if (v == 0 || v1 == 0) {
-                getView().toastShort(mContext.getString(R.string.location_information_not_set));
-                return;
+                data.setLonlat(lonNew);
+//                getView().toastShort(mContext.getString(R.string.location_information_not_set));
+//                return;
             }
         } else {
-            getView().toastShort(mContext.getString(R.string.location_information_not_set));
-            return;
+            data.setLonlat(lonNew);
+//            getView().toastShort(mContext.getString(R.string.location_information_not_set));
+//            return;
         }
         Intent intent = new Intent();
         if (AppUtils.isChineseLanguage()) {
@@ -499,7 +508,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         }
 
 
-        mDeviceInfo.setLonlat(data.getLonlatLabel());
+        mDeviceInfo.setLonlat(data.getLonlat());
         mDeviceInfo.setSourceType(Constants.DEPLOY_MAP_SOURCE_TYPE_BASE_STATION);
         mDeviceInfo.setSn(sn);
         intent.putExtra(Constants.EXTRA_DEVICE_INFO, mDeviceInfo);
@@ -636,6 +645,8 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
             address = mContext.getString(R.string.unknown_street);
         }
         mDeviceInfo.setAddress(address);
+//        getView().setDeviceLocationTextColor(R.color.c_252525);
+
         if (isAttachedView()) {
             getView().setDeviceLocation(address, true);
         }

@@ -14,8 +14,9 @@
         android:id="@+id/tv_warning_contact_phone_msg_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="发送中"
         android:textColor="@color/c_37B0E9"
+        android:layout_gravity="left|center_vertical"
+        android:gravity="left|center_vertical"
         android:textSize="14dp"
         android:textStyle="bold"></TextView>
 
@@ -23,7 +24,8 @@
         android:id="@+id/ll_warning_contact_phone_msg_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:layout_gravity="left|center_vertical"
+        android:gravity="left|center_vertical"
         android:orientation="vertical"
         android:paddingBottom="16dp">
 

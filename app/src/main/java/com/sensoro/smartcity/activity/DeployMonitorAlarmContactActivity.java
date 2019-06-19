@@ -2,29 +2,31 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.model.DeployContactModel;
+import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.SoftHideKeyBoardUtil;
+import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.AlarmContactHistoryAdapter;
 import com.sensoro.smartcity.adapter.AlarmContactRcContentAdapter;
-import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IAlarmContactActivityView;
-import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.smartcity.presenter.AlarmContactActivityPresenter;
-import com.sensoro.common.utils.AppUtils;
-import com.sensoro.common.utils.SoftHideKeyBoardUtil;
-import com.sensoro.common.callback.RecycleViewItemClickListener;
-import com.sensoro.common.manger.SensoroLinearLayoutManager;
-import com.sensoro.common.widgets.TipOperationDialogUtils;
-import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -102,8 +104,8 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
         rcAcDeployAlarmContactHistory.setAdapter(mHistoryAdapter);
 
 
-        SensoroLinearLayoutManager contactManager = new SensoroLinearLayoutManager(mActivity);
-        contactManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        LinearLayoutManager contactManager = new LinearLayoutManager(mActivity);
+        contactManager.setOrientation(LinearLayoutManager.VERTICAL);
         rcAddAlarmContactRv.setLayoutManager(contactManager);
         rcAddAlarmContactRv.setAdapter(mAlarmContactRcContentAdapter);
     }
@@ -222,6 +224,13 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
     public void updateContactData(ArrayList<DeployContactModel> mdContactModelList) {
         mAlarmContactRcContentAdapter.updateAdapter(mdContactModelList);
 
+
+    }
+
+    @Override
+    public void updateRepeatAdapter(List<Integer> list) {
+
+        mAlarmContactRcContentAdapter.updateRepeatAdapter(list);
 
     }
 
