@@ -261,6 +261,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
         leftAxis.setTextColor(Color.parseColor("#252525"));
 
+        leftAxis.setLabelCount(5);
 
         leftAxis.setDrawGridLines(true);
         leftAxis.setDrawAxisLine(true);
@@ -331,7 +332,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         YAxis leftAxis = chart2.getAxisLeft();
         leftAxis.setTypeface(DEFAULT_BOLD);
         leftAxis.setTextSize(10f);
-//        leftAxis.setLabelCount();
+        leftAxis.setLabelCount(5);
 
         leftAxis.setTextColor(Color.parseColor("#252525"));
 
