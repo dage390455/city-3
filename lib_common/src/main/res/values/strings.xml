@@ -1137,5 +1137,7 @@
     <string name="continue_associate">continue associate</string>
     <string name="network_delay">Network delay</string>
     <string name="temperature_information">Temperature</string>
+    <string name="external">external</string>
+    <string name="internal">internal</string>
 
 </resources>

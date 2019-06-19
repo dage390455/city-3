@@ -1119,5 +1119,6 @@
     <string name="sensor_list">传感器列表中关联</string>
     <string name="network_delay">网络时延</string>
     <string name="temperature_information">温度信息</string>
-
+    <string name="external">外部：</string>
+    <string name="internal">内部：</string>
 </resources>
