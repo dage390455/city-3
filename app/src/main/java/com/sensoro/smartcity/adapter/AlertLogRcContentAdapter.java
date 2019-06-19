@@ -489,45 +489,6 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
 
                 stringBuffer.append(temp).append(" ");
 
-//                if (type == 0) {
-//                    switch (((AlarmInfo.RecordInfo.Event) stautus.get(0)).getReciveStatus()) {
-//                        case 0:
-////                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.telephone_call));
-//                            stringBuffer.append(temp).append(" ");
-//                            break;
-//                        case 1:
-////                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.telephone_answer_success));
-//                            stringBuffer.append(temp).append(" ");
-//                            break;
-//                        case 2:
-////                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.telephone_answer_failed));
-//                            stringBuffer.append(temp).append(" ");
-//                            break;
-//                        default:
-////                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.telephone_answer_unknow));
-//                            stringBuffer.append(temp).append(" ");
-//                            break;
-//                    }
-//                } else if (type == 1) {
-//                    switch (((AlarmInfo.RecordInfo.Event) stautus.get(0)).getReciveStatus()) {
-//                        case 0:
-////                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.sms_sending));
-//                            stringBuffer.append(temp).append(" ");
-//                            break;
-//                        case 1:
-////                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.sms_received_successfully));
-//                            stringBuffer.append(temp).append(" ");
-//                            break;
-//                        case 2:
-////                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.sms_received_failed));
-//                            stringBuffer.append(temp).append(" ");
-//                            break;
-//                        default:
-////                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.sms_received_unknow));
-//                            stringBuffer.append(temp).append(" ");
-//                            break;
-//                    }
-//                }
                 tempList.add(temp);
             }
             if (stautus.size() > 2) {
