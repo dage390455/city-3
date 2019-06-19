@@ -14,7 +14,7 @@ import android.view.KeyEvent;
 import androidx.fragment.app.Fragment;
 
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.example.city_camera.fragment.CameraListFragment;
+import com.sensoro.city_camera.fragment.CameraListFragment;
 import com.igexin.sdk.PushManager;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.base.ContextUtils;
