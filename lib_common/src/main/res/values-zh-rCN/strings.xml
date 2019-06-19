@@ -1120,4 +1120,7 @@
     <string name="network_delay">网络时延</string>
     <string name="temperature_information">温度信息</string>
 
+    <string name="recommend_transformer_dialog_top">根据电流，推荐电流互感器型号：</string>
+    <string name="recommend_transformer_dialog_bottom">请选择现场安装的互感器型号（需大于推荐值，否则传感器将无法工作）</string>
+
 </resources>

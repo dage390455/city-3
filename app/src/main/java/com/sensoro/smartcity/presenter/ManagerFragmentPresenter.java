@@ -16,6 +16,7 @@ import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractManagerActivity;
 import com.sensoro.smartcity.activity.DeployRecordActivity;
@@ -23,9 +24,8 @@ import com.sensoro.smartcity.activity.InspectionTaskListActivity;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.MerchantSwitchActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
-import com.sensoro.smartcity.activity.WireMaterialDiameterCalculatorActivity;
+import com.sensoro.smartcity.activity.ThreePhaseElectConfigActivity;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
@@ -254,7 +254,8 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     }
 
     public void doWireMaterial_diameter() {
-        Intent intent = new Intent(mContext, WireMaterialDiameterCalculatorActivity.class);
+//        Intent intent = new Intent(mContext, WireMaterialDiameterCalculatorActivity.class);
+        Intent intent = new Intent(mContext, ThreePhaseElectConfigActivity.class);
         getView().startAC(intent);
     }
 
