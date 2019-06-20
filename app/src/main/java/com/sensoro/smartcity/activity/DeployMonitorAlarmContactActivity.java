@@ -92,6 +92,8 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
         historyClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_1dbb99));
         historyClearDialog.setTipConfirmText(getString(R.string.clear), getResources().getColor(R.color.c_a6a6a6));
         historyClearDialog.setTipDialogUtilsClickListener(this);
+
+
     }
 
 
