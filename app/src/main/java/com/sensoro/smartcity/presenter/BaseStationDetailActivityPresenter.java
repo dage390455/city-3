@@ -234,7 +234,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
             interval = "1h";
 
         }
-        getView().showProgressDialog();
+//        getView().showProgressDialog();
 
 
         RetrofitServiceHelper.getInstance().getBaseStationChartDetail(sn, "temperature", interval, from, System.currentTimeMillis()).subscribeOn(Schedulers.io())

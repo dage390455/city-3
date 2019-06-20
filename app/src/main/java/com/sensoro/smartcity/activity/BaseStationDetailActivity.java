@@ -677,6 +677,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
             case R.id.ac_basestation_tv_today:
                 currentClick = 0;
 
+
                 acBasestationTvToday.setTextColor(Color.parseColor("#252525"));
                 acBasestationTvWeek.setBackground(getResources().getDrawable(R.drawable.shape_bg_top));
 
@@ -818,23 +819,26 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         public void handleMessage(Message msg) {
 
             if (currentClick == 0) {
-                LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+                if (null != chart.getData()) {
 
-                LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
-                if (null != set1) {
-                    set1.setDrawVerticalHighlightIndicator(false);
 
-                    for (int i = 0; i < set1.getValues().size(); i++) {
-                        set1.getValues().get(i).setIcon(null);
+                    LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+
+                    LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
+                    if (null != set1) {
+                        set1.setDrawVerticalHighlightIndicator(false);
+
+                        for (int i = 0; i < set1.getValues().size(); i++) {
+                            set1.getValues().get(i).setIcon(null);
+                        }
+                    }
+                    if (null != set2) {
+                        set2.setDrawVerticalHighlightIndicator(false);
+                        for (int i = 0; i < set2.getValues().size(); i++) {
+                            set2.getValues().get(i).setIcon(null);
+                        }
                     }
                 }
-                if (null != set2) {
-                    set2.setDrawVerticalHighlightIndicator(false);
-                    for (int i = 0; i < set2.getValues().size(); i++) {
-                        set2.getValues().get(i).setIcon(null);
-                    }
-                }
-
 
                 chart.invalidate();
                 topStateRl.setEnabled(false);
@@ -843,25 +847,28 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
                 topStateRl.startAnimation(animation);
                 topStateRl.setVisibility(View.GONE);
             } else {
-                LineDataSet set1 = (LineDataSet) chart2.getData().getDataSetByIndex(0);
-                LineDataSet set2 = (LineDataSet) chart2.getData().getDataSetByIndex(1);
+                if (null != chart2.getData()) {
 
 
-                if (null != set1) {
+                    LineDataSet set1 = (LineDataSet) chart2.getData().getDataSetByIndex(0);
+                    LineDataSet set2 = (LineDataSet) chart2.getData().getDataSetByIndex(1);
 
-                    set1.setDrawVerticalHighlightIndicator(false);
-                    for (int i = 0; i < set1.getValues().size(); i++) {
-                        set1.getValues().get(i).setIcon(null);
+
+                    if (null != set1) {
+
+                        set1.setDrawVerticalHighlightIndicator(false);
+                        for (int i = 0; i < set1.getValues().size(); i++) {
+                            set1.getValues().get(i).setIcon(null);
+                        }
+                    }
+
+                    if (null != set2) {
+                        set2.setDrawVerticalHighlightIndicator(false);
+                        for (int i = 0; i < set2.getValues().size(); i++) {
+                            set2.getValues().get(i).setIcon(null);
+                        }
                     }
                 }
-
-                if (null != set2) {
-                    set2.setDrawVerticalHighlightIndicator(false);
-                    for (int i = 0; i < set2.getValues().size(); i++) {
-                        set2.getValues().get(i).setIcon(null);
-                    }
-                }
-
                 chart2.invalidate();
                 topStateRl.setEnabled(false);
                 Animation animation = new AlphaAnimation(1F, 0F);
