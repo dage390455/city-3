@@ -8,14 +8,11 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.Group;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,14 +28,12 @@ import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.WireMaterialDiameterAdapter;
 import com.sensoro.smartcity.imainviews.IThreePhaseElectConfigActivityView;
-import com.sensoro.smartcity.imainviews.IWireMaterialDiameterCalculatorView;
 import com.sensoro.smartcity.model.WireMaterialDiameterModel;
 import com.sensoro.smartcity.presenter.ThreePhaseElectConfigActivityPresenter;
-import com.sensoro.smartcity.presenter.WireMaterialDiameterCalculatorPresenter;
+import com.sensoro.smartcity.widget.dialog.RecommendedTransformerDialogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -85,7 +80,6 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
     private Drawable mDetailUpDrawable;
     private Drawable addBlackDrawable;
     private Drawable addWhiteDrawable;
-
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -436,7 +430,7 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
 
 
     @OnClick({R.id.include_text_title_tv_cancel, R.id.ll_input_rated_current_ac_wire_material_diameter1,
-            R.id.fl_in_line_add_ac_wire_material_diameter, R.id.fl_out_line_add_ac_wire_material_diameter})
+            R.id.fl_in_line_add_ac_wire_material_diameter, R.id.fl_out_line_add_ac_wire_material_diameter, R.id.include_text_title_tv_subtitle})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_cancel:
@@ -468,6 +462,10 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
                 llInputRatedCurrentAcWireMaterialDiameter1.requestFocus();
                 llInputRatedCurrentAcWireMaterialDiameter1.setFocusableInTouchMode(true);
                 mPresenter.doAddOutLine();
+                break;
+            case R.id.include_text_title_tv_subtitle:
+                //保存
+                mPresenter.doSave();
                 break;
         }
     }

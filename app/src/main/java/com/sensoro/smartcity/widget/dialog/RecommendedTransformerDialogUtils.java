@@ -8,11 +8,13 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.EarlyWarningThresholdDialogUtilsAdapter;
-import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
+import com.sensoro.smartcity.adapter.RecommendedTransformerDialogUtilsAdapter;
+import com.sensoro.smartcity.model.RecommendedTransformerValueModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecommendedTransformerDialogUtils {
@@ -22,15 +24,11 @@ public class RecommendedTransformerDialogUtils {
 
     private RecyclerView rvRecommendTransformerValue;
     //
-    private EarlyWarningThresholdDialogUtilsAdapter mAdapter;
+    private RecommendedTransformerDialogUtilsAdapter mAdapter;
     private CustomCornerDialog mDialog;
+    private OnRecommendedTransformerDialogUtilsListener listener;
 
     public RecommendedTransformerDialogUtils(Activity activity) {
-        this(activity, activity.getString(R.string.warning_threshold));
-
-    }
-
-    public RecommendedTransformerDialogUtils(Activity activity, String title) {
         View view = View.inflate(activity, R.layout.item_dialog_recommend_transformer, null);
         ivRecommendTransformerClose = view.findViewById(R.id.iv_recommend_transformer_close);
         tvRecommendTransformerValue = view.findViewById(R.id.tv_recommend_transformer_value);
@@ -39,46 +37,42 @@ public class RecommendedTransformerDialogUtils {
         LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rvRecommendTransformerValue.setLayoutManager(layoutManager);
-        mAdapter = new EarlyWarningThresholdDialogUtilsAdapter(activity);
+        mAdapter = new RecommendedTransformerDialogUtilsAdapter(activity);
         rvRecommendTransformerValue.setAdapter(mAdapter);
-//        mTvConfirm = view.findViewById(R.id.dialog_tip_tv_confirm);
-//        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-//        builder.setView(view);
-//        builder.setCancelable(false);
-//        mDialog = builder.create();
-//        Window window = mDialog.getWindow();
-//        if (window != null) {
-//            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        }
-
         mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view, 560 / 750f);
         ivRecommendTransformerClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (listener != null) {
+                    listener.onCancel();
+                }
                 dismiss();
             }
         });
-        ivRecommendTransformerClose.setOnClickListener(new View.OnClickListener() {
+        mAdapter.setOnItemClickListener(new RecycleViewItemClickListener() {
             @Override
-            public void onClick(View v) {
-//                if (listener != null) {
-//                    listener.onChangeInfoClick();
-//                }
+            public void onItemClick(View view, int position) {
+                if (listener != null) {
+                    RecommendedTransformerValueModel recommendedTransformerValueModel = mAdapter.getData().get(position);
+                    listener.onItemChose(recommendedTransformerValueModel);
+                }
+
             }
         });
-
     }
 
-    public void show() {
+    public void show(List<RecommendedTransformerValueModel> data, String recommendValue) {
         if (mDialog != null) {
+            updateRecommendedTransformerAdapter(data);
+            tvRecommendTransformerValue.setText(recommendValue);
             mDialog.show();
+
         }
     }
 
-    public void show(List<EarlyWarningthresholdDialogUtilsAdapterModel> data) {
-        if (mDialog != null) {
-//            updateEarlyWarningThresholdAdapter(data);
-            mDialog.show();
+    private void updateRecommendedTransformerAdapter(List<RecommendedTransformerValueModel> data) {
+        if (data != null) {
+            mAdapter.updateList(data);
         }
     }
 
@@ -88,11 +82,21 @@ public class RecommendedTransformerDialogUtils {
         }
     }
 
-    public void destory() {
+    public void destroy() {
         if (mDialog != null) {
             mDialog.cancel();
             mDialog = null;
         }
+    }
+
+    public void setOnRecommendedTransformerDialogUtilsListener(OnRecommendedTransformerDialogUtilsListener onRecommendedTransformerDialogUtilsListener) {
+        this.listener = onRecommendedTransformerDialogUtilsListener;
+    }
+
+    public interface OnRecommendedTransformerDialogUtilsListener {
+        void onCancel();
+
+        void onItemChose(RecommendedTransformerValueModel recommendedTransformerValueModel);
     }
 
 }

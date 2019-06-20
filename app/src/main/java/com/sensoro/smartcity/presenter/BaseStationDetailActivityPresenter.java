@@ -30,6 +30,7 @@ import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.BaseStationChartDetailRsp;
 import com.sensoro.common.server.response.BaseStationDetailRsp;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.FrequencyPointActivity;
@@ -38,7 +39,7 @@ import com.sensoro.smartcity.activity.MonitorPointMapENActivity;
 import com.sensoro.smartcity.activity.NetWorkInfoActivity;
 import com.sensoro.smartcity.activity.SelfCheckActivity;
 import com.sensoro.smartcity.imainviews.IBaseStationDetailActivityView;
-import com.sensoro.common.utils.AppUtils;
+import com.sensoro.smartcity.model.CityEntry;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
@@ -47,6 +48,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -69,6 +71,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
 
     private String curentType = "day";
     DeviceInfo mDeviceInfo = new DeviceInfo();
+    private List<BaseStationChartDetailModel> modelList = new ArrayList<>();
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventData eventData) {
@@ -231,7 +234,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
             interval = "1h";
 
         }
-        getView().showProgressDialog();
+//        getView().showProgressDialog();
 
 
         RetrofitServiceHelper.getInstance().getBaseStationChartDetail(sn, "temperature", interval, from, System.currentTimeMillis()).subscribeOn(Schedulers.io())
@@ -242,6 +245,9 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
                 List<BaseStationChartDetailModel> data = deviceCameraListRsp.getData();
                 if (null != data && data.size() > 0) {
                     processChartData(data);
+                    modelList.clear();
+
+                    modelList.addAll(data);
                     System.out.println("====" + data.size());
 
                 } else {
@@ -287,15 +293,19 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         List<Float> list1 = new ArrayList<>();
         List<Float> list2 = new ArrayList<>();
 
-        for (BaseStationChartDetailModel model : modelList) {
+
+        for (int i = 0; i < modelList.size(); i++) {
+
+            BaseStationChartDetailModel model = modelList.get(i);
             list1.add(model.getBoard());
             list2.add(model.getShell());
 
-            values1.add(new Entry(model.getKey(), model.getBoard()));
+            float f = Float.parseFloat(model.getKey()) / 100000;
+            values1.add(new CityEntry(i, f, model.getBoard()));
 
-            values2.add(new Entry(model.getKey(), model.getShell()));
-
+            values2.add(new CityEntry(i, f, model.getShell()));
         }
+
         Float max1 = Collections.max(list1);
         Float max2 = Collections.max(list2);
         float max = Math.max(max1, max2);
@@ -346,15 +356,15 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         data.setValueTextColor(Color.WHITE);
         data.setValueTextSize(9f);
         data.setDrawValues(false);
-        getView().updateChartData(data, max + 1f, min);
+        getView().updateChartData(data, max + 5f, min - 5f);
 
     }
 
 
     public String stampToDate(String stap) {
         String time;
-        long lt = Float.valueOf(stap).longValue();
-        Date date = new Date(lt);
+        long lt = new BigDecimal(stap).longValue();
+        Date date = new Date(lt * 100000);
 
 
 //        if (curentType.equals("day")) {
@@ -377,6 +387,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
      * @param data
      */
     public void drawHighlight(Entry e, Highlight h, LineData data) {
+        CityEntry cityEntry = (CityEntry) e;
         float first = 0, second = 0;
         int dataSetIndex = h.getDataSetIndex();
 
@@ -443,9 +454,10 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         }
 
 
-        String time = stampToDate(Float.toString(e.getX()));
+//        String time = stampToDate(Float.toString());
 
-        getView().updateTopView(time, "内部：" + decimalFormat.format(first) + "\u2103", "外部：" + decimalFormat.format(second) + "\u2103");
+
+        getView().updateTopView(DateUtil.getFullDate(Long.parseLong(modelList.get(cityEntry.getIndex()).getKey())), mContext.getResources().getString(R.string.internal) + decimalFormat.format(first) + "\u2103", mContext.getResources().getString(R.string.external) + decimalFormat.format(second) + "\u2103");
 
     }
 

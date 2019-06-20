@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.model.RecommendedTransformerValueModel;
 
@@ -20,9 +21,14 @@ public class RecommendedTransformerDialogUtilsAdapter extends RecyclerView.Adapt
 
     private Context mContext;
     private final ArrayList<RecommendedTransformerValueModel> mList = new ArrayList<>();
+    private RecycleViewItemClickListener listener;
 
     public RecommendedTransformerDialogUtilsAdapter(Context context) {
         this.mContext = context;
+    }
+
+    public void setOnItemClickListener(RecycleViewItemClickListener recycleViewItemClickListener) {
+        this.listener = recycleViewItemClickListener;
     }
 
     public void updateList(List<RecommendedTransformerValueModel> list) {
@@ -45,15 +51,24 @@ public class RecommendedTransformerDialogUtilsAdapter extends RecyclerView.Adapt
     @Override
     public void onBindViewHolder(EarlyWarningThresholdDialogUtilsHolder holder, int position) {
         RecommendedTransformerValueModel recommendedTransformerValueModel = mList.get(position);
+        StringBuilder stringBuilder = new StringBuilder();
         if (recommendedTransformerValueModel.isRecommend) {
             holder.tvValue.setBackground(mContext.getDrawable(R.drawable.shape_bg_corner_1dbb99_shadow));
             holder.tvValue.setTextColor(mContext.getResources().getColor(R.color.white));
-            holder.tvValue.setText(recommendedTransformerValueModel.value + "A" + "(推荐)");
+            holder.tvValue.setText(stringBuilder.append(recommendedTransformerValueModel.value).append("A").append("(").append(mContext.getString(R.string.recommend)).append(")").toString());
         } else {
             holder.tvValue.setBackground(mContext.getDrawable(R.drawable.shape_bg_corner_f4f4f4_shadow));
             holder.tvValue.setTextColor(mContext.getResources().getColor(R.color.c_5d5d5d));
-            holder.tvValue.setText(recommendedTransformerValueModel.value + "A");
+            holder.tvValue.setText(stringBuilder.append(recommendedTransformerValueModel.value).append("A").toString());
         }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null != listener) {
+                    listener.onItemClick(v, position);
+                }
+            }
+        });
     }
 
     @Override

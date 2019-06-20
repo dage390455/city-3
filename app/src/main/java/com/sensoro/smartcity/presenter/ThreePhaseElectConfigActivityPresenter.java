@@ -8,7 +8,9 @@ import com.sensoro.common.base.BasePresenter;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IThreePhaseElectConfigActivityView;
 import com.sensoro.smartcity.model.MaterialValueModel;
+import com.sensoro.smartcity.model.RecommendedTransformerValueModel;
 import com.sensoro.smartcity.model.WireMaterialDiameterModel;
+import com.sensoro.smartcity.widget.dialog.RecommendedTransformerDialogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,7 @@ import java.util.Locale;
 import static com.sensoro.smartcity.constant.CityConstants.MATERIAL_VALUE_MAP;
 
 
-public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThreePhaseElectConfigActivityView> {
+public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThreePhaseElectConfigActivityView> implements RecommendedTransformerDialogUtils.OnRecommendedTransformerDialogUtilsListener {
     private Activity mActivity;
     private ArrayList<WireMaterialDiameterModel> mInLineList;
     private ArrayList<WireMaterialDiameterModel> mOutLineList;
@@ -25,7 +27,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
     private boolean mIsInlineClick;
     private int mClickPosition;
     private boolean mIsAction;
-
+    private RecommendedTransformerDialogUtils recommendedTransformerDialogUtils;
 
     @Override
     public void initData(Context context) {
@@ -36,6 +38,8 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         initPickerData();
         getView().updateInLineData(mInLineList);
         getView().updateOutLineData(mOutLineList);
+        recommendedTransformerDialogUtils = new RecommendedTransformerDialogUtils(mActivity);
+        recommendedTransformerDialogUtils.setOnRecommendedTransformerDialogUtilsListener(this);
     }
 
     @Override
@@ -46,6 +50,10 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         if (mOutLineList != null) {
             mOutLineList.clear();
         }
+        if (recommendedTransformerDialogUtils != null) {
+            recommendedTransformerDialogUtils.destroy();
+        }
+
     }
 
     private void initPickerData() {
@@ -80,7 +88,9 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         getView().updateOutLineData(mOutLineList);
         getView().setPickerTitle(mActivity.getString(R.string.out_line));
         getView().showPickerView();
-        getView().setResultVisible(false);
+        //
+        doRecommendTransformer();
+//        getView().setResultVisible(false);
     }
 
     public void doInLineItemClick(int position, boolean isAction) {
@@ -96,7 +106,9 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         getView().updateInLineData(mInLineList);
         getView().setPickerTitle(mActivity.getString(R.string.in_line));
         getView().showPickerView();
-        getView().setResultVisible(false);
+        //
+        doRecommendTransformer();
+//        getView().setResultVisible(false);
     }
 
     public void doSelectComplete(int material, int diameter, int count) {
@@ -132,6 +144,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         }
         checkRecommendTransformer();
         getView().dismissPickerView();
+        doRecommendTransformer();
     }
 
     public void doDeleteGroup() {
@@ -153,6 +166,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         }
         checkRecommendTransformer();
         getView().dismissPickerView();
+        doRecommendTransformer();
     }
 
     public void checkRecommendTransformer() {
@@ -176,7 +190,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
 
         try {
             ratedCurrent = Integer.parseInt(getView().getEtInputText());
-            if(ratedCurrent < 1 || ratedCurrent > 560) {
+            if (ratedCurrent < 1 || ratedCurrent > 560) {
                 getView().toastShort(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.rated_current_colon), "1-560"));
                 return;
             }
@@ -189,7 +203,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
 
         int temp = Math.min(ratedCurrent, inLineTotal);
         int actualRatedCurrent = Math.min(temp, outLineTotal);
-
+        //
         if (actualRatedCurrent > 0 && actualRatedCurrent <= 120) {
             //120A/40mA
             getView().setRatedCurrentTransformer(String.format("%s%s", mActivity.getString(R.string.current_transformer), "120A/40mA"));
@@ -211,12 +225,12 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
             //l80k
             getView().setLeakageCurrentTransformer(String.format("%s%s", mActivity.getString(R.string.leakage_current_transformer), "L80K"));
         }
-        getView().setResultVisible(true);
-
-        getView().setAirRatedCurrentValue(ratedCurrent);
-        getView().setInLineTotalCurrentValue(inLineTotal);
-        getView().setOutLineTotalCurrentValue(outLineTotal);
-        getView().setActualCurrentValue(actualRatedCurrent);
+//        getView().setResultVisible(true);
+        getView().toastShort("ratedCurrent = " + ratedCurrent + ",inLineTotal = " + inLineTotal + ",outLineTotal = " + outLineTotal + ",actualRatedCurrent = " + actualRatedCurrent);
+//        getView().setAirRatedCurrentValue(ratedCurrent);
+//        getView().setInLineTotalCurrentValue(inLineTotal);
+//        getView().setOutLineTotalCurrentValue(outLineTotal);
+//        getView().setActualCurrentValue(actualRatedCurrent);
 
 
     }
@@ -232,6 +246,8 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
             }
             if (isNeedUpdate) {
                 getView().updateInLineData(mInLineList);
+                //
+                doRecommendTransformer();
             }
         } else {
             for (WireMaterialDiameterModel model : mOutLineList) {
@@ -243,6 +259,8 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
 
             if (isNeedUpdate) {
                 getView().updateOutLineData(mOutLineList);
+                //
+                doRecommendTransformer();
             }
         }
 
@@ -269,5 +287,28 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         getView().setPickerTitle(mActivity.getString(R.string.out_line));
         getView().showPickerView();
         getView().setResultVisible(false);
+    }
+
+    public void doSave() {
+        if (recommendedTransformerDialogUtils != null) {
+            ArrayList<RecommendedTransformerValueModel> objects = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                RecommendedTransformerValueModel recommendedTransformerValueModel = new RecommendedTransformerValueModel();
+                recommendedTransformerValueModel.isRecommend = i == 0;
+                recommendedTransformerValueModel.value = 200 + i * 20;
+                objects.add(recommendedTransformerValueModel);
+            }
+            recommendedTransformerDialogUtils.show(objects, "200A");
+        }
+    }
+
+    @Override
+    public void onCancel() {
+
+    }
+
+    @Override
+    public void onItemChose(RecommendedTransformerValueModel recommendedTransformerValueModel) {
+        getView().toastShort("b " + recommendedTransformerValueModel.isRecommend + ",value " + recommendedTransformerValueModel.value);
     }
 }
