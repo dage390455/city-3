@@ -911,7 +911,12 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         @Override
         public String getFormattedValue(float value) {
             String p;
-            p = decimalFormat.format(value);
+            if (value == 0f) {
+                p = "0.00";
+            } else {
+
+                p = decimalFormat.format(value);
+            }
             return (p + "\u2103");
 
         }
