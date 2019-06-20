@@ -2,23 +2,24 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sensoro.smartcity.R;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.smartcity.imainviews.IInspectionActivityView;
-import com.sensoro.smartcity.presenter.InspectionActivityPresenter;
-import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.dialog.TipDialogUtils;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.imainviews.IInspectionActivityView;
+import com.sensoro.smartcity.presenter.InspectionActivityPresenter;
 
 import java.util.List;
 
@@ -206,7 +207,7 @@ public class InspectionActivity extends BaseActivity<IInspectionActivityView, In
             acInspectionTvNormal.setBackgroundResource(R.drawable.shape_bg_corner_29c_shadow);
         } else {
             acInspectionTvNormal.setTextColor(mActivity.getResources().getColor(R.color.white));
-            acInspectionTvNormal.setBackgroundResource(R.drawable.filter_corner);
+            acInspectionTvNormal.setBackgroundResource(R.drawable.shape_bg_corner_dfdf_shadow);
         }
 
     }
