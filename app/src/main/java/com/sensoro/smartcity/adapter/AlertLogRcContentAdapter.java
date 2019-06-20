@@ -480,10 +480,10 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                     AlarmInfo.RecordInfo.Event event = (AlarmInfo.RecordInfo.Event) stautus.get(i);
                     String number = event.getNumber();
                     String name = event.getName();
-                    if (i != (stautus.size() - 1)) {
+                    if (i < 2 && i != (stautus.size() - 1)) {
                         temp.append(" ").append(name).append("(").append(number).append(")").append(" ;");
                     } else {
-                        temp.append(" ").append(name).append("(").append(number).append(")").append(" ");
+//                        temp.append(" ").append(name).append("(").append(number).append(")").append(" ");
                     }
                 }
 
