@@ -445,34 +445,32 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
     }
 
     /**
+     * map中根据pos存储数据
+     *
      * @param stringBuffer
      * @param pos
      * @param phoneList
      * @return
      */
     private SpannableString appendResult(StringBuilder stringBuffer, int pos, AlarmInfo.RecordInfo.Event[] phoneList) {
-        //情况集合
-//        receiveStatusListClear();
-        List<AlarmInfo.RecordInfo.Event> receiveStautus0 = new ArrayList<>();
-        List<AlarmInfo.RecordInfo.Event> receiveStautus1 = new ArrayList<>();
-        List<AlarmInfo.RecordInfo.Event> receiveStautus2 = new ArrayList<>();
-        List<AlarmInfo.RecordInfo.Event> receiveStautus3 = new ArrayList<>();
+        List<AlarmInfo.RecordInfo.Event> receiveStautus0;
+        List<AlarmInfo.RecordInfo.Event> receiveStautus1;
+        List<AlarmInfo.RecordInfo.Event> receiveStautus2;
+        List<AlarmInfo.RecordInfo.Event> receiveStautus3;
         List[] lists = hashMap.get(pos);
         if (null == lists || lists.length == 0) {
+            receiveStautus0 = new ArrayList<>();
+            receiveStautus1 = new ArrayList<>();
+            receiveStautus2 = new ArrayList<>();
+            receiveStautus3 = new ArrayList<>();
             lists = new List[]{receiveStautus0, receiveStautus1, receiveStautus2, receiveStautus3};
             hashMap.put(pos, lists);
         } else {
-            List[] lists1 = hashMap.get(pos);
-            receiveStautus0 = lists1[0];
-            receiveStautus1 = lists1[1];
-            receiveStautus2 = lists1[2];
-            receiveStautus3 = lists1[3];
+            receiveStautus0 = lists[0];
+            receiveStautus1 = lists[1];
+            receiveStautus2 = lists[2];
+            receiveStautus3 = lists[3];
 
-            //多条短信或者电话类型数据清除
-//            receiveStautus0.clear();
-//            receiveStautus1.clear();
-//            receiveStautus2.clear();
-//            receiveStautus3.clear();
         }
 
 
@@ -495,31 +493,25 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
 
         }
         List[] receiveStautus = {receiveStautus0, receiveStautus1, receiveStautus2, receiveStautus3};
-        StringBuilder temp = null;
+        List<AlarmInfo.RecordInfo.Event> tottalPhoneList = new ArrayList<>();
         for (List stautus : receiveStautus) {
-            if (stautus.size() > 0) {
-                temp = new StringBuilder();
-                for (int i = 0; i < stautus.size(); i++) {
-                    //最多显示两个
-                    if (i < 2) {
-                        AlarmInfo.RecordInfo.Event event = (AlarmInfo.RecordInfo.Event) stautus.get(i);
-                        String number = event.getNumber();
-                        String name = event.getName();
-                        temp.append(" ").append(name).append("(").append(number).append(")");
-                        //一个的时候不显示；
-                        if (stautus.size() > 1 && i != 1) {
-                            temp.append(" ;");
-                        }
+            tottalPhoneList.addAll(stautus);
+        }
 
-                    }
+        for (int i = 0; i < tottalPhoneList.size(); i++) {
+            if (i < 2) {
+                AlarmInfo.RecordInfo.Event event = (AlarmInfo.RecordInfo.Event) tottalPhoneList.get(i);
+                String number = event.getNumber();
+                String name = event.getName();
+                stringBuffer.append(" ").append(name).append("(").append(number).append(")");
+                //一个的时候不显示；
+                if (i != 1) {
+                    stringBuffer.append(" ;");
                 }
 
-                stringBuffer.append(temp).append(" ");
-
-//                tempList.add(temp);
             }
-
         }
+
         if (phoneList.length > 2) {
             stringBuffer.append(mContext.getString(R.string.etc) + phoneList.length + mContext.getString(R.string.contacts));
         }
@@ -547,12 +539,6 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         return spannableString;
     }
 
-//    private void receiveStatusListClear() {
-//        receiveStautus0.clear();
-//        receiveStautus1.clear();
-//        receiveStautus2.clear();
-//        receiveStautus3.clear();
-//    }
 
     private SpannableString changTextColor(final String content, final String temp, SpannableString spannableString, @ColorRes int color) {
         ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(color));

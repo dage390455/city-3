@@ -14,11 +14,11 @@
         android:id="@+id/tv_warning_contact_phone_msg_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/c_37B0E9"
         android:layout_gravity="left|center_vertical"
+        android:layout_marginLeft="2dp"
         android:gravity="left|center_vertical"
-        android:textSize="14dp"
-        android:textStyle="bold"></TextView>
+        android:textColor="@color/c_37B0E9"
+        android:textSize="14dp" />
 
     <LinearLayout
         android:id="@+id/ll_warning_contact_phone_msg_content"
