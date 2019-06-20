@@ -457,7 +457,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
 //        String time = stampToDate(Float.toString());
 
 
-        getView().updateTopView(DateUtil.getFullDate(Long.parseLong(modelList.get(cityEntry.getIndex()).getKey())), mContext.getResources().getString(R.string.internal) + decimalFormat.format(first) + "\u2103", mContext.getResources().getString(R.string.external) + decimalFormat.format(second) + "\u2103");
+        getView().updateTopView(DateUtil.getFullMonthDate(Long.parseLong(modelList.get(cityEntry.getIndex()).getKey())), mContext.getResources().getString(R.string.internal) + decimalFormat.format(first) + "\u2103", mContext.getResources().getString(R.string.external) + decimalFormat.format(second) + "\u2103");
 
     }
 
