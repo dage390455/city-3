@@ -356,6 +356,8 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         data.setValueTextColor(Color.WHITE);
         data.setValueTextSize(9f);
         data.setDrawValues(false);
+
+
         getView().updateChartData(data, max + 5f, min - 5f);
 
     }
