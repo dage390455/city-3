@@ -1,18 +1,16 @@
 package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,7 +24,7 @@ import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.AlarmContactHistoryAdapter;
-import com.sensoro.smartcity.adapter.AlarmContactRcContentAdapter;
+import com.sensoro.smartcity.adapter.AlarmContactListViewAdapter;
 import com.sensoro.smartcity.imainviews.IAlarmContactActivityView;
 import com.sensoro.smartcity.presenter.AlarmContactActivityPresenter;
 
@@ -38,7 +36,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContactActivityView, AlarmContactActivityPresenter>
-        implements IAlarmContactActivityView, RecycleViewItemClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener, AlarmContactRcContentAdapter.OnAlarmContactAdapterListener {
+        implements IAlarmContactActivityView, RecycleViewItemClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener, AlarmContactListViewAdapter.OnAlarmContactAdapterListener {
 
 
     @BindView(R.id.alarm_contact_tv_add)
@@ -60,13 +58,16 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
     //    @BindView(R.id.ac_name_address_ll_add_name_phone)
 //    LinearLayout acNameAddressLlAddNamePhone;
     @BindView(R.id.rc_add_alarm_contact)
-    RecyclerView rcAddAlarmContactRv;
+    ListView rcAddAlarmContactRv;
+    //    @BindView(R.id.rc_add_alarm_contact)
+//    RecyclerView rcAddAlarmContactRv;
     @BindView(R.id.item_adapter_alarm_contact_add_ll)
     LinearLayout itemAdapterAlarmContactAddLl;
     @BindView(R.id.add_scrollView)
     ScrollView scrollToView;
     private AlarmContactHistoryAdapter mHistoryAdapter;
-    private AlarmContactRcContentAdapter mAlarmContactRcContentAdapter;
+    //    private AlarmContactRcContentAdapter mAlarmContactRcContentAdapter;
+    private AlarmContactListViewAdapter mAlarmContactRcContentAdapter;
     private TipOperationDialogUtils historyClearDialog;
 
     @Override
@@ -162,10 +163,12 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
         rcAcDeployAlarmContactHistory.setAdapter(mHistoryAdapter);
 
 
-        LinearLayoutManager contactManager = new LinearLayoutManager(mActivity);
-        contactManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rcAddAlarmContactRv.setLayoutManager(contactManager);
+//        LinearLayoutManager contactManager = new LinearLayoutManager(mActivity);
+//        contactManager.setOrientation(LinearLayoutManager.VERTICAL);
+//        rcAddAlarmContactRv.setLayoutManager(contactManager);
         rcAddAlarmContactRv.setAdapter(mAlarmContactRcContentAdapter);
+
+
     }
 
     private void initTitle() {
@@ -194,7 +197,7 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
 
 
     private void initRcContent() {
-        mAlarmContactRcContentAdapter = new AlarmContactRcContentAdapter(this);
+        mAlarmContactRcContentAdapter = new AlarmContactListViewAdapter(this);
     }
 
     @Override
@@ -312,7 +315,7 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
                 model.phone = s;
 
             }
-            mAlarmContactRcContentAdapter.notifyItemChanged(mAlarmContactRcContentAdapter.mFocusPos);
+            mAlarmContactRcContentAdapter.notifyDataSetChanged();
         }
 
 

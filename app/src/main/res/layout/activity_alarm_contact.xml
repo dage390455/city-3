@@ -31,13 +31,13 @@
             android:orientation="vertical">
 
 
-            <androidx.recyclerview.widget.RecyclerView
+            <com.sensoro.common.widgets.Mylistview
                 android:id="@+id/rc_add_alarm_contact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
 
-            </androidx.recyclerview.widget.RecyclerView>
+            </com.sensoro.common.widgets.Mylistview>
 
             <LinearLayout
                 android:layout_width="match_parent"
