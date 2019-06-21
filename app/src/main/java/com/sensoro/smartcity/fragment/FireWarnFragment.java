@@ -28,12 +28,12 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.MainWarnFragRcContentAdapter;
+import com.sensoro.smartcity.adapter.MainFireWarnFragRcContentAdapter;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseFragment;
-import com.sensoro.smartcity.imainviews.IWarnFragmentView;
+import com.sensoro.smartcity.imainviews.IFireWarnFragmentView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
-import com.sensoro.smartcity.presenter.WarnFragmentPresenter;
+import com.sensoro.smartcity.presenter.FireWarnFragmentPresenter;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
@@ -55,8 +55,8 @@ import butterknife.OnClick;
 import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.common.constant.Constants.DIRECTION_UP;
 
-public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPresenter> implements
-        IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
+public class FireWarnFragment extends BaseFragment<IFireWarnFragmentView, FireWarnFragmentPresenter> implements
+        IFireWarnFragmentView, MainFireWarnFragRcContentAdapter.AlarmConfirmStatusClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.fg_main_top_search_title_root)
     LinearLayout fgMainWarnTitleRoot;
     @BindView(R.id.fg_main_top_search_frame_search)
@@ -91,7 +91,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     ImageView btnSearchClear;
     @BindView(R.id.ll_search_history)
     LinearLayout llSearchHistory;
-    private MainWarnFragRcContentAdapter mRcContentAdapter;
+    private MainFireWarnFragRcContentAdapter mRcContentAdapter;
     private boolean isShowDialog = true;
     private ProgressUtils mProgressUtils;
     private AlarmPopUtils mAlarmPopUtils;
@@ -267,8 +267,8 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     }
 
     @Override
-    protected WarnFragmentPresenter createPresenter() {
-        return new WarnFragmentPresenter();
+    protected FireWarnFragmentPresenter createPresenter() {
+        return new FireWarnFragmentPresenter();
     }
 
     @Override
@@ -334,7 +334,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     }
 
     private void initRcContent() {
-        mRcContentAdapter = new MainWarnFragRcContentAdapter(mRootFragment.getActivity());
+        mRcContentAdapter = new MainFireWarnFragRcContentAdapter(mRootFragment.getActivity());
         mRcContentAdapter.setAlarmConfirmStatusClickListener(this);
         final SensoroXLinearLayoutManager xLinearLayoutManager = new SensoroXLinearLayoutManager(mRootFragment.getActivity());
         xLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

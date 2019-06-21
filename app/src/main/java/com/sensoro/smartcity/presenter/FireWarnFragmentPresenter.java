@@ -29,7 +29,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmDetailLogActivity;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.common.constant.Constants;
-import com.sensoro.smartcity.imainviews.IWarnFragmentView;
+import com.sensoro.smartcity.imainviews.IFireWarnFragmentView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
@@ -51,7 +51,7 @@ import java.util.Map;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> implements IOnCreate, AlarmPopUtils.OnPopupCallbackListener, CalendarPopUtils.OnCalendarPopupCallbackListener, Runnable {
+public class FireWarnFragmentPresenter extends BasePresenter<IFireWarnFragmentView> implements IOnCreate, AlarmPopUtils.OnPopupCallbackListener, CalendarPopUtils.OnCalendarPopupCallbackListener, Runnable {
     private final List<DeviceAlarmLogInfo> mDeviceAlarmLogInfoList = new ArrayList<>();
     private final List<String> mSearchHistoryList = new ArrayList<>();
     private volatile int cur_page = 1;

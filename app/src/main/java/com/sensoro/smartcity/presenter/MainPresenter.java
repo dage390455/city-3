@@ -41,10 +41,10 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.common.constant.Constants;
+import com.sensoro.smartcity.fragment.FireWarnFragment;
 import com.sensoro.smartcity.fragment.HomeFragment;
 import com.sensoro.smartcity.fragment.MalfunctionFragment;
 import com.sensoro.smartcity.fragment.ManagerFragment;
-import com.sensoro.smartcity.fragment.WarnFragment;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
 import com.sensoro.common.utils.AppUtils;
@@ -86,7 +86,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private final MainPresenter.TaskRunnable mRunnable = new MainPresenter.TaskRunnable();
     private final NetWorkTaskRunnable mNetWorkTaskRunnable = new NetWorkTaskRunnable();
     //
-    private WarnFragment warnFragment;
+    private FireWarnFragment mFireWarnFragment;
     private HomeFragment homeFragment;
     private ManagerFragment managerFragment;
     private MalfunctionFragment malfunctionFragment;
@@ -278,7 +278,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private void initViewPager() {
         //
         homeFragment = new HomeFragment();
-        warnFragment = new WarnFragment();
+        mFireWarnFragment = new FireWarnFragment();
         managerFragment = new ManagerFragment();
         malfunctionFragment = new MalfunctionFragment();
         mCameraListFragment = (CameraListFragment) ARouter.getInstance().build(ARouterConstants.FRAGMENT_CAMERA_LIST).navigation();
@@ -286,7 +286,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             mFragmentList.clear();
         }
         mFragmentList.add(homeFragment);
-        mFragmentList.add(warnFragment);
+        mFragmentList.add(mFireWarnFragment);
         mFragmentList.add(mCameraListFragment);
         mFragmentList.add(malfunctionFragment);
         mFragmentList.add(managerFragment);

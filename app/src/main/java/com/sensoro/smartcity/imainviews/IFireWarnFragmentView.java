@@ -8,7 +8,7 @@ import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 
 import java.util.List;
 
-public interface IWarnFragmentView extends IToast, IActivityIntent, IProgressDialog {
+public interface IFireWarnFragmentView extends IToast, IActivityIntent, IProgressDialog {
     void cancelSearchData();
 
     void updateAlarmListAdapter(List<DeviceAlarmLogInfo> deviceAlarmLogInfoList);
