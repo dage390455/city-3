@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat;
 import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.model.ImageItem;
+import com.sensoro.common.utils.MyPermissionManager;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.cameralibrary.JCameraView;
@@ -279,6 +280,8 @@ public class TakeRecordActivity extends BaseActivity<ITakeRecordActivityView, Ta
                     jCameraView.onResume();
                 } else {
                     SensoroToast.getInstance().makeText(mActivity, getResources().getString(R.string.please_go_to_setting), Toast.LENGTH_SHORT);
+                    MyPermissionManager.startAppSetting(mActivity);
+
                     finish();
                 }
             }
