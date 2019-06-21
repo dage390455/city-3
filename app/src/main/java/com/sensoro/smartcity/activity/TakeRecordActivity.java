@@ -281,7 +281,6 @@ public class TakeRecordActivity extends BaseActivity<ITakeRecordActivityView, Ta
                 } else {
                     SensoroToast.getInstance().makeText(mActivity, getResources().getString(R.string.please_go_to_setting), Toast.LENGTH_SHORT);
                     MyPermissionManager.startAppSetting(mActivity);
-
                     finish();
                 }
             }
