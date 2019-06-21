@@ -676,7 +676,13 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
                 break;
             case R.id.ac_basestation_tv_today:
                 currentClick = 0;
+                if (chart.getData() != null) {
+                    chart.setVisibility(View.VISIBLE);
+                    chart2.setVisibility(View.INVISIBLE);
+                } else {
+                    mPresenter.requestChartDetailData("day");
 
+                }
 
                 acBasestationTvToday.setTextColor(Color.parseColor("#252525"));
                 acBasestationTvWeek.setBackground(getResources().getDrawable(R.drawable.shape_bg_top));
@@ -686,13 +692,19 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
                 acBasestationTvToday.setBackground(null);
 
 
-                mPresenter.requestChartDetailData("day");
 
 
                 break;
             case R.id.ac_basestation_tv_week:
                 currentClick = 1;
+                if (chart2.getData() != null) {
 
+                    chart2.setVisibility(View.VISIBLE);
+                    chart.setVisibility(View.INVISIBLE);
+                } else {
+                    mPresenter.requestChartDetailData("week");
+
+                }
                 acBasestationTvWeek.setTextColor(Color.parseColor("#252525"));
                 acBasestationTvToday.setBackground(getResources().getDrawable(R.drawable.shape_bg_top));
 
@@ -700,7 +712,6 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
                 acBasestationTvToday.setTextColor(Color.parseColor("#A6A6A6"));
                 acBasestationTvWeek.setBackground(null);
 
-                mPresenter.requestChartDetailData("week");
 
                 break;
             case R.id.rl_network_information:
