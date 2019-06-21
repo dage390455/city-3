@@ -278,7 +278,7 @@ public class TakeRecordActivity extends BaseActivity<ITakeRecordActivityView, Ta
                     granted = true;
                     jCameraView.onResume();
                 } else {
-                    Toast.makeText(this, "请到设置-权限管理中开启", Toast.LENGTH_SHORT).show();
+                    SensoroToast.getInstance().makeText(mActivity, getResources().getString(R.string.please_go_to_setting), Toast.LENGTH_SHORT);
                     finish();
                 }
             }

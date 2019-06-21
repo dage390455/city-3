@@ -1139,5 +1139,6 @@
     <string name="temperature_information">Temperature</string>
     <string name="external">external</string>
     <string name="internal">internal</string>
+    <string name="please_go_to_setting">Please go to Settings - Rights Management to open</string>
 
 </resources>
