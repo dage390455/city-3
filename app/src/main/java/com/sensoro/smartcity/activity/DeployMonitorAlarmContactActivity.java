@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -122,23 +121,23 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
 
         //底部按钮顶上去
 
-        rootView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                if (bottom - oldBottom < -1) {
-                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                            0);
-                    params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                    itemAdapterAlarmContactAddLl.setLayoutParams(params);
-
-                } else if (bottom - oldBottom > 1) {
-                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                            (int) AppUtils.dp2px(mActivity, 45));
-                    params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                    itemAdapterAlarmContactAddLl.setLayoutParams(params);
-                }
-            }
-        });
+//        rootView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+//            @Override
+//            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+//                if (bottom - oldBottom < -1) {
+//                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+//                            0);
+//                    params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+//                    itemAdapterAlarmContactAddLl.setLayoutParams(params);
+//
+//                } else if (bottom - oldBottom > 1) {
+//                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+//                            (int) AppUtils.dp2px(mActivity, 45));
+//                    params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+//                    itemAdapterAlarmContactAddLl.setLayoutParams(params);
+//                }
+//            }
+//        });
 
     }
 
