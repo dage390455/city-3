@@ -1,7 +1,7 @@
 package com.sensoro.smartcity.activity;
 
 import android.Manifest;
-import android.content.Context;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -20,24 +20,16 @@ import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.utils.MyPermissionManager;
-import com.sensoro.common.widgets.PermissionDialogUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.cameralibrary.JCameraView;
 import com.sensoro.smartcity.cameralibrary.listener.JCameraListener;
 import com.sensoro.smartcity.imainviews.ITakeRecordActivityView;
 import com.sensoro.smartcity.presenter.TakeRecordActivityPresenter;
-import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.yanzhenjie.permission.Action;
-import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.Permission;
-import com.yanzhenjie.permission.Rationale;
-import com.yanzhenjie.permission.RequestExecutor;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.List;
 
 import static com.sensoro.common.constant.Constants.RESULT_CODE_RECORD;
 
@@ -48,15 +40,13 @@ public class TakeRecordActivity extends BaseActivity<ITakeRecordActivityView, Ta
     private JCameraView jCameraView;
     private final int GET_PERMISSION_REQUEST = 100; //权限申请自定义码
     private boolean granted = false;
-    private PermissionDialogUtils permissionDialogUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_take_record);
         //
         initView();
-//        getPermissions();
-        permissionDialogUtils = new PermissionDialogUtils(mActivity);
+        getPermissions();
 
         mPresenter.initData(mActivity);
     }
@@ -124,10 +114,7 @@ public class TakeRecordActivity extends BaseActivity<ITakeRecordActivityView, Ta
         if (granted) {
             jCameraView.onResume();
         }
-        requestPermissions(new String[]{
-                Permission.WRITE_EXTERNAL_STORAGE,
-                Permission.RECORD_AUDIO,
-                Permission.CAMERA});
+
 
     }
 
@@ -262,117 +249,41 @@ public class TakeRecordActivity extends BaseActivity<ITakeRecordActivityView, Ta
         }
     }
 
-    //    @TargetApi(23)
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//                                           int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if (requestCode == GET_PERMISSION_REQUEST) {
-//            int size = 0;
-//            if (grantResults.length >= 1) {
-//                int writeResult = grantResults[0];
-//                //读写内存权限
-//                boolean writeGranted = writeResult == PackageManager.PERMISSION_GRANTED;//读写内存权限
-//                if (!writeGranted) {
-//                    size++;
-//                }
-//                //录音权限
-//                int recordPermissionResult = grantResults[1];
-//                boolean recordPermissionGranted = recordPermissionResult == PackageManager.PERMISSION_GRANTED;
-//                if (!recordPermissionGranted) {
-//                    size++;
-//                }
-//                //相机权限
-//                int cameraPermissionResult = grantResults[2];
-//                boolean cameraPermissionGranted = cameraPermissionResult == PackageManager.PERMISSION_GRANTED;
-//                if (!cameraPermissionGranted) {
-//                    size++;
-//                }
-//                if (size == 0) {
-//                    granted = true;
-//                    jCameraView.onResume();
-//                } else {
-//                    SensoroToast.getInstance().makeText(mActivity, getResources().getString(R.string.please_go_to_setting), Toast.LENGTH_SHORT);
-//                    MyPermissionManager.startAppSetting(mActivity);
-//                    finish();
-//                }
-//            }
-//        }
-//    }
-
-    private void requestPermissions(final String[] permissions) {
-        AndPermission.with(mActivity).runtime()
-                .permission(permissions)
-                .rationale(new Rationale<List<String>>() {
-                    @Override
-                    public void showRationale(Context context, List<String> data, final RequestExecutor executor) {
-                        // 重新授权的提示
-                        StringBuilder stringBuilder = new StringBuilder();
-                        for (String str : data) {
-                            stringBuilder.append(str).append(",");
-                        }
-                        try {
-                            LogUtils.loge("权限列表：" + stringBuilder.toString());
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
-                        }
-                        permissionDialogUtils.setTipMessageText(mActivity.getString(R.string.permission_descript)).setTipConfirmText(mActivity.getString(R.string.reauthorization), mActivity.getResources().getColor(R.color.colorAccent)).show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
-                            @Override
-                            public void onCancelClick() {
-                                executor.cancel();
-                                permissionDialogUtils.dismiss();
-                                finish();
-                            }
-
-                            @Override
-                            public void onConfirmClick() {
-                                executor.execute();
-                                permissionDialogUtils.dismiss();
-                            }
-                        });
-                    }
-                })
-                .onGranted(new Action<List<String>>() {
-                    @Override
-                    public void onAction(List<String> data) {
-                        // 用户同意授权
-                        jCameraView.onResume();
-
-                        try {
-                            LogUtils.loge("SplashActivityPresenter 进入界面 ");
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
-                        }
-                    }
-                })
-                .onDenied(new Action<List<String>>() {
-                    @Override
-                    public void onAction(List<String> data) {
-                        // 用户拒绝权限，提示用户授权
-                        if (AndPermission.hasAlwaysDeniedPermission(mActivity, permissions)) {
-                            // 如果用户勾选了禁止重复提醒，需要提示用户去到APP权限设置页面开启权限
-                            String permissionTips = MyPermissionManager.getPermissionTips(data);
-                            permissionDialogUtils.setTipConfirmText(mActivity.getString(R.string.go_setting), mActivity.getResources().getColor(R.color.c_f34a4a)).setTipMessageText(permissionTips + mActivity.getString(R.string.permission_check)).show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
-                                @Override
-                                public void onCancelClick() {
-                                    permissionDialogUtils.dismiss();
-                                    finish();
-                                }
-
-                                @Override
-                                public void onConfirmClick() {
-                                    permissionDialogUtils.dismiss();
-                                    MyPermissionManager.startAppSetting(mActivity);
-                                }
-                            });
-                        } else {
-                            requestPermissions(data.toArray(new String[data.size()]));
-                        }
-
-
-                    }
-                })
-                .start();
-
+    @TargetApi(23)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == GET_PERMISSION_REQUEST) {
+            int size = 0;
+            if (grantResults.length >= 1) {
+                int writeResult = grantResults[0];
+                //读写内存权限
+                boolean writeGranted = writeResult == PackageManager.PERMISSION_GRANTED;//读写内存权限
+                if (!writeGranted) {
+                    size++;
+                }
+                //录音权限
+                int recordPermissionResult = grantResults[1];
+                boolean recordPermissionGranted = recordPermissionResult == PackageManager.PERMISSION_GRANTED;
+                if (!recordPermissionGranted) {
+                    size++;
+                }
+                //相机权限
+                int cameraPermissionResult = grantResults[2];
+                boolean cameraPermissionGranted = cameraPermissionResult == PackageManager.PERMISSION_GRANTED;
+                if (!cameraPermissionGranted) {
+                    size++;
+                }
+                if (size == 0) {
+                    granted = true;
+                    jCameraView.onResume();
+                } else {
+                    SensoroToast.getInstance().makeText(mActivity, getResources().getString(R.string.please_go_to_setting), Toast.LENGTH_SHORT);
+                    MyPermissionManager.startAppSetting(mActivity);
+                    finish();
+                }
+            }
+        }
     }
 }
