@@ -3,6 +3,9 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -30,7 +33,6 @@ import com.sensoro.smartcity.adapter.WireMaterialDiameterAdapter;
 import com.sensoro.smartcity.imainviews.IThreePhaseElectConfigActivityView;
 import com.sensoro.smartcity.model.WireMaterialDiameterModel;
 import com.sensoro.smartcity.presenter.ThreePhaseElectConfigActivityPresenter;
-import com.sensoro.smartcity.widget.dialog.RecommendedTransformerDialogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,18 +105,17 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
 
         initEtListener();
 
-        AppUtils.getInputSoftStatus(llRootAcWireMaterialDiameter, new AppUtils.InputSoftStatusListener() {
-
-            @Override
-            public void onKeyBoardClose() {
-                mPresenter.checkRecommendTransformer();
-            }
-
-            @Override
-            public void onKeyBoardOpen() {
-                setResultVisible(false);
-            }
-        });
+//        AppUtils.getInputSoftStatus(llRootAcWireMaterialDiameter, new AppUtils.InputSoftStatusListener() {
+//
+//            @Override
+//            public void onKeyBoardClose() {
+//                mPresenter.handleRecommendTransformer();
+//            }
+//
+//            @Override
+//            public void onKeyBoardOpen() {
+//            }
+//        });
 
         addBlackDrawable = mActivity.getDrawable(R.drawable.wire_add);
         if (addBlackDrawable != null) {
@@ -128,33 +129,27 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
 
     private void initEtListener() {
 
-//        etInputRatedCurrentAcWireMaterialDiameter1.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                String s1 = s.toString();
-//                if (!TextUtils.isEmpty(s1)) {
-//                    try {
-//                        int i = Integer.parseInt(s1);
-//                        if (i > 560 || i <= 0) {
-//                            toastShort(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.rated_current_colon), "1-560"));
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                        toastShort(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.rated_current_colon), "1-560"));
-//                    }
-//                }
-//            }
-//        });
+        etInputRatedCurrentAcWireMaterialDiameter1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String s1 = s.toString();
+                if (!TextUtils.isEmpty(s1)) {
+                    mPresenter.handleRecommendTransformer();
+                } else {
+                    setActualCurrentValue("-");
+                }
+            }
+        });
 
         etInputRatedCurrentAcWireMaterialDiameter1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
@@ -383,49 +378,13 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
     }
 
     @Override
-    public void setRecommendBtnStatus(boolean isClickable) {
-//        tvRecommendTransformerAcWireMaterialDiameter.setClickable(isClickable);
-//        tvRecommendTransformerAcWireMaterialDiameter.setBackground(mActivity.getDrawable(isClickable ? R.drawable.shape_bg_corner_4_29c_shadow : R.drawable.filter_corner));
-    }
+    public void setActualCurrentValue(String value) {
+        if (TextUtils.isEmpty(value)) {
+            tvActualValue.setText("-");
+        } else {
+            tvActualValue.setText(value + "A");
+        }
 
-    @Override
-    public void setRatedCurrentTransformer(String ratedCurrent) {
-//        tvCurrentTransformerAcWireMaterialDiameter.setText(ratedCurrent);
-    }
-
-    @Override
-    public void setLeakageCurrentTransformer(String leakage) {
-//        tvLeakageCurrentAcWireMaterialDiameter.setText(leakage);
-    }
-
-    @Override
-    public void setResultVisible(boolean isVisible) {
-//        llMatchResultAcWireMaterialDiameter.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-//        if (!isVisible) {
-//            clDetailAcWireMaterialDiameter.setVisibility(View.GONE);
-//            tvLookDetailAcWireMaterialDiameter.setText(mActivity.getString(R.string.look_detail));
-//        }
-
-    }
-
-    @Override
-    public void setOutLineTotalCurrentValue(int value) {
-//        tvOutLineTotalValueAcWireMaterialDiameter.setText(String.format(Locale.ROOT, "%dA", value));
-    }
-
-    @Override
-    public void setInLineTotalCurrentValue(int value) {
-//        tvInLineTotalValueAcWireMaterialDiameter.setText(String.format(Locale.ROOT, "%dA", value));
-    }
-
-    @Override
-    public void setAirRatedCurrentValue(int ratedCurrent) {
-//        tvElectricalFireValueAcWireMaterialDiameter.setText(String.format(Locale.ROOT, "%dA", ratedCurrent));
-    }
-
-    @Override
-    public void setActualCurrentValue(int actualRatedCurrent) {
-//        tvActualOverCurrentThresholdValueAcWireMaterialDiameter.setText(String.format(Locale.ROOT, "%dA", actualRatedCurrent));
     }
 
 
@@ -445,7 +404,7 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
 //                break;
 //            case R.id.tv_recommend_transformer_ac_wire_material_diameter:
 //                AppUtils.dismissInputMethodManager(mActivity, etInputRatedCurrentAcWireMaterialDiameter1, true);
-//                mPresenter.doRecommendTransformer();
+//                mPresenter.handleRecommendTransformer();
 //                scrollBottom();
 //                break;
             case R.id.fl_detail_ac_wire_material_diameter:

@@ -2,7 +2,6 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.smartcity.R;
@@ -89,7 +88,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         getView().setPickerTitle(mActivity.getString(R.string.out_line));
         getView().showPickerView();
         //
-        doRecommendTransformer();
+        handleRecommendTransformer();
 //        getView().setResultVisible(false);
     }
 
@@ -107,7 +106,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         getView().setPickerTitle(mActivity.getString(R.string.in_line));
         getView().showPickerView();
         //
-        doRecommendTransformer();
+        handleRecommendTransformer();
 //        getView().setResultVisible(false);
     }
 
@@ -142,9 +141,8 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
             }
 
         }
-        checkRecommendTransformer();
         getView().dismissPickerView();
-        doRecommendTransformer();
+        handleRecommendTransformer();
     }
 
     public void doDeleteGroup() {
@@ -164,17 +162,11 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
             }
 
         }
-        checkRecommendTransformer();
         getView().dismissPickerView();
-        doRecommendTransformer();
+        handleRecommendTransformer();
     }
 
-    public void checkRecommendTransformer() {
-        getView().setRecommendBtnStatus(!TextUtils.isEmpty(getView().getEtInputText()) && mInLineList.size() > 0 && mOutLineList.size() > 0);
-
-    }
-
-    public void doRecommendTransformer() {
+    public void handleRecommendTransformer() {
         int inLineTotal = 0;
         int outLineTotal = 0;
         for (WireMaterialDiameterModel model : mInLineList) {
@@ -206,13 +198,13 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         //
         if (actualRatedCurrent > 0 && actualRatedCurrent <= 120) {
             //120A/40mA
-            getView().setRatedCurrentTransformer(String.format("%s%s", mActivity.getString(R.string.current_transformer), "120A/40mA"));
+//            getView().setRatedCurrentTransformer(String.format("%s%s", mActivity.getString(R.string.current_transformer), "120A/40mA"));
         } else if (actualRatedCurrent <= 200) {
             //200A/40mA
-            getView().setRatedCurrentTransformer(String.format("%s%s", mActivity.getString(R.string.current_transformer), "200A/40mA"));
+//            getView().setRatedCurrentTransformer(String.format("%s%s", mActivity.getString(R.string.current_transformer), "200A/40mA"));
         } else if (actualRatedCurrent <= 400) {
             //400/40mA
-            getView().setRatedCurrentTransformer(String.format("%s%s", mActivity.getString(R.string.current_transformer), "400/40mA"));
+//            getView().setRatedCurrentTransformer(String.format("%s%s", mActivity.getString(R.string.current_transformer), "400/40mA"));
         } else {
             getView().toastShort(mActivity.getString(R.string.not_matched_current_transformer));
             return;
@@ -220,17 +212,18 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
 
         if (actualRatedCurrent <= 120) {
             //l45k
-            getView().setLeakageCurrentTransformer(String.format("%s%s", mActivity.getString(R.string.leakage_current_transformer), "L45K"));
+//            getView().setLeakageCurrentTransformer(String.format("%s%s", mActivity.getString(R.string.leakage_current_transformer), "L45K"));
         } else {
             //l80k
-            getView().setLeakageCurrentTransformer(String.format("%s%s", mActivity.getString(R.string.leakage_current_transformer), "L80K"));
+//            getView().setLeakageCurrentTransformer(String.format("%s%s", mActivity.getString(R.string.leakage_current_transformer), "L80K"));
         }
 //        getView().setResultVisible(true);
-        getView().toastShort("ratedCurrent = " + ratedCurrent + ",inLineTotal = " + inLineTotal + ",outLineTotal = " + outLineTotal + ",actualRatedCurrent = " + actualRatedCurrent);
+//        getView().toastShort("ratedCurrent = " + ratedCurrent + ",inLineTotal = " + inLineTotal + ",outLineTotal = " + outLineTotal + ",actualRatedCurrent = " + actualRatedCurrent);
 //        getView().setAirRatedCurrentValue(ratedCurrent);
 //        getView().setInLineTotalCurrentValue(inLineTotal);
 //        getView().setOutLineTotalCurrentValue(outLineTotal);
 //        getView().setActualCurrentValue(actualRatedCurrent);
+        getView().setActualCurrentValue(actualRatedCurrent == 0 ? "-" : String.valueOf(actualRatedCurrent));
 
 
     }
@@ -247,7 +240,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
             if (isNeedUpdate) {
                 getView().updateInLineData(mInLineList);
                 //
-                doRecommendTransformer();
+                handleRecommendTransformer();
             }
         } else {
             for (WireMaterialDiameterModel model : mOutLineList) {
@@ -260,7 +253,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
             if (isNeedUpdate) {
                 getView().updateOutLineData(mOutLineList);
                 //
-                doRecommendTransformer();
+                handleRecommendTransformer();
             }
         }
 
@@ -275,7 +268,6 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         getView().updateInLineData(mInLineList);
         getView().setPickerTitle(mActivity.getString(R.string.in_line));
         getView().showPickerView();
-        getView().setResultVisible(false);
     }
 
     public void doAddOutLine() {
@@ -286,7 +278,6 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         getView().updateOutLineData(mOutLineList);
         getView().setPickerTitle(mActivity.getString(R.string.out_line));
         getView().showPickerView();
-        getView().setResultVisible(false);
     }
 
     public void doSave() {

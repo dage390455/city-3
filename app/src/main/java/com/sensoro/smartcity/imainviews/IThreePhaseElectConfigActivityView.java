@@ -24,19 +24,6 @@ public interface IThreePhaseElectConfigActivityView extends IToast , IActivityIn
 
     void setPickerTitle(String title);
 
-    void setRecommendBtnStatus(boolean isClickable);
+    void setActualCurrentValue(String value);
 
-    void setRatedCurrentTransformer(String ratedCurrent);
-
-    void setLeakageCurrentTransformer(String leakage);
-
-    void setResultVisible(boolean isVisible);
-
-    void setOutLineTotalCurrentValue(int value);
-
-    void setInLineTotalCurrentValue(int value);
-
-    void setAirRatedCurrentValue(int ratedCurrent);
-
-    void setActualCurrentValue(int actualRatedCurrent);
 }
