@@ -8,8 +8,11 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IThreePhaseElectConfigActivityView;
 import com.sensoro.smartcity.model.MaterialValueModel;
 import com.sensoro.smartcity.model.RecommendedTransformerValueModel;
+import com.sensoro.smartcity.model.ThreePhaseElectDataModel;
 import com.sensoro.smartcity.model.WireMaterialDiameterModel;
 import com.sensoro.smartcity.widget.dialog.RecommendedTransformerDialogUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
     private int mClickPosition;
     private boolean mIsAction;
     private RecommendedTransformerDialogUtils recommendedTransformerDialogUtils;
+    private ThreePhaseElectDataModel threePhaseElectDataModel;
 
     @Override
     public void initData(Context context) {
@@ -89,7 +93,6 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         getView().showPickerView();
         //
         handleRecommendTransformer();
-//        getView().setResultVisible(false);
     }
 
     public void doInLineItemClick(int position, boolean isAction) {
@@ -107,7 +110,6 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         getView().showPickerView();
         //
         handleRecommendTransformer();
-//        getView().setResultVisible(false);
     }
 
     public void doSelectComplete(int material, int diameter, int count) {
@@ -171,17 +173,17 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         int outLineTotal = 0;
         for (WireMaterialDiameterModel model : mInLineList) {
             MaterialValueModel materialValueModel = MATERIAL_VALUE_MAP.get(model.diameter);
-            inLineTotal += model.material == 1 ? materialValueModel.alValue : materialValueModel.cuValue * model.count;
+            inLineTotal += model.material == 1 ? materialValueModel.alValue : materialValueModel.cuValue * model.count * 1.5f;
         }
 
         for (WireMaterialDiameterModel model : mOutLineList) {
             MaterialValueModel materialValueModel = MATERIAL_VALUE_MAP.get(model.diameter);
-            outLineTotal += model.material == 1 ? materialValueModel.alValue : materialValueModel.cuValue * model.count;
+            outLineTotal += model.material == 1 ? materialValueModel.alValue : materialValueModel.cuValue * model.count * 1.5f;
         }
         int ratedCurrent = -1;
 
         try {
-            ratedCurrent = Integer.parseInt(getView().getEtInputText());
+            ratedCurrent = (int) (Integer.parseInt(getView().getEtInputText()) * 1.25f);
             if (ratedCurrent < 1 || ratedCurrent > 560) {
                 getView().toastShort(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.rated_current_colon), "1-560"));
                 return;
@@ -196,36 +198,46 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         int temp = Math.min(ratedCurrent, inLineTotal);
         int actualRatedCurrent = Math.min(temp, outLineTotal);
         //
+        threePhaseElectDataModel = new ThreePhaseElectDataModel();
         if (actualRatedCurrent > 0 && actualRatedCurrent <= 120) {
             //120A/40mA
-//            getView().setRatedCurrentTransformer(String.format("%s%s", mActivity.getString(R.string.current_transformer), "120A/40mA"));
+            //
+            RecommendedTransformerValueModel recommendedTransformerValueModel1 = new RecommendedTransformerValueModel();
+            recommendedTransformerValueModel1.value = 120;
+            recommendedTransformerValueModel1.isRecommend = true;
+            //
+            RecommendedTransformerValueModel recommendedTransformerValueModel2 = new RecommendedTransformerValueModel();
+            recommendedTransformerValueModel2.value = 200;
+            //
+            RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
+            recommendedTransformerValueModel3.value = 400;
+            threePhaseElectDataModel.transformerValueList.add(recommendedTransformerValueModel1);
+            threePhaseElectDataModel.transformerValueList.add(recommendedTransformerValueModel2);
+            threePhaseElectDataModel.transformerValueList.add(recommendedTransformerValueModel3);
         } else if (actualRatedCurrent <= 200) {
             //200A/40mA
-//            getView().setRatedCurrentTransformer(String.format("%s%s", mActivity.getString(R.string.current_transformer), "200A/40mA"));
+            //
+            RecommendedTransformerValueModel recommendedTransformerValueModel2 = new RecommendedTransformerValueModel();
+            recommendedTransformerValueModel2.value = 200;
+            recommendedTransformerValueModel2.isRecommend = true;
+            //
+            RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
+            recommendedTransformerValueModel3.value = 400;
+            threePhaseElectDataModel.transformerValueList.add(recommendedTransformerValueModel2);
+            threePhaseElectDataModel.transformerValueList.add(recommendedTransformerValueModel3);
         } else if (actualRatedCurrent <= 400) {
             //400/40mA
-//            getView().setRatedCurrentTransformer(String.format("%s%s", mActivity.getString(R.string.current_transformer), "400/40mA"));
+            RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
+            recommendedTransformerValueModel3.value = 400;
+            recommendedTransformerValueModel3.isRecommend = true;
+            threePhaseElectDataModel.transformerValueList.add(recommendedTransformerValueModel3);
         } else {
             getView().toastShort(mActivity.getString(R.string.not_matched_current_transformer));
             return;
         }
-
-        if (actualRatedCurrent <= 120) {
-            //l45k
-//            getView().setLeakageCurrentTransformer(String.format("%s%s", mActivity.getString(R.string.leakage_current_transformer), "L45K"));
-        } else {
-            //l80k
-//            getView().setLeakageCurrentTransformer(String.format("%s%s", mActivity.getString(R.string.leakage_current_transformer), "L80K"));
-        }
-//        getView().setResultVisible(true);
-//        getView().toastShort("ratedCurrent = " + ratedCurrent + ",inLineTotal = " + inLineTotal + ",outLineTotal = " + outLineTotal + ",actualRatedCurrent = " + actualRatedCurrent);
-//        getView().setAirRatedCurrentValue(ratedCurrent);
-//        getView().setInLineTotalCurrentValue(inLineTotal);
-//        getView().setOutLineTotalCurrentValue(outLineTotal);
-//        getView().setActualCurrentValue(actualRatedCurrent);
+        threePhaseElectDataModel.actualRatedCurrent = actualRatedCurrent;
+        threePhaseElectDataModel.inputValue = ratedCurrent;
         getView().setActualCurrentValue(actualRatedCurrent == 0 ? "-" : String.valueOf(actualRatedCurrent));
-
-
     }
 
     public void onPickerViewDismiss() {
@@ -282,14 +294,8 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
 
     public void doSave() {
         if (recommendedTransformerDialogUtils != null) {
-            ArrayList<RecommendedTransformerValueModel> objects = new ArrayList<>();
-            for (int i = 0; i < 3; i++) {
-                RecommendedTransformerValueModel recommendedTransformerValueModel = new RecommendedTransformerValueModel();
-                recommendedTransformerValueModel.isRecommend = i == 0;
-                recommendedTransformerValueModel.value = 200 + i * 20;
-                objects.add(recommendedTransformerValueModel);
-            }
-            recommendedTransformerDialogUtils.show(objects, "200A");
+            RecommendedTransformerValueModel recommendedTransformerValueModel = threePhaseElectDataModel.transformerValueList.get(0);
+            recommendedTransformerDialogUtils.show(threePhaseElectDataModel.transformerValueList, recommendedTransformerValueModel.value + "A");
         }
     }
 
@@ -300,6 +306,8 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
 
     @Override
     public void onItemChose(RecommendedTransformerValueModel recommendedTransformerValueModel) {
-        getView().toastShort("b " + recommendedTransformerValueModel.isRecommend + ",value " + recommendedTransformerValueModel.value);
+        threePhaseElectDataModel.currentTransformerValue = recommendedTransformerValueModel;
+        EventBus.getDefault().post(threePhaseElectDataModel);
+        getView().finishAc();
     }
 }

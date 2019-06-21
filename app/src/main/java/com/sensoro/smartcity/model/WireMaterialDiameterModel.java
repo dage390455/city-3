@@ -1,6 +1,8 @@
 package com.sensoro.smartcity.model;
 
-public class WireMaterialDiameterModel {
+import java.io.Serializable;
+
+public class WireMaterialDiameterModel implements Serializable {
     //  1代表铜芯 2代表铝芯
     public int material;
     //线径
