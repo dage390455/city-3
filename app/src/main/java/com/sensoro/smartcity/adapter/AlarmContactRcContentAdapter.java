@@ -178,7 +178,7 @@ public class AlarmContactRcContentAdapter extends RecyclerView.Adapter<AlarmCont
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-
+//                itemHolder.itemAdapterEtAlarmContactPhone.setFocusable(true);
                 //有焦点且软键盘弹出
                 if (mRepeatList.contains(position)) {
                     itemHolder.itemAdapterEtAlarmContactPhone.setTextColor(mContext.getResources().getColor(R.color.c_252525));

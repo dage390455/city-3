@@ -1,13 +1,18 @@
 package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -58,6 +63,8 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
     RecyclerView rcAddAlarmContactRv;
     @BindView(R.id.item_adapter_alarm_contact_add_ll)
     LinearLayout itemAdapterAlarmContactAddLl;
+    @BindView(R.id.add_scrollView)
+    ScrollView scrollToView;
     private AlarmContactHistoryAdapter mHistoryAdapter;
     private AlarmContactRcContentAdapter mAlarmContactRcContentAdapter;
     private TipOperationDialogUtils historyClearDialog;
@@ -82,6 +89,55 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
         initClearHistoryDialog();
 
         mAlarmContactRcContentAdapter.setOnAlarmContactAdapterListener(this);
+
+        View root_ll_rc = findViewById(R.id.root_ll_rc);
+
+        //键盘遮挡
+//        root_ll_rc.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//
+//            @Override
+//            public void onGlobalLayout() {
+//                Rect rect = new Rect();
+////获取root在窗体的可视区域
+//                root_ll_rc.getWindowVisibleDisplayFrame(rect);
+////获取root在窗体的不可视区域高度(被其他View遮挡的区域高度)
+//                int rootInvisibleHeight = root_ll_rc.getRootView().getHeight() - rect.bottom;
+////若不可视区域高度大于100，则键盘显示
+//                if (rootInvisibleHeight > 100) {
+//                    int[] location = new int[2];
+////获取scrollToView在窗体的坐标
+//                    rcAddAlarmContactRv.getLocationInWindow(location);
+////计算root滚动高度，使scrollToView在可见区域的底部
+//                    int srollHeight = (location[1] + rcAddAlarmContactRv.getHeight()) - rect.bottom;
+//                    rcAddAlarmContactRv.scrollTo(0, srollHeight);
+//                } else {
+////键盘隐藏
+////                    rootView.scrollTo(0, 0);
+//                }
+//            }
+//        });
+
+        View rootView = findViewById(R.id.rc_root_add_alarm_contact);
+
+        //底部按钮顶上去
+
+        rootView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if (bottom - oldBottom < -1) {
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                            0);
+                    params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                    itemAdapterAlarmContactAddLl.setLayoutParams(params);
+
+                } else if (bottom - oldBottom > 1) {
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                            (int) AppUtils.dp2px(mActivity, 45));
+                    params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                    itemAdapterAlarmContactAddLl.setLayoutParams(params);
+                }
+            }
+        });
 
     }
 
