@@ -1168,5 +1168,6 @@
     <string name="person">person</string>
     <string name="external">external</string>
     <string name="internal">internal</string>
+    <string name="please_go_to_setting">Please go to Settings - Rights Management to open</string>
 
 </resources>
