@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/security_warn_detail_log_item_title_tv"
+        android:layout_width="match_parent"
+        android:textSize="14sp"
+        android:text="联系人 [升哲] 通过 Web 确认本次预警 有效"
+        android:textColor="@color/c_252525"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/security_warn_detail_log_item_remarks_tv"
+        android:text="备注：打雷啦，下雨收衣服啦"
+        android:textColor="@color/c_252525"
+        android:textSize="12sp"
+        android:layout_marginTop="6dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/security_warn_detail_log_item_time_tv"
+        android:text="今天 10：14：28"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="12sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

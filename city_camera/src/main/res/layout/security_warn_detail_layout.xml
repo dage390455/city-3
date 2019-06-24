@@ -58,11 +58,22 @@
 
             </RelativeLayout>
 
+            <TextView
+                android:id="@+id/security_warn_time_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_rl"
+                android:layout_marginTop="9dp"
+                android:text="今天12:36"
+                android:textColor="@color/c_a6a6a6"
+                android:textSize="14sp" />
+
             <View
                 android:id="@+id/line1"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_divider_height"
-                android:layout_below="@+id/title_rl"
+                android:layout_marginTop="16dp"
+                android:layout_below="@id/security_warn_time_tv"
                 android:background="@color/c_dfdfdf" />
 
             <TextView
