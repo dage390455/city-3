@@ -1,3 +1,15 @@
 <resources>
 
+    <string name="capture_time">抓拍时间</string>
+    <string name="process_status">处理状态</string>
+    <string name="customize_time">自定义时间</string>
+    <string name="seven_days">7天</string>
+    <string name="three_days">3天</string>
+    <string name="twentyfour_hours">24小时</string>
+    <string name="Unlimited">不限</string>
+    <string name="capture_photo">抓怕图片</string>
+    <string name="control_photo">布控图片</string>
+    <string name="word_valid">有效</string>
+    <string name="warn_confirm">预警确认</string>
+    <string name="external_type">外来</string>
 </resources>

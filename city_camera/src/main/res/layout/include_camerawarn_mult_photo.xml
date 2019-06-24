@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_mult_photo_content"
+    android:layout_width="match_parent"
+    android:layout_height="190dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginRight="20dp">
+
+    <RelativeLayout
+        android:id="@+id/layout_left_photo_content"
+        android:layout_width="162dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:background="@color/d8d8d8">
+
+        <ImageView
+            android:id="@+id/iv_left_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/tv_left_photolabel"
+            android:layout_width="56dp"
+            android:layout_height="18dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/shape_block"
+            android:gravity="center"
+            android:text="@string/control_photo"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/layout_right_photo_content"
+        android:layout_width="162dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="12dp"
+        android:background="@color/d8d8d8">
+
+        <ImageView
+            android:id="@+id/iv_right_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/tv_right_photolabel"
+            android:layout_width="56dp"
+            android:layout_height="18dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/shape_block"
+            android:gravity="center"
+            android:text="@string/capture_photo"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_right_matchrate"
+            android:layout_width="36dp"
+            android:layout_height="18dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="4dp"
+            android:layout_marginBottom="6dp"
+            android:layout_toRightOf="@+id/tv_right_photolabel"
+            android:background="@drawable/shape_block"
+            android:gravity="center"
+            android:text="91%"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

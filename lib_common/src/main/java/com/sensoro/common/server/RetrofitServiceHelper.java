@@ -28,6 +28,7 @@ import com.sensoro.common.server.response.BaseStationChartDetailRsp;
 import com.sensoro.common.server.response.BaseStationDetailRsp;
 import com.sensoro.common.server.response.BaseStationListRsp;
 import com.sensoro.common.server.response.CameraFilterRsp;
+import com.sensoro.common.server.response.CameraWarnRsp;
 import com.sensoro.common.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.common.server.response.ContractAddRsp;
 import com.sensoro.common.server.response.ContractInfoRsp;
@@ -450,6 +451,24 @@ public class RetrofitServiceHelper {
             , String search, Long beginTime, Long endTime, String unionTypes) {
         return retrofitService.getDeviceAlarmLogList(10, page, sn, deviceName, phone, search, beginTime, endTime, unionTypes);
     }
+
+    /**
+     *
+     * @param page
+     * @param sn
+     * @param deviceName
+     * @param phone
+     * @param search
+     * @param beginTime
+     * @param endTime
+     * @param unionTypes
+     * @return
+     */
+    public Observable<CameraWarnRsp> getCameraWarnList(int page, String sn, String deviceName, String phone
+            , String search, Long beginTime, Long endTime, String unionTypes) {
+        return retrofitService.getCameraWarnLogList(10, page, sn, deviceName, phone, search, beginTime, endTime, unionTypes);
+    }
+
 
     /**
      * 获取故障信息日志
