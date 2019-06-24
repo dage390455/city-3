@@ -23,4 +23,7 @@
     <string name="security_warn_confirm_dialog_exit_title">是否退出预警确认</string>
     <string name="security_warn_confirm_dialog_upload_button">确认上报</string>
     <string name="security_warn_confirm_dialog_upload_title">是否上报有效预警</string>
+    <string name="security_warn_detail_activity_title">预警日志</string>
+    <string name="security_warn_video_title">预警录像</string>
+    <string name="security_warn_deploy_title">布控人员信息</string>
 </resources>

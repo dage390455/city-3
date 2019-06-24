@@ -2,7 +2,7 @@
     package="com.sensoro.city_camera">
 
     <application >
-
+        <activity android:name=".activity.SecurityWarnDetailActivity"/>
     </application>
 
 </manifest>
