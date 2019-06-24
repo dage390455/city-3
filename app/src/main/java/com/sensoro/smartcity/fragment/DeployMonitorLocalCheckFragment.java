@@ -3,7 +3,6 @@ package com.sensoro.smartcity.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import androidx.annotation.NonNull;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -20,24 +19,26 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.OnDismissListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectChangeListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
+import com.sensoro.common.base.BaseFragment;
+import com.sensoro.common.widgets.SelectDialog;
+import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
-import com.sensoro.common.base.BaseFragment;
 import com.sensoro.smartcity.constant.DeoloyCheckPointConstants;
 import com.sensoro.smartcity.constant.DeployCheckStateEnum;
 import com.sensoro.smartcity.imainviews.IDeployMonitorLocalCheckFragmentView;
 import com.sensoro.smartcity.presenter.DeployMonitorLocalCheckFragmentPresenter;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.widget.dialog.DeployMonitorCheckDialogUtils;
 import com.sensoro.smartcity.widget.dialog.EarlyWarningThresholdDialogUtils;
-import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
-import com.sensoro.common.widgets.SelectDialog;
-import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -299,7 +300,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
     public void updateBtnStatus(boolean hasConfig) {
         tvFgDeployLocalButton.setEnabled(hasConfig);
         tvFgDeployLocalButton.setClickable(hasConfig);
-        tvFgDeployLocalButton.setBackgroundResource(hasConfig ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_solid_df_corner);
+        tvFgDeployLocalButton.setBackgroundResource(hasConfig ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_corner_dfdf_shadow);
         mPresenter.updateCheckTipText(hasConfig);
     }
 
@@ -502,7 +503,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
                         String text = materials.get(position);
                         setWireMaterialText(text);
                     }
-                }, materials);
+                }, materials, getResources().getString(R.string.diameter_material));
                 break;
             case R.id.ll_fg_deploy_local_check_wire_diameter:
                 pvCustomOptions.show(); //弹出自定义条件选择器

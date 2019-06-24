@@ -5,13 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
+import com.sensoro.common.model.EventData;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractPreviewActivity;
 import com.sensoro.smartcity.activity.ContractResultActivity;
-import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractCreationSuccessView;
-import com.sensoro.common.model.EventData;
 
 import org.greenrobot.eventbus.EventBus;
 

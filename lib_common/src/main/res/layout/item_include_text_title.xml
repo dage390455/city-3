@@ -20,7 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.sensoro.smartcity.widget.BoldTextView
+    <com.sensoro.common.widgets.BoldTextView
         android:id="@+id/include_text_title_tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

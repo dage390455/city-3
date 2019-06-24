@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.CameraFilterModel;
@@ -19,7 +20,6 @@ import com.sensoro.common.server.response.DeviceCameraDetailRsp;
 import com.sensoro.common.server.response.DeviceCameraListRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.CameraDetailActivity;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
 
 import java.io.Serializable;
@@ -30,7 +30,7 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class CameraListActivityPresenter extends BasePresenter<ICameraListActivityView> implements Constants {
+public class CameraListActivityPresenter extends BasePresenter<ICameraListActivityView>  {
     private Activity mContext;
     private volatile int cur_page = 1;
     private final List<DeviceCameraInfo> deviceCameraInfos = new ArrayList<>();
@@ -44,7 +44,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        Serializable serializableExtra = mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST);
+        Serializable serializableExtra = mContext.getIntent().getSerializableExtra(Constants.EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST);
         if (serializableExtra instanceof ArrayList) {
             getView().setSmartRefreshEnable(false);
             deviceCameraInfos.clear();
@@ -55,7 +55,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
             getView().dismissProgressDialog();
             getView().setTopTitleState();
         } else {
-            requestDataByFilter(DIRECTION_DOWN, null);
+            requestDataByFilter(Constants.DIRECTION_DOWN, null);
         }
         List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_CAMERA_LIST);
         if (list != null) {
@@ -130,7 +130,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
 
     public void requestDataByFilter(final int direction, String search) {
         switch (direction) {
-            case DIRECTION_DOWN:
+            case Constants.DIRECTION_DOWN:
                 cur_page = 1;
                 if (isAttachedView()) {
                     getView().showProgressDialog();
@@ -159,7 +159,7 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                     }
                 });
                 break;
-            case DIRECTION_UP:
+            case Constants.DIRECTION_UP:
                 cur_page++;
                 if (isAttachedView()) {
                     getView().showProgressDialog();

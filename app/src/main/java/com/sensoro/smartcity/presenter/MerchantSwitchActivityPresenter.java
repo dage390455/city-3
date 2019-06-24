@@ -20,7 +20,7 @@ import com.sensoro.common.server.response.LoginRsp;
 import com.sensoro.common.server.response.UserAccountControlRsp;
 import com.sensoro.common.server.response.UserAccountRsp;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.factory.UserPermissionFactory;
 import com.sensoro.smartcity.imainviews.IMerchantSwitchActivityView;
 
@@ -37,7 +37,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwitchActivityView> implements Constants, IOnCreate {
+public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwitchActivityView> implements IOnCreate {
 
     private final List<UserInfo> mUserInfoList = new ArrayList<>();
     private Activity mContext;
@@ -50,11 +50,11 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        eventLoginData = (EventLoginData) mContext.getIntent().getSerializableExtra(EXTRA_EVENT_LOGIN_DATA);
+        eventLoginData = (EventLoginData) mContext.getIntent().getSerializableExtra(Constants.EXTRA_EVENT_LOGIN_DATA);
         if (eventLoginData != null) {
             getView().setTvBackToMainMerchantVisible(eventLoginData.hasControllerAid);
             getView().setCurrentNameAndPhone(eventLoginData.userName, eventLoginData.phone);
-            requestDataByDirection(DIRECTION_DOWN, true, null);
+            requestDataByDirection(Constants.DIRECTION_DOWN, true, null);
         }
         List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MERCHANT);
         if (list != null) {
@@ -76,7 +76,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
             tempSearch = searchText;
         }
         switch (direction) {
-            case DIRECTION_DOWN:
+            case Constants.DIRECTION_DOWN:
                 cur_page = 0;
                 RetrofitServiceHelper.getInstance().getUserAccountList(tempSearch, null, cur_page * 20, 20).subscribeOn(Schedulers.io()).observeOn
                         (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>(this) {
@@ -104,7 +104,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                     }
                 });
                 break;
-            case DIRECTION_UP:
+            case Constants.DIRECTION_UP:
                 cur_page++;
                 RetrofitServiceHelper.getInstance().getUserAccountList(tempSearch, null, cur_page * 20, 20).subscribeOn(Schedulers.io()).observeOn
                         (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>(this) {
@@ -145,7 +145,9 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
             @Override
             public ObservableSource<DevicesMergeTypesRsp> apply(UserAccountControlRsp userAccountControlRsp) throws Exception {
                 UserInfo userInfo = userAccountControlRsp.getData();
-                RetrofitServiceHelper.getInstance().saveSessionId(userInfo.getSessionID());
+                String sessionID = userInfo.getSessionID();
+                String token = userInfo.getToken();
+                RetrofitServiceHelper.getInstance().saveSessionId(sessionID, token);
                 //
                 eventLoginData = UserPermissionFactory.createLoginData(userInfo, phoneId);
                 return RetrofitServiceHelper.getInstance().getDevicesMergeTypes();
@@ -160,7 +162,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
             @Override
             public void onCompleted(DevicesMergeTypesRsp devicesMergeTypesRsp) {
                 EventData eventData = new EventData();
-                eventData.code = EVENT_DATA_SEARCH_MERCHANT;
+                eventData.code = Constants.EVENT_DATA_SEARCH_MERCHANT;
                 eventData.data = eventLoginData;
                 EventBus.getDefault().post(eventData);
                 getView().dismissProgressDialog();
@@ -200,7 +202,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
-            case EVENT_DATA_SEARCH_MERCHANT:
+            case Constants.EVENT_DATA_SEARCH_MERCHANT:
                 //TODO 不需要注册,以后预留
 //                if (data instanceof EventLoginData) {
 //                    EventLoginData eventLoginData = (EventLoginData) data;
@@ -297,7 +299,8 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
             public ObservableSource<DevicesMergeTypesRsp> apply(LoginRsp loginRsp) throws Exception {
                 //
                 String sessionID = loginRsp.getData().getSessionID();
-                RetrofitServiceHelper.getInstance().saveSessionId(sessionID);
+                String token = loginRsp.getData().getToken();
+                RetrofitServiceHelper.getInstance().saveSessionId(sessionID,token);
                 UserInfo userInfo = loginRsp.getData();
                 eventLoginData = UserPermissionFactory.createLoginData(userInfo, phoneId);
                 PreferencesHelper.getInstance().saveUserData(eventLoginData);
@@ -321,7 +324,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
             public void onCompleted(DevicesMergeTypesRsp devicesMergeTypesRsp) {
                 if (eventLoginData != null) {
                     EventData eventData = new EventData();
-                    eventData.code = EVENT_DATA_SEARCH_MERCHANT;
+                    eventData.code = Constants.EVENT_DATA_SEARCH_MERCHANT;
                     eventData.data = eventLoginData;
                     EventBus.getDefault().post(eventData);
                     getView().finishAc();

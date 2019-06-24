@@ -20,7 +20,7 @@ import com.sensoro.common.adapter.NameAddressHistoryAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorNameAddressActivityView;
 import com.sensoro.smartcity.presenter.DeployMonitorNameAddressActivityPresenter;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;

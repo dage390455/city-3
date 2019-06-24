@@ -39,6 +39,7 @@ import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.bean.BaseStationDetailModel;
 import com.sensoro.common.server.bean.ScenesData;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -48,7 +49,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MonitorDeployDetailPhotoAdapter;
 import com.sensoro.smartcity.imainviews.IBaseStationDetailActivityView;
 import com.sensoro.smartcity.presenter.BaseStationDetailActivityPresenter;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.smartcity.widget.CityLineChartRenderer;
 
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -103,8 +104,8 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     View acBasestationRlNameLine;
     @BindView(R.id.chartname_ll)
     LinearLayout chartnameLl;
-    @BindView(R.id.chart1)
-    LineChart chart1;
+    //    @BindView(R.id.chart1)
+//    LineChart chart1;
     @BindView(R.id.time_tv)
     TextView timeTv;
     @BindView(R.id.in_tv)
@@ -146,11 +147,13 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     @BindView(R.id.rl_self_check_state)
     RelativeLayout rlSelfCheckState;
     private LineChart chart;
+    private LineChart chart2;
     private TextView out_tv, in_tv, time_tv;
     private DecimalFormat decimalFormat = new DecimalFormat(".00");
     MonitorDeployDetailPhotoAdapter mAdapter;
     private ProgressUtils mProgressUtils;
     private TagAdapter mTagAdapter;
+    private int currentClick = 0;
 
 
     private void initMonitorPhoto() {
@@ -199,9 +202,15 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         time_tv = findViewById(R.id.time_tv);
 
 
+        initChart();
+        initChart2();
+    }
+
+    private void initChart() {
         chart = findViewById(R.id.chart1);
         chart.setOnChartValueSelectedListener(this);
 
+        chart.setRenderer(new CityLineChartRenderer(chart, chart.getAnimator(), chart.getViewPortHandler()));
         // no description text
         chart.getDescription().setEnabled(false);
 
@@ -239,6 +248,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         xAxis.setAxisLineColor(ContextCompat.getColor(this, R.color.c_dfdfdf));
 
         xAxis.setDrawAxisLine(true);
+//        xAxis.setGranularity(4000000);
         xAxis.setValueFormatter(new MyXFormatter());
 
         xAxis.setLabelCount(3, true);
@@ -251,9 +261,10 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
         leftAxis.setTextColor(Color.parseColor("#252525"));
 
+        leftAxis.setLabelCount(5);
 
         leftAxis.setDrawGridLines(true);
-        leftAxis.setDrawAxisLine(false);
+        leftAxis.setDrawAxisLine(true);
 
         leftAxis.enableGridDashedLine(10, 10, 0);
 //        leftAxis.setGranularityEnabled(true);
@@ -268,6 +279,81 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
         chart.setOnChartGestureListener(onChartGestureListener);
     }
+
+    private void initChart2() {
+        chart2 = findViewById(R.id.chart2);
+        chart2.setOnChartValueSelectedListener(this);
+
+        chart2.setRenderer(new CityLineChartRenderer(chart2, chart2.getAnimator(), chart2.getViewPortHandler()));
+        // no description text
+        chart2.getDescription().setEnabled(false);
+
+        // enable touch gestures
+        chart2.setTouchEnabled(true);
+
+        chart2.setDragDecelerationFrictionCoef(0.9f);
+
+        // enable scaling and dragging
+        chart2.getLegend().setEnabled(false);
+        chart2.setDragEnabled(true);
+        chart2.setScaleEnabled(true);
+        chart2.setDrawGridBackground(false);
+        chart2.setHighlightPerDragEnabled(true);
+
+        // if disabled, scaling can be done on x- and y-axis separately
+
+        // set an alternative background color
+        chart2.setBackgroundColor(Color.WHITE);
+
+        chart2.animateX(1500);
+
+        chart2.setPinchZoom(false);
+        chart2.setScaleYEnabled(false);
+        chart2.setScaleXEnabled(false);
+
+//        chart2.setViewPortOffsets(120, 20, 60, 100);
+        XAxis xAxis = chart2.getXAxis();
+        xAxis.setTypeface(DEFAULT_BOLD);
+        xAxis.setTextSize(10f);
+        xAxis.setTextColor(Color.parseColor("#252525"));
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+
+        xAxis.setAxisLineColor(ContextCompat.getColor(this, R.color.c_dfdfdf));
+
+        xAxis.setDrawAxisLine(true);
+//        xAxis.setGranularity(4000000);
+        xAxis.setValueFormatter(new MyXFormatter());
+
+        xAxis.setLabelCount(3, true);
+        xAxis.setAvoidFirstLastClipping(true);
+
+
+        YAxis leftAxis = chart2.getAxisLeft();
+        leftAxis.setTypeface(DEFAULT_BOLD);
+        leftAxis.setTextSize(10f);
+        leftAxis.setLabelCount(5);
+
+        leftAxis.setTextColor(Color.parseColor("#252525"));
+
+
+        leftAxis.setDrawGridLines(true);
+        leftAxis.setDrawAxisLine(true);
+
+        leftAxis.enableGridDashedLine(10, 10, 0);
+//        leftAxis.setGranularityEnabled(true);
+        leftAxis.setValueFormatter(new MyYFormatter());
+
+
+        chart2.getAxisRight().setEnabled(false);
+
+
+        chart2.setOnTouchListener(touchListener);
+        chart2.setNoDataText("");
+
+        chart2.setOnChartGestureListener(onChartGestureListener);
+    }
+
 
     /**
      * 手势处理，显示和隐藏高亮及topview
@@ -328,47 +414,47 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
      * 处理事件冲突
      */
 
-    View.OnTouchListener touchListener = new View.OnTouchListener() {
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-
-                scrollView.requestDisallowInterceptTouchEvent(false);
-            } else {
-                scrollView.requestDisallowInterceptTouchEvent(true);
-
-            }
-
-            return false;
-        }
-    };
-
-
 //    View.OnTouchListener touchListener = new View.OnTouchListener() {
-//        float ratio = 12f;
-//        float x0 = 0f;
-//        float y0 = 0f;
 //
 //        @Override
 //        public boolean onTouch(View v, MotionEvent event) {
-//            switch (event.getAction()) {
-//                case MotionEvent.ACTION_DOWN:
-//                    x0 = event.getX();
-//                    y0 = event.getY();
-//                    break;
-//                case MotionEvent.ACTION_MOVE:
-//                    float dx = Math.abs(event.getX() - x0);
-//                    float dy = Math.abs(event.getY() - y0);
-//                    x0 = event.getX();
-//                    y0 = event.getY();
-//                    scrollView.requestDisallowInterceptTouchEvent(dx * ratio > dy);
-//                    break;
+//
+//            if (event.getAction() == MotionEvent.ACTION_UP) {
+//
+//                scrollView.requestDisallowInterceptTouchEvent(false);
+//            } else {
+//                scrollView.requestDisallowInterceptTouchEvent(true);
+//
 //            }
+//
 //            return false;
 //        }
 //    };
+
+
+    View.OnTouchListener touchListener = new View.OnTouchListener() {
+        float ratio = 12f;
+        float x0 = 0f;
+        float y0 = 0f;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    x0 = event.getX();
+                    y0 = event.getY();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    float dx = Math.abs(event.getX() - x0);
+                    float dy = Math.abs(event.getY() - y0);
+                    x0 = event.getX();
+                    y0 = event.getY();
+                    scrollView.requestDisallowInterceptTouchEvent(dx * ratio > dy);
+                    break;
+            }
+            return false;
+        }
+    };
 
 
     private void initRcDeployDeviceTag() {
@@ -406,43 +492,108 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
     @Override
     public void updateChartData(LineData lineData, float max, float min) {
+//        if (chart.getData() != null &&
+//                chart.getData().getDataSetCount() > 0) {
+//            LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+//            set1.setValues(lineData.getDataSets().get(0));
+//            set1.notifyDataSetChanged();
+//            chart.getData().notifyDataChanged();
+//            chart.notifyDataSetChanged();
+//        }
 
+        if (currentClick == 0) {
+            chart.setVisibility(View.VISIBLE);
+            chart2.setVisibility(View.INVISIBLE);
 
-        YAxis leftAxis = chart.getAxisLeft();
+            YAxis leftAxis = chart.getAxisLeft();
+            leftAxis.resetAxisMaximum();
+            leftAxis.resetAxisMinimum();
+            leftAxis.setAxisMaximum(max);
+            leftAxis.setAxisMinimum(min);
+            chart.setData(lineData);
+            final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+            final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
+            set1.setDrawVerticalHighlightIndicator(false);
+            set2.setDrawVerticalHighlightIndicator(false);
 
-        leftAxis.resetAxisMaximum();
-        leftAxis.resetAxisMinimum();
-//        leftAxis.setAxisMaximum(max);
-//
-//        leftAxis.setAxisMinimum(min);
-        chart.setData(lineData);
-        final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
-        final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
-        set1.setDrawVerticalHighlightIndicator(false);
-        set2.setDrawVerticalHighlightIndicator(false);
-        chart.invalidate();
+            set1.notifyDataSetChanged();
+            set2.notifyDataSetChanged();
+            chart.getData().notifyDataChanged();
+            chart.notifyDataSetChanged();
+
+            chart.invalidate();
+        } else {
+            chart.setVisibility(View.INVISIBLE);
+            chart2.setVisibility(View.VISIBLE);
+            YAxis leftAxis = chart2.getAxisLeft();
+            leftAxis.resetAxisMaximum();
+            leftAxis.resetAxisMinimum();
+            leftAxis.setAxisMaximum(max);
+            leftAxis.setAxisMinimum(min);
+            chart2.setData(lineData);
+            final LineDataSet set1 = (LineDataSet) chart2.getData().getDataSetByIndex(0);
+            final LineDataSet set2 = (LineDataSet) chart2.getData().getDataSetByIndex(1);
+            set1.setDrawVerticalHighlightIndicator(false);
+            set2.setDrawVerticalHighlightIndicator(false);
+
+            set1.notifyDataSetChanged();
+            set2.notifyDataSetChanged();
+            chart2.getData().notifyDataChanged();
+            chart2.notifyDataSetChanged();
+
+            chart2.invalidate();
+
+        }
+
     }
 
     @Override
     public void updateCharEmpty() {
 
-        LineData data = new LineData();
 
-        YAxis leftAxis = chart.getAxisLeft();
-        leftAxis.setAxisMaximum(100f);
-        leftAxis.setAxisMinimum(0f);
-        chart.setData(data);
+        if (currentClick == 0) {
 
+            chart.setVisibility(View.VISIBLE);
+            chart2.setVisibility(View.INVISIBLE);
+            LineData data = new LineData();
 
-        XAxis xAxis = chart.getXAxis();
-
-        Date dayBegin = DateUtil.getPastDate(1);
-
-        xAxis.setAxisMinimum(dayBegin.getTime());
-        xAxis.setAxisMaximum(System.currentTimeMillis());
+            YAxis leftAxis = chart.getAxisLeft();
+            leftAxis.setAxisMaximum(100f);
+            leftAxis.setAxisMinimum(0f);
+            chart.setData(data);
 
 
-        chart.invalidate();
+            XAxis xAxis = chart.getXAxis();
+
+            Date dayBegin = DateUtil.getPastDate(1);
+
+            xAxis.setAxisMinimum(dayBegin.getTime() / 100000);
+            xAxis.setAxisMaximum(System.currentTimeMillis() / 100000);
+
+
+            chart.invalidate();
+        } else {
+            chart.setVisibility(View.INVISIBLE);
+            chart2.setVisibility(View.VISIBLE);
+            LineData data = new LineData();
+
+            YAxis leftAxis = chart2.getAxisLeft();
+            leftAxis.setAxisMaximum(100f);
+            leftAxis.setAxisMinimum(0f);
+            chart2.setData(data);
+
+
+            XAxis xAxis = chart2.getXAxis();
+
+            Date dayBegin = DateUtil.getPastDate(1);
+
+            xAxis.setAxisMinimum(dayBegin.getTime() / 100000);
+            xAxis.setAxisMaximum(System.currentTimeMillis() / 100000);
+
+
+            chart2.invalidate();
+
+        }
 
 
     }
@@ -458,18 +609,10 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         }
 
 
-        if ("station".equals(model.getType())) {
-            acBasestationTvTypetime.setText(R.string.αbasestation);
-        } else if ("gateway".equals(model.getType())) {
-            acBasestationTvTypetime.setText(R.string.αgateway);
-        } else if ("scgateway".equals(model.getType())) {
-            acBasestationTvTypetime.setText(R.string.αroute);
-        } else if ("ai_camera".equals(model.getType())) {
-            acBasestationTvTypetime.setText("AI_CAMERA");
-        }
+        acBasestationTvTypetime.setText(model.getTypeName());
 
         if (!TextUtils.isEmpty(model.getUpdatedTime())) {
-            acBasestationTvTypetime.append(" " + DateUtil.getDate(Long.parseLong(model.getUpdatedTime())));
+            acBasestationTvTypetime.append(" " + DateUtil.getHourFormatDate(Long.parseLong(model.getUpdatedTime())));
         }
 
         if (!TextUtils.isEmpty(model.getStatus())) {
@@ -506,7 +649,7 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     @Override
     public void updateNetDelay(String delay, int color) {
         acBasestationTvNetdelay.setTextColor(getResources().getColor(color));
-        acBasestationTvNetdelay.setText(delay);
+        acBasestationTvNetdelay.setText(delay + "ms");
 
 
     }
@@ -532,7 +675,14 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
                 break;
             case R.id.ac_basestation_tv_today:
+                currentClick = 0;
+                if (chart.getData() != null) {
+                    chart.setVisibility(View.VISIBLE);
+                    chart2.setVisibility(View.INVISIBLE);
+                } else {
+                    mPresenter.requestChartDetailData("day");
 
+                }
 
                 acBasestationTvToday.setTextColor(Color.parseColor("#252525"));
                 acBasestationTvWeek.setBackground(getResources().getDrawable(R.drawable.shape_bg_top));
@@ -542,13 +692,19 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
                 acBasestationTvToday.setBackground(null);
 
 
-                mPresenter.requestChartDetailData("day");
 
 
                 break;
             case R.id.ac_basestation_tv_week:
+                currentClick = 1;
+                if (chart2.getData() != null) {
 
+                    chart2.setVisibility(View.VISIBLE);
+                    chart.setVisibility(View.INVISIBLE);
+                } else {
+                    mPresenter.requestChartDetailData("week");
 
+                }
                 acBasestationTvWeek.setTextColor(Color.parseColor("#252525"));
                 acBasestationTvToday.setBackground(getResources().getDrawable(R.drawable.shape_bg_top));
 
@@ -556,7 +712,6 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
                 acBasestationTvToday.setTextColor(Color.parseColor("#A6A6A6"));
                 acBasestationTvWeek.setBackground(null);
 
-                mPresenter.requestChartDetailData("week");
 
                 break;
             case R.id.rl_network_information:
@@ -592,18 +747,39 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
-        chart.centerViewToAnimated(e.getX(), e.getY(), chart.getData().getDataSetByIndex(h.getDataSetIndex())
-                .getAxisDependency(), 500);
-        mPresenter.drawHighlight(e, h, chart.getData());
-        e.setIcon(getResources().getDrawable(R.drawable.chart_black_dot));
+
+        if (currentClick == 0) {
+            Log.e("===onValueSelected", "Selected: " + e.toString() + "=====" + h.toString());
+            chart.centerViewToAnimated(e.getX(), e.getY(), chart.getData().getDataSetByIndex(h.getDataSetIndex())
+                    .getAxisDependency(), 500);
+            mPresenter.drawHighlight(e, h, chart.getData());
+            e.setIcon(getResources().getDrawable(R.drawable.chart_black_dot));
 
 
-        final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
-        final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
-        set1.setDrawVerticalHighlightIndicator(true);
-        set2.setDrawVerticalHighlightIndicator(true);
-        fadeIn(topStateRl);
-        myHandler.removeCallbacksAndMessages(null);
+            final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+            final LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
+            set1.setDrawVerticalHighlightIndicator(true);
+            set2.setDrawVerticalHighlightIndicator(true);
+            fadeIn(topStateRl);
+            myHandler.removeCallbacksAndMessages(null);
+        } else {
+            Log.e("===onValueSelected", "Selected: " + e.toString() + "=====" + h.toString());
+            chart2.centerViewToAnimated(e.getX(), e.getY(), chart2.getData().getDataSetByIndex(h.getDataSetIndex())
+                    .getAxisDependency(), 500);
+            mPresenter.drawHighlight(e, h, chart2.getData());
+            e.setIcon(getResources().getDrawable(R.drawable.chart_black_dot));
+
+
+            final LineDataSet set1 = (LineDataSet) chart2.getData().getDataSetByIndex(0);
+            final LineDataSet set2 = (LineDataSet) chart2.getData().getDataSetByIndex(1);
+            set1.setDrawVerticalHighlightIndicator(true);
+            set2.setDrawVerticalHighlightIndicator(true);
+            fadeIn(topStateRl);
+            myHandler.removeCallbacksAndMessages(null);
+
+        }
+
+
     }
 
     @Override
@@ -614,16 +790,30 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     public void fadeIn(final View view, final float startAlpha, final float endAlpha, final long duration) {
 
 
-        if (view.getVisibility() == View.VISIBLE) return;
+        if (currentClick == 0) {
+            if (view.getVisibility() == View.VISIBLE) return;
 
 
-        view.setVisibility(View.VISIBLE);
-        Animation animation = new AlphaAnimation(startAlpha, endAlpha);
-        animation.setDuration(duration);
-        view.startAnimation(animation);
+            view.setVisibility(View.VISIBLE);
+            Animation animation = new AlphaAnimation(startAlpha, endAlpha);
+            animation.setDuration(duration);
+            view.startAnimation(animation);
 
 
-        chart.invalidate();
+            chart.invalidate();
+        } else {
+
+            if (view.getVisibility() == View.VISIBLE) return;
+
+
+            view.setVisibility(View.VISIBLE);
+            Animation animation = new AlphaAnimation(startAlpha, endAlpha);
+            animation.setDuration(duration);
+            view.startAnimation(animation);
+
+
+            chart2.invalidate();
+        }
 
 
     }
@@ -638,27 +828,66 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
     private final Handler myHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
-            LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
+
+            if (currentClick == 0) {
+                if (null != chart.getData()) {
 
 
-            set1.setDrawVerticalHighlightIndicator(false);
-            set2.setDrawVerticalHighlightIndicator(false);
+                    LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+
+                    LineDataSet set2 = (LineDataSet) chart.getData().getDataSetByIndex(1);
+                    if (null != set1) {
+                        set1.setDrawVerticalHighlightIndicator(false);
+
+                        for (int i = 0; i < set1.getValues().size(); i++) {
+                            set1.getValues().get(i).setIcon(null);
+                        }
+                    }
+                    if (null != set2) {
+                        set2.setDrawVerticalHighlightIndicator(false);
+                        for (int i = 0; i < set2.getValues().size(); i++) {
+                            set2.getValues().get(i).setIcon(null);
+                        }
+                    }
+                }
+
+                chart.invalidate();
+                topStateRl.setEnabled(false);
+                Animation animation = new AlphaAnimation(1F, 0F);
+                animation.setDuration(400);
+                topStateRl.startAnimation(animation);
+                topStateRl.setVisibility(View.GONE);
+            } else {
+                if (null != chart2.getData()) {
 
 
-            for (int i = 0; i < set1.getValues().size(); i++) {
-                set1.getValues().get(i).setIcon(null);
+                    LineDataSet set1 = (LineDataSet) chart2.getData().getDataSetByIndex(0);
+                    LineDataSet set2 = (LineDataSet) chart2.getData().getDataSetByIndex(1);
+
+
+                    if (null != set1) {
+
+                        set1.setDrawVerticalHighlightIndicator(false);
+                        for (int i = 0; i < set1.getValues().size(); i++) {
+                            set1.getValues().get(i).setIcon(null);
+                        }
+                    }
+
+                    if (null != set2) {
+                        set2.setDrawVerticalHighlightIndicator(false);
+                        for (int i = 0; i < set2.getValues().size(); i++) {
+                            set2.getValues().get(i).setIcon(null);
+                        }
+                    }
+                }
+                chart2.invalidate();
+                topStateRl.setEnabled(false);
+                Animation animation = new AlphaAnimation(1F, 0F);
+                animation.setDuration(400);
+                topStateRl.startAnimation(animation);
+                topStateRl.setVisibility(View.GONE);
             }
-            for (int i = 0; i < set2.getValues().size(); i++) {
-                set2.getValues().get(i).setIcon(null);
-            }
 
-            chart.invalidate();
-            topStateRl.setEnabled(false);
-            Animation animation = new AlphaAnimation(1F, 0F);
-            animation.setDuration(400);
-            topStateRl.startAnimation(animation);
-            topStateRl.setVisibility(View.GONE);
 
         }
     };
@@ -678,13 +907,8 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         @Override
         public String getFormattedValue(float value) {
 
-            if (value > 0) {
 
-                return mPresenter.stampToDate(value + "");
-            } else {
-
-                return super.getFormattedValue(value);
-            }
+            return mPresenter.stampToDate(value + "");
 
         }
 
@@ -705,10 +929,11 @@ public class BaseStationDetailActivity extends BaseActivity<IBaseStationDetailAc
         @Override
         public String getFormattedValue(float value) {
             String p;
-            if (value > 0) {
-                p = decimalFormat.format(value);
+            if (value == 0f) {
+                p = "0.00";
             } else {
-                p = 0 + "";
+
+                p = decimalFormat.format(value);
             }
             return (p + "\u2103");
 

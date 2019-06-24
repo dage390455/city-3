@@ -2,6 +2,7 @@ package com.sensoro.nameplate.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -15,7 +16,6 @@ import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.widgets.SensoroToast;
-import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.nameplate.IMainViews.IEditNameplateDetailActivityView;
 import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.R2;
@@ -32,7 +32,7 @@ import butterknife.OnClick;
 
 public class EditNameplateDetailActivity extends BaseActivity<IEditNameplateDetailActivityView, EditNameplateDetailActivityPresenter>
         implements IEditNameplateDetailActivityView, DeployDeviceTagAddTagAdapter.DeployDeviceTagAddTagItemClickListener, RecycleViewItemClickListener,
-        TagDialogUtils.OnTagDialogListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
+        TagDialogUtils.OnTagDialogListener {
     @BindView(R2.id.include_text_title_tv_cancel)
     TextView includeTextTitleTvCancel;
     @BindView(R2.id.include_text_title_tv_title)
@@ -49,7 +49,6 @@ public class EditNameplateDetailActivity extends BaseActivity<IEditNameplateDeta
     RecyclerView rvEditNameplateDetailAddTag;
     private DeployDeviceTagAddTagAdapter mAddTagAdapter;
     private TagDialogUtils tagDialogUtils;
-    private TipOperationDialogUtils historyClearDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -64,12 +63,11 @@ public class EditNameplateDetailActivity extends BaseActivity<IEditNameplateDeta
         tagDialogUtils.registerListener(this);
         initTitle();
         initRcAddTag();
-        initClearHistoryDialog();
 
     }
 
     private void initTitle() {
-        includeTextTitleTvTitle.setText(R.string.sensor_detail_tag);
+        includeTextTitleTvTitle.setText(R.string.nameplate_base_info);
         includeTextTitleTvCancel.setVisibility(View.VISIBLE);
         includeTextTitleTvCancel.setTextColor(getResources().getColor(R.color.c_b6b6b6));
         includeTextTitleTvCancel.setText(R.string.cancel);
@@ -78,14 +76,6 @@ public class EditNameplateDetailActivity extends BaseActivity<IEditNameplateDeta
         updateSaveStatus(true);
     }
 
-    private void initClearHistoryDialog() {
-        historyClearDialog = new TipOperationDialogUtils(mActivity, true);
-        historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
-        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record), R.color.c_a6a6a6);
-        historyClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_1dbb99));
-        historyClearDialog.setTipConfirmText(getString(R.string.clear), getResources().getColor(R.color.c_a6a6a6));
-        historyClearDialog.setTipDialogUtilsClickListener(this);
-    }
 
     @Override
     public void updateSaveStatus(boolean isEnable) {
@@ -95,9 +85,10 @@ public class EditNameplateDetailActivity extends BaseActivity<IEditNameplateDeta
     }
 
     @Override
-    public void showHistoryClearDialog() {
-        if (historyClearDialog != null) {
-            historyClearDialog.show();
+    public void updateNameplateName(String nameplateName) {
+
+        if (!TextUtils.isEmpty(nameplateName)) {
+            etEditNameplateDetail.setText(nameplateName);
         }
     }
 
@@ -159,10 +150,6 @@ public class EditNameplateDetailActivity extends BaseActivity<IEditNameplateDeta
             tagDialogUtils = null;
         }
 
-        if (historyClearDialog != null) {
-            historyClearDialog.destroy();
-            historyClearDialog = null;
-        }
 
         super.onDestroy();
     }
@@ -218,31 +205,14 @@ public class EditNameplateDetailActivity extends BaseActivity<IEditNameplateDeta
         }
     }
 
-    @Override
-    public void onCancelClick() {
-        if (historyClearDialog != null) {
-            historyClearDialog.dismiss();
-        }
-    }
 
-    @Override
-    public void onConfirmClick(String content, String diameter) {
-        if (historyClearDialog != null) {
-            historyClearDialog.dismiss();
-        }
-
-    }
-
-
-    @OnClick({R2.id.include_text_title_tv_cancel, R2.id.include_text_title_tv_subtitle, R2.id.et_edit_nameplate_detail})
+    @OnClick({R2.id.include_text_title_tv_cancel, R2.id.include_text_title_tv_subtitle})
     public void onViewClicked(View view) {
         int id = view.getId();
         if (R.id.include_text_title_tv_cancel == id) {
             finishAc();
         } else if (R.id.include_text_title_tv_subtitle == id) {
-            mPresenter.doFinish();
-        } else if (R.id.et_edit_nameplate_detail == id) {
-            historyClearDialog.show();
+            mPresenter.doFinish(etEditNameplateDetail.getText().toString().trim());
         } else {
 
         }

@@ -35,7 +35,7 @@ import com.sensoro.smartcity.imainviews.IWarnFragmentView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.presenter.WarnFragmentPresenter;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
@@ -44,7 +44,7 @@ import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.common.widgets.SensoroToast;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtilsTest;
+import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -52,8 +52,8 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
+import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
+import static com.sensoro.common.constant.Constants.DIRECTION_UP;
 
 public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPresenter> implements
         IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
@@ -94,7 +94,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     private MainWarnFragRcContentAdapter mRcContentAdapter;
     private boolean isShowDialog = true;
     private ProgressUtils mProgressUtils;
-    private AlarmPopUtilsTest mAlarmPopUtils;
+    private AlarmPopUtils mAlarmPopUtils;
     private Animation returnTopAnimation;
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private TipOperationDialogUtils historyClearDialog;
@@ -109,7 +109,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     @SuppressLint("ClickableViewAccessibility")
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
-        mAlarmPopUtils = new AlarmPopUtilsTest(mRootFragment.getActivity());
+        mAlarmPopUtils = new AlarmPopUtils(mRootFragment.getActivity());
         mAlarmPopUtils.setOnPopupCallbackListener(mPresenter);
         returnTopAnimation = AnimationUtils.loadAnimation(mRootFragment.getContext(), R.anim.return_top_in_anim);
         mReturnTopImageView.setAnimation(returnTopAnimation);

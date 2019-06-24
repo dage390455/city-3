@@ -2,15 +2,13 @@ package com.sensoro.common.server.bean;
 
 public class BaseStationChartDetailModel {
 
-    private float key;
+    private String key;
 
-    public float getKey() {
+    public String getKey() {
         return key;
     }
 
-    public void setKey(float key) {
-        this.key = key;
-    }
+
 
     public float getShell() {
         return shell;
@@ -32,4 +30,7 @@ public class BaseStationChartDetailModel {
     private float board;
 
 
+    public void setKey(String key) {
+        this.key = key;
+    }
 }

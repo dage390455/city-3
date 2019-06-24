@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat;
 import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.model.ImageItem;
+import com.sensoro.common.utils.MyPermissionManager;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.cameralibrary.JCameraView;
@@ -30,7 +31,7 @@ import com.sensoro.smartcity.util.WidgetUtil;
 import java.io.File;
 import java.io.Serializable;
 
-import static com.sensoro.smartcity.constant.Constants.RESULT_CODE_RECORD;
+import static com.sensoro.common.constant.Constants.RESULT_CODE_RECORD;
 
 public class TakeRecordActivity extends BaseActivity<ITakeRecordActivityView, TakeRecordActivityPresenter> implements ITakeRecordActivityView, View.OnClickListener {
 
@@ -278,7 +279,8 @@ public class TakeRecordActivity extends BaseActivity<ITakeRecordActivityView, Ta
                     granted = true;
                     jCameraView.onResume();
                 } else {
-                    Toast.makeText(this, "请到设置-权限管理中开启", Toast.LENGTH_SHORT).show();
+                    SensoroToast.getInstance().makeText(mActivity, getResources().getString(R.string.please_go_to_setting), Toast.LENGTH_SHORT);
+                    MyPermissionManager.startAppSetting(mActivity);
                     finish();
                 }
             }

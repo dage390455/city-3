@@ -21,7 +21,7 @@ import com.sensoro.common.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IBusinessContractView;
 import com.sensoro.smartcity.presenter.BusinessContractPresenter;
 import com.sensoro.common.server.bean.ContractsTemplateInfo;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
@@ -241,7 +241,7 @@ public class BusinessContractFragment extends BaseFragment<IBusinessContractView
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         setSiteNature(sites.get(position));
                     }
-                }, sites);
+                }, sites, getResources().getString(R.string.contract_info_site_nature));
                 break;
             case R.id.iv_contract_age_del:
                 contractAgeAddOrSubtract(etContractAge,false);

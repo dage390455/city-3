@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractResultActivityView;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.utils.ImageFactory;
@@ -21,8 +21,7 @@ import org.greenrobot.eventbus.EventBus;
 import cn.bingoogolapple.qrcode.core.BGAQRCodeUtil;
 import cn.bingoogolapple.qrcode.zxing.QRCodeEncoder;
 
-public class ContractResultActivityPresenter extends BasePresenter<IContractResultActivityView> implements
-        Constants {
+public class ContractResultActivityPresenter extends BasePresenter<IContractResultActivityView> {
     private Activity mContext;
     private String code;
     private Bitmap bitmapTemp;
@@ -31,10 +30,10 @@ public class ContractResultActivityPresenter extends BasePresenter<IContractResu
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        code = mContext.getIntent().getStringExtra(EXTRA_CONTRACT_ID_QRCODE);
+        code = mContext.getIntent().getStringExtra(Constants.EXTRA_CONTRACT_ID_QRCODE);
 //        needFinish = mContext.getIntent().getBooleanExtra(EXTRA_CONTRACT_RESULT_TYPE, false);
 //        if (needFinish) {
-            getView().setTextResultInfo("业主扫描此二维码，生成合同预览");
+        getView().setTextResultInfo("业主扫描此二维码，生成合同预览");
 //        } else {
 //            getView().setTextResultInfo("业主扫描此二维码，查看合同详情");
 //        }
@@ -65,7 +64,7 @@ public class ContractResultActivityPresenter extends BasePresenter<IContractResu
         if (wxAppInstalled) {
 //            boolean wxAppSupportAPI = ContextUtils.getContext().api.isWXAppSupportAPI();
 //            if (wxAppSupportAPI) {
-                toShareWeChat();
+            toShareWeChat();
 //            } else {
 //                getView().toastShort("当前版的微信不支持分享功能");
 //            }
@@ -110,7 +109,7 @@ public class ContractResultActivityPresenter extends BasePresenter<IContractResu
 
     public void finish() {
         EventData eventData = new EventData();
-        eventData.code = EVENT_DATA_FINISH_CODE;
+        eventData.code = Constants.EVENT_DATA_FINISH_CODE;
         eventData.data = true;
         EventBus.getDefault().post(eventData);
         getView().finishAc();

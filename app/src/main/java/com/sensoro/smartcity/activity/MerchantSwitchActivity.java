@@ -32,7 +32,7 @@ import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IMerchantSwitchActivityView;
 import com.sensoro.smartcity.presenter.MerchantSwitchActivityPresenter;
 import com.sensoro.common.server.bean.UserInfo;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
@@ -46,8 +46,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
+import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
+import static com.sensoro.common.constant.Constants.DIRECTION_UP;
 
 public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivityView, MerchantSwitchActivityPresenter> implements IMerchantSwitchActivityView
         , View.OnClickListener, AbsListView.OnScrollListener, AdapterView.OnItemClickListener,TipOperationDialogUtils.TipDialogUtilsClickListener {

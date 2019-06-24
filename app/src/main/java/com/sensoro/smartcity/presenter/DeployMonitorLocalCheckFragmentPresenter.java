@@ -15,10 +15,12 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.handler.HandlerDeployCheck;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnStart;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
@@ -48,14 +50,12 @@ import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.callback.OnConfigInfoObserver;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.DeoloyCheckPointConstants;
 import com.sensoro.smartcity.constant.DeployCheckStateEnum;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IDeployMonitorLocalCheckFragmentView;
-import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.MaterialValueModel;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 
@@ -75,8 +75,10 @@ import java.util.Set;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.sensoro.smartcity.constant.CityConstants.MATERIAL_VALUE_MAP;
 
-public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDeployMonitorLocalCheckFragmentView> implements IOnCreate, Constants, Runnable, BLEDeviceListener<BLEDevice>, IOnStart {
+
+public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDeployMonitorLocalCheckFragmentView> implements IOnCreate, Runnable, BLEDeviceListener<BLEDevice>, IOnStart {
     private DeployMonitorCheckActivity mActivity;
     private final ArrayList<String> pickerStrings = new ArrayList<>();
     private ArrayList<EarlyWarningthresholdDialogUtilsAdapterModel> overCurrentDataList;
@@ -108,7 +110,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         initPickerData();
         initOverCurrentData();
         //基站或白名单不开启蓝牙
-        if (deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION || deployAnalyzerModel.whiteListDeployType != TYPE_SCAN_DEPLOY_WHITE_LIST) {
+        if (deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION || deployAnalyzerModel.whiteListDeployType != Constants.TYPE_SCAN_DEPLOY_WHITE_LIST) {
             mHandler.post(this);
             BleObserver.getInstance().registerBleObserver(this);
         }
@@ -123,7 +125,9 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         geocoderSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
             @Override
             public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
-                try {
+                String address = "";
+
+                if (i == 1000) {
                     RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
 
                     StringBuilder stringBuilder = new StringBuilder();
@@ -180,26 +184,22 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                             stringBuilder.append(streetNumber);
                         }
                     }
-                    String address;
                     if (TextUtils.isEmpty(stringBuilder)) {
                         address = township;
                     } else {
                         address = stringBuilder.append("附近").toString();
                     }
-                    if (!TextUtils.isEmpty(address)) {
-                        deployAnalyzerModel.address = address;
-                        getView().setDeployPosition(true, address);
-                    }
-                    try {
-                        LogUtils.loge("deployMapModel", "----" + deployAnalyzerModel.address);
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
 
-                    //
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else {
+                    //转换失败
+                    address = mActivity.getString(R.string.not_positioned);
+
                 }
+                if (TextUtils.isEmpty(address)) {
+                    address = mActivity.getString(R.string.unknown_street);
+                }
+                deployAnalyzerModel.address = address;
+                getView().setDeployPosition(true, address);
             }
 
             @Override
@@ -221,7 +221,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
 
     private void initPickerData() {
-        pickerStrings.addAll(Constants.materialValueMap.keySet());
+        pickerStrings.addAll(MATERIAL_VALUE_MAP.keySet());
         getView().updatePvCustomOptions(pickerStrings);
     }
 
@@ -246,23 +246,23 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         //控制界面显示逻辑
         switch (deployAnalyzerModel.deployType) {
             //基站
-            case TYPE_SCAN_DEPLOY_STATION:
+            case Constants.TYPE_SCAN_DEPLOY_STATION:
                 getView().setDeployDeviceType(mActivity.getString(R.string.station));
                 getView().setDeployDeviceConfigVisible(false);
                 break;
-            case TYPE_SCAN_DEPLOY_DEVICE:
-            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
-            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+            case Constants.TYPE_SCAN_DEPLOY_DEVICE:
+            case Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 //不论更换还是部署都需要安装检测
                 getView().setDeployDeviceType(deviceTypeName);
                 switch (deployAnalyzerModel.whiteListDeployType) {
                     //白名单设备
-                    case TYPE_SCAN_DEPLOY_WHITE_LIST:
-                    case TYPE_SCAN_DEPLOY_WHITE_LIST_HAS_SIGNAL_CONFIG:
+                    case Constants.TYPE_SCAN_DEPLOY_WHITE_LIST:
+                    case Constants.TYPE_SCAN_DEPLOY_WHITE_LIST_HAS_SIGNAL_CONFIG:
                         getView().setDeployDeviceConfigVisible(false);
                         break;
                     default:
-                        boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+                        boolean isFire = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                         getView().setDeployDeviceConfigVisible(isFire);
                         break;
                 }
@@ -297,42 +297,40 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(DeviceInfo deviceInfo) {
+        String sn = deviceInfo.getSn();
+        try {
+            if (deployAnalyzerModel.sn.equalsIgnoreCase(sn)) {
+                deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
+                tempSignal = deviceInfo.getSignal();
+                try {
+                    LogUtils.loge(this, "部署页刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + tempSignal);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
-            case EVENT_DATA_DEPLOY_RESULT_FINISH:
-            case EVENT_DATA_DEPLOY_CHANGE_RESULT_CONTINUE:
-            case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
+            case Constants.EVENT_DATA_DEPLOY_RESULT_FINISH:
+            case Constants.EVENT_DATA_DEPLOY_CHANGE_RESULT_CONTINUE:
+            case Constants.EVENT_DATA_DEPLOY_RESULT_CONTINUE:
                 getView().finishAc();
                 break;
-            case EVENT_DATA_DEPLOY_MAP:
+            case Constants.EVENT_DATA_DEPLOY_MAP:
                 //地图信息
                 if (data instanceof DeployAnalyzerModel) {
                     deployAnalyzerModel = (DeployAnalyzerModel) data;
                     getView().setDeployPosition(checkHasLatLng(), deployAnalyzerModel.address);
                 }
                 getView().updateBtnStatus(canDoOneNextTest());
-                break;
-            case EVENT_DATA_SOCKET_DATA_INFO:
-                //信号刷新推送
-                if (data instanceof DeviceInfo) {
-                    DeviceInfo deviceInfo = (DeviceInfo) data;
-                    String sn = deviceInfo.getSn();
-                    try {
-                        if (deployAnalyzerModel.sn.equalsIgnoreCase(sn)) {
-                            deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
-                            tempSignal = deviceInfo.getSignal();
-                            try {
-                                LogUtils.loge(this, "部署页刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + tempSignal);
-                            } catch (Throwable throwable) {
-                                throwable.printStackTrace();
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
                 break;
             default:
                 break;
@@ -346,8 +344,8 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         } else {
             intent.setClass(mActivity, DeployMapENActivity.class);
         }
-        deployAnalyzerModel.mapSourceType = DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL;
-        intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+        deployAnalyzerModel.mapSourceType = Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL;
+        intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
         getView().startAC(intent);
     }
 
@@ -561,10 +559,10 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
 
     public void updateCheckTipText(boolean hasConfig) {
         if (hasConfig) {
-            if (TYPE_SCAN_DEPLOY_STATION == deployAnalyzerModel.deployType) {
+            if (Constants.TYPE_SCAN_DEPLOY_STATION == deployAnalyzerModel.deployType) {
                 getView().setDeployLocalCheckTipText("");
             } else {
-                if (DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType) || "mantun_fires".equals(deployAnalyzerModel.deviceType)) {
+                if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType) || "mantun_fires".equals(deployAnalyzerModel.deviceType)) {
                     getView().setDeployLocalCheckTipText(mActivity.getString(R.string.deploy_check_button_tip_is_powered_on));
                 } else {
                     DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deployAnalyzerModel.deviceType);
@@ -648,7 +646,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                 int material = 0;
                 int mapValue = inputValue;
                 double diameter = Double.parseDouble(diameterStr);
-                MaterialValueModel materialValueModel = Constants.materialValueMap.get(diameterStr);
+                MaterialValueModel materialValueModel = MATERIAL_VALUE_MAP.get(diameterStr);
                 if (materialValueModel != null) {
                     if (mActivity.getString(R.string.cu).equals(materialStr)) {
                         material = 0;
@@ -792,26 +790,26 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         //是否有强制部署权限
         switch (deployAnalyzerModel.deployType) {
             //基站
-            case TYPE_SCAN_DEPLOY_STATION:
+            case Constants.TYPE_SCAN_DEPLOY_STATION:
                 // 基站
                 //改为直接跳过
                 goToNextStep();
 //                getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE, false);
 //                checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE);
                 break;
-            case TYPE_SCAN_DEPLOY_DEVICE:
-            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
-            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+            case Constants.TYPE_SCAN_DEPLOY_DEVICE:
+            case Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 switch (deployAnalyzerModel.whiteListDeployType) {
                     //白名单设备
-                    case TYPE_SCAN_DEPLOY_WHITE_LIST:
+                    case Constants.TYPE_SCAN_DEPLOY_WHITE_LIST:
                         // 开始检查操作并更新UI
 //                        getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE, false);
 //                        checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_SINGLE);
                         //改为直接跳过
                         goToNextStep();
                         break;
-                    case TYPE_SCAN_DEPLOY_WHITE_LIST_HAS_SIGNAL_CONFIG:
+                    case Constants.TYPE_SCAN_DEPLOY_WHITE_LIST_HAS_SIGNAL_CONFIG:
                         // 开始检查操作并更新UI
                         getView().showDeployMonitorCheckDialogUtils(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_TWO, false);
                         checkDeviceIsNearBy(DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_ORIGIN_STATE_TWO);
@@ -820,7 +818,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                         //不论更换还是部署都需要安装检测
                         String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType);
                         getView().setDeployDeviceType(deviceTypeName);
-                        boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+                        boolean isFire = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                         if (isFire) {
                             //做初始配置检查
                             //开始检查操作并更新UI
@@ -1014,14 +1012,14 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
             deployAnalyzerModel.status = data.getData().getStatus();
             deployAnalyzerModel.signal = String.copyValueOf(tempSignal.toCharArray());
             switch (data.getData().getStatus()) {
-                case SENSOR_STATUS_ALARM:
+                case Constants.SENSOR_STATUS_ALARM:
                     tempForceReason = "status";
                     tempStatus = data.getData().getStatus();
                     String alarmReason = handleAlarmReason(data.getData());
                     getView().updateDeployMonitorCheckDialogUtils(DeployCheckStateEnum.DEVICE_CHECK_STATUS_FAIL_ALARM,
                             alarmReason, PreferencesHelper.getInstance().getUserData().hasForceUpload);
                     break;
-                case SENSOR_STATUS_MALFUNCTION:
+                case Constants.SENSOR_STATUS_MALFUNCTION:
                     tempForceReason = "status";
                     tempStatus = data.getData().getStatus();
                     String reason = handleMalfunctionReason(data.getData());
@@ -1254,19 +1252,19 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
     private boolean canDoOneNextTest() {
         switch (deployAnalyzerModel.deployType) {
             //基站
-            case TYPE_SCAN_DEPLOY_STATION:
+            case Constants.TYPE_SCAN_DEPLOY_STATION:
                 return checkHasLatLng();
-            case TYPE_SCAN_DEPLOY_DEVICE:
-            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
-            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+            case Constants.TYPE_SCAN_DEPLOY_DEVICE:
+            case Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 switch (deployAnalyzerModel.whiteListDeployType) {
                     //白名单设备
-                    case TYPE_SCAN_DEPLOY_WHITE_LIST:
-                    case TYPE_SCAN_DEPLOY_WHITE_LIST_HAS_SIGNAL_CONFIG:
+                    case Constants.TYPE_SCAN_DEPLOY_WHITE_LIST:
+                    case Constants.TYPE_SCAN_DEPLOY_WHITE_LIST_HAS_SIGNAL_CONFIG:
                         return checkHasLatLng();
                     default:
                         //不论更换还是部署都需要安装检测
-                        boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+                        boolean isFire = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                         if (isFire) {
                             //需要安装检测的
                             return checkHasLatLng() && checkHasConfig();

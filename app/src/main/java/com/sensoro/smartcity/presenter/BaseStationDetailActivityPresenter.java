@@ -19,6 +19,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
@@ -29,6 +30,7 @@ import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.BaseStationChartDetailRsp;
 import com.sensoro.common.server.response.BaseStationDetailRsp;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.FrequencyPointActivity;
@@ -36,9 +38,8 @@ import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapENActivity;
 import com.sensoro.smartcity.activity.NetWorkInfoActivity;
 import com.sensoro.smartcity.activity.SelfCheckActivity;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IBaseStationDetailActivityView;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.smartcity.model.CityEntry;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
@@ -47,6 +48,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -56,11 +58,6 @@ import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-
-import static com.sensoro.smartcity.constant.Constants.EVENT_DATA_UPDATEBASESTATION;
-import static com.sensoro.smartcity.constant.Constants.EXTRA_DEVICE_INFO;
-import static com.sensoro.smartcity.constant.Constants.EXTRA_JUST_DISPLAY_PIC;
-import static com.sensoro.smartcity.constant.Constants.REQUEST_CODE_PREVIEW;
 
 public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStationDetailActivityView> implements GeocodeSearch.OnGeocodeSearchListener {
     private Activity mContext;
@@ -74,6 +71,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
 
     private String curentType = "day";
     DeviceInfo mDeviceInfo = new DeviceInfo();
+    private List<BaseStationChartDetailModel> modelList = new ArrayList<>();
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventData eventData) {
@@ -82,11 +80,11 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         switch (code) {
 
             //位置校准的逻辑更新
-            case EVENT_DATA_UPDATEBASESTATION:
+            case Constants.EVENT_DATA_UPDATE_BASE_STATION:
 
 
                 final ArrayList<Double> pushDeviceInfo = (ArrayList<Double>) dataevent;
-                data.setLonlatLabel(pushDeviceInfo);
+                data.setLonlat(pushDeviceInfo);
                 freshLocationDeviceInfo();
 
 
@@ -115,7 +113,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
     private void freshLocationDeviceInfo() {
 
 
-        List<Double> lonlat = data.getLonlatLabel();
+        List<Double> lonlat = data.getLonlat();
         try {
             double v = lonlat.get(1);
             double v1 = lonlat.get(0);
@@ -123,6 +121,9 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
                 getView().setDeviceLocation(mContext.getString(R.string.not_positioned), false);
                 getView().setDeviceLocationTextColor(R.color.c_a6a6a6);
                 return;
+            } else {
+                getView().setDeviceLocationTextColor(R.color.c_252525);
+
             }
             RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(v, v1), 200, GeocodeSearch.AMAP);
             geocoderSearch.getFromLocationAsyn(query);
@@ -233,7 +234,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
             interval = "1h";
 
         }
-        getView().showProgressDialog();
+//        getView().showProgressDialog();
 
 
         RetrofitServiceHelper.getInstance().getBaseStationChartDetail(sn, "temperature", interval, from, System.currentTimeMillis()).subscribeOn(Schedulers.io())
@@ -244,6 +245,11 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
                 List<BaseStationChartDetailModel> data = deviceCameraListRsp.getData();
                 if (null != data && data.size() > 0) {
                     processChartData(data);
+                    modelList.clear();
+
+                    modelList.addAll(data);
+                    System.out.println("====" + data.size());
+
                 } else {
                     getView().updateCharEmpty();
 
@@ -287,15 +293,19 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         List<Float> list1 = new ArrayList<>();
         List<Float> list2 = new ArrayList<>();
 
-        for (BaseStationChartDetailModel model : modelList) {
+
+        for (int i = 0; i < modelList.size(); i++) {
+
+            BaseStationChartDetailModel model = modelList.get(i);
             list1.add(model.getBoard());
             list2.add(model.getShell());
 
-            values1.add(new Entry(model.getKey(), model.getBoard()));
+            float f = Float.parseFloat(model.getKey()) / 100000;
+            values1.add(new CityEntry(i, f, model.getBoard()));
 
-            values2.add(new Entry(model.getKey(), model.getShell()));
-
+            values2.add(new CityEntry(i, f, model.getShell()));
         }
+
         Float max1 = Collections.max(list1);
         Float max2 = Collections.max(list2);
         float max = Math.max(max1, max2);
@@ -346,15 +356,17 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         data.setValueTextColor(Color.WHITE);
         data.setValueTextSize(9f);
         data.setDrawValues(false);
-        getView().updateChartData(data, max + 1f, min);
+
+
+        getView().updateChartData(data, max + 5f, min - 5f);
 
     }
 
 
     public String stampToDate(String stap) {
         String time;
-        long lt = Float.valueOf(stap).longValue();
-        Date date = new Date(lt);
+        long lt = new BigDecimal(stap).longValue();
+        Date date = new Date(lt * 100000);
 
 
 //        if (curentType.equals("day")) {
@@ -377,6 +389,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
      * @param data
      */
     public void drawHighlight(Entry e, Highlight h, LineData data) {
+        CityEntry cityEntry = (CityEntry) e;
         float first = 0, second = 0;
         int dataSetIndex = h.getDataSetIndex();
 
@@ -443,9 +456,10 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         }
 
 
-        String time = stampToDate(Float.toString(e.getX()));
+//        String time = stampToDate(Float.toString());
 
-        getView().updateTopView(time, "内部：" + decimalFormat.format(first) + "\u2103", "外部：" + decimalFormat.format(second) + "\u2103");
+
+        getView().updateTopView(DateUtil.getFullMonthDate(Long.parseLong(modelList.get(cityEntry.getIndex()).getKey())), mContext.getResources().getString(R.string.internal) + decimalFormat.format(first) + "\u2103", mContext.getResources().getString(R.string.external) + decimalFormat.format(second) + "\u2103");
 
     }
 
@@ -482,17 +496,23 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
 
 
     public void doNavigation() {
-        List<Double> lonlat = data.getLonlatLabel();
+        List<Double> lonlat = data.getLonlat();
+        ArrayList<Double> lonNew = new ArrayList<>();
+
+        lonNew.add(0d);
+        lonNew.add(0d);
         if (lonlat.size() == 2) {
             double v = lonlat.get(1);
             double v1 = lonlat.get(0);
             if (v == 0 || v1 == 0) {
-                getView().toastShort(mContext.getString(R.string.location_information_not_set));
-                return;
+                data.setLonlat(lonNew);
+//                getView().toastShort(mContext.getString(R.string.location_information_not_set));
+//                return;
             }
         } else {
-            getView().toastShort(mContext.getString(R.string.location_information_not_set));
-            return;
+            data.setLonlat(lonNew);
+//            getView().toastShort(mContext.getString(R.string.location_information_not_set));
+//            return;
         }
         Intent intent = new Intent();
         if (AppUtils.isChineseLanguage()) {
@@ -502,131 +522,145 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         }
 
 
-
-        mDeviceInfo.setLonlat(data.getLonlatLabel());
-        mDeviceInfo.setSourceType(Constants.DEPLOY_MAP_SOURCE_TYPE_BASESTATION);
+        mDeviceInfo.setLonlat(data.getLonlat());
+        mDeviceInfo.setSourceType(Constants.DEPLOY_MAP_SOURCE_TYPE_BASE_STATION);
         mDeviceInfo.setSn(sn);
-        intent.putExtra(EXTRA_DEVICE_INFO, mDeviceInfo);
+        intent.putExtra(Constants.EXTRA_DEVICE_INFO, mDeviceInfo);
         getView().startAC(intent);
     }
 
+    /**
+     * 逆地理编码（坐标转地址）
+     * 1）可以在回调中解析result，获取地址、adcode等等信息。
+     * <p>
+     * 2）返回结果成功或者失败的响应码。1000为成功，其他为失败
+     */
+
     @Override
     public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
-        RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
-        String address;
-        if (AppUtils.isChineseLanguage()) {
+        String address = "";
+        if (i == 1000) {
+            RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
+            if (AppUtils.isChineseLanguage()) {
 //            address = regeocodeResult.getRegeocodeAddress().getFormatAddress();
 
 //                改为自定义
-            StringBuilder stringBuilder = new StringBuilder();
-            //
-            String province = regeocodeAddress.getProvince();
-            //
-            String district = regeocodeAddress.getDistrict();// 区或县或县级市
-            //
-            //
-            String township = regeocodeAddress.getTownship();// 乡镇
-            //
-            String streetName = null;// 道路
-            List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
-            if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
-                RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
-                if (regeocodeRoad != null) {
-                    streetName = regeocodeRoad.getName();
+                StringBuilder stringBuilder = new StringBuilder();
+                //
+                String province = regeocodeAddress.getProvince();
+                //
+                String district = regeocodeAddress.getDistrict();// 区或县或县级市
+                //
+                //
+                String township = regeocodeAddress.getTownship();// 乡镇
+                //
+                String streetName = null;// 道路
+                List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
+                if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
+                    RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
+                    if (regeocodeRoad != null) {
+                        streetName = regeocodeRoad.getName();
+                    }
                 }
-            }
-            //
-            String streetNumber = null;// 门牌号
-            StreetNumber number = regeocodeAddress.getStreetNumber();
-            if (number != null) {
-                String street = number.getStreet();
-                if (street != null) {
-                    streetNumber = street + number.getNumber();
+                //
+                String streetNumber = null;// 门牌号
+                StreetNumber number = regeocodeAddress.getStreetNumber();
+                if (number != null) {
+                    String street = number.getStreet();
+                    if (street != null) {
+                        streetNumber = street + number.getNumber();
+                    } else {
+                        streetNumber = number.getNumber();
+                    }
+                }
+                //
+                String building = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
+                //区县
+                if (!TextUtils.isEmpty(province)) {
+                    stringBuilder.append(province);
+                }
+                if (!TextUtils.isEmpty(district)) {
+                    stringBuilder.append(district);
+                }
+                //乡镇
+                if (!TextUtils.isEmpty(township)) {
+                    stringBuilder.append(township);
+                }
+                //道路
+                if (!TextUtils.isEmpty(streetName)) {
+                    stringBuilder.append(streetName);
+                }
+                //标志性建筑
+                if (!TextUtils.isEmpty(building)) {
+                    stringBuilder.append(building);
                 } else {
-                    streetNumber = number.getNumber();
+                    //门牌号
+                    if (!TextUtils.isEmpty(streetNumber)) {
+                        stringBuilder.append(streetNumber);
+                    }
                 }
-            }
-            //
-            String building = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
-            //区县
-            if (!TextUtils.isEmpty(province)) {
-                stringBuilder.append(province);
-            }
-            if (!TextUtils.isEmpty(district)) {
-                stringBuilder.append(district);
-            }
-            //乡镇
-            if (!TextUtils.isEmpty(township)) {
-                stringBuilder.append(township);
-            }
-            //道路
-            if (!TextUtils.isEmpty(streetName)) {
-                stringBuilder.append(streetName);
-            }
-            //标志性建筑
-            if (!TextUtils.isEmpty(building)) {
-                stringBuilder.append(building);
-            } else {
-                //门牌号
-                if (!TextUtils.isEmpty(streetNumber)) {
-                    stringBuilder.append(streetNumber);
+                if (TextUtils.isEmpty(stringBuilder)) {
+                    address = township;
+                } else {
+                    address = stringBuilder.append("附近").toString();
                 }
-            }
-            if (TextUtils.isEmpty(stringBuilder)) {
-                address = township;
+                //
+                try {
+                    LogUtils.loge(this, "onRegeocodeSearched: " + "code = " + i + ",address = " + address);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             } else {
-                address = stringBuilder.append("附近").toString();
-            }
-            //
-            try {
-                LogUtils.loge(this, "onRegeocodeSearched: " + "code = " + i + ",address = " + address);
-            } catch (Throwable throwable) {
-                throwable.printStackTrace();
+                StringBuilder stringBuilder = new StringBuilder();
+                String subLoc = regeocodeAddress.getDistrict();// 区或县或县级市
+                String ts = regeocodeAddress.getTownship();// 乡镇
+                String thf = null;// 道路
+                List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
+                if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
+                    RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
+                    if (regeocodeRoad != null) {
+                        thf = regeocodeRoad.getName();
+                    }
+                }
+                String subthf = null;// 门牌号
+                StreetNumber streetNumber = regeocodeAddress.getStreetNumber();
+                if (streetNumber != null) {
+                    subthf = streetNumber.getNumber();
+                }
+                String fn = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
+                if (TextUtils.isEmpty(thf)) {
+                    if (!TextUtils.isEmpty(fn)) {
+                        stringBuilder.append(fn);
+                    }
+                }
+                if (subLoc != null) {
+                    stringBuilder.append(subLoc);
+                }
+                if (ts != null) {
+                    stringBuilder.append(ts);
+                }
+                if (thf != null) {
+                    stringBuilder.append(thf);
+                }
+                if (subthf != null) {
+                    stringBuilder.append(subthf);
+                }
+                address = stringBuilder.toString();
+                if (TextUtils.isEmpty(address)) {
+                    address = ts;
+                }
             }
         } else {
-            StringBuilder stringBuilder = new StringBuilder();
-            String subLoc = regeocodeAddress.getDistrict();// 区或县或县级市
-            String ts = regeocodeAddress.getTownship();// 乡镇
-            String thf = null;// 道路
-            List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
-            if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
-                RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
-                if (regeocodeRoad != null) {
-                    thf = regeocodeRoad.getName();
-                }
-            }
-            String subthf = null;// 门牌号
-            StreetNumber streetNumber = regeocodeAddress.getStreetNumber();
-            if (streetNumber != null) {
-                subthf = streetNumber.getNumber();
-            }
-            String fn = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
-            if (TextUtils.isEmpty(thf)) {
-                if (!TextUtils.isEmpty(fn)) {
-                    stringBuilder.append(fn);
-                }
-            }
-            if (subLoc != null) {
-                stringBuilder.append(subLoc);
-            }
-            if (ts != null) {
-                stringBuilder.append(ts);
-            }
-            if (thf != null) {
-                stringBuilder.append(thf);
-            }
-            if (subthf != null) {
-                stringBuilder.append(subthf);
-            }
-            address = stringBuilder.toString();
-            if (TextUtils.isEmpty(address)) {
-                address = ts;
-            }
+            //转换失败
+            address = mContext.getString(R.string.not_positioned);
+
         }
         if (TextUtils.isEmpty(address)) {
             address = mContext.getString(R.string.unknown_street);
         }
         mDeviceInfo.setAddress(address);
+//        getView().setDeviceLocationTextColor(R.color.c_252525);
+
         if (isAttachedView()) {
             getView().setDeviceLocation(address, true);
         }
@@ -655,8 +689,8 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
             intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, items);
             intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
             intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
-            intentPreview.putExtra(EXTRA_JUST_DISPLAY_PIC, true);
-            getView().startACForResult(intentPreview, REQUEST_CODE_PREVIEW);
+            intentPreview.putExtra(Constants.EXTRA_JUST_DISPLAY_PIC, true);
+            getView().startACForResult(intentPreview, Constants.REQUEST_CODE_PREVIEW);
         } else {
             getView().toastShort(mContext.getString(R.string.no_photos_added));
         }

@@ -14,5 +14,8 @@ public interface INameplateDetailActivityView extends IToast, IProgressDialog, I
 
     void updateTopDetail(NamePlateInfo namePlateInfo);
 
+    void updateNamePlateStatus(int pos);
+
+    void setQrCodeUrl(String qrCodeUrl);
 
 }

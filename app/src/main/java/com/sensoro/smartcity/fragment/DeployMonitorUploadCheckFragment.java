@@ -18,7 +18,7 @@ import com.sensoro.smartcity.adapter.DeployDeviceDetailAlarmContactAdapter;
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IDeployMonitorUploadCheckFragmentView;
-import com.sensoro.smartcity.model.DeployContactModel;
+import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.smartcity.presenter.DeployMonitorUploadCheckFragmentPresenter;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
@@ -284,7 +284,7 @@ public class DeployMonitorUploadCheckFragment extends BaseFragment<IDeployMonito
     @Override
     public void setUploadBtnStatus(boolean isEnable) {
         tvFgDeployUploadCheckUpload.setEnabled(isEnable);
-        tvFgDeployUploadCheckUpload.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_solid_df_corner);
+        tvFgDeployUploadCheckUpload.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_corner_dfdf_shadow);
     }
 
     @Override

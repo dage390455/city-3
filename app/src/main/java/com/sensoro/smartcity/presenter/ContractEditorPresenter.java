@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractEditorView;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.bean.ContractListInfo;

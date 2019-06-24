@@ -11,17 +11,17 @@ import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorConfigurationView;
 import com.sensoro.common.iwidget.IOnCreate;
-import com.sensoro.smartcity.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeployControlSettingData;
 import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -34,7 +34,11 @@ import java.util.ArrayList;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMonitorConfigurationView> implements Constants, IOnCreate {
+import static com.sensoro.common.constant.Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE;
+import static com.sensoro.common.constant.Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL;
+import static com.sensoro.smartcity.constant.CityConstants.MATERIAL_VALUE_MAP;
+
+public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMonitorConfigurationView> implements IOnCreate {
     private Activity mActivity;
     private DeployAnalyzerModel deployAnalyzerModel;
     private int[] mMinMaxValue;
@@ -59,7 +63,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
     public void initData(Context context) {
         mActivity = (Activity) context;
         deployAnalyzerModel = (DeployAnalyzerModel) mActivity.getIntent().getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
-        configurationSource = mActivity.getIntent().getIntExtra(EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
+        configurationSource = mActivity.getIntent().getIntExtra(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
         switch (configurationSource) {
             case DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE:
                 //部署
@@ -112,7 +116,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
     }
 
     private void initPickerData() {
-        pickerStrings.addAll(Constants.materialValueMap.keySet());
+        pickerStrings.addAll(MATERIAL_VALUE_MAP.keySet());
         getView().updatePvCustomOptions(pickerStrings);
     }
 
@@ -281,52 +285,43 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onMessageEvent(EventData eventData) {
-        int code = eventData.code;
-        Object data = eventData.data;
-        switch (code) {
-            case EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT:
-                if (data instanceof MonitorPointOperationTaskResultInfo) {
-                    try {
-                        LogUtils.loge("EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT --->>");
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                    MonitorPointOperationTaskResultInfo info = (MonitorPointOperationTaskResultInfo) data;
-                    final String scheduleNo = info.getScheduleNo();
-                    if (!TextUtils.isEmpty(scheduleNo) && info.getTotal() == info.getComplete()) {
-                        String[] split = scheduleNo.split(",");
-                        if (split.length > 0) {
-                            final String temp = split[0];
-                            if (!TextUtils.isEmpty(temp)) {
-                                if (AppUtils.isActivityTop(mActivity, DeployMonitorConfigurationActivity.class)) {
-                                    mActivity.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
-                                                mHandler.removeCallbacks(DeviceTaskOvertime);
-                                                if (isAttachedView()) {
-                                                    getView().dismissOperatingLoadingDialog();
-                                                    getView().showOperationSuccessToast();
-                                                    //
-                                                    pushConfigResult();
-                                                    mHandler.postDelayed(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            getView().finishAc();
-                                                        }
-                                                    }, 1000);
-                                                }
+    public void onMessageEvent(MonitorPointOperationTaskResultInfo monitorPointOperationTaskResultInfo) {
+        try {
+            LogUtils.loge("EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT --->>");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        final String scheduleNo = monitorPointOperationTaskResultInfo.getScheduleNo();
+        if (!TextUtils.isEmpty(scheduleNo) && monitorPointOperationTaskResultInfo.getTotal() == monitorPointOperationTaskResultInfo.getComplete()) {
+            String[] split = scheduleNo.split(",");
+            if (split.length > 0) {
+                final String temp = split[0];
+                if (!TextUtils.isEmpty(temp)) {
+                    if (AppUtils.isActivityTop(mActivity, DeployMonitorConfigurationActivity.class)) {
+                        mActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
+                                    mHandler.removeCallbacks(DeviceTaskOvertime);
+                                    if (isAttachedView()) {
+                                        getView().dismissOperatingLoadingDialog();
+                                        getView().showOperationSuccessToast();
+                                        //
+                                        pushConfigResult();
+                                        mHandler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                getView().finishAc();
                                             }
-                                        }
-                                    });
+                                        }, 1000);
+                                    }
                                 }
                             }
-                        }
-
+                        });
                     }
                 }
-                break;
+            }
+
         }
     }
 

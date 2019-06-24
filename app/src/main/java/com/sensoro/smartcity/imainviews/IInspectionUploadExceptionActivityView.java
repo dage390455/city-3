@@ -9,7 +9,7 @@ import com.sensoro.common.widgets.SelectDialog;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface IInspectionUploadExceptionActivityView extends IToast,IProgressDialog,IActivityIntent{
+public interface IInspectionUploadExceptionActivityView extends IToast, IProgressDialog, IActivityIntent {
     void updateExceptionTagAdapter(List<String> exceptionTags);
 
     void updateWordCount(int count);
@@ -19,10 +19,14 @@ public interface IInspectionUploadExceptionActivityView extends IToast,IProgress
     List<Integer> getSelectTags();
 
     String getRemarkMessage();
+
     void updateImageList(ArrayList<ImageItem> imageList);
 
-    void showDialog(SelectDialog.SelectDialogListener listener, List<String> names);
+    void showDialog(SelectDialog.SelectDialogListener listener, List<String> names, String title);
+
     void initUploadProgressDialog();
+
     void dismissUploadProgressDialog();
+
     void showUploadProgressDialog(String content, double percent);
 }

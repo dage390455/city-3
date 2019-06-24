@@ -9,13 +9,13 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMapENActivity;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
-import com.sensoro.smartcity.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.server.bean.DeployControlSettingData;
 import com.sensoro.common.server.bean.DeployRecordInfo;
 import com.sensoro.common.server.bean.ScenesData;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
@@ -26,8 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRecordDetailActivityView>
-        implements Constants {
+public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRecordDetailActivityView> {
     private Activity mActivity;
     private DeployRecordInfo mDeployRecordInfo;
     private DeployAnalyzerModel deployAnalyzerModel;
@@ -35,15 +34,15 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
-        mDeployRecordInfo = (DeployRecordInfo) mActivity.getIntent().getSerializableExtra(EXTRA_DEPLOY_RECORD_DETAIL);
+        mDeployRecordInfo = (DeployRecordInfo) mActivity.getIntent().getSerializableExtra(Constants.EXTRA_DEPLOY_RECORD_DETAIL);
         refreshUI();
     }
 
     private void initDeployMapModel() {
         List<Double> lonlat = mDeployRecordInfo.getLonlat();
         deployAnalyzerModel = new DeployAnalyzerModel();
-        deployAnalyzerModel.mapSourceType = DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD;
-        deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_POINT_DISPLAY;
+        deployAnalyzerModel.mapSourceType = Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD;
+        deployAnalyzerModel.deployType = Constants.TYPE_SCAN_DEPLOY_POINT_DISPLAY;
         if (lonlat != null) {
             deployAnalyzerModel.latLng.clear();
             deployAnalyzerModel.latLng.addAll(lonlat);
@@ -82,15 +81,15 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
                         Integer status = mDeployRecordInfo.getStatus();
                         if (status != null) {
                             switch (status) {
-                                case SENSOR_STATUS_ALARM:
+                                case Constants.SENSOR_STATUS_ALARM:
                                     forceReasonStr = mActivity.getString(R.string.deploy_check_record_reason_status) + mActivity.getString(R.string.status_alarm_true) + mActivity.getString(R.string.deploy_check_record_force_tip);
                                     break;
-                                case SENSOR_STATUS_MALFUNCTION:
+                                case Constants.SENSOR_STATUS_MALFUNCTION:
                                     forceReasonStr = mActivity.getString(R.string.deploy_check_record_reason_status) + mActivity.getString(R.string.status_malfunction) + mActivity.getString(R.string.deploy_check_record_force_tip);
                                     break;
-                                case SENSOR_STATUS_NORMAL:
-                                case SENSOR_STATUS_LOST:
-                                case SENSOR_STATUS_INACTIVE:
+                                case Constants.SENSOR_STATUS_NORMAL:
+                                case Constants.SENSOR_STATUS_LOST:
+                                case Constants.SENSOR_STATUS_INACTIVE:
                                     break;
                                 default:
                                     break;
@@ -132,7 +131,7 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
             String deviceType = mDeployRecordInfo.getDeviceType();
             String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deviceType);
             getView().setDeployDeviceRecordDeviceType(deviceTypeName);
-            boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType);
+            boolean isFire = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType);
             getView().setDeployDetailDeploySettingVisible(isFire);
             if (isFire) {
                 //TODO 是否配置过电器火灾字段字段
@@ -183,7 +182,7 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
         } else {
             intent.setClass(mActivity, DeployMapENActivity.class);
         }
-        intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+        intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
         getView().startAC(intent);
     }
 
@@ -201,8 +200,8 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
             intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, items);
             intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
             intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
-            intentPreview.putExtra(EXTRA_JUST_DISPLAY_PIC, true);
-            getView().startACForResult(intentPreview, REQUEST_CODE_PREVIEW);
+            intentPreview.putExtra(Constants.EXTRA_JUST_DISPLAY_PIC, true);
+            getView().startACForResult(intentPreview, Constants.REQUEST_CODE_PREVIEW);
         } else {
             getView().toastShort(mActivity.getString(R.string.no_photos_added));
         }

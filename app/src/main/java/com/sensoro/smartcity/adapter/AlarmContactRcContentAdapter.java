@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -11,8 +10,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.model.DeployContactModel;
 
 import java.util.ArrayList;
 import java.util.List;

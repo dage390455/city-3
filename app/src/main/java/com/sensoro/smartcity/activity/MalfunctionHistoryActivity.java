@@ -36,8 +36,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
+import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
+import static com.sensoro.common.constant.Constants.DIRECTION_UP;
 
 public class MalfunctionHistoryActivity extends BaseActivity<IMalfunctionHistoryActivityView, MalfunctionHistoryActivityPresenter>
         implements IMalfunctionHistoryActivityView, CalendarPopUtils.OnCalendarPopupCallbackListener, View.OnClickListener {

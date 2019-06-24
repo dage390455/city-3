@@ -2,11 +2,16 @@ package com.sensoro.smartcity.presenter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnDestroy;
+import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
@@ -17,24 +22,19 @@ import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.DeployStationInfoRsp;
 import com.sensoro.common.server.response.DeviceDeployRsp;
+import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
 import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
 import com.sensoro.smartcity.activity.DeployMonitorCheckActivity;
-import com.sensoro.smartcity.activity.DeployMonitorDeployPicActivity;
 import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
 import com.sensoro.smartcity.activity.DeployMonitorWeChatRelationActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorUploadCheckFragmentView;
-import com.sensoro.smartcity.model.DeployAnalyzerModel;
-import com.sensoro.smartcity.model.DeployContactModel;
-import com.sensoro.smartcity.model.DeployResultModel;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.model.DeployResultModel;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.RegexUtils;
+import com.sensoro.common.utils.RegexUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.smartcity.widget.popup.UpLoadPhotosUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -47,23 +47,7 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.sensoro.smartcity.constant.Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED;
-import static com.sensoro.smartcity.constant.Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
-import static com.sensoro.smartcity.constant.Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
-import static com.sensoro.smartcity.constant.Constants.DEVICE_CONTROL_DEVICE_TYPES;
-import static com.sensoro.smartcity.constant.Constants.EXTRA_DEPLOY_RESULT_MODEL;
-import static com.sensoro.smartcity.constant.Constants.EXTRA_DEPLOY_TO_PHOTO;
-import static com.sensoro.smartcity.constant.Constants.EXTRA_DEPLOY_TO_SN;
-import static com.sensoro.smartcity.constant.Constants.EXTRA_SETTING_DEPLOY_CONTACT;
-import static com.sensoro.smartcity.constant.Constants.EXTRA_SETTING_DEPLOY_DEVICE_TYPE;
-import static com.sensoro.smartcity.constant.Constants.EXTRA_SETTING_NAME_ADDRESS;
-import static com.sensoro.smartcity.constant.Constants.EXTRA_SETTING_TAG_LIST;
-import static com.sensoro.smartcity.constant.Constants.EXTRA_SETTING_WE_CHAT_RELATION;
-import static com.sensoro.smartcity.constant.Constants.TYPE_SCAN_DEPLOY_DEVICE;
-import static com.sensoro.smartcity.constant.Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE;
-import static com.sensoro.smartcity.constant.Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE;
-import static com.sensoro.smartcity.constant.Constants.TYPE_SCAN_DEPLOY_STATION;
-import static com.sensoro.smartcity.constant.Constants.TYPE_SCAN_INSPECTION;
+
 
 public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDeployMonitorUploadCheckFragmentView> implements IOnCreate, IOnDestroy {
     private DeployMonitorCheckActivity mActivity;
@@ -93,7 +77,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
 
     private void init() {
         switch (deployAnalyzerModel.deployType) {
-            case TYPE_SCAN_DEPLOY_STATION:
+            case Constants.TYPE_SCAN_DEPLOY_STATION:
                 //基站部署
                 getView().setAlarmContactAndPicAndMiniProgramVisible(false);
                 getView().setDeployPhotoVisible(false);
@@ -105,14 +89,14 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                 getView().setDeployDeviceType(mActivity.getString(R.string.station));
                 getView().updateTagsData(deployAnalyzerModel.tagList);
                 break;
-            case TYPE_SCAN_DEPLOY_DEVICE:
+            case Constants.TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
                 getView().setAlarmContactAndPicAndMiniProgramVisible(true);
                 getView().setDeployPhotoVisible(true);
                 echoDeviceInfo();
                 break;
-            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
-            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+            case Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 //巡检设备更换
                 getView().setAlarmContactAndPicAndMiniProgramVisible(true);
                 getView().setDeployPhotoVisible(true);
@@ -120,7 +104,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                 echoDeviceInfo();
                 getView().setDeployDetailArrowWeChatVisible(false);
                 break;
-            case TYPE_SCAN_INSPECTION:
+            case Constants.TYPE_SCAN_INSPECTION:
                 //扫描巡检设备
                 break;
             default:
@@ -166,11 +150,11 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
             }
         }
         switch (deployAnalyzerModel.deployType) {
-            case TYPE_SCAN_DEPLOY_STATION:
+            case Constants.TYPE_SCAN_DEPLOY_STATION:
                 break;
-            case TYPE_SCAN_DEPLOY_DEVICE:
-            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
-            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+            case Constants.TYPE_SCAN_DEPLOY_DEVICE:
+            case Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 //联系人校验
                 if (deployAnalyzerModel.deployContactModelList.size() > 0) {
                     DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
@@ -184,7 +168,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                     return false;
                 }
                 //照片校验
-                if (getRealImageSize() == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+                if (getRealImageSize() == 0 && deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION) {
                     return false;
                 }
                 break;
@@ -265,26 +249,33 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
     public void doNameAddress() {
         Intent intent = new Intent(mActivity, DeployMonitorNameAddressActivity.class);
         if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
-            intent.putExtra(EXTRA_SETTING_NAME_ADDRESS, deployAnalyzerModel.nameAndAddress);
+            intent.putExtra(Constants.EXTRA_SETTING_NAME_ADDRESS, deployAnalyzerModel.nameAndAddress);
         }
         getView().startAC(intent);
     }
 
     public void doTag() {
-        Intent intent = new Intent(mActivity, DeployDeviceTagActivity.class);
+        Bundle bundle = new Bundle();
         if (deployAnalyzerModel.tagList.size() > 0) {
-            intent.putStringArrayListExtra(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
+            bundle.putStringArrayList(Constants.EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
         }
-        getView().startAC(intent);
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_TAG,bundle,mActivity);
     }
 
     public void doSettingPhoto() {
-        Intent intent = new Intent(mActivity, DeployMonitorDeployPicActivity.class);
+        Bundle bundle = new Bundle();
         if (getRealImageSize() > 0) {
-            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
+            bundle.putSerializable(Constants.EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
         }
-        intent.putExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
-        getView().startAC(intent);
+        bundle.putString(Constants.EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_PIC,bundle,mActivity);
+
+//        Intent intent = new Intent(mActivity, DeployMonitorDeployPicActivity.class);
+//        if (getRealImageSize() > 0) {
+//            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
+//        }
+//        intent.putExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
+//        getView().startAC(intent);
     }
 
     private int getRealImageSize() {
@@ -300,18 +291,18 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
     public void doAlarmContact() {
         Intent intent = new Intent(mActivity, DeployMonitorAlarmContactActivity.class);
         if (deployAnalyzerModel.deployContactModelList.size() > 0) {
-            intent.putExtra(EXTRA_SETTING_DEPLOY_CONTACT, (ArrayList<DeployContactModel>) deployAnalyzerModel.deployContactModelList);
+            intent.putExtra(Constants.EXTRA_SETTING_DEPLOY_CONTACT, (ArrayList<DeployContactModel>) deployAnalyzerModel.deployContactModelList);
         }
         getView().startAC(intent);
     }
 
     public void doWeChatRelation() {
-        if (deployAnalyzerModel.deployType == TYPE_SCAN_DEPLOY_DEVICE) {
+        if (deployAnalyzerModel.deployType == Constants.TYPE_SCAN_DEPLOY_DEVICE) {
             Intent intent = new Intent(mActivity, DeployMonitorWeChatRelationActivity.class);
             if (!TextUtils.isEmpty(deployAnalyzerModel.weChatAccount)) {
-                intent.putExtra(EXTRA_SETTING_WE_CHAT_RELATION, deployAnalyzerModel.weChatAccount);
+                intent.putExtra(Constants.EXTRA_SETTING_WE_CHAT_RELATION, deployAnalyzerModel.weChatAccount);
             }
-            intent.putExtra(EXTRA_DEPLOY_TO_SN, deployAnalyzerModel.sn);
+            intent.putExtra(Constants.EXTRA_DEPLOY_TO_SN, deployAnalyzerModel.sn);
             getView().startAC(intent);
         }
     }
@@ -319,15 +310,15 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
     public void doConfirm() {
         //姓名地址校验
         switch (deployAnalyzerModel.deployType) {
-            case TYPE_SCAN_DEPLOY_STATION:
+            case Constants.TYPE_SCAN_DEPLOY_STATION:
 //                if (checkHasPhoto()) return;
 //                //经纬度校验
 //                if (checkHasNoLatLng()) return;
                 requestUpload();
                 break;
-            case TYPE_SCAN_DEPLOY_DEVICE:
-            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
-            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+            case Constants.TYPE_SCAN_DEPLOY_DEVICE:
+            case Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 //联系人校验
                 if (checkHasContact()) return;
                 if (checkHasPhoto()) return;
@@ -368,7 +359,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
         final double lon = deployAnalyzerModel.latLng.get(0);
         final double lan = deployAnalyzerModel.latLng.get(1);
         switch (deployAnalyzerModel.deployType) {
-            case TYPE_SCAN_DEPLOY_STATION:
+            case Constants.TYPE_SCAN_DEPLOY_STATION:
                 //基站部署
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().doStationDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress).subscribeOn(Schedulers.io())
@@ -382,9 +373,9 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                                     getView().toastShort(errorMsg);
                                 } else if (errorCode == 4013101 || errorCode == 4000013) {
-                                    freshError(deployAnalyzerModel.sn, null, DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
+                                    freshError(deployAnalyzerModel.sn, null, Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
                                 } else {
-                                    freshError(deployAnalyzerModel.sn, errorMsg, DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
+                                    freshError(deployAnalyzerModel.sn, errorMsg, Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
                                 }
                             }
 
@@ -396,10 +387,10 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                             }
                         });
                 break;
-            case TYPE_SCAN_DEPLOY_DEVICE:
+            case Constants.TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
-            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
-            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+            case Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 doUploadImages(lon, lan);
                 break;
             default:
@@ -477,11 +468,11 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
     private void doDeployResult(double lon, double lan, List<String> imgUrls) {
         DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
         switch (deployAnalyzerModel.deployType) {
-            case TYPE_SCAN_DEPLOY_DEVICE:
+            case Constants.TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
                 getView().showProgressDialog();
                 //TODO 添加电气火灾配置支持
-                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+                boolean isFire = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                 //暂时添加 后续可以删除
                 DeployControlSettingData settingData = null;
                 if (isFire) {
@@ -497,9 +488,9 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                                     getView().toastShort(errorMsg);
                                 } else if (errorCode == 4013101 || errorCode == 4000013) {
-                                    freshError(deployAnalyzerModel.sn, null, DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
+                                    freshError(deployAnalyzerModel.sn, null, Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
                                 } else {
-                                    freshError(deployAnalyzerModel.sn, errorMsg, DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
+                                    freshError(deployAnalyzerModel.sn, errorMsg, Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
                                 }
                             }
 
@@ -511,7 +502,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                             }
                         });
                 break;
-            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
                         deployAnalyzerModel.mDeviceDetail.getTaskId(), 1, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
@@ -531,14 +522,14 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                         if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                             getView().toastShort(errorMsg);
                         } else if (errorCode == 4013101 || errorCode == 4000013) {
-                            freshError(deployAnalyzerModel.sn, null, DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
+                            freshError(deployAnalyzerModel.sn, null, Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
                         } else {
-                            freshError(deployAnalyzerModel.sn, errorMsg, DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
+                            freshError(deployAnalyzerModel.sn, errorMsg, Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
                         }
                     }
                 });
                 break;
-            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+            case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
                         null, 2, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress, deployContactModel.name,
@@ -559,9 +550,9 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                         if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                             getView().toastShort(errorMsg);
                         } else if (errorCode == 4013101 || errorCode == 4000013) {
-                            freshError(deployAnalyzerModel.sn, null, DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
+                            freshError(deployAnalyzerModel.sn, null, Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
                         } else {
-                            freshError(deployAnalyzerModel.sn, errorMsg, DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
+                            freshError(deployAnalyzerModel.sn, errorMsg, Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
                         }
                     }
                 });
@@ -580,7 +571,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
         //
         deployResultModel.sn = deviceInfo.getSn();
         deployResultModel.deviceType = deployAnalyzerModel.deviceType;
-        deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
+        deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
         deployResultModel.scanType = deployAnalyzerModel.deployType;
         deployResultModel.wxPhone = deployAnalyzerModel.weChatAccount;
         deployResultModel.settingData = deployAnalyzerModel.settingData;
@@ -604,7 +595,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
         deployResultModel.deviceStatus = deviceInfo.getStatus();
         deployResultModel.signal = deviceInfo.getSignal();
         deployResultModel.name = deployAnalyzerModel.nameAndAddress;
-        intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+        intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
         getView().startAC(intent);
     }
 
@@ -618,14 +609,14 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
         deployResultModel.deviceType = deployAnalyzerModel.deviceType;
         deployResultModel.stationStatus = deployStationInfo.getNormalStatus();
         deployResultModel.updateTime = deployStationInfo.getUpdatedTime();
-        deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
+        deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
         deployResultModel.scanType = deployAnalyzerModel.deployType;
         deployResultModel.address = deployAnalyzerModel.address;
         if (deployAnalyzerModel.deployContactModelList.size() > 0) {
             deployResultModel.deployContactModelList.addAll(deployAnalyzerModel.deployContactModelList);
         }
         deployResultModel.signal = deployAnalyzerModel.signal;
-        intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+        intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
         getView().startAC(intent);
     }
 
@@ -649,12 +640,12 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
         deployResultModel.deviceStatus = deployAnalyzerModel.status;
         deployResultModel.signal = deployAnalyzerModel.signal;
         deployResultModel.name = deployAnalyzerModel.nameAndAddress;
-        intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+        intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
         getView().startAC(intent);
     }
 
     private boolean checkHasPhoto() {
-        if (getRealImageSize() == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+        if (getRealImageSize() == 0 && deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION) {
             getView().toastShort(mActivity.getString(R.string.please_add_at_least_one_image));
             getView().setUploadBtnStatus(true);
             return true;

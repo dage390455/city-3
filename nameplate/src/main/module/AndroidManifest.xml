@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.sensoro.nameplate">
+
+    <application
+        android:name=".debug.NameplateApp"
+        android:allowBackup="true"
+        android:label="@string/camera_nameplate"
+        android:supportsRtl="true"
+        android:theme="@style/MyTheme"
+        tools:replace="android:theme">
+
+        <activity
+            android:name=".activity.NameplateListActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.NameplateDetailActivity" />
+        <activity android:name=".activity.EditNameplateDetailActivity" />
+        <activity android:name=".activity.DeployNameplateAddSensorFromListActivity" />
+        <activity android:name=".activity.DeployNameplateActivity" />
+        <activity android:name=".activity.DeployNameplateAddSensorActivity" />
+        <activity android:name=".activity.DeployNameplateNameActivity" />
+
+    </application>
+
+</manifest>

@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeployDeviceTagAddTagAdapter;
 import com.sensoro.smartcity.adapter.DeployDeviceTagHistoryTagAdapter;
@@ -30,6 +32,7 @@ import butterknife.OnClick;
 import static com.sensoro.smartcity.widget.dialog.TagDialogUtils.DIALOG_TAG_ADD;
 import static com.sensoro.smartcity.widget.dialog.TagDialogUtils.DIALOG_TAG_EDIT;
 
+@Route(path = ARouterConstants.ACTIVITY_DEPLOY_DEVICE_TAG)
 public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivityView, DeployDeviceTagActivityPresenter>
         implements IDeployDeviceTagActivityView, DeployDeviceTagAddTagAdapter.DeployDeviceTagAddTagItemClickListener, RecycleViewItemClickListener,
         TagDialogUtils.OnTagDialogListener, TipOperationDialogUtils.TipDialogUtilsClickListener {

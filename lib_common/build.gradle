@@ -32,39 +32,56 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api fileTree(dir: 'libs', include: ['*.jar'])
     //
-    testImplementation deps.junit
+    api deps.support.app_compat
+    api deps.support.multidex
+    api deps.support.recyclerview
+    api deps.support.design
+    api deps.support.cardview
+    api deps.support.constraint_layout
     //
-    implementation deps.support.app_compat
-    implementation deps.support.multidex
-    implementation deps.support.recyclerview
+    api deps.permission
     //
-    androidTestImplementation deps.support.test_espresso
+    api deps.butterknife
     //
-    implementation deps.permission
+    api deps.autosize
     //
-    implementation deps.butterknife
-    annotationProcessor deps.butterknife_compiler
+    api deps.arouter_api
     //
-    implementation deps.autosize
+    api deps.smartrefresh
     //
-    implementation deps.arouter_api
-    annotationProcessor deps.arouter_compiler
+    api deps.photoview
     //
-    implementation deps.okhttp3_logging
-    implementation deps.okhttp3
-    implementation deps.retrofit.runtime
-    implementation deps.retrofit.gson
-    implementation deps.retrofit.adapter
-    implementation deps.rxjava2
-    implementation deps.rx_android
-    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
+    api deps.glide
+    //
+    //网络组件
+    api deps.okhttp3_logging
+    api deps.okhttp3
+    api deps.retrofit.runtime
+    api deps.retrofit.gson
+    api deps.retrofit.adapter
+    api deps.rxjava2
+    api deps.rx_android
+    api 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
     //消息组件
-    implementation deps.event_bus
+    api deps.event_bus
 
-    implementation(deps.immersionbar) {
+    api(deps.immersionbar) {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
-    implementation 'com.baidu.mobstat:mtj-sdk-circle:latest.integration'
+    //七牛sdk
+    api 'com.qiniu:qiniu-android-sdk:7.3.+'
+    //微信
+    api 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
+    //bugly
+    api 'com.tencent.bugly:nativecrashreport:latest.release'
+    api 'com.tencent.bugly:crashreport_upgrade:latest.release'
+    //百度统计
+    api 'com.baidu.mobstat:mtj-sdk-circle:latest.integration'
+
+    androidTestImplementation deps.support.test_espresso
+    testImplementation deps.junit
+    annotationProcessor deps.butterknife_compiler
+    annotationProcessor deps.arouter_compiler
 }

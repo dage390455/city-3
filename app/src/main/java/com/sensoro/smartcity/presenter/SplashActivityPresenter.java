@@ -17,13 +17,13 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.MainActivity;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISplashActivityView;
 import com.sensoro.smartcity.push.SensoroPushIntentService;
 import com.sensoro.smartcity.push.SensoroPushService;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.MyPermissionManager;
+import com.sensoro.common.utils.MyPermissionManager;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Rationale;
@@ -32,7 +32,7 @@ import com.yanzhenjie.permission.runtime.Permission;
 
 import java.util.List;
 
-public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> implements Constants, IOnStart {
+public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> implements IOnStart {
     private Activity mContext;
     private final Handler handler = new Handler();
 
@@ -56,8 +56,9 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
         try {
             RetrofitServiceHelper.getInstance().getBaseUrlType();
             String sessionID = RetrofitServiceHelper.getInstance().getSessionId();
+            String sessionToken = RetrofitServiceHelper.getInstance().getSessionToken();
             try {
-                LogUtils.loge("sessionID = " + sessionID);
+                LogUtils.loge("sessionID = " + sessionID + ",token = " + sessionToken);
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
             }
@@ -72,8 +73,8 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
                 openLogin();
                 return;
             }
-            //TODO 做版本校验
-            if (TextUtils.isEmpty(sessionID)) {
+            // 两个都为空时需要重新登录
+            if (TextUtils.isEmpty(sessionToken) && TextUtils.isEmpty(sessionID)) {
                 openLogin();
                 return;
             }
@@ -117,7 +118,7 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
             public void run() {
                 Intent mainIntent = new Intent();
                 mainIntent.setClass(mContext, MainActivity.class);
-                mainIntent.putExtra(EXTRA_EVENT_LOGIN_DATA, eventLoginData);
+                mainIntent.putExtra(Constants.EXTRA_EVENT_LOGIN_DATA, eventLoginData);
                 getView().startAC(mainIntent);
                 getView().finishAc();
             }

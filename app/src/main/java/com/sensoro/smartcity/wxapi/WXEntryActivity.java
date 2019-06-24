@@ -35,8 +35,8 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
 		this.getWindow().getDecorView().setBackgroundColor(Color.TRANSPARENT);
 
 		// 通过WXAPIFactory工厂，获取IWXAPI的实例
-//		api = WXAPIFactory.createWXAPI(this, Constants.APP_ID, false);
-//		api.registerApp(Constants.APP_ID);
+//		api = WXAPIFactory.createWXAPI(this, CityConstants.APP_ID, false);
+//		api.registerApp(CityConstants.APP_ID);
 
 		int wxSdkVersion = SensoroCityApplication.getInstance().api.getWXAppSupportAPI();
 		if (wxSdkVersion >= TIMELINE_SUPPORTED_VERSION) {

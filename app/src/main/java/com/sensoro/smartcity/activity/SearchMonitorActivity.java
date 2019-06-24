@@ -32,11 +32,11 @@ import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
 import com.sensoro.smartcity.adapter.RelationAdapter;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
 import com.sensoro.smartcity.presenter.SearchMonitorActivityPresenter;
 import com.sensoro.common.server.bean.DeviceInfo;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
@@ -44,7 +44,7 @@ import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.common.widgets.SensoroToast;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtilsTest;
+import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -53,7 +53,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.view.View.VISIBLE;
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
+import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 
 /**
  * Created by sensoro on 17/7/11.
@@ -566,7 +566,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        AlarmPopUtilsTest.handlePhotoIntent(requestCode,resultCode,data);
+        AlarmPopUtils.handlePhotoIntent(requestCode,resultCode,data);
     }
 
     @Override

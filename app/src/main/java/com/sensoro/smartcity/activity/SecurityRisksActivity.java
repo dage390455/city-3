@@ -115,7 +115,7 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
         securityRisksReferTagAdapter = new SecurityRisksReferTagAdapter(mActivity);
         securityRisksReferTagAdapter.setOnTagClickListener(mPresenter);
         SensoroLinearLayoutManager linearLayoutManager = new SensoroLinearLayoutManager(mActivity,false);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         rvTagAcSecurityRisks.setLayoutManager(linearLayoutManager);
         rvTagAcSecurityRisks.setAdapter(securityRisksReferTagAdapter);
     }
@@ -124,7 +124,7 @@ public class SecurityRisksActivity extends BaseActivity<ISecurityRisksActivityVi
         securityRisksContentAdapter = new SecurityRisksContentAdapter(mActivity);
         securityRisksContentAdapter.setOnSecurityRisksItemClickListener(mPresenter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         rcContentAcSecurityRisk.setLayoutManager(linearLayoutManager);
         rcContentAcSecurityRisk.setAdapter(securityRisksContentAdapter);
 

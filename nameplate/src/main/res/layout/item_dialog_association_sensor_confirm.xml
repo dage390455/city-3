@@ -36,21 +36,22 @@
         android:textColor="@color/c_252525"
         />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.sensoro.common.widgets.MaxHeightRecyclerView
         android:id="@+id/rv_content_item_dialog_associate_sensor_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_count_item_dialog_associate_sensor_confirm"
         android:layout_marginBottom="16dp">
 
-    </androidx.recyclerview.widget.RecyclerView>
+    </com.sensoro.common.widgets.MaxHeightRecyclerView>
 
 
 
     <TextView
         android:id="@+id/tv_confirm_item_dialog_associate_sensor_confirm"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+
         android:text="@string/confirm_associate"
         android:textColor="@color/white"
         android:textSize="14dp"
@@ -58,8 +59,6 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="10dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="6dp"
         android:layout_below="@id/rv_content_item_dialog_associate_sensor_confirm"
         android:background="@drawable/shape_bg_corner_4_29c_shadow"
         />

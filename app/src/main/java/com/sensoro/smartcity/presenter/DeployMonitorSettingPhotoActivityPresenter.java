@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.TakeRecordActivity;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorSettingPhotoActivityView;
 import com.sensoro.common.model.EventData;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
@@ -27,7 +27,7 @@ import java.util.List;
 import static com.sensoro.smartcity.widget.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
 
 
-public class DeployMonitorSettingPhotoActivityPresenter extends BasePresenter<IDeployMonitorSettingPhotoActivityView> implements Constants, SelectDialog.SelectDialogListener {
+public class DeployMonitorSettingPhotoActivityPresenter extends BasePresenter<IDeployMonitorSettingPhotoActivityView> implements SelectDialog.SelectDialogListener {
 
     private final ArrayList<ImageItem> selImageList = new ArrayList<>(); //当前选择的所有图片
 
@@ -41,8 +41,8 @@ public class DeployMonitorSettingPhotoActivityPresenter extends BasePresenter<ID
     public void initData(Context context) {
         mContext = (Activity) context;
         ArrayList<ImageItem> items = (ArrayList<ImageItem>) mContext.getIntent().getSerializableExtra
-                (EXTRA_DEPLOY_TO_PHOTO);
-        isJustDisplay = mContext.getIntent().getBooleanExtra(EXTRA_JUST_DISPLAY_PIC, false);
+                (Constants.EXTRA_DEPLOY_TO_PHOTO);
+        isJustDisplay = mContext.getIntent().getBooleanExtra(Constants.EXTRA_JUST_DISPLAY_PIC, false);
         getView().setJustDisplayPic(isJustDisplay);
         getView().setSubtitleVisible(!isJustDisplay);
         if (items != null && items.size() > 0) {
@@ -63,7 +63,7 @@ public class DeployMonitorSettingPhotoActivityPresenter extends BasePresenter<ID
     public void doFinish() {
         if (selImageList.size() > 0) {
             EventData eventData = new EventData();
-            eventData.code = EVENT_DATA_DEPLOY_SETTING_PHOTO;
+            eventData.code = Constants.EVENT_DATA_DEPLOY_SETTING_PHOTO;
             eventData.data = selImageList;
             EventBus.getDefault().post(eventData);
             getView().finishAc();
@@ -90,11 +90,11 @@ public class DeployMonitorSettingPhotoActivityPresenter extends BasePresenter<ID
             }
             getView().updateImageList(selImageList);
 //            updateButton();
-        } else if (IMAGE_ITEM_ADD == position) {
+        } else if (Constants.IMAGE_ITEM_ADD == position) {
             List<String> names = new ArrayList<>();
             names.add(mContext.getString(R.string.take_photo));
             names.add(mContext.getString(R.string.album));
-            getView().showDialog(this, names);
+            getView().showDialog(this, names, mContext.getResources().getString(R.string.camera_photo));
         } else {
             //打开预览
 
@@ -102,15 +102,15 @@ public class DeployMonitorSettingPhotoActivityPresenter extends BasePresenter<ID
             intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, (ArrayList<ImageItem>) images);
             intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
             intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
-            intentPreview.putExtra(EXTRA_JUST_DISPLAY_PIC,isJustDisplay);
-            getView().startACForResult(intentPreview, REQUEST_CODE_PREVIEW);
+            intentPreview.putExtra(Constants.EXTRA_JUST_DISPLAY_PIC, isJustDisplay);
+            getView().startACForResult(intentPreview, Constants.REQUEST_CODE_PREVIEW);
         }
     }
 
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
             //添加图片返回
-            if (data != null && requestCode == REQUEST_CODE_SELECT) {
+            if (data != null && requestCode == Constants.REQUEST_CODE_SELECT) {
                 tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                 if (tempImages != null) {
                     boolean fromTakePhoto = data.getBooleanExtra(EXTRA_RESULT_BY_TAKE_PHOTO, false);
@@ -123,7 +123,7 @@ public class DeployMonitorSettingPhotoActivityPresenter extends BasePresenter<ID
             }
         } else if (resultCode == ImagePicker.RESULT_CODE_BACK) {
             //预览图片返回
-            if (data != null && requestCode == REQUEST_CODE_PREVIEW) {
+            if (data != null && requestCode == Constants.REQUEST_CODE_PREVIEW) {
                 tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
                 if (tempImages != null) {
                     selImageList.clear();
@@ -150,7 +150,7 @@ public class DeployMonitorSettingPhotoActivityPresenter extends BasePresenter<ID
                 ImagePicker.getInstance().setSelectLimit(maxImgCount - selImageList.size());
                 Intent intent = new Intent(mContext, ImageGridActivity.class);
                 intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
-                mContext.startActivityForResult(intent, REQUEST_CODE_SELECT);
+                mContext.startActivityForResult(intent, Constants.REQUEST_CODE_SELECT);
                 break;
             case 1:
                 //打开选择,本次允许选择的数量
@@ -162,12 +162,12 @@ public class DeployMonitorSettingPhotoActivityPresenter extends BasePresenter<ID
                  * 详情请查看ImagePickerActivity
                  * */
                 intent1.putExtra(ImageGridActivity.EXTRAS_IMAGES, selImageList);
-                mContext.startActivityForResult(intent1, REQUEST_CODE_SELECT);
+                mContext.startActivityForResult(intent1, Constants.REQUEST_CODE_SELECT);
                 break;
             case 2:
                 Intent intent2 = new Intent(mContext, TakeRecordActivity.class);
 //                                    intent2.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
-                mContext.startActivityForResult(intent2, REQUEST_CODE_RECORD);
+                mContext.startActivityForResult(intent2, Constants.REQUEST_CODE_RECORD);
                 break;
             default:
                 break;

@@ -1,6 +1,8 @@
 package com.sensoro.nameplate.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +25,12 @@ import butterknife.ButterKnife;
 
 public class AddedSensorAdapter extends RecyclerView.Adapter<AddedSensorAdapter.AddedSensorAdapterViewHolder> {
     private final Context mContext;
-    private List<Object> mList = new ArrayList<>();
+
+    public List<NamePlateInfo> getmList() {
+        return mList;
+    }
+
+    private List<NamePlateInfo> mList = new ArrayList<>();
     private onDeleteClickListenre mListener;
 
     public AddedSensorAdapter(Context context) {
@@ -35,27 +42,44 @@ public class AddedSensorAdapter extends RecyclerView.Adapter<AddedSensorAdapter.
     public AddedSensorAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View inflate = LayoutInflater.from(mContext).inflate(R.layout.item_adapter_added_sensor, parent, false);
         AddedSensorAdapterViewHolder holder = new AddedSensorAdapterViewHolder(inflate);
-        holder.tvDeleteItemAdapterAddedSensor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    Integer position = (Integer) v.getTag();
-                    mListener.onDeleteClick(position);
-                }
-            }
-        });
+
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull AddedSensorAdapterViewHolder holder, int position) {
-        holder.tvDeleteItemAdapterAddedSensor.setTag(position);
-        holder.tvNameItemAdapterAddedSensor.setText("费家村中央杂货铺");
-        holder.tvDeviceNameItemAdapterAddedSensor.setText("烟雾");
-        holder.tvDeviceSnItemAdapterAddedSensor.setText("1234567890190123456");
+        NamePlateInfo plateInfo = mList.get(position);
+        holder.tvDeleteItemAdapterAddedSensor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onDeleteClick(position);
+                }
+            }
+        });
+        if (!TextUtils.isEmpty(plateInfo.getName())) {
+            holder.tvNameItemAdapterAddedSensor.setText(plateInfo.getName());
+        } else {
+            holder.tvNameItemAdapterAddedSensor.setText(plateInfo.getSn());
+
+        }
+        if (!TextUtils.isEmpty(plateInfo.getSn())) {
+            holder.tvDeviceSnItemAdapterAddedSensor.setText(plateInfo.getSn());
+        } else {
+            holder.tvDeviceSnItemAdapterAddedSensor.setText("");
+
+        }
+        if (!TextUtils.isEmpty(plateInfo.deviceTypeName)) {
+            holder.tvDeviceNameItemAdapterAddedSensor.setText(plateInfo.deviceTypeName);
+        } else {
+            holder.tvDeviceNameItemAdapterAddedSensor.setText("");
+
+        }
+        holder.ivIconItemAdapterAddedSensor.setColorFilter(Color.parseColor("#a6a6a6"));
+
 
         Glide.with(mContext)
-                .load("")
+                .load(plateInfo.iconUrl)
                 .thumbnail(0.1f)
                 .placeholder(R.drawable.ic_default_image)
                 .error(R.drawable.ic_default_image)
@@ -67,13 +91,13 @@ public class AddedSensorAdapter extends RecyclerView.Adapter<AddedSensorAdapter.
         return mList.size();
     }
 
-    public void upDateData(List<NamePlateInfo> data) {
+    public void updateData(List<NamePlateInfo> data) {
         mList.clear();
         mList.addAll(data);
         notifyDataSetChanged();
     }
 
-    public void setOnDeleteClickListener(onDeleteClickListenre listener){
+    public void setOnDeleteClickListener(onDeleteClickListenre listener) {
         mListener = listener;
     }
 
@@ -91,11 +115,11 @@ public class AddedSensorAdapter extends RecyclerView.Adapter<AddedSensorAdapter.
 
         public AddedSensorAdapterViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 
-    public interface onDeleteClickListenre{
+    public interface onDeleteClickListenre {
         void onDeleteClick(int position);
     }
 }

@@ -8,7 +8,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
 import com.sensoro.common.model.EventData;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -22,7 +22,7 @@ public class PhoneReceiver extends BroadcastReceiver {
         mAction = intent.getAction();
         if (Intent.ACTION_NEW_OUTGOING_CALL.equals(mAction)) {
             //去电
-//            EventBus.getDefault().post(new EventData(Constants.VIDEO_STOP));
+//            EventBus.getDefault().post(new EventData(CityConstants.VIDEO_STOP));
         } else {
             //来电
             TelephonyManager manager = (TelephonyManager) context.getSystemService(Service.TELEPHONY_SERVICE);

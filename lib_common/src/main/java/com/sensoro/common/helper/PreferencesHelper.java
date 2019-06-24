@@ -80,7 +80,8 @@ public final class PreferencesHelper implements Constants {
         }
         //
         editor.putBoolean(EXTRA_IS_SPECIFIC, eventLoginData.isSupperAccount);
-        editor.putBoolean(EXTRA_GRANTS_HAS_STATION, eventLoginData.hasStation);
+        editor.putBoolean(EXTRA_GRANTS_HAS_STATION_DEPLOY, eventLoginData.hasStationDeploy);
+        editor.putBoolean(EXTRA_GRANTS_HAS_STATION_LIST, eventLoginData.hasStationList);
         editor.putBoolean(EXTRA_GRANTS_HAS_CONTRACT, eventLoginData.hasContract);
         editor.putBoolean(EXTRA_GRANTS_HAS_CONTRACT_CREATE, eventLoginData.hasContractCreate);
         editor.putBoolean(EXTRA_GRANTS_HAS_CONTRACT_MODIFY, eventLoginData.hasContractModify);
@@ -95,7 +96,7 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_MALFUNCTION_INFO, eventLoginData.hasMalfunction);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_BRIEF, eventLoginData.hasDeviceBrief);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK, eventLoginData.hasSignalCheck);
-        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, eventLoginData.hasSignalConfig);
+//        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, eventLoginData.hasSignalConfig);
         editor.putBoolean(EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD, eventLoginData.hasForceUpload);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION, eventLoginData.hasDevicePositionCalibration);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_SHORT, eventLoginData.hasDeviceMuteShort);
@@ -105,6 +106,8 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_CONTROLLER_AID, eventLoginData.hasControllerAid);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_CAMERA_LIST, eventLoginData.hasDeviceCameraList);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_CAMERA_DEPLOY, eventLoginData.hasDeviceCameraDeploy);
+        editor.putBoolean(EXTRA_GRANTS_HAS_NAMEPLATE_LIST, eventLoginData.hasNameplateList);
+        editor.putBoolean(EXTRA_GRANTS_HAS_NAMEPLATE_DEPLOY, eventLoginData.hasNameplateDeploy);
         //
         editor.apply();
     }
@@ -124,7 +127,8 @@ public final class PreferencesHelper implements Constants {
             String phone = sp.getString(EXTRA_PHONE, null);
             String roles = sp.getString(EXTRA_USER_ROLES, null);
             boolean isSupperAccount = sp.getBoolean(EXTRA_IS_SPECIFIC, false);
-            boolean hasStation = sp.getBoolean(EXTRA_GRANTS_HAS_STATION, false);
+            boolean hasStationDeploy = sp.getBoolean(EXTRA_GRANTS_HAS_STATION_DEPLOY, false);
+            boolean hasStationList = sp.getBoolean(EXTRA_GRANTS_HAS_STATION_LIST, false);
             boolean hasContract = sp.getBoolean(EXTRA_GRANTS_HAS_CONTRACT, false);
             boolean hasContractCreate = sp.getBoolean(EXTRA_GRANTS_HAS_CONTRACT_CREATE, false);
             boolean hasContractModify = sp.getBoolean(EXTRA_GRANTS_HAS_CONTRACT_MODIFY, false);
@@ -139,7 +143,7 @@ public final class PreferencesHelper implements Constants {
             boolean hasMalfunction = sp.getBoolean(EXTRA_GRANTS_HAS_MALFUNCTION_INFO, false);
             boolean hasDeviceBrief = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_BRIEF, false);
             boolean hasDeviceSignalCheck = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK, false);
-            boolean hasDeviceSignalConfig = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, false);
+//            boolean hasDeviceSignalConfig = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, false);
             boolean hasBadSignalUpload = sp.getBoolean(EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD, false);
             boolean hasDevicePositionCalibration = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION, false);
             boolean hasDeviceMuteShort = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_SHORT, false);
@@ -149,6 +153,8 @@ public final class PreferencesHelper implements Constants {
             boolean hasControllerAid = sp.getBoolean(EXTRA_GRANTS_HAS_CONTROLLER_AID, false);
             boolean hasDeviceCameraList = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_CAMERA_LIST, false);
             boolean hasDeviceCameraDeploy = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_CAMERA_DEPLOY, false);
+            boolean hasNameplateList = sp.getBoolean(EXTRA_GRANTS_HAS_NAMEPLATE_LIST, false);
+            boolean hasNameplateDeploy = sp.getBoolean(EXTRA_GRANTS_HAS_NAMEPLATE_DEPLOY, false);
             final EventLoginData eventLoginData = new EventLoginData();
             eventLoginData.phoneId = phoneId;
             eventLoginData.userId = userId;
@@ -158,7 +164,8 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasSubMerchant = hasSubMerchant;
             eventLoginData.hasMerchantChange = hasMerchantChange;
             eventLoginData.isSupperAccount = isSupperAccount;
-            eventLoginData.hasStation = hasStation;
+            eventLoginData.hasStationDeploy = hasStationDeploy;
+            eventLoginData.hasStationList = hasStationList;
             eventLoginData.hasContract = hasContract;
             eventLoginData.hasContractCreate = hasContractCreate;
             eventLoginData.hasContractModify = hasContractModify;
@@ -183,6 +190,8 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasControllerAid = hasControllerAid;
             eventLoginData.hasDeviceCameraList = hasDeviceCameraList;
             eventLoginData.hasDeviceCameraDeploy = hasDeviceCameraDeploy;
+            eventLoginData.hasNameplateList = hasNameplateList;
+            eventLoginData.hasNameplateDeploy = hasNameplateDeploy;
             mEventLoginData = eventLoginData;
         }
         return mEventLoginData;
@@ -259,16 +268,28 @@ public final class PreferencesHelper implements Constants {
         }
     }
 
-    public boolean saveSessionId(String sessionId) {
-        if (TextUtils.isEmpty(sessionId)) {
+    public boolean saveSessionId(String sessionId, String token) {
+        if (TextUtils.isEmpty(sessionId) && TextUtils.isEmpty(token)) {
             return false;
         }
         SharedPreferences sp = ContextUtils.getContext().getSharedPreferences(PREFERENCE_LOGIN_ID, Context
                 .MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString(PREFERENCE_KEY_SESSION_ID, sessionId);
+        if (!TextUtils.isEmpty(sessionId)) {
+            editor.putString(PREFERENCE_KEY_SESSION_ID, sessionId);
+        }
+        if (!TextUtils.isEmpty(token)) {
+            editor.putString(PREFERENCE_KEY_USER_TOKEN, token);
+        }
         editor.apply();
         return true;
+    }
+
+    public String getSessionToken() {
+        SharedPreferences sp = ContextUtils.getContext().getSharedPreferences(PREFERENCE_LOGIN_ID, Context
+                .MODE_PRIVATE);
+        return sp.getString(PREFERENCE_KEY_USER_TOKEN, null);
+
     }
 
     public String getSessionId() {
@@ -325,7 +346,7 @@ public final class PreferencesHelper implements Constants {
     public DeviceMergeTypesInfo getLocalDevicesMergeTypes() {
         try {
             if (mDeviceMergeTypesInfo == null) {
-                String json = ContextUtils.getContext().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, null);
+                String json = ContextUtils.getContext().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_LOCAL_DEVICES_MERGE_TYPES, null);
                 LogUtils.loge("DeviceMergeTypesInfo json : " + json);
                 if (!TextUtils.isEmpty(json)) {
                     mDeviceMergeTypesInfo = RetrofitServiceHelper.getInstance().getGson().fromJson(json, DeviceMergeTypesInfo.class);
@@ -379,7 +400,7 @@ public final class PreferencesHelper implements Constants {
         SharedPreferences sp = ContextUtils.getContext().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Context
                 .MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, json);
+        editor.putString(PREFERENCE_KEY_LOCAL_DEVICES_MERGE_TYPES, json);
         editor.apply();
         return true;
     }

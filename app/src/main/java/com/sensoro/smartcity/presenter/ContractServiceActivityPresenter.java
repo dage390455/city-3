@@ -17,7 +17,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.ContractInfoActivity;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractServiceActivityView;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.BusinessLicenseData;
@@ -29,7 +29,7 @@ import com.sensoro.common.server.bean.ContractsTemplateInfo;
 import com.sensoro.common.server.response.ContractsTemplateRsp;
 import com.sensoro.smartcity.util.FileUtil;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.RegexUtils;
+import com.sensoro.common.utils.RegexUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -44,7 +44,7 @@ import io.reactivex.schedulers.Schedulers;
 
 
 public class ContractServiceActivityPresenter extends BasePresenter<IContractServiceActivityView> implements
-        IOnCreate, Constants {
+        IOnCreate {
     private Activity mContext;
     private int serviceType;
     private String line1;
@@ -62,7 +62,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        serviceType = mContext.getIntent().getIntExtra(EXTRA_CONTRACT_TYPE, -1);
+        serviceType = mContext.getIntent().getIntExtra(Constants.EXTRA_CONTRACT_TYPE, -1);
         uid = mContext.getIntent().getStringExtra("contract_uid");
         refreshContent();
         getContractTemplateInfos();
@@ -70,8 +70,8 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
 
     private void refreshContent() {
         Intent intent = mContext.getIntent();
-        contractID = intent.getIntExtra(EXTRA_CONTRACT_ID, -1);
-        originType = intent.getIntExtra(EXTRA_CONTRACT_ORIGIN_TYPE, -1);
+        contractID = intent.getIntExtra(Constants.EXTRA_CONTRACT_ID, -1);
+        originType = intent.getIntExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE, -1);
         if (originType == Constants.CONTRACT_ORIGIN_TYPE_EDIT) {
             getView().setBtnNextText(mContext.getString(R.string.save));
         }
@@ -171,7 +171,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                         FileUtil.getSaveFile(mContext.getApplicationContext()).getAbsolutePath());
                 intent.putExtra(CameraActivity.KEY_CONTENT_TYPE,
                         CameraActivity.CONTENT_TYPE_GENERAL);
-                getView().startACForResult(intent, REQUEST_CODE_LICENSE_SERVICE);
+                getView().startACForResult(intent, Constants.REQUEST_CODE_LICENSE_SERVICE);
                 break;
             case 2:
                 if (!SensoroCityApplication.getInstance().hasGotToken) {
@@ -181,7 +181,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                 intent1.putExtra(CameraActivity.KEY_OUTPUT_FILE_PATH,
                         FileUtil.getSaveFile(mContext.getApplication()).getAbsolutePath());
                 intent1.putExtra(CameraActivity.KEY_CONTENT_TYPE, CameraActivity.CONTENT_TYPE_ID_CARD_FRONT);
-                getView().startACForResult(intent1, REQUEST_CODE_PERSON_SERVICE);
+                getView().startACForResult(intent1, Constants.REQUEST_CODE_PERSON_SERVICE);
                 break;
             case 3:
                 break;
@@ -197,7 +197,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
         intent.setClass(mContext, ContractInfoActivity.class);
         switch (serviceType) {
             case 1:
-                intent.putExtra(EXTRA_CONTRACT_TYPE, 1);
+                intent.putExtra(Constants.EXTRA_CONTRACT_TYPE, 1);
                 //
                 if (RegexUtils.checkContractNotEmpty(line1)) {
                     if (line1.length() > 48) {
@@ -269,7 +269,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                 }
                 break;
             case 2:
-                intent.putExtra(EXTRA_CONTRACT_TYPE, 2);
+                intent.putExtra(Constants.EXTRA_CONTRACT_TYPE, 2);
                 if (RegexUtils.checkContractNotEmpty(line1)) {
                     if (line1.length() > 48) {
                         getView().toastShort("姓名不能超过48个字符");
@@ -310,7 +310,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                 }
                 break;
             case 3:
-                intent.putExtra(EXTRA_CONTRACT_TYPE, 3);
+                intent.putExtra(Constants.EXTRA_CONTRACT_TYPE, 3);
                 if (RegexUtils.checkContractNotEmpty(line1)) {
                     if (line1.length() > 100) {
                         getView().toastShort("甲方（客户名称）不能超过100个字符");
@@ -586,7 +586,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
 
     public void handleResult(int requestCode, int resultCode, Intent data) {
         // 识别成功回调，营业执照识别
-        if (requestCode == REQUEST_CODE_LICENSE_SERVICE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == Constants.REQUEST_CODE_LICENSE_SERVICE && resultCode == Activity.RESULT_OK) {
             getView().showProgressDialog();
             //
             try {
@@ -665,7 +665,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                 getView().toastShort("读取失败请重试");
             }
         }
-        if (requestCode == REQUEST_CODE_PERSON_SERVICE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == Constants.REQUEST_CODE_PERSON_SERVICE && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 getView().showProgressDialog();
                 //
@@ -769,7 +769,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
         switch (code) {
-            case EVENT_DATA_FINISH_CODE:
+            case Constants.EVENT_DATA_FINISH_CODE:
                 getView().finishAc();
                 break;
         }

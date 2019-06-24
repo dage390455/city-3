@@ -21,7 +21,7 @@
     android:visibility="visible"
     android:contentDescription="@null"
     />
-    <com.sensoro.smartcity.widget.BoldTextView
+    <com.sensoro.common.widgets.BoldTextView
         android:id="@+id/include_imv_title_tv_title"
         android:layout_width="wrap_content"
         android:layout_height="21dp"

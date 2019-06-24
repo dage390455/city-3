@@ -3,16 +3,16 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 
-import com.sensoro.smartcity.R;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.imainviews.IMalfunctionHistoryActivityView;
-import com.sensoro.smartcity.model.CalendarDateModel;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.MalfunctionListInfo;
 import com.sensoro.common.server.response.MalfunctionListRsp;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.imainviews.IMalfunctionHistoryActivityView;
+import com.sensoro.smartcity.model.CalendarDateModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,9 +21,6 @@ import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunctionHistoryActivityView> {
     private Activity mActivity;
@@ -51,12 +48,12 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
     public void initData(Context context) {
         mActivity = (Activity) context;
         mSn = mActivity.getIntent().getStringExtra(Constants.EXTRA_SENSOR_SN);
-        requestDataByFilter(DIRECTION_DOWN);
+        requestDataByFilter(Constants.DIRECTION_DOWN);
     }
 
     public void requestDataByFilter(final int direction) {
         switch (direction) {
-            case DIRECTION_DOWN:
+            case Constants.DIRECTION_DOWN:
                 cur_page = 1;
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getDeviceMalfunctionLogList(cur_page, mSn, null, null, startTime,
@@ -77,7 +74,7 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
                     }
                 });
                 break;
-            case DIRECTION_UP:
+            case Constants.DIRECTION_UP:
                 cur_page++;
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getDeviceMalfunctionLogList(cur_page, mSn, null, null, startTime,
@@ -112,7 +109,7 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
     }
 
     private void freshUI(int direction, MalfunctionListRsp malfunctionListRsp) {
-        if (direction == DIRECTION_DOWN) {
+        if (direction == Constants.DIRECTION_DOWN) {
             mMalfunctionInfoList.clear();
         }
         List<MalfunctionListInfo> malfunctionListInfoList = malfunctionListRsp.getData();
@@ -138,7 +135,7 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
         getView().setDateSelectVisible(false);
         startTime = null;
         endTime = null;
-        requestDataByFilter(DIRECTION_DOWN);
+        requestDataByFilter(Constants.DIRECTION_DOWN);
     }
 
     public void onCalendarBack(CalendarDateModel calendarDateModel) {
@@ -150,6 +147,6 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
 //        getView().setSelectedDateSearchText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil
 //                .getMothDayFormatDate(endTime));
         endTime += 1000 * 60 * 60 * 24;
-        requestDataByFilter(DIRECTION_DOWN);
+        requestDataByFilter(Constants.DIRECTION_DOWN);
     }
 }

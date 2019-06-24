@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 
 public class LoginUrlDialogUtils implements View.OnClickListener {
     private final Activity mActivity;

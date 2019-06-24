@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.constant.ContractOrderInfo;
 import com.sensoro.common.server.bean.ContractListInfo;
 import com.sensoro.common.utils.DateUtil;

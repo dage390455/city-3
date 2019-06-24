@@ -18,21 +18,20 @@ import com.bigkoo.pickerview.listener.OnDismissListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectChangeListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
+import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.widgets.SelectDialog;
+import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
-import com.sensoro.common.base.BaseActivity;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorConfigurationView;
 import com.sensoro.smartcity.model.MaterialValueModel;
 import com.sensoro.smartcity.presenter.DeployMonitorConfigurationPresenter;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.widget.dialog.BleConfigurationDialogUtils;
 import com.sensoro.smartcity.widget.dialog.EarlyWarningThresholdDialogUtils;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
-import com.sensoro.common.widgets.TipOperationDialogUtils;
-import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
-import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +40,8 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.sensoro.smartcity.constant.CityConstants.MATERIAL_VALUE_MAP;
 
 public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMonitorConfigurationView, DeployMonitorConfigurationPresenter>
         implements IDeployMonitorConfigurationView {
@@ -171,7 +172,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
             try {
                 Integer integer = Integer.valueOf(enterValue);
                 int in = integer;
-                MaterialValueModel materialValueModel = Constants.materialValueMap.get(diameter);
+                MaterialValueModel materialValueModel = MATERIAL_VALUE_MAP.get(diameter);
                 if (materialValueModel != null) {
                     if (getString(R.string.cu).equals(material)) {
                         in = materialValueModel.cuValue;
@@ -305,7 +306,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         setMaterial(marterials.get(position));
                     }
-                }, marterials);
+                }, marterials, getResources().getString(R.string.diameter_material));
                 break;
             case R.id.ll_wire_diameter:
                 pvCustomOptions.show(); //弹出自定义条件选择器
@@ -334,7 +335,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     @Override
     public void updateBtnStatus(boolean canConfig) {
         acDeployConfigurationTvConfiguration.setEnabled(canConfig);
-        acDeployConfigurationTvConfiguration.setBackgroundResource(canConfig ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_solid_df_corner);
+        acDeployConfigurationTvConfiguration.setBackgroundResource(canConfig ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_corner_dfdf_shadow);
 
     }
 

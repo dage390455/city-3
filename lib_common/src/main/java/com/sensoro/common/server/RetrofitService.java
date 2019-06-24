@@ -18,6 +18,7 @@ import com.sensoro.common.server.response.ContractsTemplateRsp;
 import com.sensoro.common.server.response.DeleteNamePlateRsp;
 import com.sensoro.common.server.response.DeployCameraUploadRsp;
 import com.sensoro.common.server.response.DeployDeviceDetailRsp;
+import com.sensoro.common.server.response.DeployNameplateRsp;
 import com.sensoro.common.server.response.DeployRecordRsp;
 import com.sensoro.common.server.response.DeployStationInfoRsp;
 import com.sensoro.common.server.response.DeviceAlarmItemRsp;
@@ -45,11 +46,11 @@ import com.sensoro.common.server.response.LoginRsp;
 import com.sensoro.common.server.response.MalfunctionCountRsp;
 import com.sensoro.common.server.response.MalfunctionListRsp;
 import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
-import com.sensoro.common.server.response.NameplateBindDeviceRsp;
 import com.sensoro.common.server.response.NamePlateListRsp;
+import com.sensoro.common.server.response.NameplateBindDeviceRsp;
 import com.sensoro.common.server.response.QiNiuToken;
-import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.server.response.UpdateRsp;
 import com.sensoro.common.server.response.UserAccountControlRsp;
 import com.sensoro.common.server.response.UserAccountRsp;
@@ -434,16 +435,31 @@ public interface RetrofitService {
 
 
     @GET("nameplates")
-    Observable<NamePlateListRsp> getNameplateList(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
+    Observable<NamePlateListRsp> getNameplateList(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @Query("deviceFlag") String deviceFlag);
 
 
     @DELETE("nameplate/{nameplateId}")
     Observable<DeleteNamePlateRsp> deleteNameplate(@Path("nameplateId") String nameplateId);
 
     @GET("nameplate/{nameplateId}")
-    Observable<ResponseResult<NamePlateInfo>> getNameplateDetail(@Path("nameplateId") String nameplateId);
+    Observable<ResponseResult<NamePlateInfo>> getNameplateDetail(@Path("nameplateId") String nameplateId, @Query("isAuthUser") Boolean isAuthUser);
 
     @GET("nameplate/bind/devices")
-    Observable<NameplateBindDeviceRsp> getNameplateBindDevices(@Query("nameplateId") String nameplateId);
+    Observable<NameplateBindDeviceRsp> getNameplateBindDevices(@Query("page") Integer page, @Query("count") Integer count, @Query("nameplateId") String nameplateId);
+
+    @PUT("nameplate/unbind/device")
+    Observable<ResponseResult<Integer>> unbindNameplateDevice(@Body RequestBody requestBody);
+
+    @PUT("nameplate/{nameplateId}")
+    Observable<ResponseResult<Integer>> updateNameplate(@Path("nameplateId") String nameplateId, @Body RequestBody body);
+
+    @GET("nameplate/unbind/devices")
+    Observable<NameplateBindDeviceRsp> getNameplateUnbindDevices(@Query("page") Integer page, @Query("count") Integer count, @Query("nameplateId") String nameplateId, @Query("search") String searchText);
+
+    @PUT("nameplate/deploy/{nameplateId}")
+    Observable<DeployNameplateRsp> doUploadDeployNameplate(@Path("nameplateId") String nameplateId, @Body RequestBody requestBody);
+
+    @PUT("nameplate/bind/device")
+    Observable<ResponseResult<Integer>> doBindDevice(@Body RequestBody requestBody);
 }
 

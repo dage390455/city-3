@@ -19,7 +19,7 @@ import com.sensoro.common.server.response.ContractsListRsp;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.activity.ContractDetailActivity;
 import com.sensoro.smartcity.activity.ContractEditorActivity;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractManagerActivityView;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
@@ -35,7 +35,7 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class ContractManagerActivityPresenter extends BasePresenter<IContractManagerActivityView> implements IOnCreate, Constants
+public class ContractManagerActivityPresenter extends BasePresenter<IContractManagerActivityView> implements IOnCreate
         , CalendarPopUtils.OnCalendarPopupCallbackListener {
     private Activity mContext;
     private final List<ContractListInfo> dataList = new ArrayList<>();
@@ -58,7 +58,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
         initSearchHistoryData();
         initCalendarPop();
         getView().setContractMangerAddVisible(PreferencesHelper.getInstance().getUserData().hasContractCreate);
-        requestDataByDirection(DIRECTION_DOWN, true);
+        requestDataByDirection(Constants.DIRECTION_DOWN, true);
 
     }
 
@@ -133,7 +133,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
             temp_endTime = endTime;
         }
         switch (direction) {
-            case DIRECTION_DOWN:
+            case Constants.DIRECTION_DOWN:
                 cur_page = 0;
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().searchContract(requestDataType, tempSearch, requestDataConfirmed, temp_startTime, temp_endTime, null, null).subscribeOn
@@ -167,7 +167,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
                     }
                 });
                 break;
-            case DIRECTION_UP:
+            case Constants.DIRECTION_UP:
                 cur_page++;
                 getView().showProgressDialog();
                 int offset = cur_page * 20;
@@ -383,17 +383,17 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
 
     public void requestContractDataAll() {
         requestDataType = null;
-        refreshData(DIRECTION_DOWN);
+        refreshData(Constants.DIRECTION_DOWN);
     }
 
     public void requestContractDataBusiness() {
         requestDataType = 1;
-        refreshData(DIRECTION_DOWN);
+        refreshData(Constants.DIRECTION_DOWN);
     }
 
     public void requestContractDataPerson() {
         requestDataType = 2;
-        refreshData(DIRECTION_DOWN);
+        refreshData(Constants.DIRECTION_DOWN);
     }
 
     @Override
@@ -422,7 +422,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
                 requestDataType = item.status;
                 break;
         }
-        refreshData(DIRECTION_DOWN);
+        refreshData(Constants.DIRECTION_DOWN);
     }
 
     public void doSelectStatusDevice(InspectionStatusCountModel item) {
@@ -435,7 +435,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
                 requestDataConfirmed = item.status;
                 break;
         }
-        refreshData(DIRECTION_DOWN);
+        refreshData(Constants.DIRECTION_DOWN);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -443,18 +443,18 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
-            case EVENT_DATA_FINISH_CODE:
+            case Constants.EVENT_DATA_FINISH_CODE:
                 if (data instanceof Boolean) {
                     boolean needFinish = (boolean) data;
                     if (needFinish) {
-                        requestDataByDirection(DIRECTION_DOWN, false);
+                        requestDataByDirection(Constants.DIRECTION_DOWN, false);
                     }
                 }
                 break;
 
-            case EVENT_DATA__CONTRACT_EDIT_REFRESH_CODE:
+            case Constants.EVENT_DATA__CONTRACT_EDIT_REFRESH_CODE:
             case Constants.EVENT_DATA_CONTRACT_CREATION_SUCCESS:
-                refreshData(DIRECTION_DOWN);
+                refreshData(Constants.DIRECTION_DOWN);
                 break;
         }
     }
@@ -471,7 +471,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
 
     public void doCancelSearch() {
         tempSearch = null;
-        refreshData(DIRECTION_DOWN);
+        refreshData(Constants.DIRECTION_DOWN);
     }
 
     public void save(String text) {
@@ -519,7 +519,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
         getView().setSelectedDateSearchText(DateUtil.getCalendarYearMothDayFormatDate(startTime) + " ~ " + DateUtil
                 .getCalendarYearMothDayFormatDate(endTime));
         endTime += 1000 * 60 * 60 * 24;
-        refreshData(DIRECTION_DOWN);
+        refreshData(Constants.DIRECTION_DOWN);
 
     }
 

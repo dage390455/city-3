@@ -21,7 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sensoro.smartcity.constant.Constants.IMAGE_ITEM_ADD;
+import static com.sensoro.common.constant.Constants.IMAGE_ITEM_ADD;
 
 /**
  * ================================================

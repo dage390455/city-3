@@ -4,15 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import androidx.appcompat.app.AlertDialog;
 import android.text.TextUtils;
 
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.ContractResultActivity;
-import com.sensoro.smartcity.activity.ContractServiceActivity;
+import androidx.appcompat.app.AlertDialog;
+
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.imainviews.IContractInfoActivityView;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
@@ -20,7 +17,11 @@ import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.ContractListInfo;
 import com.sensoro.common.server.bean.ContractsTemplateInfo;
 import com.sensoro.common.server.response.ContractInfoRsp;
-import com.sensoro.smartcity.util.RegexUtils;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.ContractResultActivity;
+import com.sensoro.smartcity.activity.ContractServiceActivity;
+import com.sensoro.smartcity.imainviews.IContractInfoActivityView;
+import com.sensoro.common.utils.RegexUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -32,8 +33,7 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoActivityView> implements IOnCreate,
-        Constants {
+public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoActivityView> implements IOnCreate{
 
     private Activity mContext;
     private int serviceType;
@@ -59,9 +59,9 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        int contractId = mContext.getIntent().getIntExtra(EXTRA_CONTRACT_ID, -1);
+        int contractId = mContext.getIntent().getIntExtra(Constants.EXTRA_CONTRACT_ID, -1);
         if (contractId == -1) {
-            serviceType = mContext.getIntent().getIntExtra(EXTRA_CONTRACT_TYPE, -1);
+            serviceType = mContext.getIntent().getIntExtra(Constants.EXTRA_CONTRACT_TYPE, -1);
             contract_service_life = mContext.getIntent().getStringExtra("contract_service_life");
             contract_service_life_first = mContext.getIntent().getStringExtra("contract_service_life_first");
             contract_service_life_period = mContext.getIntent().getStringExtra("contract_service_life_period");
@@ -406,7 +406,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
 
     private void handleCode(String code, String text) {
         Intent intent = new Intent();
-        final String url = CONTRACT_WE_CHAT_BASE_URL + code;
+        final String url = Constants.CONTRACT_WE_CHAT_BASE_URL + code;
         intent.setClass(mContext, ContractResultActivity.class);
 //        switch (serviceType) {
 //            case 1:
@@ -419,9 +419,9 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
 //        }
         intent.putExtra("code", url);
         if (text.startsWith("查看")) {
-            intent.putExtra(EXTRA_CONTRACT_RESULT_TYPE, false);
+            intent.putExtra(Constants.EXTRA_CONTRACT_RESULT_TYPE, false);
         } else {
-            intent.putExtra(EXTRA_CONTRACT_RESULT_TYPE, true);
+            intent.putExtra(Constants.EXTRA_CONTRACT_RESULT_TYPE, true);
         }
         getView().startAC(intent);
 
@@ -446,7 +446,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
-            case EVENT_DATA_FINISH_CODE:
+            case Constants.EVENT_DATA_FINISH_CODE:
                 if (data instanceof Boolean) {
                     boolean needFinish = (boolean) data;
                     if (needFinish) {
@@ -454,7 +454,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                     }
                 }
                 break;
-            case EVENT_DATA__CONTRACT_EDIT_REFRESH_CODE:
+            case Constants.EVENT_DATA__CONTRACT_EDIT_REFRESH_CODE:
                 if (data instanceof Integer) {
                     requestData((Integer) data);
                 }
@@ -469,8 +469,8 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
         intent.setClass(mContext, ContractServiceActivity.class);
         int createdType = mContractInfo.getCreated_type();
         intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE, Constants.CONTRACT_ORIGIN_TYPE_EDIT);
-        intent.putExtra(EXTRA_CONTRACT_TYPE, createdType);
-        intent.putExtra(EXTRA_CONTRACT_ID, mContractInfo.getId());
+        intent.putExtra(Constants.EXTRA_CONTRACT_TYPE, createdType);
+        intent.putExtra(Constants.EXTRA_CONTRACT_ID, mContractInfo.getId());
         String placeType = mContractInfo.getPlace_type();
         if (TextUtils.isEmpty(placeType)) {
             placeType = no;

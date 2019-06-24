@@ -28,7 +28,8 @@ public class UserPermissionFactory {
         eventLoginData.roles = userInfo.getRoles();
         String isSpecific = userInfo.getIsSpecific();
         eventLoginData.isSupperAccount = getIsSupperAccount(isSpecific);
-        eventLoginData.hasStation = getHasStationDeploy(grants);
+        eventLoginData.hasStationDeploy = getHasStationDeploy(grants);
+        eventLoginData.hasStationList = getHasStationList(grants);
         eventLoginData.hasContract = getHasContract(grants);
         eventLoginData.hasContractCreate = getHasContractCreate(grants);
         eventLoginData.hasContractModify = getHasContractModify(grants);
@@ -53,6 +54,8 @@ public class UserPermissionFactory {
         eventLoginData.hasDeviceFirmwareUpdate = getHasDeviceFirmUpdate(grants);
         eventLoginData.hasDeviceDemoMode = getHasDeviceDemoMode(grants);
         eventLoginData.hasDeviceCameraList = getHasDeviceCameraList(grants);
+        eventLoginData.hasNameplateList = getHasNameplateList(grants);
+        eventLoginData.hasNameplateDeploy = getHasNameplateDeploy(grants);
         eventLoginData.hasDeviceCameraDeploy = getHasDeviceCameraDeploy(grants);
         String controllerAid = userInfo.getControllerAid();
         //通过controllerAid来判断是否可以返回主账户
@@ -83,7 +86,7 @@ public class UserPermissionFactory {
     }
 
     /**
-     * 判断基站权限
+     * 判断基站部署权限
      *
      * @param grants
      * @return
@@ -93,6 +96,23 @@ public class UserPermissionFactory {
             List<String> station = grants.getStation();
             if (station != null) {
                 return station.contains("deploy");
+            }
+
+        }
+        return false;
+    }
+
+    /**
+     * 基站列表权限
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasStationList(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> station = grants.getStation();
+            if (station != null) {
+                return station.contains("list");
             }
 
         }
@@ -457,7 +477,7 @@ public class UserPermissionFactory {
     }
 
     /**
-     * 用户是否有摄像头deploy权限
+     * 摄像头部署
      *
      * @param grants
      * @return
@@ -467,6 +487,38 @@ public class UserPermissionFactory {
             List<String> grantsCamera = grants.getCamera();
             if (grantsCamera != null) {
                 return grantsCamera.contains("deploy");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 铭牌查看
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasNameplateList(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsNameplate = grants.getNameplate();
+            if (grantsNameplate != null) {
+                return grantsNameplate.contains("list");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 检查是否有铭牌部署权限
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasNameplateDeploy(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsNameplate = grants.getNameplate();
+            if (grantsNameplate != null) {
+                return grantsNameplate.contains("deploy");
             }
         }
         return false;

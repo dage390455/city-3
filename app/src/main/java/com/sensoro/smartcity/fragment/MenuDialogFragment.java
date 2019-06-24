@@ -21,7 +21,7 @@ import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.EventLoginData;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

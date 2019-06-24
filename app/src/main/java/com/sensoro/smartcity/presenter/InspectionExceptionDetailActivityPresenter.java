@@ -13,7 +13,7 @@ import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.InspectionTaskExceptionDeviceRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionExceptionDetailActivityView;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
@@ -27,15 +27,14 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class InspectionExceptionDetailActivityPresenter extends BasePresenter<IInspectionExceptionDetailActivityView>
-        implements Constants {
+public class InspectionExceptionDetailActivityPresenter extends BasePresenter<IInspectionExceptionDetailActivityView> {
     private Activity mContext;
     private InspectionTaskDeviceDetail mDeviceDetail;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        mDeviceDetail = (InspectionTaskDeviceDetail) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL);
+        mDeviceDetail = (InspectionTaskDeviceDetail) mContext.getIntent().getSerializableExtra(Constants.EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL);
         requestExceptionDetail();
     }
 

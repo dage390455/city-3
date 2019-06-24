@@ -28,6 +28,7 @@ public class GrantsInfo implements Serializable {
     private List<String> malfunction;
     private List<String> control;
     private List<String> camera;
+    private List<String> nameplate;
     private List<?> sysLog;
 
 
@@ -213,5 +214,13 @@ public class GrantsInfo implements Serializable {
 
     public void setCamera(List<String> camera) {
         this.camera = camera;
+    }
+
+    public List<String> getNameplate() {
+        return nameplate;
+    }
+
+    public void setNameplate(List<String> nameplate) {
+        this.nameplate = nameplate;
     }
 }

@@ -391,7 +391,7 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
     @Override
     public void setUploadBtnStatus(boolean isEnable) {
         tvAcDeployDeviceCameraUpload.setEnabled(isEnable);
-        tvAcDeployDeviceCameraUpload.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_solid_df_corner);
+        tvAcDeployDeviceCameraUpload.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_corner_dfdf_shadow);
     }
 
     @Override

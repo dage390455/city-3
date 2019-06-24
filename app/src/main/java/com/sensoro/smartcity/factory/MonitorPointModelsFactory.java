@@ -3,6 +3,7 @@ package com.sensoro.smartcity.factory;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.server.bean.DeviceAlarmsRecord;
 import com.sensoro.common.server.bean.DeviceInfo;
@@ -20,12 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.sensoro.smartcity.constant.Constants.SENSOR_STATUS_ALARM;
-import static com.sensoro.smartcity.constant.Constants.SENSOR_STATUS_INACTIVE;
-import static com.sensoro.smartcity.constant.Constants.SENSOR_STATUS_LOST;
-import static com.sensoro.smartcity.constant.Constants.SENSOR_STATUS_MALFUNCTION;
-import static com.sensoro.smartcity.constant.Constants.SENSOR_STATUS_NORMAL;
-
 public class MonitorPointModelsFactory {
 
     public static Elect3DetailModel createElect3DetailModel(DeviceInfo deviceInfo, int index, DisplayOptionsBean.SpecialBean.DataBean dataBean, Map<String, SensorStruct> sensoroDetails) {
@@ -39,23 +34,23 @@ public class MonitorPointModelsFactory {
                     elect3DetailModel.index = index;
                     int status = deviceInfo.getStatus();
                     switch (status) {
-                        case SENSOR_STATUS_ALARM:
+                        case Constants.SENSOR_STATUS_ALARM:
                             elect3DetailModel.backgroundColor = R.color.c_fde4e4;
                             elect3DetailModel.textColor = R.color.c_922c2c;
                             break;
-                        case SENSOR_STATUS_INACTIVE:
+                        case Constants.SENSOR_STATUS_INACTIVE:
                             elect3DetailModel.backgroundColor = R.color.c_f4f4f4;
                             elect3DetailModel.textColor = R.color.c_5d5d5d;
                             break;
-                        case SENSOR_STATUS_LOST:
+                        case Constants.SENSOR_STATUS_LOST:
                             elect3DetailModel.backgroundColor = R.color.c_f4f4f4;
                             elect3DetailModel.textColor = R.color.c_b6b6b6;
                             break;
-                        case SENSOR_STATUS_NORMAL:
+                        case Constants.SENSOR_STATUS_NORMAL:
                             elect3DetailModel.backgroundColor = R.color.c_dff6ef;
                             elect3DetailModel.textColor = R.color.c_197358;
                             break;
-                        case SENSOR_STATUS_MALFUNCTION:
+                        case Constants.SENSOR_STATUS_MALFUNCTION:
                             elect3DetailModel.backgroundColor = R.color.c_fff7e2;
                             elect3DetailModel.textColor = R.color.c_987823;
                             break;
@@ -65,7 +60,7 @@ public class MonitorPointModelsFactory {
                             break;
                     }
                     //针对预警特殊处理
-                    if (SENSOR_STATUS_ALARM == status) {
+                    if (Constants.SENSOR_STATUS_ALARM == status) {
                         elect3DetailModel.backgroundColor = R.color.c_dff6ef;
                         elect3DetailModel.textColor = R.color.c_197358;
                         List<DeviceAlarmsRecord> alarmsRecords = deviceInfo.getAlarmsRecords();
@@ -139,19 +134,19 @@ public class MonitorPointModelsFactory {
                 }
                 int status = deviceInfo.getStatus();
                 switch (status) {
-                    case SENSOR_STATUS_ALARM:
+                    case Constants.SENSOR_STATUS_ALARM:
                         monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_alarm;
                         break;
-                    case SENSOR_STATUS_INACTIVE:
+                    case Constants.SENSOR_STATUS_INACTIVE:
                         monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_inactive;
                         break;
-                    case SENSOR_STATUS_LOST:
+                    case Constants.SENSOR_STATUS_LOST:
                         monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_lost;
                         break;
-                    case SENSOR_STATUS_NORMAL:
+                    case Constants.SENSOR_STATUS_NORMAL:
                         monitoringPointRcContentAdapterModel.statusColorId = R.color.c_1dbb99;
                         break;
-                    case SENSOR_STATUS_MALFUNCTION:
+                    case Constants.SENSOR_STATUS_MALFUNCTION:
                         monitoringPointRcContentAdapterModel.statusColorId = R.color.c_fdc83b;
                         break;
                     default:
@@ -159,7 +154,7 @@ public class MonitorPointModelsFactory {
                         break;
                 }
                 //针对预警特殊处理
-                if (SENSOR_STATUS_ALARM == status) {
+                if (Constants.SENSOR_STATUS_ALARM == status) {
                     monitoringPointRcContentAdapterModel.statusColorId = R.color.c_1dbb99;
                     List<DeviceAlarmsRecord> alarmsRecords = deviceInfo.getAlarmsRecords();
                     if (alarmsRecords != null) {
@@ -245,7 +240,7 @@ public class MonitorPointModelsFactory {
             TaskOptionModel muteModel = new TaskOptionModel();
             muteModel.id = MonitorPointOperationCode.ERASURE_STR;
             muteModel.optionType = MonitorPointOperationCode.ERASURE;
-            boolean muteClickable = status == SENSOR_STATUS_ALARM || status == SENSOR_STATUS_MALFUNCTION;
+            boolean muteClickable = status == Constants.SENSOR_STATUS_ALARM || status == Constants.SENSOR_STATUS_MALFUNCTION;
             muteModel.clickable = muteClickable;
             muteModel.contentResId = R.string.monitor_point_detail_erasure;
             muteModel.drawableResId = muteClickable ? R.drawable.erasure_clickable : R.drawable.erasure_not_clickable;
@@ -257,7 +252,7 @@ public class MonitorPointModelsFactory {
             TaskOptionModel muteLongModel = new TaskOptionModel();
             muteLongModel.id = MonitorPointOperationCode.ERASURE_LONG_STR;
             muteLongModel.optionType = MonitorPointOperationCode.ERASURE_LONG;
-            boolean muteLongClickable = status == SENSOR_STATUS_ALARM || status == SENSOR_STATUS_MALFUNCTION;
+            boolean muteLongClickable = status == Constants.SENSOR_STATUS_ALARM || status == Constants.SENSOR_STATUS_MALFUNCTION;
             muteLongModel.clickable = muteLongClickable;
             muteLongModel.contentResId = R.string.monitor_point_detail_erasure_long;
             muteLongModel.drawableResId = muteLongClickable ? R.drawable.erasure_clickable : R.drawable.erasure_not_clickable;
@@ -269,7 +264,7 @@ public class MonitorPointModelsFactory {
         TaskOptionModel resetModel = new TaskOptionModel();
         resetModel.id = MonitorPointOperationCode.RESET_STR;
         resetModel.optionType = MonitorPointOperationCode.RESET;
-        boolean resetClickable = status == SENSOR_STATUS_ALARM || status == SENSOR_STATUS_MALFUNCTION;
+        boolean resetClickable = status == Constants.SENSOR_STATUS_ALARM || status == Constants.SENSOR_STATUS_MALFUNCTION;
         resetModel.clickable = resetClickable;
         resetModel.contentResId = R.string.monitor_point_detail_reset;
         resetModel.drawableResId = resetClickable ? R.drawable.reset_clickable : R.drawable.reset_not_clickable;
@@ -279,7 +274,7 @@ public class MonitorPointModelsFactory {
         TaskOptionModel passwordModel = new TaskOptionModel();
         passwordModel.id = MonitorPointOperationCode.PSD_STR;
         passwordModel.optionType = MonitorPointOperationCode.PSD;
-        boolean passwordClickable = status != SENSOR_STATUS_LOST && status != SENSOR_STATUS_INACTIVE;
+        boolean passwordClickable = status != Constants.SENSOR_STATUS_LOST && status != Constants.SENSOR_STATUS_INACTIVE;
         passwordModel.clickable = passwordClickable;
         passwordModel.contentResId = R.string.monitor_point_detail_psd;
         passwordModel.drawableResId = passwordClickable ? R.drawable.psd_clickable : R.drawable.psd_not_clickable;
@@ -289,7 +284,7 @@ public class MonitorPointModelsFactory {
         TaskOptionModel viewModel = new TaskOptionModel();
         viewModel.id = MonitorPointOperationCode.QUERY_STR;
         viewModel.optionType = MonitorPointOperationCode.QUERY;
-        boolean viewClickable = status != SENSOR_STATUS_LOST && status != SENSOR_STATUS_INACTIVE;
+        boolean viewClickable = status != Constants.SENSOR_STATUS_LOST && status != Constants.SENSOR_STATUS_INACTIVE;
         viewModel.clickable = viewClickable;
         viewModel.contentResId = R.string.monitor_point_detail_query;
         viewModel.drawableResId = viewClickable ? R.drawable.query_clickable : R.drawable.query_not_clickable;
@@ -299,7 +294,7 @@ public class MonitorPointModelsFactory {
         TaskOptionModel checkModel = new TaskOptionModel();
         checkModel.id = MonitorPointOperationCode.SELF_CHECK_STR;
         checkModel.optionType = MonitorPointOperationCode.SELF_CHECK;
-        boolean checkClickable = status != SENSOR_STATUS_LOST && status != SENSOR_STATUS_INACTIVE;
+        boolean checkClickable = status != Constants.SENSOR_STATUS_LOST && status != Constants.SENSOR_STATUS_INACTIVE;
         checkModel.clickable = checkClickable;
         checkModel.contentResId = R.string.monitor_point_detail_self_check;
         checkModel.drawableResId = checkClickable ? R.drawable.self_check_clickable : R.drawable.self_check_not_clickable;
@@ -309,7 +304,7 @@ public class MonitorPointModelsFactory {
         TaskOptionModel configModel = new TaskOptionModel();
         configModel.id = MonitorPointOperationCode.AIR_SWITCH_CONFIG_STR;
         configModel.optionType = MonitorPointOperationCode.AIR_SWITCH_CONFIG;
-        boolean configClickable = status != SENSOR_STATUS_LOST && status != SENSOR_STATUS_INACTIVE;
+        boolean configClickable = status != Constants.SENSOR_STATUS_LOST && status != Constants.SENSOR_STATUS_INACTIVE;
         configModel.clickable = configClickable;
         configModel.contentResId = R.string.monitor_point_detail_air_switch_config;
         configModel.drawableResId = configClickable ? R.drawable.air_switch_config_clickable : R.drawable.air_switch_config_not_clickable;
@@ -319,7 +314,7 @@ public class MonitorPointModelsFactory {
         TaskOptionModel openModel = new TaskOptionModel();
         openModel.id = MonitorPointOperationCode.AIR_SWITCH_POWER_OFF_STR;
         openModel.optionType = MonitorPointOperationCode.AIR_SWITCH_POWER_OFF;
-        boolean openClickable = status != SENSOR_STATUS_LOST && status != SENSOR_STATUS_INACTIVE;
+        boolean openClickable = status != Constants.SENSOR_STATUS_LOST && status != Constants.SENSOR_STATUS_INACTIVE;
         openModel.clickable = openClickable;
         openModel.contentResId = R.string.command_elec_disconnect_btn_title;
         openModel.drawableResId = openClickable ? R.drawable.power_off : R.drawable.power_off_gray;
@@ -329,7 +324,7 @@ public class MonitorPointModelsFactory {
         TaskOptionModel closeModel = new TaskOptionModel();
         closeModel.id = MonitorPointOperationCode.AIR_SWITCH_POWER_ON_STR;
         closeModel.optionType = MonitorPointOperationCode.AIR_SWITCH_POWER_ON;
-        boolean closeClickable = status != SENSOR_STATUS_LOST && status != SENSOR_STATUS_INACTIVE;
+        boolean closeClickable = status != Constants.SENSOR_STATUS_LOST && status != Constants.SENSOR_STATUS_INACTIVE;
         closeModel.clickable = closeClickable;
         closeModel.contentResId = R.string.command_elec_connect_btn_title;
         closeModel.drawableResId = closeClickable ? R.drawable.power_on : R.drawable.power_on_gray;

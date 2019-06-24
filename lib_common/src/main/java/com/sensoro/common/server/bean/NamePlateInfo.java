@@ -1,7 +1,7 @@
 package com.sensoro.common.server.bean;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.ArrayList;
 
 public class NamePlateInfo implements Serializable {
 
@@ -15,9 +15,16 @@ public class NamePlateInfo implements Serializable {
     private String _id;
     private String orientationName;
     private String deviceType;
+    //标识是否已经部署过
+    private Boolean deployFlag;
+    //关联传感器的数量
+    private Integer devicesCount;
 
+    public String deviceTypeName;
+    public String iconUrl;
+    public boolean isCheck;
 
-    private List<String> tags;
+    private ArrayList<String> tags;
 
     public String getCreateTime() {
         return createTime;
@@ -27,6 +34,21 @@ public class NamePlateInfo implements Serializable {
         this.createTime = createTime;
     }
 
+    public Boolean getDeployFlag() {
+        return deployFlag;
+    }
+
+    public void setDeployFlag(Boolean deployFlag) {
+        this.deployFlag = deployFlag;
+    }
+
+    public Integer getDevicesCount() {
+        return devicesCount;
+    }
+
+    public void setDevicesCount(Integer devicesCount) {
+        this.devicesCount = devicesCount;
+    }
 
     public String getSn() {
         return sn;
@@ -76,11 +98,11 @@ public class NamePlateInfo implements Serializable {
         this.orientationName = orientationName;
     }
 
-    public List<String> getTags() {
+    public ArrayList<String> getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(ArrayList<String> tags) {
         this.tags = tags;
     }
 
@@ -98,5 +120,21 @@ public class NamePlateInfo implements Serializable {
 
     public void set_id(String _id) {
         this._id = _id;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
+    }
+
+    public boolean isDeployFlag() {
+        return deployFlag;
+    }
+
+    public void setDeployFlag(boolean deployFlag) {
+        this.deployFlag = deployFlag;
     }
 }

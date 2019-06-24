@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sensoro.common.iwidget.IOnDestroy;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.model.HomeTopModel;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 
 import java.util.ArrayList;

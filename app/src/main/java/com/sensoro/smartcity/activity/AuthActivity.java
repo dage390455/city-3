@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAuthActivityView;
 import com.sensoro.smartcity.presenter.AuthActivityPresenter;
 import com.sensoro.smartcity.util.LogUtils;

@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.server.bean.BaseStationInfo;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,10 +72,15 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
         if (deviceCameraInfo != null) {
             //
             String name = deviceCameraInfo.getName();
+            String type = deviceCameraInfo.getTypeName();
             if (TextUtils.isEmpty(name)) {
-                name = mContext.getString(R.string.unknown);
+                name = deviceCameraInfo.getSn();
             }
-            holder.itemDeviceCameraTvDeviceName.setText(name);
+            if (!TextUtils.isEmpty(type)) {
+                holder.itemDeviceCameraTvDeviceName.setText(type + " ");
+
+            }
+            holder.itemDeviceCameraTvDeviceName.append(name);
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,19 +92,19 @@ public class BaseStationListAdapter extends RecyclerView.Adapter<BaseStationList
         });
 
 
-        if (null != types && types.size() > 0) {
-            for (CameraFilterModel.ListBean type : types) {
-                if (deviceCameraInfo.getType().equals(type.getCode())) {
-
-                    holder.item_basestation_tv_type.setVisibility(View.VISIBLE);
-                    holder.item_basestation_tv_type.setText(type.getTitle());
-                    break;
-                } else {
-                    holder.item_basestation_tv_type.setVisibility(View.GONE);
-
-                }
-            }
-        }
+//        if (null != types && types.size() > 0) {
+//            for (CameraFilterModel.ListBean type : types) {
+//                if (deviceCameraInfo.getType().equals(type.getCode())) {
+//
+//                    holder.item_basestation_tv_type.setVisibility(View.VISIBLE);
+//                    holder.item_basestation_tv_type.setText(type.getTitle());
+//                    break;
+//                } else {
+//                    holder.item_basestation_tv_type.setVisibility(View.GONE);
+//
+//                }
+//            }
+//        }
 
 
         if (!TextUtils.isEmpty(deviceCameraInfo.getSn())) {

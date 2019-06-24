@@ -4,9 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.sensoro.smartcity.R;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IWireMaterialDiameterCalculatorView;
 import com.sensoro.smartcity.model.MaterialValueModel;
 import com.sensoro.smartcity.model.WireMaterialDiameterModel;
@@ -14,6 +13,9 @@ import com.sensoro.smartcity.model.WireMaterialDiameterModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import static com.sensoro.smartcity.constant.CityConstants.MATERIAL_VALUE_MAP;
+
 
 public class WireMaterialDiameterCalculatorPresenter extends BasePresenter<IWireMaterialDiameterCalculatorView> {
     private Activity mActivity;
@@ -47,7 +49,7 @@ public class WireMaterialDiameterCalculatorPresenter extends BasePresenter<IWire
     }
 
     private void initPickerData() {
-        pickerStrings.addAll(Constants.materialValueMap.keySet());
+        pickerStrings.addAll(MATERIAL_VALUE_MAP.keySet());
         List<String> mMaterials = new ArrayList(2);
         List<String> mCounts = new ArrayList(9);
         mMaterials.add(mActivity.getString(R.string.cu));
@@ -162,12 +164,12 @@ public class WireMaterialDiameterCalculatorPresenter extends BasePresenter<IWire
         int inLineTotal = 0;
         int outLineTotal = 0;
         for (WireMaterialDiameterModel model : mInLineList) {
-            MaterialValueModel materialValueModel = Constants.materialValueMap.get(model.diameter);
+            MaterialValueModel materialValueModel = MATERIAL_VALUE_MAP.get(model.diameter);
             inLineTotal += model.material == 1 ? materialValueModel.alValue : materialValueModel.cuValue * model.count;
         }
 
         for (WireMaterialDiameterModel model : mOutLineList) {
-            MaterialValueModel materialValueModel = Constants.materialValueMap.get(model.diameter);
+            MaterialValueModel materialValueModel = MATERIAL_VALUE_MAP.get(model.diameter);
             outLineTotal += model.material == 1 ? materialValueModel.alValue : materialValueModel.cuValue * model.count;
         }
         int ratedCurrent = -1;

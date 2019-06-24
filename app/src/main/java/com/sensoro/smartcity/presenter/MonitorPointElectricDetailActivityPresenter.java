@@ -71,15 +71,15 @@ import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.analyzer.OperationCmdAnalyzer;
 import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.callback.OnConfigInfoObserver;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IMonitorPointElectricDetailActivityView;
 import com.sensoro.smartcity.model.BleUpdateModel;
-import com.sensoro.smartcity.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.Elect3DetailModel;
 import com.sensoro.smartcity.model.TaskOptionModel;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
@@ -108,7 +108,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<IMonitorPointElectricDetailActivityView> implements IOnCreate, Constants, IOnResume,
+public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<IMonitorPointElectricDetailActivityView> implements IOnCreate, IOnResume,
         GeocodeSearch.OnGeocodeSearchListener, MonitorDetailOperationAdapter.OnMonitorDetailOperationAdapterListener, BLEDeviceListener<BLEDevice>
         , TipDeviceUpdateDialogUtils.TipDialogUpdateClickListener, IOnStart {
     private Activity mContext;
@@ -149,14 +149,14 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     private final ArrayList<EarlyWarningthresholdDialogUtilsAdapterModel> mEarlyWarningThresholdDialogUtilsAdapterModels = new ArrayList<>();
     private SensoroDeviceConnection sensoroDeviceConnection;
     private String mOperationType;
-    private volatile int deviceDemoMode = DEVICE_DEMO_MODE_NOT_SUPPORT;
+    private volatile int deviceDemoMode = Constants.DEVICE_DEMO_MODE_NOT_SUPPORT;
     private ArrayList<DeviceCameraInfo> deviceCameras;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        mDeviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
+        mDeviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(Constants.EXTRA_DEVICE_INFO);
         geocoderSearch = new GeocodeSearch(mContext);
         geocoderSearch.setOnGeocodeSearchListener(this);
         bleUpdateModel.sn = mDeviceInfo.getSn();
@@ -202,7 +202,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         }
         int status = mDeviceInfo.getStatus();
         int resId = R.drawable.signal_none;
-        if (SENSOR_STATUS_LOST == status || SENSOR_STATUS_INACTIVE == status) {
+        if (Constants.SENSOR_STATUS_LOST == status || Constants.SENSOR_STATUS_INACTIVE == status) {
             getView().setSignalStatus(resId, mContext.getString(R.string.s_none));
         } else {
             if (!TextUtils.isEmpty(signal)) {
@@ -231,23 +231,23 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         String statusText;
         int textColor;
         switch (status) {
-            case SENSOR_STATUS_ALARM:
+            case Constants.SENSOR_STATUS_ALARM:
                 textColor = mContext.getResources().getColor(R.color.c_f34a4a);
                 statusText = mContext.getString(R.string.main_page_warn);
                 break;
-            case SENSOR_STATUS_NORMAL:
+            case Constants.SENSOR_STATUS_NORMAL:
                 textColor = mContext.getResources().getColor(R.color.c_1dbb99);
                 statusText = mContext.getString(R.string.normal);
                 break;
-            case SENSOR_STATUS_LOST:
+            case Constants.SENSOR_STATUS_LOST:
                 textColor = mContext.getResources().getColor(R.color.c_5d5d5d);
                 statusText = mContext.getString(R.string.status_lost);
                 break;
-            case SENSOR_STATUS_INACTIVE:
+            case Constants.SENSOR_STATUS_INACTIVE:
                 textColor = mContext.getResources().getColor(R.color.c_b6b6b6);
                 statusText = mContext.getString(R.string.status_inactive);
                 break;
-            case SENSOR_STATUS_MALFUNCTION:
+            case Constants.SENSOR_STATUS_MALFUNCTION:
                 textColor = mContext.getResources().getColor(R.color.c_fdc83b);
                 statusText = mContext.getString(R.string.status_malfunction);
                 break;
@@ -457,7 +457,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         if (mDeviceInfo != null) {
             if (Objects.requireNonNull(PreferencesHelper.getInstance().getConfigDeviceType(mDeviceInfo.getDeviceType())).isDemoSupported()) {
                 if ("fhsj_smoke".equals(mDeviceInfo.getDeviceType())) {
-                    if( WidgetUtil.isContainVersion("2.1.1", bleUpdateModel.currentFirmVersion)){
+                    if (WidgetUtil.isContainVersion("2.1.1", bleUpdateModel.currentFirmVersion)) {
                         //只针对泛海三江烟感并且在2.1.1版本及以上
                         if (PreferencesHelper.getInstance().getUserData().hasDeviceDemoMode) {
                             Integer demoMode = mDeviceInfo.getDemoMode();
@@ -465,21 +465,21 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                 switch (demoMode) {
                                     case 0:
                                         //正常模式
-                                        deviceDemoMode = DEVICE_DEMO_MODE_CLOSE;
+                                        deviceDemoMode = Constants.DEVICE_DEMO_MODE_CLOSE;
                                         break;
                                     case 1:
                                         //演示模式
-                                        deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
+                                        deviceDemoMode = Constants.DEVICE_DEMO_MODE_OPEN;
                                         break;
                                     default:
                                         break;
                                 }
                             }
                         } else {
-                            deviceDemoMode = DEVICE_DEMO_MODE_NO_PERMISSION;
+                            deviceDemoMode = Constants.DEVICE_DEMO_MODE_NO_PERMISSION;
                         }
-                    }else{
-                        deviceDemoMode =  DEVICE_DEMO_MODE_NOT_SUPPORT;
+                    } else {
+                        deviceDemoMode = Constants.DEVICE_DEMO_MODE_NOT_SUPPORT;
                     }
 
                 } else {
@@ -489,22 +489,22 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             switch (demoMode) {
                                 case 0:
                                     //正常模式
-                                    deviceDemoMode = DEVICE_DEMO_MODE_CLOSE;
+                                    deviceDemoMode = Constants.DEVICE_DEMO_MODE_CLOSE;
                                     break;
                                 case 1:
                                     //演示模式
-                                    deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
+                                    deviceDemoMode = Constants.DEVICE_DEMO_MODE_OPEN;
                                     break;
                                 default:
                                     break;
                             }
                         }
                     } else {
-                        deviceDemoMode = DEVICE_DEMO_MODE_NO_PERMISSION;
+                        deviceDemoMode = Constants.DEVICE_DEMO_MODE_NO_PERMISSION;
                     }
                 }
-            }else{
-                deviceDemoMode =  DEVICE_DEMO_MODE_NOT_SUPPORT;
+            } else {
+                deviceDemoMode = Constants.DEVICE_DEMO_MODE_NOT_SUPPORT;
             }
             //TODO delete
 //            deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
@@ -525,7 +525,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     }
 
     private void setMonitorConfigInfo(DeployControlSettingData deployControlSettingData) {
-        if (DEVICE_CONTROL_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
+        if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
             final String[] switchSpecStr = {"-", "-", "-"};
             if (deployControlSettingData != null) {
                 Integer switchSpec = deployControlSettingData.getSwitchSpec();
@@ -675,7 +675,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             public void run() {
                 if (mDeviceInfo != null) {
                     final ArrayList<MonitoringPointRcContentAdapterModel> malfunctionBeanData = new ArrayList<>();
-                    if (mDeviceInfo.getStatus() == SENSOR_STATUS_MALFUNCTION) {
+                    if (mDeviceInfo.getStatus() == Constants.SENSOR_STATUS_MALFUNCTION) {
                         Map<String, MalfunctionDataBean> malfunctionData = mDeviceInfo.getMalfunctionData();
                         //TODO 添加故障字段数组
                         if (malfunctionData != null) {
@@ -1132,71 +1132,68 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     }
 
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(DeviceInfo deviceInfo) {
+        if (deviceInfo.getSn().equalsIgnoreCase(mDeviceInfo.getSn())) {
+            if (AppUtils.isActivityTop(mContext, MonitorPointElectricDetailActivity.class)) {
+                mContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isAttachedView()) {
+                            mDeviceInfo.cloneSocketData(deviceInfo);
+                            // 单项数值设置
+                            if (isAttachedView()) {
+                                freshLocationDeviceInfo();
+                                freshTopData();
+                                handleDeviceInfoAdapter();
+                            }
+
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(MonitorPointOperationTaskResultInfo monitorPointOperationTaskResultInfo) {
+        final String scheduleNo = monitorPointOperationTaskResultInfo.getScheduleNo();
+        if (!TextUtils.isEmpty(scheduleNo) && monitorPointOperationTaskResultInfo.getTotal() == monitorPointOperationTaskResultInfo.getComplete()) {
+            String[] split = scheduleNo.split(",");
+            if (split.length > 0) {
+                final String temp = split[0];
+                if (!TextUtils.isEmpty(temp)) {
+                    if (AppUtils.isActivityTop(mContext, MonitorPointElectricDetailActivity.class)) {
+                        mContext.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
+                                    mHandler.removeCallbacks(DeviceTaskOvertime);
+                                    if (isAttachedView()) {
+                                        getView().dismissOperatingLoadingDialog();
+                                        getView().showOperationSuccessToast();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+
+        }
+    }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
-            case EVENT_DATA_SOCKET_DATA_INFO:
-                if (data instanceof DeviceInfo) {
-                    final DeviceInfo pushDeviceInfo = (DeviceInfo) data;
-                    if (pushDeviceInfo.getSn().equalsIgnoreCase(mDeviceInfo.getSn())) {
-                        if (AppUtils.isActivityTop(mContext, MonitorPointElectricDetailActivity.class)) {
-                            mContext.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (isAttachedView()) {
-                                        mDeviceInfo.cloneSocketData(pushDeviceInfo);
-                                        // 单项数值设置
-                                        if (isAttachedView()) {
-                                            freshLocationDeviceInfo();
-                                            freshTopData();
-                                            handleDeviceInfoAdapter();
-                                        }
-
-                                    }
-                                }
-                            });
-                        }
-                    }
-                }
-                break;
-            case EVENT_DATA_DEPLOY_INIT_CONFIG_CODE:
+            case Constants.EVENT_DATA_DEPLOY_INIT_CONFIG_CODE:
                 if (data instanceof DeployControlSettingData) {
                     DeployControlSettingData deployControlSettingData = (DeployControlSettingData) data;
                     setMonitorConfigInfo(deployControlSettingData);
                 }
-            case EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT:
-                if (data instanceof MonitorPointOperationTaskResultInfo) {
-                    MonitorPointOperationTaskResultInfo info = (MonitorPointOperationTaskResultInfo) data;
-                    final String scheduleNo = info.getScheduleNo();
-                    if (!TextUtils.isEmpty(scheduleNo) && info.getTotal() == info.getComplete()) {
-                        String[] split = scheduleNo.split(",");
-                        if (split.length > 0) {
-                            final String temp = split[0];
-                            if (!TextUtils.isEmpty(temp)) {
-                                if (AppUtils.isActivityTop(mContext, MonitorPointElectricDetailActivity.class)) {
-                                    mContext.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
-                                                mHandler.removeCallbacks(DeviceTaskOvertime);
-                                                if (isAttachedView()) {
-                                                    getView().dismissOperatingLoadingDialog();
-                                                    getView().showOperationSuccessToast();
-                                                }
-                                            }
-                                        }
-                                    });
-                                }
-                            }
-                        }
-
-                    }
-                }
-                break;
-            case EVENT_DATA_DEVICE_POSITION_CALIBRATION:
+            case Constants.EVENT_DATA_DEVICE_POSITION_CALIBRATION:
                 if (data instanceof DeviceInfo) {
                     final DeviceInfo pushDeviceInfo = (DeviceInfo) data;
                     if (pushDeviceInfo.getSn().equals(mDeviceInfo.getSn())) {
@@ -1237,114 +1234,118 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
         RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
         String address;
-        if (AppUtils.isChineseLanguage()) {
+        if (i == 1000) {
+            if (AppUtils.isChineseLanguage()) {
 //            address = regeocodeResult.getRegeocodeAddress().getFormatAddress();
 
 //                改为自定义
-            StringBuilder stringBuilder = new StringBuilder();
-            //
-            String province = regeocodeAddress.getProvince();
-            //
-            String district = regeocodeAddress.getDistrict();// 区或县或县级市
-            //
-            //
-            String township = regeocodeAddress.getTownship();// 乡镇
-            //
-            String streetName = null;// 道路
-            List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
-            if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
-                RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
-                if (regeocodeRoad != null) {
-                    streetName = regeocodeRoad.getName();
+                StringBuilder stringBuilder = new StringBuilder();
+                //
+                String province = regeocodeAddress.getProvince();
+                //
+                String district = regeocodeAddress.getDistrict();// 区或县或县级市
+                //
+                //
+                String township = regeocodeAddress.getTownship();// 乡镇
+                //
+                String streetName = null;// 道路
+                List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
+                if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
+                    RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
+                    if (regeocodeRoad != null) {
+                        streetName = regeocodeRoad.getName();
+                    }
                 }
-            }
-            //
-            String streetNumber = null;// 门牌号
-            StreetNumber number = regeocodeAddress.getStreetNumber();
-            if (number != null) {
-                String street = number.getStreet();
-                if (street != null) {
-                    streetNumber = street + number.getNumber();
+                //
+                String streetNumber = null;// 门牌号
+                StreetNumber number = regeocodeAddress.getStreetNumber();
+                if (number != null) {
+                    String street = number.getStreet();
+                    if (street != null) {
+                        streetNumber = street + number.getNumber();
+                    } else {
+                        streetNumber = number.getNumber();
+                    }
+                }
+                //
+                String building = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
+                //区县
+                if (!TextUtils.isEmpty(province)) {
+                    stringBuilder.append(province);
+                }
+                if (!TextUtils.isEmpty(district)) {
+                    stringBuilder.append(district);
+                }
+                //乡镇
+                if (!TextUtils.isEmpty(township)) {
+                    stringBuilder.append(township);
+                }
+                //道路
+                if (!TextUtils.isEmpty(streetName)) {
+                    stringBuilder.append(streetName);
+                }
+                //标志性建筑
+                if (!TextUtils.isEmpty(building)) {
+                    stringBuilder.append(building);
                 } else {
-                    streetNumber = number.getNumber();
+                    //门牌号
+                    if (!TextUtils.isEmpty(streetNumber)) {
+                        stringBuilder.append(streetNumber);
+                    }
                 }
-            }
-            //
-            String building = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
-            //区县
-            if (!TextUtils.isEmpty(province)) {
-                stringBuilder.append(province);
-            }
-            if (!TextUtils.isEmpty(district)) {
-                stringBuilder.append(district);
-            }
-            //乡镇
-            if (!TextUtils.isEmpty(township)) {
-                stringBuilder.append(township);
-            }
-            //道路
-            if (!TextUtils.isEmpty(streetName)) {
-                stringBuilder.append(streetName);
-            }
-            //标志性建筑
-            if (!TextUtils.isEmpty(building)) {
-                stringBuilder.append(building);
-            } else {
-                //门牌号
-                if (!TextUtils.isEmpty(streetNumber)) {
-                    stringBuilder.append(streetNumber);
+                if (TextUtils.isEmpty(stringBuilder)) {
+                    address = township;
+                } else {
+                    address = stringBuilder.append("附近").toString();
                 }
-            }
-            if (TextUtils.isEmpty(stringBuilder)) {
-                address = township;
+                //
+                try {
+                    LogUtils.loge(this, "onRegeocodeSearched: " + "code = " + i + ",address = " + address);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             } else {
-                address = stringBuilder.append("附近").toString();
-            }
-            //
-            try {
-                LogUtils.loge(this, "onRegeocodeSearched: " + "code = " + i + ",address = " + address);
-            } catch (Throwable throwable) {
-                throwable.printStackTrace();
+                StringBuilder stringBuilder = new StringBuilder();
+                String subLoc = regeocodeAddress.getDistrict();// 区或县或县级市
+                String ts = regeocodeAddress.getTownship();// 乡镇
+                String thf = null;// 道路
+                List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
+                if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
+                    RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
+                    if (regeocodeRoad != null) {
+                        thf = regeocodeRoad.getName();
+                    }
+                }
+                String subthf = null;// 门牌号
+                StreetNumber streetNumber = regeocodeAddress.getStreetNumber();
+                if (streetNumber != null) {
+                    subthf = streetNumber.getNumber();
+                }
+                String fn = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
+                if (TextUtils.isEmpty(thf)) {
+                    if (!TextUtils.isEmpty(fn)) {
+                        stringBuilder.append(fn);
+                    }
+                }
+                if (subLoc != null) {
+                    stringBuilder.append(subLoc);
+                }
+                if (ts != null) {
+                    stringBuilder.append(ts);
+                }
+                if (thf != null) {
+                    stringBuilder.append(thf);
+                }
+                if (subthf != null) {
+                    stringBuilder.append(subthf);
+                }
+                address = stringBuilder.toString();
+                if (TextUtils.isEmpty(address)) {
+                    address = ts;
+                }
             }
         } else {
-            StringBuilder stringBuilder = new StringBuilder();
-            String subLoc = regeocodeAddress.getDistrict();// 区或县或县级市
-            String ts = regeocodeAddress.getTownship();// 乡镇
-            String thf = null;// 道路
-            List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
-            if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
-                RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
-                if (regeocodeRoad != null) {
-                    thf = regeocodeRoad.getName();
-                }
-            }
-            String subthf = null;// 门牌号
-            StreetNumber streetNumber = regeocodeAddress.getStreetNumber();
-            if (streetNumber != null) {
-                subthf = streetNumber.getNumber();
-            }
-            String fn = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
-            if (TextUtils.isEmpty(thf)) {
-                if (!TextUtils.isEmpty(fn)) {
-                    stringBuilder.append(fn);
-                }
-            }
-            if (subLoc != null) {
-                stringBuilder.append(subLoc);
-            }
-            if (ts != null) {
-                stringBuilder.append(ts);
-            }
-            if (thf != null) {
-                stringBuilder.append(thf);
-            }
-            if (subthf != null) {
-                stringBuilder.append(subthf);
-            }
-            address = stringBuilder.toString();
-            if (TextUtils.isEmpty(address)) {
-                address = ts;
-            }
+            address = mContext.getString(R.string.not_positioned);
         }
         if (TextUtils.isEmpty(address)) {
             address = mContext.getString(R.string.unknown_street);
@@ -1385,7 +1386,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         } else {
             intent.setClass(mContext, MonitorPointMapENActivity.class);
         }
-        intent.putExtra(EXTRA_DEVICE_INFO, mDeviceInfo);
+        intent.putExtra(Constants.EXTRA_DEVICE_INFO, mDeviceInfo);
         getView().startAC(intent);
     }
 
@@ -1403,7 +1404,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     public void doMonitorHistory() {
         String sn = mDeviceInfo.getSn();
         Intent intent = new Intent(mContext, AlarmHistoryLogActivity.class);
-        intent.putExtra(EXTRA_SENSOR_SN, sn);
+        intent.putExtra(Constants.EXTRA_SENSOR_SN, sn);
         getView().startAC(intent);
     }
 
@@ -1668,8 +1669,8 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, items);
             intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
             intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
-            intentPreview.putExtra(EXTRA_JUST_DISPLAY_PIC, true);
-            getView().startACForResult(intentPreview, REQUEST_CODE_PREVIEW);
+            intentPreview.putExtra(Constants.EXTRA_JUST_DISPLAY_PIC, true);
+            getView().startACForResult(intentPreview, Constants.REQUEST_CODE_PREVIEW);
         } else {
             getView().toastShort(mContext.getString(R.string.no_photos_added));
         }
@@ -1720,11 +1721,11 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 break;
             case MonitorPointOperationCode.AIR_SWITCH_CONFIG:
                 Intent intent = new Intent(mContext, DeployMonitorConfigurationActivity.class);
-                intent.putExtra(EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
+                intent.putExtra(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
                 DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
                 deployAnalyzerModel.deviceType = mDeviceInfo.getDeviceType();
                 deployAnalyzerModel.sn = mDeviceInfo.getSn();
-                intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+                intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                 getView().startAC(intent);
                 break;
             case MonitorPointOperationCode.AIR_SWITCH_POWER_OFF:
@@ -1836,7 +1837,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                 }
                             }
                         };
-                        if (DEVICE_UPDATE_FIRMWARE_CHIP_TYPES.contains(bleUpdateModel.deviceType)) {
+                        if (Constants.DEVICE_UPDATE_FIRMWARE_CHIP_TYPES.contains(bleUpdateModel.deviceType)) {
                             sensoroDeviceConnection.startChipEUpdate(bleUpdateModel.filePath, bleUpdateModel.blePassword, onDeviceUpdateObserver);
                         } else {
                             sensoroDeviceConnection.startUpdate(bleUpdateModel.filePath, bleUpdateModel.blePassword, onDeviceUpdateObserver);
@@ -2047,12 +2048,12 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             case 0:
                                 //演示模式关闭成功
                                 finalTipText = mContext.getString(R.string.demo_mode_has_close);
-                                deviceDemoMode = DEVICE_DEMO_MODE_CLOSE;
+                                deviceDemoMode = Constants.DEVICE_DEMO_MODE_CLOSE;
                                 break;
                             case 1:
                                 //演示模式开启成功
                                 finalTipText = mContext.getString(R.string.demo_mode_has_open);
-                                deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
+                                deviceDemoMode = Constants.DEVICE_DEMO_MODE_OPEN;
                                 break;
                         }
 
@@ -2113,7 +2114,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         if (deviceCameras != null && deviceCameras.size() > 0) {
             //TODO 去摄像头列表
             Intent intent = new Intent();
-            intent.putExtra(EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST, deviceCameras);
+            intent.putExtra(Constants.EXTRA_DEVICE_CAMERA_DETAIL_INFO_LIST, deviceCameras);
             intent.setClass(mContext, CameraListActivity.class);
             getView().startAC(intent);
         } else {
