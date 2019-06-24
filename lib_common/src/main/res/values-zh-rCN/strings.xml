@@ -690,7 +690,7 @@
     <string name="please_select_device_pic">请选择一张设备照片</string>
     <string name="please_select_installation_site">请选择一张现场照片</string>
     <string name="rated_current">额定电流/A</string>
-    <string name="deploy_configuration_enter_tip">请输入安装现场空气开关的额定电流，范围：</string>
+    <string name="deploy_configuration_enter_tip">空开标注额定电流</string>
     <string name="deploy_configuration">开始配置</string>
     <string name="if_it_is_a_store_please_upload">需能看清店面名称</string>
     <string name="check_ble_status">请检查蓝牙状态</string>
@@ -1125,5 +1125,10 @@
     <string name="recommend_transformer_dialog_top">根据电流，推荐电流互感器型号：</string>
     <string name="recommend_transformer_dialog_bottom">请选择现场安装的互感器型号（需大于推荐值，否则传感器将无法工作）</string>
     <string name="recommend">推荐</string>
+    <string name="config_air_rated_current">空开额定电流</string>
+    <string name="config_recommend_trans">推荐互感器型号</string>
+    <string name="config_actual_trans">实际互感器型号</string>
+    <string name="config_input">进线</string>
+    <string name="config_output">出线</string>
 
 </resources>

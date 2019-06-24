@@ -1143,4 +1143,9 @@
     <string name="recommend_transformer_dialog_top">According to the current, the recommended current transformer model:</string>
     <string name="recommend_transformer_dialog_bottom">Please select the transformer type installed on site (need to be larger than the recommended value, otherwise the sensor will not work)</string>
     <string name="recommend">Recommend</string>
+    <string name="config_air_rated_current">Air rated current</string>
+    <string name="config_input">Input</string>
+    <string name="config_output">OutPut</string>
+    <string name="config_recommend_trans">Recommended transformer</string>
+    <string name="config_actual_trans">Actual transformer</string>
 </resources>
