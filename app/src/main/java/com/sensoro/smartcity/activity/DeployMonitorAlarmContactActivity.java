@@ -5,8 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ScrollView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +22,7 @@ import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.AlarmContactHistoryAdapter;
-import com.sensoro.smartcity.adapter.AlarmContactListViewAdapter;
+import com.sensoro.smartcity.adapter.AlarmContactRcContentAdapter;
 import com.sensoro.smartcity.imainviews.IAlarmContactActivityView;
 import com.sensoro.smartcity.presenter.AlarmContactActivityPresenter;
 
@@ -35,7 +34,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContactActivityView, AlarmContactActivityPresenter>
-        implements IAlarmContactActivityView, RecycleViewItemClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener, AlarmContactListViewAdapter.OnAlarmContactAdapterListener {
+        implements IAlarmContactActivityView, RecycleViewItemClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener, AlarmContactRcContentAdapter.OnAlarmContactAdapterListener {
 
 
     @BindView(R.id.alarm_contact_tv_add)
@@ -57,16 +56,12 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
     //    @BindView(R.id.ac_name_address_ll_add_name_phone)
 //    LinearLayout acNameAddressLlAddNamePhone;
     @BindView(R.id.rc_add_alarm_contact)
-    ListView rcAddAlarmContactRv;
-    //    @BindView(R.id.rc_add_alarm_contact)
-//    RecyclerView rcAddAlarmContactRv;
+    RecyclerView rcAddAlarmContactRv;
     @BindView(R.id.item_adapter_alarm_contact_add_ll)
     LinearLayout itemAdapterAlarmContactAddLl;
-    @BindView(R.id.add_scrollView)
-    ScrollView scrollToView;
     private AlarmContactHistoryAdapter mHistoryAdapter;
+    private AlarmContactRcContentAdapter mAlarmContactRcContentAdapter;
     //    private AlarmContactRcContentAdapter mAlarmContactRcContentAdapter;
-    private AlarmContactListViewAdapter mAlarmContactRcContentAdapter;
     private TipOperationDialogUtils historyClearDialog;
 
     @Override
@@ -85,12 +80,10 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
         includeTextTitleTvTitle.setText(R.string.alert_contact);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         initTitle();
-        initRcHistory();
-        initClearHistoryDialog();
+
 
         mAlarmContactRcContentAdapter.setOnAlarmContactAdapterListener(this);
 
-        View root_ll_rc = findViewById(R.id.root_ll_rc);
 
         //键盘遮挡
 //        root_ll_rc.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -119,25 +112,28 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
 
         View rootView = findViewById(R.id.rc_root_add_alarm_contact);
 
+
         //底部按钮顶上去
 
-//        rootView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-//            @Override
-//            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-//                if (bottom - oldBottom < -1) {
-//                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-//                            0);
-//                    params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-//                    itemAdapterAlarmContactAddLl.setLayoutParams(params);
-//
-//                } else if (bottom - oldBottom > 1) {
-//                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-//                            (int) AppUtils.dp2px(mActivity, 45));
-//                    params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-//                    itemAdapterAlarmContactAddLl.setLayoutParams(params);
-//                }
-//            }
-//        });
+        rootView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if (bottom - oldBottom < -1) {
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                            0);
+                    params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                    itemAdapterAlarmContactAddLl.setLayoutParams(params);
+
+                } else if (bottom - oldBottom > 1) {
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                            (int) AppUtils.dp2px(mActivity, 45));
+                    params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                    itemAdapterAlarmContactAddLl.setLayoutParams(params);
+                }
+            }
+        });
+        initRcHistory();
+        initClearHistoryDialog();
 
     }
 
@@ -162,9 +158,9 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
         rcAcDeployAlarmContactHistory.setAdapter(mHistoryAdapter);
 
 
-//        LinearLayoutManager contactManager = new LinearLayoutManager(mActivity);
-//        contactManager.setOrientation(LinearLayoutManager.VERTICAL);
-//        rcAddAlarmContactRv.setLayoutManager(contactManager);
+        LinearLayoutManager contactManager = new LinearLayoutManager(mActivity);
+        contactManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rcAddAlarmContactRv.setLayoutManager(contactManager);
         rcAddAlarmContactRv.setAdapter(mAlarmContactRcContentAdapter);
 
 
@@ -196,7 +192,7 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
 
 
     private void initRcContent() {
-        mAlarmContactRcContentAdapter = new AlarmContactListViewAdapter(this);
+        mAlarmContactRcContentAdapter = new AlarmContactRcContentAdapter(this);
     }
 
     @Override

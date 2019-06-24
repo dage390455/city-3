@@ -12,32 +12,30 @@
         layout="@layout/item_include_text_text_title" />
 
 
-    <ScrollView
-        android:id="@+id/add_scrollView"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/item_adapter_alarm_contact_add_ll"
+        android:layout_below="@+id/ac_alarm_contact_title">
 
-
-        android:layout_below="@+id/ac_alarm_contact_title"
-        android:background="@color/c_f4f4f4"
-        android:scrollbars="none">
 
         <LinearLayout
             android:id="@+id/root_ll_rc"
             android:layout_width="match_parent"
-
             android:layout_height="match_parent"
+
+
+            android:background="@color/c_f4f4f4"
             android:orientation="vertical">
 
 
-            <com.sensoro.common.widgets.Mylistview
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rc_add_alarm_contact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
 
-            </com.sensoro.common.widgets.Mylistview>
+            </androidx.recyclerview.widget.RecyclerView>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -78,7 +76,7 @@
 
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 
     <LinearLayout
