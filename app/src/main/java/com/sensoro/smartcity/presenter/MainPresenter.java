@@ -13,13 +13,10 @@ import android.view.KeyEvent;
 
 import androidx.fragment.app.Fragment;
 
-import com.alibaba.android.arouter.launcher.ARouter;
-import com.sensoro.city_camera.fragment.CameraListFragment;
 import com.igexin.sdk.PushManager;
-import com.sensoro.city_camera.fragment.CameraWarnListFragment;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.base.ContextUtils;
-import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.manger.ActivityTaskManager;
@@ -38,17 +35,16 @@ import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
 import com.sensoro.common.server.response.DevicesMergeTypesRsp;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
-import com.sensoro.common.constant.Constants;
-import com.sensoro.smartcity.fragment.FireWarnFragment;
+import com.sensoro.smartcity.fragment.FireSecurityWarnFragment;
 import com.sensoro.smartcity.fragment.HomeFragment;
 import com.sensoro.smartcity.fragment.MalfunctionFragment;
 import com.sensoro.smartcity.fragment.ManagerFragment;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
@@ -87,11 +83,10 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private final MainPresenter.TaskRunnable mRunnable = new MainPresenter.TaskRunnable();
     private final NetWorkTaskRunnable mNetWorkTaskRunnable = new NetWorkTaskRunnable();
     //
-    private FireWarnFragment mFireWarnFragment;
+    private FireSecurityWarnFragment mFireSecurityWarnFragment;
     private HomeFragment homeFragment;
     private ManagerFragment managerFragment;
     private MalfunctionFragment malfunctionFragment;
-    private CameraWarnListFragment mCameraWarnListFragment;
     private ScreenBroadcastReceiver mScreenReceiver;
     private volatile boolean pingNetCanUse;
 
@@ -279,16 +274,14 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private void initViewPager() {
         //
         homeFragment = new HomeFragment();
-        mFireWarnFragment = new FireWarnFragment();
+        mFireSecurityWarnFragment = new FireSecurityWarnFragment();
         managerFragment = new ManagerFragment();
         malfunctionFragment = new MalfunctionFragment();
-        mCameraWarnListFragment = (CameraWarnListFragment) ARouter.getInstance().build(ARouterConstants.FRAGMENT_CAMERA_WARN_LIST).navigation();
         if (mFragmentList.size() > 0) {
             mFragmentList.clear();
         }
         mFragmentList.add(homeFragment);
-        mFragmentList.add(mFireWarnFragment);
-        mFragmentList.add(mCameraWarnListFragment);
+        mFragmentList.add(mFireSecurityWarnFragment);
         mFragmentList.add(malfunctionFragment);
         mFragmentList.add(managerFragment);
         getView().updateMainPageAdapterData(mFragmentList);

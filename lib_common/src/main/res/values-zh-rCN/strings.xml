@@ -1120,5 +1120,7 @@
     <string name="sensor_list">传感器列表中关联</string>
     <string name="network_delay">网络时延</string>
     <string name="temperature_information">温度信息</string>
+    <string name="fire_warn_title">消防预警</string>
+    <string name="security_warn_title">安防预警</string>
 
 </resources>
