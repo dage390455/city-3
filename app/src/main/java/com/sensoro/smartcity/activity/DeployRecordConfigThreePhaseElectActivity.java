@@ -9,7 +9,9 @@ import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.widgets.BoldTextView;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
@@ -19,6 +21,7 @@ import com.sensoro.smartcity.presenter.DeployRecordConfigThreePhaseElectActivity
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+@Route(path = ARouterConstants.ACTIVITY_DEPLOY_RECORD_CONFIG_THREE_PHASE_ELECT_ACTIVITY)
 public class DeployRecordConfigThreePhaseElectActivity extends BaseActivity<IDeployRecordConfigThreePhaseElectActivityView, DeployRecordConfigThreePhaseElectActivityPresenter>
         implements IDeployRecordConfigThreePhaseElectActivityView {
 

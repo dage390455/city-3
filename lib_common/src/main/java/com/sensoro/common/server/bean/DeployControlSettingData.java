@@ -52,6 +52,7 @@ public class DeployControlSettingData implements Serializable {
 
     //互感器
     private Integer transformer;
+    private Integer recommTrans;
     private List<wireData> input;
     private List<wireData> output;
 
@@ -77,6 +78,14 @@ public class DeployControlSettingData implements Serializable {
 
     public void setOutput(List<wireData> output) {
         this.output = output;
+    }
+
+    public Integer getRecommTrans() {
+        return recommTrans;
+    }
+
+    public void setRecommTrans(Integer recommTrans) {
+        this.recommTrans = recommTrans;
     }
 
     public static class wireData implements Serializable {

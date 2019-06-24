@@ -82,6 +82,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_weight="1"
                         android:gravity="end"
+                        android:lineSpacingExtra="8dp"
                         android:text="-"
                         android:textColor="@color/c_252525" />
                 </LinearLayout>
@@ -116,6 +117,7 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:text="-"
+                        android:lineSpacingExtra="8dp"
                         android:textColor="@color/c_252525" />
                 </LinearLayout>
 

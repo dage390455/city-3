@@ -1,6 +1,9 @@
 package com.sensoro.common.constant;
 
 public interface ARouterConstants {
+    String ACTIVITY_DEPLOY_RECORD_CONFIG_COMMON_ELECT_ACTIVITY = "/app/activity/DeployRecordConfigCommonElectActivity";
+    String ACTIVITY_DEPLOY_RECORD_CONFIG_THREE_PHASE_ELECT_ACTIVITY = "/app/activity/DeployRecordConfigThreePhaseElectActivity";
+
     String ACTIVITY_NAMEPLATE_LIST = "/nameplate/activity/NameplateListActivity";
 
     String ACTIVITY_DEPLOY_DEVICE_TAG = "/app/activity/DeployDeviceTagActivity";

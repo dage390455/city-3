@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.SpannableString;
@@ -22,6 +23,7 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnResume;
@@ -526,44 +528,72 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     private void setMonitorConfigInfo(DeployControlSettingData deployControlSettingData) {
         if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
-            final String[] switchSpecStr = {"-", "-", "-"};
+            final String[] values = {"-", "-"};
             if (deployControlSettingData != null) {
                 Integer switchSpec = deployControlSettingData.getSwitchSpec();
                 if (switchSpec != null) {
-                    switchSpecStr[0] = switchSpec + "A";
-                }
-                Integer wireMaterial = deployControlSettingData.getWireMaterial();
-                if (wireMaterial != null) {
-                    switch (wireMaterial) {
-                        case 0:
-                            switchSpecStr[1] = mContext.getString(R.string.cu);
-                            break;
-                        case 1:
-                            switchSpecStr[1] = mContext.getString(R.string.al);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                Double wireDiameter = deployControlSettingData.getWireDiameter();
-                if (wireDiameter != null) {
-                    String formatDouble = WidgetUtil.getFormatDouble(wireDiameter, 2);
-                    switchSpecStr[2] = formatDouble + "m㎡";
+                    values[0] = switchSpec + "A";
                 }
             }
-            mContext.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (isAttachedView()) {
-                        getView().setMonitorSwitchSpec(switchSpecStr[0]);
-                        getView().setMonitorWireMaterial(switchSpecStr[1]);
-                        getView().setMonitorWireDiameter(switchSpecStr[2]);
-                    }
-
+            if (hasNesConfigInfo(deployControlSettingData)) {
+                //新数据
+                Integer transformer = deployControlSettingData.getTransformer();
+                if (transformer != null) {
+                    values[1] = transformer + "A";
                 }
-            });
+                getView().setDeviceDetailConfigInfo(mContext.getString(R.string.actual_overcurrent_threshold) + ":" + values[0], mContext.getString(R.string.device_detail_config_trans) + ":" + values[1]);
+            } else {
+                //传统数据
+                getView().setDeviceDetailConfigInfo(mContext.getString(R.string.actual_overcurrent_threshold) + ":" + values[0], null);
+            }
+//            final String[] switchSpecStr = {"-", "-", "-"};
+//            if (deployControlSettingData != null) {
+//                Integer switchSpec = deployControlSettingData.getSwitchSpec();
+//                if (switchSpec != null) {
+//                    switchSpecStr[0] = switchSpec + "A";
+//                }
+//                Integer wireMaterial = deployControlSettingData.getWireMaterial();
+//                if (wireMaterial != null) {
+//                    switch (wireMaterial) {
+//                        case 0:
+//                            switchSpecStr[1] = mContext.getString(R.string.cu);
+//                            break;
+//                        case 1:
+//                            switchSpecStr[1] = mContext.getString(R.string.al);
+//                            break;
+//                        default:
+//                            break;
+//                    }
+//                }
+//                Double wireDiameter = deployControlSettingData.getWireDiameter();
+//                if (wireDiameter != null) {
+//                    String formatDouble = WidgetUtil.getFormatDouble(wireDiameter, 2);
+//                    switchSpecStr[2] = formatDouble + "m㎡";
+//                }
+//            }
+//            mContext.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (isAttachedView()) {
+//                        getView().setMonitorSwitchSpec(switchSpecStr[0]);
+//                        getView().setMonitorWireMaterial(switchSpecStr[1]);
+//                        getView().setMonitorWireDiameter(switchSpecStr[2]);
+//                    }
+//
+//                }
+//            });
 
         }
+    }
+
+    private boolean hasNesConfigInfo(DeployControlSettingData deployControlSettingData) {
+        if (deployControlSettingData != null) {
+            List<DeployControlSettingData.wireData> inputList = deployControlSettingData.getInput();
+            List<DeployControlSettingData.wireData> outputList = deployControlSettingData.getOutput();
+            return inputList != null && inputList.size() > 0 && outputList != null && outputList.size() > 0;
+        }
+        return false;
+
     }
 
     private void requestBlePassword() {
@@ -2119,6 +2149,23 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             getView().startAC(intent);
         } else {
             getView().setDeviceCamerasText(mContext.getString(R.string.device_detail_camera_no_camera));
+        }
+    }
+
+    public void goConfigDetailInfo() {
+        DeployControlSettingData settingData = mDeviceInfo.getConfig();
+        if (hasNesConfigInfo(settingData)) {
+            //新界面
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA, settingData);
+            startActivity(ARouterConstants.ACTIVITY_DEPLOY_RECORD_CONFIG_THREE_PHASE_ELECT_ACTIVITY, bundle, mContext);
+        } else {
+            Bundle bundle = new Bundle();
+            if (settingData != null) {
+                bundle.putSerializable(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA, settingData);
+            }
+            startActivity(ARouterConstants.ACTIVITY_DEPLOY_RECORD_CONFIG_COMMON_ELECT_ACTIVITY, bundle, mContext);
+            //旧界面
         }
     }
 }

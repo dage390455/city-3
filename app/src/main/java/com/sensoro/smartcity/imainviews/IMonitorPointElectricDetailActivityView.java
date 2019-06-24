@@ -108,12 +108,6 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
 
     void setMonitorDeployTime(String time);
 
-    void setMonitorSwitchSpec(String text);
-
-    void setMonitorWireMaterial(String text);
-
-    void setMonitorWireDiameter(String text);
-
     void setDeviceVision(String text);
 
     void updateDialogProgress(String msg, int progress, int status);
@@ -138,4 +132,6 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
 
     void showOperationTipLoadingDialog(String text);
     void setDeviceCamerasText(String text);
+
+    void setDeviceDetailConfigInfo(String actual,String trans);
 }

@@ -1130,5 +1130,7 @@
     <string name="config_actual_trans">实际互感器型号</string>
     <string name="config_input">进线</string>
     <string name="config_output">出线</string>
+    <string name="device_detail_config_info">初始配置信息</string>
+    <string name="device_detail_config_trans">安装互感器型号</string>
 
 </resources>
