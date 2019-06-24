@@ -13,9 +13,12 @@ import android.view.KeyEvent;
 
 import androidx.fragment.app.Fragment;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.igexin.sdk.PushManager;
+import com.sensoro.city_camera.fragment.CameraListFragment;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.base.ContextUtils;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
@@ -83,6 +86,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private final MainPresenter.TaskRunnable mRunnable = new MainPresenter.TaskRunnable();
     private final NetWorkTaskRunnable mNetWorkTaskRunnable = new NetWorkTaskRunnable();
     //
+    private CameraListFragment mCameraListFragment;
     private FireSecurityWarnFragment mFireSecurityWarnFragment;
     private HomeFragment homeFragment;
     private ManagerFragment managerFragment;
@@ -277,11 +281,13 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
         mFireSecurityWarnFragment = new FireSecurityWarnFragment();
         managerFragment = new ManagerFragment();
         malfunctionFragment = new MalfunctionFragment();
+        mCameraListFragment = (CameraListFragment) ARouter.getInstance().build(ARouterConstants.FRAGMENT_CAMERA_LIST).navigation();
         if (mFragmentList.size() > 0) {
             mFragmentList.clear();
         }
         mFragmentList.add(homeFragment);
         mFragmentList.add(mFireSecurityWarnFragment);
+        mFragmentList.add(mCameraListFragment);
         mFragmentList.add(malfunctionFragment);
         mFragmentList.add(managerFragment);
         getView().updateMainPageAdapterData(mFragmentList);
