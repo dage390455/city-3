@@ -4,6 +4,7 @@ package com.sensoro.city_camera.fragment;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.sensoro.city_camera.IMainViews.ICameraListFragmentView;
 import com.sensoro.city_camera.R;
+import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
 import com.sensoro.city_camera.presenter.CameraListFragmentPresenter;
 import com.sensoro.common.base.BaseFragment;
 import com.sensoro.common.constant.ARouterConstants;
@@ -49,6 +51,17 @@ public class CameraListFragment extends BaseFragment<ICameraListFragmentView, Ca
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_camera_list, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        view.findViewById(R.id.tv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new SecurityWarnConfirmDialog().show(getChildFragmentManager());
+            }
+        });
     }
 
     @Override

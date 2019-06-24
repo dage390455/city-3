@@ -12,4 +12,15 @@
     <string name="word_valid">有效</string>
     <string name="warn_confirm">预警确认</string>
     <string name="external_type">外来</string>
+    <string name="focus_type">重点</string>
+    <string name="invade_type">入侵</string>
+    <string name="security_warn_result_type_title">预警结果类型（必填）</string>
+    <string name="security_warn_des_title">备注说明</string>
+    <string name="security_warn_des_hint">请对预警事件的实际情况进行描述，最多输入100个字符</string>
+    <string name="security_warn_invalid">无效预警</string>
+    <string name="security_warn_valid">有效预警</string>
+    <string name="security_warn_confirm_dialog_exit_button">确认退出</string>
+    <string name="security_warn_confirm_dialog_exit_title">是否退出预警确认</string>
+    <string name="security_warn_confirm_dialog_upload_button">确认上报</string>
+    <string name="security_warn_confirm_dialog_upload_title">是否上报有效预警</string>
 </resources>
