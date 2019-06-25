@@ -46,6 +46,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/tv_three_phase_elect_config_current_range"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"

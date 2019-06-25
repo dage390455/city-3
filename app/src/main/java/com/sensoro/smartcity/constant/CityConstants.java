@@ -32,23 +32,23 @@ public interface CityConstants {
     int[] INSPECTION_STATUS_COLORS = {R.color.c_8058a5, R.color.c_3aa7f0, R.color.c_ff8d34, R.color.c_1dbb99, R.color.c_a6a6a6};
     int[] INSPECTION_STATUS_TEXTS = {R.string.inspection_status_text_pending_execution, R.string.inspection_status_text_executing, R.string.inspection_status_text_timeout_not_completed, R.string.inspection_status_text_completed, R.string.inspection_status_text_timeout_completed};
 
-    LinkedHashMap<Double, MaterialValueModel> MATERIAL_VALUE_MAP = new LinkedHashMap<Double, MaterialValueModel>() {
+    LinkedHashMap<String, MaterialValueModel> MATERIAL_VALUE_MAP = new LinkedHashMap<String, MaterialValueModel>() {
         {
-            put(1d, new MaterialValueModel(16, 9));
-            put(1.5, new MaterialValueModel(20, 15));
-            put(2.5, new MaterialValueModel(27, 21));
-            put(4d, new MaterialValueModel(36, 27));
-            put(6d, new MaterialValueModel(47, 36));
-            put(10d, new MaterialValueModel(64, 51));
-            put(16d, new MaterialValueModel(90, 69));
-            put(25d, new MaterialValueModel(119, 90));
-            put(35d, new MaterialValueModel(147, 112));
-            put(50d, new MaterialValueModel(185, 142));
-            put(70d, new MaterialValueModel(229, 177));
-            put(95d, new MaterialValueModel(281, 216));
-            put(120d, new MaterialValueModel(324, 246));
-            put(150d, new MaterialValueModel(371, 281));
-            put(185d, new MaterialValueModel(423, 328));
+            put("1", new MaterialValueModel(16, 9));
+            put("1.5", new MaterialValueModel(20, 15));
+            put("2.5", new MaterialValueModel(27, 21));
+            put("4", new MaterialValueModel(36, 27));
+            put("6", new MaterialValueModel(47, 36));
+            put("10", new MaterialValueModel(64, 51));
+            put("16", new MaterialValueModel(90, 69));
+            put("25", new MaterialValueModel(119, 90));
+            put("35", new MaterialValueModel(147, 112));
+            put("50", new MaterialValueModel(185, 142));
+            put("70", new MaterialValueModel(229, 177));
+            put("95", new MaterialValueModel(281, 216));
+            put("120", new MaterialValueModel(324, 246));
+            put("150", new MaterialValueModel(371, 281));
+            put("185", new MaterialValueModel(423, 328));
 
         }
     };

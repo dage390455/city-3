@@ -9,7 +9,6 @@ import java.util.List;
 
 public class DeployControlSettingData implements Serializable {
     //此字段不进行序列化
-    @Expose(serialize = false, deserialize = false)
     private Integer inputValue;
     //部署特殊处理
     private Integer switchSpec;

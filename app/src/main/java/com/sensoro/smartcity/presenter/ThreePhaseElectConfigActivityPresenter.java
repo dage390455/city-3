@@ -2,31 +2,49 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.TextUtils;
 
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
+import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.RecommendedTransformerValueModel;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeployControlSettingData;
+import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
+import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
+import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.smartcity.imainviews.IThreePhaseElectConfigActivityView;
 import com.sensoro.smartcity.model.MaterialValueModel;
 import com.sensoro.smartcity.model.WireMaterialDiameterModel;
+import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.dialog.RecommendedTransformerDialogUtils;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.sensoro.common.constant.Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE;
 import static com.sensoro.common.constant.Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL;
 import static com.sensoro.smartcity.constant.CityConstants.MATERIAL_VALUE_MAP;
 
 
-public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThreePhaseElectConfigActivityView> implements RecommendedTransformerDialogUtils.OnRecommendedTransformerDialogUtilsListener {
+public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThreePhaseElectConfigActivityView> implements RecommendedTransformerDialogUtils.OnRecommendedTransformerDialogUtilsListener, IOnCreate {
     private Activity mActivity;
     private ArrayList<WireMaterialDiameterModel> mInLineList;
     private ArrayList<WireMaterialDiameterModel> mOutLineList;
@@ -34,10 +52,23 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
     private boolean mIsInlineClick;
     private int mClickPosition;
     private boolean mIsAction;
+    private int[] mMinMaxValue;
     private RecommendedTransformerDialogUtils recommendedTransformerDialogUtils;
     private DeployControlSettingData deployControlSettingData = new DeployControlSettingData();
     private DeployAnalyzerModel deployAnalyzerModel;
     private int configurationSource;
+    private String mScheduleNo;
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Runnable DeviceTaskOvertime = new Runnable() {
+        @Override
+        public void run() {
+            mHandler.removeCallbacks(DeviceTaskOvertime);
+            mScheduleNo = null;
+            getView().dismissOperatingLoadingDialog();
+            getView().showErrorTipDialog(mActivity.getString(R.string.operation_request_time_out));
+
+        }
+    };
 
     @Override
     public void initData(Context context) {
@@ -59,14 +90,21 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         if (typeValue instanceof Integer) {
             configurationSource = (int) typeValue;
         }
+        mMinMaxValue = DeployConfigurationAnalyzer.analyzeDeviceType(deployAnalyzerModel.deviceType);
+        if (mMinMaxValue == null) {
+            getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_failed));
+        } else {
+            getView().setTvEnterValueRange(mMinMaxValue[0], mMinMaxValue[1]);
+        }
         //
         int tempValue = 0;
         switch (configurationSource) {
             case DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE:
                 //部署
                 //回显
+                getView().setSubtitleText(mActivity.getString(R.string.save));
                 Integer inputValue = deployControlSettingData.getInputValue();
-                if (inputValue!=null){
+                if (inputValue != null) {
                     tempValue = inputValue;
                 }
                 List<DeployControlSettingData.wireData> input = deployControlSettingData.getInput();
@@ -79,7 +117,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
                         }
                         Double wireDiameter = wireData.getWireDiameter();
                         if (wireDiameter != null) {
-                            wireMaterialDiameterModel.diameter = String.valueOf(wireDiameter);
+                            wireMaterialDiameterModel.diameter = WidgetUtil.getFormatDouble(wireDiameter);
                         }
                         Integer wireMaterial = wireData.getWireMaterial();
                         if (wireMaterial != null) {
@@ -99,7 +137,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
                         }
                         Double wireDiameter = wireData.getWireDiameter();
                         if (wireDiameter != null) {
-                            wireMaterialDiameterModel.diameter = String.valueOf(wireDiameter);
+                            wireMaterialDiameterModel.diameter = WidgetUtil.getFormatDouble(wireDiameter);
                         }
                         Integer wireMaterial = wireData.getWireMaterial();
                         if (wireMaterial != null) {
@@ -117,6 +155,8 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
                 break;
             case DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL:
                 //设备详情 下行
+                onCreate();
+                getView().setSubtitleText(mActivity.getString(R.string.air_switch_config));
                 break;
 
         }
@@ -134,6 +174,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
 
     @Override
     public void onDestroy() {
+        EventBus.getDefault().unregister(this);
         if (mInLineList != null) {
             mInLineList.clear();
         }
@@ -261,33 +302,50 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         int outLineTotal = 0;
         List<DeployControlSettingData.wireData> input = new ArrayList<>();
         List<DeployControlSettingData.wireData> output = new ArrayList<>();
-        for (WireMaterialDiameterModel model : mInLineList) {
-            MaterialValueModel materialValueModel = MATERIAL_VALUE_MAP.get(model.diameter);
-            inLineTotal += model.material == 1 ? materialValueModel.alValue : materialValueModel.cuValue * model.count * 1.5f;
-            //
-            DeployControlSettingData.wireData wireData = new DeployControlSettingData.wireData();
-            wireData.setWireMaterial(model.material);
-            wireData.setCount(model.count);
-            wireData.setWireDiameter(Double.parseDouble(model.diameter));
-            input.add(wireData);
-        }
-        deployControlSettingData.setInput(input);
-
-        for (WireMaterialDiameterModel model : mOutLineList) {
-            MaterialValueModel materialValueModel = MATERIAL_VALUE_MAP.get(model.diameter);
-            outLineTotal += model.material == 1 ? materialValueModel.alValue : materialValueModel.cuValue * model.count * 1.5f;
-            //
-            DeployControlSettingData.wireData wireData = new DeployControlSettingData.wireData();
-            wireData.setWireMaterial(model.material);
-            wireData.setCount(model.count);
-            wireData.setWireDiameter(Double.parseDouble(model.diameter));
-            output.add(wireData);
-        }
-        deployControlSettingData.setOutput(output);
         int ratedCurrent;
-
+        int inputValue;
         try {
-            ratedCurrent = (int) (Integer.parseInt(getView().getEtInputText()) * 1.25f);
+            if (mMinMaxValue == null) {
+                getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_failed));
+                return;
+            }
+            inputValue = Integer.parseInt(getView().getEtInputText());
+            if (inputValue < mMinMaxValue[0] || inputValue > mMinMaxValue[1]) {
+                getView().toastShort(mActivity.getString(R.string.empty_open_rated_current_is_out_of_range));
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.enter_the_correct_number_format));
+            return;
+        }
+        try {
+            for (WireMaterialDiameterModel model : mInLineList) {
+                MaterialValueModel materialValueModel = MATERIAL_VALUE_MAP.get(model.diameter);
+                inLineTotal += model.material == 1 ? materialValueModel.alValue : materialValueModel.cuValue * model.count * 1.5f;
+                //
+                DeployControlSettingData.wireData wireData = new DeployControlSettingData.wireData();
+                wireData.setWireMaterial(model.material);
+                wireData.setCount(model.count);
+                wireData.setWireDiameter(Double.parseDouble(model.diameter));
+                input.add(wireData);
+            }
+            deployControlSettingData.setInput(input);
+
+            for (WireMaterialDiameterModel model : mOutLineList) {
+                MaterialValueModel materialValueModel = MATERIAL_VALUE_MAP.get(model.diameter);
+                outLineTotal += model.material == 1 ? materialValueModel.alValue : materialValueModel.cuValue * model.count * 1.5f;
+                //
+                DeployControlSettingData.wireData wireData = new DeployControlSettingData.wireData();
+                wireData.setWireMaterial(model.material);
+                wireData.setCount(model.count);
+                wireData.setWireDiameter(Double.parseDouble(model.diameter));
+                output.add(wireData);
+            }
+            deployControlSettingData.setOutput(output);
+
+
+            ratedCurrent = (int) (inputValue * 1.25f);
             if (ratedCurrent < 1 || ratedCurrent > 560) {
                 getView().toastShort(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.rated_current_colon), "1-560"));
                 return;
@@ -297,8 +355,6 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
             getView().toastShort(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.rated_current_colon), "1-560"));
             return;
         }
-
-
         int temp = Math.min(ratedCurrent, inLineTotal);
         int actualRatedCurrent = Math.min(temp, outLineTotal);
         //
@@ -342,7 +398,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
             return;
         }
         deployControlSettingData.setSwitchSpec(actualRatedCurrent);
-        deployControlSettingData.setInputValue(ratedCurrent);
+        deployControlSettingData.setInputValue(inputValue);
         getView().setActualCurrentValue(actualRatedCurrent == 0 ? null : actualRatedCurrent);
     }
 
@@ -414,10 +470,109 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
     @Override
     public void onItemChose(RecommendedTransformerValueModel recommendedTransformerValueModel) {
         deployControlSettingData.setTransformer(recommendedTransformerValueModel.value);
+        switch (configurationSource) {
+            case DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE:
+                //部署
+                EventData eventData = new EventData();
+                eventData.code = Constants.EVENT_DATA_DEPLOY_INIT_CONFIG_CODE;
+                eventData.data = deployControlSettingData;
+                EventBus.getDefault().post(eventData);
+                getView().finishAc();
+                break;
+            case DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL:
+                //设备详情 下行
+                requestCmd();
+                break;
+        }
+
+    }
+
+    private void requestCmd() {
+        ArrayList<String> sns = new ArrayList<>();
+        sns.add(deployAnalyzerModel.sn);
+        getView().showOperationTipLoadingDialog();
+        mScheduleNo = null;
+        RetrofitServiceHelper.getInstance().doMonitorPointOperation(sns, "config", deployControlSettingData)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>(this) {
+            @Override
+            public void onCompleted(MonitorPointOperationRequestRsp response) {
+                String scheduleNo = response.getScheduleNo();
+                if (TextUtils.isEmpty(scheduleNo)) {
+                    getView().dismissOperatingLoadingDialog();
+                    getView().showErrorTipDialog(mActivity.getString(R.string.monitor_point_operation_schedule_no_error));
+                } else {
+                    String[] split = scheduleNo.split(",");
+                    if (split.length > 0) {
+                        mScheduleNo = split[0];
+                        mHandler.removeCallbacks(DeviceTaskOvertime);
+                        mHandler.postDelayed(DeviceTaskOvertime, 10 * 1000);
+                    } else {
+                        getView().dismissOperatingLoadingDialog();
+                        getView().showErrorTipDialog(mActivity.getString(R.string.monitor_point_operation_schedule_no_error));
+
+                    }
+                }
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().dismissOperatingLoadingDialog();
+                getView().showErrorTipDialog(errorMsg);
+            }
+        });
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(MonitorPointOperationTaskResultInfo monitorPointOperationTaskResultInfo) {
+        try {
+            LogUtils.loge("EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT --->>");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        final String scheduleNo = monitorPointOperationTaskResultInfo.getScheduleNo();
+        if (!TextUtils.isEmpty(scheduleNo) && monitorPointOperationTaskResultInfo.getTotal() == monitorPointOperationTaskResultInfo.getComplete()) {
+            String[] split = scheduleNo.split(",");
+            if (split.length > 0) {
+                final String temp = split[0];
+                if (!TextUtils.isEmpty(temp)) {
+                    if (AppUtils.isActivityTop(mActivity, DeployMonitorConfigurationActivity.class)) {
+                        mActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
+                                    mHandler.removeCallbacks(DeviceTaskOvertime);
+                                    if (isAttachedView()) {
+                                        getView().dismissOperatingLoadingDialog();
+                                        getView().showOperationSuccessToast();
+                                        //
+                                        pushConfigResult();
+                                        mHandler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                getView().finishAc();
+                                            }
+                                        }, 1000);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+
+        }
+    }
+
+    private void pushConfigResult() {
         EventData eventData = new EventData();
-        eventData.code = Constants.EVENT_DATA_DEPLOY_INIT_CONFIG_CODE;
         eventData.data = deployControlSettingData;
+        eventData.code = Constants.EVENT_DATA_DEPLOY_INIT_CONFIG_CODE;
         EventBus.getDefault().post(eventData);
-        getView().finishAc();
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
     }
 }

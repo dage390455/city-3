@@ -24,12 +24,15 @@ import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnResume;
 import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.common.manger.ThreadPoolManager;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.EventData;
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.AlarmInfo;
@@ -52,6 +55,8 @@ import com.sensoro.common.server.response.DeviceCameraListRsp;
 import com.sensoro.common.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
 import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.libbleserver.ble.callback.OnDeviceUpdateObserver;
 import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
 import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
@@ -73,21 +78,16 @@ import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.analyzer.OperationCmdAnalyzer;
 import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.callback.OnConfigInfoObserver;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IMonitorPointElectricDetailActivityView;
 import com.sensoro.smartcity.model.BleUpdateModel;
-import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.Elect3DetailModel;
 import com.sensoro.smartcity.model.TaskOptionModel;
-import com.sensoro.common.utils.AppUtils;
-import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.dialog.TipDeviceUpdateDialogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -1750,13 +1750,22 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 getView().showTipDialog(false, null, mContext.getString(R.string.is_device_self_check), mContext.getString(R.string.device_self_check_tip_message), R.color.c_a6a6a6, mContext.getString(R.string.self_check), R.color.c_1dbb99, MonitorPointOperationCode.SELF_CHECK);
                 break;
             case MonitorPointOperationCode.AIR_SWITCH_CONFIG:
-                Intent intent = new Intent(mContext, DeployMonitorConfigurationActivity.class);
-                intent.putExtra(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
+                //
                 DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
                 deployAnalyzerModel.deviceType = mDeviceInfo.getDeviceType();
                 deployAnalyzerModel.sn = mDeviceInfo.getSn();
-                intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
-                getView().startAC(intent);
+                if (Constants.DEVICE_CONTROL_NEW_CONFIG_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
+                    bundle.putSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+                    startActivity(ARouterConstants.ACTIVITY_THREE_PHASE_ELECT_CONFIG_ACTIVITY, bundle, mContext);
+                } else {
+                    Intent intent = new Intent(mContext, DeployMonitorConfigurationActivity.class);
+                    intent.putExtra(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
+                    intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+                    getView().startAC(intent);
+                }
+
                 break;
             case MonitorPointOperationCode.AIR_SWITCH_POWER_OFF:
                 //断电

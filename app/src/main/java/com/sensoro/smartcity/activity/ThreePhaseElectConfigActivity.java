@@ -30,11 +30,13 @@ import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.WireMaterialDiameterAdapter;
 import com.sensoro.smartcity.imainviews.IThreePhaseElectConfigActivityView;
 import com.sensoro.smartcity.model.WireMaterialDiameterModel;
 import com.sensoro.smartcity.presenter.ThreePhaseElectConfigActivityPresenter;
+import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +79,8 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
     FrameLayout flOutLineAddAcWireMaterialDiameter;
     @BindView(R.id.tv_actual_value)
     TextView tvActualValue;
+    @BindView(R.id.tv_three_phase_elect_config_current_range)
+    TextView tThreePhaseElectConfigCurrentRange;
     private WireMaterialDiameterAdapter mInLineAdapter;
     private WireMaterialDiameterAdapter mOutLineAdapter;
     private OptionsPickerView<String> pvCustomOptions;
@@ -85,6 +89,8 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
     private Drawable mDetailUpDrawable;
     private Drawable addBlackDrawable;
     private Drawable addWhiteDrawable;
+    private MonitorPointOperatingDialogUtil mOperatingUtil;
+    private TipOperationDialogUtils mTipUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -99,7 +105,8 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
         includeImvTitleTvTitle.getPaint().setFakeBoldText(true);
         includeTextTitleTvSubtitle.setText(R.string.save);
         includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_1DBB99));
-
+        mOperatingUtil = new MonitorPointOperatingDialogUtil(mActivity, false);
+        mTipUtils = new TipOperationDialogUtils(mActivity, false);
         initRcInline();
 
         initRcOutline();
@@ -382,7 +389,7 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
 
     @Override
     public void setActualCurrentValue(Integer value) {
-        if (null==value) {
+        if (null == value) {
             tvActualValue.setText("-");
         } else {
             tvActualValue.setText(value + "A");
@@ -397,6 +404,58 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
             etInputRatedCurrentAcWireMaterialDiameter1.setSelection(value.length());
         }
 
+    }
+
+    @Override
+    public void setSubtitleText(String text) {
+        includeTextTitleTvSubtitle.setText(text);
+    }
+
+    @Override
+    public void dismissOperatingLoadingDialog() {
+        if (mOperatingUtil != null) {
+            mOperatingUtil.dismiss();
+        }
+    }
+
+    @Override
+    public void showErrorTipDialog(String errorMsg) {
+        if (mTipUtils.isShowing()) {
+            mTipUtils.setTipMessageText(errorMsg);
+            return;
+        }
+        mTipUtils.setTipEtRootVisible(false);
+        mTipUtils.setTipTitleText(mActivity.getString(R.string.request_failed));
+        mTipUtils.setTipMessageText(errorMsg);
+        mTipUtils.setTipCancelText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
+        mTipUtils.setTipConfirmVisible(false);
+        mTipUtils.show();
+    }
+
+    @Override
+    public void showOperationSuccessToast() {
+
+    }
+
+    @Override
+    public void dismissTipDialog() {
+        if (mTipUtils != null) {
+            mTipUtils.dismiss();
+        }
+    }
+
+    @Override
+    public void showOperationTipLoadingDialog() {
+        if (mOperatingUtil != null) {
+            mOperatingUtil.setTipText(mActivity.getString(R.string.configuring));
+            mOperatingUtil.show();
+        }
+    }
+
+    @Override
+    public void setTvEnterValueRange(int minValue, int maxValue) {
+        String string = mActivity.getString(R.string.deploy_configuration_enter_tip);
+        tThreePhaseElectConfigCurrentRange.setText(string + "/A (" + minValue + "-" + maxValue + ")");
     }
 
 
@@ -478,6 +537,12 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
 
     @Override
     protected void onDestroy() {
+        if (mTipUtils != null) {
+            mTipUtils.destroy();
+        }
+        if (mOperatingUtil != null) {
+            mOperatingUtil.destroy();
+        }
         if (pvCustomOptions != null) {
             pvCustomOptions.dismiss();
         }

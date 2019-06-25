@@ -27,5 +27,17 @@ public interface IThreePhaseElectConfigActivityView extends IToast, IActivityInt
     void setActualCurrentValue(Integer value);
 
     void setInputRated(String value);
+    void setSubtitleText(String text);
 
+    void dismissOperatingLoadingDialog();
+
+    void showErrorTipDialog(String msg);
+
+    void showOperationSuccessToast();
+
+    void dismissTipDialog();
+
+    void showOperationTipLoadingDialog();
+
+    void setTvEnterValueRange(int minValue, int maxValue);
 }
