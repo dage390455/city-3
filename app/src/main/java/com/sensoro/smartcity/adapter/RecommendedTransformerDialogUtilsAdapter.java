@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.model.RecommendedTransformerValueModel;
+import com.sensoro.common.model.RecommendedTransformerValueModel;
 
 import java.util.ArrayList;
 import java.util.List;

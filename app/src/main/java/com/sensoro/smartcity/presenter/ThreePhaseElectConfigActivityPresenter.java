@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
+import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.model.EventData;
+import com.sensoro.common.model.RecommendedTransformerValueModel;
+import com.sensoro.common.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IThreePhaseElectConfigActivityView;
 import com.sensoro.smartcity.model.MaterialValueModel;
-import com.sensoro.smartcity.model.RecommendedTransformerValueModel;
-import com.sensoro.smartcity.model.ThreePhaseElectDataModel;
 import com.sensoro.smartcity.model.WireMaterialDiameterModel;
 import com.sensoro.smartcity.widget.dialog.RecommendedTransformerDialogUtils;
 
@@ -18,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static com.sensoro.common.constant.Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE;
+import static com.sensoro.common.constant.Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL;
 import static com.sensoro.smartcity.constant.CityConstants.MATERIAL_VALUE_MAP;
 
 
@@ -30,19 +35,101 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
     private int mClickPosition;
     private boolean mIsAction;
     private RecommendedTransformerDialogUtils recommendedTransformerDialogUtils;
-    private ThreePhaseElectDataModel threePhaseElectDataModel;
+    private DeployControlSettingData deployControlSettingData = new DeployControlSettingData();
+    private DeployAnalyzerModel deployAnalyzerModel;
+    private int configurationSource;
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
+        pickerStrings = new ArrayList<>();
         mInLineList = new ArrayList<>(5);
         mOutLineList = new ArrayList<>(5);
-        pickerStrings = new ArrayList<>();
         initPickerData();
-        getView().updateInLineData(mInLineList);
-        getView().updateOutLineData(mOutLineList);
+        //
+        Object settingDataValue = getBundleValue(mActivity, Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA);
+        Object deviceValue = getBundleValue(mActivity, Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
+        Object typeValue = getBundleValue(mActivity, Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE);
+        if (settingDataValue instanceof DeployControlSettingData) {
+            deployControlSettingData = (DeployControlSettingData) settingDataValue;
+        }
+        if (deviceValue instanceof DeployAnalyzerModel) {
+            deployAnalyzerModel = (DeployAnalyzerModel) deviceValue;
+        }
+        if (typeValue instanceof Integer) {
+            configurationSource = (int) typeValue;
+        }
+        //
+        int tempValue = 0;
+        switch (configurationSource) {
+            case DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE:
+                //部署
+                //回显
+                Integer inputValue = deployControlSettingData.getInputValue();
+                if (inputValue!=null){
+                    tempValue = inputValue;
+                }
+                List<DeployControlSettingData.wireData> input = deployControlSettingData.getInput();
+                if (input != null && input.size() > 0) {
+                    for (DeployControlSettingData.wireData wireData : input) {
+                        WireMaterialDiameterModel wireMaterialDiameterModel = new WireMaterialDiameterModel();
+                        Integer count = wireData.getCount();
+                        if (count != null) {
+                            wireMaterialDiameterModel.count = count;
+                        }
+                        Double wireDiameter = wireData.getWireDiameter();
+                        if (wireDiameter != null) {
+                            wireMaterialDiameterModel.diameter = String.valueOf(wireDiameter);
+                        }
+                        Integer wireMaterial = wireData.getWireMaterial();
+                        if (wireMaterial != null) {
+                            wireMaterialDiameterModel.material = wireMaterial;
+                        }
+                        mInLineList.add(wireMaterialDiameterModel);
+
+                    }
+                }
+                List<DeployControlSettingData.wireData> output = deployControlSettingData.getOutput();
+                if (output != null && output.size() > 0) {
+                    for (DeployControlSettingData.wireData wireData : output) {
+                        WireMaterialDiameterModel wireMaterialDiameterModel = new WireMaterialDiameterModel();
+                        Integer count = wireData.getCount();
+                        if (count != null) {
+                            wireMaterialDiameterModel.count = count;
+                        }
+                        Double wireDiameter = wireData.getWireDiameter();
+                        if (wireDiameter != null) {
+                            wireMaterialDiameterModel.diameter = String.valueOf(wireDiameter);
+                        }
+                        Integer wireMaterial = wireData.getWireMaterial();
+                        if (wireMaterial != null) {
+                            wireMaterialDiameterModel.material = wireMaterial;
+                        }
+                        mOutLineList.add(wireMaterialDiameterModel);
+                    }
+                }
+                Integer switchSpec = deployControlSettingData.getSwitchSpec();
+                if (switchSpec != null) {
+                    getView().setActualCurrentValue(switchSpec);
+                }
+
+
+                break;
+            case DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL:
+                //设备详情 下行
+                break;
+
+        }
+        //
         recommendedTransformerDialogUtils = new RecommendedTransformerDialogUtils(mActivity);
         recommendedTransformerDialogUtils.setOnRecommendedTransformerDialogUtilsListener(this);
+        getView().updateInLineData(mInLineList);
+        getView().updateOutLineData(mOutLineList);
+
+        if (tempValue != 0) {
+            getView().setInputRated(String.valueOf(tempValue));
+        }
+
     }
 
     @Override
@@ -169,18 +256,35 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
     }
 
     public void handleRecommendTransformer() {
+        deployControlSettingData.getTransformerValueList().clear();
         int inLineTotal = 0;
         int outLineTotal = 0;
+        List<DeployControlSettingData.wireData> input = new ArrayList<>();
+        List<DeployControlSettingData.wireData> output = new ArrayList<>();
         for (WireMaterialDiameterModel model : mInLineList) {
             MaterialValueModel materialValueModel = MATERIAL_VALUE_MAP.get(model.diameter);
             inLineTotal += model.material == 1 ? materialValueModel.alValue : materialValueModel.cuValue * model.count * 1.5f;
+            //
+            DeployControlSettingData.wireData wireData = new DeployControlSettingData.wireData();
+            wireData.setWireMaterial(model.material);
+            wireData.setCount(model.count);
+            wireData.setWireDiameter(Double.parseDouble(model.diameter));
+            input.add(wireData);
         }
+        deployControlSettingData.setInput(input);
 
         for (WireMaterialDiameterModel model : mOutLineList) {
             MaterialValueModel materialValueModel = MATERIAL_VALUE_MAP.get(model.diameter);
             outLineTotal += model.material == 1 ? materialValueModel.alValue : materialValueModel.cuValue * model.count * 1.5f;
+            //
+            DeployControlSettingData.wireData wireData = new DeployControlSettingData.wireData();
+            wireData.setWireMaterial(model.material);
+            wireData.setCount(model.count);
+            wireData.setWireDiameter(Double.parseDouble(model.diameter));
+            output.add(wireData);
         }
-        int ratedCurrent = -1;
+        deployControlSettingData.setOutput(output);
+        int ratedCurrent;
 
         try {
             ratedCurrent = (int) (Integer.parseInt(getView().getEtInputText()) * 1.25f);
@@ -198,46 +302,48 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         int temp = Math.min(ratedCurrent, inLineTotal);
         int actualRatedCurrent = Math.min(temp, outLineTotal);
         //
-        threePhaseElectDataModel = new ThreePhaseElectDataModel();
         if (actualRatedCurrent > 0 && actualRatedCurrent <= 120) {
             //120A/40mA
             //
             RecommendedTransformerValueModel recommendedTransformerValueModel1 = new RecommendedTransformerValueModel();
             recommendedTransformerValueModel1.value = 120;
             recommendedTransformerValueModel1.isRecommend = true;
+            deployControlSettingData.setRecommTrans(120);
             //
             RecommendedTransformerValueModel recommendedTransformerValueModel2 = new RecommendedTransformerValueModel();
             recommendedTransformerValueModel2.value = 200;
             //
             RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
             recommendedTransformerValueModel3.value = 400;
-            threePhaseElectDataModel.transformerValueList.add(recommendedTransformerValueModel1);
-            threePhaseElectDataModel.transformerValueList.add(recommendedTransformerValueModel2);
-            threePhaseElectDataModel.transformerValueList.add(recommendedTransformerValueModel3);
+            deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel1);
+            deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel2);
+            deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
         } else if (actualRatedCurrent <= 200) {
             //200A/40mA
             //
             RecommendedTransformerValueModel recommendedTransformerValueModel2 = new RecommendedTransformerValueModel();
             recommendedTransformerValueModel2.value = 200;
             recommendedTransformerValueModel2.isRecommend = true;
+            deployControlSettingData.setRecommTrans(200);
             //
             RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
             recommendedTransformerValueModel3.value = 400;
-            threePhaseElectDataModel.transformerValueList.add(recommendedTransformerValueModel2);
-            threePhaseElectDataModel.transformerValueList.add(recommendedTransformerValueModel3);
+            deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel2);
+            deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
         } else if (actualRatedCurrent <= 400) {
             //400/40mA
             RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
             recommendedTransformerValueModel3.value = 400;
             recommendedTransformerValueModel3.isRecommend = true;
-            threePhaseElectDataModel.transformerValueList.add(recommendedTransformerValueModel3);
+            deployControlSettingData.setRecommTrans(400);
+            deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
         } else {
             getView().toastShort(mActivity.getString(R.string.not_matched_current_transformer));
             return;
         }
-        threePhaseElectDataModel.actualRatedCurrent = actualRatedCurrent;
-        threePhaseElectDataModel.inputValue = ratedCurrent;
-        getView().setActualCurrentValue(actualRatedCurrent == 0 ? "-" : String.valueOf(actualRatedCurrent));
+        deployControlSettingData.setSwitchSpec(actualRatedCurrent);
+        deployControlSettingData.setInputValue(ratedCurrent);
+        getView().setActualCurrentValue(actualRatedCurrent == 0 ? null : actualRatedCurrent);
     }
 
     public void onPickerViewDismiss() {
@@ -294,8 +400,9 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
 
     public void doSave() {
         if (recommendedTransformerDialogUtils != null) {
-            RecommendedTransformerValueModel recommendedTransformerValueModel = threePhaseElectDataModel.transformerValueList.get(0);
-            recommendedTransformerDialogUtils.show(threePhaseElectDataModel.transformerValueList, recommendedTransformerValueModel.value + "A");
+            List<RecommendedTransformerValueModel> transformerValueList = deployControlSettingData.getTransformerValueList();
+            RecommendedTransformerValueModel recommendedTransformerValueModel = transformerValueList.get(0);
+            recommendedTransformerDialogUtils.show(transformerValueList, recommendedTransformerValueModel.value + "A");
         }
     }
 
@@ -306,8 +413,11 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
 
     @Override
     public void onItemChose(RecommendedTransformerValueModel recommendedTransformerValueModel) {
-        threePhaseElectDataModel.currentTransformerValue = recommendedTransformerValueModel;
-        EventBus.getDefault().post(threePhaseElectDataModel);
+        deployControlSettingData.setTransformer(recommendedTransformerValueModel.value);
+        EventData eventData = new EventData();
+        eventData.code = Constants.EVENT_DATA_DEPLOY_INIT_CONFIG_CODE;
+        eventData.data = deployControlSettingData;
+        EventBus.getDefault().post(eventData);
         getView().finishAc();
     }
 }

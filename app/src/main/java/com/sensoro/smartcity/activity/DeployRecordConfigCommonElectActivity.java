@@ -57,7 +57,7 @@ public class DeployRecordConfigCommonElectActivity extends BaseActivity<IDeployR
     private void initView() {
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         includeTextTitleTvTitle.setVisibility(View.VISIBLE);
-        includeTextTitleTvTitle.setText(R.string.deploy_detail);
+        includeTextTitleTvTitle.setText(R.string.initial_configuration_details);
     }
 
 

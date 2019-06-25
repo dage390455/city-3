@@ -24,7 +24,7 @@ import com.sensoro.smartcity.activity.InspectionTaskListActivity;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.MerchantSwitchActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
-import com.sensoro.smartcity.activity.ThreePhaseElectConfigActivity;
+import com.sensoro.smartcity.activity.WireMaterialDiameterCalculatorActivity;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
 import com.sensoro.smartcity.util.LogUtils;
 import com.tencent.bugly.beta.Beta;
@@ -254,8 +254,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     }
 
     public void doWireMaterial_diameter() {
-//        Intent intent = new Intent(mContext, WireMaterialDiameterCalculatorActivity.class);
-        Intent intent = new Intent(mContext, ThreePhaseElectConfigActivity.class);
+        Intent intent = new Intent(mContext, WireMaterialDiameterCalculatorActivity.class);
         getView().startAC(intent);
     }
 

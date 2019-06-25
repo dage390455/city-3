@@ -20,10 +20,14 @@ import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.handler.HandlerDeployCheck;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnStart;
+import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployContactModel;
+import com.sensoro.common.model.DeployResultModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
@@ -41,6 +45,9 @@ import com.sensoro.common.server.bean.SensorStruct;
 import com.sensoro.common.server.bean.SensorTypeStyles;
 import com.sensoro.common.server.response.DeployStationInfoRsp;
 import com.sensoro.common.server.response.DeviceDeployRsp;
+import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.RegexUtils;
+import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
 import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
 import com.sensoro.libbleserver.ble.connection.SensoroDeviceConnection;
@@ -61,18 +68,11 @@ import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.callback.OnConfigInfoObserver;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.constant.DeoloyCheckPointConstants;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
-import com.sensoro.common.model.DeployAnalyzerModel;
-import com.sensoro.common.model.DeployContactModel;
-import com.sensoro.common.model.DeployResultModel;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.common.utils.RegexUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -879,10 +879,18 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 if (data instanceof DeployControlSettingData) {
                     deployAnalyzerModel.settingData = (DeployControlSettingData) data;
                     Integer initValue = deployAnalyzerModel.settingData.getSwitchSpec();
+                    Integer transformer = deployAnalyzerModel.settingData.getTransformer();
                     if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
-                        if (initValue != null) {
-                            getView().setDeployDeviceDetailDeploySetting(mContext.getString(R.string.actual_overcurrent_threshold) + ":" + initValue + "A");
+                        if (transformer != null) {
+                            if (initValue != null) {
+                                getView().setDeployDeviceDetailDeploySetting(mContext.getString(R.string.actual_overcurrent_threshold) + ":" + initValue + "A" + "\n" + mContext.getString(R.string.device_detail_config_trans) + ":" + transformer + "A");
+                            }
+                        } else {
+                            if (initValue != null) {
+                                getView().setDeployDeviceDetailDeploySetting(mContext.getString(R.string.actual_overcurrent_threshold) + ":" + initValue + "A");
+                            }
                         }
+
                     }
                 } else {
                     getView().setDeployDeviceDetailDeploySetting(null);
@@ -1188,13 +1196,23 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     }
 
     public void doDeployBleSetting() {
-        Intent intent = new Intent(mContext, DeployMonitorConfigurationActivity.class);
-        if (deployAnalyzerModel.settingData != null) {
-            intent.putExtra(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA, deployAnalyzerModel.settingData);
+        //TODO
+        if (Constants.DEVICE_CONTROL_NEW_CONFIG_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA, deployAnalyzerModel.settingData);
+            bundle.putInt(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE);
+            bundle.putSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+            startActivity(ARouterConstants.ACTIVITY_THREE_PHASE_ELECT_CONFIG_ACTIVITY, bundle, mContext);
+        } else {
+            Intent intent = new Intent(mContext, DeployMonitorConfigurationActivity.class);
+            if (deployAnalyzerModel.settingData != null) {
+                intent.putExtra(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA, deployAnalyzerModel.settingData);
+            }
+            intent.putExtra(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE);
+            intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+            getView().startAC(intent);
+
         }
-        intent.putExtra(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE);
-        intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
-        getView().startAC(intent);
     }
 
     @Override

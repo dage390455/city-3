@@ -1,8 +1,10 @@
 package com.sensoro.common.server.bean;
 
 import com.google.gson.annotations.Expose;
+import com.sensoro.common.model.RecommendedTransformerValueModel;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DeployControlSettingData implements Serializable {
@@ -55,6 +57,9 @@ public class DeployControlSettingData implements Serializable {
     private Integer recommTrans;
     private List<wireData> input;
     private List<wireData> output;
+    //推荐值
+    @Expose(serialize = false, deserialize = false)
+    private List<RecommendedTransformerValueModel> transformerValueList = new ArrayList<>();
 
     public Integer getTransformer() {
         return transformer;
@@ -88,10 +93,17 @@ public class DeployControlSettingData implements Serializable {
         this.recommTrans = recommTrans;
     }
 
+    public List<RecommendedTransformerValueModel> getTransformerValueList() {
+        return transformerValueList;
+    }
+
+    public void setTransformerValueList(List<RecommendedTransformerValueModel> transformerValueList) {
+        this.transformerValueList = transformerValueList;
+    }
+
     public static class wireData implements Serializable {
         // 线径
         private Double wireDiameter;
-
         // 线材  0 铜 1 铝
         private Integer wireMaterial;
         //数量

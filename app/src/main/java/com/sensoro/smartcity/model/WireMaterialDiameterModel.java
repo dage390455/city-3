@@ -17,4 +17,7 @@ public class WireMaterialDiameterModel implements Serializable {
         this.diameter = diameter;
         this.count = count;
     }
+
+    public WireMaterialDiameterModel() {
+    }
 }

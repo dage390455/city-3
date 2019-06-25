@@ -12,9 +12,8 @@ import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.RecommendedTransformerDialogUtilsAdapter;
-import com.sensoro.smartcity.model.RecommendedTransformerValueModel;
+import com.sensoro.common.model.RecommendedTransformerValueModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RecommendedTransformerDialogUtils {

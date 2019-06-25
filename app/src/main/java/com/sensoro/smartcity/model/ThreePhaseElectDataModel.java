@@ -1,5 +1,7 @@
 package com.sensoro.smartcity.model;
 
+import com.sensoro.common.model.RecommendedTransformerValueModel;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 

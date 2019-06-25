@@ -7,7 +7,7 @@ import com.sensoro.smartcity.model.WireMaterialDiameterModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface IThreePhaseElectConfigActivityView extends IToast , IActivityIntent {
+public interface IThreePhaseElectConfigActivityView extends IToast, IActivityIntent {
     void updateInLineData(ArrayList<WireMaterialDiameterModel> mInLineList);
 
     void updateOutLineData(ArrayList<WireMaterialDiameterModel> mOutLineList);
@@ -24,6 +24,8 @@ public interface IThreePhaseElectConfigActivityView extends IToast , IActivityIn
 
     void setPickerTitle(String title);
 
-    void setActualCurrentValue(String value);
+    void setActualCurrentValue(Integer value);
+
+    void setInputRated(String value);
 
 }

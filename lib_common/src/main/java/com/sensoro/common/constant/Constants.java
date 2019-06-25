@@ -331,6 +331,11 @@ public interface Constants {
 //            add("mantun_fires");
         }
     };
+    ArrayList<String> DEVICE_CONTROL_NEW_CONFIG_DEVICE_TYPES = new ArrayList<String>(2) {
+        {
+            add("acrel_fires");
+        }
+    };
     ArrayList<String> DEVICE_UPDATE_FIRMWARE_CHIP_TYPES = new ArrayList<String>(3) {
         {
             add("t1");

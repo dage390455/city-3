@@ -462,6 +462,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="8dp"
                         android:text="@string/required"
+                        android:lineSpacingExtra="8dp"
                         android:textColor="@color/c_a6a6a6" />
 
                     <ImageView

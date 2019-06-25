@@ -1150,4 +1150,6 @@
     <string name="config_actual_trans">Actual transformer</string>
     <string name="device_detail_config_info">Init config info</string>
     <string name="device_detail_config_trans">Install trans model</string>
+    <string name="initial_configuration_details">Config details</string>
+
 </resources>

@@ -1132,5 +1132,7 @@
     <string name="config_output">出线</string>
     <string name="device_detail_config_info">初始配置信息</string>
     <string name="device_detail_config_trans">安装互感器型号</string>
+    <string name="initial_configuration_details">初始配置详情</string>
+
 
 </resources>

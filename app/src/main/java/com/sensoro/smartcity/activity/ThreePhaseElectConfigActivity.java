@@ -20,12 +20,14 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.CustomListener;
 import com.bigkoo.pickerview.listener.OnDismissListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
@@ -41,6 +43,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+@Route(path = ARouterConstants.ACTIVITY_THREE_PHASE_ELECT_CONFIG_ACTIVITY)
 public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElectConfigActivityView, ThreePhaseElectConfigActivityPresenter>
         implements IThreePhaseElectConfigActivityView {
 
@@ -146,7 +149,7 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
                 if (!TextUtils.isEmpty(s1)) {
                     mPresenter.handleRecommendTransformer();
                 } else {
-                    setActualCurrentValue("-");
+                    setActualCurrentValue(null);
                 }
             }
         });
@@ -378,11 +381,20 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
     }
 
     @Override
-    public void setActualCurrentValue(String value) {
-        if (TextUtils.isEmpty(value)) {
+    public void setActualCurrentValue(Integer value) {
+        if (null==value) {
             tvActualValue.setText("-");
         } else {
             tvActualValue.setText(value + "A");
+        }
+
+    }
+
+    @Override
+    public void setInputRated(String value) {
+        if (value != null) {
+            etInputRatedCurrentAcWireMaterialDiameter1.setText(value);
+            etInputRatedCurrentAcWireMaterialDiameter1.setSelection(value.length());
         }
 
     }
