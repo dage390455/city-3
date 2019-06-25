@@ -1408,7 +1408,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         getView().startAC(intent);
     }
 
-    OnConfigInfoObserver onConfigInfoObserver = new OnConfigInfoObserver() {
+    private final OnConfigInfoObserver onConfigInfoObserver = new OnConfigInfoObserver() {
         @Override
         public void onStart(String msg) {
             if (isAttachedView()) {
@@ -1476,13 +1476,19 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 break;
         }
         //断电、上电不走蓝牙操作
-        if ((type != MonitorPointOperationCode.AIR_SWITCH_POWER_OFF) && (type != MonitorPointOperationCode.AIR_SWITCH_POWER_ON)) {
-            //蓝牙成功直接返回，不走server
+        if (MonitorPointOperationCode.AIR_SWITCH_POWER_OFF == type || MonitorPointOperationCode.AIR_SWITCH_POWER_ON == type) {
+            requestServerCmd();
+        } else {
+            //其他先进行本地蓝牙，失败则进行下行
             if (doBleMuteOperation(onConfigInfoObserver)) {
+                //
                 return;
+            } else {
+                requestServerCmd();
             }
         }
-        requestServerCmd();
+
+
     }
 
     private boolean doBleMuteOperation(final OnConfigInfoObserver onConfigInfoObserver) {
