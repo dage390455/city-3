@@ -11,7 +11,6 @@ import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.presenter.SecurityWarnDetailPresenter;
 import com.sensoro.city_camera.util.MapUtil;
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.widgets.MaxHeightRecyclerView;
 
 import butterknife.BindView;
@@ -89,7 +88,14 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         } else if (view.getId() == R.id.security_warn_quick_navigation_tv) {
             mPresenter.doNavigation();
         } else if (view.getId() == R.id.security_warn_alert_confirm_tv) {
-
+//            ArrayList<String> list = new ArrayList<>();
+//            list.add("http://pic37.nipic.com/20140113/8800276_184927469000_2.png");
+//            list.add("http://pic25.nipic.com/20121205/10197997_003647426000_2.jpg");
+//            list.add("http://img.redocn.com/sheji/20141219/zhongguofengdaodeliyizhanbanzhijing_3744115.jpg");
+//            Intent intent = new Intent(this, PhotoPreviewActivity.class);
+//            intent.putStringArrayListExtra(PhotoPreviewActivity.EXTRA_KEY_URLS, list);
+//            intent.putExtra(PhotoPreviewActivity.EXTRA_KEY_POSITION, 1);
+//            startActivity(intent);
         }
     }
 

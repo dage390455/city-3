@@ -27,4 +27,6 @@
     <string name="security_warn_detail_activity_title">预警日志</string>
     <string name="security_warn_video_title">预警录像</string>
     <string name="security_warn_deploy_title">布控人员信息</string>
+    <string name="toast_image_download_success">下载成功</string>
+    <string name="toast_image_download_failed">下载失败</string>
 </resources>

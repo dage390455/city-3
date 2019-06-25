@@ -18,6 +18,7 @@ import java.io.OutputStream;
  */
 
 public class FileUtil {
+    private static final String TAG = "FileUtil";
     public static File getSaveFile(Context context) {
         File file = new File(context.getFilesDir(), "pic.jpg");
         return file;
@@ -360,6 +361,28 @@ public class FileUtil {
             return context.getExternalCacheDir();
         } else {
             return context.getCacheDir();
+        }
+    }
+
+    /**
+     * 复制文件
+     * @param filename 文件名
+     * @param bytes 数据
+     */
+    public static void copy(String filename, byte[] bytes) {
+        try {
+            //如果手机已插入sd卡,且app具有读写sd卡的权限
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                FileOutputStream output = null;
+                output = new FileOutputStream(filename);
+                output.write(bytes);
+                Log.i(TAG, "copy success，" + filename);
+                output.close();
+            } else {
+                Log.i(TAG, "copy fail, " + filename);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
