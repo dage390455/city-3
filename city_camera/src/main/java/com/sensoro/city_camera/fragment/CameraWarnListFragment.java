@@ -42,14 +42,12 @@ import com.sensoro.common.base.BaseFragment;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.server.bean.CameraWarnInfo;
-import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
-import com.sensoro.common.widgets.dialog.TipDialogUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -65,7 +63,7 @@ import static com.sensoro.common.constant.Constants.DIRECTION_UP;
  */
 @Route(path = ARouterConstants.FRAGMENT_CAMERA_WARN_LIST)
 public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragmentView, CameraWarnListFragmentPresenter>
-        implements ICameraWarnListFragmentView, CameraWarnFragRcContentAdapter.CameraWarnConfirmStatusClickListener,TipOperationDialogUtils.TipDialogUtilsClickListener {
+        implements ICameraWarnListFragmentView, CameraWarnFragRcContentAdapter.CameraWarnConfirmStatusClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R2.id.fg_camera_warns_top_search_et_search)
     EditText edFilterContent;
     @BindView(R2.id.fg_camera_warns_top_search_imv_clear)
@@ -84,19 +82,19 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     @BindView(R2.id.layout_camerawarns_time_filter_content)
     LinearLayout layoutFilterCapturetimeContent;
     @BindView(R2.id.tv_search_camera_warns_time_Unlimited)
-    TextView  tvFilterCapturetimeUnlimited;
+    TextView tvFilterCapturetimeUnlimited;
     @BindView(R2.id.tv_search_camera_warns_time_24h)
-    TextView  tvFilterCapturetime24h;
+    TextView tvFilterCapturetime24h;
     @BindView(R2.id.tv_search_camera_warns_time_3day)
-    TextView  tvFilterCapturetime3Days;
+    TextView tvFilterCapturetime3Days;
     @BindView(R2.id.tv_search_camera_warns_time_7day)
-    TextView  tvFilterCapturetime7Days;
+    TextView tvFilterCapturetime7Days;
     @BindView(R2.id.tv_search_camera_warns_time_customizetime)
-    TextView  tvFilterCapturetimeCustomize;
+    TextView tvFilterCapturetimeCustomize;
     @BindView(R2.id.layout_camerawarns_status_filter_content)
     LinearLayout layoutFilterStatusContent;
     @BindView(R2.id.tv_search_camera_warns_status_unlimited)
-    TextView  tvFilterStatusUnlimited;
+    TextView tvFilterStatusUnlimited;
 
     @BindView(R2.id.fg_camera_warns_rc_content)
     RecyclerView rvCameraWarnsContent;
@@ -134,6 +132,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
         initView();
         mPresenter.initData(activity);
     }
+
     @SuppressLint("ClickableViewAccessibility")
     private void initView() {
         //返回顶部
@@ -191,13 +190,11 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     }
 
 
-
     private void initRcContent() {
         mRcContentAdapter = new CameraWarnFragRcContentAdapter(mRootFragment.getActivity());
         mRcContentAdapter.setAlarmConfirmStatusClickListener(this);
-        final LinearLayoutManager xLinearLayoutManager = new LinearLayoutManager(mRootFragment.getActivity());
-        xLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        rvCameraWarnsContent.setLayoutManager(xLinearLayoutManager);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mRootFragment.getActivity());
+        rvCameraWarnsContent.setLayoutManager(linearLayoutManager);
         rvCameraWarnsContent.setAdapter(mRcContentAdapter);
         //
         //新控件
@@ -222,7 +219,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (xLinearLayoutManager.findFirstVisibleItemPosition() > 4) {
+                if (linearLayoutManager.findFirstVisibleItemPosition() > 4) {
                     if (newState == 0) {
                         mReturnTopImageView.setVisibility(View.VISIBLE);
                         if (returnTopAnimation != null && returnTopAnimation.hasEnded()) {
@@ -280,13 +277,12 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     }
 
 
-
     private void initClearHistoryDialog() {
         historyClearDialog = new TipOperationDialogUtils(mRootFragment.getActivity(), true);
         historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
-        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
-        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_1dbb99));
-        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record), R.color.c_a6a6a6);
+        historyClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_1dbb99));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear), getResources().getColor(R.color.c_a6a6a6));
         historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
@@ -300,7 +296,6 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     protected CameraWarnListFragmentPresenter createPresenter() {
         return new CameraWarnListFragmentPresenter();
     }
-
 
 
     @Override
@@ -324,10 +319,10 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
         AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), edFilterContent);
     }
 
-    
+
     @Override
     public void updateCameraWarnsListAdapter(List<CameraWarnInfo> cameraWarnInfoList) {
-        Log.d(TAG, "updateCameraWarnsListAdapter: "+cameraWarnInfoList.size());
+        Log.d(TAG, "updateCameraWarnsListAdapter: " + cameraWarnInfoList.size());
         if (cameraWarnInfoList.size() > 0) {
             mRcContentAdapter.setData(cameraWarnInfoList);
             mRcContentAdapter.notifyDataSetChanged();
@@ -378,13 +373,13 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
 
     @Override
     public void setSearchClearImvVisible(boolean isVisible) {
-        ivFilterContentClear.setVisibility(isVisible?View.VISIBLE:View.GONE);
+        ivFilterContentClear.setVisibility(isVisible ? View.VISIBLE : View.GONE);
 
     }
 
     @Override
     public void updateSearchHistoryList(List<String> data) {
-        btnSearchClear.setVisibility(data.size()>0 ?View.VISIBLE:View.GONE);
+        btnSearchClear.setVisibility(data.size() > 0 ? View.VISIBLE : View.GONE);
         mSearchHistoryAdapter.updateSearchHistoryAdapter(data);
 
     }
@@ -456,6 +451,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
         SensoroToast.getInstance().makeText(mRootFragment.getActivity(), msg, Toast.LENGTH_LONG).show();
 
     }
+
     /*item 预警确认*/
     @Override
     public void onConfirmStatusClick(View view, int position, boolean isReConfirm) {
@@ -487,6 +483,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
         historyClearDialog.dismiss();
 
     }
+
     /**
      * 历史记录删除弹框 确认按键监听
      */
@@ -512,33 +509,62 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
         }
         super.onDestroyView();
     }
-    @OnClick({R2.id.fg_camera_warns_top_search_frame_search,R2.id.fg_camera_warns_top_search_et_search
-    ,R2.id.fg_camera_warns_top_search_imv_clear,R2.id.btn_search_clear,R2.id.tv_top_search_alarm_search_cancel
-            ,R2.id.alarm_return_top})
+
+    @OnClick({R2.id.fg_camera_warns_top_search_frame_search, R2.id.fg_camera_warns_top_search_et_search,
+            R2.id.fg_camera_warns_top_search_imv_clear, R2.id.btn_search_clear,
+            R2.id.tv_top_search_alarm_search_cancel, R2.id.alarm_return_top,
+            R2.id.layout_camerawarns_status_filter_content,R2.id.tv_search_camera_warns_status_unlimited,
+            R2.id.layout_camerawarns_time_filter_content,R2.id.tv_search_camera_warns_time_Unlimited,
+            R2.id.tv_search_camera_warns_time_24h,R2.id.tv_search_camera_warns_time_3day,
+            R2.id.tv_search_camera_warns_time_7day,R2.id.tv_search_camera_warns_time_customizetime,
+            R2.id.iv_search_camera_warns_status,R2.id.tv_search_camera_warns_status,
+            R2.id.tv_search_camera_warns_time,R2.id.iv_search_camera_warns_time
+    })
     public void onViewClicked(View view) {
-        switch (view.getId()){
-            case R2.id.fg_camera_warns_top_search_frame_search:
-            case R2.id.fg_camera_warns_top_search_et_search:
-                edFilterContent.requestFocus();
-                edFilterContent.setCursorVisible(true);
-                setSearchHistoryVisible(true);
-                break;
-            case R2.id.fg_camera_warns_top_search_imv_clear:
-                edFilterContent.getText().clear();
-                edFilterContent.requestFocus();
-                AppUtils.openInputMethodManager(mRootFragment.getActivity(), edFilterContent);
-                setSearchHistoryVisible(true);
-                break;
-            case R2.id.btn_search_clear:
-                showHistoryClearDialog();
-                break;
-            case R2.id.tv_top_search_alarm_search_cancel:
-                cancelSearchData();
-                break;
-            case R2.id.alarm_return_top:
-                rvCameraWarnsContent.smoothScrollToPosition(0);
-                mReturnTopImageView.setVisibility(View.GONE);
-                break;
+        int i = view.getId();
+        if (i == R.id.fg_camera_warns_top_search_frame_search || i == R.id.fg_camera_warns_top_search_et_search) {
+            edFilterContent.requestFocus();
+            edFilterContent.setCursorVisible(true);
+            setSearchHistoryVisible(true);
+        } else if (i == R.id.fg_camera_warns_top_search_imv_clear) {
+            edFilterContent.getText().clear();
+            edFilterContent.requestFocus();
+            AppUtils.openInputMethodManager(mRootFragment.getActivity(), edFilterContent);
+            setSearchHistoryVisible(true);
+        } else if (i == R.id.btn_search_clear) {
+            showHistoryClearDialog();
+        } else if (i == R.id.tv_top_search_alarm_search_cancel) {
+            cancelSearchData();
+        } else if (i == R.id.alarm_return_top) {
+            rvCameraWarnsContent.smoothScrollToPosition(0);
+            mReturnTopImageView.setVisibility(View.GONE);
+        }else if(i == R.id.tv_search_camera_warns_time || i == R.id.iv_search_camera_warns_time){
+            setWarnFilterContent(WARN_FILTER_STATUS,false);
+            setWarnFilterContent(WARN_FILTER_TIME,layoutFilterCapturetimeContent.getVisibility()== View.GONE);
+        }else if(i == R.id.iv_search_camera_warns_status || i == R.id.tv_search_camera_warns_status){
+            setWarnFilterContent(WARN_FILTER_TIME,false);
+            setWarnFilterContent(WARN_FILTER_STATUS,layoutFilterStatusContent.getVisibility()== View.GONE);
+        }
+
+    }
+    public static final int WARN_FILTER_TIME = 0;
+    public static final int WARN_FILTER_STATUS = 1;
+
+
+    /**
+     *
+     * @param filterType 0 时间 1 处理状态
+     * @param isVisiable true 显示 false 隐藏
+     */
+    private void setWarnFilterContent(int filterType,boolean isVisiable) {
+        if (WARN_FILTER_TIME == filterType) {
+            layoutFilterCapturetimeContent.setVisibility(isVisiable ? View.VISIBLE : View.GONE);
+            ivFilterCapturetime.setImageResource(isVisiable ? R.drawable.ic_arrow_up : R.drawable.ic_arrow_down);
+
+
+        } else if (WARN_FILTER_STATUS == filterType) {
+            layoutFilterStatusContent.setVisibility(isVisiable ? View.VISIBLE : View.GONE);
+            ivFilterProcessStatus.setImageResource(isVisiable ? R.drawable.ic_arrow_up : R.drawable.ic_arrow_down);
 
         }
 

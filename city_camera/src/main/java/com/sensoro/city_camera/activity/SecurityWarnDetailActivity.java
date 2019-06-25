@@ -9,6 +9,7 @@ import com.sensoro.city_camera.IMainViews.ISecurityWarnDetailView;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.presenter.SecurityWarnDetailPresenter;
+import com.sensoro.city_camera.util.MapUtil;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.widgets.MaxHeightRecyclerView;
@@ -57,6 +58,8 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         mPresenter.initData(this);
 
         initView();
+
+        MapUtil.startLocation(this);
     }
 
     @Override
@@ -84,9 +87,15 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         } else if (view.getId() == R.id.security_warn_contact_owner_tv) {
 
         } else if (view.getId() == R.id.security_warn_quick_navigation_tv) {
-
+            mPresenter.doNavigation();
         } else if (view.getId() == R.id.security_warn_alert_confirm_tv) {
 
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MapUtil.stopLocation();
     }
 }

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -67,16 +66,18 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
             isReConfirm = false;
             if(isWarnValid){
                 holder.tvCamerawarnValid.setBackground(mContext.getDrawable(R.drawable.shape_camera_warn_valid));
+                holder.tvCamerawarnValid.setText(R.string.word_valid);
                 isReConfirm = true;
             }else{
                 holder.tvCamerawarnValid.setBackground(mContext.getDrawable(R.drawable.shape_camera_warn_unvalid));
+                holder.tvCamerawarnValid.setText(R.string.word_unvalid);
                 isReConfirm = false;
             }
             switch (warnType){
                 //1:外来 2:重点 3：入侵
                 case 1:
                     holder.tvWarnType.setText(R.string.external_type);
-                    holder.tvWarnType.setBackgroundResource(R.drawable.shape_block);
+                    holder.tvWarnType.setBackgroundResource(R.drawable.security_type_foreign_bg);
                     holder.layoutSinglePhoto.setVisibility(View.VISIBLE);
                     holder.layoutMultPhoto.setVisibility(View.GONE);
                      //加载抓拍图片
@@ -84,7 +85,7 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     break;
                 case 2:
                     holder.tvWarnType.setText(R.string.focus_type);
-                    holder.tvWarnType.setBackgroundResource(R.drawable.shape_block);
+                    holder.tvWarnType.setBackgroundResource(R.drawable.security_type_focus_bg);
                     holder.layoutSinglePhoto.setVisibility(View.GONE);
                     holder.layoutMultPhoto.setVisibility(View.VISIBLE);
                     //加载布控 抓拍 照片
@@ -94,7 +95,7 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     break;
                 case 3:
                     holder.tvWarnType.setText(R.string.invade_type);
-                    holder.tvWarnType.setBackgroundResource(R.drawable.shape_block);
+                    holder.tvWarnType.setBackgroundResource(R.drawable.security_type_invade_bg);
                     holder.layoutSinglePhoto.setVisibility(View.VISIBLE);
                     holder.layoutMultPhoto.setVisibility(View.GONE);
                     //加载抓拍照片
