@@ -298,11 +298,6 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
 
     public void handleRecommendTransformer() {
         deployControlSettingData.getTransformerValueList().clear();
-        int inLineTotal = 0;
-        int outLineTotal = 0;
-        List<DeployControlSettingData.wireData> input = new ArrayList<>();
-        List<DeployControlSettingData.wireData> output = new ArrayList<>();
-        int ratedCurrent;
         int inputValue;
         try {
             if (mMinMaxValue == null) {
@@ -319,6 +314,11 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
             getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.enter_the_correct_number_format));
             return;
         }
+        int inLineTotal = 0;
+        int outLineTotal = 0;
+        List<DeployControlSettingData.wireData> input = new ArrayList<>();
+        List<DeployControlSettingData.wireData> output = new ArrayList<>();
+        int ratedCurrent;
         try {
             for (WireMaterialDiameterModel model : mInLineList) {
                 MaterialValueModel materialValueModel = MATERIAL_VALUE_MAP.get(model.diameter);
