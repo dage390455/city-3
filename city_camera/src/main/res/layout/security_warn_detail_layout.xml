@@ -23,9 +23,18 @@
             <RelativeLayout
                 android:id="@+id/image_rl"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/color_alarm_pup_red"
-                android:minHeight="200dp" />
+                android:layout_height="wrap_content">
+
+                <ViewStub
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout="@layout/include_camerawarn_single_photo" />
+
+                <ViewStub
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout="@layout/include_camerawarn_mult_photo" />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/title_rl"
@@ -72,8 +81,8 @@
                 android:id="@+id/line1"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_divider_height"
-                android:layout_marginTop="16dp"
                 android:layout_below="@id/security_warn_time_tv"
+                android:layout_marginTop="16dp"
                 android:background="@color/c_dfdfdf" />
 
             <TextView
@@ -132,11 +141,11 @@
 
             <com.sensoro.common.widgets.MaxHeightRecyclerView
                 android:id="@+id/security_warn_log_rv"
-                android:paddingTop="20dp"
-                android:paddingBottom="9dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/line2" />
+                android:layout_below="@id/line2"
+                android:paddingTop="20dp"
+                android:paddingBottom="9dp" />
 
 
         </RelativeLayout>
