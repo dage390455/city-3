@@ -9,6 +9,7 @@
 
     <include layout="@layout/include_camerawarn_mult_photo" />
 
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -21,13 +22,17 @@
 
         <TextView
             android:id="@+id/tv_camera_warn_type"
-            android:layout_width="28dp"
-            android:layout_height="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginTop="3dp"
-            android:background="@color/c_000000"
+            android:background="@drawable/security_type_focus_bg"
             android:gravity="center"
+            android:paddingLeft="4dp"
+            android:paddingTop="2dp"
+            android:paddingRight="4dp"
+            android:paddingBottom="2dp"
             android:text="@string/external_type"
             android:textColor="@color/white"
             android:textSize="10sp"
@@ -72,13 +77,17 @@
 
         <TextView
             android:id="@+id/btn_camerawarn_confim"
-            android:layout_width="61dp"
-            android:layout_height="28dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_marginTop="8dp"
             android:background="@drawable/shape_confim_bg"
             android:gravity="center"
+            android:paddingLeft="8dp"
+            android:paddingTop="6dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="6dp"
             android:text="@string/warn_confirm"
             android:textColor="@color/c_252525"
             android:textSize="12sp"
