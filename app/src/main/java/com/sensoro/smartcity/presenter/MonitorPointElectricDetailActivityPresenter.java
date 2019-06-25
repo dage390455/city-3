@@ -587,10 +587,13 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     }
 
     private boolean hasNesConfigInfo(DeployControlSettingData deployControlSettingData) {
-        if (deployControlSettingData != null) {
-            List<DeployControlSettingData.wireData> inputList = deployControlSettingData.getInput();
-            List<DeployControlSettingData.wireData> outputList = deployControlSettingData.getOutput();
-            return inputList != null && inputList.size() > 0 && outputList != null && outputList.size() > 0;
+        //三相电中 并且有新数据
+        if (Constants.DEVICE_CONTROL_NEW_CONFIG_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
+            if (deployControlSettingData != null) {
+                List<DeployControlSettingData.wireData> inputList = deployControlSettingData.getInput();
+                List<DeployControlSettingData.wireData> outputList = deployControlSettingData.getOutput();
+                return inputList != null && inputList.size() > 0 && outputList != null && outputList.size() > 0;
+            }
         }
         return false;
 

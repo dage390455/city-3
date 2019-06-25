@@ -32,6 +32,7 @@ public class OperationCmdAnalyzer {
                 doFhsjElecFires(mOperationType, sensoroDeviceConnection, callback);
                 break;
             case "acrel_fires":
+            case "acrel_alpha":
             case "acrel_single":
                 doAcrel(mOperationType, sensoroDeviceConnection, callback);
                 break;

@@ -358,45 +358,71 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         int temp = Math.min(ratedCurrent, inLineTotal);
         int actualRatedCurrent = Math.min(temp, outLineTotal);
         //
-        if (actualRatedCurrent > 0 && actualRatedCurrent <= 120) {
-            //120A/40mA
-            //
-            RecommendedTransformerValueModel recommendedTransformerValueModel1 = new RecommendedTransformerValueModel();
-            recommendedTransformerValueModel1.value = 120;
-            recommendedTransformerValueModel1.isRecommend = true;
-            deployControlSettingData.setRecommTrans(120);
-            //
-            RecommendedTransformerValueModel recommendedTransformerValueModel2 = new RecommendedTransformerValueModel();
-            recommendedTransformerValueModel2.value = 200;
-            //
-            RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
-            recommendedTransformerValueModel3.value = 400;
-            deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel1);
-            deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel2);
-            deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
-        } else if (actualRatedCurrent <= 200) {
-            //200A/40mA
-            //
-            RecommendedTransformerValueModel recommendedTransformerValueModel2 = new RecommendedTransformerValueModel();
-            recommendedTransformerValueModel2.value = 200;
-            recommendedTransformerValueModel2.isRecommend = true;
-            deployControlSettingData.setRecommTrans(200);
-            //
-            RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
-            recommendedTransformerValueModel3.value = 400;
-            deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel2);
-            deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
-        } else if (actualRatedCurrent <= 400) {
-            //400/40mA
-            RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
-            recommendedTransformerValueModel3.value = 400;
-            recommendedTransformerValueModel3.isRecommend = true;
-            deployControlSettingData.setRecommTrans(400);
-            deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
+        if ("acrel_alpha".equals(deployAnalyzerModel.deviceType)) {
+            if (actualRatedCurrent > 0 && actualRatedCurrent <= 120) {
+                //120A/40mA
+                //
+                RecommendedTransformerValueModel recommendedTransformerValueModel1 = new RecommendedTransformerValueModel();
+                recommendedTransformerValueModel1.value = 120;
+                recommendedTransformerValueModel1.isRecommend = true;
+                deployControlSettingData.setRecommTrans(120);
+                //
+                RecommendedTransformerValueModel recommendedTransformerValueModel2 = new RecommendedTransformerValueModel();
+                recommendedTransformerValueModel2.value = 200;
+                //
+                RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
+                recommendedTransformerValueModel3.value = 400;
+                deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel1);
+                deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel2);
+                deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
+            } else if (actualRatedCurrent <= 225) {
+                //200A/40mA
+                //
+                RecommendedTransformerValueModel recommendedTransformerValueModel2 = new RecommendedTransformerValueModel();
+                recommendedTransformerValueModel2.value = 200;
+                recommendedTransformerValueModel2.isRecommend = true;
+                deployControlSettingData.setRecommTrans(200);
+                //
+                RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
+                recommendedTransformerValueModel3.value = 400;
+                deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel2);
+                deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
+            } else if (actualRatedCurrent <= 400) {
+                //400/40mA
+                RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
+                recommendedTransformerValueModel3.value = 400;
+                recommendedTransformerValueModel3.isRecommend = true;
+                deployControlSettingData.setRecommTrans(400);
+                deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
+            } else {
+                getView().toastShort(mActivity.getString(R.string.not_matched_current_transformer));
+                return;
+            }
         } else {
-            getView().toastShort(mActivity.getString(R.string.not_matched_current_transformer));
-            return;
+            if (actualRatedCurrent > 0 && actualRatedCurrent <= 250) {
+                //
+                RecommendedTransformerValueModel recommendedTransformerValueModel1 = new RecommendedTransformerValueModel();
+                recommendedTransformerValueModel1.value = 250;
+                recommendedTransformerValueModel1.isRecommend = true;
+                deployControlSettingData.setRecommTrans(250);
+                //
+                RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
+                recommendedTransformerValueModel3.value = 400;
+                deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel1);
+                deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
+            } else if (actualRatedCurrent <= 400) {
+                //400/40mA
+                RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
+                recommendedTransformerValueModel3.value = 400;
+                recommendedTransformerValueModel3.isRecommend = true;
+                deployControlSettingData.setRecommTrans(400);
+                deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
+            } else {
+                getView().toastShort(mActivity.getString(R.string.not_matched_current_transformer));
+                return;
+            }
         }
+
         deployControlSettingData.setSwitchSpec(actualRatedCurrent);
         deployControlSettingData.setInputValue(inputValue);
         getView().setActualCurrentValue(actualRatedCurrent == 0 ? null : actualRatedCurrent);
