@@ -8,10 +8,10 @@ import com.sensoro.common.widgets.SelectDialog;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface IDeployMonitorSettingPhotoActivityView extends IActivityIntent,IToast {
+public interface IDeployMonitorSettingPhotoActivityView extends IActivityIntent, IToast {
     void updateImageList(ArrayList<ImageItem> imageList);
 
-    void showDialog(SelectDialog.SelectDialogListener listener, List<String> names);
+    void showDialog(SelectDialog.SelectDialogListener listener, List<String> names, String title);
 
     void setJustDisplayPic(boolean isJustDisplay);
 

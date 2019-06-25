@@ -36,6 +36,7 @@ import com.sensoro.common.server.response.ContractsTemplateRsp;
 import com.sensoro.common.server.response.DeleteNamePlateRsp;
 import com.sensoro.common.server.response.DeployCameraUploadRsp;
 import com.sensoro.common.server.response.DeployDeviceDetailRsp;
+import com.sensoro.common.server.response.DeployNameplateRsp;
 import com.sensoro.common.server.response.DeployRecordRsp;
 import com.sensoro.common.server.response.DeployStationInfoRsp;
 import com.sensoro.common.server.response.DeviceAlarmItemRsp;
@@ -63,8 +64,8 @@ import com.sensoro.common.server.response.LoginRsp;
 import com.sensoro.common.server.response.MalfunctionCountRsp;
 import com.sensoro.common.server.response.MalfunctionListRsp;
 import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
-import com.sensoro.common.server.response.NameplateBindDeviceRsp;
 import com.sensoro.common.server.response.NamePlateListRsp;
+import com.sensoro.common.server.response.NameplateBindDeviceRsp;
 import com.sensoro.common.server.response.QiNiuToken;
 import com.sensoro.common.server.response.ResponseBase;
 import com.sensoro.common.server.response.ResponseResult;
@@ -83,6 +84,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -109,12 +111,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitServiceHelper {
     private static final long DEFAULT_TIMEOUT = 8 * 1000;
     private final String HEADER_SESSION_ID = "x-session-id";
+    private final String HEADER_SESSION_TOKEN = "Authorization";
     private final String HEADER_USER_AGENT = "User-Agent";
     private final String HEADER_INTERNATIONALIZATION_HEADER = "accept-language";
     private final String HEADER_CONTENT_TYPE = "Content-Type";
     private final String HEADER_ACCEPT = "Accept";
     private volatile int mUrlType = -1;
     private volatile String sessionId = null;
+    private volatile String token = null;
     public volatile String BASE_URL = RetrofitService.SCOPE_MASTER;//http://mocha-iot-api.mocha.server.sensoro.com-----http://iot-api
     private RetrofitService retrofitService;
     private final Retrofit.Builder builder;
@@ -123,6 +127,7 @@ public class RetrofitServiceHelper {
     public static RetrofitServiceHelper getInstance() {
         return RetrofitServiceHelperHolder.instance;
     }
+
 
     private static class RetrofitServiceHelperHolder {
         private static final RetrofitServiceHelper instance = new RetrofitServiceHelper();
@@ -161,13 +166,26 @@ public class RetrofitServiceHelper {
     }
 
     /**
+     * 获取当前的sessionToken（为空时从文件中获取）
+     *
+     * @return
+     */
+    public String getSessionToken() {
+        if (TextUtils.isEmpty(token)) {
+            token = PreferencesHelper.getInstance().getSessionToken();
+        }
+        return token;
+    }
+
+    /**
      * 保存sessionID
      *
      * @param sessionId
      */
-    public void saveSessionId(String sessionId) {
+    public void saveSessionId(String sessionId, String token) {
         this.sessionId = sessionId;
-        PreferencesHelper.getInstance().saveSessionId(sessionId);
+        this.token = token;
+        PreferencesHelper.getInstance().saveSessionId(sessionId, token);
     }
 
     /**
@@ -175,6 +193,7 @@ public class RetrofitServiceHelper {
      */
     public void clearLoginDataSessionId() {
         this.sessionId = null;
+        this.token = null;
         PreferencesHelper.getInstance().clearLoginDataSessionId();
     }
 
@@ -290,7 +309,9 @@ public class RetrofitServiceHelper {
 //                        .addHeader(HEADER_ACCEPT, "application/json")
 //                        .addHeader(HEADER_CONTENT_TYPE, "application/json;charset=UTF-8");
                 }
-
+                if (!TextUtils.isEmpty(getSessionToken())) {
+                    builder.header(HEADER_SESSION_TOKEN, "Bearer " + getSessionToken());
+                }
                 if (!TextUtils.isEmpty(getSessionId())) {
                     builder.header(HEADER_SESSION_ID, getSessionId());
                 }
@@ -377,6 +398,7 @@ public class RetrofitServiceHelper {
     public void cancelAllRsp() {
         RxApiManager.getInstance().cancelAll();
         this.sessionId = null;
+        this.token = null;
     }
 
     /**
@@ -1803,23 +1825,82 @@ public class RetrofitServiceHelper {
         return retrofitService.getBaseStationChartDetail(stationsn, type, interval, from, to);
     }
 
-    public Observable<NamePlateListRsp> getNameplateList(Integer pageSize, Integer page, String search, Map<String, String> mapFilter) {
-        return retrofitService.getNameplateList(pageSize, page, search, mapFilter);
+    public Observable<NamePlateListRsp> getNameplateList(Integer pageSize, Integer page, String search, String deviceFlag, String deployFlag) {
+        return retrofitService.getNameplateList(pageSize, page, search, deviceFlag);
     }
 
     public Observable<DeleteNamePlateRsp> deleteNameplate(String nameplateId) {
         return retrofitService.deleteNameplate(nameplateId);
     }
 
-    public Observable<ResponseResult<NamePlateInfo>> getNameplateDetail(String nameplateId) {
-        return retrofitService.getNameplateDetail(nameplateId);
+    public Observable<ResponseResult<NamePlateInfo>> getNameplateDetail(String nameplateId, Boolean isAuthUser) {
+        return retrofitService.getNameplateDetail(nameplateId, isAuthUser);
     }
 
-    public Observable<NameplateBindDeviceRsp> getNameplateBindDevices(Integer pageSize, Integer page, String nameplateId) {
-        return retrofitService.getNameplateBindDevices(nameplateId);
+    public Observable<NameplateBindDeviceRsp> getNameplateBindDevices(Integer page, Integer count, String nameplateId) {
+//        return retrofitService.getNameplateBindDevices(nameplateId);
+        return retrofitService.getNameplateBindDevices(page, count, nameplateId);
+    }
+
+    public Observable<NameplateBindDeviceRsp> getNameplateUnbindDevices(Integer page, Integer count, String nameplateId, String searchText) {
+        return retrofitService.getNameplateUnbindDevices(page, count, nameplateId, searchText);
     }
 
 
+    /**
+     * 解绑铭牌设备
+     *
+     * @param nameplateId
+     * @param sns
+     * @return
+     */
+    public Observable<ResponseResult<Integer>> unbindNameplateDevice(String nameplateId, List<String> sns) {
+        JSONObject jsonObject = new JSONObject();
+        if (sns != null && sns.size() > 0) {
+            try {
+                JSONArray jsonArray = new JSONArray();
+
+                for (int i = 0; i < sns.size(); i++) {
+                    jsonArray.put(sns.get(i));
+                }
+                jsonObject.put("nameplateId", nameplateId);
+                jsonObject.put("snList", jsonArray);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.unbindNameplateDevice(requestBody);
+    }
+
+
+    /**
+     * 更新铭牌基本信息
+     *
+     * @param nameplateId
+     * @param name
+     * @param tags
+     * @return
+     */
+    public Observable<ResponseResult<Integer>> updateNameplate(String nameplateId, String name, List<String> tags) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONArray jsonArray = new JSONArray();
+            if (null != tags && tags.size() > 0) {
+                for (String tag : tags) {
+                    jsonArray.put(tag);
+                }
+            }
+            jsonObject.put("tags", jsonArray);
+            if (!TextUtils.isEmpty(name)) {
+                jsonObject.put("name", name);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.updateNameplate(nameplateId, body);
+    }
 //    public Observable<BaseStationDetailRsp> updateStationLocation(String stationsn) {
 //        return retrofitService.updateStationLocation(stationsn);
 //    }
@@ -1940,6 +2021,62 @@ public class RetrofitServiceHelper {
         }
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
         return retrofitService.getDeployCameraInfo(requestBody);
+    }
+
+    public Observable<DeployNameplateRsp> doUploadDeployNameplate(@NonNull String nameplateId, String name, List<String> tags, ArrayList<String> imgUrls, ArrayList<NamePlateInfo> bindList) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(name)) {
+                jsonObject.put("name", name);
+            }
+
+            if (tags != null && tags.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (String tag : tags) {
+                    jsonArray.put(tag);
+                }
+                jsonObject.put("tags", jsonArray);
+
+            }
+            if (imgUrls != null && imgUrls.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (String imgUrl : imgUrls) {
+                    jsonArray.put(imgUrl);
+                }
+                jsonObject.put("deployPics", jsonArray);
+            }
+            if (bindList != null && bindList.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (NamePlateInfo info : bindList) {
+                    jsonArray.put(info.getSn());
+                }
+                jsonObject.put("snList", jsonArray);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.doUploadDeployNameplate(nameplateId, requestBody);
+    }
+
+    public Observable<ResponseResult<Integer>> doBindDevices(String nameplateId, ArrayList<NamePlateInfo> snList) {
+        JSONObject jsonObject = new JSONObject();
+        if (snList != null && snList.size() > 0) {
+            try {
+                JSONArray jsonArray = new JSONArray();
+
+                for (int i = 0; i < snList.size(); i++) {
+                    jsonArray.put(snList.get(i).getSn());
+                }
+                jsonObject.put("nameplateId", nameplateId);
+                jsonObject.put("snList", jsonArray);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.doBindDevice(requestBody);
     }
 
 }

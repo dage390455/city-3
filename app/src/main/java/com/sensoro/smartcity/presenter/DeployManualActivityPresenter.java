@@ -8,7 +8,7 @@ import android.text.TextUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.analyzer.DeployAnalyzerUtils;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployManualActivityView;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.model.EventData;

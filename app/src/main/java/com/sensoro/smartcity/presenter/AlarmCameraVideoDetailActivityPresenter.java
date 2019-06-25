@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
@@ -31,7 +32,6 @@ import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.utils.FileUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAlarmCameraVideoDetailActivityView;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
@@ -49,9 +49,6 @@ import java.util.Locale;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
-import static com.sensoro.smartcity.constant.Constants.VIDEO_START;
-import static com.sensoro.smartcity.constant.Constants.VIDEO_STOP;
 import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAUSE;
 
 public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlarmCameraVideoDetailActivityView>
@@ -73,7 +70,7 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
-        if (code == NetworkInfo) {
+        if (code == Constants.NetworkInfo) {
             int data = (int) eventData.data;
 
             switch (data) {
@@ -133,7 +130,7 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
 
 
             }
-        } else if (code == VIDEO_START) {
+        } else if (code == Constants.VIDEO_START) {
             getView().setVerOrientationUtil(true);
 
             if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
@@ -144,7 +141,7 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
             } else {
                 getView().doPlayLive(currentPlayUrl);
             }
-        } else if (code == VIDEO_STOP) {
+        } else if (code == Constants.VIDEO_STOP) {
             getView().setVerOrientationUtil(false);
             GSYVideoManager.onPause();
 

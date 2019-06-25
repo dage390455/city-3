@@ -11,10 +11,9 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
-import androidx.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -29,8 +28,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.cameralibrary.listener.ErrorListener;
 import com.sensoro.smartcity.cameralibrary.listener.JCameraListener;
@@ -38,7 +40,6 @@ import com.sensoro.smartcity.cameralibrary.state.CameraMachine;
 import com.sensoro.smartcity.cameralibrary.util.FileUtil;
 import com.sensoro.smartcity.cameralibrary.util.LogUtil;
 import com.sensoro.smartcity.cameralibrary.view.CameraView;
-import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.RecordedButton;
 
 import java.util.Locale;
@@ -128,32 +129,28 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     private RelativeLayout rl_bottom;
 
 
-    private final Handler myHandler = new Handler() {
+    private final Handler myHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-
-                    //录制完成重置
-
+            if (msg.what == 0) {
+                try {
+//录制完成重置
                     if (mProgress > maxDuration) {
                         rb_start.closeButton();
                         rb_start.setIsRecording(false);
                         tv_record_time.setVisibility(View.GONE);
                         tv_retake.setVisibility(View.GONE);
-                        machine.stopRecord(false, mProgress);
 
+                        machine.stopRecord(false, mProgress);
                         startAnim();
                         return;
                     }
                     mProgress = mProgress + 50;
                     updateStatusProgress(mProgress);
                     sendMessageDelayed(myHandler.obtainMessage(0), 50);
-                    break;
-
-                default:
-                    break;
-
+                } catch (Exception e) {
+                    SensoroToast.getInstance().makeText("录制错误，请稍后再试", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     };
@@ -248,37 +245,39 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
             public void onClick(View v) {
 
 //               判断是否大于5秒可以停止，否则不能点击
+                try {
+                    if (mProgress > 5 * 1000) {
+                        machine.stopRecord(false, mProgress);
 
-                if (mProgress > 5 * 1000) {
-                    machine.stopRecord(false, mProgress);
+                        rb_start.closeButton();
+                        rb_start.setIsRecording(false);
+                        tv_record_time.setVisibility(View.GONE);
+                        tv_retake.setVisibility(View.GONE);
+                        startAnim();
+                        myHandler.removeCallbacksAndMessages(null);
 
-                    rb_start.closeButton();
-                    rb_start.setIsRecording(false);
-                    tv_record_time.setVisibility(View.GONE);
-                    tv_retake.setVisibility(View.GONE);
-                    startAnim();
-                    myHandler.removeCallbacksAndMessages(null);
+                        return;
+                    }
 
-                    return;
+                    if (!isRecodding) {
+
+
+                        isRecodding = true;
+
+                        mProgress = 0;
+                        myHandler.removeCallbacksAndMessages(null);
+                        machine.record(mVideoView.getHolder().getSurface(), screenProp);
+
+
+                        rb_start.setIsRecording(true);
+                        tv_record_time.setVisibility(View.VISIBLE);
+                        tv_retake.setVisibility(View.VISIBLE);
+                        myHandler.sendEmptyMessageDelayed(0, 50);
+
+                    }
+                } catch (Exception e) {
+                    SensoroToast.getInstance().makeText("录制错误，请稍后再试", Toast.LENGTH_SHORT).show();
                 }
-
-                if (!isRecodding) {
-
-
-                    isRecodding = true;
-
-                    mProgress = 0;
-                    myHandler.removeCallbacksAndMessages(null);
-                    machine.record(mVideoView.getHolder().getSurface(), screenProp);
-
-
-                    rb_start.setIsRecording(true);
-                    tv_record_time.setVisibility(View.VISIBLE);
-                    tv_retake.setVisibility(View.VISIBLE);
-                    myHandler.sendEmptyMessageDelayed(0, 50);
-
-                }
-
             }
         });
 
@@ -286,8 +285,13 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         iv_finish.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                machine.confirm();
-                isRecodding = false;
+                try {
+                    machine.confirm();
+                } catch (Exception e) {
+                    SensoroToast.getInstance().makeText("录制错误，请稍后再试", Toast.LENGTH_SHORT).show();
+                } finally {
+                    isRecodding = false;
+                }
             }
         });
 
@@ -296,8 +300,11 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         tv_retake.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                retake();
-
+                try {
+                    retake();
+                } catch (Exception e) {
+                    SensoroToast.getInstance().makeText("录制错误，请稍后再试", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -306,8 +313,13 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         iv_back.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                retake();
-                resetAnim();
+                try {
+                    retake();
+                    resetAnim();
+                } catch (Exception e) {
+                    SensoroToast.getInstance().makeText("录制错误，请稍后再试", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -571,9 +583,9 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     public void confirmState(int type) {
         switch (type) {
             case TYPE_VIDEO:
-                stopVideo();    //停止播放
-                mVideoView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-                machine.start(mVideoView.getHolder(), screenProp);
+                stopVideo();
+//                mVideoView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+//                machine.start(mVideoView.getHolder(), screenProp);
                 if (jCameraLisenter != null) {
                     jCameraLisenter.recordSuccess(videoUrl, firstFrame, mProgress);
                 }
@@ -593,42 +605,36 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     public void playVideo(Bitmap firstFrame, final String url) {
         videoUrl = url;
         JCameraView.this.firstFrame = firstFrame;
-        new Thread(new Runnable() {
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-            @Override
-            public void run() {
-                try {
-                    if (mMediaPlayer == null) {
-                        mMediaPlayer = new MediaPlayer();
-                    } else {
-                        mMediaPlayer.reset();
-                    }
-                    mMediaPlayer.setDataSource(url);
-                    mMediaPlayer.setSurface(mVideoView.getHolder().getSurface());
-                    mMediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT);
-                    mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    mMediaPlayer.setOnVideoSizeChangedListener(new MediaPlayer
-                            .OnVideoSizeChangedListener() {
-                        @Override
-                        public void
-                        onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-                            updateVideoViewSize(mMediaPlayer.getVideoWidth(), mMediaPlayer
-                                    .getVideoHeight());
-                        }
-                    });
-                    mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mp) {
-                            mMediaPlayer.start();
-                        }
-                    });
-                    mMediaPlayer.setLooping(true);
-                    mMediaPlayer.prepare();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        try {
+            if (mMediaPlayer == null) {
+                mMediaPlayer = new MediaPlayer();
+            } else {
+                mMediaPlayer.reset();
             }
-        }).start();
+            mMediaPlayer.setDataSource(url);
+            mMediaPlayer.setSurface(mVideoView.getHolder().getSurface());
+            mMediaPlayer.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT);
+            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mMediaPlayer.setOnVideoSizeChangedListener(new MediaPlayer
+                    .OnVideoSizeChangedListener() {
+                @Override
+                public void
+                onVideoSizeChanged(MediaPlayer mp, int width, int height) {
+                    updateVideoViewSize(mMediaPlayer.getVideoWidth(), mMediaPlayer
+                            .getVideoHeight());
+                }
+            });
+            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mMediaPlayer.start();
+                }
+            });
+            mMediaPlayer.setLooping(true);
+            mMediaPlayer.prepare();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

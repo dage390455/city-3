@@ -15,7 +15,7 @@ import com.baidu.ocr.ui.camera.CameraActivity;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.ContractServiceActivity;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractIndexActivityView;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.BusinessLicenseData;
@@ -31,8 +31,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 
-public class ContractIndexActivityPresenter extends BasePresenter<IContractIndexActivityView> implements Constants,
-        IOnCreate {
+public class ContractIndexActivityPresenter extends BasePresenter<IContractIndexActivityView> implements IOnCreate {
     private Activity mContext;
 
     @Override
@@ -52,7 +51,7 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
         intent.putExtra(CameraActivity.KEY_CONTENT_TYPE,
                 CameraActivity.CONTENT_TYPE_GENERAL);
         if (isAttachedView()){
-            getView().startACForResult(intent, REQUEST_CODE_BUSINESS_LICENSE);
+            getView().startACForResult(intent, Constants.REQUEST_CODE_BUSINESS_LICENSE);
         }
     }
 
@@ -66,13 +65,13 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
                 absolutePath);
         intent.putExtra(CameraActivity.KEY_CONTENT_TYPE, CameraActivity.CONTENT_TYPE_ID_CARD_FRONT);
         if (isAttachedView()){
-            getView().startACForResult(intent, REQUEST_CODE_CAMERA);
+            getView().startACForResult(intent, Constants.REQUEST_CODE_CAMERA);
         }
     }
 
     public void startManual() {
         Intent intent = new Intent(mContext, ContractServiceActivity.class);
-        intent.putExtra(EXTRA_CONTRACT_TYPE, 3);
+        intent.putExtra(Constants.EXTRA_CONTRACT_TYPE, 3);
         if (isAttachedView()){
             getView().startAC(intent);
         }
@@ -81,7 +80,7 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
 
     public void handActivityResult(int requestCode, int resultCode, Intent data) {
         // 识别成功回调，营业执照识别
-        if (requestCode == REQUEST_CODE_BUSINESS_LICENSE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == Constants.REQUEST_CODE_BUSINESS_LICENSE && resultCode == Activity.RESULT_OK) {
             if (isAttachedView()){
                 getView().showProgressDialog();
             }
@@ -167,7 +166,7 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
             }
 
         }
-        if (requestCode == REQUEST_CODE_CAMERA && resultCode == Activity.RESULT_OK) {
+        if (requestCode == Constants.REQUEST_CODE_CAMERA && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 if (isAttachedView()){
                     getView().showProgressDialog();
@@ -262,7 +261,7 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
                                        String 证件编号) {
         Intent intent = new Intent();
         intent.setClass(mContext, ContractServiceActivity.class);
-        intent.putExtra(EXTRA_CONTRACT_TYPE, 1);
+        intent.putExtra(Constants.EXTRA_CONTRACT_TYPE, 1);
         intent.putExtra("legal_person", 法人);
         intent.putExtra("company_name", 单位名称);
         intent.putExtra("credit_code", 社会信用代码);
@@ -275,7 +274,7 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
     private void startServiceByNumber(String personName, String sex, String idNumber, String address) {
         Intent intent = new Intent();
         intent.setClass(mContext, ContractServiceActivity.class);
-        intent.putExtra(EXTRA_CONTRACT_TYPE, 2);
+        intent.putExtra(Constants.EXTRA_CONTRACT_TYPE, 2);
         if (TextUtils.isEmpty(personName)) {
             intent.putExtra("person_name", "无");
         } else {
@@ -313,7 +312,7 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
         switch (code){
-            case EVENT_DATA_FINISH_CODE:
+            case Constants.EVENT_DATA_FINISH_CODE:
                 getView().finishAc();
                 break;
         }

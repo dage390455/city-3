@@ -19,10 +19,10 @@ import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISignalCheckActivityView;
 import com.sensoro.common.iwidget.IOnStart;
-import com.sensoro.smartcity.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.SignalData;
 import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.common.utils.DateUtil;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActivityView>
-        implements Constants, Runnable, BLEDeviceListener<BLEDevice>, IOnStart {
+        implements Runnable, BLEDeviceListener<BLEDevice>, IOnStart {
     private Activity mActivity;
     private Handler mHandler;
     private boolean bleHasOpen;
@@ -50,7 +50,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
-        deployAnalyzerModel = (DeployAnalyzerModel) mActivity.getIntent().getSerializableExtra(EXTRA_DEPLOY_ANALYZER_MODEL);
+        deployAnalyzerModel = (DeployAnalyzerModel) mActivity.getIntent().getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
         mHandler = new Handler(Looper.getMainLooper());
         mHandler.post(this);
         init();
@@ -63,23 +63,23 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         String statusText;
         int textColor;
         switch (deployAnalyzerModel.status) {
-            case SENSOR_STATUS_ALARM:
+            case Constants.SENSOR_STATUS_ALARM:
                 textColor = R.color.c_f34a4a;
                 statusText = mActivity.getString(R.string.main_page_warn);
                 break;
-            case SENSOR_STATUS_NORMAL:
+            case Constants.SENSOR_STATUS_NORMAL:
                 textColor = R.color.c_1dbb99;
                 statusText = mActivity.getString(R.string.normal);
                 break;
-            case SENSOR_STATUS_LOST:
+            case Constants.SENSOR_STATUS_LOST:
                 textColor = R.color.c_5d5d5d;
                 statusText = mActivity.getString(R.string.status_lost);
                 break;
-            case SENSOR_STATUS_INACTIVE:
+            case Constants.SENSOR_STATUS_INACTIVE:
                 textColor = R.color.c_b6b6b6;
                 statusText = mActivity.getString(R.string.status_inactive);
                 break;
-            case SENSOR_STATUS_MALFUNCTION:
+            case Constants.SENSOR_STATUS_MALFUNCTION:
                 textColor = R.color.c_fdc83b;
                 statusText = mActivity.getString(R.string.status_malfunction);
                 break;

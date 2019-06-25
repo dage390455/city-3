@@ -3,13 +3,13 @@ package com.sensoro.nameplate.IMainViews;
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
-import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.server.bean.NamePlateInfo;
+import com.sensoro.nameplate.model.FilterModel;
 
 import java.util.List;
 
 public interface INameplateListActivityView extends IToast, IProgressDialog, IActivityIntent {
-    void updateDeviceCameraAdapter(List<NamePlateInfo> data);
+    void updateNameplateAdapter(List<NamePlateInfo> data);
 
     void onPullRefreshComplete();
 
@@ -27,13 +27,8 @@ public interface INameplateListActivityView extends IToast, IProgressDialog, IAc
 
     void setSearchButtonTextVisible(boolean isVisible);
 
-    void showCameraListFilterPopupWindow(List<CameraFilterModel> data);
-
-    void dismissCameraListFilterPopupWindow();
-
-    void updateCameraListFilterPopupWindowStatusList(List<CameraFilterModel> list);
-
-    void setCameraListFilterPopupWindowSelectState(boolean hasSelect);
 
     void updateDeleteNamePlateStatus(int pos);
+
+    void updateSelectDeviceStatusList(List<FilterModel> list);
 }

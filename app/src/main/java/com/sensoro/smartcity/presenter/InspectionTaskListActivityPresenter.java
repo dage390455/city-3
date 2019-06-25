@@ -6,7 +6,7 @@ import android.content.Intent;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.InspectionTaskDetailActivity;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionTaskListActivityView;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.model.EventData;
@@ -26,7 +26,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class InspectionTaskListActivityPresenter extends BasePresenter<IInspectionTaskListActivityView>
-        implements Constants, IOnCreate {
+        implements IOnCreate {
     private Context mContext;
     private int cur_page;
     private List<InspectionIndexTaskInfo> tempTasks = new ArrayList<>();
@@ -38,12 +38,12 @@ public class InspectionTaskListActivityPresenter extends BasePresenter<IInspecti
     public void initData(Context context) {
         mContext = context;
         onCreate();
-        refreshData(DIRECTION_DOWN);
+        refreshData(Constants.DIRECTION_DOWN);
     }
 
     public void refreshData(int direction) {
         getView().showProgressDialog();
-        if (direction == DIRECTION_DOWN) {
+        if (direction == Constants.DIRECTION_DOWN) {
             cur_page = 0;
             RetrofitServiceHelper.getInstance().getInspectTaskList(null, tempFinish, 0, 20, tempStartTime, tempFinishTime).subscribeOn(Schedulers
                     .io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskModelRsp>(this) {
@@ -106,16 +106,16 @@ public class InspectionTaskListActivityPresenter extends BasePresenter<IInspecti
         //上报异常结果成功
         switch (code) {
                 //刷新上报异常结果
-            case EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE:
+            case Constants.EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE:
                 //正常上报结果
-            case EVENT_DATA_INSPECTION_UPLOAD_NORMAL_CODE:
+            case Constants.EVENT_DATA_INSPECTION_UPLOAD_NORMAL_CODE:
                 //设备更换结果
-            case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
+            case Constants.EVENT_DATA_DEPLOY_RESULT_CONTINUE:
                 //巡检任务状态改变
-            case EVENT_DATA_INSPECTION_TASK_STATUS_CHANGE:
-                refreshData(DIRECTION_DOWN);
+            case Constants.EVENT_DATA_INSPECTION_TASK_STATUS_CHANGE:
+                refreshData(Constants.DIRECTION_DOWN);
                 break;
-            case EVENT_DATA_DEPLOY_RESULT_FINISH:
+            case Constants.EVENT_DATA_DEPLOY_RESULT_FINISH:
                 getView().finishAc();
                 break;
         }
@@ -129,7 +129,7 @@ public class InspectionTaskListActivityPresenter extends BasePresenter<IInspecti
     public void doItemClick(InspectionIndexTaskInfo task) {
 
         Intent intent = new Intent(mContext, InspectionTaskDetailActivity.class);
-        intent.putExtra(EXTRA_INSPECTION_INDEX_TASK_INFO, task);
+        intent.putExtra(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO, task);
         getView().startAC(intent);
     }
 
@@ -137,21 +137,21 @@ public class InspectionTaskListActivityPresenter extends BasePresenter<IInspecti
         tempFinish = 0;
         tempStartTime = null;
         tempFinishTime = null;
-        refreshData(DIRECTION_DOWN);
+        refreshData(Constants.DIRECTION_DOWN);
     }
 
     public void doDone() {
         tempFinish = 1;
         tempStartTime = null;
         tempFinishTime = null;
-        refreshData(DIRECTION_DOWN);
+        refreshData(Constants.DIRECTION_DOWN);
     }
 
     public void requestDataByDate(long startTime, long endTime) {
         tempStartTime = startTime;
         tempFinishTime = endTime;
         tempFinish = 1;
-        refreshData(DIRECTION_DOWN);
+        refreshData(Constants.DIRECTION_DOWN);
     }
 
     @Override

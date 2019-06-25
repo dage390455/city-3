@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionInstructionActivityView;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
@@ -22,14 +22,13 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class InspectionInstructionActivityPresenter extends BasePresenter<IInspectionInstructionActivityView>
-implements Constants{
+public class InspectionInstructionActivityPresenter extends BasePresenter<IInspectionInstructionActivityView> {
     private Activity mActivity;
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
-        ArrayList<String> deviceTypes = mActivity.getIntent().getStringArrayListExtra(EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE);
+        ArrayList<String> deviceTypes = mActivity.getIntent().getStringArrayListExtra(Constants.EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE);
         if (deviceTypes != null && deviceTypes.size()>0) {
             getView().updateRcTag(deviceTypes);
             requestContentData(deviceTypes.get(0));

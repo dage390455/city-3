@@ -604,10 +604,10 @@ public class AppUtils {
     /**
      * 合同选择场地性质dialog
      */
-    public static SelectDialog showDialog(Activity activity, SelectDialog.SelectDialogListener listener, List<String> items) {
+    public static SelectDialog showDialog(Activity activity, SelectDialog.SelectDialogListener listener, List<String> items, String title) {
         SelectDialog dialog = new SelectDialog(activity, R.style
-                .transparentFrameWindowStyle,
-                listener, items);
+                .select_dialog_bg,
+                listener, items, title);
         if (!activity.isFinishing()) {
             dialog.show();
         }

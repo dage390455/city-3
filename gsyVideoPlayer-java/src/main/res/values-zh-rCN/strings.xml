@@ -1,13 +1,8 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-
-
     <string name="play">"播放"</string>
     <string name="retry">"重试"</string>
-
     <string name="online_tip">当前手机无网络，请检查网络配置</string>
     <string name="retry_play">"视频加载失败，请重试"</string>
-
-
     <string name="mobile_network">你正在使用移动网络，将会消耗你的流量</string>
     <string name="tips_not_wifi">你正在使用移动网络，将会消耗你的流量</string>
     <string name="tips_not_wifi_confirm">继续播放</string>
@@ -20,6 +15,5 @@
     <string name="gsy_video">"录像"</string>
     <string name="live">"直播"</string>
     <string name="cameroffline">"摄像机已离线"</string>
-
     <string name="no_vido">视频已过期，服务器仅保留7天内视频</string>
 </resources>

@@ -32,7 +32,7 @@ import com.sensoro.smartcity.widget.imagepicker.view.SystemBarTintManager;
 
 import java.io.File;
 
-import static com.sensoro.smartcity.constant.Constants.RESULT_CODE_RECORD;
+import static com.sensoro.common.constant.Constants.RESULT_CODE_RECORD;
 
 /**
  * Created by zhaoshuang on 17/2/24.

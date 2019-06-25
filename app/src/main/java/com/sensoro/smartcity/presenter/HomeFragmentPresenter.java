@@ -35,7 +35,7 @@ import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.activity.SearchMonitorActivity;
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IHomeFragmentView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.HomeTopModel;
@@ -63,7 +63,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> implements Constants, IOnCreate
+public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> implements IOnCreate
         , DialogDisplayStatusListener {
     private Activity mContext;
     private final Handler mHandler = new Handler();
@@ -414,14 +414,14 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             DeviceInfo deviceInfo = homeTopModel.innerAdapter.getData().get(position);
             Intent intent = new Intent();
             intent.setClass(mContext, MonitorPointElectricDetailActivity.class);
-            intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
-            intent.putExtra(EXTRA_SENSOR_NAME, deviceInfo.getName());
-            intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
-            intent.putExtra(EXTRA_SENSOR_STATUS, deviceInfo.getStatus());
-            intent.putExtra(EXTRA_SENSOR_TIME, deviceInfo.getUpdatedTime());
+            intent.putExtra(Constants.EXTRA_DEVICE_INFO, deviceInfo);
+            intent.putExtra(Constants.EXTRA_SENSOR_NAME, deviceInfo.getName());
+            intent.putExtra(Constants.EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
+            intent.putExtra(Constants.EXTRA_SENSOR_STATUS, deviceInfo.getStatus());
+            intent.putExtra(Constants.EXTRA_SENSOR_TIME, deviceInfo.getUpdatedTime());
 //            Double[] lonlat = (Double[]) ;
 
-            intent.putExtra(EXTRA_SENSOR_LOCATION, deviceInfo.getLonlat().toArray());
+            intent.putExtra(Constants.EXTRA_SENSOR_LOCATION, deviceInfo.getLonlat().toArray());
             getView().startAC(intent);
         } catch (Exception e) {
             e.printStackTrace();
@@ -445,71 +445,86 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     //子线程处理
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(DeviceInfo deviceInfo) {
+        if (needHandleDevicePush(deviceInfo)) {
+            needRefreshContent = true;
+        }
+    }
+
+    //子线程处理
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(AlarmDeviceCountsBean alarmDeviceCountsBean) {
+        int currentAlarmCount = alarmDeviceCountsBean.get_$0();
+        int normalCount = alarmDeviceCountsBean.get_$1();
+        int lostCount = alarmDeviceCountsBean.get_$2();
+        int inactiveCount = alarmDeviceCountsBean.get_$3();
+        int malfunctionCount = alarmDeviceCountsBean.get_$4();
+        //
+        if (tempAlarmCount == 0 && currentAlarmCount > 0) {
+            needAlarmPlay = true;
+        }
+        try {
+            LogUtils.loge("malfunctionCount = " + malfunctionCount);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        needShowAlarmWindow = currentAlarmCount > tempAlarmCount;
+        try {
+            LogUtils.loge("EVENT_DATA_SOCKET_DATA_COUNT-->> tempAlarmCount = " + tempAlarmCount + ",currentAlarmCount = " + currentAlarmCount + ",mCurrentHomeTopModel.type = " + mCurrentHomeTopModel.type);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        tempAlarmCount = currentAlarmCount;
+        //
+        mHomeTopModels.clear();
+        if (currentAlarmCount > 0) {
+            alarmModel.value = tempAlarmCount;
+            mHomeTopModels.add(alarmModel);
+        }
+        if (malfunctionCount > 0) {
+            malfunctionModel.value = malfunctionCount;
+            mHomeTopModels.add(malfunctionModel);
+        }
+        if (normalCount > 0) {
+            normalModel.value = normalCount;
+            mHomeTopModels.add(normalModel);
+        }
+        if (lostCount > 0) {
+            lostModel.value = lostCount;
+            mHomeTopModels.add(lostModel);
+        }
+        if (inactiveCount > 0) {
+            inactiveModel.value = inactiveCount;
+            mHomeTopModels.add(inactiveModel);
+        }
+        totalMonitorPoint = currentAlarmCount + normalCount + lostCount + inactiveCount + malfunctionCount;
+        needRefreshHeader = true;
+    }
+
+    //子线程处理
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(int code) {
+        if (Constants.EVENT_DATA_DEVICE_SOCKET_FLUSH == code) {
+            //TODO
+            needFreshAll = true;
+            try {
+                LogUtils.loge("EVENT_DATA_DEVICE_SOCKET_FLUSH --->> 添加、删除、迁移设备");
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        }
+    }
+
+    //子线程处理
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventData eventData) {
         //后台线程处理消息
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
-            case EVENT_DATA_DEPLOY_RESULT_FINISH:
+            case Constants.EVENT_DATA_DEPLOY_RESULT_FINISH:
                 break;
-            case EVENT_DATA_SOCKET_DATA_INFO:
-                if (data instanceof DeviceInfo) {
-                    if (needHandleDevicePush((DeviceInfo) data)) {
-                        needRefreshContent = true;
-                    }
-                }
-                break;
-            case EVENT_DATA_SOCKET_DATA_COUNT:
-                if (data instanceof AlarmDeviceCountsBean) {
-                    AlarmDeviceCountsBean alarmDeviceCountsBean = (AlarmDeviceCountsBean) data;
-                    int currentAlarmCount = alarmDeviceCountsBean.get_$0();
-                    int normalCount = alarmDeviceCountsBean.get_$1();
-                    int lostCount = alarmDeviceCountsBean.get_$2();
-                    int inactiveCount = alarmDeviceCountsBean.get_$3();
-                    int malfunctionCount = alarmDeviceCountsBean.get_$4();
-                    //
-                    if (tempAlarmCount == 0 && currentAlarmCount > 0) {
-                        needAlarmPlay = true;
-                    }
-                    try {
-                        LogUtils.loge("malfunctionCount = " + malfunctionCount);
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                    needShowAlarmWindow = currentAlarmCount > tempAlarmCount;
-                    try {
-                        LogUtils.loge("EVENT_DATA_SOCKET_DATA_COUNT-->> tempAlarmCount = " + tempAlarmCount + ",currentAlarmCount = " + currentAlarmCount + ",mCurrentHomeTopModel.type = " + mCurrentHomeTopModel.type);
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                    tempAlarmCount = currentAlarmCount;
-                    //
-                    mHomeTopModels.clear();
-                    if (currentAlarmCount > 0) {
-                        alarmModel.value = tempAlarmCount;
-                        mHomeTopModels.add(alarmModel);
-                    }
-                    if (malfunctionCount > 0) {
-                        malfunctionModel.value = malfunctionCount;
-                        mHomeTopModels.add(malfunctionModel);
-                    }
-                    if (normalCount > 0) {
-                        normalModel.value = normalCount;
-                        mHomeTopModels.add(normalModel);
-                    }
-                    if (lostCount > 0) {
-                        lostModel.value = lostCount;
-                        mHomeTopModels.add(lostModel);
-                    }
-                    if (inactiveCount > 0) {
-                        inactiveModel.value = inactiveCount;
-                        mHomeTopModels.add(inactiveModel);
-                    }
-                    totalMonitorPoint = currentAlarmCount + normalCount + lostCount + inactiveCount + malfunctionCount;
-                    needRefreshHeader = true;
-                }
-                break;
-            case EVENT_DATA_SEARCH_MERCHANT:
+            case Constants.EVENT_DATA_SEARCH_MERCHANT:
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -520,16 +535,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     }
                 });
                 break;
-            case EVENT_DATA_DEVICE_SOCKET_FLUSH:
-                //TODO
-                needFreshAll = true;
-                try {
-                    LogUtils.loge("EVENT_DATA_DEVICE_SOCKET_FLUSH --->> 添加、删除、迁移设备");
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
-                }
-                break;
-            case EVENT_DATA_LOCK_SCREEN_ON:
+            case Constants.EVENT_DATA_LOCK_SCREEN_ON:
                 //TODO 暂时不加
                 if (data instanceof Boolean) {
 //                    needFreshAll = (boolean) data;
@@ -540,7 +546,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     throwable.printStackTrace();
                 }
                 break;
-            case EVENT_DATA_NET_WORK_CHANGE:
+            case Constants.EVENT_DATA_NET_WORK_CHANGE:
                 //TODO 暂时不加
 //                needFreshAll = true;
                 try {
@@ -586,7 +592,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 getView().showProgressDialog();
             }
             switch (direction) {
-                case DIRECTION_DOWN:
+                case Constants.DIRECTION_DOWN:
                     page = 1;
                     RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, homeTopModel.type, null).subscribeOn(Schedulers
                             .io()).doOnNext(new Consumer<DeviceInfoListRsp>() {
@@ -612,7 +618,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                         }
                     });
                     break;
-                case DIRECTION_UP:
+                case Constants.DIRECTION_UP:
                     page++;
                     RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, homeTopModel.type, null).subscribeOn(Schedulers
                             .io()).doOnNext(new Consumer<DeviceInfoListRsp>() {
@@ -671,7 +677,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             for (int i = 0; i < alarmModel.mDeviceList.size(); i++) {
                 DeviceInfo currentDeviceInfo = alarmModel.mDeviceList.get(i);
                 if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
-                    if (status == SENSOR_STATUS_ALARM) {
+                    if (status == Constants.SENSOR_STATUS_ALARM) {
                         currentDeviceInfo.cloneSocketData(newDeviceInfo);
                     } else {
                         alarmModel.mDeviceList.remove(i);
@@ -685,7 +691,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             for (int i = 0; i < malfunctionModel.mDeviceList.size(); i++) {
                 DeviceInfo currentDeviceInfo = malfunctionModel.mDeviceList.get(i);
                 if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
-                    if (status == SENSOR_STATUS_MALFUNCTION) {
+                    if (status == Constants.SENSOR_STATUS_MALFUNCTION) {
                         currentDeviceInfo.cloneSocketData(newDeviceInfo);
                     } else {
                         malfunctionModel.mDeviceList.remove(i);
@@ -699,7 +705,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             for (int i = 0; i < normalModel.mDeviceList.size(); i++) {
                 DeviceInfo currentDeviceInfo = normalModel.mDeviceList.get(i);
                 if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
-                    if (status == SENSOR_STATUS_NORMAL) {
+                    if (status == Constants.SENSOR_STATUS_NORMAL) {
                         currentDeviceInfo.cloneSocketData(newDeviceInfo);
                     } else {
                         normalModel.mDeviceList.remove(i);
@@ -713,7 +719,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             for (int i = 0; i < lostModel.mDeviceList.size(); i++) {
                 DeviceInfo currentDeviceInfo = lostModel.mDeviceList.get(i);
                 if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
-                    if (status == SENSOR_STATUS_LOST) {
+                    if (status == Constants.SENSOR_STATUS_LOST) {
                         currentDeviceInfo.cloneSocketData(newDeviceInfo);
                     } else {
                         lostModel.mDeviceList.remove(i);
@@ -727,7 +733,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             for (int i = 0; i < inactiveModel.mDeviceList.size(); i++) {
                 DeviceInfo currentDeviceInfo = inactiveModel.mDeviceList.get(i);
                 if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
-                    if (status == SENSOR_STATUS_INACTIVE) {
+                    if (status == Constants.SENSOR_STATUS_INACTIVE) {
                         currentDeviceInfo.cloneSocketData(newDeviceInfo);
                     } else {
                         inactiveModel.mDeviceList.remove(i);
@@ -742,7 +748,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     private void addSocketData(DeviceInfo newDeviceInfo) {
         int status = newDeviceInfo.getStatus();
         switch (status) {
-            case SENSOR_STATUS_ALARM:
+            case Constants.SENSOR_STATUS_ALARM:
                 if (!homeTopModelCacheFresh[0]) {
                     synchronized (alarmModel.mDeviceList) {
                         alarmModel.mDeviceList.add(0, newDeviceInfo);
@@ -750,7 +756,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     }
                 }
                 break;
-            case SENSOR_STATUS_NORMAL:
+            case Constants.SENSOR_STATUS_NORMAL:
                 if (!homeTopModelCacheFresh[1]) {
                     synchronized (normalModel.mDeviceList) {
                         normalModel.mDeviceList.add(0, newDeviceInfo);
@@ -758,7 +764,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     }
                 }
                 break;
-            case SENSOR_STATUS_LOST:
+            case Constants.SENSOR_STATUS_LOST:
                 if (!homeTopModelCacheFresh[2]) {
                     synchronized (lostModel.mDeviceList) {
                         lostModel.mDeviceList.add(0, newDeviceInfo);
@@ -766,7 +772,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     }
                 }
                 break;
-            case SENSOR_STATUS_INACTIVE:
+            case Constants.SENSOR_STATUS_INACTIVE:
                 if (!homeTopModelCacheFresh[3]) {
                     synchronized (inactiveModel.mDeviceList) {
                         inactiveModel.mDeviceList.add(0, newDeviceInfo);
@@ -774,7 +780,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     }
                 }
                 break;
-            case SENSOR_STATUS_MALFUNCTION:
+            case Constants.SENSOR_STATUS_MALFUNCTION:
                 if (!homeTopModelCacheFresh[4]) {
                     synchronized (inactiveModel.mDeviceList) {
                         malfunctionModel.mDeviceList.add(0, newDeviceInfo);
@@ -855,7 +861,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         if (PreferencesHelper.getInstance().getUserData() != null) {
             if (PreferencesHelper.getInstance().getUserData().hasScanLogin) {
                 Intent intent = new Intent(mContext, ScanActivity.class);
-                intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_LOGIN);
+                intent.putExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_LOGIN);
                 getView().startAC(intent);
                 return;
             }
@@ -952,7 +958,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     public void doScanDeploy() {
         Intent intent = new Intent(mContext, ScanActivity.class);
-        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
+        intent.putExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
         getView().startAC(intent);
     }
 

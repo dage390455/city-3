@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -39,10 +40,10 @@ import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeviceCameraContentAdapter;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
 import com.sensoro.smartcity.presenter.CameraListActivityPresenter;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.widget.popup.CameraListFilterPopupWindowTest;
 
 import java.util.List;
@@ -194,6 +195,22 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
 
                     return true;
                 }
+                return false;
+            }
+        });
+
+        cameraListEtSearch.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if (mCameraListFilterPopupWindow.isShowing()) {
+
+                    mCameraListFilterPopupWindow.dismiss();
+
+                }
+                cameraListEtSearch.requestFocus();
+                cameraListEtSearch.setCursorVisible(true);
+                setSearchHistoryVisible(true);
                 return false;
             }
         });
@@ -510,14 +527,7 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
                 break;
             case R.id.camera_list_et_search:
 
-                if (mCameraListFilterPopupWindow.isShowing()) {
 
-                    mCameraListFilterPopupWindow.dismiss();
-
-                }
-                cameraListEtSearch.requestFocus();
-                cameraListEtSearch.setCursorVisible(true);
-                setSearchHistoryVisible(true);
 //                forceOpenSoftKeyboard();
                 break;
             case R.id.camera_list_iv_search_clear:

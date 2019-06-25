@@ -15,10 +15,21 @@
         android:padding="20dp">
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            android:text="@string/nameplate_sn"
+            android:textColor="@color/c_a6a6a6"
+            android:textSize="14dp" />
+
+        <TextView
+            android:id="@+id/tv_nameplate_id_ac_deploy_nameplate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="铭牌编号"
+            android:ellipsize="middle"
+            android:singleLine="true"
             android:textColor="@color/c_a6a6a6"
             android:textSize="14dp" />
 
@@ -26,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="二维码铭牌"
+            android:text="@string/qr_code_nameplate"
             android:textColor="@color/c_a6a6a6"
             android:textSize="14dp" />
     </LinearLayout>
@@ -73,7 +84,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@null"
-                android:src="@drawable/arrows_right" />
+                android:src="@mipmap/arrows_right" />
 
         </LinearLayout>
 
@@ -104,12 +115,11 @@
 
             <RelativeLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                android:gravity="center_vertical"
-                android:layout_height="wrap_content"
-                >
+                android:layout_weight="1"
+                android:gravity="center_vertical">
 
                 <TextView
                     android:id="@+id/tv_tag_option_ac_deploy_nameplate"
@@ -125,7 +135,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
             </RelativeLayout>
 
@@ -133,7 +143,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@null"
-                android:src="@drawable/arrows_right" />
+                android:src="@mipmap/arrows_right" />
 
         </LinearLayout>
 
@@ -178,7 +188,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@null"
-                android:src="@drawable/arrows_right" />
+                android:src="@mipmap/arrows_right" />
 
         </LinearLayout>
     </LinearLayout>
@@ -200,7 +210,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/association_sensor"
+            android:drawableStart="@mipmap/association_sensor"
             android:drawablePadding="8dp"
             android:text="@string/associated_sensor"
             android:textColor="@color/c_252525"
@@ -222,7 +232,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
-            android:src="@drawable/arrows_right" />
+            android:src="@mipmap/arrows_right" />
 
     </LinearLayout>
 
@@ -236,10 +246,12 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/shape_bg_corner_4_dfdf_shadow"
+        android:clickable="false"
+        android:enabled="false"
         android:gravity="center"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:text="@string/inspection_uploade_exception_uploade"
+        android:text="@string/deploy_device_detail_upload"
         android:textColor="@color/white"
         android:textSize="16dp" />
 

@@ -31,12 +31,13 @@ import com.sensoro.smartcity.activity.InspectionActivity;
 import com.sensoro.smartcity.activity.InspectionExceptionDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.callback.BleObserver;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionTaskActivityView;
 import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
 import com.sensoro.smartcity.temp.TestUpdateActivity;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
+import com.sensoro.smartcity.util.CityAppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -52,7 +53,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTaskActivityView> implements
-        BLEDeviceListener<BLEDevice>, IOnCreate, IOnStart, Constants, Runnable {
+        BLEDeviceListener<BLEDevice>, IOnCreate, IOnStart, Runnable {
     private Activity mContext;
     private String tempSearch;
     private String tempDeviceType = null;
@@ -73,9 +74,9 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         mContext = (Activity) context;
         onCreate();
         //TODO 筛选类型
-        mTaskInfo = (InspectionIndexTaskInfo) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_INDEX_TASK_INFO);
+        mTaskInfo = (InspectionIndexTaskInfo) mContext.getIntent().getSerializableExtra(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO);
         if (mTaskInfo != null) {
-            requestSearchData(DIRECTION_DOWN, null);
+            requestSearchData(Constants.DIRECTION_DOWN, null);
             mHandler.post(this);
         }
         doInspectionType(false);
@@ -124,7 +125,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                 intent.setClass(mContext, InspectionExceptionDetailActivity.class);
                 break;
         }
-        intent.putExtra(EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL, deviceDetail);
+        intent.putExtra(Constants.EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL, deviceDetail);
         getView().startAC(intent);
     }
 
@@ -164,14 +165,14 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         Object data = eventData.data;
         switch (code) {
             //TODO 刷新上报异常结果
-            case EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE:
+            case Constants.EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE:
                 //TODO 正常上报结果
-            case EVENT_DATA_INSPECTION_UPLOAD_NORMAL_CODE:
+            case Constants.EVENT_DATA_INSPECTION_UPLOAD_NORMAL_CODE:
                 //TODO 设备更换结果
-            case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
-                requestSearchData(DIRECTION_DOWN, tempSearch);
+            case Constants.EVENT_DATA_DEPLOY_RESULT_CONTINUE:
+                requestSearchData(Constants.DIRECTION_DOWN, tempSearch);
                 break;
-            case EVENT_DATA_DEPLOY_RESULT_FINISH:
+            case Constants.EVENT_DATA_DEPLOY_RESULT_FINISH:
                 getView().finishAc();
                 break;
 
@@ -296,7 +297,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         }
         canFreshBle = false;
         switch (direction) {
-            case DIRECTION_DOWN:
+            case Constants.DIRECTION_DOWN:
                 cur_page = 0;
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getInspectionDeviceList(mTaskInfo.getId(), tempSearch, null, finish, tempDeviceType, cur_page * maxPageCount, maxPageCount).
@@ -319,7 +320,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                 });
                 doInspectionStatus(false);
                 break;
-            case DIRECTION_UP:
+            case Constants.DIRECTION_UP:
                 cur_page++;
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getInspectionDeviceList(mTaskInfo.getId(), tempSearch, null, finish, tempDeviceType, cur_page * maxPageCount, maxPageCount).
@@ -355,11 +356,11 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
 
     public void doCancelSearch() {
         tempSearch = null;
-        requestSearchData(DIRECTION_DOWN, null);
+        requestSearchData(Constants.DIRECTION_DOWN, null);
     }
 
     private void freshUI(int direction, InspectionTaskDeviceDetailRsp inspectionTaskDeviceDetailRsp) {
-        if (direction == DIRECTION_DOWN) {
+        if (direction == Constants.DIRECTION_DOWN) {
             mDevices.clear();
         }
 //        handleDeviceAlarmLogs(deviceAlarmLogRsp);
@@ -429,7 +430,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
 
     public void doSelectStatusDevice(InspectionStatusCountModel item, String searchText) {
         this.finish = item.status;
-        requestSearchData(DIRECTION_DOWN, searchText);
+        requestSearchData(Constants.DIRECTION_DOWN, searchText);
     }
 
     @Override
@@ -475,7 +476,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         List<Double> lonlat = deviceDetail.getLonlat();
         if (lonlat != null && lonlat.size() > 1) {
             LatLng destPosition = new LatLng(lonlat.get(1), lonlat.get(0));
-            if (AppUtils.doNavigation(mContext, destPosition)) {
+            if (CityAppUtils.doNavigation(mContext, destPosition)) {
                 return;
             }
         }
@@ -494,8 +495,8 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
 
     public void doInspectionScan() {
         Intent intent = new Intent(mContext, ScanActivity.class);
-        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_INSPECTION);
-        intent.putExtra(EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
+        intent.putExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_INSPECTION);
+        intent.putExtra(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
         getView().startAC(intent);
     }
 
@@ -516,7 +517,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         } else {
             tempDeviceType = stringBuilder.toString();
         }
-        requestSearchData(DIRECTION_DOWN, searchText);
+        requestSearchData(Constants.DIRECTION_DOWN, searchText);
     }
 
     public void clearSearchHistory() {

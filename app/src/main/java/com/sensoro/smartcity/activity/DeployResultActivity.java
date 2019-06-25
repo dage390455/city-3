@@ -11,12 +11,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sensoro.smartcity.R;
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IDeployResultActivityView;
 import com.sensoro.smartcity.presenter.DeployResultActivityPresenter;
-import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.common.utils.AppUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,6 +27,7 @@ import butterknife.OnClick;
 /**
  * Created by sensoro on 17/8/4.
  */
+@Route(path = ARouterConstants.ACTIVITY_DEPLOYRESULT)
 
 public class DeployResultActivity extends BaseActivity<IDeployResultActivityView, DeployResultActivityPresenter>
         implements IDeployResultActivityView {
@@ -229,17 +232,17 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     }
 
     @Override
-    public void setDeployResultContinueText(String text) {
+    public void setDeployResultRightButtonText(String text) {
         acDeployResultTvContinue.setText(text);
     }
 
     @Override
-    public void setDeployResultBackHomeText(String text) {
+    public void setDeployResultLeftButtonText(String text) {
         acDeployResultTvBackHome.setText(text);
     }
 
     @Override
-    public void setDeployResultContinueVisible(boolean isVisible) {
+    public void setDeployResultRightButtonVisible(boolean isVisible) {
         acDeployResultTvContinue.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
@@ -278,7 +281,7 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     }
 
     @Override
-    public void setDeployResultContinueTextBackground(Drawable drawable) {
+    public void setDeployResultRightButtonTextBackground(Drawable drawable) {
         acDeployResultTvContinue.setBackground(drawable);
     }
 
@@ -322,10 +325,10 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_deploy_result_tv_back_home:
-                mPresenter.backHome();
+                mPresenter.doLeftButton();
                 break;
             case R.id.ac_deploy_result_tv_continue:
-                mPresenter.gotoContinue();
+                mPresenter.doRightButton();
                 break;
         }
     }

@@ -7,7 +7,7 @@ import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.SecurityRisksTagModel;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISecurityRiskTagManagerView;
 
 import org.greenrobot.eventbus.EventBus;

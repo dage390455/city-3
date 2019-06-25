@@ -1,12 +1,12 @@
 package com.sensoro.nameplate.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -31,8 +32,10 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -41,7 +44,6 @@ import com.sensoro.nameplate.IMainViews.IDeployNameplateAddSensorFromListActivit
 import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.R2;
 import com.sensoro.nameplate.adapter.AddSensorListAdapter;
-import com.sensoro.nameplate.model.AddSensorFromListModel;
 import com.sensoro.nameplate.presenter.DeployNameplateAddSensorFromListActivityPresenter;
 import com.sensoro.nameplate.widget.AssociationSensorConfirmDialogUtil;
 import com.sensoro.nameplate.widget.CustomDrawableDivider;
@@ -51,10 +53,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 
+@Route(path = ARouterConstants.ACTIVITY_DEPLOY_ASSOCIATE_SENSOR_FROM_LIST)
 public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDeployNameplateAddSensorFromListActivityView,
         DeployNameplateAddSensorFromListActivityPresenter> implements IDeployNameplateAddSensorFromListActivityView,
         TextView.OnEditorActionListener, View.OnClickListener {
@@ -91,6 +93,8 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
     SmartRefreshLayout refreshLayoutInclude;
     @BindView(R2.id.return_top_include)
     ImageView returnTopInclude;
+    @BindView(R2.id.view_divider_ac_deploy_nameplate_sensor_list)
+    View viewDividerAcDeployNameplateSensorList;
     @BindView(R2.id.rv_search_history)
     RecyclerView rvSearchHistory;
     @BindView(R2.id.btn_search_clear)
@@ -123,12 +127,15 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
         mConfirmDialog.setOnListener(new AssociationSensorConfirmDialogUtil.OnListener() {
             @Override
             public void onConfirm() {
-                toastShort("确认关联");
+                mConfirmDialog.dismiss();
+                mPresenter.doAssociateSensor();
             }
         });
         returnTopAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.return_top_in_anim);
         returnTopInclude.setAnimation(returnTopAnimation);
         returnTopInclude.setVisibility(View.GONE);
+
+        setSelectSize(0);
 
         initOnclick();
 
@@ -242,13 +249,13 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
         refreshLayoutInclude.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
-                mPresenter.requestWithDirection(DIRECTION_DOWN,null);
+                mPresenter.requestWithDirection(DIRECTION_DOWN, true);
             }
         });
         refreshLayoutInclude.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                mPresenter.requestWithDirection(Constants.DIRECTION_UP,null);
+                mPresenter.requestWithDirection(Constants.DIRECTION_UP);
             }
         });
     }
@@ -276,6 +283,7 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
 //                        toolbarDirection == DIRECTION_DOWN) {
 ////                    mListRecyclerView.setre
 //                }
+
                 if (manager.findFirstVisibleItemPosition() > 4) {
                     if (newState == 0) {
                         returnTopInclude.setVisibility(View.VISIBLE);
@@ -293,7 +301,11 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
+                if (manager.findFirstVisibleItemPosition() == 0 && rvListInclude.getChildAt(0).getTop() == 0) {
+                    viewDividerAcDeployNameplateSensorList.setVisibility(View.GONE);
+                } else {
+                    viewDividerAcDeployNameplateSensorList.setVisibility(View.VISIBLE);
+                }
             }
         });
     }
@@ -341,12 +353,12 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
     }
 
     @Override
-    public void updateData(ArrayList<AddSensorFromListModel> mList) {
+    public void updateData(ArrayList<NamePlateInfo> mList) {
         if (mList == null || mList.size() > 0) {
             icNoContent.setVisibility(View.GONE);
             refreshLayoutInclude.setVisibility(View.VISIBLE);
             mAddSensorListAdapter.updateData(mList);
-        }else{
+        } else {
             icNoContent.setVisibility(View.VISIBLE);
             refreshLayoutInclude.setVisibility(View.GONE);
         }
@@ -360,7 +372,7 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
 
     @Override
     public void setCheckedDrawable(Drawable drawable) {
-        rbSelectAllAcDeployNameplateSensorList.setCompoundDrawables(drawable,null,null,null);
+        rbSelectAllAcDeployNameplateSensorList.setCompoundDrawables(drawable, null, null, null);
     }
 
     @Override
@@ -369,17 +381,18 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
     }
 
     @Override
-    public void setSelectSize(String size) {
-        tvSelectedCountAcDeployNameplateSensorList.setText(size);
+    public void setSelectSize(int size) {
+        tvSelectedCountAcDeployNameplateSensorList.setTextColor(mActivity.getResources().getColor(size == 0 ? R.color.c_a6a6a6 : R.color.c_1dbb99));
+        tvSelectedCountAcDeployNameplateSensorList.setText(size + "");
     }
 
     @Override
     public void setAddStatus(boolean canAdd) {
         if (canAdd) {
-            tvAddAcDeployNameplateSensorList.setBackgroundColor(mActivity.getResources().getColor( R.color.c_1dbb99 ));
+            tvAddAcDeployNameplateSensorList.setBackgroundColor(mActivity.getResources().getColor(R.color.c_1dbb99));
             tvAddAcDeployNameplateSensorList.setClickable(true);
-        }else{
-            tvAddAcDeployNameplateSensorList.setBackgroundColor(mActivity.getResources().getColor( R.color.c_dfdfdf));
+        } else {
+            tvAddAcDeployNameplateSensorList.setBackgroundColor(mActivity.getResources().getColor(R.color.c_dfdfdf));
             tvAddAcDeployNameplateSensorList.setClickable(false);
         }
 
@@ -412,6 +425,13 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
     }
 
     @Override
+    public void showConfirmDialog() {
+        if (mConfirmDialog != null) {
+            mConfirmDialog.show(mPresenter.mSelectList);
+        }
+    }
+
+    @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
             String text = etSearchAcDeployNameplateSensorList.getText().toString();
@@ -428,7 +448,7 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
     @Override
     protected void onStop() {
         super.onStop();
-        AppUtils.dismissInputMethodManager(mActivity,etSearchAcDeployNameplateSensorList);
+        AppUtils.dismissInputMethodManager(mActivity, etSearchAcDeployNameplateSensorList);
     }
 
     @Override
@@ -436,22 +456,51 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
         int id = v.getId();
         if (id == R.id.iv_arrow_left_ac_deploy_nameplate_sensor_list) {
             mActivity.finish();
-        }else if  (id == R.id.iv_clear_ac_deploy_nameplate_sensor_list ) {
+        } else if (id == R.id.iv_clear_ac_deploy_nameplate_sensor_list) {
             etSearchAcDeployNameplateSensorList.getText().clear();
-        }else if (id == R.id.tv_search_cancel_ac_deploy_nameplate_sensor_list) {
+
+            etSearchAcDeployNameplateSensorList.setText("");
+            etSearchAcDeployNameplateSensorList.requestFocus();
+            AppUtils.openInputMethodManager(DeployNameplateAddSensorFromListActivity.this, etSearchAcDeployNameplateSensorList);
+            setSearchHistoryVisible(true);
+
+        } else if (id == R.id.tv_search_cancel_ac_deploy_nameplate_sensor_list) {
             etSearchAcDeployNameplateSensorList.getText().clear();
-            mPresenter.requestWithDirection(DIRECTION_DOWN,null);
+            mPresenter.requestSearchData(DIRECTION_DOWN, "");
             setSearchHistoryVisible(false);
             AppUtils.dismissInputMethodManager(mActivity, etSearchAcDeployNameplateSensorList);
-        }else if (id == R.id.rb_select_all_ac_deploy_nameplate_sensor_list) {
+        } else if (id == R.id.rb_select_all_ac_deploy_nameplate_sensor_list) {
             mPresenter.doSelectAll();
-        }else if (id == R.id.tv_add_ac_deploy_nameplate_sensor_list) {
-            if (mConfirmDialog != null) {
-                mConfirmDialog.show(mPresenter.mSelectList);
-            }
-        }else if (id == R.id.return_top_include) {
+        } else if (id == R.id.tv_add_ac_deploy_nameplate_sensor_list) {
+            mPresenter.doAddSensorList();
+        } else if (id == R.id.return_top_include) {
             rvListInclude.smoothScrollToPosition(0);
             returnTopInclude.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void startAC(Intent intent) {
+
+    }
+
+    @Override
+    public void finishAc() {
+        mActivity.finish();
+    }
+
+    @Override
+    public void startACForResult(Intent intent, int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int resultCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int resultCode, Intent data) {
+
     }
 }

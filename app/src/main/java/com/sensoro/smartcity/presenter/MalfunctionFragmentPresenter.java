@@ -18,7 +18,7 @@ import com.sensoro.common.server.bean.MalfunctionListInfo;
 import com.sensoro.common.server.response.MalfunctionListRsp;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.activity.MalfunctionDetailActivity;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMalfunctionFragmentView;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
@@ -33,7 +33,7 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFragmentView> implements IOnCreate, Constants,
+public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFragmentView> implements IOnCreate,
         CalendarPopUtils.OnCalendarPopupCallbackListener {
     private String tempSearch;
     private long startTime;
@@ -75,7 +75,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
             temp_endTime = endTime;
         }
         switch (direction) {
-            case DIRECTION_DOWN:
+            case Constants.DIRECTION_DOWN:
                 cur_page = 1;
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getDeviceMalfunctionLogList(cur_page, null, null, tempSearch, temp_startTime,
@@ -98,7 +98,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
                     }
                 });
                 break;
-            case DIRECTION_UP:
+            case Constants.DIRECTION_UP:
                 cur_page++;
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getDeviceMalfunctionLogList(cur_page, null, null, tempSearch, temp_startTime,
@@ -135,7 +135,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
 
     public void doCancelSearch() {
         tempSearch = null;
-        requestSearchData(DIRECTION_DOWN, null);
+        requestSearchData(Constants.DIRECTION_DOWN, null);
     }
 
     public void doCalendar(LinearLayout fgMainTopSearchTitleRoot) {
@@ -187,7 +187,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
                 if (malfunctionListRsp.getData().size() == 0) {
                     getView().toastShort("没有更多数据了");
                 }
-                refreshUI(DIRECTION_DOWN, malfunctionListRsp);
+                refreshUI(Constants.DIRECTION_DOWN, malfunctionListRsp);
                 getView().onPullRefreshComplete();
             }
 
@@ -201,7 +201,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
     }
 
     private void refreshUI(int directionDown, MalfunctionListRsp malfunctionListRsp) {
-        if (directionDown == DIRECTION_DOWN) {
+        if (directionDown == Constants.DIRECTION_DOWN) {
             mMalfunctionInfoList.clear();
         }
         handleMalfunctionLists(malfunctionListRsp);
@@ -243,7 +243,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
-            case EVENT_DATA_SEARCH_MERCHANT:
+            case Constants.EVENT_DATA_SEARCH_MERCHANT:
                 if (isAttachedView()) {
                     getView().cancelSearchState();
                 }

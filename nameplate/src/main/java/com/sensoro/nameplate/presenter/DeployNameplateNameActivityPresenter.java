@@ -28,7 +28,7 @@ public class DeployNameplateNameActivityPresenter extends BasePresenter<IDeployN
         mContext = (Activity) context;
         String sn = mContext.getIntent().getStringExtra(Constants.EXTRA_DEPLOY_TO_SN);
 //
-        String name = mContext.getIntent().getStringExtra(Constants.EXTRA_SETTING_NAME_ADDRESS);
+        String name = mContext.getIntent().getStringExtra(Constants.EXTRA_DEPLOY_NAMEPLATE_NAME);
         List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_NAMEPLATE_NAME);
         if (list != null) {
             mHistoryKeywords.addAll(list);

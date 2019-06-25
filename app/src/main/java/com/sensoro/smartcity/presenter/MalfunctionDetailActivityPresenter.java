@@ -6,11 +6,12 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.amap.api.maps.model.LatLng;
+import com.sensoro.common.server.bean.MalfunctionDataBean;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MalfunctionHistoryActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMalfunctionDetailActivityView;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.model.EventData;
@@ -21,8 +22,9 @@ import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.common.server.bean.MalfunctionListInfo;
 import com.sensoro.common.server.response.DeviceInfoListRsp;
 import com.sensoro.common.server.response.MalfunctionCountRsp;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.smartcity.util.CityAppUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -31,13 +33,14 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfunctionDetailActivityView> implements Constants, IOnCreate {
+public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfunctionDetailActivityView> implements IOnCreate {
     private Activity mActivity;
     private MalfunctionListInfo mMalfunctionInfo;
     private LatLng destPosition;
@@ -63,7 +66,7 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
         String deviceSN = mMalfunctionInfo.getDeviceSN();
         if (TextUtils.isEmpty(deviceSN)) {
             deviceSN = mActivity.getString(R.string.device_number) + mActivity.getString(R.string.unknown);
-        }else{
+        } else {
             deviceSN = mActivity.getString(R.string.device_number) + deviceSN;
         }
 
@@ -85,7 +88,19 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
                 }
             }
         });
-        getView().updateRcContent(records, mMalfunctionInfo.getMalfunctionData().get(mMalfunctionInfo.getMalfunctionType()).getDescription());
+        String description = mActivity.getString(R.string.unknown_malfunction);
+        Map<String, MalfunctionDataBean> malfunctionData = mMalfunctionInfo.getMalfunctionData();
+        if (malfunctionData != null) {
+            String malfunctionType = mMalfunctionInfo.getMalfunctionType();
+            if (malfunctionType != null) {
+                MalfunctionDataBean malfunctionDataBean = malfunctionData.get(malfunctionType);
+                if (malfunctionDataBean != null) {
+                    description = malfunctionDataBean.getDescription();
+                }
+
+            }
+        }
+        getView().updateRcContent(records, description);
         long current = System.currentTimeMillis();
         final StringBuffer stringBuffer = new StringBuffer();
         RetrofitServiceHelper.getInstance().getMalfunctionCount(current - 3600 * 24 * 180 * 1000L, current, null, mMalfunctionInfo.getDeviceSN()).subscribeOn(Schedulers.io())
@@ -150,7 +165,7 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
         List<Double> deviceLonlat = mMalfunctionInfo.getDeviceLonlat();
         if (deviceLonlat != null && deviceLonlat.size() > 1) {
             destPosition = new LatLng(deviceLonlat.get(1), deviceLonlat.get(0));
-            if (AppUtils.doNavigation(mActivity, destPosition)) {
+            if (CityAppUtils.doNavigation(mActivity, destPosition)) {
                 return;
             }
         }
@@ -169,8 +184,8 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
         inspectionTaskDeviceDetail.setSn(deviceSN);
         //
         Intent intent = new Intent(mActivity, ScanActivity.class);
-        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE);
-        intent.putExtra(EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO, inspectionTaskDeviceDetail);
+        intent.putExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE);
+        intent.putExtra(Constants.EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO, inspectionTaskDeviceDetail);
         getView().startAC(intent);
 
     }
@@ -180,19 +195,19 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
-            case EVENT_DATA_DEPLOY_RESULT_FINISH:
+            case Constants.EVENT_DATA_DEPLOY_RESULT_FINISH:
                 getView().finishAc();
                 break;
-            case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
+            case Constants.EVENT_DATA_DEPLOY_RESULT_CONTINUE:
                 if (data instanceof Integer) {
                     int resultCode = (Integer) data;
                     //TODO 判断结果控制界面是否消失
-                    if (resultCode == DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS) {
+                    if (resultCode == Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS) {
                         getView().finishAc();
                     }
                 }
                 break;
-            case EVENT_DATA_SCAN_LOGIN_SUCCESS:
+            case Constants.EVENT_DATA_SCAN_LOGIN_SUCCESS:
                 getView().finishAc();
                 break;
         }

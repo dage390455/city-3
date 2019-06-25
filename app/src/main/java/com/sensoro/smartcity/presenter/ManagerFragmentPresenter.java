@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnFragmentStart;
@@ -14,7 +16,6 @@ import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.response.ResponseBase;
-import com.sensoro.nameplate.activity.DeployNameplateActivity;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractManagerActivity;
 import com.sensoro.smartcity.activity.DeployRecordActivity;
@@ -23,9 +24,8 @@ import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.MerchantSwitchActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.activity.WireMaterialDiameterCalculatorActivity;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
@@ -37,7 +37,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView> implements IOnCreate, IOnFragmentStart, Constants {
+//import com.sensoro.nameplate.activity.DeployNameplateActivity;
+
+public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView> implements IOnCreate, IOnFragmentStart {
     private Activity mContext;
 
     @Override
@@ -161,7 +163,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         if (PreferencesHelper.getInstance().getUserData() != null) {
             if (PreferencesHelper.getInstance().getUserData().hasSubMerchant || PreferencesHelper.getInstance().getUserData().hasControllerAid) {
                 Intent intent = new Intent(mContext, MerchantSwitchActivity.class);
-                intent.putExtra(EXTRA_EVENT_LOGIN_DATA, PreferencesHelper.getInstance().getUserData());
+                intent.putExtra(Constants.EXTRA_EVENT_LOGIN_DATA, PreferencesHelper.getInstance().getUserData());
                 getView().startAC(intent);
 //                return;
             }
@@ -174,7 +176,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
 //        if (PreferencesHelper.getInstance().getUserData() != null) {
 //            if (!PreferencesHelper.getInstance().getUserData().isSupperAccount) {
         Intent intent = new Intent(mContext, DeployRecordActivity.class);
-//                intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
+//                intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, CityConstants.TYPE_SCAN_DEPLOY_DEVICE);
         getView().startAC(intent);
 
 //        Intent intent = new Intent(mContext, DeployNameplateActivity.class);
@@ -186,7 +188,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         if (PreferencesHelper.getInstance().getUserData() != null) {
             if (PreferencesHelper.getInstance().getUserData().hasScanLogin) {
                 Intent intent = new Intent(mContext, ScanActivity.class);
-                intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_LOGIN);
+                intent.putExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_LOGIN);
                 getView().startAC(intent);
                 return;
             }
@@ -236,7 +238,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
-            case EVENT_DATA_SEARCH_MERCHANT:
+            case Constants.EVENT_DATA_SEARCH_MERCHANT:
                 if (data instanceof EventLoginData) {
                     checkPermission((EventLoginData) data);
                 }
@@ -246,7 +248,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
 
     public void doSignalCheck() {
         Intent intent = new Intent(mContext, ScanActivity.class);
-        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, TYPE_SCAN_SIGNAL_CHECK);
+        intent.putExtra(Constants.EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_SIGNAL_CHECK);
         getView().startAC(intent);
 
     }
@@ -254,5 +256,9 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     public void doWireMaterial_diameter() {
         Intent intent = new Intent(mContext, WireMaterialDiameterCalculatorActivity.class);
         getView().startAC(intent);
+    }
+
+    public void doManageNameplate() {
+        startActivity(ARouterConstants.ACTIVITY_NAMEPLATE_LIST, null, mContext);
     }
 }

@@ -1,13 +1,9 @@
 package com.sensoro.smartcity;
 
-import android.content.Context;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatDelegate;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -19,29 +15,16 @@ import com.baidu.ocr.sdk.exception.OCRError;
 import com.baidu.ocr.sdk.model.AccessToken;
 import com.github.moduth.blockcanary.BlockCanary;
 import com.mapbox.mapboxsdk.Mapbox;
-import com.qiniu.android.common.FixedZone;
-import com.qiniu.android.storage.Configuration;
-import com.qiniu.android.storage.UploadManager;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
-import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
-import com.scwang.smartrefresh.layout.api.DefaultRefreshInitializer;
-import com.scwang.smartrefresh.layout.api.RefreshFooter;
-import com.scwang.smartrefresh.layout.api.RefreshHeader;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
-import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.sensoro.common.base.BaseApplication;
 import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.utils.Repause;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceManager;
 import com.sensoro.smartcity.callback.BleObserver;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.push.AppBlockCanaryContext;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
-import com.sensoro.smartcity.util.DynamicTimeFormat;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.NotificationUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
@@ -67,54 +50,11 @@ public class SensoroCityApplication extends BaseApplication implements Repause
     private NotificationUtils mNotificationUtils;
     public boolean isAPPBack = true;
     private static PushHandler pushHandler;
-    public UploadManager uploadManager;
+
     public volatile boolean hasGotToken = false;
     public static String VIDEO_PATH;
     public AMapLocationClient mLocationClient;
     public BLEDeviceManager bleDeviceManager;
-
-//    static {
-//        initSmartRefresh();
-//    }
-
-    private void initSmartRefresh() {
-        //启用矢量图兼容
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-        //设置全局默认配置（优先级最低，会被其他设置覆盖）
-        SmartRefreshLayout.setDefaultRefreshInitializer(new DefaultRefreshInitializer() {
-            @Override
-            public void initialize(@NonNull Context context, @NonNull RefreshLayout layout) {
-                //全局设置（优先级最低）
-//                layout.setEnableLoadMore(false);
-                layout.setEnableAutoLoadMore(true);
-                layout.setEnableOverScrollDrag(false);
-                layout.setEnableOverScrollBounce(true);
-                layout.setEnableLoadMoreWhenContentNotFull(true);
-                layout.setEnableFooterFollowWhenLoadFinished(true);
-                layout.setEnableScrollContentWhenRefreshed(true);
-            }
-        });
-        //设置全局的Footer构建器
-        SmartRefreshLayout.setDefaultRefreshHeaderCreator(new DefaultRefreshHeaderCreator() {
-            @NonNull
-            @Override
-            public RefreshHeader createRefreshHeader(@NonNull Context context, @NonNull RefreshLayout layout) {
-                //全局设置主题颜色（优先级第二低，可以覆盖 DefaultRefreshInitializer 的配置，与下面的ClassicsHeader绑定）
-                layout.setPrimaryColorsId(android.R.color.white);
-
-                String format = SensoroCityApplication.this.getResources().getString(R.string.update_from) + " %s";
-                return new ClassicsHeader(context).setTimeFormat(new DynamicTimeFormat(format));
-            }
-        });
-        //设置全局的Footer构建器
-        SmartRefreshLayout.setDefaultRefreshFooterCreator(new DefaultRefreshFooterCreator() {
-            @Override
-            public RefreshFooter createRefreshFooter(Context context, RefreshLayout layout) {
-                //指定为经典Footer，默认是 BallPulseFooter
-                return new ClassicsFooter(context).setDrawableSize(20);
-            }
-        });
-    }
 
     @Override
     public void onCreate() {
@@ -318,20 +258,6 @@ public class SensoroCityApplication extends BaseApplication implements Repause
                 "D1T3OGkU9CzoVaEBnQ8ie2xG", "YD1WmK9CG2TVUDwt2MuT2XswNkimCEf7");
     }
 
-    private void initUploadManager() {
-        Configuration config = new Configuration.Builder()
-                .chunkSize(512 * 1024)        // 分片上传时，每片的大小。 默认256K
-                .putThreshhold(1024 * 1024)   // 启用分片上传阀值。默认512K
-                .connectTimeout(10)           // 链接超时。默认10秒
-                .useHttps(true)               // 是否使用https上传域名
-                .responseTimeout(60)// 服务器响应超时。默认60秒
-                .recorder(null)           // recorder分片上传时，已上传片记录器。默认null
-//                .recorder(new re, keyGen)   // keyGen 分片上传时，生成标识符，用于片记录器区分是那个文件的上传记录
-                .zone(FixedZone.zone0)// 设置区域，指定不同区域的上传域名、备用域名、备用IP。
-                .build();
-// 重用uploadManager。一般地，只需要创建一个uploadManager对象
-        uploadManager = new UploadManager(config);
-    }
 
     private void initImagePicker() {
         ImagePicker imagePicker = ImagePicker.getInstance();
@@ -439,9 +365,7 @@ public class SensoroCityApplication extends BaseApplication implements Repause
         api.registerApp(Constants.APP_ID);
 //        FMMapSDK.init(this);
         initImagePicker();
-        initUploadManager();
         locate();
-        initSmartRefresh();
         initBugLy();
         BlockCanary.install(this, new AppBlockCanaryContext()).start();
         if (LeakCanary.isInAnalyzerProcess(this)) {

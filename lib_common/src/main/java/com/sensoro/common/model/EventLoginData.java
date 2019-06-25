@@ -9,7 +9,7 @@ public final class EventLoginData implements Serializable {
     public String phone;
     public String roles;
     public boolean isSupperAccount;
-    public boolean hasStation;
+    public boolean hasStationDeploy;
     public boolean hasContract;
     public boolean hasContractCreate;
     public boolean hasContractModify;
@@ -35,9 +35,18 @@ public final class EventLoginData implements Serializable {
     public boolean hasControllerAid = false;
     public boolean hasDeviceCameraList = false;
     public boolean hasDeviceCameraDeploy = false;
-    //TODO 加入本地字段写入支持
+    //TODO
     public boolean hasStationList = false;
     public boolean hasNameplateList = false;
+    public boolean hasNameplateDeploy = false;
+//    "nameplate": [
+//            "modify",
+//            "deploy",
+//            "list",
+//            "delete",
+//            "export",
+//            "add"
+//            ],
 
     @Override
     public String toString() {
@@ -48,7 +57,7 @@ public final class EventLoginData implements Serializable {
                 ", phone='" + phone + '\'' +
                 ", roles='" + roles + '\'' +
                 ", isSupperAccount=" + isSupperAccount +
-                ", hasStation=" + hasStation +
+                ", hasStationDeploy=" + hasStationDeploy +
                 ", hasContract=" + hasContract +
                 ", hasContractCreate=" + hasContractCreate +
                 ", hasContractModify=" + hasContractModify +
@@ -76,6 +85,7 @@ public final class EventLoginData implements Serializable {
                 ", hasDeviceCameraDeploy=" + hasDeviceCameraDeploy +
                 ", hasStationList=" + hasStationList +
                 ", hasNameplateList=" + hasNameplateList +
+                ", hasNameplateDeploy=" + hasNameplateDeploy +
                 '}';
     }
 }

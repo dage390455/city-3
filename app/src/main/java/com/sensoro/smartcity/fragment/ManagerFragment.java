@@ -13,16 +13,15 @@ import android.widget.Toast;
 import com.sensoro.common.base.BaseFragment;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
-import com.sensoro.nameplate.activity.NameplateListActivity;
+import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
+import com.sensoro.common.widgets.dialog.TipDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.BaseStationListActivity;
 import com.sensoro.smartcity.activity.CameraListActivity;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
 import com.sensoro.smartcity.presenter.ManagerFragmentPresenter;
-import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
-import com.sensoro.common.widgets.dialog.TipDialogUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.widget.dialog.VersionDialogUtils;
 
 import java.util.Objects;
@@ -275,7 +274,9 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 startAC(new Intent(mRootFragment.getActivity(), CameraListActivity.class));
                 break;
             case R.id.fg_main_manage_ll_nameplate:
-                startAC(new Intent(mRootFragment.getActivity(), NameplateListActivity.class));
+                mPresenter.doManageNameplate();
+//                ARouter.getInstance().build(ARouterConstants.ACTIVITY_NAMEPLATE_LIST).navigation(mRootFragment.getActivity());
+//                startAC(new Intent(mRootFragment.getActivity(), NameplateListActivity.class));
                 break;
             case R.id.fg_main_manage_ll_basestation:
                 startAC(new Intent(mRootFragment.getActivity(), BaseStationListActivity.class));
@@ -343,14 +344,14 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
 
     @Override
     public void setStationManagerVisible(boolean hasStationList) {
-        line9.setVisibility(hasStationList?View.VISIBLE:View.GONE);
+        line9.setVisibility(hasStationList ? View.VISIBLE : View.GONE);
         fgMainManageLlBasestation.setVisibility(hasStationList ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void setNameplateVisible(boolean hasNameplate) {
-        line10.setVisibility(hasNameplate?View.VISIBLE:View.GONE);
-        fgMainManageLlNameplate.setVisibility(hasNameplate?View.VISIBLE:View.GONE);
+        line10.setVisibility(hasNameplate ? View.VISIBLE : View.GONE);
+        fgMainManageLlNameplate.setVisibility(hasNameplate ? View.VISIBLE : View.GONE);
     }
 
     @Override

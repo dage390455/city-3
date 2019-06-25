@@ -4,15 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.CameraPersonDetailActivity;
-import com.sensoro.smartcity.activity.CameraPersonLocusActivity;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.imainviews.ICameraPersonAvatarHistoryActivityView;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.response.DeviceCameraPersonFaceRsp;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.CameraPersonDetailActivity;
+import com.sensoro.smartcity.activity.CameraPersonLocusActivity;
+import com.sensoro.smartcity.imainviews.ICameraPersonAvatarHistoryActivityView;
 
 import java.util.ArrayList;
 import java.util.List;

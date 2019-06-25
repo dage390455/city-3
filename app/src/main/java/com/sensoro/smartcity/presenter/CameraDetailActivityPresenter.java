@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
@@ -27,7 +28,6 @@ import com.sensoro.common.server.response.DeviceCameraHistoryRsp;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.CameraPersonAvatarHistoryActivity;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraDetailActivityView;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
@@ -43,9 +43,6 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
-import static com.sensoro.smartcity.constant.Constants.VIDEO_START;
-import static com.sensoro.smartcity.constant.Constants.VIDEO_STOP;
 import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_AUTO_COMPLETE;
 import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAUSE;
 
@@ -78,7 +75,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
-        if (code == NetworkInfo) {
+        if (code == Constants.NetworkInfo) {
             int data = (int) eventData.data;
 
             switch (data) {
@@ -134,7 +131,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
 
             }
-        } else if (code == VIDEO_START) {
+        } else if (code == Constants.VIDEO_START) {
 
             if (null == itemUrl) {
                 doLive();
@@ -144,7 +141,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                 getView().getPlayView().clickCityStartIcon();
                 GSYVideoManager.onResume(true);
             }
-        } else if (code == VIDEO_STOP) {
+        } else if (code == Constants.VIDEO_STOP) {
             getView().setVerOrientationUtilEnable(false);
             GSYVideoManager.onPause();
 

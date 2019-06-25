@@ -16,21 +16,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sensoro.common.constant.Constants;
+import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.calendarview.CalendarView;
 import com.sensoro.smartcity.calendarview.customview.CustomCircleRangeMonthView;
 import com.sensoro.smartcity.calendarview.customview.CustomRangeMonthView;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.CalendarDateModel;
-import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.common.utils.DateUtil;
-import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.sensoro.smartcity.constant.CityConstants.MONTHS;
 
 public class CalendarPopUtils implements
         CalendarView.OnCalendarRangeSelectListener, Constants, PopupWindow.OnDismissListener, CalendarView.OnMonthChangeListener {
@@ -184,7 +186,7 @@ public class CalendarPopUtils implements
 
     }
     private void setMonthYearText(int month) {
-        acCalendarTvMonthYear.setText(mActivity.getString(Constants.MONTHS[month - 1]));
+        acCalendarTvMonthYear.setText(mActivity.getString(MONTHS[month - 1]));
     }
 
     private void setSelectTime(long startTime, long endTime) {

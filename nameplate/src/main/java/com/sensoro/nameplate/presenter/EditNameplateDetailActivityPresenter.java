@@ -6,8 +6,10 @@ import android.text.TextUtils;
 
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
-import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.EventData;
+import com.sensoro.common.server.CityObserver;
+import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.ResourceUtils;
 import com.sensoro.nameplate.IMainViews.IEditNameplateDetailActivityView;
 import com.sensoro.nameplate.R;
@@ -15,18 +17,29 @@ import com.sensoro.nameplate.R;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class EditNameplateDetailActivityPresenter extends BasePresenter<IEditNameplateDetailActivityView> implements Constants {
     private final List<String> mTagList = new ArrayList<>();
     private Activity mContext;
 
+    private String nameplateId, nameplateName;
+
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
 
+
+        nameplateId = mContext.getIntent().getStringExtra("nameplateId");
+        nameplateName = mContext.getIntent().getStringExtra("nameplateName");
+
+        if (!TextUtils.isEmpty(nameplateName)) {
+            getView().updateNameplateName(nameplateName);
+        }
         ArrayList<String> stringArrayListExtra = mContext.getIntent().getStringArrayListExtra(EXTRA_SETTING_TAG_LIST);
         if (stringArrayListExtra != null) {
             mTagList.addAll(stringArrayListExtra);
@@ -78,32 +91,16 @@ public class EditNameplateDetailActivityPresenter extends BasePresenter<IEditNam
         getView().dismissDialog();
     }
 
-//    public void addTags(int position) {
-//        String test = mHistoryKeywords.get(position);
-//        if (mTagList.size() >= 8) {
-//            getView().toastShort(mContext.getString(R.string.can_only_add_up_to_limit_labels));
-//        } else {
-//            if (!TextUtils.isEmpty(test)) {
-//                String trim = getTrim(test);
-//                if (!TextUtils.isEmpty(trim)) {
-//                    if (ResourceUtils.getByteFromWords(trim) > 30) {
-//                        getView().toastShort(mContext.getString(R.string.the_maximum_length_of_the_label));
-//                        return;
-//                    }
-//                    if (mTagList.contains(trim)) {
-//                        getView().toastShort(mContext.getString(R.string.label_cannot_be_repeated));
-//                        return;
-//                    } else {
-//                        mTagList.add(trim);
-//                    }
-//                    getView().updateTags(mTagList);
-//                }
-//
-//            }
-//        }
-//    }
 
-    public void doFinish() {
+    public void doFinish(String name) {
+
+
+        if (TextUtils.isEmpty(name)) {
+
+            getView().toastShort(mContext.getString(R.string.nameplate_name_empty));
+
+            return;
+        }
         if (mTagList.size() > 8) {
             getView().toastShort(mContext.getString(R.string.can_only_add_up_to_limit_labels));
         } else {
@@ -114,46 +111,29 @@ public class EditNameplateDetailActivityPresenter extends BasePresenter<IEditNam
                     return;
                 }
             }
-            save();
-            EventData eventData = new EventData();
-            eventData.code = EVENT_DATA_DEPLOY_SETTING_TAG;
-            eventData.data = mTagList;
-            EventBus.getDefault().post(eventData);
-            getView().finishAc();
-        }
-    }
 
 
-    private void save() {
-        //原数据
-        String oldText = PreferencesHelper.getInstance().getDeployTagsHistory();
-        List<String> oldHistoryList = new ArrayList<>();
-        if (!TextUtils.isEmpty(oldText)) {
-            oldHistoryList.addAll(Arrays.asList(oldText.split(",")));
-        }
-        if (mTagList.size() > 0) {
-            for (int i = mTagList.size() - 1; i >= 0; i--) {
-                if (oldHistoryList.contains(mTagList.get(i))) {
-                    oldHistoryList.remove(mTagList.get(i));
+            RetrofitServiceHelper.getInstance().updateNameplate(nameplateId, name, mTagList).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Integer>>(this) {
+                @Override
+                public void onCompleted(ResponseResult<Integer> responseResult) {
+                    if (responseResult.getData() == 1) {
+                        getView().finishAc();
+                        //更新
+                        EventData eventData = new EventData();
+                        eventData.code = EVENT_DATA_UPDATE_NAMEPLATE_LIST;
+                        EventBus.getDefault().post(eventData);
+                    }
+
                 }
-                oldHistoryList.add(0, mTagList.get(i));
-            }
+
+                @Override
+                public void onErrorMsg(int errorCode, String errorMsg) {
+                    getView().toastShort(errorMsg);
+
+                }
+            });
         }
-        ArrayList<String> tempList = new ArrayList<>();
-        for (String str : oldHistoryList) {
-            if (tempList.size() < 20) {
-                tempList.add(str);
-            }
-        }
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < tempList.size(); i++) {
-            if (i == (tempList.size() - 1)) {
-                stringBuilder.append(tempList.get(i));
-            } else {
-                stringBuilder.append(tempList.get(i)).append(",");
-            }
-        }
-        PreferencesHelper.getInstance().saveDeployTagsHistory(stringBuilder.toString());
     }
 
 

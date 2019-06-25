@@ -3,7 +3,7 @@
     package="com.sensoro.nameplate">
 
     <application>
-        <activity android:name=".activity.NameplateDetailActivity"/>
+        <activity android:name=".activity.NameplateDetailActivity" />
         <activity android:name=".activity.NameplateListActivity" />
         <activity android:name=".activity.EditNameplateDetailActivity" />
         <activity android:name=".activity.DeployNameplateAddSensorFromListActivity" />

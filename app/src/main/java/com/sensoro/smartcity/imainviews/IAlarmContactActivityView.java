@@ -2,7 +2,7 @@ package com.sensoro.smartcity.imainviews;
 
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IToast;
-import com.sensoro.smartcity.model.DeployContactModel;
+import com.sensoro.common.model.DeployContactModel;
 
 import java.util.ArrayList;
 

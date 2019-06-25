@@ -19,7 +19,7 @@ import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;

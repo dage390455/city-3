@@ -6,13 +6,11 @@ import androidx.annotation.NonNull;
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
-import com.sensoro.smartcity.model.DeployContactModel;
+import com.sensoro.common.model.DeployContactModel;
 
 import java.util.List;
 
 public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialog, IActivityIntent {
-    void updateUploadState(boolean isAvailable);
-
     void setDeviceSn(String sn);
 
     //

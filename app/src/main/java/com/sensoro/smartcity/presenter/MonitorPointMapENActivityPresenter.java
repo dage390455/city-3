@@ -3,12 +3,13 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
@@ -22,19 +23,19 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.UiSettings;
 import com.mapbox.mapboxsdk.maps.widgets.MyLocationViewSettings;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
+import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.utils.GPSUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployMapENActivity;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMonitorPointMapENActivityView;
-import com.sensoro.smartcity.model.DeployAnalyzerModel;
-import com.sensoro.smartcity.model.DeployContactModel;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 
@@ -44,7 +45,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-public class MonitorPointMapENActivityPresenter extends BasePresenter<IMonitorPointMapENActivityView> implements Constants, IOnCreate, OnMapReadyCallback, MapboxMap.InfoWindowAdapter {
+public class MonitorPointMapENActivityPresenter extends BasePresenter<IMonitorPointMapENActivityView> implements IOnCreate, OnMapReadyCallback, MapboxMap.InfoWindowAdapter {
 
     private Activity mContext;
     private MapboxMap aMap;
@@ -55,7 +56,7 @@ public class MonitorPointMapENActivityPresenter extends BasePresenter<IMonitorPo
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        mDeviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
+        mDeviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(Constants.EXTRA_DEVICE_INFO);
         EventLoginData userData = PreferencesHelper.getInstance().getUserData();
         if (userData != null) {
             getView().setPositionCalibrationVisible(userData.hasDevicePositionCalibration);
@@ -72,7 +73,7 @@ public class MonitorPointMapENActivityPresenter extends BasePresenter<IMonitorPo
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
-            case EVENT_DATA_DEVICE_POSITION_CALIBRATION:
+            case Constants.EVENT_DATA_DEVICE_POSITION_CALIBRATION:
                 if (data instanceof DeviceInfo) {
                     DeviceInfo pushDeviceInfo = (DeviceInfo) data;
                     if (pushDeviceInfo.getSn().equalsIgnoreCase(mDeviceInfo.getSn())) {
@@ -102,7 +103,7 @@ public class MonitorPointMapENActivityPresenter extends BasePresenter<IMonitorPo
             Icon icon = iconFactory.fromResource(R.drawable.deploy_map_cur);
 
             MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.icon(icon).title("国外")
+            markerOptions.icon(icon).title(mContext.getString(R.string.unknown_street))
                     .position(latLng);
             Marker markerView = aMap.addMarker(markerOptions);
             aMap.setInfoWindowAdapter(this);
@@ -172,10 +173,10 @@ public class MonitorPointMapENActivityPresenter extends BasePresenter<IMonitorPo
         if (!TextUtils.isEmpty(tempAddress)) {
             deployAnalyzerModel.address = tempAddress;
         }
-        deployAnalyzerModel.mapSourceType = DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM;
-        deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_DEVICE;
+        deployAnalyzerModel.mapSourceType = Constants.DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM;
+        deployAnalyzerModel.deployType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
         intent.setClass(mContext, DeployMapENActivity.class);
-        intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+        intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
         getView().startAC(intent);
     }
 

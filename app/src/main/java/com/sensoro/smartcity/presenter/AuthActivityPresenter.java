@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.common.model.EventData;
@@ -21,9 +22,8 @@ import com.sensoro.common.server.response.DevicesMergeTypesRsp;
 import com.sensoro.smartcity.BuildConfig;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MainActivity;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAuthActivityView;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -36,14 +36,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> implements Constants, IOnStart {
+public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> implements  IOnStart {
     private Activity mContext;
     private EventLoginData mEventLoginData;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        mEventLoginData = (EventLoginData) mContext.getIntent().getSerializableExtra(EXTRA_EVENT_LOGIN_DATA);
+        mEventLoginData = (EventLoginData) mContext.getIntent().getSerializableExtra(Constants.EXTRA_EVENT_LOGIN_DATA);
     }
 
     @Override
@@ -153,11 +153,11 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
     private void saveLoginDataOpenMain(EventLoginData eventLoginData) {
         //
         EventData eventData = new EventData();
-        eventData.code = EVENT_DATA_AUTH_SUC;
+        eventData.code = Constants.EVENT_DATA_AUTH_SUC;
         EventBus.getDefault().post(eventData);
         Intent mainIntent = new Intent();
         mainIntent.setClass(mContext, MainActivity.class);
-        mainIntent.putExtra(EXTRA_EVENT_LOGIN_DATA, eventLoginData);
+        mainIntent.putExtra(Constants.EXTRA_EVENT_LOGIN_DATA, eventLoginData);
         if (isAttachedView()){
             getView().startAC(mainIntent);
             getView().finishAc();
@@ -166,7 +166,7 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
 
     public void close() {
         EventData eventData = new EventData();
-        eventData.code = EVENT_DATA_CANCEL_AUTH;
+        eventData.code = Constants.EVENT_DATA_CANCEL_AUTH;
         EventBus.getDefault().post(eventData);
         if (isAttachedView()){
             getView().finishAc();

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.nameplate.R;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class TagDialogUtils implements View.OnClickListener {
     private final Activity mActivity;
@@ -60,6 +63,8 @@ public class TagDialogUtils implements View.OnClickListener {
                 mDialogEtInput.getText().clear();
             }
         });
+
+
 //        mAddTagDialog = builder.create();
 //        Window window = mAddTagDialog.getWindow();
 //        if (window != null) {
@@ -119,6 +124,9 @@ public class TagDialogUtils implements View.OnClickListener {
             mType = DIALOG_TAG_ADD;
             mAddTagDialog.show();
             mDialogEtInput.setCursorVisible(true);
+            InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(INPUT_METHOD_SERVICE);
+            imm.showSoftInput(mDialogEtInput, InputMethodManager.SHOW_IMPLICIT);
+            showSoftKeyboard();
         }
     }
 
@@ -131,6 +139,7 @@ public class TagDialogUtils implements View.OnClickListener {
             currentPosition = position;
             mAddTagDialog.show();
             mDialogEtInput.setCursorVisible(true);
+            showSoftKeyboard();
         }
 
     }
@@ -138,7 +147,29 @@ public class TagDialogUtils implements View.OnClickListener {
     public void dismissDialog() {
         if (mAddTagDialog != null) {
             mAddTagDialog.dismiss();
+            hideSoftKeyboard(mActivity);
         }
 
+    }
+
+
+    public void showSoftKeyboard() {
+
+        mDialogEtInput.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(INPUT_METHOD_SERVICE);
+                imm.showSoftInput(mDialogEtInput, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }, 300);
+
+    }
+
+    public static void hideSoftKeyboard(Activity activity) {
+        View view = activity.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 }

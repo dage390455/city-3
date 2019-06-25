@@ -3,6 +3,7 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -18,6 +19,7 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnStart;
@@ -35,20 +37,18 @@ import com.sensoro.common.server.response.DeviceCameraDetailRsp;
 import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployCameraLiveDetailActivity;
-import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMapENActivity;
-import com.sensoro.smartcity.activity.DeployMonitorDeployPicActivity;
 import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployCameraDetailActivityView;
-import com.sensoro.smartcity.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.DeployCameraConfigModel;
-import com.sensoro.smartcity.model.DeployResultModel;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.model.DeployResultModel;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.widget.popup.UpLoadPhotosUtils;
+import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -129,7 +129,8 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
             geocoderSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
                 @Override
                 public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
-                    try {
+                    String address = "";
+                    if (i == 1000) {
                         RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
 
                         StringBuilder stringBuilder = new StringBuilder();
@@ -186,24 +187,21 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
                                 stringBuilder.append(streetNumber);
                             }
                         }
-                        String address;
                         if (TextUtils.isEmpty(stringBuilder)) {
                             address = township;
                         } else {
                             address = stringBuilder.append("附近").toString();
                         }
-                        if (!TextUtils.isEmpty(address)) {
-                            deployAnalyzerModel.address = address;
-                        }
-                        try {
-                            LogUtils.loge("deployMapModel", "----" + deployAnalyzerModel.address);
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
-                        }
-                        //
-                    } catch (Exception e) {
-                        e.printStackTrace();
+
+                    } else {
+                        address = mContext.getString(R.string.not_positioned);
                     }
+                    if (TextUtils.isEmpty(address)) {
+                        address = mContext.getString(R.string.unknown_street);
+                    }
+                    deployAnalyzerModel.address = address;
+
+
                     getView().setDeployPosition(true, deployAnalyzerModel.address);
                 }
 
@@ -453,20 +451,28 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
     }
 
     public void doTag() {
-        Intent intent = new Intent(mContext, DeployDeviceTagActivity.class);
+        Bundle bundle = new Bundle();
         if (deployAnalyzerModel.tagList.size() > 0) {
-            intent.putStringArrayListExtra(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
+            bundle.putStringArrayList(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
         }
-        getView().startAC(intent);
+
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_TAG, bundle, mContext);
     }
 
     public void doSettingPhoto() {
-        Intent intent = new Intent(mContext, DeployMonitorDeployPicActivity.class);
+        Bundle bundle = new Bundle();
         if (getRealImageSize() > 0) {
-            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
+            bundle.putSerializable(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
         }
-        intent.putExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, "deploy_camera");
-        getView().startAC(intent);
+        bundle.putString(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, "deploy_camera");
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_PIC, bundle, mContext);
+
+//        Intent intent = new Intent(mContext, DeployMonitorDeployPicActivity.class);
+//        if (getRealImageSize() > 0) {
+//            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
+//        }
+//        intent.putExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, "deploy_camera");
+//        getView().startAC(intent);
     }
 
     public void doDeployMap() {
@@ -710,7 +716,7 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
                 getView().setUploadBtnStatus(checkCanUpload());
 
             }
-        }, strings);
+        }, strings, mContext.getResources().getString(R.string.deploy_camera_sets_lens_orientation));
     }
 
     //处理安装方式
@@ -727,7 +733,7 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
                 getView().setDeployMethod(method);
                 getView().setUploadBtnStatus(checkCanUpload());
             }
-        }, strings);
+        }, strings, mContext.getResources().getString(R.string.deploy_camera_install_method));
     }
 
     public void doDeployCameraLive() {

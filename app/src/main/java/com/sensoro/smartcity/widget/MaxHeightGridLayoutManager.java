@@ -7,7 +7,7 @@ import android.view.View;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 
 public class MaxHeightGridLayoutManager extends GridLayoutManager {
     private  Context mContext;

@@ -130,6 +130,7 @@ public class BaseStationDetailModel {
 
     private String hardwareVersion;
     private String type;
+    private String typeName;
     private String status;
     private String firmwareVersion;
     private NetWork network;
@@ -145,6 +146,7 @@ public class BaseStationDetailModel {
     private Vpn vpn;
     private ArrayList<String> tags;
     private ArrayList<Double> lonlatLabel;
+    private ArrayList<Double> lonlat;
     private ArrayList<String> channels;
     private ArrayList<String> selftest;
     private ArrayList<String> images;
@@ -165,6 +167,22 @@ public class BaseStationDetailModel {
 
     public void setLonlatLabel(ArrayList<Double> lonlatLabel) {
         this.lonlatLabel = lonlatLabel;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
+    public ArrayList<Double> getLonlat() {
+        return lonlat;
+    }
+
+    public void setLonlat(ArrayList<Double> lonlat) {
+        this.lonlat = lonlat;
     }
 
     public static class NetDelay implements Parcelable {

@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
@@ -20,7 +21,6 @@ import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
 import com.sensoro.common.server.response.AlarmCameraLiveRsp;
 import com.sensoro.common.server.response.DeviceCameraDetailRsp;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAlarmCameraLiveDetailActivityView;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
@@ -35,9 +35,6 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.sensoro.smartcity.constant.Constants.NetworkInfo;
-import static com.sensoro.smartcity.constant.Constants.VIDEO_START;
-import static com.sensoro.smartcity.constant.Constants.VIDEO_STOP;
 
 public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarmCameraLiveDetailActivityView> {
     private Activity mActivity;
@@ -55,7 +52,7 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
-        if (code == NetworkInfo) {
+        if (code == Constants.NetworkInfo) {
             int data = (int) eventData.data;
 
             switch (data) {
@@ -108,13 +105,13 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
                     break;
 
             }
-        } else if (code == VIDEO_START) {
+        } else if (code == com.sensoro.common.constant.Constants.VIDEO_START) {
 
             doLive();
 //                    }
             getView().setVerOrientationUtilEnable(true);
 
-        } else if (code == VIDEO_STOP) {
+        } else if (code == Constants.VIDEO_STOP) {
 
 
             getView().setVerOrientationUtilEnable(false);

@@ -13,7 +13,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.InspectionInstructionActivity;
 import com.sensoro.smartcity.activity.InspectionUploadExceptionActivity;
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionActivityView;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnStart;
@@ -37,7 +37,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class InspectionActivityPresenter extends BasePresenter<IInspectionActivityView> implements
-        BLEDeviceListener<BLEDevice>, IOnCreate, Constants, IOnStart, Runnable {
+        BLEDeviceListener<BLEDevice>, IOnCreate, IOnStart, Runnable {
     private Activity mContext;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private long startTime;
@@ -49,7 +49,7 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
         mContext = (Activity) context;
         onCreate();
         startTime = System.currentTimeMillis();
-        mDeviceDetail = (InspectionTaskDeviceDetail) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL);
+        mDeviceDetail = (InspectionTaskDeviceDetail) mContext.getIntent().getSerializableExtra(Constants.EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL);
         mHandler.post(this);
         if (mDeviceDetail != null) {
             List<String> tags = mDeviceDetail.getTags();
@@ -84,8 +84,8 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
 
     public void doUploadException() {
         Intent intent = new Intent(mContext, InspectionUploadExceptionActivity.class);
-        intent.putExtra(EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL, mDeviceDetail);
-        intent.putExtra(EXTRA_INSPECTION_START_TIME, startTime);
+        intent.putExtra(Constants.EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL, mDeviceDetail);
+        intent.putExtra(Constants.EXTRA_INSPECTION_START_TIME, startTime);
         getView().startAC(intent);
     }
 
@@ -100,7 +100,7 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
                         if (responseBase.getErrcode() == 0) {
                             getView().toastShort(mContext.getString(R.string.successful_report));
                             EventData eventData = new EventData();
-                            eventData.code = EVENT_DATA_INSPECTION_UPLOAD_NORMAL_CODE;
+                            eventData.code = Constants.EVENT_DATA_INSPECTION_UPLOAD_NORMAL_CODE;
                             EventBus.getDefault().post(eventData);
                             getView().finishAc();
                         } else {
@@ -143,9 +143,9 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
         Object data = eventData.data;
         //上报异常结果成功
         switch (code) {
-            case EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE:
-            case EVENT_DATA_DEPLOY_RESULT_FINISH:
-            case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
+            case Constants.EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE:
+            case Constants.EVENT_DATA_DEPLOY_RESULT_FINISH:
+            case Constants.EVENT_DATA_DEPLOY_RESULT_CONTINUE:
                 getView().finishAc();
                 break;
         }

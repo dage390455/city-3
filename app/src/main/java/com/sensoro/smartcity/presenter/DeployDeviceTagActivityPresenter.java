@@ -6,12 +6,12 @@ import android.text.TextUtils;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.utils.ResourceUtils;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployDeviceTagActivityView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDeviceTagActivityView> implements Constants {
+public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDeviceTagActivityView>  {
     private final List<String> mHistoryKeywords = new ArrayList<>();
     private final List<String> mTagList = new ArrayList<>();
     private Activity mContext;
@@ -30,10 +30,12 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
     public void initData(Context context) {
         mContext = (Activity) context;
 
-        ArrayList<String> stringArrayListExtra = mContext.getIntent().getStringArrayListExtra(EXTRA_SETTING_TAG_LIST);
-        if (stringArrayListExtra != null) {
+        Object bundleValue = getBundleValue(mContext, Constants.EXTRA_SETTING_TAG_LIST);
+        if (bundleValue instanceof ArrayList) {
+            ArrayList<String> stringArrayListExtra = (ArrayList<String>) bundleValue;
             mTagList.addAll(stringArrayListExtra);
         }
+
         String history = PreferencesHelper.getInstance().getDeployTagsHistory();
         if (!TextUtils.isEmpty(history)) {
             mHistoryKeywords.clear();
@@ -127,7 +129,7 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
             }
             save();
             EventData eventData = new EventData();
-            eventData.code = EVENT_DATA_DEPLOY_SETTING_TAG;
+            eventData.code = Constants.EVENT_DATA_DEPLOY_SETTING_TAG;
             eventData.data = mTagList;
             EventBus.getDefault().post(eventData);
             getView().finishAc();

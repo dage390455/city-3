@@ -30,6 +30,7 @@ public class UserInfo implements Serializable {
     private Account account;
     private boolean addUserEnable = true;
     private String controllerAid;
+    private String token;
 
     public String getControllerAid() {
         return controllerAid;
@@ -222,6 +223,14 @@ public class UserInfo implements Serializable {
                 ", updatedTime=" + updatedTime +
                 ", isStop=" + isStop +
                 '}';
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public static class Account implements Serializable {

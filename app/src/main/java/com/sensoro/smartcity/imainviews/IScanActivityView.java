@@ -4,12 +4,14 @@ import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
 
-public interface IScanActivityView extends IToast,IProgressDialog,IActivityIntent{
+public interface IScanActivityView extends IToast, IProgressDialog, IActivityIntent {
     void startScan();
 
     void stopScan();
 
     void updateTitleText(String title);
+
+    void setScanTvInputSnVisible(boolean isVisible);
 
     void setBottomVisible(boolean isVisible);
 

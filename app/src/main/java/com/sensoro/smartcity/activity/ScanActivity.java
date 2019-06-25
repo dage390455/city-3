@@ -12,8 +12,10 @@ import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
@@ -27,6 +29,7 @@ import butterknife.OnClick;
 import cn.szx.simplescanner.zbar.Result;
 import cn.szx.simplescanner.zbar.ZBarScannerView;
 
+@Route(path = ARouterConstants.ACTIVITY_SCAN)
 public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPresenter> implements
         IScanActivityView, ZBarScannerView.ResultHandler {
     @BindView(R.id.ac_scan_qr_view)
@@ -194,6 +197,11 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     @Override
     public void setBottomVisible(boolean isVisible) {
         acScanLlBottom.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setScanTvInputSnVisible(boolean isVisible) {
+        acScanTvInputSn.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override

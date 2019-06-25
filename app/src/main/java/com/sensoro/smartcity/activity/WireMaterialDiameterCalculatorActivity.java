@@ -29,7 +29,7 @@ import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IWireMaterialDiameterCalculatorView;
 import com.sensoro.smartcity.model.WireMaterialDiameterModel;
 import com.sensoro.smartcity.presenter.WireMaterialDiameterCalculatorPresenter;
-import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.ArrayList;
@@ -416,7 +416,7 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
     @Override
     public void setRecommendBtnStatus(boolean isClickable) {
         tvRecommendTransformerAcWireMaterialDiameter.setClickable(isClickable);
-        tvRecommendTransformerAcWireMaterialDiameter.setBackground(mActivity.getDrawable(isClickable ? R.drawable.shape_bg_corner_4_29c_shadow : R.drawable.shape_bg_solid_df_corner));
+        tvRecommendTransformerAcWireMaterialDiameter.setBackground(mActivity.getDrawable(isClickable ? R.drawable.shape_bg_corner_4_29c_shadow : R.drawable.shape_bg_corner_dfdf_shadow));
     }
 
     @Override

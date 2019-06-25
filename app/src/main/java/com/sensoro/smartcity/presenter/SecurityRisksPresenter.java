@@ -12,7 +12,7 @@ import com.sensoro.common.model.SecurityRisksTagModel;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.SecurityRisksContentAdapter;
 import com.sensoro.smartcity.adapter.SecurityRisksReferTagAdapter;
-import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISecurityRisksActivityView;
 import com.sensoro.smartcity.widget.dialog.TagDialogUtils;
 
@@ -46,8 +46,6 @@ public class SecurityRisksPresenter extends BasePresenter<ISecurityRisksActivity
             securityRisksList = list;
             getView().updateSecurityRisksContent(securityRisksList);
         }
-
-
         locationTagList = PreferencesHelper.getInstance().getSecurityRiskLocationTags(mActivity);
         behaviorTagList = PreferencesHelper.getInstance().getSecurityRiskBehaviorTags(mActivity);
 

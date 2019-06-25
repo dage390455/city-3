@@ -14,5 +14,6 @@ public interface IEditNameplateDetailActivityView extends IToast, IActivityInten
 
     void updateSaveStatus(boolean isEnable);
 
-    void showHistoryClearDialog();
+    void updateNameplateName(String nameplateName);
+
 }
