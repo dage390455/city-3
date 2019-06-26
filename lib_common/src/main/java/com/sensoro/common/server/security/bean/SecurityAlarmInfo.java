@@ -1,9 +1,8 @@
-package com.sensoro.common.server.bean;
+package com.sensoro.common.server.security.bean;
 
 import java.io.Serializable;
-import java.util.List;
 
-public class CameraWarnInfo implements Serializable, Comparable<CameraWarnInfo> {
+public class SecurityAlarmInfo implements Serializable, Comparable<SecurityAlarmInfo> {
     public String id;
     public boolean isValid;//是否有效
     public int warnType; // 1:外来 2:重点 3：入侵
@@ -16,7 +15,7 @@ public class CameraWarnInfo implements Serializable, Comparable<CameraWarnInfo> 
 
 
     @Override
-    public int compareTo(CameraWarnInfo o) {
+    public int compareTo(SecurityAlarmInfo o) {
         return 0;
     }
 }

@@ -28,7 +28,7 @@ import com.sensoro.common.server.response.BaseStationChartDetailRsp;
 import com.sensoro.common.server.response.BaseStationDetailRsp;
 import com.sensoro.common.server.response.BaseStationListRsp;
 import com.sensoro.common.server.response.CameraFilterRsp;
-import com.sensoro.common.server.response.CameraWarnRsp;
+import com.sensoro.common.server.security.response.CameraWarnRsp;
 import com.sensoro.common.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.common.server.response.ContractAddRsp;
 import com.sensoro.common.server.response.ContractInfoRsp;
@@ -73,6 +73,8 @@ import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.server.response.UpdateRsp;
 import com.sensoro.common.server.response.UserAccountControlRsp;
 import com.sensoro.common.server.response.UserAccountRsp;
+import com.sensoro.common.server.security.response.HandleAlarmRsp;
+import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.LogUtils;
 
@@ -451,24 +453,6 @@ public class RetrofitServiceHelper {
             , String search, Long beginTime, Long endTime, String unionTypes) {
         return retrofitService.getDeviceAlarmLogList(10, page, sn, deviceName, phone, search, beginTime, endTime, unionTypes);
     }
-
-    /**
-     *
-     * @param page
-     * @param sn
-     * @param deviceName
-     * @param phone
-     * @param search
-     * @param beginTime
-     * @param endTime
-     * @param unionTypes
-     * @return
-     */
-    public Observable<CameraWarnRsp> getCameraWarnList(int page, String sn, String deviceName, String phone
-            , String search, Long beginTime, Long endTime, String unionTypes) {
-        return retrofitService.getCameraWarnLogList(10, page, sn, deviceName, phone, search, beginTime, endTime, unionTypes);
-    }
-
 
     /**
      * 获取故障信息日志
@@ -2097,5 +2081,63 @@ public class RetrofitServiceHelper {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
         return retrofitService.doBindDevice(requestBody);
     }
+    //安防=============
+    /**
+     *
+     * @param page
+     * @param sn
+     * @param deviceName
+     * @param phone
+     * @param search
+     * @param beginTime
+     * @param endTime
+     * @param unionTypes
+     * @return
+     */
+    public Observable<CameraWarnRsp> getCameraWarnList(int page, String sn, String deviceName, String phone
+            , String search, Long beginTime, Long endTime, String unionTypes) {
+        return retrofitService.getCameraWarnLogList(10, page, sn, deviceName, phone, search, beginTime, endTime, unionTypes);
+    }
+
+    /**
+     * Alarms - 处理预警信息
+     * @param id 预警id
+     * @param isEffective 处理结果，0-无效/1-有效.
+     * @param operationDetail 处理备注信息
+     * @return
+     */
+    public Observable<HandleAlarmRsp> handleSecurityAlarm(@NonNull String id, int  isEffective, String operationDetail) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("id", id);
+            jsonObject.put("isEffective", isEffective);
+            if (!TextUtils.isEmpty(operationDetail)) {
+                jsonObject.put("operationDetail", operationDetail);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.handleSecurityAlarm(id, requestBody);
+    }
+
+    /**
+     *
+     * @param id 安防预警ID
+     * @return
+     */
+    public Observable<SecurityAlarmTimelineRsp> getSecurityAlarmTimeLine(@NonNull String id) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("id", id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.getSecurityAlarmTimeLine(id, requestBody);
+    }
+
+
 
 }

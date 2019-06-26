@@ -2,13 +2,10 @@ package com.sensoro.city_camera.presenter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.widget.Toast;
 
-import com.sensoro.city_camera.IMainViews.ICameraListFragmentView;
 import com.sensoro.city_camera.IMainViews.ICameraWarnListFragmentView;
 import com.sensoro.city_camera.R;
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
@@ -21,11 +18,9 @@ import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
-import com.sensoro.common.server.bean.CameraWarnInfo;
-import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
+import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
 import com.sensoro.common.server.bean.EventCameraWarnStatusModel;
-import com.sensoro.common.server.response.CameraWarnRsp;
-import com.sensoro.common.server.response.DeviceAlarmLogRsp;
+import com.sensoro.common.server.security.response.CameraWarnRsp;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -43,21 +38,21 @@ import io.reactivex.schedulers.Schedulers;
  * @author wangqinghao
  */
 public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnListFragmentView> implements IOnCreate,Runnable {
-    private final List<CameraWarnInfo> mCameraWarnInfoList = new ArrayList<>();
+    private final List<SecurityAlarmInfo> mSecurityAlarmInfoList = new ArrayList<>();
     private final List<String> mSearchHistoryList = new ArrayList<>();
     private volatile int cur_page = 1;
     private long startTime;
     private long endTime;
     private Activity mContext;
     private boolean isReConfirm = false;
-    private CameraWarnInfo mCurrentCameraWarnInfo;
+    private SecurityAlarmInfo mCurrentSecurityAlarmInfo;
     private String tempSearchText;
     private volatile boolean needFresh = false;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
 
-    private final Comparator<CameraWarnInfo> cameraWarnInfoComparator = new Comparator<CameraWarnInfo>() {
+    private final Comparator<SecurityAlarmInfo> cameraWarnInfoComparator = new Comparator<SecurityAlarmInfo>() {
         @Override
-        public int compare(CameraWarnInfo o1, CameraWarnInfo o2) {
+        public int compare(SecurityAlarmInfo o1, SecurityAlarmInfo o2) {
             long l = o2.warnTime - o1.warnType;
             if (l > 0) {
                 return 1;
@@ -91,31 +86,31 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
     }
 
     private void freshUI(final int direction, CameraWarnRsp cameraWarnRsp){
-        final List<CameraWarnInfo> cameraWarnInfoList = cameraWarnRsp.getData();
+        final List<SecurityAlarmInfo> securityAlarmInfoList = cameraWarnRsp.getData();
         ThreadPoolManager.getInstance().execute(new Runnable() {
             @Override
             public void run() {
                 if(direction == Constants.DIRECTION_DOWN){
-                    mCameraWarnInfoList.clear();
+                    mSecurityAlarmInfoList.clear();
                 }
-                synchronized (mCameraWarnInfoList){
+                synchronized (mSecurityAlarmInfoList){
                     out:
-                    for (int i = 0; i < cameraWarnInfoList.size(); i++) {
-                        CameraWarnInfo cameraWarnInfo = cameraWarnInfoList.get(i);
-                        for (int j = 0; j < mCameraWarnInfoList.size(); j++) {
-                            if (mCameraWarnInfoList.get(j).id.equals(cameraWarnInfo.id)) {
-                                mCameraWarnInfoList.set(i, cameraWarnInfo);
+                    for (int i = 0; i < securityAlarmInfoList.size(); i++) {
+                        SecurityAlarmInfo securityAlarmInfo = securityAlarmInfoList.get(i);
+                        for (int j = 0; j < mSecurityAlarmInfoList.size(); j++) {
+                            if (mSecurityAlarmInfoList.get(j).id.equals(securityAlarmInfo.id)) {
+                                mSecurityAlarmInfoList.set(i, securityAlarmInfo);
                                 break out;
                             }
                         }
-                        mCameraWarnInfoList.add(cameraWarnInfo);
+                        mSecurityAlarmInfoList.add(securityAlarmInfo);
                     }
-                    Collections.sort(mCameraWarnInfoList, cameraWarnInfoComparator);
+                    Collections.sort(mSecurityAlarmInfoList, cameraWarnInfoComparator);
                     mContext.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             if (isAttachedView()) {
-                                getView().updateCameraWarnsListAdapter(mCameraWarnInfoList);
+                                getView().updateCameraWarnsListAdapter(mSecurityAlarmInfoList);
                             }
 
                         }
@@ -129,7 +124,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
     public void onDestroy() {
         mHandler.removeCallbacksAndMessages(null);
         EventBus.getDefault().unregister(this);
-        mCameraWarnInfoList.clear();
+        mSecurityAlarmInfoList.clear();
 
     }
 
@@ -157,8 +152,8 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                 addTestData(false);
                 getView().dismissProgressDialog();
                 CameraWarnRsp cameraWarnRsp = new CameraWarnRsp();
-                cameraWarnRsp.setData(mCameraWarnInfoList);
-                //getView().updateCameraWarnsListAdapter(mCameraWarnInfoList);
+                cameraWarnRsp.setData(mSecurityAlarmInfoList);
+                //getView().updateCameraWarnsListAdapter(mSecurityAlarmInfoList);
                 freshUI(direction, cameraWarnRsp); //demo
                 getView().onPullRefreshComplete();
                 //demo finish
@@ -192,12 +187,12 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                 addTestData(false);
                 getView().dismissProgressDialog();
                 CameraWarnRsp cameraWarnRsp1 = new CameraWarnRsp();
-                cameraWarnRsp1.setData(mCameraWarnInfoList);
+                cameraWarnRsp1.setData(mSecurityAlarmInfoList);
                 freshUI(direction, cameraWarnRsp1);
                 getView().onPullRefreshComplete();
                 //demo finish
 
-                /*RetrofitServiceHelper.getInstance().getCameraWarnList(cur_page, null, null, null, tempSearchText, null,
+                RetrofitServiceHelper.getInstance().getCameraWarnList(cur_page, null, null, null, tempSearchText, null,
                         null,
                         null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<CameraWarnRsp>(this) {
 
@@ -222,7 +217,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                             getView().onPullRefreshComplete();
                         }
                     }
-                });*/
+                });
                 break;
             default:
                 break;
@@ -230,19 +225,19 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
 
     }
 
-    public void clickItem(CameraWarnInfo cameraWarnInfo,boolean isReConfirm) {
+    public void clickItem(SecurityAlarmInfo securityAlarmInfo, boolean isReConfirm) {
         /*Intent intent = new Intent(mContext, AlarmDetailLogActivity.class);
         intent.putExtra(Constants.EXTRA_ALARM_INFO, deviceAlarmLogInfo);
         getView().startAC(intent);*/
-        getView().toastLong(cameraWarnInfo.toString());
+        getView().toastLong(securityAlarmInfo.toString());
     }
 
     /**
      * 单个安防预警确认
-     * @param cameraWarnInfo
+     * @param securityAlarmInfo
      */
-    public void cameraWarnConfirm(final CameraWarnInfo cameraWarnInfo){
-        getView().toastLong(cameraWarnInfo.warnName);
+    public void cameraWarnConfirm(final SecurityAlarmInfo securityAlarmInfo){
+        getView().toastLong(securityAlarmInfo.warnName);
     }
 
     /**
@@ -292,7 +287,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                 @Override
                 public void run() {
                     if (isAttachedView()) {
-                        getView().updateCameraWarnsListAdapter(mCameraWarnInfoList);
+                        getView().updateCameraWarnsListAdapter(mSecurityAlarmInfoList);
                     }
                     needFresh = false;
                 }
@@ -324,21 +319,21 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         getView().updateSearchHistoryList(mSearchHistoryList);
     }
     /**Item Button 点击事件处理 */
-    public void clickItemByConfirmStatus(final CameraWarnInfo cameraWarnInfo,boolean isReConfirm){
+    public void clickItemByConfirmStatus(final SecurityAlarmInfo securityAlarmInfo, boolean isReConfirm){
         this.isReConfirm = isReConfirm;
-        mCurrentCameraWarnInfo = cameraWarnInfo;
+        mCurrentSecurityAlarmInfo = securityAlarmInfo;
         getView().toastLong("item Button 点击");
 
 
 
     }
-    private void freshSingleWarnLogInfo(CameraWarnInfo cameraWarnInfo) {
-        synchronized (cameraWarnInfo) {
+    private void freshSingleWarnLogInfo(SecurityAlarmInfo securityAlarmInfo) {
+        synchronized (securityAlarmInfo) {
             // 处理只针对当前集合做处理
             boolean canRefresh = false;
-            for (int i = 0; i < mCameraWarnInfoList.size(); i++) {
-                CameraWarnInfo tempLogInfo = mCameraWarnInfoList.get(i);
-                if (tempLogInfo.id.equals(cameraWarnInfo.id)) {
+            for (int i = 0; i < mSecurityAlarmInfoList.size(); i++) {
+                SecurityAlarmInfo tempLogInfo = mSecurityAlarmInfoList.get(i);
+                if (tempLogInfo.id.equals(securityAlarmInfo.id)) {
                     //刷新单个信息
                     /*AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
                     deviceAlarmLogInfo.setSort(1);
@@ -354,12 +349,12 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                 }
             }
             if (canRefresh) {
-                Collections.sort(mCameraWarnInfoList, cameraWarnInfoComparator);
+                Collections.sort(mSecurityAlarmInfoList, cameraWarnInfoComparator);
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (isAttachedView()) {
-                            getView().updateCameraWarnsListAdapter(mCameraWarnInfoList);
+                            getView().updateCameraWarnsListAdapter(mSecurityAlarmInfoList);
                         }
 
                     }
@@ -370,7 +365,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
     }
     private void addTestData(boolean isClearData){
         if(isClearData){
-            mCameraWarnInfoList.clear();
+            mSecurityAlarmInfoList.clear();
         }
         boolean[] warnValid = {true,false};
         int[] warnType = {1,2,3};
@@ -381,7 +376,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         String[] focusMatchrates = {"91%","50%"};
         int dataSize = 6;
         for (int i=0;i<dataSize;i++){
-            CameraWarnInfo info = new CameraWarnInfo();
+            SecurityAlarmInfo info = new SecurityAlarmInfo();
             //int roundInt = (int)Math.round(0.5);
             int roundInt = i;
             info.id = "000"+i;
@@ -393,7 +388,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
             info.warnName = warnName[roundInt%warnName.length]+""+roundInt;
             info.warnAddress = warnAddress[roundInt%warnAddress.length]+""+roundInt;
             info.warnTime = System.currentTimeMillis()-roundInt*100;
-            mCameraWarnInfoList.add(info);
+            mSecurityAlarmInfoList.add(info);
         }
     }
 

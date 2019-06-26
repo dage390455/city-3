@@ -10,7 +10,7 @@ import com.sensoro.common.server.response.BaseStationChartDetailRsp;
 import com.sensoro.common.server.response.BaseStationDetailRsp;
 import com.sensoro.common.server.response.BaseStationListRsp;
 import com.sensoro.common.server.response.CameraFilterRsp;
-import com.sensoro.common.server.response.CameraWarnRsp;
+import com.sensoro.common.server.security.response.CameraWarnRsp;
 import com.sensoro.common.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.common.server.response.ContractAddRsp;
 import com.sensoro.common.server.response.ContractInfoRsp;
@@ -55,6 +55,8 @@ import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.server.response.UpdateRsp;
 import com.sensoro.common.server.response.UserAccountControlRsp;
 import com.sensoro.common.server.response.UserAccountRsp;
+import com.sensoro.common.server.security.response.HandleAlarmRsp;
+import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
 
 import java.util.Map;
 
@@ -101,7 +103,6 @@ public interface RetrofitService {
     String DEVICE_ALARM_TIME = "details/alarm/ltime";
     String DEVICE_ALARM_HISTORY = "prov1/alarms/list/app";
     String DEVICE_ALARM_LOG = "alarmplay";
-    String Camera_WARN_LOG = "camerawarn";
     String DEVICE_MALFUNCTION_LOG = "prov1/malfunctions";
     //    String DEVICE_BRIEF_LIST = "stats/device/brief/app";
     String DEVICE_BRIEF_LIST = "prov2/stats/device/brief/app";
@@ -166,13 +167,6 @@ public interface RetrofitService {
                                                                 String phone, @Query("search") String search, @Query
                                                                 ("beginTime") Long beginTime,
                                                         @Query("endTime") Long endTime
-            , @Query("unionTypes") String unionTypes);
-    @GET(Camera_WARN_LOG)
-    Observable<CameraWarnRsp> getCameraWarnLogList(@Query("count") int count, @Query("page") int page, @Query
-            ("sn") String sn, @Query("deviceName") String deviceName, @Query("phone")
-                                                                String phone, @Query("search") String searchText, @Query
-                                                                ("beginTime") Long beginTime,
-                                                   @Query("endTime") Long endTime
             , @Query("unionTypes") String unionTypes);
 
     @GET(DEVICE_MALFUNCTION_LOG)
@@ -470,5 +464,23 @@ public interface RetrofitService {
 
     @PUT("nameplate/bind/device")
     Observable<ResponseResult<Integer>> doBindDevice(@Body RequestBody requestBody);
+
+
+    @GET("alarms")
+    Observable<CameraWarnRsp> getCameraWarnLogList(@Query("count") int count, @Query("page") int page, @Query
+            ("sn") String sn, @Query("deviceName") String deviceName, @Query("phone")
+                                                           String phone, @Query("search") String searchText, @Query
+                                                           ("beginTime") Long beginTime,
+                                                   @Query("endTime") Long endTime
+            , @Query("unionTypes") String unionTypes);
+
+    @PUT("alarms/{id}/handle")
+    Observable<HandleAlarmRsp> handleSecurityAlarm(@Path("id") String id,@Body RequestBody requestBody);
+    @GET("alarms/{id}/events")
+    Observable<SecurityAlarmTimelineRsp> getSecurityAlarmTimeLine(@Path("id") String id,@Body RequestBody requestBody);
+    
+
+
+
 }
 
