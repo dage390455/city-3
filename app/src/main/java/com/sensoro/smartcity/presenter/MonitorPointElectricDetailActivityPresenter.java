@@ -261,15 +261,19 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         getView().setTitleNameTextView(TextUtils.isEmpty(name) ? sn : name);
 
 
-        List<DeviceNotificationBean> notifications = mDeviceInfo.getAlarms().getNotifications();
-
-        //设置共x人
-        if (notifications.size() == 0) {
-            getView().setNoContact();
+        AlarmInfo alarms = mDeviceInfo.getAlarms();
+        if (alarms != null) {
+            List<DeviceNotificationBean> notifications = alarms.getNotifications();
+            //设置共x人
+            if (notifications.size() == 0) {
+                getView().setNoContact();
+            } else {
+                getView().setContractName(notifications.get(0).getContact());
+                getView().setContractPhone(notifications.get(0).getContent());
+                getView().setContractCount(notifications.size());
+            }
         } else {
-            getView().setContractName(notifications.get(0).getContact());
-            getView().setContractPhone(notifications.get(0).getContent());
-            getView().setContractCount(notifications.size());
+            getView().setNoContact();
         }
 
 
@@ -1376,22 +1380,24 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     public void doContact() {
 
-        List<DeviceNotificationBean> notifications = mDeviceInfo.getAlarms().getNotifications();
+        AlarmInfo alarms = mDeviceInfo.getAlarms();
+        if (alarms!=null){
+            List<DeviceNotificationBean> notifications = alarms.getNotifications();
 
-        if (null != notifications) {
-            if (notifications.size() > 1) {
-                WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
-                dialogUtil.show(notifications);
-            } else if (notifications.size() == 1) {
-                DeviceNotificationBean notificationBean = notifications.get(0);
-                if (TextUtils.isEmpty(notificationBean.getContent()) || mContext.getString(R.string.not_set).equals(notificationBean.getContent())) {
-                    getView().toastShort(mContext.getString(R.string.phone_contact_not_set));
-                    return;
+            if (null != notifications) {
+                if (notifications.size() > 1) {
+                    WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
+                    dialogUtil.show(notifications);
+                } else if (notifications.size() == 1) {
+                    DeviceNotificationBean notificationBean = notifications.get(0);
+                    if (TextUtils.isEmpty(notificationBean.getContent()) || mContext.getString(R.string.not_set).equals(notificationBean.getContent())) {
+                        getView().toastShort(mContext.getString(R.string.phone_contact_not_set));
+                        return;
+                    }
+                    AppUtils.diallPhone(notificationBean.getContent(), mContext);
                 }
-                AppUtils.diallPhone(notificationBean.getContent(), mContext);
             }
         }
-
 
     }
 
@@ -1402,79 +1408,49 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         getView().startAC(intent);
     }
 
+    private final OnConfigInfoObserver onConfigInfoObserver = new OnConfigInfoObserver() {
+        @Override
+        public void onStart(String msg) {
+            if (isAttachedView()) {
+                getView().dismissTipDialog();
+                getView().showOperationTipLoadingDialog();
+            }
+        }
+
+        @Override
+        public void onSuccess(Object o) {
+            if (isAttachedView()) {
+                getView().dismissOperatingLoadingDialog();
+                getView().showOperationSuccessToast();
+            }
+        }
+
+        @Override
+        public void onFailed(String errorMsg) {
+            if (isAttachedView()) {
+                bleRequestCmd();
+            }
+        }
+
+        @Override
+        public void onOverTime(String overTimeMsg) {
+            if (isAttachedView()) {
+                bleRequestCmd();
+            }
+        }
+    };
+
     public void doOperation(int type) {
+
+
         switch (type) {
             case MonitorPointOperationCode.ERASURE:
                 mOperationType = MonitorPointOperationCode.ERASURE_STR;
-                if (doBleMuteOperation(new OnConfigInfoObserver() {
-                    @Override
-                    public void onStart(String msg) {
-                        if (isAttachedView()) {
-                            getView().dismissTipDialog();
-                            getView().showOperationTipLoadingDialog();
-                        }
-                    }
 
-                    @Override
-                    public void onSuccess(Object o) {
-                        if (isAttachedView()) {
-                            getView().dismissOperatingLoadingDialog();
-                            getView().showOperationSuccessToast();
-                        }
-                    }
-
-                    @Override
-                    public void onFailed(String errorMsg) {
-                        if (isAttachedView()) {
-                            bleRequestCmd();
-                        }
-                    }
-
-                    @Override
-                    public void onOverTime(String overTimeMsg) {
-                        if (isAttachedView()) {
-                            bleRequestCmd();
-                        }
-                    }
-                })) {
-                    return;
-                }
                 break;
             case MonitorPointOperationCode.ERASURE_LONG:
                 mOperationType = MonitorPointOperationCode.ERASURE_LONG_STR;
-                if (doBleMuteOperation(new OnConfigInfoObserver() {
-                    @Override
-                    public void onStart(String msg) {
-                        if (isAttachedView()) {
-                            getView().dismissTipDialog();
-                            getView().showOperationTipLoadingDialog();
-                        }
-                    }
 
-                    @Override
-                    public void onSuccess(Object o) {
-                        if (isAttachedView()) {
-                            getView().dismissOperatingLoadingDialog();
-                            getView().showOperationSuccessToast();
-                        }
-                    }
-
-                    @Override
-                    public void onFailed(String errorMsg) {
-                        if (isAttachedView()) {
-                            bleRequestCmd();
-                        }
-                    }
-
-                    @Override
-                    public void onOverTime(String overTimeMsg) {
-                        if (isAttachedView()) {
-                            bleRequestCmd();
-                        }
-                    }
-                })) {
-                    return;
-                }
                 break;
             case MonitorPointOperationCode.RESET:
                 mOperationType = MonitorPointOperationCode.RESET_STR;
@@ -1496,8 +1472,23 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 mOperationType = MonitorPointOperationCode.AIR_SWITCH_POWER_ON_STR;
                 //上电
                 break;
+            default:
+                break;
         }
-        requestServerCmd();
+        //断电、上电不走蓝牙操作
+        if (MonitorPointOperationCode.AIR_SWITCH_POWER_OFF == type || MonitorPointOperationCode.AIR_SWITCH_POWER_ON == type) {
+            requestServerCmd();
+        } else {
+            //其他先进行本地蓝牙，失败则进行下行
+            if (doBleMuteOperation(onConfigInfoObserver)) {
+                //
+                return;
+            } else {
+                requestServerCmd();
+            }
+        }
+
+
     }
 
     private boolean doBleMuteOperation(final OnConfigInfoObserver onConfigInfoObserver) {
