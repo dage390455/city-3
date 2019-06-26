@@ -138,5 +138,6 @@
     <string name="sbc_name">Google 图书搜索</string>
     <string name="wifi_changing_network">连接到 Wi-Fi \u2026</string>
     <string name="do_not_enter_illegal_characters_such_as_english_and_numbers">请勿输入英文，数字等非法字符</string>
+    <string name="please_go_to_setting">请到设置-权限管理中开启</string>
 
 </resources>

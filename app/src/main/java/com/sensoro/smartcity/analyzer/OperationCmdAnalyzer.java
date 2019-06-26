@@ -79,9 +79,6 @@ public class OperationCmdAnalyzer {
             case MonitorPointOperationCode.AIR_SWITCH_POWER_ON_STR:
                 builder.setCmd(2);
                 break;
-            case MonitorPointOperationCode.SELF_CHECK_STR:
-                builder.setCmd(2);
-                break;
             case MonitorPointOperationCode.QUERY_STR:
                 builder.setCmd(0);
                 break;
@@ -187,6 +184,10 @@ public class OperationCmdAnalyzer {
         switch (mOperationType) {
             case MonitorPointOperationCode.ERASURE_STR:
                 builder.setSmokeCtrl(MsgNode1V1M5.SmokeCtrl.SMOKE_ERASURE);
+                break;
+
+            case MonitorPointOperationCode.ERASURE_LONG_STR:
+                builder.setSmokeCtrl(MsgNode1V1M5.SmokeCtrl.SMOKE_ERASURE_LONE);
                 break;
             default:
                 callback.onWriteFailure(0, 0);

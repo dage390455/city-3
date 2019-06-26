@@ -1441,79 +1441,49 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         getView().startAC(intent);
     }
 
+    private final OnConfigInfoObserver onConfigInfoObserver = new OnConfigInfoObserver() {
+        @Override
+        public void onStart(String msg) {
+            if (isAttachedView()) {
+                getView().dismissTipDialog();
+                getView().showOperationTipLoadingDialog();
+            }
+        }
+
+        @Override
+        public void onSuccess(Object o) {
+            if (isAttachedView()) {
+                getView().dismissOperatingLoadingDialog();
+                getView().showOperationSuccessToast();
+            }
+        }
+
+        @Override
+        public void onFailed(String errorMsg) {
+            if (isAttachedView()) {
+                bleRequestCmd();
+            }
+        }
+
+        @Override
+        public void onOverTime(String overTimeMsg) {
+            if (isAttachedView()) {
+                bleRequestCmd();
+            }
+        }
+    };
+
     public void doOperation(int type) {
+
+
         switch (type) {
             case MonitorPointOperationCode.ERASURE:
                 mOperationType = MonitorPointOperationCode.ERASURE_STR;
-                if (doBleMuteOperation(new OnConfigInfoObserver() {
-                    @Override
-                    public void onStart(String msg) {
-                        if (isAttachedView()) {
-                            getView().dismissTipDialog();
-                            getView().showOperationTipLoadingDialog();
-                        }
-                    }
 
-                    @Override
-                    public void onSuccess(Object o) {
-                        if (isAttachedView()) {
-                            getView().dismissOperatingLoadingDialog();
-                            getView().showOperationSuccessToast();
-                        }
-                    }
-
-                    @Override
-                    public void onFailed(String errorMsg) {
-                        if (isAttachedView()) {
-                            bleRequestCmd();
-                        }
-                    }
-
-                    @Override
-                    public void onOverTime(String overTimeMsg) {
-                        if (isAttachedView()) {
-                            bleRequestCmd();
-                        }
-                    }
-                })) {
-                    return;
-                }
                 break;
             case MonitorPointOperationCode.ERASURE_LONG:
                 mOperationType = MonitorPointOperationCode.ERASURE_LONG_STR;
-                if (doBleMuteOperation(new OnConfigInfoObserver() {
-                    @Override
-                    public void onStart(String msg) {
-                        if (isAttachedView()) {
-                            getView().dismissTipDialog();
-                            getView().showOperationTipLoadingDialog();
-                        }
-                    }
 
-                    @Override
-                    public void onSuccess(Object o) {
-                        if (isAttachedView()) {
-                            getView().dismissOperatingLoadingDialog();
-                            getView().showOperationSuccessToast();
-                        }
-                    }
-
-                    @Override
-                    public void onFailed(String errorMsg) {
-                        if (isAttachedView()) {
-                            bleRequestCmd();
-                        }
-                    }
-
-                    @Override
-                    public void onOverTime(String overTimeMsg) {
-                        if (isAttachedView()) {
-                            bleRequestCmd();
-                        }
-                    }
-                })) {
-                    return;
-                }
                 break;
             case MonitorPointOperationCode.RESET:
                 mOperationType = MonitorPointOperationCode.RESET_STR;
@@ -1535,8 +1505,23 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 mOperationType = MonitorPointOperationCode.AIR_SWITCH_POWER_ON_STR;
                 //上电
                 break;
+            default:
+                break;
         }
-        requestServerCmd();
+        //断电、上电不走蓝牙操作
+        if (MonitorPointOperationCode.AIR_SWITCH_POWER_OFF == type || MonitorPointOperationCode.AIR_SWITCH_POWER_ON == type) {
+            requestServerCmd();
+        } else {
+            //其他先进行本地蓝牙，失败则进行下行
+            if (doBleMuteOperation(onConfigInfoObserver)) {
+                //
+                return;
+            } else {
+                requestServerCmd();
+            }
+        }
+
+
     }
 
     private boolean doBleMuteOperation(final OnConfigInfoObserver onConfigInfoObserver) {

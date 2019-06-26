@@ -583,9 +583,9 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     public void confirmState(int type) {
         switch (type) {
             case TYPE_VIDEO:
-                stopVideo();    //停止播放
-                mVideoView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-                machine.start(mVideoView.getHolder(), screenProp);
+                stopVideo();
+//                mVideoView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+//                machine.start(mVideoView.getHolder(), screenProp);
                 if (jCameraLisenter != null) {
                     jCameraLisenter.recordSuccess(videoUrl, firstFrame, mProgress);
                 }
