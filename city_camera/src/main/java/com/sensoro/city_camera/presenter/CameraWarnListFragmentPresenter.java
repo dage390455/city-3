@@ -37,7 +37,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * @author wangqinghao
  */
-public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnListFragmentView> implements IOnCreate,Runnable {
+public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnListFragmentView> implements IOnCreate, Runnable {
     private final List<SecurityAlarmInfo> mSecurityAlarmInfoList = new ArrayList<>();
     private final List<String> mSearchHistoryList = new ArrayList<>();
     private volatile int cur_page = 1;
@@ -64,9 +64,10 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
 
         }
     };
+
     @Override
     public void initData(Context context) {
-        mContext = (Activity)context;
+        mContext = (Activity) context;
         onCreate();
         //if (PreferencesHelper.getInstance().getUserData().hasAlarmInfo) {
         if (true) {
@@ -85,15 +86,15 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
 
     }
 
-    private void freshUI(final int direction, SecurityAlarmListRsp securityAlarmListRsp){
+    private void freshUI(final int direction, SecurityAlarmListRsp securityAlarmListRsp) {
         final List<SecurityAlarmInfo> securityAlarmInfoList = securityAlarmListRsp.getData().list;
         ThreadPoolManager.getInstance().execute(new Runnable() {
             @Override
             public void run() {
-                if(direction == Constants.DIRECTION_DOWN){
+                if (direction == Constants.DIRECTION_DOWN) {
                     mSecurityAlarmInfoList.clear();
                 }
-                synchronized (mSecurityAlarmInfoList){
+                synchronized (mSecurityAlarmInfoList) {
                     out:
                     for (int i = 0; i < securityAlarmInfoList.size(); i++) {
                         SecurityAlarmInfo securityAlarmInfo = securityAlarmInfoList.get(i);
@@ -120,6 +121,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         });
 
     }
+
     @Override
     public void onDestroy() {
         mHandler.removeCallbacksAndMessages(null);
@@ -130,6 +132,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
 
     /**
      * 搜索数据
+     *
      * @param direction
      * @param searchText
      */
@@ -144,23 +147,22 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         } else {
             tempSearchText = searchText;
         }
-        switch (direction){
+        switch (direction) {
             case Constants.DIRECTION_DOWN:
                 cur_page = 1;
                 getView().showProgressDialog();
-                //demo  begin
-                addTestData(false);
-                getView().dismissProgressDialog();
-                SecurityAlarmListRsp securityAlarmListRsp = new SecurityAlarmListRsp();
-                securityAlarmListRsp.setList(mSecurityAlarmInfoList);
-                //getView().updateCameraWarnsListAdapter(mSecurityAlarmInfoList);
-                freshUI(direction, securityAlarmListRsp); //demo
-                getView().onPullRefreshComplete();
-                //demo finish
+//                //demo  begin
+//                addTestData(false);
+//                getView().dismissProgressDialog();
+//                SecurityAlarmListRsp securityAlarmListRsp = new SecurityAlarmListRsp();
+//                securityAlarmListRsp.setList(mSecurityAlarmInfoList);
+//                //getView().updateCameraWarnsListAdapter(mSecurityAlarmInfoList);
+//                freshUI(direction, securityAlarmListRsp); //demo
+//                getView().onPullRefreshComplete();
+//                //demo finishAc
 
-                /*RetrofitServiceHelper.getInstance().getCameraWarnList(cur_page, null, null, null, tempSearchText, null,
-                        null,
-                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityAlarmListRsp>(this) {
+                RetrofitServiceHelper.getInstance().getSecurityAlarmList(cur_page, null, null, 2, null, 1
+                ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityAlarmListRsp>(this) {
 
 
                     @Override
@@ -176,25 +178,24 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                         freshUI(direction, securityAlarmListRsp);
                         getView().onPullRefreshComplete();
                     }
-                });*/
+                });
 
                 break;
             case Constants.DIRECTION_UP:
                 cur_page++;
                 getView().showProgressDialog();
 
-                //demo  begin
-                addTestData(false);
-                getView().dismissProgressDialog();
-                SecurityAlarmListRsp securityAlarmListRsp1 = new SecurityAlarmListRsp();
-                securityAlarmListRsp1.setList(mSecurityAlarmInfoList);
-                freshUI(direction, securityAlarmListRsp1);
-                getView().onPullRefreshComplete();
-                //demo finish
-/*
-                RetrofitServiceHelper.getInstance().getSecurityAlarmList(cur_page, null, null, null, tempSearchText, null,
-                        null,
-                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityAlarmListRsp>(this) {
+//                //demo  begin
+//                addTestData(false);
+//                getView().dismissProgressDialog();
+//                SecurityAlarmListRsp securityAlarmListRsp1 = new SecurityAlarmListRsp();
+//                securityAlarmListRsp1.setList(mSecurityAlarmInfoList);
+//                freshUI(direction, securityAlarmListRsp1);
+//                getView().onPullRefreshComplete();
+//                //demo finish
+
+                RetrofitServiceHelper.getInstance().getSecurityAlarmList(cur_page, null, null, 0, null, 0
+                ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityAlarmListRsp>(this) {
 
 
                     @Override
@@ -217,7 +218,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                             getView().onPullRefreshComplete();
                         }
                     }
-                });*/
+                });
                 break;
             default:
                 break;
@@ -234,16 +235,17 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
 
     /**
      * 单个安防预警确认
+     *
      * @param securityAlarmInfo
      */
-    public void cameraWarnConfirm(final SecurityAlarmInfo securityAlarmInfo){
+    public void cameraWarnConfirm(final SecurityAlarmInfo securityAlarmInfo) {
         getView().toastLong(securityAlarmInfo.getTaskName());
     }
 
     /**
      * 刷新单条数据
      */
-    public void  refreshSigleCameraWarnInfo(){
+    public void refreshSigleCameraWarnInfo() {
 
     }
 
@@ -251,6 +253,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
     public void onCreate() {
         EventBus.getDefault().register(this);
     }
+
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventCameraWarnStatusModel eventAlarmStatusModel) {
         if (TextUtils.isEmpty(tempSearchText) && !getView().getSearchTextCancelVisible()) {
@@ -260,8 +263,8 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         }
 
 
+    }
 
-        }
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
@@ -271,16 +274,21 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         }
 
     }
+
     public void doCancelSearch() {
         tempSearchText = null;
         requestSearchData(Constants.DIRECTION_DOWN, null);
     }
-    /**首次刷新列表*/
+
+    /**
+     * 首次刷新列表
+     */
     @Override
     public void run() {
         scheduleRefresh();
         mHandler.postDelayed(this, 3000);
     }
+
     private void scheduleRefresh() {
         if (needFresh) {
             mContext.runOnUiThread(new Runnable() {
@@ -297,6 +305,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
 
     /**
      * 保存历史搜索记录
+     *
      * @param text
      */
     public void save(String text) {
@@ -318,15 +327,18 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         mSearchHistoryList.clear();
         getView().updateSearchHistoryList(mSearchHistoryList);
     }
-    /**Item Button 点击事件处理 */
-    public void clickItemByConfirmStatus(final SecurityAlarmInfo securityAlarmInfo, boolean isReConfirm){
+
+    /**
+     * Item Button 点击事件处理
+     */
+    public void clickItemByConfirmStatus(final SecurityAlarmInfo securityAlarmInfo, boolean isReConfirm) {
         this.isReConfirm = isReConfirm;
         mCurrentSecurityAlarmInfo = securityAlarmInfo;
         getView().toastLong("item Button 点击");
 
 
-
     }
+
     private void freshSingleWarnLogInfo(SecurityAlarmInfo securityAlarmInfo) {
         synchronized (securityAlarmInfo) {
             // 处理只针对当前集合做处理
@@ -363,7 +375,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
 
         }
     }
-    private void addTestData(boolean isClearData){
+    /*private void addTestData(boolean isClearData){
         if(isClearData){
             mSecurityAlarmInfoList.clear();
         }
@@ -390,7 +402,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
             info.setAlarmTime( System.currentTimeMillis()-roundInt*100);
             mSecurityAlarmInfoList.add(info);
         }
-    }
+    }*/
 
 
 }

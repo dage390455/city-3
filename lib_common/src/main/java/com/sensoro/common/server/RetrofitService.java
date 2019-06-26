@@ -89,7 +89,9 @@ public interface RetrofitService {
     //正式环境
     String SCOPE_MASTER = "https://city-api.sensoro.com/";
     //开发环境
-    String SCOPE_DEVELOPER = "https://city-dev-api.sensoro.com/";
+//    String SCOPE_DEVELOPER = "https://city-dev-api.sensoro.com/";
+    String SCOPE_DEVELOPER = "https://city-antelope-proxy-dev-api.sensoro.com";
+//    String SCOPE_DEVELOPER = "https://city-dev-api.sensoro.com/camera-center";
 
     String LOGIN = "sessions";
     String LOGOUT = "sessions/current";
@@ -480,6 +482,9 @@ public interface RetrofitService {
                                                       @Query("offset") int offset);
     @GET("alarms/{id}")
     Observable<SecurityAlarmDetailRsp> getSecurityAlarmDetails(@Path("id") String id, @Body RequestBody requestBody);
+    @POST("token/devices_history")
+    Observable<SecurityAlarmDetailRsp> getSecurityDeviceVideoHistort(@Path("id") String id, @Body RequestBody requestBody);
+
 
 
 
