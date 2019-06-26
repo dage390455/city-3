@@ -136,6 +136,8 @@ public class DeployConfigurationAnalyzer {
             sensoroSensor.acrelFires.connectSw = 0;//关联脱扣器全部关闭
             sensoroSensor.acrelFires.ict = 2000;//漏电互感器变比 2000
             //TODO in、buzz
+            sensoroSensor.acrelFires.in = trans;
+            sensoroSensor.acrelFires.buzzer = 0x0200;
             sensoroSensor.acrelFires.cmd = 2; //自检
         }
 
