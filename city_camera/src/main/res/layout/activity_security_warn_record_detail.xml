@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_f4f4f4"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/view_top_ac_camera_person_detail"
+        android:layout_width="match_parent"
+        android:layout_height="22dp"
+        android:background="@color/white" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/include_imv_title_imv_cl_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/include_imv_title_imv_arrows_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
+            android:contentDescription="@null"
+            android:padding="10dp"
+            android:src="@mipmap/arrows_left"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.sensoro.common.widgets.BoldTextView
+            android:id="@+id/include_imv_title_tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="21dp"
+            android:layout_marginStart="5dp"
+            android:text="@string/alert_log"
+            android:textColor="@color/c_252525"
+            android:textSize="18dp"
+            app:layout_constraintBottom_toBottomOf="@id/include_imv_title_imv_arrows_left"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/include_imv_title_imv_arrows_left" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="@dimen/view_divider_height"
+            android:background="@color/c_dfdfdf"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer
+            android:id="@+id/gsy_player_ac_camera_person_detailq"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="16:9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <LinearLayout
+        android:id="@+id/vertical_tool_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="32dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/security_warn_record_download" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="69dp"
+            android:src="@drawable/security_warn_record_capture" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/horizontal_tool_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|right"
+        android:orientation="vertical"
+        android:layout_marginEnd="12dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/security_warn_record_download_horizontal" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:src="@drawable/security_warn_record_capture_horizontal" />
+    </LinearLayout>
+
+</LinearLayout>

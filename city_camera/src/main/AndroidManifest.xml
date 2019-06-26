@@ -1,13 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sensoro.city_camera">
 
-    <application >
-        <activity android:name=".activity.SecurityWarnDetailActivity"/>
+    <application>
+        <activity
+            android:name=".activity.SecurityWarnRecordDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity android:name=".activity.PhotoPreviewActivity" />
+        <activity android:name=".activity.SecurityWarnDetailActivity" />
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="feb394e9f7754ae572cc77a0bfc723e5" />
-
         <meta-data
             android:name="com.fengmap.mapapi.appkey"
             android:value="7b11a3fcdc47cdacf522976dd5ca4c61" />
