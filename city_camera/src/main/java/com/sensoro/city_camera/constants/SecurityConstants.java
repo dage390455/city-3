@@ -13,4 +13,17 @@ public interface SecurityConstants {
      * 预警无效
      */
     int SECURITY_INVALID = 1;
+    /**
+     * 重点
+     */
+    int SECURITY_TPYE_FOCUS = 1;
+    /**
+     * 外来
+     */
+    int SECURITY_TPYE_FOREIGN = 2;
+    /**
+     * 入侵
+     */
+    int SECURITY_TPYE_INVADE = 3;
+
 }

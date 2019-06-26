@@ -3,8 +3,7 @@ package com.sensoro.city_camera.IMainViews;
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
-import com.sensoro.common.server.bean.CameraWarnInfo;
-import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
+import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
 
 import java.util.List;
 
@@ -16,9 +15,9 @@ public interface ICameraWarnListFragmentView extends IToast, IActivityIntent, IP
 
     /**
      * 更新安防预警列表
-     * @param CameraWarnInfoList
+     * @param securityAlarmInfoList
      */
-    void updateCameraWarnsListAdapter(List<CameraWarnInfo> CameraWarnInfoList);
+    void updateCameraWarnsListAdapter(List<SecurityAlarmInfo> securityAlarmInfoList);
 
     /**
      * 下拉刷新完成

@@ -41,7 +41,7 @@ import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseFragment;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.constant.ARouterConstants;
-import com.sensoro.common.server.bean.CameraWarnInfo;
+import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.widgets.ProgressUtils;
@@ -321,10 +321,10 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
 
 
     @Override
-    public void updateCameraWarnsListAdapter(List<CameraWarnInfo> cameraWarnInfoList) {
-        Log.d(TAG, "updateCameraWarnsListAdapter: " + cameraWarnInfoList.size());
-        if (cameraWarnInfoList.size() > 0) {
-            mRcContentAdapter.setData(cameraWarnInfoList);
+    public void updateCameraWarnsListAdapter(List<SecurityAlarmInfo> securityAlarmInfoList) {
+        Log.d(TAG, "updateCameraWarnsListAdapter: " + securityAlarmInfoList.size());
+        if (securityAlarmInfoList.size() > 0) {
+            mRcContentAdapter.setData(securityAlarmInfoList);
             mRcContentAdapter.notifyDataSetChanged();
         }
         try {
@@ -332,7 +332,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
-        setNoContentVisible(cameraWarnInfoList.size() < 1);
+        setNoContentVisible(securityAlarmInfoList.size() < 1);
 
     }
 
@@ -456,8 +456,8 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     @Override
     public void onConfirmStatusClick(View view, int position, boolean isReConfirm) {
         try {
-            CameraWarnInfo cameraWarnInfo = mRcContentAdapter.getData().get(position);
-            mPresenter.clickItemByConfirmStatus(cameraWarnInfo, isReConfirm);
+            SecurityAlarmInfo securityAlarmInfo = mRcContentAdapter.getData().get(position);
+            mPresenter.clickItemByConfirmStatus(securityAlarmInfo, isReConfirm);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -466,8 +466,8 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     @Override
     public void onItemClick(View view, int position, boolean isReConfirm) {
         try {
-            CameraWarnInfo cameraWarnInfo = mRcContentAdapter.getData().get(position);
-            mPresenter.clickItem(cameraWarnInfo, isReConfirm);
+            SecurityAlarmInfo securityAlarmInfo = mRcContentAdapter.getData().get(position);
+            mPresenter.clickItem(securityAlarmInfo, isReConfirm);
         } catch (Exception e) {
             e.printStackTrace();
         }
