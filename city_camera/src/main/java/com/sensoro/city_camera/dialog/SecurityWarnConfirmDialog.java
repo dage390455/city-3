@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
+import com.sensoro.city_camera.constants.SecurityConstants;
 import com.sensoro.common.widgets.dialog.TipDialogUtils;
 
 import butterknife.BindView;
@@ -48,6 +49,12 @@ public class SecurityWarnConfirmDialog extends BaseBottomDialog {
 
     private TipDialogUtils mCancelConfirmDialog, mUploadConfirmDialog;
 
+    public static final String EXTRA_KEY_SECURITY_ID = "security_id";
+    public static final String EXTRA_KEY_SECURITY_TITLE = "security_title";
+    public static final String EXTRA_KEY_SECURITY_TIME = "security_time";
+    public static final String EXTRA_KEY_SECURITY_TYPE = "security_type";
+    private String id;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -64,6 +71,32 @@ public class SecurityWarnConfirmDialog extends BaseBottomDialog {
     }
 
     private void initUI() {
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            id = bundle.getString(EXTRA_KEY_SECURITY_ID);
+            String title = bundle.getString(EXTRA_KEY_SECURITY_TITLE);
+            String time = bundle.getString(EXTRA_KEY_SECURITY_TIME);
+            int type = bundle.getInt(EXTRA_KEY_SECURITY_TYPE);
+
+            mSecurityWarnTitleTv.setText(title);
+            mSecurityWarnTimeTv.setText(time);
+            switch (type) {
+                case SecurityConstants.SECURITY_TPYE_FOCUS:
+                    mSecurityWarnTimeTv.setText(R.string.focus_type);
+                    mSecurityWarnTypeTv.setBackgroundResource(R.drawable.security_type_focus_bg);
+                    break;
+                case SecurityConstants.SECURITY_TPYE_FOREIGN:
+                    mSecurityWarnTimeTv.setText(R.string.external_type);
+                    mSecurityWarnTypeTv.setBackgroundResource(R.drawable.security_type_foreign_bg);
+                    break;
+                case SecurityConstants.SECURITY_TPYE_INVADE:
+                    mSecurityWarnTimeTv.setText(R.string.invade_type);
+                    mSecurityWarnTypeTv.setBackgroundResource(R.drawable.security_type_invade_bg);
+                    break;
+                default:
+            }
+        }
+
         mSecurityWarnTypeValidRb.setOnCheckedChangeListener((buttonView, isChecked) ->
                 mSecurityWarnCommitBtn.setBackgroundResource(isChecked
                         ? R.drawable.security_warn_valid_commit_btn_bg
@@ -85,9 +118,9 @@ public class SecurityWarnConfirmDialog extends BaseBottomDialog {
         }
     }
 
-    private void showCancelCommitDialog(){
-        if(mCancelConfirmDialog == null){
-            mCancelConfirmDialog  = new TipDialogUtils(getActivity());
+    private void showCancelCommitDialog() {
+        if (mCancelConfirmDialog == null) {
+            mCancelConfirmDialog = new TipDialogUtils(getActivity());
             mCancelConfirmDialog.setTipConfirmText(getContext().getString(R.string.security_warn_confirm_dialog_exit_button), ContextCompat.getColor(getContext(), R.color.c_f34a4a));
             mCancelConfirmDialog.setTipMessageText(getContext().getString(R.string.security_warn_confirm_dialog_exit_title));
             mCancelConfirmDialog.setTipDialogUtilsClickListener(new TipDialogUtils.TipDialogUtilsClickListener() {
@@ -107,8 +140,8 @@ public class SecurityWarnConfirmDialog extends BaseBottomDialog {
         mCancelConfirmDialog.show();
     }
 
-    private void showUploadConfirmDialog(){
-        if(mUploadConfirmDialog == null){
+    private void showUploadConfirmDialog() {
+        if (mUploadConfirmDialog == null) {
             mUploadConfirmDialog = new TipDialogUtils(getActivity());
             mUploadConfirmDialog.setTipConfirmText(getContext().getString(R.string.security_warn_confirm_dialog_upload_button), ContextCompat.getColor(getContext(), R.color.c_f34a4a));
             mUploadConfirmDialog.setTipMessageText(getContext().getString(R.string.security_warn_confirm_dialog_upload_title));
@@ -120,6 +153,14 @@ public class SecurityWarnConfirmDialog extends BaseBottomDialog {
 
                 @Override
                 public void onConfirmClick() {
+                    if (mSecurityConfirmCallback != null) {
+                        mSecurityConfirmCallback.onConfirmClick(id,
+                                mSecurityWarnTypeValidRb.isChecked()
+                                        ? SecurityConstants.SECURITY_VALID
+                                        : SecurityConstants.SECURITY_INVALID,
+                                String.valueOf(mSecurityWarnDesEt.getText()));
+                    }
+                    dismiss();
                     mUploadConfirmDialog.dismiss();
                 }
             });
@@ -127,8 +168,25 @@ public class SecurityWarnConfirmDialog extends BaseBottomDialog {
         mUploadConfirmDialog.show();
     }
 
-    public void show(FragmentManager fragmentManager){
+    public void show(FragmentManager fragmentManager) {
         show(fragmentManager, SecurityWarnConfirmDialog.class.getSimpleName());
     }
 
+    private SecurityConfirmCallback mSecurityConfirmCallback;
+
+    public interface SecurityConfirmCallback {
+
+        /**
+         * 预警确认弹窗回调
+         *
+         * @param id
+         * @param isEffective
+         * @param operationDetail
+         */
+        void onConfirmClick(String id, int isEffective, String operationDetail);
+    }
+
+    public void setSecurityConfirmCallback(SecurityConfirmCallback securityConfirmCallback) {
+        mSecurityConfirmCallback = securityConfirmCallback;
+    }
 }

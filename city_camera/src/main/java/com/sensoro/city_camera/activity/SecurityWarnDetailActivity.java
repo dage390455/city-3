@@ -8,7 +8,6 @@ import android.widget.TextView;
 import com.sensoro.city_camera.IMainViews.ISecurityWarnDetailView;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
-import com.sensoro.city_camera.dialog.SecurityCameraDetailsDialog;
 import com.sensoro.city_camera.dialog.SecurityControlPersonDetailsDialog;
 import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
 import com.sensoro.city_camera.presenter.SecurityWarnDetailPresenter;
@@ -24,7 +23,8 @@ import butterknife.OnClick;
  * @author : bin.tian
  * date   : 2019-06-24
  */
-public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetailView, SecurityWarnDetailPresenter> {
+public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetailView, SecurityWarnDetailPresenter>
+        implements ISecurityWarnDetailView {
 
     @BindView(R2.id.include_text_title_imv_arrows_left)
     ImageView mBackIv;
@@ -51,6 +51,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     @BindView(R2.id.security_warn_alert_confirm_tv)
     TextView mSecurityWarnConfirmTv;
 
+    private SecurityWarnConfirmDialog mSecurityWarnConfirmDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -97,15 +98,23 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         } else if (view.getId() == R.id.security_warn_quick_navigation_tv) {
             mPresenter.doNavigation();
         } else if (view.getId() == R.id.security_warn_alert_confirm_tv) {
-//            ArrayList<String> list = new ArrayList<>();
-//            list.add("http://pic37.nipic.com/20140113/8800276_184927469000_2.png");
-//            list.add("http://pic25.nipic.com/20121205/10197997_003647426000_2.jpg");
-//            list.add("http://img.redocn.com/sheji/20141219/zhongguofengdaodeliyizhanbanzhijing_3744115.jpg");
-//            Intent intent = new Intent(this, PhotoPreviewActivity.class);
-//            intent.putStringArrayListExtra(PhotoPreviewActivity.EXTRA_KEY_URLS, list);
-//            intent.putExtra(PhotoPreviewActivity.EXTRA_KEY_POSITION, 1);
-//            startActivity(intent);
+            mPresenter.doConfirm();
         }
+    }
+
+    @Override
+    public void showConfirmDialog() {
+        if (mSecurityWarnConfirmDialog == null) {
+            mSecurityWarnConfirmDialog = new SecurityWarnConfirmDialog();
+            mSecurityWarnConfirmDialog.setSecurityConfirmCallback(mPresenter);
+        }
+        Bundle bundle = new Bundle();
+        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_ID, "");
+        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TITLE, "");
+        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TIME, "");
+        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TYPE, "");
+        mSecurityWarnConfirmDialog.setArguments(bundle);
+        mSecurityWarnConfirmDialog.show(getSupportFragmentManager());
     }
 
     @Override
