@@ -51,15 +51,15 @@ public class SecurityAlarmInfo implements Serializable, Comparable<SecurityAlarm
     private String sceneUrl;
     private String faceRect;
     private double score;
-    private String captureTime;
-    private String alarmTime;
+    private long captureTime;
+    private long alarmTime;
     private int isHandle;
     private int isEffective;
     private String faceUrl;
     private String imageUrl;
     private int cid;
     private int taskType;
-    private String alarmType;
+    private int alarmType;
     private double latitude;
     private double longitude;
     private String captureId;
@@ -182,19 +182,19 @@ public class SecurityAlarmInfo implements Serializable, Comparable<SecurityAlarm
         this.score = score;
     }
 
-    public String getCaptureTime() {
+    public long getCaptureTime() {
         return captureTime;
     }
 
-    public void setCaptureTime(String captureTime) {
+    public void setCaptureTime(long captureTime) {
         this.captureTime = captureTime;
     }
 
-    public String getAlarmTime() {
+    public long getAlarmTime() {
         return alarmTime;
     }
 
-    public void setAlarmTime(String alarmTime) {
+    public void setAlarmTime(long alarmTime) {
         this.alarmTime = alarmTime;
     }
 
@@ -246,11 +246,11 @@ public class SecurityAlarmInfo implements Serializable, Comparable<SecurityAlarm
         this.taskType = taskType;
     }
 
-    public String getAlarmType() {
+    public int getAlarmType() {
         return alarmType;
     }
 
-    public void setAlarmType(String alarmType) {
+    public void setAlarmType(int alarmType) {
         this.alarmType = alarmType;
     }
 

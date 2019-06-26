@@ -21,13 +21,20 @@ public class SecurityAlarmListRsp extends ResponseBase implements Serializable {
     public void setData(SecurityAlarmListData data) {
         this.data = data;
     }
+    public void setList(List<SecurityAlarmInfo> list){
+        if(null == this.data){
+            this.data = new SecurityAlarmListData();
+        }
+        this.data.list = list;
+        this.data.total = list.size();
+    }
 
 
     public static class SecurityAlarmListData {
-        int total;
-        int offset;
-        int limit;
-        List<SecurityAlarmInfo> list;
+        public int total;
+        public int offset;
+        public int limit;
+        public List<SecurityAlarmInfo> list;
     }
 
     @Override

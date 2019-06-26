@@ -52,14 +52,14 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
         boolean isReConfirm = false;
         SecurityAlarmInfo securityAlarmInfo = mList.get(position);
         if (securityAlarmInfo != null) {
-            boolean isWarnValid = securityAlarmInfo.isValid;
-            int warnType = securityAlarmInfo.warnType;
-            String capturePhotoUrl = securityAlarmInfo.capturePhotoUrl;
-            String focusOriPhoto = securityAlarmInfo.focusOriPhoto;
-            String focusMatchrate = securityAlarmInfo.focusMatchrate;
-            String warnName = securityAlarmInfo.warnName;
-            String warnAddress = securityAlarmInfo.warnAddress;
-            long warnTime = securityAlarmInfo.warnTime;
+            boolean isWarnValid = (securityAlarmInfo.getIsEffective()> 0);
+            int warnType = securityAlarmInfo.getAlarmType();
+            String capturePhotoUrl = securityAlarmInfo.getFaceUrl();
+            String focusOriPhoto = securityAlarmInfo.getImageUrl();
+            String focusMatchrate = securityAlarmInfo.getScore()+"";
+            String warnName = securityAlarmInfo.getTaskName();
+            String warnAddress = securityAlarmInfo.getAddress();
+            long warnTime = securityAlarmInfo.getAlarmTime();
             holder.tvWarnName.setText(warnName);
             holder.tvWarnAddress.setText(warnAddress);
             holder.tvWarnTime.setText(DateUtil.getStrTimeToday(mContext, warnTime, 0));
