@@ -22,12 +22,15 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnResume;
 import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.common.manger.ThreadPoolManager;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.EventData;
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.AlarmInfo;
@@ -50,6 +53,8 @@ import com.sensoro.common.server.response.DeviceCameraListRsp;
 import com.sensoro.common.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
 import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.libbleserver.ble.callback.OnDeviceUpdateObserver;
 import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
 import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
@@ -71,21 +76,16 @@ import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.analyzer.OperationCmdAnalyzer;
 import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.callback.OnConfigInfoObserver;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IMonitorPointElectricDetailActivityView;
 import com.sensoro.smartcity.model.BleUpdateModel;
-import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.Elect3DetailModel;
 import com.sensoro.smartcity.model.TaskOptionModel;
-import com.sensoro.common.utils.AppUtils;
-import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.dialog.TipDeviceUpdateDialogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -1408,79 +1408,49 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         getView().startAC(intent);
     }
 
+    private final OnConfigInfoObserver onConfigInfoObserver = new OnConfigInfoObserver() {
+        @Override
+        public void onStart(String msg) {
+            if (isAttachedView()) {
+                getView().dismissTipDialog();
+                getView().showOperationTipLoadingDialog();
+            }
+        }
+
+        @Override
+        public void onSuccess(Object o) {
+            if (isAttachedView()) {
+                getView().dismissOperatingLoadingDialog();
+                getView().showOperationSuccessToast();
+            }
+        }
+
+        @Override
+        public void onFailed(String errorMsg) {
+            if (isAttachedView()) {
+                bleRequestCmd();
+            }
+        }
+
+        @Override
+        public void onOverTime(String overTimeMsg) {
+            if (isAttachedView()) {
+                bleRequestCmd();
+            }
+        }
+    };
+
     public void doOperation(int type) {
+
+
         switch (type) {
             case MonitorPointOperationCode.ERASURE:
                 mOperationType = MonitorPointOperationCode.ERASURE_STR;
-                if (doBleMuteOperation(new OnConfigInfoObserver() {
-                    @Override
-                    public void onStart(String msg) {
-                        if (isAttachedView()) {
-                            getView().dismissTipDialog();
-                            getView().showOperationTipLoadingDialog();
-                        }
-                    }
 
-                    @Override
-                    public void onSuccess(Object o) {
-                        if (isAttachedView()) {
-                            getView().dismissOperatingLoadingDialog();
-                            getView().showOperationSuccessToast();
-                        }
-                    }
-
-                    @Override
-                    public void onFailed(String errorMsg) {
-                        if (isAttachedView()) {
-                            bleRequestCmd();
-                        }
-                    }
-
-                    @Override
-                    public void onOverTime(String overTimeMsg) {
-                        if (isAttachedView()) {
-                            bleRequestCmd();
-                        }
-                    }
-                })) {
-                    return;
-                }
                 break;
             case MonitorPointOperationCode.ERASURE_LONG:
                 mOperationType = MonitorPointOperationCode.ERASURE_LONG_STR;
-                if (doBleMuteOperation(new OnConfigInfoObserver() {
-                    @Override
-                    public void onStart(String msg) {
-                        if (isAttachedView()) {
-                            getView().dismissTipDialog();
-                            getView().showOperationTipLoadingDialog();
-                        }
-                    }
 
-                    @Override
-                    public void onSuccess(Object o) {
-                        if (isAttachedView()) {
-                            getView().dismissOperatingLoadingDialog();
-                            getView().showOperationSuccessToast();
-                        }
-                    }
-
-                    @Override
-                    public void onFailed(String errorMsg) {
-                        if (isAttachedView()) {
-                            bleRequestCmd();
-                        }
-                    }
-
-                    @Override
-                    public void onOverTime(String overTimeMsg) {
-                        if (isAttachedView()) {
-                            bleRequestCmd();
-                        }
-                    }
-                })) {
-                    return;
-                }
                 break;
             case MonitorPointOperationCode.RESET:
                 mOperationType = MonitorPointOperationCode.RESET_STR;
@@ -1502,8 +1472,23 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 mOperationType = MonitorPointOperationCode.AIR_SWITCH_POWER_ON_STR;
                 //上电
                 break;
+            default:
+                break;
         }
-        requestServerCmd();
+        //断电、上电不走蓝牙操作
+        if (MonitorPointOperationCode.AIR_SWITCH_POWER_OFF == type || MonitorPointOperationCode.AIR_SWITCH_POWER_ON == type) {
+            requestServerCmd();
+        } else {
+            //其他先进行本地蓝牙，失败则进行下行
+            if (doBleMuteOperation(onConfigInfoObserver)) {
+                //
+                return;
+            } else {
+                requestServerCmd();
+            }
+        }
+
+
     }
 
     private boolean doBleMuteOperation(final OnConfigInfoObserver onConfigInfoObserver) {
