@@ -102,7 +102,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
 
     public void doContactOwner(DeviceAlarmLogInfo deviceAlarmLogInfo) {
         List<DeviceNotificationBean> deviceNotifications = deviceAlarmLogInfo.getDeviceNotifications();
-        if (deviceNotifications.size() > 0) {
+        if (deviceNotifications != null && deviceNotifications.size() > 0) {
             WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
             dialogUtil.show(deviceNotifications);
         } else {
