@@ -1125,4 +1125,5 @@
 
     <string name="fire_warn_title">消防预警</string>
     <string name="security_warn_title">安防预警</string>
+    <string name="app_name_city_camera">app_name_city_camera</string>
 </resources>

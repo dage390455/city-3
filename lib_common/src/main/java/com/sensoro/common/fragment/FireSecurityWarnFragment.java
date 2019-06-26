@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.fragment;
+package com.sensoro.common.fragment;
 
 
 import android.content.Context;
@@ -12,14 +12,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
+import com.sensoro.common.R;
+import com.sensoro.common.R2;
 import com.sensoro.common.base.BaseFragment;
+import com.sensoro.common.imainview.IFireSecurityWarnView;
+import com.sensoro.common.presenter.FireSecurityWarnPresenter;
 import com.sensoro.common.utils.AppUtils;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.imainviews.IFireSecurityWarnView;
-import com.sensoro.smartcity.presenter.FireSecurityWarnPresenter;
 import com.shizhefei.view.indicator.FixedIndicatorView;
 import com.shizhefei.view.indicator.IndicatorViewPager;
-import com.shizhefei.view.indicator.slidebar.ColorBar;
 import com.shizhefei.view.indicator.slidebar.TextWidthColorBar;
 import com.shizhefei.view.indicator.transition.OnTransitionTextListener;
 
@@ -32,12 +32,14 @@ import butterknife.BindView;
 /**
  * @author bin.tian
  */
-public class FireSecurityWarnFragment extends BaseFragment<IFireSecurityWarnView, FireSecurityWarnPresenter> implements IFireSecurityWarnView{
+public class FireSecurityWarnFragment extends BaseFragment<IFireSecurityWarnView, FireSecurityWarnPresenter> implements IFireSecurityWarnView {
 
-    @BindView(R.id.content_viewPager)
+    @BindView(R2.id.content_viewPager)
     ViewPager mContentViewPager;
-    @BindView(R.id.indicatorView)
+    @BindView(R2.id.indicatorView)
     FixedIndicatorView mIndicatorView;
+    @BindView(R2.id.line_top)
+    View lineTop;
 
     private FireSecurityWarnPageAdapter mFireSecurityWarnPageAdapter;
 
@@ -47,7 +49,7 @@ public class FireSecurityWarnFragment extends BaseFragment<IFireSecurityWarnView
         mPresenter.initData(activity);
     }
 
-    private void initView(){
+    private void initView() {
         mFireSecurityWarnPageAdapter = new FireSecurityWarnPageAdapter(mRootFragment.getFragmentManager());
         mIndicatorView.setScrollBar(new TextWidthColorBar(getContext(), mIndicatorView, ContextCompat.getColor(getContext(), R.color.c_1DBB99), AppUtils.dp2px(getContext(), 2F)));
         mIndicatorView.setSplitMethod(FixedIndicatorView.SPLITMETHOD_EQUALS);
@@ -83,6 +85,12 @@ public class FireSecurityWarnFragment extends BaseFragment<IFireSecurityWarnView
     public void updateFireSecurityPageAdapterData(List<String> fragmentTitleList, List<Fragment> fragments) {
         mFireSecurityWarnPageAdapter.setFragmentData(fragmentTitleList, fragments);
         mFireSecurityWarnPageAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setHasFireSecurityView(boolean visible) {
+        mIndicatorView.setVisibility(visible ? View.VISIBLE : View.GONE);
+        lineTop.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -146,7 +154,7 @@ public class FireSecurityWarnFragment extends BaseFragment<IFireSecurityWarnView
 
         @Override
         public View getViewForTab(int position, View convertView, ViewGroup container) {
-            if (convertView == null){
+            if (convertView == null) {
                 convertView = getLayoutInflater().inflate(R.layout.fire_security_tap_top_layout, container, false);
             }
             TextView textView = (TextView) convertView;
@@ -166,5 +174,7 @@ public class FireSecurityWarnFragment extends BaseFragment<IFireSecurityWarnView
             this.fragmentTitleList.addAll(fragmentTitleList);
             this.fragmentList.addAll(fragmentList);
         }
-    };
+    }
+
+    ;
 }

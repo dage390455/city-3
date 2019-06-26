@@ -1,8 +1,7 @@
-package com.sensoro.smartcity.activity;
+package com.sensoro.city_camera.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -12,27 +11,28 @@ import com.sensoro.bottomnavigation.BadgeItem;
 import com.sensoro.bottomnavigation.BottomNavigationBar;
 import com.sensoro.bottomnavigation.BottomNavigationItem;
 import com.sensoro.bottomnavigation.TextBadgeItem;
+import com.sensoro.city_camera.IMainViews.ILauncherActivityView;
+import com.sensoro.city_camera.R;
+import com.sensoro.city_camera.R2;
+import com.sensoro.city_camera.presenter.LauncherActivityPresenter;
+import com.sensoro.common.adapter.MainFragmentPageAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.widgets.HomeViewPager;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
-import com.sensoro.smartcity.R;
-import com.sensoro.common.adapter.MainFragmentPageAdapter;
-import com.sensoro.smartcity.imainviews.IMainView;
-import com.sensoro.smartcity.presenter.MainPresenter;
-import com.sensoro.common.widgets.HomeViewPager;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity<IMainView, MainPresenter> implements IMainView
+public class LauncherActivity extends BaseActivity<ILauncherActivityView, LauncherActivityPresenter> implements ILauncherActivityView
         , BottomNavigationBar.OnTabSelectedListener {
 
-    @BindView(R.id.ac_main_hvp_content)
+    @BindView(R2.id.ac_main_hvp_content)
     HomeViewPager acMainHvpContent;
-    @BindView(R.id.ac_main_bottom_navigation_bar)
+    @BindView(R2.id.ac_main_bottom_navigation_bar)
     BottomNavigationBar acMainBottomBar;
     private MainFragmentPageAdapter mPageAdapter;
     private BottomNavigationItem warnItem;
@@ -40,16 +40,21 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_launcher);
         ButterKnife.bind(this);
         initView();
         mPresenter.initData(mActivity);
 
     }
 
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        return mPresenter.onKeyDown(keyCode, event);
+//    }
+
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return mPresenter.onKeyDown(keyCode, event);
+    public void onBackPressed() {
+        mPresenter.exit();
     }
 
     private void initView() {
@@ -60,35 +65,24 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     }
 
     private void initBottomBar() {
-        BottomNavigationItem homeItem = new BottomNavigationItem(R.drawable.selector_ac_main_home, mActivity.getString(R.string.main_page_home));
         warnItem = new BottomNavigationItem(R.drawable.selector_ac_main_warning, mActivity.getString(R.string.main_page_warn));
         warnItem.setBadgeItem(new TextBadgeItem());
-        BottomNavigationItem malfunctionItem = new BottomNavigationItem(R.drawable.selector_ac_main_malfunction, mActivity.getString(R.string.main_page_malfunction));
-        BottomNavigationItem managerItem = new BottomNavigationItem(R.drawable.selector_ac_main_manage, mActivity.getString(R.string.main_page_manage));
-        BottomNavigationItem cameraItem = new BottomNavigationItem(R.drawable.selector_ac_main_home, getString(R.string.main_page_camera));
+        BottomNavigationItem cameraItem = new BottomNavigationItem(R.drawable.selector_ac_main_warning, getString(R.string.main_page_camera));
         acMainBottomBar.setTabSelectedListener(this);
         acMainBottomBar
-                .addItem(homeItem)
                 .addItem(warnItem)
                 .addItem(cameraItem)
-                .addItem(malfunctionItem)
-                .addItem(managerItem)
                 .setFirstSelectedPosition(0)
                 .initialise();
         warnItem.getBadgeItem().hide(false);
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        mPresenter.handleActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    protected MainPresenter createPresenter() {
-        return new MainPresenter();
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        mPresenter.handleActivityResult(requestCode, resultCode, data);
+//    }
 
 
     @Override
@@ -143,7 +137,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     public void setHpCurrentItem(int position) {
-        acMainHvpContent.setCurrentItem(position,false);
+        acMainHvpContent.setCurrentItem(position, false);
 
     }
 
@@ -246,5 +240,10 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
             mProgressUtils = null;
         }
         super.onDestroy();
+    }
+
+    @Override
+    protected LauncherActivityPresenter createPresenter() {
+        return new LauncherActivityPresenter();
     }
 }

@@ -8,6 +8,8 @@
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".activity.PhotoPreviewActivity" />
         <activity android:name=".activity.SecurityWarnDetailActivity" />
+        <activity android:name=".activity.LauncherActivity"/>
+
 
         <meta-data
             android:name="com.amap.api.v2.apikey"

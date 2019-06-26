@@ -2,6 +2,7 @@ package com.sensoro.common.constant;
 
 public interface ARouterConstants {
     String ACTIVITY_NAMEPLATE_LIST = "/nameplate/activity/NameplateListActivity";
+    String FRAGMENT_FIRE_WARN_FRAGMENT = "/common/activity/FireWarnFragment";
 
     String ACTIVITY_DEPLOY_DEVICE_TAG = "/app/activity/DeployDeviceTagActivity";
 
