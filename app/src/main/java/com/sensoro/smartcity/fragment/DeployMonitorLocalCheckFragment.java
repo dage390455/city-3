@@ -300,7 +300,7 @@ public class DeployMonitorLocalCheckFragment extends BaseFragment<IDeployMonitor
     public void updateBtnStatus(boolean hasConfig) {
         tvFgDeployLocalButton.setEnabled(hasConfig);
         tvFgDeployLocalButton.setClickable(hasConfig);
-        tvFgDeployLocalButton.setBackgroundResource(hasConfig ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.filter_corner);
+        tvFgDeployLocalButton.setBackgroundResource(hasConfig ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_corner_dfdf_shadow);
         mPresenter.updateCheckTipText(hasConfig);
     }
 

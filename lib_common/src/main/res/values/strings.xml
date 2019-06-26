@@ -645,7 +645,7 @@
     <string name="electric_current">Current</string>
     <string name="device_air_switch_config_tip_message">Resetting this value will change the threshold of alarm</string>
     <string name="air_switch_config">Configuration</string>
-    <string name="is_device_air_switch_config">Setting</string>
+    <string name="is_device_air_switch_config">Setting</string>git
     <string name="configuring">Setting&#8230;</string>
     <string name="monitor_point_operation_error_value_range">Input error,Range:</string>
     <string name="enter_the_correct_number_format">Please enter number in correct format</string>
@@ -1138,6 +1138,12 @@
     <string name="continue_associate">continue associate</string>
     <string name="network_delay">Network delay</string>
     <string name="temperature_information">Temperature</string>
+
+    <string name="external">external</string>
+    <string name="internal">internal</string>
+    <string name="please_go_to_setting">Please go to Settings - Rights Management to open</string>
+
+
     <string name="fire_warn_title">消防预警</string>
     <string name="security_warn_title">安防预警</string>
 
