@@ -8,6 +8,9 @@ import android.widget.TextView;
 import com.sensoro.city_camera.IMainViews.ISecurityWarnDetailView;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
+import com.sensoro.city_camera.dialog.SecurityCameraDetailsDialog;
+import com.sensoro.city_camera.dialog.SecurityControlPersonDetailsDialog;
+import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
 import com.sensoro.city_camera.presenter.SecurityWarnDetailPresenter;
 import com.sensoro.city_camera.util.MapUtil;
 import com.sensoro.common.base.BaseActivity;
@@ -84,6 +87,12 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         } else if (view.getId() == R.id.security_warn_deploy_tv) {
 
         } else if (view.getId() == R.id.security_warn_contact_owner_tv) {
+//            SecurityCameraDetailsDialog cameraDetailsDialog = new SecurityCameraDetailsDialog();
+//            cameraDetailsDialog.show(getSupportFragmentManager());
+            SecurityControlPersonDetailsDialog securityControlPersonDetailsDialog = new SecurityControlPersonDetailsDialog();
+            securityControlPersonDetailsDialog.show(getSupportFragmentManager());
+//            SecurityWarnConfirmDialog warnConfirmDialog = new SecurityWarnConfirmDialog();
+//            warnConfirmDialog.show(getSupportFragmentManager());
 
         } else if (view.getId() == R.id.security_warn_quick_navigation_tv) {
             mPresenter.doNavigation();

@@ -29,4 +29,17 @@
     <string name="security_warn_deploy_title">布控人员信息</string>
     <string name="toast_image_download_success">下载成功</string>
     <string name="toast_image_download_failed">下载失败</string>
+    <string name="word_base_info">基本信息</string>
+    <string name="word_device_sn">设备号</string>
+    <string name="title_camera_brand">摄像机品牌</string>
+    <string name="title_label">标签</string>
+    <string name="title_camera_version">摄像机版本</string>
+    <string name="title_warn_contact">预警联系人</string>
+    <string name="title_navi">位置导航</string>
+    <string name="word_name">姓名</string>
+    <string name="word_nation">民族</string>
+    <string name="word_phone">手机号</string>
+    <string name="word_idcard">身份证</string>
+    <string name="word_describe">描述</string>
+>>>>>>> 1.添加相机详情 布控人员详情 dialog
 </resources>
