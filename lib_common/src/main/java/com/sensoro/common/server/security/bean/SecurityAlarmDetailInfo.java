@@ -1,11 +1,12 @@
 package com.sensoro.common.server.security.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
- * 安防预警信息
+ * 安防预警详情信息
  */
-public class SecurityAlarmInfo implements Serializable, Comparable<SecurityAlarmInfo> {
+public class SecurityAlarmDetailInfo implements Serializable {
 
 
     /**
@@ -27,20 +28,25 @@ public class SecurityAlarmInfo implements Serializable, Comparable<SecurityAlarm
      * alarmTime : 1543507002943
      * isHandle : 0
      * isEffective : 0
+     * operationDetail : null
      * faceUrl : https://jxsr-oss1.antelopecloud.cn/files
      * imageUrl : https://jxsr-oss1.antelopecloud.cn/files
      * cid : 538379219
+     * alarmNotifyUserIds : ["101000001028","101000001034"]
      * taskType : 101501
      * alarmType : 1
      * latitude : 30.491367
      * longitude : 114.40996
      * captureId : 1543480494000005
+     * personInfoUrl : /api/person/resource/v1/person/getPersonById
+     * aid : 5190486531474724667
+     * feature : 90rXvRhW3ju2k409tSoGuiZlyLxjmTq8TKCtvQ02pTyDjjQ6NBr3PDbSk7whZ449b137u7d+xTyqpcw8TLIIPEpDCr1BHMG7rZ7xu5u93Dx
      */
 
     private String id;
     private String alarmLogId;
     private String infoId;
-    private StructuredInfoJson structuredInfojson;//布控人员图片结构化数据.
+    private Object structuredInfojson;
     private ObjectMainJsonBean objectMainJson;
     private String deviceName;
     private String address;
@@ -55,6 +61,7 @@ public class SecurityAlarmInfo implements Serializable, Comparable<SecurityAlarm
     private String alarmTime;
     private int isHandle;
     private int isEffective;
+    private Object operationDetail;
     private String faceUrl;
     private String imageUrl;
     private int cid;
@@ -63,12 +70,10 @@ public class SecurityAlarmInfo implements Serializable, Comparable<SecurityAlarm
     private double latitude;
     private double longitude;
     private String captureId;
-
-    @Override
-    public int compareTo(SecurityAlarmInfo o) {
-        return 0;
-    }
-
+    private String personInfoUrl;
+    private String aid;
+    private String feature;
+    private List<String> alarmNotifyUserIds;
 
     public String getId() {
         return id;
@@ -94,11 +99,11 @@ public class SecurityAlarmInfo implements Serializable, Comparable<SecurityAlarm
         this.infoId = infoId;
     }
 
-    public StructuredInfoJson getStructuredInfojson() {
+    public Object getStructuredInfojson() {
         return structuredInfojson;
     }
 
-    public void setStructuredInfojson(StructuredInfoJson structuredInfojson) {
+    public void setStructuredInfojson(Object structuredInfojson) {
         this.structuredInfojson = structuredInfojson;
     }
 
@@ -214,6 +219,14 @@ public class SecurityAlarmInfo implements Serializable, Comparable<SecurityAlarm
         this.isEffective = isEffective;
     }
 
+    public Object getOperationDetail() {
+        return operationDetail;
+    }
+
+    public void setOperationDetail(Object operationDetail) {
+        this.operationDetail = operationDetail;
+    }
+
     public String getFaceUrl() {
         return faceUrl;
     }
@@ -278,17 +291,40 @@ public class SecurityAlarmInfo implements Serializable, Comparable<SecurityAlarm
         this.captureId = captureId;
     }
 
-    public static class StructuredInfoJson {
-        /**
-         * 布控人员图片结构化数据
-         * 数据结构为空
-         */
-
+    public String getPersonInfoUrl() {
+        return personInfoUrl;
     }
 
+    public void setPersonInfoUrl(String personInfoUrl) {
+        this.personInfoUrl = personInfoUrl;
+    }
+
+    public String getAid() {
+        return aid;
+    }
+
+    public void setAid(String aid) {
+        this.aid = aid;
+    }
+
+    public String getFeature() {
+        return feature;
+    }
+
+    public void setFeature(String feature) {
+        this.feature = feature;
+    }
+
+    public List<String> getAlarmNotifyUserIds() {
+        return alarmNotifyUserIds;
+    }
+
+    public void setAlarmNotifyUserIds(List<String> alarmNotifyUserIds) {
+        this.alarmNotifyUserIds = alarmNotifyUserIds;
+    }
 
     public static class ObjectMainJsonBean {
-        /** 布控人员信息
+        /**
          * name : 刘敏
          * gender : 男
          * mobile : 18754623152

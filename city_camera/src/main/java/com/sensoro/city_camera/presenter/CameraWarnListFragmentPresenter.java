@@ -20,7 +20,7 @@ import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
 import com.sensoro.common.server.bean.EventCameraWarnStatusModel;
-import com.sensoro.common.server.security.response.CameraWarnRsp;
+import com.sensoro.common.server.security.response.SecurityAlarmListRsp;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -85,8 +85,8 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
 
     }
 
-    private void freshUI(final int direction, CameraWarnRsp cameraWarnRsp){
-        final List<SecurityAlarmInfo> securityAlarmInfoList = cameraWarnRsp.getData();
+    private void freshUI(final int direction, SecurityAlarmListRsp securityAlarmListRsp){
+        final List<SecurityAlarmInfo> securityAlarmInfoList = securityAlarmListRsp.getData();
         ThreadPoolManager.getInstance().execute(new Runnable() {
             @Override
             public void run() {
@@ -151,16 +151,16 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                 //demo  begin
                 addTestData(false);
                 getView().dismissProgressDialog();
-                CameraWarnRsp cameraWarnRsp = new CameraWarnRsp();
-                cameraWarnRsp.setData(mSecurityAlarmInfoList);
+                SecurityAlarmListRsp securityAlarmListRsp = new SecurityAlarmListRsp();
+                securityAlarmListRsp.setData(mSecurityAlarmInfoList);
                 //getView().updateCameraWarnsListAdapter(mSecurityAlarmInfoList);
-                freshUI(direction, cameraWarnRsp); //demo
+                freshUI(direction, securityAlarmListRsp); //demo
                 getView().onPullRefreshComplete();
                 //demo finish
 
                 /*RetrofitServiceHelper.getInstance().getCameraWarnList(cur_page, null, null, null, tempSearchText, null,
                         null,
-                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<CameraWarnRsp>(this) {
+                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityAlarmListRsp>(this) {
 
 
                     @Override
@@ -171,9 +171,9 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                     }
 
                     @Override
-                    public void onCompleted(CameraWarnRsp cameraWarnRsp) {
+                    public void onCompleted(SecurityAlarmListRsp securityAlarmListRsp) {
                         getView().dismissProgressDialog();
-                        freshUI(direction, cameraWarnRsp);
+                        freshUI(direction, securityAlarmListRsp);
                         getView().onPullRefreshComplete();
                     }
                 });*/
@@ -186,15 +186,15 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                 //demo  begin
                 addTestData(false);
                 getView().dismissProgressDialog();
-                CameraWarnRsp cameraWarnRsp1 = new CameraWarnRsp();
-                cameraWarnRsp1.setData(mSecurityAlarmInfoList);
-                freshUI(direction, cameraWarnRsp1);
+                SecurityAlarmListRsp securityAlarmListRsp1 = new SecurityAlarmListRsp();
+                securityAlarmListRsp1.setData(mSecurityAlarmInfoList);
+                freshUI(direction, securityAlarmListRsp1);
                 getView().onPullRefreshComplete();
                 //demo finish
 
                 RetrofitServiceHelper.getInstance().getCameraWarnList(cur_page, null, null, null, tempSearchText, null,
                         null,
-                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<CameraWarnRsp>(this) {
+                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityAlarmListRsp>(this) {
 
 
                     @Override
@@ -206,14 +206,14 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                     }
 
                     @Override
-                    public void onCompleted(CameraWarnRsp cameraWarnRsp) {
+                    public void onCompleted(SecurityAlarmListRsp securityAlarmListRsp) {
                         getView().dismissProgressDialog();
-                        if (cameraWarnRsp.getData().size() == 0) {
+                        if (securityAlarmListRsp.getData().size() == 0) {
                             getView().toastShort(mContext.getString(R.string.no_more_data));
                             getView().onPullRefreshCompleteNoMoreData();
                             cur_page--;
                         } else {
-                            freshUI(direction, cameraWarnRsp);
+                            freshUI(direction, securityAlarmListRsp);
                             getView().onPullRefreshComplete();
                         }
                     }

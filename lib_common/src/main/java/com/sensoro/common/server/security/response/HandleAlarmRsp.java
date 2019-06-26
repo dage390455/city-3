@@ -22,7 +22,7 @@ public class HandleAlarmRsp extends ResponseBase implements Serializable {
                 '}';
     }
 
-    class HandleAlarmData {
+    public static class HandleAlarmData {
         public String id;
     }
 }

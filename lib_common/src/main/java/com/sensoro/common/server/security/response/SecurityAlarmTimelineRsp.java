@@ -20,7 +20,7 @@ public class SecurityAlarmTimelineRsp extends ResponseBase implements Serializab
         this.data = data;
     }
 
-    class SecurityAlarmTimelineData {
+    public static class SecurityAlarmTimelineData {
         public String id;
         public List<SecurityAlarmEventInfo> list;
     }

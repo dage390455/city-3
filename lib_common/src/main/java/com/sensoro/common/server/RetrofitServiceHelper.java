@@ -28,7 +28,8 @@ import com.sensoro.common.server.response.BaseStationChartDetailRsp;
 import com.sensoro.common.server.response.BaseStationDetailRsp;
 import com.sensoro.common.server.response.BaseStationListRsp;
 import com.sensoro.common.server.response.CameraFilterRsp;
-import com.sensoro.common.server.security.response.CameraWarnRsp;
+import com.sensoro.common.server.security.response.SecurityAlarmDetailRsp;
+import com.sensoro.common.server.security.response.SecurityAlarmListRsp;
 import com.sensoro.common.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.common.server.response.ContractAddRsp;
 import com.sensoro.common.server.response.ContractInfoRsp;
@@ -2083,24 +2084,7 @@ public class RetrofitServiceHelper {
     }
     //安防=============
     /**
-     *
-     * @param page
-     * @param sn
-     * @param deviceName
-     * @param phone
-     * @param search
-     * @param beginTime
-     * @param endTime
-     * @param unionTypes
-     * @return
-     */
-    public Observable<CameraWarnRsp> getCameraWarnList(int page, String sn, String deviceName, String phone
-            , String search, Long beginTime, Long endTime, String unionTypes) {
-        return retrofitService.getCameraWarnLogList(10, page, sn, deviceName, phone, search, beginTime, endTime, unionTypes);
-    }
-
-    /**
-     * Alarms - 处理预警信息
+     * 处理安防预警信息
      * @param id 预警id
      * @param isEffective 处理结果，0-无效/1-有效.
      * @param operationDetail 处理备注信息
@@ -2123,7 +2107,7 @@ public class RetrofitServiceHelper {
     }
 
     /**
-     *
+     *获取安防预警详情时间轴事件
      * @param id 安防预警ID
      * @return
      */
@@ -2137,6 +2121,40 @@ public class RetrofitServiceHelper {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
         return retrofitService.getSecurityAlarmTimeLine(id, requestBody);
     }
+
+    /**
+     * 获取安防预警列表
+     * @param startTime 查询范围开始时间 精确到秒
+     * @param endTime  查询范围结束时间 精确到秒
+     * @param alarmOperationType 预警操作类型，1-已处理/2-未处理/3-有效/4-无效
+     * @param taskName 任务名称，多个名称时逗号分隔(支持模糊匹配)
+     * @param alarmType 预警日志类型，1-重点人员/2-外来人员/3-人员入侵
+     * @param limit  查询条数，默认20
+     * @param offset 查询起始位置，默认0
+     * @return
+     */
+    public Observable<SecurityAlarmListRsp> getSecurityAlarmList(String startTime,String endTime,int alarmOperationType,
+                                                                 String taskName,int alarmType,int limit,int offset){
+        return retrofitService.getSecurityAlarmList(startTime,endTime,alarmOperationType,taskName,alarmType,limit,offset);
+
+    }
+
+    /**
+     * 获取预警详情信息
+     * @param id 预警id.
+     * @return
+     */
+    public Observable<SecurityAlarmDetailRsp> getSecurityAlarmDetails(@NonNull String id) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("id", id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.getSecurityAlarmDetails(id, requestBody);
+    }
+
 
 
 

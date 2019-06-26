@@ -10,7 +10,8 @@ import com.sensoro.common.server.response.BaseStationChartDetailRsp;
 import com.sensoro.common.server.response.BaseStationDetailRsp;
 import com.sensoro.common.server.response.BaseStationListRsp;
 import com.sensoro.common.server.response.CameraFilterRsp;
-import com.sensoro.common.server.security.response.CameraWarnRsp;
+import com.sensoro.common.server.security.response.SecurityAlarmDetailRsp;
+import com.sensoro.common.server.security.response.SecurityAlarmListRsp;
 import com.sensoro.common.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.common.server.response.ContractAddRsp;
 import com.sensoro.common.server.response.ContractInfoRsp;
@@ -466,19 +467,19 @@ public interface RetrofitService {
     Observable<ResponseResult<Integer>> doBindDevice(@Body RequestBody requestBody);
 
 
-    @GET("alarms")
-    Observable<CameraWarnRsp> getCameraWarnLogList(@Query("count") int count, @Query("page") int page, @Query
-            ("sn") String sn, @Query("deviceName") String deviceName, @Query("phone")
-                                                           String phone, @Query("search") String searchText, @Query
-                                                           ("beginTime") Long beginTime,
-                                                   @Query("endTime") Long endTime
-            , @Query("unionTypes") String unionTypes);
-
     @PUT("alarms/{id}/handle")
-    Observable<HandleAlarmRsp> handleSecurityAlarm(@Path("id") String id,@Body RequestBody requestBody);
+    Observable<HandleAlarmRsp> handleSecurityAlarm(@Path("id") String id, @Body RequestBody requestBody);
+
     @GET("alarms/{id}/events")
-    Observable<SecurityAlarmTimelineRsp> getSecurityAlarmTimeLine(@Path("id") String id,@Body RequestBody requestBody);
-    
+    Observable<SecurityAlarmTimelineRsp> getSecurityAlarmTimeLine(@Path("id") String id, @Body RequestBody requestBody);
+
+    @GET("alarms")
+    Observable<SecurityAlarmListRsp> getSecurityAlarmList(@Query("startTime") String startTime, @Query("endTime") String endTime,
+                                                      @Query("alarmOperationType") int alarmOperationType, @Query("taskName") String taskName,
+                                                      @Query("alarmType") int alarmType, @Query("limit") int limit,
+                                                      @Query("offset") int offset);
+    @GET("alarms/{id}")
+    Observable<SecurityAlarmDetailRsp> getSecurityAlarmDetails(@Path("id") String id, @Body RequestBody requestBody);
 
 
 

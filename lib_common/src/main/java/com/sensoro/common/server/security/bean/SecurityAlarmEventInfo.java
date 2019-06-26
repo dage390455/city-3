@@ -15,7 +15,7 @@ public class SecurityAlarmEventInfo implements Serializable, Comparable<Security
     public EventHandler handler;
     public long createTime;
 
-    class EventHandler{
+    public static class EventHandler{
          String email;
          String name;
 

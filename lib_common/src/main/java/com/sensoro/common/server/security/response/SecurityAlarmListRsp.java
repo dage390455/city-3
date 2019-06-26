@@ -8,25 +8,32 @@ import java.util.List;
 
 /**
  * Created by sensoro on 17/7/26.
+ * 获取安防预警列表
  */
 
-public class CameraWarnRsp extends ResponseBase implements Serializable{
+public class SecurityAlarmListRsp extends ResponseBase implements Serializable {
 
-    public List<SecurityAlarmInfo> getData() {
+    protected SecurityAlarmListData data;
+    public SecurityAlarmListData getData() {
         return data;
     }
 
-    public void setData(List<SecurityAlarmInfo> data) {
+    public void setData(SecurityAlarmListData data) {
         this.data = data;
     }
 
-    protected List<SecurityAlarmInfo> data;
+
+    public static class SecurityAlarmListData {
+        int total;
+        int offset;
+        int limit;
+        List<SecurityAlarmInfo> list;
+    }
 
     @Override
     public String toString() {
-        return "SecurityAlarmInfo{" +
+        return "SecurityAlarmListRsp{" +
                 "data=" + data +
                 '}';
     }
-
 }
