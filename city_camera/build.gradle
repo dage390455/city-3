@@ -70,6 +70,11 @@ dependencies {
     implementation deps.amap_location
     //搜索功能
     implementation deps.amap_search
-
+    //图片预览
     implementation 'com.github.MikeOrtiz:TouchImageView:2.2.0'
+    //播放器
+    implementation project(path: ':gsyVideoPlayer-base')
+    implementation project(path: ':gsyVideoPlayer-proxy_cache')
+    implementation project(path: ':gsyVideoPlayer-java')
+    implementation project(path: ':gsyVideoPlayer-armv7a')
 }

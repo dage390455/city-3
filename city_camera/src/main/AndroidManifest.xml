@@ -3,7 +3,10 @@
     package="com.sensoro.city_camera">
 
     <application>
-        <activity android:name=".activity.PhotoPreviewActivity"></activity>
+        <activity
+            android:name=".activity.SecurityWarnRecordDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity android:name=".activity.PhotoPreviewActivity" />
         <activity android:name=".activity.SecurityWarnDetailActivity" />
 
         <meta-data

@@ -17,6 +17,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.sensoro.city_camera.IMainViews.ICameraListFragmentView;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.activity.SecurityWarnDetailActivity;
+import com.sensoro.city_camera.activity.SecurityWarnRecordDetailActivity;
 import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
 import com.sensoro.city_camera.presenter.CameraListFragmentPresenter;
 import com.sensoro.common.base.BaseFragment;
@@ -62,7 +63,8 @@ public class CameraListFragment extends BaseFragment<ICameraListFragmentView, Ca
             @Override
             public void onClick(View v) {
 //                new SecurityWarnConfirmDialog().show(getChildFragmentManager());
-                startActivity(new Intent(getContext(), SecurityWarnDetailActivity.class));
+//                startActivity(new Intent(getContext(), SecurityWarnDetailActivity.class));
+                startActivity(new Intent(getContext(), SecurityWarnRecordDetailActivity.class));
             }
         });
     }
