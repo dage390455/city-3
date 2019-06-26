@@ -265,12 +265,12 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         if (alarms != null) {
             List<DeviceNotificationBean> notifications = alarms.getNotifications();
             //设置共x人
-            if (notifications.size() == 0) {
-                getView().setNoContact();
-            } else {
+            if (null != notifications && notifications.size() > 0) {
                 getView().setContractName(notifications.get(0).getContact());
                 getView().setContractPhone(notifications.get(0).getContent());
                 getView().setContractCount(notifications.size());
+            } else {
+                getView().setNoContact();
             }
         } else {
             getView().setNoContact();
@@ -1381,7 +1381,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     public void doContact() {
 
         AlarmInfo alarms = mDeviceInfo.getAlarms();
-        if (alarms!=null){
+        if (alarms != null) {
             List<DeviceNotificationBean> notifications = alarms.getNotifications();
 
             if (null != notifications) {
@@ -1395,7 +1395,13 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         return;
                     }
                     AppUtils.diallPhone(notificationBean.getContent(), mContext);
+                } else {
+                    getView().toastShort(mContext.getString(R.string.phone_contact_not_set));
+
                 }
+            } else {
+                getView().toastShort(mContext.getString(R.string.phone_contact_not_set));
+
             }
         }
 

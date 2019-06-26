@@ -317,7 +317,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     public void doContactOwner() {
 
         List<DeviceNotificationBean> deviceNotifications = deviceAlarmLogInfo.getDeviceNotifications();
-        if (deviceNotifications.size() > 0) {
+        if (null != deviceNotifications && deviceNotifications.size() > 0) {
             WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
             dialogUtil.show(deviceNotifications);
         } else {
