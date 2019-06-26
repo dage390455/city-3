@@ -33,6 +33,7 @@ import com.sensoro.smartcity.widget.HtmlImageSpan;
 import com.sensoro.smartcity.widget.dialog.WarnPhoneMsgDialogUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -45,10 +46,9 @@ import static com.sensoro.smartcity.constant.CityConstants.confirmStatusTextColo
 public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcContentAdapter.AlertLogRcContentHolder> implements Constants {
     private final Context mContext;
     private final List<AlarmInfo.RecordInfo> timeShaftParentBeans = new ArrayList<>();
-    private List<AlarmInfo.RecordInfo.Event> receiveStautus0 = new ArrayList<>();
-    private List<AlarmInfo.RecordInfo.Event> receiveStautus1 = new ArrayList<>();
-    private List<AlarmInfo.RecordInfo.Event> receiveStautus2 = new ArrayList<>();
-    private List<AlarmInfo.RecordInfo.Event> receiveStautus3 = new ArrayList<>();
+
+
+    private HashMap<Integer, List[]> hashMap = new HashMap<>();
 
     public AlertLogRcContentAdapter(Context context) {
         mContext = context;
@@ -331,17 +331,17 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             }
 
 
-            holder.itemAlertContentTvContent.setText(appendResult(stringBuffer, 0, recordInfo.getPhoneList()));
+            holder.itemAlertContentTvContent.setText(appendResult(stringBuffer, position, recordInfo.getPhoneList()));
             holder.llConfirm.setVisibility(View.GONE);
 
             holder.itemAlertContentTvContent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    List[] receiveStautus = {receiveStautus0, receiveStautus1, receiveStautus2, receiveStautus3};
+//                    List[] receiveStautus = {receiveStautus0, receiveStautus1, receiveStautus2, receiveStautus3};
 
                     WarnPhoneMsgDialogUtil phoneMsgDialogUtil = new WarnPhoneMsgDialogUtil((Activity) mContext);
                     phoneMsgDialogUtil.setTitleTv(mContext.getResources().getString(R.string.alarm_contact_tip_phone));
-                    phoneMsgDialogUtil.show(0, receiveStautus);
+                    phoneMsgDialogUtil.show(0, hashMap.get(position));
                 }
             });
         } else if ("sendSMS".equals(recordInfo.getType())) {
@@ -374,7 +374,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
 //            holder.itemAlertContentTvContent.setText();
 
 
-            holder.itemAlertContentTvContent.setText(appendResult(stringBuffer, 1, recordInfo.getPhoneList()));
+            holder.itemAlertContentTvContent.setText(appendResult(stringBuffer, position, recordInfo.getPhoneList()));
 
 
             holder.llConfirm.setVisibility(View.GONE);
@@ -382,11 +382,12 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             holder.itemAlertContentTvContent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    List[] receiveStautus = {receiveStautus0, receiveStautus1, receiveStautus2, receiveStautus3};
+                    ;
+//                    List[] receiveStautus = {receiveStautus0, receiveStautus1, receiveStautus2, receiveStautus3};
 
                     WarnPhoneMsgDialogUtil phoneMsgDialogUtil = new WarnPhoneMsgDialogUtil((Activity) mContext);
                     phoneMsgDialogUtil.setTitleTv(mContext.getResources().getString(R.string.alarm_contact_tip_msg));
-                    phoneMsgDialogUtil.show(1, receiveStautus);
+                    phoneMsgDialogUtil.show(1, hashMap.get(position));
                 }
             });
         } else if ("alarm".equals(recordInfo.getType())) {
@@ -444,14 +445,35 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
     }
 
     /**
+     * map中根据pos存储数据
+     *
      * @param stringBuffer
-     * @param type         0表示 系统拨打电话至 1表示 系统发送短信至
+     * @param pos
      * @param phoneList
      * @return
      */
-    private SpannableString appendResult(StringBuilder stringBuffer, int type, AlarmInfo.RecordInfo.Event[] phoneList) {
-        //情况集合
-        receiveStatusListClear();
+    private SpannableString appendResult(StringBuilder stringBuffer, int pos, AlarmInfo.RecordInfo.Event[] phoneList) {
+        List<AlarmInfo.RecordInfo.Event> receiveStautus0;
+        List<AlarmInfo.RecordInfo.Event> receiveStautus1;
+        List<AlarmInfo.RecordInfo.Event> receiveStautus2;
+        List<AlarmInfo.RecordInfo.Event> receiveStautus3;
+        List[] lists = hashMap.get(pos);
+        if (null == lists || lists.length == 0) {
+            receiveStautus0 = new ArrayList<>();
+            receiveStautus1 = new ArrayList<>();
+            receiveStautus2 = new ArrayList<>();
+            receiveStautus3 = new ArrayList<>();
+            lists = new List[]{receiveStautus0, receiveStautus1, receiveStautus2, receiveStautus3};
+            hashMap.put(pos, lists);
+        } else {
+            receiveStautus0 = lists[0];
+            receiveStautus1 = lists[1];
+            receiveStautus2 = lists[2];
+            receiveStautus3 = lists[3];
+
+        }
+
+
         for (int i = 0; i < phoneList.length; i++) {
             AlarmInfo.RecordInfo.Event event = phoneList[i];
             switch (event.getReciveStatus()) {
@@ -471,31 +493,28 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
 
         }
         List[] receiveStautus = {receiveStautus0, receiveStautus1, receiveStautus2, receiveStautus3};
-        StringBuilder temp = null;
-        ArrayList<StringBuilder> tempList = new ArrayList<>();
+        List<AlarmInfo.RecordInfo.Event> tottalPhoneList = new ArrayList<>();
         for (List stautus : receiveStautus) {
-            if (stautus.size() > 0) {
-                temp = new StringBuilder();
-                for (int i = 0; i < stautus.size(); i++) {
-                    AlarmInfo.RecordInfo.Event event = (AlarmInfo.RecordInfo.Event) stautus.get(i);
-                    String number = event.getNumber();
-                    String name = event.getName();
-                    if (i != (stautus.size() - 1)) {
-                        temp.append(" ").append(name).append("(").append(number).append(")").append(" ;");
-                    } else {
-                        temp.append(" ").append(name).append("(").append(number).append(")").append(" ");
-                    }
+            tottalPhoneList.addAll(stautus);
+        }
+
+        for (int i = 0; i < tottalPhoneList.size(); i++) {
+            if (i < 2) {
+                AlarmInfo.RecordInfo.Event event = (AlarmInfo.RecordInfo.Event) tottalPhoneList.get(i);
+                String number = event.getNumber();
+                String name = event.getName();
+                stringBuffer.append(" ").append(name).append("(").append(number).append(")");
+                //一个的时候不显示；
+                if (i != 1) {
+                    stringBuffer.append(" ;");
                 }
 
-                stringBuffer.append(temp).append(" ");
-
-                tempList.add(temp);
-            }
-            if (stautus.size() > 2) {
-                stringBuffer.append(mContext.getString(R.string.etc) + stautus.size() + mContext.getString(R.string.contacts));
             }
         }
 
+        if (phoneList.length > 2) {
+            stringBuffer.append(mContext.getString(R.string.etc) + phoneList.length + mContext.getString(R.string.contacts));
+        }
 
         String lookDetail = mContext.getResources().getString(R.string.look_detail);
         stringBuffer.append(" ");
@@ -503,19 +522,6 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         stringBuffer.append("   ");
 
         SpannableString spannableString = new SpannableString(stringBuffer);
-
-        for (StringBuilder sb : tempList) {
-            try {
-                ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(R.color.c_252525));
-                int i = stringBuffer.indexOf(sb.toString());
-                if (i == -1) {
-                    i = 0;
-                }
-                spannableString.setSpan(foregroundColorSpan, i, i + sb.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
 
 
         int indexOfLookDetail = stringBuffer.indexOf(lookDetail);
@@ -533,12 +539,6 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         return spannableString;
     }
 
-    private void receiveStatusListClear() {
-        receiveStautus0.clear();
-        receiveStautus1.clear();
-        receiveStautus2.clear();
-        receiveStautus3.clear();
-    }
 
     private SpannableString changTextColor(final String content, final String temp, SpannableString spannableString, @ColorRes int color) {
         ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(color));

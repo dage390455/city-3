@@ -358,6 +358,8 @@
     <string name="alarm_contact_tip_sample">e.g:XX</string>
     <string name="alarm_contact_tip_phone">Mobile</string>
     <string name="alarm_contact_tip_msg">Msg</string>
+
+
     <string name="alarm_contact_tip_phone_sample">e.g.18600000000</string>
     //预警日志xml
     <string name="alarm_log_alarm_time">ALARM TIME</string>
@@ -1164,5 +1166,8 @@
     <string name="etc">Etc</string>
     <string name="total">total</string>
     <string name="person">person</string>
+    <string name="external">external</string>
+    <string name="internal">internal</string>
+    <string name="please_go_to_setting">Please go to Settings - Rights Management to open</string>
 
 </resources>
