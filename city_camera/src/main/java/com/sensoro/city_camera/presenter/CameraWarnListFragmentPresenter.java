@@ -2,12 +2,14 @@ package com.sensoro.city_camera.presenter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
 import com.sensoro.city_camera.IMainViews.ICameraWarnListFragmentView;
 import com.sensoro.city_camera.R;
+import com.sensoro.city_camera.activity.SecurityWarnDetailActivity;
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
@@ -227,10 +229,10 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
     }
 
     public void clickItem(SecurityAlarmInfo securityAlarmInfo, boolean isReConfirm) {
-        /*Intent intent = new Intent(mContext, AlarmDetailLogActivity.class);
-        intent.putExtra(Constants.EXTRA_ALARM_INFO, deviceAlarmLogInfo);
-        getView().startAC(intent);*/
-        getView().toastLong(securityAlarmInfo.toString());
+        Intent intent = new Intent(mContext, SecurityWarnDetailActivity.class);
+        intent.putExtra("id", securityAlarmInfo.getId());
+        getView().startAC(intent);
+
     }
 
     /**
