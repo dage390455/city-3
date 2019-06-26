@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
 import com.sensoro.common.constant.Constants;
-import com.sensoro.common.server.bean.CameraWarnInfo;
+import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
 import com.sensoro.common.utils.DateUtil;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
 
     private final Context mContext;
     private CameraWarnConfirmStatusClickListener mListener;
-    private final List<CameraWarnInfo> mList = new ArrayList<>();
+    private final List<SecurityAlarmInfo> mList = new ArrayList<>();
 
     public CameraWarnFragRcContentAdapter(Context context) {
         mContext = context;
@@ -50,16 +50,16 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
 //            holder.mainWarnRcContentTvTag.setText("误报");
 //        }
         boolean isReConfirm = false;
-        CameraWarnInfo cameraWarnInfo = mList.get(position);
-        if (cameraWarnInfo != null) {
-            boolean isWarnValid = cameraWarnInfo.isValid;
-            int warnType = cameraWarnInfo.warnType;
-            String capturePhotoUrl = cameraWarnInfo.capturePhotoUrl;
-            String focusOriPhoto = cameraWarnInfo.focusOriPhoto;
-            String focusMatchrate = cameraWarnInfo.focusMatchrate;
-            String warnName = cameraWarnInfo.warnName;
-            String warnAddress = cameraWarnInfo.warnAddress;
-            long warnTime = cameraWarnInfo.warnTime;
+        SecurityAlarmInfo securityAlarmInfo = mList.get(position);
+        if (securityAlarmInfo != null) {
+            boolean isWarnValid = (securityAlarmInfo.getIsEffective()> 0);
+            int warnType = securityAlarmInfo.getAlarmType();
+            String capturePhotoUrl = securityAlarmInfo.getFaceUrl();
+            String focusOriPhoto = securityAlarmInfo.getImageUrl();
+            String focusMatchrate = securityAlarmInfo.getScore()+"";
+            String warnName = securityAlarmInfo.getTaskName();
+            String warnAddress = securityAlarmInfo.getAddress();
+            long warnTime = securityAlarmInfo.getAlarmTime();
             holder.tvWarnName.setText(warnName);
             holder.tvWarnAddress.setText(warnAddress);
             holder.tvWarnTime.setText(DateUtil.getStrTimeToday(mContext, warnTime, 0));
@@ -124,12 +124,12 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
         });
     }
 
-    public void setData(List<CameraWarnInfo> list) {
+    public void setData(List<SecurityAlarmInfo> list) {
         this.mList.clear();
         this.mList.addAll(list);
     }
 
-    public List<CameraWarnInfo> getData() {
+    public List<SecurityAlarmInfo> getData() {
         return mList;
     }
 
