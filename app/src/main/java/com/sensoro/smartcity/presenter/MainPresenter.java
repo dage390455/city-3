@@ -89,6 +89,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private MalfunctionFragment malfunctionFragment;
     private ScreenBroadcastReceiver mScreenReceiver;
     private volatile boolean pingNetCanUse;
+    //默认应后后端要求，默认只能支持websocket协议
+    private final String[] transports = {"websocket"};
 
     private final class ScreenBroadcastReceiver extends BroadcastReceiver {
         private boolean isFirst = true;
@@ -571,6 +573,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             options.query = "session=" + sessionId;
             options.forceNew = true;
             options.path = "/city";
+            options.transports = transports;
             mSocket = IO.socket(RetrofitServiceHelper.getInstance().BASE_URL + "app", options);
             if (hasDeviceBriefControl()) {
                 mSocket.on(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);
@@ -667,6 +670,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             options.query = "session=" + sessionId;
             options.forceNew = true;
             options.path = "/city";
+            options.transports = transports;
             mSocket = IO.socket(RetrofitServiceHelper.getInstance().BASE_URL + "app", options);
             if (hasDeviceBriefControl()) {
                 mSocket.on(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);

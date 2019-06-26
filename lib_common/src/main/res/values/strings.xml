@@ -644,7 +644,7 @@
     <string name="electric_current">Current</string>
     <string name="device_air_switch_config_tip_message">Resetting this value will change the threshold of alarm</string>
     <string name="air_switch_config">Configuration</string>
-    <string name="is_device_air_switch_config">Setting</string>
+    <string name="is_device_air_switch_config">Setting</string>git
     <string name="configuring">Setting&#8230;</string>
     <string name="monitor_point_operation_error_value_range">Input error,Range:</string>
     <string name="enter_the_correct_number_format">Please enter number in correct format</string>
