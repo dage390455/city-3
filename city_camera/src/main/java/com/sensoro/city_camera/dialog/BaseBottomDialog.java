@@ -1,5 +1,6 @@
 package com.sensoro.city_camera.dialog;
 
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 
@@ -8,6 +9,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.sensoro.common.utils.AppUtils;
 
 /**
  * @author : bin.tian
@@ -35,6 +37,8 @@ public abstract class BaseBottomDialog extends BottomSheetDialogFragment {
     @Override
     public void onStart() {
         super.onStart();
+        fixHeight();
+
         final View view = getView();
         view.post(() -> {
             View parent = (View) view.getParent();
@@ -51,6 +55,28 @@ public abstract class BaseBottomDialog extends BottomSheetDialogFragment {
             }
             return false;
         });
+    }
+
+    private void fixHeight() {
+        final View view = getView();
+        if (null == view || null == getContext()) {
+            return;
+        }
+
+        View parent = (View) view.getParent();
+        BottomSheetBehavior behavior = BottomSheetBehavior.from(parent);
+        view.measure(0, 0);
+
+        int screenHeight = AppUtils.getAndroiodScreenHeight(getContext());
+        if (screenHeight != -1) {
+            behavior.setPeekHeight((int) (screenHeight * 0.92));
+        } else {
+            behavior.setPeekHeight(view.getMeasuredHeight());
+        }
+
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) parent.getLayoutParams();
+        params.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
+        parent.setLayoutParams(params);
     }
 
     /**
