@@ -156,7 +156,7 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
     public void doContactOwner() {
 
         List<DeviceNotificationBean> deviceNotifications = mMalfunctionInfo.getDeviceNotifications();
-        if (deviceNotifications.size() > 0) {
+        if (null != deviceNotifications && deviceNotifications.size() > 0) {
             WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mActivity);
             dialogUtil.show(deviceNotifications);
         } else {
