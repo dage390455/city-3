@@ -17,12 +17,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.common.R;
+import com.sensoro.common.R2;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.CalendarDateModel;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.calendarview.CalendarView;
+import com.sensoro.smartcity.calendarview.customview.CustomCircleRangeMonthView;
 import com.sensoro.smartcity.calendarview.customview.CustomRangeMonthView;
 
 import java.util.Calendar;
@@ -36,41 +38,41 @@ import static com.sensoro.common.constant.CalendarConstants.MONTHS;
 public class CalendarPopUtils implements
         CalendarView.OnCalendarRangeSelectListener, Constants, PopupWindow.OnDismissListener, CalendarView.OnMonthChangeListener {
 
-    @BindView(R.id.ac_calendar_ll_start_month)
+    @BindView(R2.id.ac_calendar_ll_start_month)
     LinearLayout acCalendarLlStartMonth;
-    @BindView(R.id.ac_calendar_ll_end_month)
+    @BindView(R2.id.ac_calendar_ll_end_month)
     LinearLayout acCalendarLlEndMonth;
-    @BindView(R.id.calendar_view_ll)
+    @BindView(R2.id.calendar_view_ll)
     LinearLayout calendarViewLl;
     private PopupWindow mPopupWindow = null;
     private final Activity mActivity;
-    @BindView(R.id.ac_calendar_imv_arrows)
+    @BindView(R2.id.ac_calendar_imv_arrows)
     ImageView acCalendarImvArrows;
-    @BindView(R.id.ac_calendar_tv_start_month)
+    @BindView(R2.id.ac_calendar_tv_start_month)
     TextView acCalendarTvStartMonth;
-    @BindView(R.id.ac_calendar_tv_start_year)
+    @BindView(R2.id.ac_calendar_tv_start_year)
     TextView acCalendarTvStartYear;
-    @BindView(R.id.ac_calendar_tv_end_month)
+    @BindView(R2.id.ac_calendar_tv_end_month)
     TextView acCalendarTvEndMonth;
-    @BindView(R.id.ac_calendar_tv_end_year)
+    @BindView(R2.id.ac_calendar_tv_end_year)
     TextView acCalendarTvEndYear;
-    @BindView(R.id.calendar_view)
+    @BindView(R2.id.calendar_view)
     CalendarView calendarView;
-    @BindView(R.id.ac_calendar_tv_cancel)
+    @BindView(R2.id.ac_calendar_tv_cancel)
     TextView acCalendarTvCancel;
-    @BindView(R.id.ac_calendar_tv_save)
+    @BindView(R2.id.ac_calendar_tv_save)
     TextView acCalendarTvSave;
-    @BindView(R.id.calendar_btn_layout)
+    @BindView(R2.id.calendar_btn_layout)
     LinearLayout calendarBtnLayout;
-    @BindView(R.id.sensor_calendar_date_layout)
+    @BindView(R2.id.sensor_calendar_date_layout)
     RelativeLayout sensorCalendarDateLayout;
-    @BindView(R.id.ac_calendar_view_dismiss)
+    @BindView(R2.id.ac_calendar_view_dismiss)
     View dismissiView;
-    @BindView(R.id.ac_calendar_imv_arrow_left)
+    @BindView(R2.id.ac_calendar_imv_arrow_left)
     ImageView acCalendarImvArrowLeft;
-    @BindView(R.id.ac_calendar_tv_month_year)
+    @BindView(R2.id.ac_calendar_tv_month_year)
     TextView acCalendarTvMonthYear;
-    @BindView(R.id.ac_calendar_imv_arrow_right)
+    @BindView(R2.id.ac_calendar_imv_arrow_right)
     ImageView acCalendarImvArrowRight;
 
     private boolean isMultiple;
@@ -276,26 +278,23 @@ public class CalendarPopUtils implements
     }
 
 
-    @OnClick({R.id.ac_calendar_tv_cancel, R.id.ac_calendar_tv_save, R.id.ac_calendar_view_dismiss, R.id.ac_calendar_imv_arrow_left, R.id.ac_calendar_imv_arrow_right})
+    @OnClick({R2.id.ac_calendar_tv_cancel, R2.id.ac_calendar_tv_save,
+            R2.id.ac_calendar_view_dismiss, R2.id.ac_calendar_imv_arrow_left,
+            R2.id.ac_calendar_imv_arrow_right})
     public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.ac_calendar_tv_cancel:
-                calendarViewLl.startAnimation(dismissTranslateAnimation);
+        int i = view.getId();
+        if (i == R.id.ac_calendar_tv_cancel) {
+            calendarViewLl.startAnimation(dismissTranslateAnimation);
 //                mPopupWindow.dismiss();
-                break;
-            case R.id.ac_calendar_tv_save:
-                saveDate();
-                break;
-            case R.id.ac_calendar_view_dismiss:
-                calendarViewLl.startAnimation(dismissTranslateAnimation);
+        } else if (i == R.id.ac_calendar_tv_save) {
+            saveDate();
+        } else if (i == R.id.ac_calendar_view_dismiss) {
+            calendarViewLl.startAnimation(dismissTranslateAnimation);
 //                mPopupWindow.dismiss();
-                break;
-            case R.id.ac_calendar_imv_arrow_left:
-                calendarView.scrollToPre();
-                break;
-            case R.id.ac_calendar_imv_arrow_right:
-                calendarView.scrollToNext();
-                break;
+        } else if (i == R.id.ac_calendar_imv_arrow_left) {
+            calendarView.scrollToPre();
+        } else if (i == R.id.ac_calendar_imv_arrow_right) {
+            calendarView.scrollToNext();
         }
     }
 
