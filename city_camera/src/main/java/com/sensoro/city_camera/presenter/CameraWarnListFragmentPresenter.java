@@ -38,6 +38,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 /**
+ * 安防预警列表
  * @author wangqinghao
  */
 public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnListFragmentView> implements IOnCreate, Runnable {
@@ -164,8 +165,8 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
 //                freshUI(direction, securityAlarmListRsp); //demo
 //                getView().onPullRefreshComplete();
 //                //demo finishAc
-
-                RetrofitServiceHelper.getInstance().getSecurityAlarmList(cur_page, null, null, 2, null, 1
+                cur_page = 0;
+                RetrofitServiceHelper.getInstance().getSecurityAlarmList(cur_page, null, null, 3, null, 0
                 ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityAlarmListRsp>(this) {
 
 

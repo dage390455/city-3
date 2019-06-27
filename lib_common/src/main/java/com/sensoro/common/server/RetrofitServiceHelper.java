@@ -2131,7 +2131,30 @@ public class RetrofitServiceHelper {
      */
     public Observable<SecurityAlarmListRsp> getSecurityAlarmList(int offset,String startTime,String endTime,int alarmOperationType,
                                                                  String taskName,int alarmType){
-        return retrofitService.getSecurityAlarmList(startTime,endTime,alarmOperationType,taskName,alarmType,SECURITY_ALARMLIST_PAGE_COUNT,offset);
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("offset", offset);
+            jsonObject.put("limit", SECURITY_ALARMLIST_PAGE_COUNT);
+            if(!TextUtils.isEmpty(taskName)){
+                jsonObject.put("taskName", taskName);
+            }
+            if (0 == alarmOperationType) {
+                jsonObject.put("alarmOperationType", alarmOperationType);
+            }
+            if (0 == alarmType) {
+                jsonObject.put("alarmType", alarmType);
+            }
+            if (!TextUtils.isEmpty(startTime) && !TextUtils.isEmpty(endTime)) {
+                jsonObject.put("startTime", startTime);
+                jsonObject.put("endTime", endTime);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+//        return retrofitService.getSecurityAlarmList(startTime,endTime,alarmOperationType,taskName,alarmType,SECURITY_ALARMLIST_PAGE_COUNT,offset);
+        return retrofitService.getSecurityAlarmList(20,0);
 
     }
 

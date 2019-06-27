@@ -42,6 +42,7 @@
             android:textSize="10sp"
             android:textStyle="bold" />
 
+
     </RelativeLayout>
 
 
@@ -57,6 +58,12 @@
             android:id="@+id/iv_right_photo"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+        <View
+            android:visibility="gone"
+            android:id="@+id/view_mul_valid_cover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80FFFFFF" />
 
         <TextView
             android:id="@+id/tv_right_photolabel"
