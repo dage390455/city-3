@@ -3,10 +3,12 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -270,7 +272,7 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
         mInLineAdapter.setOnItemClickListener(new WireMaterialDiameterAdapter.onItemClickListener() {
             @Override
             public void onItemClick(int position, boolean isAction) {
-                AppUtils.dismissInputMethodManager(mActivity,etInputRatedCurrentAcWireMaterialDiameter1);
+                AppUtils.dismissInputMethodManager(mActivity, etInputRatedCurrentAcWireMaterialDiameter1);
                 mPresenter.doInLineItemClick(position, isAction);
             }
         });
@@ -285,7 +287,7 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
         mOutLineAdapter.setOnItemClickListener(new WireMaterialDiameterAdapter.onItemClickListener() {
             @Override
             public void onItemClick(int position, boolean isAction) {
-                AppUtils.dismissInputMethodManager(mActivity,etInputRatedCurrentAcWireMaterialDiameter1);
+                AppUtils.dismissInputMethodManager(mActivity, etInputRatedCurrentAcWireMaterialDiameter1);
                 mPresenter.doOutLineItemClick(position, isAction);
             }
         });
@@ -434,7 +436,7 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
         llMatchResultAcWireMaterialDiameter.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         if (!isVisible) {
             clDetailAcWireMaterialDiameter.setVisibility(View.GONE);
-            tvLookDetailAcWireMaterialDiameter.setText(mActivity.getString(R.string.look_detail));
+            tvLookDetailAcWireMaterialDiameter.setText(mActivity.getString(R.string.details));
         }
 
     }
@@ -518,7 +520,7 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
             }
             tvLookDetailAcWireMaterialDiameter.setCompoundDrawables(null, null, mDetailDownDrawable, null);
             clDetailAcWireMaterialDiameter.setVisibility(View.GONE);
-            tvLookDetailAcWireMaterialDiameter.setText(mActivity.getString(R.string.look_detail));
+            tvLookDetailAcWireMaterialDiameter.setText(mActivity.getString(R.string.details));
         } else {
             if (mDetailUpDrawable == null) {
                 mDetailUpDrawable = mActivity.getDrawable(R.drawable.arrow_up_elect);

@@ -1632,7 +1632,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         getView().dismissTipDialog();
         getView().showOperationTipLoadingDialog();
         mScheduleNo = null;
-        RetrofitServiceHelper.getInstance().doMonitorPointOperation(sns, mOperationType, null, null, null, null, null)
+        RetrofitServiceHelper.getInstance().doMonitorPointOperation(sns, mOperationType, null, null, null, null, null, null)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>(this) {
             @Override
             public void onCompleted(MonitorPointOperationRequestRsp response) {

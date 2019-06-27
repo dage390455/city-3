@@ -975,7 +975,7 @@
     <string name="delete_this_group">删除本组</string>
     <string name="not_matched_current_transformer">暂无推荐，请联系升哲研发人员确认</string>
     <string name="air_open_arguments">空开参数</string>
-    <string name="air_open_rated_current">空开标注额定电流/A (1&#8211;560)</string>
+    <string name="air_open_rated_current">空开标注额定电流/A (1&#8211;600)</string>
     <string name="diameter_arguments_tip">电线参数  请根据现场实际情况进行选择</string>
     <string name="match_result">匹配结果</string>
     <string name="look_detail">查看详情</string>

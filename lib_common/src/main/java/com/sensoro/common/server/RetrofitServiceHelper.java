@@ -1416,7 +1416,7 @@ public class RetrofitServiceHelper {
         return retrofitService.getDevicesMergeTypes();
     }
 
-    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer switchSpec, Integer wireMaterial, Double diameter) {
+    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer inputValue, Integer switchSpec, Integer wireMaterial, Double diameter) {
         JSONObject jsonObject = new JSONObject();
 
         try {
@@ -1438,6 +1438,9 @@ public class RetrofitServiceHelper {
                 jsonObject.put("rules", jsonRules);
             }
             JSONObject jsonObjectConfig = new JSONObject();
+            if (inputValue != null) {
+                jsonObjectConfig.put("inputValue", inputValue);
+            }
             if (switchSpec != null) {
                 jsonObjectConfig.put("switchSpec", switchSpec);
             }

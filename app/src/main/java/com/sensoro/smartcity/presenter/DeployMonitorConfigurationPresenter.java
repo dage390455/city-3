@@ -232,18 +232,18 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                 break;
             case DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL:
                 //详情
-                requestCmd(mEnterValue, materialValue, diameterValue);
+                requestCmd(inputValue, mEnterValue, materialValue, diameterValue);
                 break;
         }
 
     }
 
-    private void requestCmd(final Integer value, final int material, final Double diameter) {
+    private void requestCmd(Integer inputValue, final Integer value, final int material, final Double diameter) {
         ArrayList<String> sns = new ArrayList<>();
         sns.add(deployAnalyzerModel.sn);
         getView().showOperationTipLoadingDialog();
         mScheduleNo = null;
-        RetrofitServiceHelper.getInstance().doMonitorPointOperation(sns, "config", null, null, value, material, diameter)
+        RetrofitServiceHelper.getInstance().doMonitorPointOperation(sns, "config", null, null, inputValue, value, material, diameter)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>(this) {
             @Override
             public void onCompleted(MonitorPointOperationRequestRsp response) {
@@ -266,6 +266,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                     deployControlSettingData.setSwitchSpec(value);
                     deployControlSettingData.setWireDiameter(diameter);
                     deployControlSettingData.setWireMaterial(material);
+                    deployControlSettingData.setInputValue(inputValue);
                 }
             }
 
