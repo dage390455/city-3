@@ -6,6 +6,7 @@ import android.content.Context;
 import androidx.fragment.app.Fragment;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.sensoro.common.BuildConfig;
 import com.sensoro.common.R;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.ARouterConstants;
@@ -24,7 +25,7 @@ public class FireSecurityWarnPresenter extends BasePresenter<IFireSecurityWarnVi
     private final ArrayList<Fragment> mFragmentList = new ArrayList<>(2);
     private final ArrayList<String> mFragmentTitleList = new ArrayList<>(2);
     //控制model
-    private final boolean isModel = true;
+    private final boolean isModel = BuildConfig.IS_MODULE;
 
     @Override
     public void initData(Context context) {
