@@ -476,11 +476,7 @@ public interface RetrofitService {
     Observable<SecurityAlarmTimelineRsp> getSecurityAlarmTimeLine(@Path("id") String id);
 
     @GET("camera-center/alarms")
-    Observable<SecurityAlarmListRsp> getSecurityAlarmList(
-                                                       @Query("limit") int limit,
-                                                      @Query("offset") int offset);
-//    @GET("camera-center/alarms")
-//    Observable<SecurityAlarmListRsp> getSecurityAlarmList(@Body RequestBody requestBody);
+    Observable<SecurityAlarmListRsp> getSecurityAlarmList( @QueryMap Map<String, Object> param);
     @GET("camera-center/alarms/{id}")
     Observable<SecurityAlarmDetailRsp> getSecurityAlarmDetails(@Path("id") String id);
     @POST("token/devices_history")

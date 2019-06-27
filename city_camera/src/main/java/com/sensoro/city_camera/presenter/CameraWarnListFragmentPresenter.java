@@ -166,7 +166,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
 //                getView().onPullRefreshComplete();
 //                //demo finishAc
                 cur_page = 0;
-                RetrofitServiceHelper.getInstance().getSecurityAlarmList(cur_page, null, null, 3, null, 0
+                RetrofitServiceHelper.getInstance().getSecurityAlarmList(cur_page, null, null, 0, null, 0
                 ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityAlarmListRsp>(this) {
 
 
