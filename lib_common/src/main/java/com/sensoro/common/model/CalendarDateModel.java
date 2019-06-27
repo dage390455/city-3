@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.model;
+package com.sensoro.common.model;
 
 public class CalendarDateModel {
     public String startDate;
