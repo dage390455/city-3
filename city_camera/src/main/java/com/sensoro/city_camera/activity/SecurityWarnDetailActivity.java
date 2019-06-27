@@ -8,11 +8,14 @@ import android.widget.TextView;
 import com.sensoro.city_camera.IMainViews.ISecurityWarnDetailView;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
+import com.sensoro.city_camera.constants.SecurityConstants;
 import com.sensoro.city_camera.dialog.SecurityControlPersonDetailsDialog;
 import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
 import com.sensoro.city_camera.presenter.SecurityWarnDetailPresenter;
 import com.sensoro.city_camera.util.MapUtil;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
+import com.sensoro.common.server.security.response.SecurityAlarmDetailRsp;
 import com.sensoro.common.widgets.MaxHeightRecyclerView;
 
 import butterknife.BindView;
@@ -36,6 +39,8 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     TextView mSecurityWarnTypeTv;
     @BindView(R2.id.security_warn_title_tv)
     TextView mSecurityWarnTitleTv;
+    @BindView(R2.id.security_warn_time_tv)
+    TextView mSecurityWarnTimeTv;
     @BindView(R2.id.security_warn_video_tv)
     TextView mSecurityWarnVideoTv;
     @BindView(R2.id.security_warn_camera_tv)
@@ -52,6 +57,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     TextView mSecurityWarnConfirmTv;
 
     private SecurityWarnConfirmDialog mSecurityWarnConfirmDialog;
+
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -103,16 +109,44 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     }
 
     @Override
-    public void showConfirmDialog() {
+    public void updateSecurityWarnDetail(SecurityAlarmDetailInfo securityAlarmDetailInfo) {
+        if(securityAlarmDetailInfo == null){
+            finish();
+            return;
+        }
+
+        mSecurityWarnTitleTv.setText(securityAlarmDetailInfo.getTaskName());
+        switch (securityAlarmDetailInfo.getAlarmType()){
+            case SecurityConstants.SECURITY_TYPE_FOCUS:
+                mSecurityWarnTypeTv.setText(R.string.focus_type);
+                mSecurityWarnTypeTv.setBackgroundResource(R.drawable.security_type_focus_bg);
+                break;
+            case SecurityConstants.SECURITY_TYPE_FOREIGN:
+                mSecurityWarnTypeTv.setText(R.string.external_type);
+                mSecurityWarnTypeTv.setBackgroundResource(R.drawable.security_type_foreign_bg);
+                break;
+            case SecurityConstants.SECURITY_TYPE_INVADE:
+                mSecurityWarnTypeTv.setText(R.string.invade_type);
+                mSecurityWarnTypeTv.setBackgroundResource(R.drawable.security_type_invade_bg);
+                break;
+                default:
+        }
+
+        mSecurityWarnTimeTv.setText(securityAlarmDetailInfo.getAlarmTime());
+//        mSecurityWarnCameraNameTv.setText(securityAlarmDetailInfo.getCamera().getName());
+    }
+
+    @Override
+    public void showConfirmDialog(SecurityAlarmDetailInfo securityAlarmDetailInfo) {
         if (mSecurityWarnConfirmDialog == null) {
             mSecurityWarnConfirmDialog = new SecurityWarnConfirmDialog();
             mSecurityWarnConfirmDialog.setSecurityConfirmCallback(mPresenter);
         }
         Bundle bundle = new Bundle();
-        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_ID, "");
-        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TITLE, "");
-        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TIME, "");
-        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TYPE, "");
+        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_ID, securityAlarmDetailInfo.getId());
+        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TITLE, securityAlarmDetailInfo.getTaskName());
+        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TIME, securityAlarmDetailInfo.getAlarmTime());
+        bundle.putInt(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TYPE, securityAlarmDetailInfo.getAlarmType());
         mSecurityWarnConfirmDialog.setArguments(bundle);
         mSecurityWarnConfirmDialog.show(getSupportFragmentManager());
     }

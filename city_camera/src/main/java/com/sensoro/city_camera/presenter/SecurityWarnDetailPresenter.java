@@ -1,5 +1,6 @@
 package com.sensoro.city_camera.presenter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -11,7 +12,9 @@ import com.sensoro.city_camera.util.MapUtil;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
 import com.sensoro.common.server.security.response.HandleAlarmRsp;
+import com.sensoro.common.server.security.response.SecurityAlarmDetailRsp;
 import com.sensoro.common.utils.AppUtils;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -23,10 +26,38 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDetailView> implements SecurityWarnConfirmDialog.SecurityConfirmCallback {
     private Context mContxt;
+    private String mSecurityInfoId;
+    private SecurityAlarmDetailInfo mSecurityAlarmDetailInfo;
+
     @Override
     public void initData(Context context) {
         mContxt = context;
+        mSecurityInfoId = ((Activity)context).getIntent().getStringExtra("id");
+        requestSecurityWarnDetailData(mSecurityInfoId);
     }
+
+    private void requestSecurityWarnDetailData(String id){
+        RetrofitServiceHelper
+                .getInstance()
+                .getSecurityAlarmDetails(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CityObserver<SecurityAlarmDetailRsp>(this) {
+                    @Override
+                    public void onCompleted(SecurityAlarmDetailRsp securityAlarmDetailRsp) {
+                        if (securityAlarmDetailRsp != null){
+                            mSecurityAlarmDetailInfo = securityAlarmDetailRsp.getData();
+                            getView().updateSecurityWarnDetail(mSecurityAlarmDetailInfo);
+                        }
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+
+                    }
+                });
+    }
+
 
     public void doContactOwner() {
         /*String tempNumber = deviceAlarmLogInfo.getDeviceNotification().getContent();
@@ -61,7 +92,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
     }
 
     public void doConfirm(){
-        getView().showConfirmDialog();
+        getView().showConfirmDialog(mSecurityAlarmDetailInfo);
     }
 
     @Override

@@ -2115,14 +2115,7 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<SecurityAlarmTimelineRsp> getSecurityAlarmTimeLine(@NonNull String id) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("id", id);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        return retrofitService.getSecurityAlarmTimeLine(id, requestBody);
+        return retrofitService.getSecurityAlarmTimeLine(id);
     }
 
     /**
@@ -2148,14 +2141,7 @@ public class RetrofitServiceHelper {
      * @return
      */
     public Observable<SecurityAlarmDetailRsp> getSecurityAlarmDetails(@NonNull String id) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("id", id);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        return retrofitService.getSecurityAlarmDetails(id, requestBody);
+        return retrofitService.getSecurityAlarmDetails(id);
     }
 
 

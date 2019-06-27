@@ -81,16 +81,16 @@ public class SecurityWarnConfirmDialog extends BaseBottomDialog {
             mSecurityWarnTitleTv.setText(title);
             mSecurityWarnTimeTv.setText(time);
             switch (type) {
-                case SecurityConstants.SECURITY_TPYE_FOCUS:
-                    mSecurityWarnTimeTv.setText(R.string.focus_type);
+                case SecurityConstants.SECURITY_TYPE_FOCUS:
+                    mSecurityWarnTypeTv.setText(R.string.focus_type);
                     mSecurityWarnTypeTv.setBackgroundResource(R.drawable.security_type_focus_bg);
                     break;
-                case SecurityConstants.SECURITY_TPYE_FOREIGN:
-                    mSecurityWarnTimeTv.setText(R.string.external_type);
+                case SecurityConstants.SECURITY_TYPE_FOREIGN:
+                    mSecurityWarnTypeTv.setText(R.string.external_type);
                     mSecurityWarnTypeTv.setBackgroundResource(R.drawable.security_type_foreign_bg);
                     break;
-                case SecurityConstants.SECURITY_TPYE_INVADE:
-                    mSecurityWarnTimeTv.setText(R.string.invade_type);
+                case SecurityConstants.SECURITY_TYPE_INVADE:
+                    mSecurityWarnTypeTv.setText(R.string.invade_type);
                     mSecurityWarnTypeTv.setBackgroundResource(R.drawable.security_type_invade_bg);
                     break;
                 default:

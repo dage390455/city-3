@@ -69,7 +69,7 @@ public class SecurityAlarmDetailInfo implements Serializable {
     private String imageUrl;
     private int cid;
     private int taskType;
-    private String alarmType;
+    private int alarmType;
     private double latitude;
     private double longitude;
     private String captureId;
@@ -271,11 +271,11 @@ public class SecurityAlarmDetailInfo implements Serializable {
         this.taskType = taskType;
     }
 
-    public String getAlarmType() {
+    public int getAlarmType() {
         return alarmType;
     }
 
-    public void setAlarmType(String alarmType) {
+    public void setAlarmType(int alarmType) {
         this.alarmType = alarmType;
     }
 

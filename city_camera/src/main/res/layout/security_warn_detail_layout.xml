@@ -61,6 +61,7 @@
                     android:layout_marginLeft="4dp"
                     android:layout_toRightOf="@id/security_warn_type_tv"
                     android:singleLine="true"
+                    android:textStyle="bold"
                     android:text="费家村外来人员预警"
                     android:textColor="@color/c_000000"
                     android:textSize="20sp" />
