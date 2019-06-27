@@ -58,6 +58,7 @@ import com.sensoro.common.server.response.UserAccountControlRsp;
 import com.sensoro.common.server.response.UserAccountRsp;
 import com.sensoro.common.server.security.response.HandleAlarmRsp;
 import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
+import com.sensoro.common.server.security.response.SecurityWarnRecordResp;
 
 import java.util.Map;
 
@@ -486,7 +487,8 @@ public interface RetrofitService {
     @POST("token/devices_history")
     Observable<SecurityAlarmDetailRsp> getSecurityDeviceVideoHistort(@Path("id") String id, @Body RequestBody requestBody);
 
-
+    @GET("camera-center/{id}/videos")
+    Observable<SecurityWarnRecordResp> getSecurityWarnRecord(@Path("id") String id);
 
 
 }

@@ -94,7 +94,9 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         if (viewId == R.id.include_text_title_imv_arrows_left) {
             finishAc();
         } else if (viewId == R.id.security_warn_video_tv) {
-
+            Intent intent = getIntent();
+            intent.setClass(this, SecurityWarnRecordDetailActivity.class);
+            startAC(intent);
         } else if (viewId == R.id.security_warn_camera_tv) {
 
         } else if (viewId == R.id.security_warn_deploy_tv) {
