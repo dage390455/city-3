@@ -88,4 +88,5 @@ dependencies {
     testImplementation deps.junit
     annotationProcessor deps.butterknife_compiler
     annotationProcessor deps.arouter_compiler
+    api project(path: ':calendarview')
 }

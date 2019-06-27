@@ -10,8 +10,6 @@ import java.util.LinkedHashMap;
  */
 
 public interface CityConstants {
-    int[] MONTHS = {R.string.january, R.string.february, R.string.march, R.string.april, R.string.may, R.string.june
-            , R.string.july, R.string.august, R.string.september, R.string.october, R.string.november, R.string.december};
     int[] DEVICE_STATUS_ARRAY = {R.string.main_page_warn, R.string.normal, R.string.status_lost, R.string.status_inactive, R.string.status_malfunction};
     int[] DEVICE_STATUS_COLOR_ARRAY = {R.color.c_f34a4a, R.color.c_1dbb99, R.color.c_5d5d5d, R.color.c_b6b6b6, R.color.c_fdc83b};
     int[] STATION_STATUS_ARRAY = {R.string.status_inactive, R.string.normal, R.string.status_alarm_true, R.string.status_emergency_alarm, R.string.status_timeout_not_reported, R.string.status_offline, R.string.status_malfunction};

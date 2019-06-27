@@ -1,9 +1,14 @@
 package com.sensoro.common.constant;
 
+import com.sensoro.common.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public interface Constants {
+    //
+    int[] MONTHS = {R.string.january, R.string.february, R.string.march, R.string.april, R.string.may, R.string.june
+            , R.string.july, R.string.august, R.string.september, R.string.october, R.string.november, R.string.december};
     //
     String SOCKET_EVENT_DEVICE_INFO = "city-device-update-series";
     String SOCKET_EVENT_DEVICE_ALARM_COUNT = "city.device.stat";

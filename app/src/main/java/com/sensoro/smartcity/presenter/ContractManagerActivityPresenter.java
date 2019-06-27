@@ -21,9 +21,9 @@ import com.sensoro.smartcity.activity.ContractDetailActivity;
 import com.sensoro.smartcity.activity.ContractEditorActivity;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractManagerActivityView;
-import com.sensoro.smartcity.model.CalendarDateModel;
+import com.sensoro.common.model.CalendarDateModel;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
-import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
+import com.sensoro.common.widgets.CalendarPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
