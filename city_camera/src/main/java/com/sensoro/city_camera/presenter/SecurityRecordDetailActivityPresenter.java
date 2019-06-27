@@ -3,6 +3,7 @@ package com.sensoro.city_camera.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.os.Environment;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -14,6 +15,8 @@ import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.download.DownloadListener;
+import com.sensoro.common.server.download.DownloadUtil;
 import com.sensoro.common.server.security.bean.SecurityRecord;
 import com.sensoro.common.server.security.response.SecurityWarnRecordResp;
 import com.sensoro.common.utils.DateUtil;
@@ -23,6 +26,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -33,6 +37,7 @@ import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAU
 public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecurityRecordDetailActivityView> {
     private Activity mActivity;
     private String mSecurityWarnId;
+    private SecurityRecord mSecurityRecord;
 
     @Override
     public void initData(Context context) {
@@ -170,6 +175,7 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
                         if (recordList != null && !recordList.isEmpty()) {
                             SecurityRecord securityRecord = recordList.get(0);
                             if (securityRecord != null) {
+                                mSecurityRecord = securityRecord;
                                 setTitle(securityRecord.createTime);
                                 setLastCover(securityRecord.coverUrl);
                                 if (isAttachedView()) {
@@ -207,5 +213,54 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
 
     public void doRetry() {
         requestVideo();
+    }
+
+    public void doCapture() {
+        if (mSecurityRecord == null) {
+            return;
+        }
+        String fileName = System.currentTimeMillis() + ".jpeg";
+        String[] strings = mSecurityRecord.mediaUrl.split("/?");
+        if (strings.length > 0) {
+            fileName = strings[0];
+            String[] strings1 = fileName.split("/");
+            if (strings1.length > 0) {
+                fileName = strings1[strings1.length - 1];
+            }
+        }
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath(), fileName);
+        getView().capture(file);
+    }
+
+    public void doDownload() {
+        if (mSecurityRecord == null) {
+            return;
+        }
+        String fileName = System.currentTimeMillis() + ".mp4";
+        String[] strings = mSecurityRecord.mediaUrl.split("/?");
+        if (strings.length > 0) {
+            fileName = strings[0];
+            String[] strings1 = fileName.split("/");
+            if (strings1.length > 0) {
+                fileName = strings1[strings1.length - 1];
+            }
+        }
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath(), fileName);
+        new DownloadUtil(new DownloadListener() {
+            @Override
+            public void onFinish(File file) {
+                getView().toastShort(mActivity.getString(R.string.download_security_warn_record_success));
+            }
+
+            @Override
+            public void onProgress(int progress, String totalBytesRead, String fileSize) {
+
+            }
+
+            @Override
+            public void onFailed(String errMsg) {
+                getView().toastShort(mActivity.getString(R.string.download_security_warn_record_fail));
+            }
+        }).downloadFile(mSecurityRecord.mediaUrl, file.getAbsolutePath());
     }
 }

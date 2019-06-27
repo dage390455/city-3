@@ -41,4 +41,8 @@
     <string name="word_phone">手机号</string>
     <string name="word_idcard">身份证</string>
     <string name="word_describe">描述</string>
+    <string name="download_security_warn_record_success">下载完成</string>
+    <string name="download_security_warn_record_fail">下载失败</string>
+    <string name="capture_security_warn_record_success">保存成功</string>
+    <string name="capture_security_warn_record_fail">保存失败</string>
 </resources>

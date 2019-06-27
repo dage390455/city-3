@@ -7,6 +7,8 @@ import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 
+import java.io.File;
+
 
 public interface ISecurityRecordDetailActivityView extends IActivityIntent, IToast, IProgressDialog {
     void startPlayLogic(String url1);
@@ -26,4 +28,6 @@ public interface ISecurityRecordDetailActivityView extends IActivityIntent, IToa
     void onVideoResume();
 
     void onVideoPause();
+
+    void capture(File file);
 }
