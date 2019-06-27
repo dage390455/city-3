@@ -15,6 +15,7 @@ public class SecurityAlarmDetailInfo implements Serializable {
      * infoId : 6846440
      * structuredInfojson : null
      * objectMainJson : {"name":"刘敏","gender":"男","mobile":"18754623152","birthday":"852455","description":"阿东分工","nationality":"汉","identityCardNumber":"410521198704143653"}
+     * camera : {"name":"集成研发抓拍机","sn":"001C2711A8AF","cid":"540409919","brand":"SENSORO","version":"V1.0.0","type":"抓拍机","deviceStatus":"1","latitude":"40.017564","longitude":"116.503266","location":"北京市朝阳区崔各庄镇川渝饭庄12345","label":["望京","SOHO"],"contact":{"name":"test","mobilePhone":"13699167277"},"installationMode":"101800","orientation":"112901"}
      * deviceName : 集成研发抓拍机
      * address : 北京市望京SOHO-T1-2807室
      * libId : 101000009813
@@ -41,13 +42,15 @@ public class SecurityAlarmDetailInfo implements Serializable {
      * personInfoUrl : /api/person/resource/v1/person/getPersonById
      * aid : 5190486531474724667
      * feature : 90rXvRhW3ju2k409tSoGuiZlyLxjmTq8TKCtvQ02pTyDjjQ6NBr3PDbSk7whZ449b137u7d+xTyqpcw8TLIIPEpDCr1BHMG7rZ7xu5u93Dx
+     * contacts : [{"name":"齐哲","mobilePhone":"13888888888"},{"name":"巴哲","mobilePhone":"13999999999"}]
      */
 
     private String id;
     private String alarmLogId;
     private String infoId;
     private Object structuredInfojson;
-    private ObjectMainJsonBean objectMainJson;
+    private SecurityDeployPersonInfo objectMainJson;
+    private SecurityCameraInfo camera;
     private String deviceName;
     private String address;
     private String libId;
@@ -74,6 +77,7 @@ public class SecurityAlarmDetailInfo implements Serializable {
     private String aid;
     private String feature;
     private List<String> alarmNotifyUserIds;
+    private List<SecurityContactsInfo> contacts;
 
     public String getId() {
         return id;
@@ -107,12 +111,20 @@ public class SecurityAlarmDetailInfo implements Serializable {
         this.structuredInfojson = structuredInfojson;
     }
 
-    public ObjectMainJsonBean getObjectMainJson() {
+    public SecurityDeployPersonInfo getObjectMainJson() {
         return objectMainJson;
     }
 
-    public void setObjectMainJson(ObjectMainJsonBean objectMainJson) {
+    public void setObjectMainJson(SecurityDeployPersonInfo objectMainJson) {
         this.objectMainJson = objectMainJson;
+    }
+
+    public SecurityCameraInfo getCamera() {
+        return camera;
+    }
+
+    public void setCamera(SecurityCameraInfo camera) {
+        this.camera = camera;
     }
 
     public String getDeviceName() {
@@ -323,79 +335,11 @@ public class SecurityAlarmDetailInfo implements Serializable {
         this.alarmNotifyUserIds = alarmNotifyUserIds;
     }
 
-    public static class ObjectMainJsonBean {
-        /**
-         * name : 刘敏
-         * gender : 男
-         * mobile : 18754623152
-         * birthday : 852455
-         * description : 阿东分工
-         * nationality : 汉
-         * identityCardNumber : 410521198704143653
-         */
+    public List<SecurityContactsInfo> getContacts() {
+        return contacts;
+    }
 
-        private String name;
-        private String gender;
-        private String mobile;
-        private String birthday;
-        private String description;
-        private String nationality;
-        private String identityCardNumber;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getGender() {
-            return gender;
-        }
-
-        public void setGender(String gender) {
-            this.gender = gender;
-        }
-
-        public String getMobile() {
-            return mobile;
-        }
-
-        public void setMobile(String mobile) {
-            this.mobile = mobile;
-        }
-
-        public String getBirthday() {
-            return birthday;
-        }
-
-        public void setBirthday(String birthday) {
-            this.birthday = birthday;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public String getNationality() {
-            return nationality;
-        }
-
-        public void setNationality(String nationality) {
-            this.nationality = nationality;
-        }
-
-        public String getIdentityCardNumber() {
-            return identityCardNumber;
-        }
-
-        public void setIdentityCardNumber(String identityCardNumber) {
-            this.identityCardNumber = identityCardNumber;
-        }
+    public void setContacts(List<SecurityContactsInfo> contacts) {
+        this.contacts = contacts;
     }
 }
