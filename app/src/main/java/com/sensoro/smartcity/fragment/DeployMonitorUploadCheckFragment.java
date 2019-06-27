@@ -284,7 +284,7 @@ public class DeployMonitorUploadCheckFragment extends BaseFragment<IDeployMonito
     @Override
     public void setUploadBtnStatus(boolean isEnable) {
         tvFgDeployUploadCheckUpload.setEnabled(isEnable);
-        tvFgDeployUploadCheckUpload.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.filter_corner);
+        tvFgDeployUploadCheckUpload.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_corner_dfdf_shadow);
     }
 
     @Override

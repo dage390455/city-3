@@ -90,7 +90,7 @@ public class CameraInterface implements Camera.PreviewCallback {
     private int angle = 0;
     private int cameraAngle = 90;//摄像头角度   默认为90度
     private int rotation = 0;
-    private byte[] firstFrame_data;
+    private volatile byte[] firstFrame_data;
 
     public static final int TYPE_RECORDER = 0x090;
     public static final int TYPE_CAPTURE = 0x091;

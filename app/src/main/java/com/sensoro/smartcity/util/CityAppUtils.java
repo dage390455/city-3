@@ -43,6 +43,33 @@ public class CityAppUtils {
 
     }
 
+    public static boolean doNavigation(Activity activity, LatLng currentPostion, LatLng destPosition) {
+        if (destPosition.latitude == 0 || destPosition.longitude == 0) {
+//            SensoroToast.INSTANCE.makeText("位置坐标信息错误", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (isChineseLanguage()) {
+            if (currentPostion != null) {
+                double lat = currentPostion.latitude;//获取纬度
+                double lon = currentPostion.longitude;//获取经度
+                LatLng startPosition = new LatLng(lat, lon);
+                if (isAppInstalled(activity, "com.autonavi.minimap")) {
+                    openGaoDeMap(activity, startPosition, destPosition);
+                } else if (isAppInstalled(activity, "com.baidu.BaiduMap")) {
+                    openBaiDuMap(activity, startPosition, destPosition);
+                } else {
+                    openOther(activity, startPosition, destPosition);
+                }
+                return true;
+            }
+            return false;
+        } else {
+            return doNavigation(activity, GPSUtil.gcj02_To_Gps84(destPosition.latitude, destPosition.longitude), null);
+        }
+
+
+    }
+
     public static boolean doNavigation(Activity activity, double[] destPosition, String text) {
 
         if (destPosition == null || destPosition.length != 2 || destPosition[0] == 0 || destPosition[1] == 0) {

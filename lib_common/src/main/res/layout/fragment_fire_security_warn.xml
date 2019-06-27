@@ -2,17 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingTop="40dp">
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <com.shizhefei.view.indicator.FixedIndicatorView
         android:id="@+id/indicatorView"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:background="@color/white"
-        android:gravity="center" />
+        android:gravity="center"
+        android:layout_marginTop="40dp"/>
 
     <View
+        android:id="@+id/line_top"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/c_dfdfdf" />
@@ -20,5 +21,6 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/content_viewPager"
         android:layout_width="match_parent"
+        android:background="@color/c_f4f4f4"
         android:layout_height="match_parent" />
 </LinearLayout>

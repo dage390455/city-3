@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.imainviews;
+package com.sensoro.common.imainview;
 
 import androidx.fragment.app.Fragment;
 
@@ -19,4 +19,6 @@ public interface IFireSecurityWarnView extends IProgressDialog, IToast, IActivit
      * @param fragments
      */
     void updateFireSecurityPageAdapterData(List<String> fragmentTitleList, List<Fragment> fragments);
+
+    void setHasFireSecurityView(boolean visible);
 }

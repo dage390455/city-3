@@ -46,19 +46,19 @@ android {
         flavorDimensions "default"
         vectorDrawables.useSupportLibrary = true
         manifestPlaceholders = [
-                GETUI_APP_ID    : "2VjnktTwteAnEZ1aMZCB53",
-                GETUI_APP_KEY   : "zrfWS690Dh7r9bPUUfh1o2",
-                GETUI_APP_SECRET: "fN5extdlmHA5NDbdKPkP6A",
+//                GETUI_APP_ID    : "2VjnktTwteAnEZ1aMZCB53",
+//                GETUI_APP_KEY   : "zrfWS690Dh7r9bPUUfh1o2",
+//                GETUI_APP_SECRET: "fN5extdlmHA5NDbdKPkP6A",
 
-//              GETUI_APP_ID    : "g5ikHO2m7DAZ0oY4BrXNE",
-//              GETUI_APP_KEY   : "BkwqeevSYj8fQTO47FsXGA",
-//              GETUI_APP_SECRET: "Z41MlQj5AC8JwUzxEm2081",
+              GETUI_APP_ID    : "g5ikHO2m7DAZ0oY4BrXNE",
+              GETUI_APP_KEY   : "BkwqeevSYj8fQTO47FsXGA",
+              GETUI_APP_SECRET: "Z41MlQj5AC8JwUzxEm2081",
                 //TODO 测试版/正式版 使用其中一个
-                APP_ICON        : "@mipmap/ic_launcher_beta",
-                APP_ROUND_ICON  : "@mipmap/ic_launcher_beta_round"
+//                APP_ICON        : "@mipmap/ic_launcher_beta",
+//                APP_ROUND_ICON  : "@mipmap/ic_launcher_beta_round"
                 //
-//                APP_ICON        : "@mipmap/ic_launcher",
-//                APP_ROUND_ICON  : "@mipmap/ic_launcher_round"
+                APP_ICON        : "@mipmap/ic_launcher",
+                APP_ROUND_ICON  : "@mipmap/ic_launcher_round"
 
         ]
 

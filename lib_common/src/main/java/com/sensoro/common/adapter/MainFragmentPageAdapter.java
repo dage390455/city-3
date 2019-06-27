@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.adapter;
+package com.sensoro.common.adapter;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.amap.api.maps.model.LatLng;
+import com.sensoro.common.server.bean.MalfunctionDataBean;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MalfunctionHistoryActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
@@ -32,6 +33,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -64,7 +66,7 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
         String deviceSN = mMalfunctionInfo.getDeviceSN();
         if (TextUtils.isEmpty(deviceSN)) {
             deviceSN = mActivity.getString(R.string.device_number) + mActivity.getString(R.string.unknown);
-        }else{
+        } else {
             deviceSN = mActivity.getString(R.string.device_number) + deviceSN;
         }
 
@@ -86,7 +88,19 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
                 }
             }
         });
-        getView().updateRcContent(records, mMalfunctionInfo.getMalfunctionData().get(mMalfunctionInfo.getMalfunctionType()).getDescription());
+        String description = mActivity.getString(R.string.unknown_malfunction);
+        Map<String, MalfunctionDataBean> malfunctionData = mMalfunctionInfo.getMalfunctionData();
+        if (malfunctionData != null) {
+            String malfunctionType = mMalfunctionInfo.getMalfunctionType();
+            if (malfunctionType != null) {
+                MalfunctionDataBean malfunctionDataBean = malfunctionData.get(malfunctionType);
+                if (malfunctionDataBean != null) {
+                    description = malfunctionDataBean.getDescription();
+                }
+
+            }
+        }
+        getView().updateRcContent(records, description);
         long current = System.currentTimeMillis();
         final StringBuffer stringBuffer = new StringBuffer();
         RetrofitServiceHelper.getInstance().getMalfunctionCount(current - 3600 * 24 * 180 * 1000L, current, null, mMalfunctionInfo.getDeviceSN()).subscribeOn(Schedulers.io())

@@ -183,10 +183,7 @@ public class AlarmPopupConfigAnalyzer {
 
                                     }
                                 }
-
-
                             }
-
                             alarmPopupModel.subAlarmPopupModels = alarmPopupSubModelArrayList;
                         }
                     }
@@ -195,9 +192,9 @@ public class AlarmPopupConfigAnalyzer {
         }
     }
 
-    private static AlarmPopupModel.AlarmPopupTagModel createAlarmPopupTagModel(int displayStatus) {
+    private static AlarmPopupModel.AlarmPopupTagModel createAlarmPopupTagModel(Integer displayStatus) {
         AlarmPopupModel.AlarmPopupTagModel alarmPopupTagModel = new AlarmPopupModel.AlarmPopupTagModel();
-        if (1 == displayStatus) {
+        if (displayStatus != null && 1 == displayStatus) {
             alarmPopupTagModel.resDrawable = R.drawable.shape_bg_solid_f3_20dp_corner;
         } else {
             alarmPopupTagModel.resDrawable = R.drawable.shape_bg_solid_29c_20dp_corner;
@@ -398,18 +395,24 @@ public class AlarmPopupConfigAnalyzer {
 
     public static Map<String, Integer> createAlarmPopupServerData(@NonNull final AlarmPopupModel alarmPopupModel) {
         Integer displayStatus = null;
-        for (AlarmPopupModel.AlarmPopupTagModel mainTag : alarmPopupModel.mainTags) {
-            if (mainTag.isChose) {
-                displayStatus = mainTag.id;
-                break;
+        if (alarmPopupModel.mainTags != null) {
+            for (AlarmPopupModel.AlarmPopupTagModel mainTag : alarmPopupModel.mainTags) {
+                if (mainTag.isChose) {
+                    displayStatus = mainTag.id;
+                    break;
+                }
             }
         }
         HashMap<String, Integer> map = new HashMap<>();
         map.put("displayStatus", displayStatus);
-        for (AlarmPopupModel.AlarmPopupSubModel subAlarmPopupModel : alarmPopupModel.subAlarmPopupModels) {
-            for (AlarmPopupModel.AlarmPopupTagModel subTag : subAlarmPopupModel.subTags) {
-                if (subTag.isChose) {
-                    map.put(subAlarmPopupModel.key, subTag.id);
+        if (alarmPopupModel.subAlarmPopupModels != null) {
+            for (AlarmPopupModel.AlarmPopupSubModel subAlarmPopupModel : alarmPopupModel.subAlarmPopupModels) {
+                if (subAlarmPopupModel.subTags != null) {
+                    for (AlarmPopupModel.AlarmPopupTagModel subTag : subAlarmPopupModel.subTags) {
+                        if (subTag.isChose) {
+                            map.put(subAlarmPopupModel.key, subTag.id);
+                        }
+                    }
                 }
             }
         }

@@ -109,7 +109,6 @@
     <string name="main_page_warn">预警</string>
     <string name="main_page_malfunction">故障</string>
     <string name="main_page_manage">管理</string>
-    <string name="main_page_camera">摄像机</string>
     <string name="confirming">预警确认</string>
     <string name="confirming_again">再次确认</string>
     <string name="to_be_confirmed">待确认</string>
@@ -533,7 +532,7 @@
     //warn framgen
     <string name="warn_fragment_search_tip">设备名称/设备编号/手机号</string>
 
-    <string name="basestation_search_tip">基站名称/基站标号/标签</string>
+    <string name="basestation_search_tip">基站名称/基站编号/标签</string>
 
 
     //
@@ -1120,7 +1119,11 @@
     <string name="sensor_list">传感器列表中关联</string>
     <string name="network_delay">网络时延</string>
     <string name="temperature_information">温度信息</string>
+    <string name="external">外部：</string>
+    <string name="internal">内部：</string>
+
+
     <string name="fire_warn_title">消防预警</string>
     <string name="security_warn_title">安防预警</string>
-
+    <string name="app_name_city_camera">app_name_city_camera</string>
 </resources>
