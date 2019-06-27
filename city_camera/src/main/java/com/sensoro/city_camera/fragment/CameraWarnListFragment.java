@@ -135,6 +135,9 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
 
     @SuppressLint("ClickableViewAccessibility")
     private void initView() {
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
+
+
         //返回顶部
         returnTopAnimation = AnimationUtils.loadAnimation(mRootFragment.getContext(), R.anim.return_top_in_anim);
         mReturnTopImageView.setAnimation(returnTopAnimation);

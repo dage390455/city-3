@@ -23,6 +23,7 @@ import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
 import com.sensoro.common.server.bean.EventCameraWarnStatusModel;
 import com.sensoro.common.server.security.response.SecurityAlarmListRsp;
+import com.sensoro.common.widgets.popup.CalendarPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -48,6 +49,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
     private Activity mContext;
     private boolean isReConfirm = false;
     private SecurityAlarmInfo mCurrentSecurityAlarmInfo;
+    private CalendarPopUtils mCalendarPopUtils;
     private String tempSearchText;
     private volatile boolean needFresh = false;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
