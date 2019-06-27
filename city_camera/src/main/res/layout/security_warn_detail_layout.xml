@@ -26,11 +26,13 @@
                 android:layout_height="wrap_content">
 
                 <ViewStub
+                    android:id="@+id/single_image_vs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout="@layout/include_camerawarn_single_photo" />
 
                 <ViewStub
+                    android:id="@+id/multi_image_vs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout="@layout/include_camerawarn_mult_photo" />

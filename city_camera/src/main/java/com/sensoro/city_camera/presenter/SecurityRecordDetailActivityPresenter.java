@@ -14,18 +14,16 @@ import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
-import com.sensoro.common.server.bean.DeviceCameraHistoryBean;
-import com.sensoro.common.server.response.DeviceCameraHistoryRsp;
 import com.sensoro.common.server.response.DeviceCameraPersonFaceRsp;
+import com.sensoro.common.server.security.bean.SecurityRecord;
+import com.sensoro.common.server.security.bean.SecurityWarnRecord;
+import com.sensoro.common.server.security.response.SecurityWarnRecordResp;
 import com.sensoro.common.utils.DateUtil;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.io.Serializable;
-import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -35,27 +33,19 @@ import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAU
 public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecurityRecordDetailActivityView> {
     private Activity mActivity;
     private DeviceCameraPersonFaceRsp.DataBean dataBean;
+    private String mSecurityWarnId;
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
         EventBus.getDefault().register(this);
-        Serializable extra = mActivity.getIntent().getSerializableExtra(Constants.EXTRA_CAMERA_PERSON_DETAIL);
-        if (extra instanceof DeviceCameraPersonFaceRsp.DataBean) {
-//            getView().initVideoOption(extra.get);
-            dataBean = (DeviceCameraPersonFaceRsp.DataBean) extra;
+        mSecurityWarnId = mActivity.getIntent().getStringExtra("id");
 
-            setTitle();
-
-            setLastCover();
-            requestVideo(dataBean);
-        } else {
-            getView().toastShort(mActivity.getString(R.string.tips_data_error));
-        }
+        requestVideo();
     }
 
-    private void setLastCover() {
-        Glide.with(mActivity).load(Constants.CAMERA_BASE_URL + dataBean.getSceneUrl())
+    private void setLastCover(String coverUrl) {
+        Glide.with(mActivity).load(coverUrl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
                 .into(getView().getImageView());
 
@@ -156,7 +146,7 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
         }
     }
 
-    private void setTitle() {
+    private void setTitle(String title) {
         try {
             long l = Long.parseLong(dataBean.getCaptureTime());
             String time = DateUtil.getStrTime_ymd_hm_ss(l);
@@ -167,30 +157,21 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
         }
     }
 
-    private void requestVideo(DeviceCameraPersonFaceRsp.DataBean dataBean) {
+    private void requestVideo() {
         getView().showProgressDialog();
-        long time;
-        try {
-            time = Long.parseLong(dataBean.getCaptureTime());
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            getView().toastShort(mActivity.getString(R.string.time_parse_error));
-            return;
-        }
 
-        time = time / 1000;
-        String beginTime = String.valueOf(time - 15);
-        String endTime = String.valueOf(time + 15);
-
-        RetrofitServiceHelper.getInstance().getDeviceCameraPlayHistoryAddress(dataBean.getCid(), beginTime, endTime, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraHistoryRsp>(null) {
+        RetrofitServiceHelper.getInstance().getSecurityWarnRecord(mSecurityWarnId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityWarnRecordResp>(null) {
             @Override
-            public void onCompleted(DeviceCameraHistoryRsp deviceCameraHistoryRsp) {
-                List<DeviceCameraHistoryBean> data = deviceCameraHistoryRsp.getData();
-                if (data != null && data.size() > 0) {
-                    DeviceCameraHistoryBean deviceCameraHistoryBean = data.get(0);
-                    String url1 = deviceCameraHistoryBean.getUrl();
-                    if (isAttachedView()) {
-                        getView().startPlayLogic(url1);
+            public void onCompleted(SecurityWarnRecordResp securityWarnRecordResp) {
+                SecurityWarnRecord securityWarnRecord = securityWarnRecordResp.securityWarnRecord;
+                if (securityWarnRecord != null) {
+                    SecurityRecord securityRecord = securityWarnRecord.recordList.get(0);
+                    if (securityRecord != null){
+                        setTitle(securityRecord.createTime);
+                        setLastCover(securityRecord.coverUrl);
+                        if (isAttachedView()) {
+                            getView().startPlayLogic(securityRecord.mediaUrl);
+                        }
                     }
 
                 } else {
@@ -222,6 +203,6 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
     }
 
     public void doRetry() {
-        requestVideo(dataBean);
+        requestVideo();
     }
 }

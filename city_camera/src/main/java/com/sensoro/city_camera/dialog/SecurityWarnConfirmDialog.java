@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentManager;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.constants.SecurityConstants;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.dialog.TipDialogUtils;
 
 import butterknife.BindView;
@@ -79,7 +80,7 @@ public class SecurityWarnConfirmDialog extends BaseBottomDialog {
             int type = bundle.getInt(EXTRA_KEY_SECURITY_TYPE);
 
             mSecurityWarnTitleTv.setText(title);
-            mSecurityWarnTimeTv.setText(time);
+            mSecurityWarnTimeTv.setText(DateUtil.getStrTimeToday(getContext(), Long.parseLong(time), 0));
             switch (type) {
                 case SecurityConstants.SECURITY_TYPE_FOCUS:
                     mSecurityWarnTypeTv.setText(R.string.focus_type);

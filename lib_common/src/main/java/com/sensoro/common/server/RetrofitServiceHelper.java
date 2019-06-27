@@ -76,6 +76,7 @@ import com.sensoro.common.server.response.UserAccountControlRsp;
 import com.sensoro.common.server.response.UserAccountRsp;
 import com.sensoro.common.server.security.response.HandleAlarmRsp;
 import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
+import com.sensoro.common.server.security.response.SecurityWarnRecordResp;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.LogUtils;
 
@@ -2166,5 +2167,12 @@ public class RetrofitServiceHelper {
         return retrofitService.getSecurityAlarmDetails(id);
     }
 
-
+    /**
+     * 获取预警录像信息
+     * @param id
+     * @return
+     */
+    public Observable<SecurityWarnRecordResp> getSecurityWarnRecord(@NonNull String id) {
+        return retrofitService.getSecurityWarnRecord(id);
+    }
 }
