@@ -17,13 +17,13 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="20dp"
             android:paddingEnd="20dp">
 
             <RelativeLayout
                 android:id="@+id/image_rl"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp">
 
                 <ViewStub
                     android:id="@+id/single_image_vs"
@@ -38,11 +38,17 @@
                     android:layout="@layout/include_camerawarn_mult_photo" />
             </RelativeLayout>
 
+            <TextView
+                android:id="@+id/confirm_result_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
             <RelativeLayout
                 android:id="@+id/title_rl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/image_rl"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp">
 
                 <TextView
@@ -50,8 +56,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/security_type_foreign_bg"
-                    android:text="外来"
                     android:textColor="@color/white"
                     android:textSize="10sp" />
 
@@ -63,10 +67,9 @@
                     android:layout_marginLeft="4dp"
                     android:layout_toRightOf="@id/security_warn_type_tv"
                     android:singleLine="true"
-                    android:textStyle="bold"
-                    android:text="费家村外来人员预警"
                     android:textColor="@color/c_000000"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
             </RelativeLayout>
 
@@ -75,8 +78,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title_rl"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="9dp"
-                android:text="今天12:36"
                 android:textColor="@color/c_a6a6a6"
                 android:textSize="14sp" />
 
@@ -85,6 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_divider_height"
                 android:layout_below="@id/security_warn_time_tv"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="16dp"
                 android:background="@color/c_dfdfdf" />
 
@@ -93,6 +97,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/line1"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:drawableStart="@drawable/icon_security_video"
                 android:drawableEnd="@drawable/arrows_right"
@@ -109,13 +114,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/security_warn_video_tv"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:drawableStart="@drawable/icon_security_camera"
                 android:drawableEnd="@drawable/arrows_right"
                 android:drawablePadding="8dp"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:text="费家村56号超市外"
                 android:textColor="@color/c_252525"
                 android:textSize="16sp" />
 
@@ -124,6 +129,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/security_warn_camera_tv"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:drawableStart="@drawable/icon_security_deploy"
                 android:drawableEnd="@drawable/arrows_right"
@@ -139,6 +145,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_divider_height"
                 android:layout_below="@+id/security_warn_deploy_tv"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:background="@color/c_dfdfdf" />
 
@@ -147,6 +154,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/line2"
+                android:layout_marginStart="20dp"
                 android:paddingTop="20dp"
                 android:paddingBottom="9dp" />
 

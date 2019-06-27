@@ -2,11 +2,13 @@ package com.sensoro.city_camera.presenter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.city_camera.IMainViews.ISecurityWarnDetailView;
 import com.sensoro.city_camera.R;
+import com.sensoro.city_camera.activity.SecurityWarnRecordDetailActivity;
 import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
 import com.sensoro.city_camera.util.MapUtil;
 import com.sensoro.common.base.BasePresenter;
@@ -25,18 +27,19 @@ import io.reactivex.schedulers.Schedulers;
  * date   : 2019-06-24
  */
 public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDetailView> implements SecurityWarnConfirmDialog.SecurityConfirmCallback {
-    private Context mContxt;
+    private Activity mActivity;
     private String mSecurityInfoId;
     private SecurityAlarmDetailInfo mSecurityAlarmDetailInfo;
 
     @Override
     public void initData(Context context) {
-        mContxt = context;
-        mSecurityInfoId = ((Activity)context).getIntent().getStringExtra("id");
+        mActivity = (Activity) context;
+        mSecurityInfoId = mActivity.getIntent().getStringExtra("id");
         requestSecurityWarnDetailData(mSecurityInfoId);
     }
 
     private void requestSecurityWarnDetailData(String id){
+        getView().showProgressDialog();
         RetrofitServiceHelper
                 .getInstance()
                 .getSecurityAlarmDetails(id)
@@ -49,11 +52,16 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
                             mSecurityAlarmDetailInfo = securityAlarmDetailRsp.getData();
                             getView().updateSecurityWarnDetail(mSecurityAlarmDetailInfo);
                         }
+                        if (isAttachedView()) {
+                            getView().dismissProgressDialog();
+                        }
                     }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
-
+                        if (isAttachedView()) {
+                            getView().dismissProgressDialog();
+                        }
                     }
                 });
     }
@@ -95,6 +103,12 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
         getView().showConfirmDialog(mSecurityAlarmDetailInfo);
     }
 
+    public void doBack(){
+        if (isAttachedView()) {
+            getView().finishAc();
+        }
+    }
+
     @Override
     public void onConfirmClick(String id, int isEffective, String operationDetail) {
         RetrofitServiceHelper.getInstance().handleSecurityAlarm(id, isEffective, operationDetail)
@@ -116,5 +130,13 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
     @Override
     public void onDestroy() {
 
+    }
+
+    public void toSecurityWarnRecord() {
+        Intent intent = mActivity.getIntent();
+        intent.setClass(mActivity, SecurityWarnRecordDetailActivity.class);
+        if(isAttachedView()){
+            getView().startAC(intent);
+        }
     }
 }

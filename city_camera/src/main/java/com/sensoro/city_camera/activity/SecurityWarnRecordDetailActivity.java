@@ -32,6 +32,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * @author bin.tian
+ */
 public class SecurityWarnRecordDetailActivity
         extends BaseActivity<ISecurityRecordDetailActivityView, SecurityRecordDetailActivityPresenter>
         implements ISecurityRecordDetailActivityView {

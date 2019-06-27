@@ -483,7 +483,7 @@ public interface RetrofitService {
     @POST("token/devices_history")
     Observable<SecurityAlarmDetailRsp> getSecurityDeviceVideoHistort(@Path("id") String id, @Body RequestBody requestBody);
 
-    @GET("camera-center/{id}/videos")
+    @GET("camera-center/alarms/{id}/videos")
     Observable<SecurityWarnRecordResp> getSecurityWarnRecord(@Path("id") String id);
 
 
