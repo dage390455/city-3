@@ -34,7 +34,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -318,7 +317,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         int outLineTotal = 0;
         List<DeployControlSettingData.wireData> input = new ArrayList<>();
         List<DeployControlSettingData.wireData> output = new ArrayList<>();
-        int ratedCurrent;
+        int temp;
         try {
             for (WireMaterialDiameterModel model : mInLineList) {
                 MaterialValueModel materialValueModel = MATERIAL_VALUE_MAP.get(model.diameter);
@@ -345,21 +344,17 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
             deployControlSettingData.setOutput(output);
 
 
-            ratedCurrent = (int) (inputValue * 1.25f);
-            if (ratedCurrent < 1 || ratedCurrent > 560) {
-                getView().toastShort(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.rated_current_colon), "1-560"));
-                return;
-            }
+            temp = (int) (inputValue * 1.25f);
         } catch (Exception e) {
             e.printStackTrace();
-            getView().toastShort(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.rated_current_colon), "1-560"));
+            getView().toastShort(mActivity.getString(R.string.empty_open_rated_current_is_out_of_range));
             return;
         }
-        int temp = Math.min(ratedCurrent, inLineTotal);
+        temp = Math.min(temp, inLineTotal);
         int actualRatedCurrent = Math.min(temp, outLineTotal);
         //
         if ("acrel_alpha".equals(deployAnalyzerModel.deviceType)) {
-            if (actualRatedCurrent > 0 && actualRatedCurrent <= 120) {
+            if (inputValue > 0 && inputValue <= 120) {
                 //120A/40mA
                 //
                 RecommendedTransformerValueModel recommendedTransformerValueModel1 = new RecommendedTransformerValueModel();
@@ -375,7 +370,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
                 deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel1);
                 deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel2);
                 deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
-            } else if (actualRatedCurrent <= 225) {
+            } else if (inputValue <= 225) {
                 //200A/40mA
                 //
                 RecommendedTransformerValueModel recommendedTransformerValueModel2 = new RecommendedTransformerValueModel();
@@ -387,7 +382,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
                 recommendedTransformerValueModel3.value = 400;
                 deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel2);
                 deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
-            } else if (actualRatedCurrent <= 400) {
+            } else if (inputValue <= 400) {
                 //400/40mA
                 RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
                 recommendedTransformerValueModel3.value = 400;
@@ -399,7 +394,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
                 return;
             }
         } else {
-            if (actualRatedCurrent > 0 && actualRatedCurrent <= 250) {
+            if (inputValue > 0 && inputValue <= 250) {
                 //
                 RecommendedTransformerValueModel recommendedTransformerValueModel1 = new RecommendedTransformerValueModel();
                 recommendedTransformerValueModel1.value = 250;
@@ -410,7 +405,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
                 recommendedTransformerValueModel3.value = 400;
                 deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel1);
                 deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
-            } else if (actualRatedCurrent <= 400) {
+            } else if (inputValue <= 400) {
                 //400/40mA
                 RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
                 recommendedTransformerValueModel3.value = 400;
