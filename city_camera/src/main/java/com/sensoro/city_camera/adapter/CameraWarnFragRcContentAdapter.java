@@ -65,21 +65,14 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
             isReConfirm = false;
             //预警是否有效
             boolean isWarnValid = (securityAlarmInfo.getIsEffective()> 0);
-            isReConfirm = isWarnValid;
+            //isReConfirm = isWarnValid;
             holder.tvCamerawarnValid.setBackgroundResource(isWarnValid?R.drawable.shape_camera_warn_valid:R.drawable.shape_camera_warn_unvalid);
             holder.tvCamerawarnValid.setText(isWarnValid?R.string.word_valid:R.string.word_unvalid);
+            holder.btnWarnConfim.setVisibility(securityAlarmInfo.getIsHandle()>0?View.INVISIBLE:View.VISIBLE);
             //根据预警类型设置UI
             switch (warnType){
                 //1-重点人员/2-外来人员/3-人员入侵
                 case 1:
-                    holder.tvWarnType.setText(R.string.external_type);
-                    holder.tvWarnType.setBackgroundResource(R.drawable.security_type_foreign_bg);
-                    holder.layoutSinglePhoto.setVisibility(View.VISIBLE);
-                    holder.layoutMultPhoto.setVisibility(View.GONE);
-                     //加载抓拍图片
-                    Glide.with(mContext).load(capturePhotoUrl).into(holder.ivSiglePhoto);
-                    break;
-                case 2:
                     holder.tvWarnType.setText(R.string.focus_type);
                     holder.tvWarnType.setBackgroundResource(R.drawable.security_type_focus_bg);
                     holder.layoutSinglePhoto.setVisibility(View.GONE);
@@ -88,6 +81,16 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     Glide.with(mContext).load(focusOriPhoto).into(holder.ivLeftPhoto);
                     Glide.with(mContext).load(capturePhotoUrl).into(holder.ivRightPhoto);
                     holder.tvRightMatchrate.setText(focusMatchrate);
+                    holder.viewMulUnvalidCover.setVisibility(!isWarnValid?View.VISIBLE:View.GONE);
+                    break;
+                case 2:
+                    holder.tvWarnType.setText(R.string.external_type);
+                    holder.tvWarnType.setBackgroundResource(R.drawable.security_type_foreign_bg);
+                    holder.layoutSinglePhoto.setVisibility(View.VISIBLE);
+                    holder.layoutMultPhoto.setVisibility(View.GONE);
+                    //加载抓拍图片
+                    Glide.with(mContext).load(capturePhotoUrl).into(holder.ivSiglePhoto);
+                    holder.viewSingleUnvalidCover.setVisibility(!isWarnValid?View.VISIBLE:View.GONE);
                     break;
                 case 3:
                     holder.tvWarnType.setText(R.string.invade_type);
@@ -96,6 +99,7 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     holder.layoutMultPhoto.setVisibility(View.GONE);
                     //加载抓拍照片
                     Glide.with(mContext).load(capturePhotoUrl).into(holder.ivSiglePhoto);
+                    holder.viewSingleUnvalidCover.setVisibility(!isWarnValid?View.VISIBLE:View.GONE);
                     break;
 
             }
@@ -140,6 +144,8 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
         RelativeLayout layoutSinglePhoto;
         @BindView(R2.id.iv_single_photo)
         ImageView ivSiglePhoto;
+        @BindView(R2.id.view_single_valid_cover)
+        View viewSingleUnvalidCover;
         //======多个照片====
         @BindView(R2.id.layout_mult_photo_content)
         RelativeLayout layoutMultPhoto;
@@ -153,6 +159,8 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
         RelativeLayout layoutMultRightContent;
         @BindView(R2.id.iv_right_photo)
         ImageView ivRightPhoto;
+        @BindView(R2.id.view_mul_valid_cover)
+        View viewMulUnvalidCover;
         @BindView(R2.id.tv_right_matchrate)
         TextView tvRightMatchrate;
 
