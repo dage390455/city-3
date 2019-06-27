@@ -73,7 +73,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
     DeviceInfo mDeviceInfo = new DeviceInfo();
     private List<BaseStationChartDetailModel> modelList = new ArrayList<>();
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
         Object dataevent = eventData.data;

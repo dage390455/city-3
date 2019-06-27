@@ -794,14 +794,21 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         getView().startAC(intent);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(DeviceInfo deviceInfo) {
         String sn = deviceInfo.getSn();
         try {
             if (deployAnalyzerModel.sn.equalsIgnoreCase(sn)) {
-                deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
-                tempSignal = deviceInfo.getSignal();
-                freshSignalInfo();
+                mContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isAttachedView()){
+                            deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
+                            tempSignal = deviceInfo.getSignal();
+                            freshSignalInfo();
+                        }
+                    }
+                });
 //                            getView().toastLong("信号-->>time = " + deployAnalyzerModel.updatedTime + ",signal = " + deployAnalyzerModel.signal);
                 try {
                     LogUtils.loge(this, "部署页刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + deployAnalyzerModel.signal);
