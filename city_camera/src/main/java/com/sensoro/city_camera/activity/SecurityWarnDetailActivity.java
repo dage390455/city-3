@@ -22,6 +22,8 @@ import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.MaxHeightRecyclerView;
 import com.sensoro.common.widgets.ProgressUtils;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -131,22 +133,30 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
                 mSecurityWarnTypeTv.setBackgroundResource(R.drawable.security_type_focus_bg);
 
                 findViewById(R.id.multi_image_vs).setVisibility(View.VISIBLE);
-                Glide.with(this).load(securityAlarmDetailInfo.getImageUrl()).into((ImageView) findViewById(R.id.iv_left_photo));
-                Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).into((ImageView) findViewById(R.id.iv_right_photo));
+                View leftView = findViewById(R.id.iv_left_photo);
+                Glide.with(this).load(securityAlarmDetailInfo.getImageUrl()).into((ImageView) leftView);
+                View rightView = findViewById(R.id.iv_right_photo);
+                Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).into((ImageView) rightView);
+                leftView.setOnClickListener(v -> previewImages(0));
+                rightView.setOnClickListener(v -> previewImages(1));
                 break;
             case SecurityConstants.SECURITY_TYPE_FOREIGN:
                 mSecurityWarnTypeTv.setText(R.string.external_type);
                 mSecurityWarnTypeTv.setBackgroundResource(R.drawable.security_type_foreign_bg);
 
                 findViewById(R.id.single_image_vs).setVisibility(View.VISIBLE);
-                Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).into((ImageView) findViewById(R.id.iv_single_photo));
+                View singleView = findViewById(R.id.iv_single_photo);
+                singleView.setOnClickListener(v -> previewImages(0));
+                Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).into((ImageView) singleView);
                 break;
             case SecurityConstants.SECURITY_TYPE_INVADE:
                 mSecurityWarnTypeTv.setText(R.string.invade_type);
                 mSecurityWarnTypeTv.setBackgroundResource(R.drawable.security_type_invade_bg);
 
                 findViewById(R.id.single_image_vs).setVisibility(View.VISIBLE);
-                Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).into((ImageView) findViewById(R.id.iv_single_photo));
+                View singlePhotoView = findViewById(R.id.iv_single_photo);
+                singlePhotoView.setOnClickListener(v -> previewImages(0));
+                Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).into((ImageView) singlePhotoView);
                 break;
             default:
         }
@@ -224,5 +234,9 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         if (mProgressUtils != null) {
             mProgressUtils.dismissProgress();
         }
+    }
+
+    private void previewImages(int position){
+        mPresenter.doPreviewImages(position);
     }
 }

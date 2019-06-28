@@ -1,46 +1,60 @@
 package com.sensoro.city_camera.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.PagerAdapter;
-
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.ortiz.touchview.TouchImageView;
+import com.sensoro.city_camera.IMainViews.IPhotoPreviewView;
 import com.sensoro.city_camera.R;
+import com.sensoro.city_camera.constants.SecurityConstants;
+import com.sensoro.city_camera.presenter.PhotoPreviewPresenter;
 import com.sensoro.city_camera.widget.ExtendedViewPager;
-import com.sensoro.common.manger.ThreadPoolManager;
-import com.sensoro.common.utils.FileUtil;
+import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.widgets.SensoroToast;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PhotoPreviewActivity extends AppCompatActivity {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-    private List<String> urlList = new ArrayList<>();
-    public static final String EXTRA_KEY_POSITION = "extra_key_position";
-    public static final String EXTRA_KEY_URLS = "extra_key_urls";
+/**
+ * @author bin.tian
+ */
+public class PhotoPreviewActivity extends BaseActivity<IPhotoPreviewView, PhotoPreviewPresenter> implements IPhotoPreviewView {
+
+    @BindView(R.id.image_viewpager)
+    ExtendedViewPager mViewPager;
+    @BindView(R.id.security_warn_image_preview_type_tv)
+    TextView mSecurityWarnTypeTv;
+    @BindView(R.id.security_warn_image_preview_title_tv)
+    TextView mSecurityWarnTitleTv;
+    @BindView(R.id.security_warn_image_preview_subtitle_tv)
+    TextView mSecurityWarnSubTitleTv;
+    @BindView(R.id.photo_info_rl)
+    View mPhotoInfoView;
+
+    private List<String> mUrlList = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_photo_preview);
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
@@ -51,51 +65,95 @@ public class PhotoPreviewActivity extends AppCompatActivity {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.c_383838));
 
-        findViewById(R.id.back_iv).setOnClickListener(v -> finish());
+        ButterKnife.bind(this);
 
-        Intent intent = getIntent();
-        urlList.addAll(intent.getStringArrayListExtra(EXTRA_KEY_URLS));
-
-        TouchImageAdapter adapter = new TouchImageAdapter();
-        final ExtendedViewPager viewPager = findViewById(R.id.image_viewpager);
-        viewPager.setAdapter(adapter);
-
-        int position = intent.getIntExtra(EXTRA_KEY_POSITION, 0);
-        viewPager.setCurrentItem(position);
-
-
-        findViewById(R.id.download_iv).setOnClickListener(v -> {
-            String url = urlList.get(viewPager.getCurrentItem());
-            if(!TextUtils.isEmpty(url)){
-             downloadImage(url);
-            }
-        });
+        mPresenter.initData(this);
     }
 
-    private void downloadImage(String url){
-        Glide.with(this)
-                .load(url)
-                .asBitmap()
-                .toBytes()
-                .into(new SimpleTarget<byte[]>() {
-                    @Override
-                    public void onResourceReady(byte[] bytes, GlideAnimation<? super byte[]> glideAnimation) {
-                        // 下载成功回调函数
-                        // 数据处理方法，保存bytes到文件 FileUtil.copy(file, bytes);
-                        String[] split = url.split("/");
-                        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath(), split[split.length-1]);
-                        ThreadPoolManager.getInstance().execute(() -> {
-                            FileUtil.copy(file.getAbsolutePath(), bytes);
-                            runOnUiThread(() -> Toast.makeText(PhotoPreviewActivity.this, getString(R.string.toast_image_download_success), Toast.LENGTH_SHORT).show());
-                        });
-                    }
+    @Override
+    protected PhotoPreviewPresenter createPresenter() {
+        return new PhotoPreviewPresenter();
+    }
 
-                    @Override
-                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                        // 下载失败回调
-                        Toast.makeText(PhotoPreviewActivity.this, getString(R.string.toast_image_download_failed), Toast.LENGTH_SHORT).show();
-                    }
-                });
+    @Override
+    public void updatePhotoList(List<String> urlList, int position) {
+        mUrlList.clear();
+        mUrlList.addAll(urlList);
+
+        mViewPager.setAdapter(new TouchImageAdapter());
+
+        mViewPager.setCurrentItem(position);
+    }
+
+    @Override
+    public void updatePhotoInfo(int securityType, String title, String subTitle) {
+        mPhotoInfoView.setVisibility(View.VISIBLE);
+        mSecurityWarnTitleTv.setText(title);
+        mSecurityWarnSubTitleTv.setText(subTitle);
+
+        switch (securityType) {
+            case SecurityConstants.SECURITY_TYPE_FOCUS:
+                mSecurityWarnTypeTv.setText(R.string.focus_type);
+                mSecurityWarnTypeTv.setBackgroundResource(R.drawable.security_type_focus_bg);
+                break;
+            case SecurityConstants.SECURITY_TYPE_FOREIGN:
+                mSecurityWarnTypeTv.setText(R.string.external_type);
+                mSecurityWarnTypeTv.setBackgroundResource(R.drawable.security_type_foreign_bg);
+                break;
+            case SecurityConstants.SECURITY_TYPE_INVADE:
+                mSecurityWarnTypeTv.setText(R.string.invade_type);
+                mSecurityWarnTypeTv.setBackgroundResource(R.drawable.security_type_invade_bg);
+                break;
+            default:
+        }
+    }
+
+    @OnClick({R.id.back_iv, R.id.download_iv})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.back_iv:
+                mPresenter.doBack();
+                break;
+            case R.id.download_iv:
+                mPresenter.doDownload(mUrlList.get(mViewPager.getCurrentItem()));
+                break;
+            default:
+        }
+    }
+
+    @Override
+    public void startAC(Intent intent) {
+
+    }
+
+    @Override
+    public void finishAc() {
+        mActivity.finish();
+    }
+
+    @Override
+    public void startACForResult(Intent intent, int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int resultCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int resultCode, Intent data) {
+
+    }
+
+    @Override
+    public void toastShort(String msg) {
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void toastLong(String msg) {
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_LONG).show();
     }
 
     class TouchImageAdapter extends PagerAdapter {
@@ -103,14 +161,14 @@ public class PhotoPreviewActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return urlList.size();
+            return mUrlList.size();
         }
 
         @NonNull
         @Override
         public View instantiateItem(@NonNull ViewGroup container, int position) {
             TouchImageView img = new TouchImageView(container.getContext());
-            Glide.with(container.getContext()).load(urlList.get(position)).into(new SimpleTarget<GlideDrawable>() {
+            Glide.with(container.getContext()).load(mUrlList.get(position)).into(new SimpleTarget<GlideDrawable>() {
                 @Override
                 public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
                     img.setImageDrawable(resource);
@@ -129,6 +187,5 @@ public class PhotoPreviewActivity extends AppCompatActivity {
         public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
             return view == object;
         }
-
     }
 }

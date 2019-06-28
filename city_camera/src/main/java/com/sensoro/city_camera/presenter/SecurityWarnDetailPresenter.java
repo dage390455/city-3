@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.city_camera.IMainViews.ISecurityWarnDetailView;
 import com.sensoro.city_camera.R;
+import com.sensoro.city_camera.activity.PhotoPreviewActivity;
 import com.sensoro.city_camera.activity.SecurityWarnRecordDetailActivity;
 import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
 import com.sensoro.city_camera.util.MapUtil;
@@ -18,6 +19,8 @@ import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
 import com.sensoro.common.server.security.response.HandleAlarmRsp;
 import com.sensoro.common.server.security.response.SecurityAlarmDetailRsp;
 import com.sensoro.common.utils.AppUtils;
+
+import java.util.ArrayList;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -38,7 +41,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
         requestSecurityWarnDetailData(mSecurityInfoId);
     }
 
-    private void requestSecurityWarnDetailData(String id){
+    private void requestSecurityWarnDetailData(String id) {
         getView().showProgressDialog();
         RetrofitServiceHelper
                 .getInstance()
@@ -48,7 +51,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
                 .subscribe(new CityObserver<SecurityAlarmDetailRsp>(this) {
                     @Override
                     public void onCompleted(SecurityAlarmDetailRsp securityAlarmDetailRsp) {
-                        if (securityAlarmDetailRsp != null){
+                        if (securityAlarmDetailRsp != null) {
                             mSecurityAlarmDetailInfo = securityAlarmDetailRsp.getData();
                             getView().updateSecurityWarnDetail(mSecurityAlarmDetailInfo);
                         }
@@ -99,11 +102,11 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 //        MapUtil.locateAndNavigation(mContxt, new LatLng(116.39747132275389, 39.9086268928637));
     }
 
-    public void doConfirm(){
+    public void doConfirm() {
         getView().showConfirmDialog(mSecurityAlarmDetailInfo);
     }
 
-    public void doBack(){
+    public void doBack() {
         if (isAttachedView()) {
             getView().finishAc();
         }
@@ -135,8 +138,15 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
     public void toSecurityWarnRecord() {
         Intent intent = mActivity.getIntent();
         intent.setClass(mActivity, SecurityWarnRecordDetailActivity.class);
-        if(isAttachedView()){
+        if (isAttachedView()) {
             getView().startAC(intent);
         }
+    }
+
+    public void doPreviewImages(int position) {
+        Intent intent = new Intent(mActivity, PhotoPreviewActivity.class);
+        intent.putExtra(PhotoPreviewPresenter.EXTRA_KEY_POSITION, position);
+        intent.putExtra(PhotoPreviewPresenter.EXTRA_KEY_SECURITY_INFO, mSecurityAlarmDetailInfo);
+        getView().startAC(intent);
     }
 }
