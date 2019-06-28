@@ -226,14 +226,13 @@
         android:background="@color/c_f4f4f4" />
 
     <RelativeLayout
-        android:id="@+id/layout_bottom"
+        android:id="@+id/layout_camera_details_contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/view_space"
         android:paddingLeft="20dp"
         android:paddingTop="16dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="16dp">
+        android:paddingRight="20dp">
 
         <TextView
             android:id="@+id/security_camera_details_contact_title"
@@ -264,6 +263,7 @@
             android:layout_marginTop="8dp"
             android:src="@drawable/arrows_right" />
 
+
         <TextView
             android:id="@+id/security_camera_details_contact_amount"
             android:layout_width="wrap_content"
@@ -272,24 +272,35 @@
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
             android:layout_toLeftOf="@id/security_camera_details_contact_arrow"
-            android:text="共4人"
+            android:text="@string/contact_count_tip"
             android:textColor="@color/c_a6a6a6"
             android:textSize="14sp" />
 
-        <View
-            android:id="@+id/line4"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_below="@id/security_camera_details_contact_tv"
-            android:layout_marginTop="16dp"
-            android:background="@color/c_dfdfdf" />
 
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/line4"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/layout_camera_details_contact"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/c_dfdfdf" />
+
+    <RelativeLayout
+        android:id="@+id/layout_camera_details_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/line4"
+        android:paddingLeft="20dp"
+        android:paddingBottom="16dp">
 
         <TextView
             android:id="@+id/security_camera_details_address_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/line4"
             android:layout_alignParentLeft="true"
             android:layout_marginTop="16dp"
             android:text="@string/title_navi"
@@ -318,7 +329,6 @@
             android:layout_alignParentRight="true"
             android:layout_marginTop="8dp"
             android:src="@drawable/arrows_right" />
-
 
     </RelativeLayout>
 

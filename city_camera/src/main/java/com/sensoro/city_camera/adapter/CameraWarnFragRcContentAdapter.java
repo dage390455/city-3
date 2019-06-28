@@ -52,46 +52,45 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
         boolean isReConfirm = false;
         SecurityAlarmInfo securityAlarmInfo = mList.get(position);
         if (securityAlarmInfo != null) {
-            boolean isWarnValid = (securityAlarmInfo.getIsEffective()> 0);
+
             int warnType = securityAlarmInfo.getAlarmType();
             String capturePhotoUrl = securityAlarmInfo.getFaceUrl();
             String focusOriPhoto = securityAlarmInfo.getImageUrl();
-            String focusMatchrate = securityAlarmInfo.getScore()+"";
-            String warnName = securityAlarmInfo.getTaskName();
-            String warnAddress = securityAlarmInfo.getAddress();
+            String focusMatchrate = (int)securityAlarmInfo.getScore()+"%";
             long warnTime = securityAlarmInfo.getAlarmTime();
-            holder.tvWarnName.setText(warnName);
-            holder.tvWarnAddress.setText(warnAddress);
+
+            holder.tvTaskName.setText(securityAlarmInfo.getTaskName());
+            holder.tvWarnDeviceName.setText(securityAlarmInfo.getDeviceName());
             holder.tvWarnTime.setText(DateUtil.getStrTimeToday(mContext, warnTime, 0));
             isReConfirm = false;
-            if(isWarnValid){
-                holder.tvCamerawarnValid.setBackground(mContext.getDrawable(R.drawable.shape_camera_warn_valid));
-                holder.tvCamerawarnValid.setText(R.string.word_valid);
-                isReConfirm = true;
-            }else{
-                holder.tvCamerawarnValid.setBackground(mContext.getDrawable(R.drawable.shape_camera_warn_unvalid));
-                holder.tvCamerawarnValid.setText(R.string.word_unvalid);
-                isReConfirm = false;
-            }
+            //预警是否有效
+            boolean isWarnValid = (securityAlarmInfo.getIsEffective()> 0);
+            //isReConfirm = isWarnValid;
+            holder.tvCamerawarnValid.setBackgroundResource(isWarnValid?R.drawable.shape_camera_warn_valid:R.drawable.shape_camera_warn_unvalid);
+            holder.tvCamerawarnValid.setText(isWarnValid?R.string.word_valid:R.string.word_unvalid);
+            holder.btnWarnConfim.setVisibility(securityAlarmInfo.getIsHandle()>0?View.INVISIBLE:View.VISIBLE);
+            //根据预警类型设置UI
             switch (warnType){
-                //1:外来 2:重点 3：入侵
+                //1-重点人员/2-外来人员/3-人员入侵
                 case 1:
-                    holder.tvWarnType.setText(R.string.external_type);
-                    holder.tvWarnType.setBackgroundResource(R.drawable.security_type_foreign_bg);
-                    holder.layoutSinglePhoto.setVisibility(View.VISIBLE);
-                    holder.layoutMultPhoto.setVisibility(View.GONE);
-                     //加载抓拍图片
-                    Glide.with(mContext).load(capturePhotoUrl).into(holder.ivSiglePhoto);
-                    break;
-                case 2:
                     holder.tvWarnType.setText(R.string.focus_type);
                     holder.tvWarnType.setBackgroundResource(R.drawable.security_type_focus_bg);
                     holder.layoutSinglePhoto.setVisibility(View.GONE);
                     holder.layoutMultPhoto.setVisibility(View.VISIBLE);
                     //加载布控 抓拍 照片
-                    Glide.with(mContext).load(capturePhotoUrl).into(holder.ivLeftPhoto);
-                    Glide.with(mContext).load(focusOriPhoto).into(holder.ivRightPhoto);
+                    Glide.with(mContext).load(focusOriPhoto).into(holder.ivLeftPhoto);
+                    Glide.with(mContext).load(capturePhotoUrl).into(holder.ivRightPhoto);
                     holder.tvRightMatchrate.setText(focusMatchrate);
+                    holder.viewMulUnvalidCover.setVisibility(!isWarnValid?View.VISIBLE:View.GONE);
+                    break;
+                case 2:
+                    holder.tvWarnType.setText(R.string.external_type);
+                    holder.tvWarnType.setBackgroundResource(R.drawable.security_type_foreign_bg);
+                    holder.layoutSinglePhoto.setVisibility(View.VISIBLE);
+                    holder.layoutMultPhoto.setVisibility(View.GONE);
+                    //加载抓拍图片
+                    Glide.with(mContext).load(capturePhotoUrl).into(holder.ivSiglePhoto);
+                    holder.viewSingleUnvalidCover.setVisibility(!isWarnValid?View.VISIBLE:View.GONE);
                     break;
                 case 3:
                     holder.tvWarnType.setText(R.string.invade_type);
@@ -100,6 +99,7 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     holder.layoutMultPhoto.setVisibility(View.GONE);
                     //加载抓拍照片
                     Glide.with(mContext).load(capturePhotoUrl).into(holder.ivSiglePhoto);
+                    holder.viewSingleUnvalidCover.setVisibility(!isWarnValid?View.VISIBLE:View.GONE);
                     break;
 
             }
@@ -144,6 +144,8 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
         RelativeLayout layoutSinglePhoto;
         @BindView(R2.id.iv_single_photo)
         ImageView ivSiglePhoto;
+        @BindView(R2.id.view_single_valid_cover)
+        View viewSingleUnvalidCover;
         //======多个照片====
         @BindView(R2.id.layout_mult_photo_content)
         RelativeLayout layoutMultPhoto;
@@ -157,15 +159,17 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
         RelativeLayout layoutMultRightContent;
         @BindView(R2.id.iv_right_photo)
         ImageView ivRightPhoto;
+        @BindView(R2.id.view_mul_valid_cover)
+        View viewMulUnvalidCover;
         @BindView(R2.id.tv_right_matchrate)
         TextView tvRightMatchrate;
 
         @BindView(R2.id.tv_camera_warn_type)
         TextView tvWarnType;
-        @BindView(R2.id.tv_camera_warn_name)
-        TextView tvWarnName;
-        @BindView(R2.id.tv_camera_warn_adress)
-        TextView tvWarnAddress;
+        @BindView(R2.id.tv_camera_task_name)
+        TextView tvTaskName;
+        @BindView(R2.id.tv_camera_warn_device_name)
+        TextView tvWarnDeviceName;
         @BindView(R2.id.tv_camera_warn_time)
         TextView tvWarnTime;
         @BindView(R2.id.btn_camerawarn_confim)

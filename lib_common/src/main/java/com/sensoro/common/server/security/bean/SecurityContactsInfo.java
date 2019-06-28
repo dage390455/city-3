@@ -13,7 +13,7 @@ public class SecurityContactsInfo implements Serializable {
      */
 
     private String name;
-    private String mobilePhone;
+    private String mobile;
 
     public String getName() {
         return name;
@@ -24,11 +24,11 @@ public class SecurityContactsInfo implements Serializable {
     }
 
     public String getMobilePhone() {
-        return mobilePhone;
+        return mobile;
     }
 
-    public void setMobilePhone(String mobilePhone) {
-        this.mobilePhone = mobilePhone;
+    public void setMobilePhone(String mobile) {
+        this.mobile = mobile;
     }
 }
 

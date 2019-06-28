@@ -74,4 +74,18 @@ public interface ICameraWarnListFragmentView extends IToast, IActivityIntent, IP
      */
     void showHistoryClearDialog();
 
+    /**
+     * 设置自定义抓拍时间过滤条件文字
+     */
+    void setCustomizeCaptureTime(String strDateRange);
+    /**
+     * 初始化筛选条件状态
+     */
+    void initFilterView();
+
+    /**
+     * 确认预警
+     * @param securityAlarmInfo
+     */
+    void showConfirmDialog(SecurityAlarmInfo securityAlarmInfo);
 }

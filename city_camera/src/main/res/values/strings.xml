@@ -41,4 +41,17 @@
     <string name="word_phone">手机号</string>
     <string name="word_idcard">身份证</string>
     <string name="word_describe">描述</string>
+    <string name="word_all">全部</string>
+    <string name="invalid_warn">无效预警</string>
+    <string name="effective_warn">有效预警</string>
+    <string name="unprocessed">未处理</string>
+    <string name="download_security_warn_record_success">下载完成</string>
+    <string name="download_security_warn_record_fail">下载失败</string>
+    <string name="capture_security_warn_record_success">保存成功</string>
+    <string name="capture_security_warn_record_fail">保存失败</string>
+    <string name="online">离线</string>
+    <string name="offline">在线</string>
+    <string name="contact_count_tip">共%d人</string>
+    <string name="security_warn_timeline_remark">备注：%1$s</string>
+    <string name="security_warn_timeline_title">联系人[%1$s]通过%2$s确认本次预警</string>
 </resources>

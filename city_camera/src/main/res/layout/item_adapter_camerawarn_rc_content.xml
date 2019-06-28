@@ -39,7 +39,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tv_camera_warn_name"
+            android:id="@+id/tv_camera_task_name"
             android:layout_width="wrap_content"
             android:layout_height="22dp"
             android:layout_alignParentTop="true"
@@ -53,7 +53,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tv_camera_warn_adress"
+            android:id="@+id/tv_camera_warn_device_name"
             android:layout_width="wrap_content"
             android:layout_height="17dp"
             android:layout_alignParentBottom="true"
@@ -70,7 +70,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="4dp"
             android:layout_toLeftOf="@+id/btn_camerawarn_confim"
-            android:layout_toRightOf="@+id/tv_camera_warn_adress"
+            android:layout_toRightOf="@+id/tv_camera_warn_device_name"
             android:text="今天12:36"
             android:textColor="@color/c_a6a6a6"
             android:textSize="12sp" />

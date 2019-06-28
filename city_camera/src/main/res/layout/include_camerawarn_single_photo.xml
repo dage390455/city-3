@@ -7,12 +7,18 @@
     android:layout_gravity="center_horizontal"
     android:layout_marginTop="16dp"
     android:background="@color/d8d8d8"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <ImageView
         android:id="@+id/iv_single_photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+    <View
+        android:visibility="gone"
+        android:id="@+id/view_single_valid_cover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80FFFFFF" />
 
     <TextView
         android:layout_width="wrap_content"

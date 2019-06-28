@@ -9,6 +9,9 @@ android {
 
 
     defaultConfig {
+        if (isModule.toBoolean()) {
+            applicationId "com.sensoro.smartcity"
+        }
         minSdkVersion build_versions.min_sdk
         //考虑到vcamera库只能在23以下
         targetSdkVersion build_versions.target_sdk
@@ -20,6 +23,27 @@ android {
             annotationProcessorOptions {
                 arguments = [AROUTER_MODULE_NAME: project.getName()]
             }
+        }
+        ndk {
+//            moduleName "city"
+            //声明启用Android日志, 在c/c++的源文件中使用的#include <android/log.h> 日志将得到输出
+//            ldLibs "log"
+//            abiFilters 'armeabi','armeabi-v7a'  //只生成armeabi的so
+            abiFilters 'armeabi-v7a'  //只生成armeabi的so
+        }
+    }
+    signingConfigs {
+        release {
+            keyAlias 'sensoro'
+            keyPassword 'sensoro'
+            storeFile file('/users/Sensoro/Work/AppKey/sensoro.keystore')
+            storePassword 'sensoro'
+        }
+        debug {
+            keyAlias 'sensoro'
+            keyPassword 'sensoro'
+            storeFile file('/users/Sensoro/Work/AppKey/sensoro.keystore')
+            storePassword 'sensoro'
         }
     }
 
@@ -61,6 +85,8 @@ dependencies {
     androidTestImplementation(deps.support.test_espresso, {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    //Calendar view
+    //implementation project(':calendarview')
     //
     //3D地图so及jar
     implementation deps.amap_3dmap

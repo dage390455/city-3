@@ -10,15 +10,16 @@ public class SecurityAlarmEventInfo implements Serializable, Comparable<Security
     public String id;
     public String name;
     public String content;
-    public String status;
+    public int status;
     public String handlerId;
     public EventHandler handler;
     public long createTime;
+    public String type;//2:处理结果信息
+    public String source;//预警事件来源，Web/App
 
     public static class EventHandler{
-         String email;
-         String name;
-
+         public String email;
+         public String name;
     }
 
     @Override

@@ -58,6 +58,7 @@ import com.sensoro.common.server.response.UserAccountControlRsp;
 import com.sensoro.common.server.response.UserAccountRsp;
 import com.sensoro.common.server.security.response.HandleAlarmRsp;
 import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
+import com.sensoro.common.server.security.response.SecurityWarnRecordResp;
 
 import java.util.Map;
 
@@ -469,23 +470,21 @@ public interface RetrofitService {
     Observable<ResponseResult<Integer>> doBindDevice(@Body RequestBody requestBody);
 
 
-    @PUT("alarms/{id}/handle")
+    @PUT("camera-center/alarms/{id}/handle")
     Observable<HandleAlarmRsp> handleSecurityAlarm(@Path("id") String id, @Body RequestBody requestBody);
 
-    @GET("alarms/{id}/events")
-    Observable<SecurityAlarmTimelineRsp> getSecurityAlarmTimeLine(@Path("id") String id, @Body RequestBody requestBody);
+    @GET("camera-center/alarms/{id}/events")
+    Observable<SecurityAlarmTimelineRsp> getSecurityAlarmTimeLine(@Path("id") String id);
 
     @GET("camera-center/alarms")
-    Observable<SecurityAlarmListRsp> getSecurityAlarmList(@Query("startTime") String startTime, @Query("endTime") String endTime,
-                                                      @Query("alarmOperationType") int alarmOperationType, @Query("taskName") String taskName,
-                                                      @Query("alarmType") int alarmType, @Query("limit") int limit,
-                                                      @Query("offset") int offset);
+    Observable<SecurityAlarmListRsp> getSecurityAlarmList( @QueryMap Map<String, Object> param);
     @GET("camera-center/alarms/{id}")
-    Observable<SecurityAlarmDetailRsp> getSecurityAlarmDetails(@Path("id") String id, @Body RequestBody requestBody);
+    Observable<SecurityAlarmDetailRsp> getSecurityAlarmDetails(@Path("id") String id);
     @POST("token/devices_history")
     Observable<SecurityAlarmDetailRsp> getSecurityDeviceVideoHistort(@Path("id") String id, @Body RequestBody requestBody);
 
-
+    @GET("camera-center/alarms/{id}/videos")
+    Observable<SecurityWarnRecordResp> getSecurityWarnRecord(@Path("id") String id);
 
 
 }

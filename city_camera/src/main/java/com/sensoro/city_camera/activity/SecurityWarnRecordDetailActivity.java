@@ -16,6 +16,7 @@ import com.sensoro.city_camera.IMainViews.ISecurityRecordDetailActivityView;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.presenter.SecurityRecordDetailActivityPresenter;
+import com.sensoro.city_camera.widget.AiGSYVideoPlayer;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -28,13 +29,18 @@ import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
+import java.io.File;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * @author bin.tian
+ */
 public class SecurityWarnRecordDetailActivity
         extends BaseActivity<ISecurityRecordDetailActivityView, SecurityRecordDetailActivityPresenter>
-        implements ISecurityRecordDetailActivityView {
+        implements ISecurityRecordDetailActivityView, AiGSYVideoPlayer.CaptureClickListener, AiGSYVideoPlayer.DownloadClickListener {
 
     @BindView(R2.id.include_imv_title_imv_arrows_left)
     ImageView includeImvTitleImvArrowsLeft;
@@ -45,7 +51,8 @@ public class SecurityWarnRecordDetailActivity
     @BindView(R2.id.view_top_ac_camera_person_detail)
     View viewTopAcCameraPersonDetail;
     @BindView(R2.id.gsy_player_ac_camera_person_detailq)
-    CityStandardGSYVideoPlayer gsyPlayerAcCameraPersonDetail;
+    AiGSYVideoPlayer gsyPlayerAcCameraPersonDetail;
+
     private OrientationUtils orientationUtils;
     private ImageView imageView;
     private GSYVideoOptionBuilder gsyVideoOption;
@@ -72,7 +79,8 @@ public class SecurityWarnRecordDetailActivity
         initViewHeight();
         initGsyVideo();
 
-
+        gsyPlayerAcCameraPersonDetail.setCaptureClickListener(this);
+        gsyPlayerAcCameraPersonDetail.setDownloadClickListener(this);
     }
 
     private void initViewHeight() {
@@ -277,6 +285,17 @@ public class SecurityWarnRecordDetailActivity
         onPause();
     }
 
+    @Override
+    public void capture(File file) {
+        gsyPlayerAcCameraPersonDetail.doCapture(file, (success, file1) -> {
+            if(success){
+                toastShort(getString(R.string.capture_security_warn_record_success));
+            } else {
+                toastShort(getString(R.string.capture_security_warn_record_fail));
+            }
+        });
+    }
+
 
     @Override
     protected void onResume() {
@@ -325,9 +344,17 @@ public class SecurityWarnRecordDetailActivity
 
     }
 
-    @OnClick(R2.id.include_imv_title_imv_arrows_left)
-    public void onViewClicked() {
-        finishAc();
+    @OnClick({R2.id.include_imv_title_imv_arrows_left, R2.id.vertical_download_iv, R2.id.vertical_capture_iv})
+    public void onViewClicked(View view) {
+        int i = view.getId();
+        if (i == R.id.include_imv_title_imv_arrows_left) {
+            finishAc();
+        } else if (i == R.id.vertical_download_iv) {
+            mPresenter.doDownload();
+        } else if (i == R.id.vertical_capture_iv) {
+            mPresenter.doCapture();
+        }
+
     }
 
     @Override
@@ -377,5 +404,15 @@ public class SecurityWarnRecordDetailActivity
         if (mProgressUtils != null) {
             mProgressUtils.dismissProgress();
         }
+    }
+
+    @Override
+    public void onCaptureClick() {
+        mPresenter.doCapture();
+    }
+
+    @Override
+    public void onDownloadClick() {
+        mPresenter.doDownload();
     }
 }

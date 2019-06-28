@@ -6,24 +6,24 @@ package com.sensoro.city_camera.constants;
  */
 public interface SecurityConstants {
     /**
-     * 预警有效
-     */
-    int SECURITY_VALID = 0;
-    /**
      * 预警无效
      */
-    int SECURITY_INVALID = 1;
+    int SECURITY_INVALID = 0;
+    /**
+     * 预警有效
+     */
+    int SECURITY_VALID = 1;
     /**
      * 重点
      */
-    int SECURITY_TPYE_FOCUS = 1;
+    int SECURITY_TYPE_FOCUS = 1;
     /**
      * 外来
      */
-    int SECURITY_TPYE_FOREIGN = 2;
+    int SECURITY_TYPE_FOREIGN = 2;
     /**
      * 入侵
      */
-    int SECURITY_TPYE_INVADE = 3;
+    int SECURITY_TYPE_INVADE = 3;
 
 }

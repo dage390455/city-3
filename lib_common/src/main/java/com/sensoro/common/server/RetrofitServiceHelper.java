@@ -77,6 +77,7 @@ import com.sensoro.common.server.response.UserAccountControlRsp;
 import com.sensoro.common.server.response.UserAccountRsp;
 import com.sensoro.common.server.security.response.HandleAlarmRsp;
 import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
+import com.sensoro.common.server.security.response.SecurityWarnRecordResp;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.LogUtils;
 
@@ -90,6 +91,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -2116,14 +2118,16 @@ public class RetrofitServiceHelper {
         return retrofitService.doBindDevice(requestBody);
     }
     //安防=============
+
     /**
      * 处理安防预警信息
-     * @param id 预警id
-     * @param isEffective 处理结果，0-无效/1-有效.
+     *
+     * @param id              预警id
+     * @param isEffective     处理结果，0-无效/1-有效.
      * @param operationDetail 处理备注信息
      * @return
      */
-    public Observable<HandleAlarmRsp> handleSecurityAlarm(@NonNull String id, int  isEffective, String operationDetail) {
+    public Observable<HandleAlarmRsp> handleSecurityAlarm(@NonNull String id, int isEffective, String operationDetail) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("id", id);
@@ -2140,55 +2144,65 @@ public class RetrofitServiceHelper {
     }
 
     /**
-     *获取安防预警详情时间轴事件
+     * 获取安防预警详情时间轴事件
+     *
      * @param id 安防预警ID
      * @return
      */
     public Observable<SecurityAlarmTimelineRsp> getSecurityAlarmTimeLine(@NonNull String id) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("id", id);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        return retrofitService.getSecurityAlarmTimeLine(id, requestBody);
+        return retrofitService.getSecurityAlarmTimeLine(id);
     }
 
     /**
      * 获取安防预警列表
-     * @param startTime 查询范围开始时间 精确到秒
-     * @param endTime  查询范围结束时间 精确到秒
+     *
+     * @param startTime          查询范围开始时间 精确到秒
+     * @param endTime            查询范围结束时间 精确到秒
      * @param alarmOperationType 预警操作类型，1-已处理/2-未处理/3-有效/4-无效
-     * @param taskName 任务名称，多个名称时逗号分隔(支持模糊匹配)
-     * @param alarmType 预警日志类型，1-重点人员/2-外来人员/3-人员入侵
-     * 查询条数，默认20
-     * @param offset 查询起始位置，默认0
+     * @param taskName           任务名称，多个名称时逗号分隔(支持模糊匹配)
+     * @param alarmType          预警日志类型，1-重点人员/2-外来人员/3-人员入侵
+     *                           查询条数，默认20
+     * @param offset             查询起始位置，默认0
      * @return
      */
-    public Observable<SecurityAlarmListRsp> getSecurityAlarmList(int offset,String startTime,String endTime,int alarmOperationType,
-                                                                 String taskName,int alarmType){
-        return retrofitService.getSecurityAlarmList(startTime,endTime,alarmOperationType,taskName,alarmType,SECURITY_ALARMLIST_PAGE_COUNT,offset);
+    public Observable<SecurityAlarmListRsp> getSecurityAlarmList(int offset, String startTime, String endTime, int alarmOperationType,
+                                                                 String taskName, int alarmType) {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("limit", SECURITY_ALARMLIST_PAGE_COUNT);
+        paramMap.put("offset", offset);
+        if (!TextUtils.isEmpty(taskName)) {
+            paramMap.put("taskName", taskName);
+        }
+        if (0 != alarmOperationType) {
+            paramMap.put("alarmOperationType", alarmOperationType);
+        }
+        if (0 != alarmType) {
+            paramMap.put("alarmType", alarmType);
+        }
+        if (!TextUtils.isEmpty(startTime) && !TextUtils.isEmpty(endTime)) {
+            paramMap.put("startTime", startTime);
+            paramMap.put("endTime", endTime);
+        }
+        return retrofitService.getSecurityAlarmList(paramMap);
 
     }
 
     /**
      * 获取预警详情信息
+     *
      * @param id 预警id.
      * @return
      */
     public Observable<SecurityAlarmDetailRsp> getSecurityAlarmDetails(@NonNull String id) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("id", id);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        return retrofitService.getSecurityAlarmDetails(id, requestBody);
+        return retrofitService.getSecurityAlarmDetails(id);
     }
 
-
-
-
+    /**
+     * 获取预警录像信息
+     * @param id
+     * @return
+     */
+    public Observable<SecurityWarnRecordResp> getSecurityWarnRecord(@NonNull String id) {
+        return retrofitService.getSecurityWarnRecord(id);
+    }
 }
