@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +21,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.ortiz.touchview.TouchImageView;
 import com.sensoro.city_camera.IMainViews.IPhotoPreviewView;
 import com.sensoro.city_camera.R;
+import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.constants.SecurityConstants;
 import com.sensoro.city_camera.presenter.PhotoPreviewPresenter;
 import com.sensoro.city_camera.widget.ExtendedViewPager;
@@ -40,15 +40,15 @@ import butterknife.OnClick;
  */
 public class PhotoPreviewActivity extends BaseActivity<IPhotoPreviewView, PhotoPreviewPresenter> implements IPhotoPreviewView {
 
-    @BindView(R.id.image_viewpager)
+    @BindView(R2.id.image_viewpager)
     ExtendedViewPager mViewPager;
-    @BindView(R.id.security_warn_image_preview_type_tv)
+    @BindView(R2.id.security_warn_image_preview_type_tv)
     TextView mSecurityWarnTypeTv;
-    @BindView(R.id.security_warn_image_preview_title_tv)
+    @BindView(R2.id.security_warn_image_preview_title_tv)
     TextView mSecurityWarnTitleTv;
-    @BindView(R.id.security_warn_image_preview_subtitle_tv)
+    @BindView(R2.id.security_warn_image_preview_subtitle_tv)
     TextView mSecurityWarnSubTitleTv;
-    @BindView(R.id.photo_info_rl)
+    @BindView(R2.id.photo_info_rl)
     View mPhotoInfoView;
 
     private List<String> mUrlList = new ArrayList<>();
@@ -108,16 +108,13 @@ public class PhotoPreviewActivity extends BaseActivity<IPhotoPreviewView, PhotoP
         }
     }
 
-    @OnClick({R.id.back_iv, R.id.download_iv})
+    @OnClick({R2.id.back_iv, R2.id.download_iv})
     public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.back_iv:
-                mPresenter.doBack();
-                break;
-            case R.id.download_iv:
-                mPresenter.doDownload(mUrlList.get(mViewPager.getCurrentItem()));
-                break;
-            default:
+        int i = view.getId();
+        if (i == R.id.back_iv) {
+            mPresenter.doBack();
+        } else if (i == R.id.download_iv) {
+            mPresenter.doDownload(mUrlList.get(mViewPager.getCurrentItem()));
         }
     }
 

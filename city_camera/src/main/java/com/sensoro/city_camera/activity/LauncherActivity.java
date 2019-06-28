@@ -47,7 +47,12 @@ public class LauncherActivity extends BaseActivity<ILauncherActivityView, Launch
 
     }
 
-//    @Override
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mPresenter.onStart();
+    }
+    //    @Override
 //    public boolean onKeyDown(int keyCode, KeyEvent event) {
 //        return mPresenter.onKeyDown(keyCode, event);
 //    }
