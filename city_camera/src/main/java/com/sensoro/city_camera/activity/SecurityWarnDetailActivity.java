@@ -18,6 +18,7 @@ import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.adapter.SecurityWarnTimeLineAdapter;
 import com.sensoro.city_camera.constants.SecurityConstants;
 import com.sensoro.city_camera.dialog.SecurityCameraDetailsDialog;
+import com.sensoro.city_camera.dialog.SecurityControlPersonDetailsDialog;
 import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
 import com.sensoro.city_camera.presenter.SecurityWarnDetailPresenter;
 import com.sensoro.city_camera.util.MapUtil;
@@ -163,6 +164,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
                 Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).into((ImageView) rightView);
                 leftView.setOnClickListener(v -> previewImages(0));
                 rightView.setOnClickListener(v -> previewImages(1));
+                mSecurityWarnDeployTv.setVisibility(View.VISIBLE);
 
                 break;
             case SecurityConstants.SECURITY_TYPE_FOREIGN:
@@ -177,6 +179,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
                 View singleView = findViewById(R.id.iv_single_photo);
                 singleView.setOnClickListener(v -> previewImages(0));
                 Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).into((ImageView) singleView);
+                mSecurityWarnDeployTv.setVisibility(View.GONE);
                 break;
             case SecurityConstants.SECURITY_TYPE_INVADE:
                 mSecurityWarnTypeTv.setText(R.string.invade_type);
@@ -190,6 +193,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
                 View singlePhotoView = findViewById(R.id.iv_single_photo);
                 singlePhotoView.setOnClickListener(v -> previewImages(0));
                 Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).into((ImageView) singlePhotoView);
+                mSecurityWarnDeployTv.setVisibility(View.GONE);
                 break;
             default:
         }
