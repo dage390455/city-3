@@ -65,7 +65,6 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         switch (configurationSource) {
             case DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE:
                 //部署
-                getView().setTitleTvSubtitleVisible(false);
                 getView().setAcDeployConfigurationTvConfigurationText(mActivity.getString(R.string.save));
                 deployControlSettingData = (DeployControlSettingData) mActivity.getIntent().getSerializableExtra(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA);
                 if (deployControlSettingData != null) {
@@ -88,7 +87,6 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                 }
                 break;
             case DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL:
-                getView().setTitleTvSubtitleVisible(true);
                 onCreate();
                 getView().setAcDeployConfigurationTvConfigurationText(mActivity.getString(R.string.air_switch_config));
                 //详情

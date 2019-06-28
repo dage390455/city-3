@@ -99,11 +99,11 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     }
 
     private void initView() {
-        includeTextTitleTvSubtitle.setText(R.string.cancel);
+        includeTextTitleImvArrowsLeft.setText(R.string.cancel);
+        includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
         includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_1DBB99));
         initTipDialog();
         initOperatingDialog();
-        includeTextTitleTvSubtitle.setVisibility(View.GONE);
         includeTextTitleTvTitle.setText(mActivity.getString(R.string.initial_configuration));
         initCustomOptionPicker();
         acDeployConfigurationEtEnter.addTextChangedListener(new TextWatcher() {
@@ -445,11 +445,6 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     @Override
     public void showOperationSuccessToast() {
         SensoroSuccessToast.getInstance().showToast(mActivity, Toast.LENGTH_SHORT);
-    }
-
-    @Override
-    public void setTitleTvSubtitleVisible(boolean isVisible) {
-        includeTextTitleTvSubtitle.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override
