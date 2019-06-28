@@ -63,6 +63,8 @@ dependencies {
     androidTestImplementation(deps.support.test_espresso, {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    //Calendar view
+    //implementation project(':calendarview')
     //
     //3D地图so及jar
     implementation deps.amap_3dmap

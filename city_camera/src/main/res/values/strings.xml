@@ -41,4 +41,8 @@
     <string name="word_phone">手机号</string>
     <string name="word_idcard">身份证</string>
     <string name="word_describe">描述</string>
+    <string name="word_all">全部</string>
+    <string name="invalid_warn">无效预警</string>
+    <string name="effective_warn">有效预警</string>
+    <string name="unprocessed">未处理</string>
 </resources>

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.widget.LinearLayout;
 
 import com.sensoro.city_camera.IMainViews.ICameraWarnListFragmentView;
 import com.sensoro.city_camera.R;
@@ -17,13 +18,16 @@ import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.manger.ThreadPoolManager;
+import com.sensoro.common.model.CalendarDateModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
 import com.sensoro.common.server.bean.EventCameraWarnStatusModel;
 import com.sensoro.common.server.security.response.SecurityAlarmListRsp;
-import com.sensoro.common.widgets.popup.CalendarPopUtils;
+import com.sensoro.common.server.security.response.SecurityWarnRecordResp;
+import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.widgets.CalendarPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -37,21 +41,44 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
+
 /**
  * 安防预警列表
  * @author wangqinghao
  */
-public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnListFragmentView> implements IOnCreate, Runnable {
-    private final List<SecurityAlarmInfo> mSecurityAlarmInfoList = new ArrayList<>();
-    private final List<String> mSearchHistoryList = new ArrayList<>();
-    private volatile int cur_page = 1;
+public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnListFragmentView> implements IOnCreate, Runnable,
+CalendarPopUtils.OnCalendarPopupCallbackListener{
+
+    public static final int FILTER_STATUS_ALL = 0;
+    public static final int FILTER_STATUS_UNPROCESS = 2;
+    public static final int FILTER_STATUS_EFFECTIVE = 3;
+    public static final int FILTER_STATUS_INVALID = 4;
+
+    public static final long  FILTER_TIME_ALL = 0;
+    public static final long  FILTER_TIME_24H = 24*3600;
+    public static final long FILTER_TIME_3DAY = 3*24*3600;
+    public static final long  FILTER_TIME_7DAY = 7*24*3600;
+
+    //搜索文字
+    private String tempSearchText;
+    //抓拍时间
     private long startTime;
     private long endTime;
-    private Activity mContext;
+    private String  dateSearchText;
+    //处理状态
+    private int handleStatus = FILTER_STATUS_UNPROCESS;
+
+    private final List<SecurityAlarmInfo> mSecurityAlarmInfoList = new ArrayList<>();
+    private final List<String> mSearchHistoryList = new ArrayList<>();
+    private volatile int cur_page = 0;
+
     private boolean isReConfirm = false;
+
+    private Activity mContext;
     private SecurityAlarmInfo mCurrentSecurityAlarmInfo;
     private CalendarPopUtils mCalendarPopUtils;
-    private String tempSearchText;
+
     private volatile boolean needFresh = false;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
 
@@ -74,13 +101,15 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        //if (PreferencesHelper.getInstance().getUserData().hasAlarmInfo) {
+        mCalendarPopUtils = new CalendarPopUtils(mContext);
+        mCalendarPopUtils
+                .setMonthStatus(1)
+                .setOnCalendarPopupCallbackListener(this);
+
         if (true) {
-            //requestSearchData(Constants.DIRECTION_DOWN, null);
-            //demo
-            requestSearchData(Constants.DIRECTION_UP, null);
-            //demo
-            //mHandler.post(this);
+            innitFilterStatus();
+            requestSearchData(Constants.DIRECTION_DOWN);
+            mHandler.post(this);
         }
         //安防历史搜索记录
         List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
@@ -135,38 +164,23 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
 
     }
 
+
+
     /**
      * 搜索数据
      *
-     * @param direction
-     * @param searchText
+     * @param direction DIRECTION_DOWN：下拉重新请求  DIRECTION_UP：上滑继续请求
      */
-    public void requestSearchData(final int direction, String searchText) {
-        //搜索缓存的数据
-        //if (!PreferencesHelper.getInstance().getUserData().hasAlarmInfo) {
-        if (false) {
-            return;
-        }
-        if (TextUtils.isEmpty(searchText)) {
-            tempSearchText = null;
-        } else {
-            tempSearchText = searchText;
-        }
+    public void requestSearchData(final int direction) {
         switch (direction) {
             case Constants.DIRECTION_DOWN:
-                cur_page = 1;
-                getView().showProgressDialog();
-//                //demo  begin
-//                addTestData(false);
-//                getView().dismissProgressDialog();
-//                SecurityAlarmListRsp securityAlarmListRsp = new SecurityAlarmListRsp();
-//                securityAlarmListRsp.setList(mSecurityAlarmInfoList);
-//                //getView().updateCameraWarnsListAdapter(mSecurityAlarmInfoList);
-//                freshUI(direction, securityAlarmListRsp); //demo
-//                getView().onPullRefreshComplete();
-//                //demo finishAc
                 cur_page = 0;
-                RetrofitServiceHelper.getInstance().getSecurityAlarmList(cur_page, null, null, 0, null, 0
+                getView().showProgressDialog();
+                //查询起始位置，默认0
+                RetrofitServiceHelper.getInstance().getSecurityAlarmList(
+                        (cur_page== 0?0:cur_page*20-1),
+                        (startTime==0?null:startTime+""),
+                        (endTime==0?null:endTime+""), handleStatus, tempSearchText, 0
                 ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityAlarmListRsp>(this) {
 
 
@@ -189,17 +203,11 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
             case Constants.DIRECTION_UP:
                 cur_page++;
                 getView().showProgressDialog();
-
-//                //demo  begin
-//                addTestData(false);
-//                getView().dismissProgressDialog();
-//                SecurityAlarmListRsp securityAlarmListRsp1 = new SecurityAlarmListRsp();
-//                securityAlarmListRsp1.setList(mSecurityAlarmInfoList);
-//                freshUI(direction, securityAlarmListRsp1);
-//                getView().onPullRefreshComplete();
-//                //demo finish
-
-                RetrofitServiceHelper.getInstance().getSecurityAlarmList(cur_page, null, null, 0, null, 0
+                int offsetUp = cur_page== 0?1:cur_page*20-1;
+                RetrofitServiceHelper.getInstance().getSecurityAlarmList(
+                        (cur_page== 0?1:cur_page*20-1),
+                        (startTime==0?null:startTime+""),
+                        (endTime==0?null:endTime+""), handleStatus, tempSearchText, 0
                 ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityAlarmListRsp>(this) {
 
 
@@ -231,6 +239,11 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
 
     }
 
+    /**
+     * List Item点击事件处理
+     * @param securityAlarmInfo
+     * @param isReConfirm
+     */
     public void clickItem(SecurityAlarmInfo securityAlarmInfo, boolean isReConfirm) {
         Intent intent = new Intent(mContext, SecurityWarnDetailActivity.class);
         intent.putExtra("id", securityAlarmInfo.getId());
@@ -282,7 +295,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
 
     public void doCancelSearch() {
         tempSearchText = null;
-        requestSearchData(Constants.DIRECTION_DOWN, null);
+        requestSearchData(Constants.DIRECTION_DOWN);
     }
 
     /**
@@ -293,6 +306,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         scheduleRefresh();
         mHandler.postDelayed(this, 3000);
     }
+
 
     private void scheduleRefresh() {
         if (needFresh) {
@@ -380,34 +394,91 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
 
         }
     }
-    /*private void addTestData(boolean isClearData){
-        if(isClearData){
-            mSecurityAlarmInfoList.clear();
+
+    /**
+     * 日历选择时间回调
+     * @param calendarDateModel
+     */
+    @Override
+    public void onCalendarPopupCallback(CalendarDateModel calendarDateModel) {
+        startTime = DateUtil.strToDate(calendarDateModel.startDate).getTime();
+        endTime = DateUtil.strToDate(calendarDateModel.endDate).getTime();
+        dateSearchText = DateUtil.getCalendarYearMothDayFormatDate(startTime) + " ~ " + DateUtil
+                .getCalendarYearMothDayFormatDate(endTime);
+
+        getView().setCustomizeCaptureTime(dateSearchText);
+        endTime += 1000 * 60 * 60 * 24;
+        requestSearchData(DIRECTION_DOWN);
+
+        getView().setSearchHistoryVisible(false);
+        if (!TextUtils.isEmpty(tempSearchText)) {
+            save(tempSearchText);
         }
-        int[] warnValid = {0,1};
-        int[] warnType = {1,2,3};
-        String[] warnAddress = {"地址1111111111","地址2222222222","地址3333333333"};
-        String[] warnName = {"外来人员布控人物","重点人员布控人物","人员入侵布控任务"};
-        String capturePhotoUrl = "http://pic13.nipic.com/20110409/7119492_114440620000_2.jpg";
-        String focusOriPhoto = "http://pic41.nipic.com/20140508/18609517_112216473140_2.jpg";
-        double[] focusMatchrates = {91,50};
-        int dataSize = 6;
-        for (int i=0;i<dataSize;i++){
-            SecurityAlarmInfo info = new SecurityAlarmInfo();
-            //int roundInt = (int)Math.round(0.5);
-            int roundInt = i;
-            info.setId("000"+i) ;
-            info.setIsEffective(warnValid[roundInt%warnValid.length]);
-            info.setTaskType(warnType[roundInt%warnType.length]);
-            info.setFaceUrl(capturePhotoUrl);
-            info.setImageUrl(focusOriPhoto);
-            info.setScore(focusMatchrates[roundInt%focusMatchrates.length]);
-            info.setTaskName(warnName[roundInt%warnName.length]+""+roundInt);
-            info.setAddress(warnAddress[roundInt%warnAddress.length]+""+roundInt);
-            info.setAlarmTime( System.currentTimeMillis()-roundInt*100);
-            mSecurityAlarmInfoList.add(info);
-        }
-    }*/
 
 
+    }
+
+
+    /**
+     * 选择筛选过滤时间
+     */
+    public  void filterDataByTime(long filterTimeInval){
+        if(filterTimeInval == 0){
+            startTime = 0;
+            endTime = 0;
+        }else{
+            endTime = System.currentTimeMillis();
+            startTime = endTime - filterTimeInval*1000;
+        }
+
+        requestSearchData(DIRECTION_DOWN);
+    }
+
+    /**
+     * 设置 搜索关键字
+     * @param searchText
+     */
+    public void setFilterText(String searchText){
+        if (TextUtils.isEmpty(searchText)) {
+            tempSearchText = null;
+        } else {
+            tempSearchText = searchText;
+        }
+
+    }
+
+
+    /**
+     * 通过预警处理状态筛选
+     * @param filterStatusType
+     */
+    public void filterDataByStatus(int filterStatusType){
+        handleStatus = filterStatusType;
+        requestSearchData(DIRECTION_DOWN);
+    }
+
+    /**
+     * 自定义时间 弹出日历选择日期范围
+     * @param fgMainWarnTitleRoot
+     */
+    public void doCalendar(LinearLayout fgMainWarnTitleRoot) {
+        long temp_startTime = -1;
+        long temp_endTime = -1;
+        if (startTime != 0&& endTime !=0) {
+            temp_startTime = startTime;
+            temp_endTime = endTime;
+        }
+        mCalendarPopUtils.show(fgMainWarnTitleRoot, temp_startTime, temp_endTime);
+    }
+
+    /**
+     * 初始化筛选条件
+     */
+    public void innitFilterStatus(){
+        startTime = 0;
+        endTime = 0;
+        handleStatus = FILTER_STATUS_UNPROCESS;
+        tempSearchText = "";
+        getView().initFilterView();
+    }
 }
