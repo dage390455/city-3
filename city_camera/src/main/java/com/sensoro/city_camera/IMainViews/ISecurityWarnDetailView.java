@@ -28,4 +28,10 @@ public interface ISecurityWarnDetailView extends IActivityIntent, IProgressDialo
      * @param list
      */
     void updateSecurityWarnTimeLine(List<SecurityAlarmEventInfo> list);
+
+    /**
+     * 更新确认信息
+     * @param securityAlarmDetailInfo
+     */
+    void updateSecurityConfirmResult(SecurityAlarmDetailInfo securityAlarmDetailInfo);
 }

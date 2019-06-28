@@ -2,6 +2,7 @@ package com.sensoro.city_camera.fragment;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import com.sensoro.city_camera.IMainViews.ICameraWarnListFragmentView;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.adapter.CameraWarnFragRcContentAdapter;
+import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
 import com.sensoro.city_camera.presenter.CameraWarnListFragmentPresenter;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseFragment;
@@ -140,6 +142,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     //删除历史记录
     private TipOperationDialogUtils historyClearDialog;
     private static final String TAG = "wqh_Test";
+    private SecurityWarnConfirmDialog mSecurityWarnConfirmDialog;
 
 
     @Override
@@ -427,7 +430,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     public void setCustomizeCaptureTime(String strDataRange) {
 
         tvFilterCapturetimeCustomize.setText(strDataRange);
-        setFilterTvStytle(tvFilterCapturetimeCustomize,true);
+        setFilterTvStyle(tvFilterCapturetimeCustomize,true);
 
     }
 
@@ -435,24 +438,39 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     public void initFilterView() {
         edFilterContent.setText("");
         //抓拍时间
-        setFilterTvStytle(tvFilterCapturetimeUnlimited,false);
-        setFilterTvStytle(tvFilterCapturetime24h,false);
-        setFilterTvStytle(tvFilterCapturetime3Days,false);
-        setFilterTvStytle(tvFilterCapturetime7Days,false);
+        setFilterTvStyle(tvFilterCapturetimeUnlimited,false);
+        setFilterTvStyle(tvFilterCapturetime24h,false);
+        setFilterTvStyle(tvFilterCapturetime3Days,false);
+        setFilterTvStyle(tvFilterCapturetime7Days,false);
         tvFilterCapturetimeCustomize.setText(R.string.customize_time);
-        setFilterTvStytle(tvFilterCapturetimeUnlimited,true);
+        setFilterTvStyle(tvFilterCapturetimeUnlimited,true);
         //处理状态
-        setFilterTvStytle(tvFilterStatusUnlimited,false);
-        setFilterTvStytle(tvFilterStatusUnprocessed,true);
-        setFilterTvStytle(tvFilterStatusEffective,false);
-        setFilterTvStytle(tvFilterStatusInvalid,false);
+        setFilterTvStyle(tvFilterStatusUnlimited,false);
+        setFilterTvStyle(tvFilterStatusUnprocessed,true);
+        setFilterTvStyle(tvFilterStatusEffective,false);
+        setFilterTvStyle(tvFilterStatusInvalid,false);
 
+    }
+
+    @Override
+    public void showConfirmDialog(SecurityAlarmInfo securityAlarmInfo) {
+        if (mSecurityWarnConfirmDialog == null) {
+            mSecurityWarnConfirmDialog = new SecurityWarnConfirmDialog();
+            mSecurityWarnConfirmDialog.setSecurityConfirmCallback(mPresenter);
+        }
+        Bundle bundle = new Bundle();
+        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_ID, securityAlarmInfo.getId());
+        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TITLE, securityAlarmInfo.getTaskName());
+        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TIME, String.valueOf(securityAlarmInfo.getAlarmTime()));
+        bundle.putInt(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TYPE, securityAlarmInfo.getAlarmType());
+        mSecurityWarnConfirmDialog.setArguments(bundle);
+        mSecurityWarnConfirmDialog.show(getChildFragmentManager());
     }
 
 
     @Override
     public void startAC(Intent intent) {
-        Objects.requireNonNull(mRootFragment.getActivity()).startActivity(intent);
+        startActivity(intent);
     }
 
     @Override
@@ -462,7 +480,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-
+        startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -509,7 +527,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     public void onConfirmStatusClick(View view, int position, boolean isReConfirm) {
         try {
             SecurityAlarmInfo securityAlarmInfo = mRcContentAdapter.getData().get(position);
-            mPresenter.clickItemByConfirmStatus(securityAlarmInfo, isReConfirm);
+            mPresenter.clickItemByConfirmStatus(securityAlarmInfo);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -606,45 +624,45 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
         }else if(i == R.id.tv_search_camera_warns_time_Unlimited){
             mPresenter.filterDataByTime(FILTER_TIME_ALL);
             setFilterTimeDefault();
-            setFilterTvStytle(tvFilterCapturetimeUnlimited,true);
+            setFilterTvStyle(tvFilterCapturetimeUnlimited,true);
             setWarnFilterContent(WARN_FILTER_TIME, false);
 
         }else if(i == R.id.tv_search_camera_warns_time_24h){
             mPresenter.filterDataByTime(FILTER_TIME_24H);
             setFilterTimeDefault();
-            setFilterTvStytle(tvFilterCapturetime24h,true);
+            setFilterTvStyle(tvFilterCapturetime24h,true);
             setWarnFilterContent(WARN_FILTER_TIME, false);
 
         }else if(i == R.id.tv_search_camera_warns_time_3day){
             mPresenter.filterDataByTime(FILTER_TIME_3DAY);
             setFilterTimeDefault();
-            setFilterTvStytle(tvFilterCapturetime3Days,true);
+            setFilterTvStyle(tvFilterCapturetime3Days,true);
             setWarnFilterContent(WARN_FILTER_TIME, false);
         }else if(i == R.id.tv_search_camera_warns_time_7day){
             mPresenter.filterDataByTime(FILTER_TIME_7DAY);
             setFilterTimeDefault();
-            setFilterTvStytle(tvFilterCapturetime7Days,true);
+            setFilterTvStyle(tvFilterCapturetime7Days,true);
             setWarnFilterContent(WARN_FILTER_TIME, false);
         }//处理状态
         else if(i == R.id.tv_search_camera_warns_status_unlimited){
             mPresenter.filterDataByStatus(FILTER_STATUS_ALL);
             setFilterStatusDefault();
-            setFilterTvStytle(tvFilterStatusUnlimited,true);
+            setFilterTvStyle(tvFilterStatusUnlimited,true);
             setWarnFilterContent(WARN_FILTER_STATUS, false);
         }else if(i == R.id.tv_search_status_unprocessed){
             mPresenter.filterDataByStatus(FILTER_STATUS_UNPROCESS);
             setFilterStatusDefault();
-            setFilterTvStytle(tvFilterStatusUnprocessed,true);
+            setFilterTvStyle(tvFilterStatusUnprocessed,true);
             setWarnFilterContent(WARN_FILTER_STATUS, false);
         }else if(i == R.id.tv_search_status_effective_warn){
             mPresenter.filterDataByStatus(FILTER_STATUS_EFFECTIVE);
             setFilterStatusDefault();
-            setFilterTvStytle(tvFilterStatusEffective,true);
+            setFilterTvStyle(tvFilterStatusEffective,true);
             setWarnFilterContent(WARN_FILTER_STATUS, false);
         }else if(i == R.id.tv_search_status_invalid_warn){
             mPresenter.filterDataByStatus(FILTER_STATUS_INVALID);
             setFilterStatusDefault();
-            setFilterTvStytle(tvFilterStatusInvalid,true);
+            setFilterTvStyle(tvFilterStatusInvalid,true);
             setWarnFilterContent(WARN_FILTER_STATUS, false);
         }
 
@@ -680,7 +698,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
      */
     public void setFilterCustomText(String dateRangeStr){
         tvFilterCapturetimeCustomize.setText(dateRangeStr);
-        setFilterTvStytle(tvFilterCapturetimeCustomize,true);
+        setFilterTvStyle(tvFilterCapturetimeCustomize,true);
     }
 
     /**
@@ -688,34 +706,39 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
      */
     public void setFilterTimeDefault() {
         //抓拍时间
-        setFilterTvStytle(tvFilterCapturetimeUnlimited,false);
-        setFilterTvStytle(tvFilterCapturetime24h,false);
-        setFilterTvStytle(tvFilterCapturetime3Days,false);
-        setFilterTvStytle(tvFilterCapturetime7Days,false);
+        setFilterTvStyle(tvFilterCapturetimeUnlimited,false);
+        setFilterTvStyle(tvFilterCapturetime24h,false);
+        setFilterTvStyle(tvFilterCapturetime3Days,false);
+        setFilterTvStyle(tvFilterCapturetime7Days,false);
         tvFilterCapturetimeCustomize.setText(R.string.customize_time);
-        setFilterTvStytle(tvFilterCapturetimeCustomize,false);
+        setFilterTvStyle(tvFilterCapturetimeCustomize,false);
     }
     /**
      * 抓拍状态初始化
      */
     public void setFilterStatusDefault() {
         //处理状态
-        setFilterTvStytle(tvFilterStatusUnlimited,false);
-        setFilterTvStytle(tvFilterStatusUnprocessed,false);
-        setFilterTvStytle(tvFilterStatusEffective,false);
-        setFilterTvStytle(tvFilterStatusInvalid,false);
+        setFilterTvStyle(tvFilterStatusUnlimited,false);
+        setFilterTvStyle(tvFilterStatusUnprocessed,false);
+        setFilterTvStyle(tvFilterStatusEffective,false);
+        setFilterTvStyle(tvFilterStatusInvalid,false);
     }
     /**
      * 设置选择前后字体样式
      * @param tv
      * @param isBold
      */
-    public void setFilterTvStytle(TextView tv,boolean isBold){
+    public void setFilterTvStyle(TextView tv, boolean isBold){
         tv.getPaint().setFakeBoldText(isBold);
         tv.setTextColor(isBold?getResources().getColor(R.color.c_252525):getResources().getColor(R.color.c_a6a6a6));
     }
 
 
-
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == CameraWarnListFragmentPresenter.REQUEST_CODE_DETAIL && resultCode == Activity.RESULT_OK){
+            mPresenter.requestSearchData(DIRECTION_DOWN);
+        }
+    }
 }

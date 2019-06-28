@@ -21,6 +21,8 @@ import com.sensoro.common.server.security.response.SecurityAlarmDetailRsp;
 import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
 import com.sensoro.common.utils.AppUtils;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -144,7 +146,10 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
                 .subscribe(new CityObserver<HandleAlarmRsp>(this) {
                     @Override
                     public void onCompleted(HandleAlarmRsp handleAlarmRsp) {
-                        // TODO 刷新item
+                        mSecurityAlarmDetailInfo.setIsEffective(isEffective);
+                        getView().updateSecurityConfirmResult(mSecurityAlarmDetailInfo);
+                        requestSecurityWarnTimeLineData(mSecurityInfoId);
+                        getView().setIntentResult(Activity.RESULT_OK);
                     }
 
                     @Override
