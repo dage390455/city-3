@@ -426,11 +426,18 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
         }
     }
 
+    /**
+     * 设置抓拍事件过滤条件
+     * @param strDataRange
+     */
     @Override
     public void setCustomizeCaptureTime(String strDataRange) {
 
         tvFilterCapturetimeCustomize.setText(strDataRange);
         setFilterTvStyle(tvFilterCapturetimeCustomize,true);
+
+        tvFilterCapturetime.setText(strDataRange);
+        setFilterTvStyle(tvFilterCapturetime,true);
 
     }
 
@@ -444,11 +451,15 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
         setFilterTvStyle(tvFilterCapturetime7Days,false);
         tvFilterCapturetimeCustomize.setText(R.string.customize_time);
         setFilterTvStyle(tvFilterCapturetimeUnlimited,true);
+
         //处理状态
         setFilterTvStyle(tvFilterStatusUnlimited,false);
         setFilterTvStyle(tvFilterStatusUnprocessed,true);
         setFilterTvStyle(tvFilterStatusEffective,false);
         setFilterTvStyle(tvFilterStatusInvalid,false);
+        //设置标题
+        setFilterTvStyle(tvFilterProcessStatus,true);
+        tvFilterProcessStatus.setText(tvFilterStatusUnprocessed.getText());
 
     }
 
@@ -620,12 +631,16 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             //抓拍时间筛选
         } else if (i == R.id.tv_search_camera_warns_time_customizetime) {
             mPresenter.doCalendar(fgMainWarnTitleRoot);
+            setFilterTimeDefault();
             setWarnFilterContent(WARN_FILTER_TIME, false);
         }else if(i == R.id.tv_search_camera_warns_time_Unlimited){
             mPresenter.filterDataByTime(FILTER_TIME_ALL);
             setFilterTimeDefault();
             setFilterTvStyle(tvFilterCapturetimeUnlimited,true);
             setWarnFilterContent(WARN_FILTER_TIME, false);
+            //抓拍时间 选择栏标题设置
+            setFilterTvStyle(tvFilterCapturetime,false);
+            tvFilterCapturetime.setText(R.string.capture_time);
 
         }else if(i == R.id.tv_search_camera_warns_time_24h){
             mPresenter.filterDataByTime(FILTER_TIME_24H);
@@ -633,37 +648,61 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             setFilterTvStyle(tvFilterCapturetime24h,true);
             setWarnFilterContent(WARN_FILTER_TIME, false);
 
+            //抓拍时间 选择栏标题设置
+            setFilterTvStyle(tvFilterCapturetime,true);
+            tvFilterCapturetime.setText(R.string.twentyfour_hours);
+
+
         }else if(i == R.id.tv_search_camera_warns_time_3day){
             mPresenter.filterDataByTime(FILTER_TIME_3DAY);
             setFilterTimeDefault();
             setFilterTvStyle(tvFilterCapturetime3Days,true);
             setWarnFilterContent(WARN_FILTER_TIME, false);
+            //抓拍时间 选择栏标题设置
+            setFilterTvStyle(tvFilterCapturetime,true);
+            tvFilterCapturetime.setText(R.string.three_days);
         }else if(i == R.id.tv_search_camera_warns_time_7day){
             mPresenter.filterDataByTime(FILTER_TIME_7DAY);
             setFilterTimeDefault();
             setFilterTvStyle(tvFilterCapturetime7Days,true);
             setWarnFilterContent(WARN_FILTER_TIME, false);
+            //抓拍时间 选择栏标题设置
+            setFilterTvStyle(tvFilterCapturetime,true);
+            tvFilterCapturetime.setText(R.string.seven_days);
         }//处理状态
         else if(i == R.id.tv_search_camera_warns_status_unlimited){
             mPresenter.filterDataByStatus(FILTER_STATUS_ALL);
             setFilterStatusDefault();
             setFilterTvStyle(tvFilterStatusUnlimited,true);
             setWarnFilterContent(WARN_FILTER_STATUS, false);
+            setWarnFilterContent(WARN_FILTER_TIME, false);
+            //处理状态 选择栏标题设置
+            setFilterTvStyle(tvFilterProcessStatus,false);
+            tvFilterProcessStatus.setText(R.string.process_status);
         }else if(i == R.id.tv_search_status_unprocessed){
             mPresenter.filterDataByStatus(FILTER_STATUS_UNPROCESS);
             setFilterStatusDefault();
             setFilterTvStyle(tvFilterStatusUnprocessed,true);
             setWarnFilterContent(WARN_FILTER_STATUS, false);
+            //处理状态 选择栏标题设置
+            setFilterTvStyle(tvFilterProcessStatus,true);
+            tvFilterProcessStatus.setText(R.string.unprocessed);
         }else if(i == R.id.tv_search_status_effective_warn){
             mPresenter.filterDataByStatus(FILTER_STATUS_EFFECTIVE);
             setFilterStatusDefault();
             setFilterTvStyle(tvFilterStatusEffective,true);
             setWarnFilterContent(WARN_FILTER_STATUS, false);
+            //处理状态 选择栏标题设置
+            setFilterTvStyle(tvFilterProcessStatus,true);
+            tvFilterProcessStatus.setText(R.string.effective_warn);
         }else if(i == R.id.tv_search_status_invalid_warn){
             mPresenter.filterDataByStatus(FILTER_STATUS_INVALID);
             setFilterStatusDefault();
             setFilterTvStyle(tvFilterStatusInvalid,true);
             setWarnFilterContent(WARN_FILTER_STATUS, false);
+            //处理状态 选择栏标题设置
+            setFilterTvStyle(tvFilterProcessStatus,true);
+            tvFilterProcessStatus.setText(R.string.invalid_warn);
         }
 
     }

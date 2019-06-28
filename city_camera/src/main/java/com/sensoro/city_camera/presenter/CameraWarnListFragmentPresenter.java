@@ -401,8 +401,10 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
     public void onCalendarPopupCallback(CalendarDateModel calendarDateModel) {
         startTime = DateUtil.strToDate(calendarDateModel.startDate).getTime();
         endTime = DateUtil.strToDate(calendarDateModel.endDate).getTime();
-        dateSearchText = DateUtil.getCalendarYearMothDayFormatDate(startTime) + " ~ " + DateUtil
-                .getCalendarYearMothDayFormatDate(endTime);
+        /*dateSearchText = DateUtil.getCalendarYearMothDayFormatDate(startTime) + " ~ " + DateUtil
+                .getCalendarYearMothDayFormatDate(endTime);*/
+        dateSearchText = DateUtil.getMonthDate(startTime) + " ~ " + DateUtil
+                .getMonthDate(endTime);
 
         getView().setCustomizeCaptureTime(dateSearchText);
         endTime += 1000 * 60 * 60 * 24;
