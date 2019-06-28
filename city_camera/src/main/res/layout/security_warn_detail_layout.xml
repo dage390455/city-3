@@ -41,7 +41,10 @@
             <TextView
                 android:id="@+id/confirm_result_tv"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <RelativeLayout
                 android:id="@+id/title_rl"
@@ -92,59 +95,98 @@
                 android:layout_marginTop="16dp"
                 android:background="@color/c_dfdfdf" />
 
-            <TextView
-                android:id="@+id/security_warn_video_tv"
+            <RelativeLayout
+                android:id="@+id/security_warn_video_rl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/line1"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:drawableStart="@drawable/icon_security_video"
-                android:drawableEnd="@drawable/arrows_right"
-                android:drawablePadding="8dp"
-                android:gravity="center_vertical"
-                android:singleLine="true"
-                android:text="@string/security_warn_video_title"
-                android:textColor="@color/c_252525"
-                android:textSize="16sp" />
+                android:layout_marginTop="20dp">
+
+                <ImageView
+                    android:id="@+id/icon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/icon_security_video" />
+
+                <TextView
+                    android:id="@+id/security_warn_video_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toRightOf="@id/icon"
+                    android:drawableEnd="@drawable/arrows_right"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="@string/security_warn_video_title"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
 
 
-            <TextView
-                android:id="@+id/security_warn_camera_tv"
+            <RelativeLayout
+                android:id="@+id/security_warn_camera_rl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/security_warn_video_tv"
+                android:layout_below="@id/security_warn_video_rl"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:drawableStart="@drawable/icon_security_camera"
-                android:drawableEnd="@drawable/arrows_right"
-                android:drawablePadding="8dp"
-                android:gravity="center_vertical"
-                android:singleLine="true"
-                android:textColor="@color/c_252525"
-                android:textSize="16sp" />
+                android:layout_marginTop="20dp">
 
-            <TextView
-                android:id="@+id/security_warn_deploy_tv"
+                <ImageView
+                    android:id="@+id/icon2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/icon_security_camera" />
+
+                <TextView
+                    android:id="@+id/security_warn_camera_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_toEndOf="@id/icon2"
+                    android:drawableEnd="@drawable/arrows_right"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/security_warn_deploy_rl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/security_warn_camera_tv"
+                android:layout_below="@id/security_warn_camera_rl"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:drawableStart="@drawable/icon_security_deploy"
-                android:drawableEnd="@drawable/arrows_right"
-                android:drawablePadding="8dp"
-                android:gravity="center_vertical"
-                android:singleLine="true"
-                android:text="@string/security_warn_deploy_title"
-                android:textColor="@color/c_252525"
-                android:textSize="16sp" />
+                android:layout_marginTop="20dp">
+
+                <ImageView
+                    android:id="@+id/icon3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/icon_security_deploy" />
+
+                <TextView
+                    android:id="@+id/security_warn_deploy_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toEndOf="@id/icon3"
+                    android:drawableEnd="@drawable/arrows_right"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="@string/security_warn_deploy_title"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
 
             <View
                 android:id="@+id/line2"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/view_divider_height"
-                android:layout_below="@+id/security_warn_deploy_tv"
+                android:layout_below="@+id/security_warn_deploy_rl"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:background="@color/c_dfdfdf" />
