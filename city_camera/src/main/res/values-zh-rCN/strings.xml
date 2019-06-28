@@ -49,4 +49,6 @@
     <string name="download_security_warn_record_fail">下载失败</string>
     <string name="capture_security_warn_record_success">保存成功</string>
     <string name="capture_security_warn_record_fail">保存失败</string>
+    <string name="security_warn_timeline_remark">备注：%1$s</string>
+    <string name="security_warn_timeline_title">联系人[%1$s]通过%2$s确认本次预警</string>
 </resources>

@@ -6,10 +6,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.sensoro.city_camera.IMainViews.ISecurityWarnDetailView;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
+import com.sensoro.city_camera.adapter.SecurityWarnTimeLineAdapter;
 import com.sensoro.city_camera.constants.SecurityConstants;
 import com.sensoro.city_camera.dialog.SecurityControlPersonDetailsDialog;
 import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
@@ -18,6 +22,7 @@ import com.sensoro.city_camera.util.MapUtil;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
+import com.sensoro.common.server.security.bean.SecurityAlarmEventInfo;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.MaxHeightRecyclerView;
 import com.sensoro.common.widgets.ProgressUtils;
@@ -54,7 +59,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     @BindView(R2.id.security_warn_deploy_tv)
     TextView mSecurityWarnDeployTv;
     @BindView(R2.id.security_warn_log_rv)
-    MaxHeightRecyclerView mSecurityLogRv;
+    RecyclerView mSecurityLogRv;
     @BindView(R2.id.security_warn_contact_owner_tv)
     TextView mSecurityWarnContactOwnerTv;
     @BindView(R2.id.security_warn_quick_navigation_tv)
@@ -66,6 +71,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
 
     private SecurityWarnConfirmDialog mSecurityWarnConfirmDialog;
     private ProgressUtils mProgressUtils;
+    private SecurityWarnTimeLineAdapter mTimeLineAdapter;
 
 
     @Override
@@ -89,6 +95,12 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mSubtitle.setVisibility(View.GONE);
         mTitleTv.setText(R.string.security_warn_detail_activity_title);
+
+        mTimeLineAdapter = new SecurityWarnTimeLineAdapter(this);
+        mSecurityLogRv.setHasFixedSize(true);
+        mSecurityLogRv.setNestedScrollingEnabled(false);
+        mSecurityLogRv.setLayoutManager(new LinearLayoutManager(this));
+        mSecurityLogRv.setAdapter(mTimeLineAdapter);
     }
 
     @OnClick({R2.id.include_text_title_imv_arrows_left, R2.id.security_warn_video_tv, R2.id.security_warn_camera_tv,
@@ -174,6 +186,13 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
             mConfirmResultTv.setVisibility(View.GONE);
         }
 
+    }
+
+    @Override
+    public void updateSecurityWarnTimeLine(List<SecurityAlarmEventInfo> list) {
+        if(mTimeLineAdapter != null){
+            mTimeLineAdapter.setDataList(list);
+        }
     }
 
     @Override

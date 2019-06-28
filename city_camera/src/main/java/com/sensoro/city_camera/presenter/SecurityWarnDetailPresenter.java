@@ -18,6 +18,7 @@ import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
 import com.sensoro.common.server.security.response.HandleAlarmRsp;
 import com.sensoro.common.server.security.response.SecurityAlarmDetailRsp;
+import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
 import com.sensoro.common.utils.AppUtils;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
         mActivity = (Activity) context;
         mSecurityInfoId = mActivity.getIntent().getStringExtra("id");
         requestSecurityWarnDetailData(mSecurityInfoId);
+        requestSecurityWarnTimeLineData(mSecurityInfoId);
     }
 
     private void requestSecurityWarnDetailData(String id) {
@@ -65,6 +67,28 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
                         if (isAttachedView()) {
                             getView().dismissProgressDialog();
                         }
+                    }
+                });
+    }
+
+    private void requestSecurityWarnTimeLineData(String id) {
+        RetrofitServiceHelper
+                .getInstance()
+                .getSecurityAlarmTimeLine(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CityObserver<SecurityAlarmTimelineRsp>(this) {
+                    @Override
+                    public void onCompleted(SecurityAlarmTimelineRsp securityAlarmTimelineRsp) {
+                        SecurityAlarmTimelineRsp.SecurityAlarmTimelineData securityAlarmTimelineRspData = securityAlarmTimelineRsp.getData();
+                        if(securityAlarmTimelineRspData != null){
+                            getView().updateSecurityWarnTimeLine(securityAlarmTimelineRspData.list);
+                        }
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+
                     }
                 });
     }

@@ -473,7 +473,7 @@ public interface RetrofitService {
     @PUT("alarms/{id}/handle")
     Observable<HandleAlarmRsp> handleSecurityAlarm(@Path("id") String id, @Body RequestBody requestBody);
 
-    @GET("alarms/{id}/events")
+    @GET("camera-center/alarms/{id}/events")
     Observable<SecurityAlarmTimelineRsp> getSecurityAlarmTimeLine(@Path("id") String id);
 
     @GET("camera-center/alarms")
