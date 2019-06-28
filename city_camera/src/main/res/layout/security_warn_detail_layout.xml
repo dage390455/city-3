@@ -154,13 +154,14 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/line2"
                 android:layout_marginStart="20dp"
-                android:paddingTop="20dp"
+                android:descendantFocusability="blocksDescendants"
+                android:paddingTop="8dp"
                 android:paddingBottom="9dp">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/security_warn_log_rv"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="wrap_content" />
             </RelativeLayout>
 
 
