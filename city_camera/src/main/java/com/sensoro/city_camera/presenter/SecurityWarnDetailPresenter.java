@@ -17,6 +17,8 @@ import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
+import com.sensoro.common.server.security.bean.SecurityCameraInfo;
+import com.sensoro.common.server.security.bean.SecurityContactsInfo;
 import com.sensoro.common.server.security.response.HandleAlarmRsp;
 import com.sensoro.common.server.security.response.SecurityAlarmDetailRsp;
 import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
@@ -25,6 +27,7 @@ import com.sensoro.common.utils.AppUtils;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -98,35 +101,27 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 
 
     public void doContactOwner() {
-        /*String tempNumber = deviceAlarmLogInfo.getDeviceNotification().getContent();
+        List<SecurityContactsInfo> contacts = mSecurityAlarmDetailInfo.getContacts();
 
-        if (TextUtils.isEmpty(tempNumber)) {
+        if (contacts.isEmpty()) {
             if (isAttachedView()) {
-                getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
+                getView().toastShort(mActivity.getString(R.string.no_find_contact_phone_number));
             }
         } else {
-            AppUtils.diallPhone(tempNumber, mContext);
-        }*/
+            AppUtils.diallPhone(contacts.get(0).getMobilePhone(), mActivity);
+        }
     }
 
     public void doNavigation() {
-        /*double[] deviceLonlat = deviceAlarmLogInfo.getDeviceLonlat();
-        if (deviceLonlat != null && deviceLonlat.length > 1) {
-            destPosition = new LatLng(deviceLonlat[1], deviceLonlat[0]);
-            if (CityAppUtils.doNavigation(mContext, destPosition)) {
-                return;
-            } else {
-                if (isAttachedView()) {
-                    getView().toastShort(mContext.getString(R.string.location_not_obtained));
-                }
-            }
+        SecurityCameraInfo camera = mSecurityAlarmDetailInfo.getCamera();
+        if (camera!= null){
+            LatLng destPosition = new LatLng(Double.parseDouble(camera.getLatitude()), Double.parseDouble(camera.getLongitude()));
+            MapUtil.locateAndNavigation(mActivity, destPosition);
         } else {
             if (isAttachedView()) {
-                getView().toastShort(mContext.getString(R.string.location_not_obtained));
+                getView().toastShort(mActivity.getString(R.string.location_not_obtained));
             }
-        }*/
-
-//        MapUtil.locateAndNavigation(mContxt, new LatLng(116.39747132275389, 39.9086268928637));
+        }
     }
 
     public void doConfirm() {

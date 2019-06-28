@@ -2,6 +2,7 @@ package com.sensoro.city_camera.IMainViews;
 
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
+import com.sensoro.common.iwidget.IToast;
 import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
 import com.sensoro.common.server.security.bean.SecurityAlarmEventInfo;
 
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * @author bin.tian
  */
-public interface ISecurityWarnDetailView extends IActivityIntent, IProgressDialog {
+public interface ISecurityWarnDetailView extends IActivityIntent, IProgressDialog, IToast {
     /**
      * 显示安防预警确认弹窗
      * @param securityAlarmDetailInfo

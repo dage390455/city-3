@@ -18,7 +18,6 @@ import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.adapter.SecurityWarnTimeLineAdapter;
 import com.sensoro.city_camera.constants.SecurityConstants;
 import com.sensoro.city_camera.dialog.SecurityCameraDetailsDialog;
-import com.sensoro.city_camera.dialog.SecurityControlPersonDetailsDialog;
 import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
 import com.sensoro.city_camera.presenter.SecurityWarnDetailPresenter;
 import com.sensoro.city_camera.util.MapUtil;
@@ -30,6 +29,7 @@ import com.sensoro.common.server.security.bean.SecurityContactsInfo;
 import com.sensoro.common.server.security.bean.SecurityDeployPersonInfo;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +81,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     private SecurityWarnTimeLineAdapter mTimeLineAdapter;
     private View mSingleView;
     private View mMultiView;
+    private View mCover;
 
 
     @Override
@@ -106,7 +107,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         mTitleTv.setText(R.string.security_warn_detail_activity_title);
 
         mTimeLineAdapter = new SecurityWarnTimeLineAdapter(this);
-        mSecurityLogRv.setHasFixedSize(true);
+//        mSecurityLogRv.setHasFixedSize(true);
         mSecurityLogRv.setNestedScrollingEnabled(false);
         mSecurityLogRv.setLayoutManager(new LinearLayoutManager(this));
         mSecurityLogRv.setAdapter(mTimeLineAdapter);
@@ -130,13 +131,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
             mPresenter.showDeployDetail();
 
         } else if (viewId == R.id.security_warn_contact_owner_tv) {
-//            SecurityCameraDetailsDialog cameraDetailsDialog = new SecurityCameraDetailsDialog();
-//            cameraDetailsDialog.show(getSupportFragmentManager());
-            SecurityControlPersonDetailsDialog securityControlPersonDetailsDialog = new SecurityControlPersonDetailsDialog();
-            securityControlPersonDetailsDialog.show(getSupportFragmentManager());
-//            SecurityWarnConfirmDialog warnConfirmDialog = new SecurityWarnConfirmDialog();
-//            warnConfirmDialog.show(getSupportFragmentManager());
-
+            mPresenter.doContactOwner();
         } else if (viewId == R.id.security_warn_quick_navigation_tv) {
             mPresenter.doNavigation();
         } else if (viewId == R.id.security_warn_alert_confirm_tv) {
@@ -157,10 +152,11 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
                 mSecurityWarnTypeTv.setText(R.string.focus_type);
                 mSecurityWarnTypeTv.setBackgroundResource(R.drawable.security_type_focus_bg);
 
-                if(mMultiView == null){
-                    mMultiView = ((ViewStub)findViewById(R.id.multi_image_vs)).inflate();
+                if (mMultiView == null) {
+                    mMultiView = ((ViewStub) findViewById(R.id.multi_image_vs)).inflate();
                     mMultiView.setVisibility(View.VISIBLE);
                 }
+                mCover = findViewById(R.id.view_mul_valid_cover);
                 View leftView = findViewById(R.id.iv_left_photo);
                 Glide.with(this).load(securityAlarmDetailInfo.getImageUrl()).into((ImageView) leftView);
                 View rightView = findViewById(R.id.iv_right_photo);
@@ -173,10 +169,11 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
                 mSecurityWarnTypeTv.setText(R.string.external_type);
                 mSecurityWarnTypeTv.setBackgroundResource(R.drawable.security_type_foreign_bg);
 
-                if(mSingleView == null){
-                    mSingleView = ((ViewStub)findViewById(R.id.single_image_vs)).inflate();
+                if (mSingleView == null) {
+                    mSingleView = ((ViewStub) findViewById(R.id.single_image_vs)).inflate();
                     mSingleView.setVisibility(View.VISIBLE);
                 }
+                mCover = findViewById(R.id.view_single_valid_cover);
                 View singleView = findViewById(R.id.iv_single_photo);
                 singleView.setOnClickListener(v -> previewImages(0));
                 Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).into((ImageView) singleView);
@@ -185,10 +182,11 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
                 mSecurityWarnTypeTv.setText(R.string.invade_type);
                 mSecurityWarnTypeTv.setBackgroundResource(R.drawable.security_type_invade_bg);
 
-                if(mSingleView == null){
-                    mSingleView = ((ViewStub)findViewById(R.id.single_image_vs)).inflate();
+                if (mSingleView == null) {
+                    mSingleView = ((ViewStub) findViewById(R.id.single_image_vs)).inflate();
                     mSingleView.setVisibility(View.VISIBLE);
                 }
+                mCover = findViewById(R.id.view_single_valid_cover);
                 View singlePhotoView = findViewById(R.id.iv_single_photo);
                 singlePhotoView.setOnClickListener(v -> previewImages(0));
                 Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).into((ImageView) singlePhotoView);
@@ -204,24 +202,30 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     }
 
     @Override
-    public void updateSecurityConfirmResult(SecurityAlarmDetailInfo securityAlarmDetailInfo){
-        if(securityAlarmDetailInfo.getIsEffective() == SecurityConstants.SECURITY_VALID){
+    public void updateSecurityConfirmResult(SecurityAlarmDetailInfo securityAlarmDetailInfo) {
+        if (mCover != null) {
+            mCover.setVisibility(securityAlarmDetailInfo.getIsEffective() == SecurityConstants.SECURITY_VALID || securityAlarmDetailInfo.getIsEffective() == SecurityConstants.SECURITY_INVALID ? View.VISIBLE : View.GONE);
+        }
+        if (securityAlarmDetailInfo.getIsEffective() == SecurityConstants.SECURITY_VALID) {
             mConfirmResultTv.setText(R.string.word_valid);
             mConfirmResultTv.setBackgroundResource(R.drawable.shape_camera_warn_valid);
-//            mSecurityWarnConfirmTv.setVisibility(View.GONE);
-        } else if(securityAlarmDetailInfo.getIsEffective() == SecurityConstants.SECURITY_INVALID){
+            mSecurityWarnConfirmTv.setVisibility(View.GONE);
+            mCover.setVisibility(View.VISIBLE);
+        } else if (securityAlarmDetailInfo.getIsEffective() == SecurityConstants.SECURITY_INVALID) {
             mConfirmResultTv.setText(R.string.word_unvalid);
             mConfirmResultTv.setBackgroundResource(R.drawable.shape_camera_warn_unvalid);
-//            mSecurityWarnConfirmTv.setVisibility(View.GONE);
+            mSecurityWarnConfirmTv.setVisibility(View.GONE);
+            mCover.setVisibility(View.VISIBLE);
         } else {
             mSecurityWarnConfirmTv.setVisibility(View.VISIBLE);
             mConfirmResultTv.setVisibility(View.GONE);
+            mCover.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void updateSecurityWarnTimeLine(List<SecurityAlarmEventInfo> list) {
-        if(mTimeLineAdapter != null){
+        if (mTimeLineAdapter != null) {
             mTimeLineAdapter.setDataList(list);
         }
     }
@@ -333,7 +337,17 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         }
     }
 
-    private void previewImages(int position){
+    private void previewImages(int position) {
         mPresenter.doPreviewImages(position);
+    }
+
+    @Override
+    public void toastShort(String msg) {
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void toastLong(String msg) {
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_LONG).show();
     }
 }
