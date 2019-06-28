@@ -6,13 +6,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
-import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
-import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
-import com.sensoro.smartcity.imainviews.IDeployMonitorConfigurationView;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.EventData;
@@ -21,7 +16,10 @@ import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeployControlSettingData;
 import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
-import com.sensoro.common.utils.AppUtils;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
+import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
+import com.sensoro.smartcity.imainviews.IDeployMonitorConfigurationView;
 import com.sensoro.smartcity.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -256,7 +254,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                     if (split.length > 0) {
                         mScheduleNo = split[0];
                         mHandler.removeCallbacks(DeviceTaskOvertime);
-                        mHandler.postDelayed(DeviceTaskOvertime, 10 * 1000);
+                        mHandler.postDelayed(DeviceTaskOvertime, 15 * 1000);
                     } else {
                         getView().dismissOperatingLoadingDialog();
                         getView().showErrorTipDialog(mActivity.getString(R.string.monitor_point_operation_schedule_no_error));
@@ -296,28 +294,26 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
             if (split.length > 0) {
                 final String temp = split[0];
                 if (!TextUtils.isEmpty(temp)) {
-                    if (AppUtils.isActivityTop(mActivity, DeployMonitorConfigurationActivity.class)) {
-                        mActivity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
-                                    mHandler.removeCallbacks(DeviceTaskOvertime);
-                                    if (isAttachedView()) {
-                                        getView().dismissOperatingLoadingDialog();
-                                        getView().showOperationSuccessToast();
-                                        //
-                                        pushConfigResult();
-                                        mHandler.postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                getView().finishAc();
-                                            }
-                                        }, 1000);
-                                    }
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
+                                mHandler.removeCallbacks(DeviceTaskOvertime);
+                                if (isAttachedView()) {
+                                    getView().dismissOperatingLoadingDialog();
+                                    getView().showOperationSuccessToast();
+                                    //
+                                    pushConfigResult();
+                                    mHandler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            getView().finishAc();
+                                        }
+                                    }, 1000);
                                 }
                             }
-                        });
-                    }
+                        }
+                    });
                 }
             }
 

@@ -69,7 +69,6 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
 import com.sensoro.smartcity.activity.CameraListActivity;
 import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
-import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapENActivity;
 import com.sensoro.smartcity.adapter.MonitorDetailOperationAdapter;
@@ -336,8 +335,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 getView().setDeviceOperationVisible(false);
             }
         }
+        //正常状态下也开启蓝牙
         if (status == Constants.SENSOR_STATUS_ALARM || status == Constants.SENSOR_STATUS_MALFUNCTION
-                || PreferencesHelper.getInstance().getUserData().hasDeviceFirmwareUpdate
+                || status == Constants.SENSOR_STATUS_NORMAL || PreferencesHelper.getInstance().getUserData().hasDeviceFirmwareUpdate
                 || PreferencesHelper.getInstance().getUserData().hasDeviceDemoMode) {
             mHandler.removeCallbacks(bleRunnable);
             mHandler.post(bleRunnable);
@@ -528,6 +528,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     private void setMonitorConfigInfo(DeployControlSettingData deployControlSettingData) {
         if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
+            mDeviceInfo.setConfig(deployControlSettingData);
             final String[] values = {"-", "-"};
             if (deployControlSettingData != null) {
                 Integer switchSpec = deployControlSettingData.getSwitchSpec();
@@ -1168,23 +1169,21 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(DeviceInfo deviceInfo) {
         if (deviceInfo.getSn().equalsIgnoreCase(mDeviceInfo.getSn())) {
-            if (AppUtils.isActivityTop(mContext, MonitorPointElectricDetailActivity.class)) {
-                mContext.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+            mContext.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (isAttachedView()) {
+                        mDeviceInfo.cloneSocketData(deviceInfo);
+                        // 单项数值设置
                         if (isAttachedView()) {
-                            mDeviceInfo.cloneSocketData(deviceInfo);
-                            // 单项数值设置
-                            if (isAttachedView()) {
-                                freshLocationDeviceInfo();
-                                freshTopData();
-                                handleDeviceInfoAdapter();
-                            }
-
+                            freshLocationDeviceInfo();
+                            freshTopData();
+                            handleDeviceInfoAdapter();
                         }
+
                     }
-                });
-            }
+                }
+            });
         }
     }
 
@@ -1196,20 +1195,18 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             if (split.length > 0) {
                 final String temp = split[0];
                 if (!TextUtils.isEmpty(temp)) {
-                    if (AppUtils.isActivityTop(mContext, MonitorPointElectricDetailActivity.class)) {
-                        mContext.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
-                                    mHandler.removeCallbacks(DeviceTaskOvertime);
-                                    if (isAttachedView()) {
-                                        getView().dismissOperatingLoadingDialog();
-                                        getView().showOperationSuccessToast();
-                                    }
+                    mContext.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
+                                mHandler.removeCallbacks(DeviceTaskOvertime);
+                                if (isAttachedView()) {
+                                    getView().dismissOperatingLoadingDialog();
+                                    getView().showOperationSuccessToast();
                                 }
                             }
-                        });
-                    }
+                        }
+                    });
                 }
             }
 
@@ -1645,7 +1642,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     String[] split = scheduleNo.split(",");
                     if (split.length > 0) {
                         mScheduleNo = split[0];
-                        mHandler.postDelayed(DeviceTaskOvertime, 10 * 1000);
+                        mHandler.postDelayed(DeviceTaskOvertime, 15 * 1000);
                     } else {
                         getView().dismissOperatingLoadingDialog();
                         getView().showErrorTipDialog(mContext.getString(R.string.monitor_point_operation_schedule_no_error));

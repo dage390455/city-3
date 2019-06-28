@@ -37,6 +37,7 @@ import com.sensoro.smartcity.imainviews.IThreePhaseElectConfigActivityView;
 import com.sensoro.smartcity.model.WireMaterialDiameterModel;
 import com.sensoro.smartcity.presenter.ThreePhaseElectConfigActivityPresenter;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
+import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -434,7 +435,7 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
 
     @Override
     public void showOperationSuccessToast() {
-
+        SensoroSuccessToast.getInstance().showToast(mActivity, Toast.LENGTH_SHORT);
     }
 
     @Override

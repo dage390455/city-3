@@ -670,7 +670,7 @@ public class RetrofitServiceHelper {
                 List<DeployControlSettingData.wireData> output = deployControlSettingData.getOutput();
                 if (output != null && output.size() > 0) {
                     JSONArray jsonArrayOutput = new JSONArray();
-                    for (DeployControlSettingData.wireData wireData : input) {
+                    for (DeployControlSettingData.wireData wireData : output) {
                         JSONObject jsonObjectOutput = new JSONObject();
                         Integer wireMaterial1 = wireData.getWireMaterial();
                         if (wireMaterial1 != null) {

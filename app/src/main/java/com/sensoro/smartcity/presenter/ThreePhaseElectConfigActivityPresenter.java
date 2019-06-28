@@ -17,9 +17,7 @@ import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeployControlSettingData;
 import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
 import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.smartcity.imainviews.IThreePhaseElectConfigActivityView;
 import com.sensoro.smartcity.model.MaterialValueModel;
@@ -305,12 +303,13 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
             }
             inputValue = Integer.parseInt(getView().getEtInputText());
             if (inputValue < mMinMaxValue[0] || inputValue > mMinMaxValue[1]) {
-                getView().toastShort(mActivity.getString(R.string.empty_open_rated_current_is_out_of_range));
+                getView().toastShort(mActivity.getString(R.string.empty_open_rated_current_is_out_of_range) + " " + mMinMaxValue[0] + "~" + mMinMaxValue[1]);
                 return;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.enter_the_correct_number_format));
+//            getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.enter_the_correct_number_format));
+            getView().toastShort(mActivity.getString(R.string.please_enter_the_configuration_parameters_correctly));
             return;
         }
         int inLineTotal = 0;
@@ -382,16 +381,25 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
                 recommendedTransformerValueModel3.value = 400;
                 deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel2);
                 deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
-            } else if (inputValue <= 400) {
-                //400/40mA
+            }
+//            else if (inputValue <= 400) {
+//                //400/40mA
+//                RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
+//                recommendedTransformerValueModel3.value = 400;
+//                recommendedTransformerValueModel3.isRecommend = true;
+//                deployControlSettingData.setRecommTrans(400);
+//                deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
+//            } else {
+//                getView().toastShort(mActivity.getString(R.string.not_matched_current_transformer));
+//                return;
+//            }
+            else {
+                //TODO >400 按400算
                 RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
                 recommendedTransformerValueModel3.value = 400;
                 recommendedTransformerValueModel3.isRecommend = true;
                 deployControlSettingData.setRecommTrans(400);
                 deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
-            } else {
-                getView().toastShort(mActivity.getString(R.string.not_matched_current_transformer));
-                return;
             }
         } else {
             if (inputValue > 0 && inputValue <= 250) {
@@ -405,17 +413,26 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
                 recommendedTransformerValueModel3.value = 400;
                 deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel1);
                 deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
-            } else if (inputValue <= 400) {
+            } else {
                 //400/40mA
                 RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
                 recommendedTransformerValueModel3.value = 400;
                 recommendedTransformerValueModel3.isRecommend = true;
                 deployControlSettingData.setRecommTrans(400);
                 deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
-            } else {
-                getView().toastShort(mActivity.getString(R.string.not_matched_current_transformer));
-                return;
+
             }
+//            else if (inputValue <= 400) {
+//                //400/40mA
+//                RecommendedTransformerValueModel recommendedTransformerValueModel3 = new RecommendedTransformerValueModel();
+//                recommendedTransformerValueModel3.value = 400;
+//                recommendedTransformerValueModel3.isRecommend = true;
+//                deployControlSettingData.setRecommTrans(400);
+//                deployControlSettingData.getTransformerValueList().add(recommendedTransformerValueModel3);
+//            } else {
+//                getView().toastShort(mActivity.getString(R.string.not_matched_current_transformer));
+//                return;
+//            }
         }
 
         deployControlSettingData.setSwitchSpec(actualRatedCurrent);
@@ -476,6 +493,30 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
     }
 
     public void doSave() {
+        try {
+            if (mMinMaxValue == null) {
+                getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_failed));
+                return;
+            }
+            int inputValue = Integer.parseInt(getView().getEtInputText());
+            if (inputValue < mMinMaxValue[0] || inputValue > mMinMaxValue[1]) {
+                getView().toastShort(mActivity.getString(R.string.empty_open_rated_current_is_out_of_range) + " " + mMinMaxValue[0] + "~" + mMinMaxValue[1]);
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+//            getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.enter_the_correct_number_format));
+            getView().toastShort(mActivity.getString(R.string.please_enter_the_configuration_parameters_correctly));
+            return;
+        }
+        if (mInLineList.isEmpty()) {
+            getView().toastShort(mActivity.getString(R.string.please_add_config_input));
+            return;
+        }
+        if (mOutLineList.isEmpty()) {
+            getView().toastShort(mActivity.getString(R.string.please_add_config_out));
+            return;
+        }
         if (recommendedTransformerDialogUtils != null) {
             List<RecommendedTransformerValueModel> transformerValueList = deployControlSettingData.getTransformerValueList();
             RecommendedTransformerValueModel recommendedTransformerValueModel = transformerValueList.get(0);
@@ -526,7 +567,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
                     if (split.length > 0) {
                         mScheduleNo = split[0];
                         mHandler.removeCallbacks(DeviceTaskOvertime);
-                        mHandler.postDelayed(DeviceTaskOvertime, 10 * 1000);
+                        mHandler.postDelayed(DeviceTaskOvertime, 15 * 1000);
                     } else {
                         getView().dismissOperatingLoadingDialog();
                         getView().showErrorTipDialog(mActivity.getString(R.string.monitor_point_operation_schedule_no_error));
@@ -557,28 +598,30 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
             if (split.length > 0) {
                 final String temp = split[0];
                 if (!TextUtils.isEmpty(temp)) {
-                    if (AppUtils.isActivityTop(mActivity, DeployMonitorConfigurationActivity.class)) {
-                        mActivity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
-                                    mHandler.removeCallbacks(DeviceTaskOvertime);
-                                    if (isAttachedView()) {
-                                        getView().dismissOperatingLoadingDialog();
-                                        getView().showOperationSuccessToast();
-                                        //
-                                        pushConfigResult();
-                                        mHandler.postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                getView().finishAc();
-                                            }
-                                        }, 1000);
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
+                                mHandler.removeCallbacks(DeviceTaskOvertime);
+                                if (isAttachedView()) {
+                                    getView().dismissPickerView();
+                                    getView().dismissOperatingLoadingDialog();
+                                    getView().showOperationSuccessToast();
+                                    if (recommendedTransformerDialogUtils != null) {
+                                        recommendedTransformerDialogUtils.dismiss();
                                     }
+                                    //
+                                    pushConfigResult();
+                                    mHandler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            getView().finishAc();
+                                        }
+                                    }, 1000);
                                 }
                             }
-                        });
-                    }
+                        }
+                    });
                 }
             }
 

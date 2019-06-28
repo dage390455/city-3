@@ -1152,5 +1152,8 @@
     <string name="device_detail_config_info">Init config info</string>
     <string name="device_detail_config_trans">Install trans model</string>
     <string name="initial_configuration_details">Config details</string>
+    <string name="please_add_config_input">Please add input config</string>
+    <string name="please_add_config_out">Please add output config</string>
+    <string name="please_enter_the_configuration_parameters_correctly">Please enter the configuration parameters correctly</string>
 
 </resources>

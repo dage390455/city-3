@@ -1129,10 +1129,13 @@
     <string name="config_recommend_trans">推荐互感器型号</string>
     <string name="config_actual_trans">实际互感器型号</string>
     <string name="config_input">进线</string>
+    <string name="please_add_config_input">请添加进线</string>
+    <string name="please_add_config_out">请添加出线</string>
     <string name="config_output">出线</string>
     <string name="device_detail_config_info">初始配置信息</string>
     <string name="device_detail_config_trans">安装互感器型号</string>
     <string name="initial_configuration_details">初始配置详情</string>
+    <string name="please_enter_the_configuration_parameters_correctly">请正确输入配置参数</string>
 
 
 </resources>
