@@ -243,9 +243,8 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
      * List Item点击事件处理
      *
      * @param securityAlarmInfo
-     * @param isReConfirm
      */
-    public void clickItem(SecurityAlarmInfo securityAlarmInfo, boolean isReConfirm) {
+    public void clickItem(SecurityAlarmInfo securityAlarmInfo) {
         Intent intent = new Intent(mContext, SecurityWarnDetailActivity.class);
         intent.putExtra("id", securityAlarmInfo.getId());
         getView().startACForResult(intent, REQUEST_CODE_DETAIL);

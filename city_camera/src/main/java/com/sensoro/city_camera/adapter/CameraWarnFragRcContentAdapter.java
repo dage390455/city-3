@@ -48,8 +48,7 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
 //        if(position==1){
 //            changeStrokeColor(holder.mainWarnRcContentTvTag,R.color.c_ff8d34);
 //            holder.mainWarnRcContentTvTag.setText("误报");
-//        }
-        boolean isReConfirm = false;
+//        }boolean isReConfirm = false;
         SecurityAlarmInfo securityAlarmInfo = mList.get(position);
         if (securityAlarmInfo != null) {
 
@@ -62,13 +61,12 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
             holder.tvTaskName.setText(securityAlarmInfo.getTaskName());
             holder.tvWarnDeviceName.setText(securityAlarmInfo.getDeviceName());
             holder.tvWarnTime.setText(DateUtil.getStrTimeToday(mContext, warnTime, 0));
-            isReConfirm = false;
             //预警是否有效
             boolean isWarnValid = (securityAlarmInfo.getIsEffective()> 0);
             //isReConfirm = isWarnValid;
             holder.tvCamerawarnValid.setBackgroundResource(isWarnValid?R.drawable.shape_camera_warn_valid:R.drawable.shape_camera_warn_unvalid);
             holder.tvCamerawarnValid.setText(isWarnValid?R.string.word_valid:R.string.word_unvalid);
-            holder.btnWarnConfim.setVisibility(securityAlarmInfo.getIsHandle()>0?View.INVISIBLE:View.VISIBLE);
+            holder.btnWarnConfim.setVisibility(securityAlarmInfo.getIsHandle()==0?View.VISIBLE:View.INVISIBLE);
             //根据预警类型设置UI
             switch (warnType){
                 //1-重点人员/2-外来人员/3-人员入侵
@@ -78,8 +76,8 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     holder.layoutSinglePhoto.setVisibility(View.GONE);
                     holder.layoutMultPhoto.setVisibility(View.VISIBLE);
                     //加载布控 抓拍 照片
-                    Glide.with(mContext).load(focusOriPhoto).into(holder.ivLeftPhoto);
-                    Glide.with(mContext).load(capturePhotoUrl).into(holder.ivRightPhoto);
+                    Glide.with(mContext).load(mContext).placeholder(R.drawable.ic_port_default_white).into(holder.ivLeftPhoto);
+                    Glide.with(mContext).load(capturePhotoUrl).placeholder(R.drawable.ic_port_default_white).into(holder.ivRightPhoto);
                     holder.tvRightMatchrate.setText(focusMatchrate);
                     holder.viewMulUnvalidCover.setVisibility(!isWarnValid?View.VISIBLE:View.GONE);
                     break;
@@ -89,7 +87,7 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     holder.layoutSinglePhoto.setVisibility(View.VISIBLE);
                     holder.layoutMultPhoto.setVisibility(View.GONE);
                     //加载抓拍图片
-                    Glide.with(mContext).load(capturePhotoUrl).into(holder.ivSiglePhoto);
+                    Glide.with(mContext).load(capturePhotoUrl).placeholder(R.drawable.ic_port_default_white).into(holder.ivSiglePhoto);
                     holder.viewSingleUnvalidCover.setVisibility(!isWarnValid?View.VISIBLE:View.GONE);
                     break;
                 case 3:
@@ -98,19 +96,18 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     holder.layoutSinglePhoto.setVisibility(View.VISIBLE);
                     holder.layoutMultPhoto.setVisibility(View.GONE);
                     //加载抓拍照片
-                    Glide.with(mContext).load(capturePhotoUrl).into(holder.ivSiglePhoto);
+                    Glide.with(mContext).load(capturePhotoUrl).placeholder(R.drawable.ic_port_default_white).into(holder.ivSiglePhoto);
                     holder.viewSingleUnvalidCover.setVisibility(!isWarnValid?View.VISIBLE:View.GONE);
                     break;
 
             }
         }
 
-        final Boolean finalIsReConfirm = isReConfirm;
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
-                    mListener.onItemClick(v, position, finalIsReConfirm);
+                    mListener.onItemClick(v, position);
                 }
             }
         });
@@ -118,7 +115,7 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
-                    mListener.onConfirmStatusClick(v, position,finalIsReConfirm);
+                    mListener.onConfirmStatusClick(v, position);
                 }
             }
         });
@@ -186,9 +183,9 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
     }
 
     public interface CameraWarnConfirmStatusClickListener {
-        void onConfirmStatusClick(View view, int position, boolean isReConfirm);
+        void onConfirmStatusClick(View view, int position);
 
-        void onItemClick(View view, int position, boolean isReConfirm);
+        void onItemClick(View view, int position);
     }
 
 }

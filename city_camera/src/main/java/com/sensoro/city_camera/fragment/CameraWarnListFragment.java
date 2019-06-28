@@ -535,7 +535,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
 
     /*item 预警确认*/
     @Override
-    public void onConfirmStatusClick(View view, int position, boolean isReConfirm) {
+    public void onConfirmStatusClick(View view, int position) {
         try {
             SecurityAlarmInfo securityAlarmInfo = mRcContentAdapter.getData().get(position);
             mPresenter.clickItemByConfirmStatus(securityAlarmInfo);
@@ -545,10 +545,10 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     }
 
     @Override
-    public void onItemClick(View view, int position, boolean isReConfirm) {
+    public void onItemClick(View view, int position) {
         try {
             SecurityAlarmInfo securityAlarmInfo = mRcContentAdapter.getData().get(position);
-            mPresenter.clickItem(securityAlarmInfo, isReConfirm);
+            mPresenter.clickItem(securityAlarmInfo);
         } catch (Exception e) {
             e.printStackTrace();
         }
