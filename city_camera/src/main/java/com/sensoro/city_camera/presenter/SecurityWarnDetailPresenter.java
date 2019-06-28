@@ -139,6 +139,12 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
     public void showCameraDetail(){
         getView().showCameraDetailsDialog(mSecurityAlarmDetailInfo);
     }
+    /**
+     * 显示布控信息详情
+     */
+    public void showDeployDetail(){
+        getView().showDeployDetail(mSecurityAlarmDetailInfo);
+    }
 
     public void doBack() {
         if (isAttachedView()) {

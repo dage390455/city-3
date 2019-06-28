@@ -22,6 +22,11 @@ public interface ISecurityWarnDetailView extends IActivityIntent, IProgressDialo
      */
     void showCameraDetailsDialog(SecurityAlarmDetailInfo securityAlarmDetailInfo);
 
+    /**
+     * 显示布控信息详情
+     * @param securityAlarmDetailInfo
+     */
+    void showDeployDetail(SecurityAlarmDetailInfo securityAlarmDetailInfo);
 
     /**
      * 更新安防预警详情数据

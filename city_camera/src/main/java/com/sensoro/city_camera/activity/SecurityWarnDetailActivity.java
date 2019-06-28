@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +27,7 @@ import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
 import com.sensoro.common.server.security.bean.SecurityAlarmEventInfo;
 import com.sensoro.common.server.security.bean.SecurityContactsInfo;
+import com.sensoro.common.server.security.bean.SecurityDeployPersonInfo;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.ProgressUtils;
 
@@ -74,6 +76,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
 
     private SecurityWarnConfirmDialog mSecurityWarnConfirmDialog;
     private SecurityCameraDetailsDialog mSecurityCameraDetailsDialog;
+    private SecurityControlPersonDetailsDialog mControlPersonDetailsDialog;
     private ProgressUtils mProgressUtils;
     private SecurityWarnTimeLineAdapter mTimeLineAdapter;
     private View mSingleView;
@@ -123,6 +126,8 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
             mPresenter.showCameraDetail();
 
         } else if (viewId == R.id.security_warn_deploy_tv) {
+            //布控详情
+            mPresenter.showDeployDetail();
 
         } else if (viewId == R.id.security_warn_contact_owner_tv) {
 //            SecurityCameraDetailsDialog cameraDetailsDialog = new SecurityCameraDetailsDialog();
@@ -162,6 +167,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
                 Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).into((ImageView) rightView);
                 leftView.setOnClickListener(v -> previewImages(0));
                 rightView.setOnClickListener(v -> previewImages(1));
+
                 break;
             case SecurityConstants.SECURITY_TYPE_FOREIGN:
                 mSecurityWarnTypeTv.setText(R.string.external_type);
@@ -265,6 +271,21 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
 
         mSecurityCameraDetailsDialog.setArguments(bundle);
         mSecurityCameraDetailsDialog.show(getSupportFragmentManager());
+    }
+
+    @Override
+    public void showDeployDetail(SecurityAlarmDetailInfo securityAlarmDetailInfo) {
+        if(null ==securityAlarmDetailInfo.getObjectMainJson()){
+            return;
+        }
+        if (mControlPersonDetailsDialog == null) {
+            mControlPersonDetailsDialog = new SecurityControlPersonDetailsDialog();
+        }
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(SecurityControlPersonDetailsDialog.EXTRA_KEY_DEPLOY_INFO,securityAlarmDetailInfo.getObjectMainJson());
+        mControlPersonDetailsDialog.setArguments(bundle);
+        mControlPersonDetailsDialog.show(getSupportFragmentManager());
+
     }
 
     @Override

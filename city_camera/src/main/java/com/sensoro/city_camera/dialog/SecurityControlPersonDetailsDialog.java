@@ -12,8 +12,10 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
+import com.bumptech.glide.Glide;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
+import com.sensoro.common.server.security.bean.SecurityDeployPersonInfo;
 import com.sensoro.common.widgets.dialog.TipDialogUtils;
 
 import butterknife.BindView;
@@ -42,8 +44,11 @@ public class SecurityControlPersonDetailsDialog extends BaseBottomDialog {
     @BindView(R2.id.control_person_describe_tv)
     TextView mControlPersonDescribeTv;
 
+    public static final String EXTRA_KEY_DEPLOY_INFO = "deploy_info";
+    public static final String EXTRA_KEY_DEPLOY_IMAGE = "deploy_imageurl";
+    private SecurityDeployPersonInfo mSecurityDeployPersonInfo;
 
-    private TipDialogUtils mCancelConfirmDialog, mUploadConfirmDialog;
+
 
     @Nullable
     @Override
@@ -61,64 +66,36 @@ public class SecurityControlPersonDetailsDialog extends BaseBottomDialog {
     }
 
     private void initUI() {
+        Bundle bundle = getArguments();
+        if (bundle != null){
+            mSecurityDeployPersonInfo = (SecurityDeployPersonInfo)bundle.getSerializable(EXTRA_KEY_DEPLOY_INFO);
+            String imageUrl = bundle.getString(EXTRA_KEY_DEPLOY_IMAGE);
+            Glide.with(getActivity()).load(imageUrl).into(mControlPersonPhotoIv);
+            mControlPersonNameTv.setText(mSecurityDeployPersonInfo.getName());
+            mControlPersonNationTv.setText(mSecurityDeployPersonInfo.getNationality());
+            mControlPersonTelephoneTv.setText(mSecurityDeployPersonInfo.getMobile());
+            mControlPersonIdcardTv.setText(mSecurityDeployPersonInfo.getIdentityCardNumber());
+            mControlPersonDescribeTv.setText(mSecurityDeployPersonInfo.getDescription());
+        }
+
+
 
     }
 
     @Override
     protected void onBackPressed() {
-        showCancelCommitDialog();
+        dismiss();
     }
 
     @OnClick({R2.id.iv_alarm_popup_close,R2.id.control_person_describe_tv})
     public void onViewClicked(View view) {
         int i = view.getId();
         if (i == R.id.iv_alarm_popup_close) {
-            showCancelCommitDialog();
-        }else if(i == R.id.control_person_describe_tv){
-
+            dismiss();
         }
     }
 
-    private void showCancelCommitDialog() {
-        if (mCancelConfirmDialog == null) {
-            mCancelConfirmDialog = new TipDialogUtils(getActivity());
-            mCancelConfirmDialog.setTipConfirmText(getContext().getString(R.string.security_warn_confirm_dialog_exit_button), ContextCompat.getColor(getContext(), R.color.c_f34a4a));
-            mCancelConfirmDialog.setTipMessageText(getContext().getString(R.string.security_warn_confirm_dialog_exit_title));
-            mCancelConfirmDialog.setTipDialogUtilsClickListener(new TipDialogUtils.TipDialogUtilsClickListener() {
-                @Override
-                public void onCancelClick() {
-                    mCancelConfirmDialog.dismiss();
-                }
 
-                @Override
-                public void onConfirmClick() {
-                    mCancelConfirmDialog.dismiss();
-                    dismiss();
-                }
-            });
-        }
-        mCancelConfirmDialog.show();
-    }
-
-    private void showUploadConfirmDialog() {
-        if (mUploadConfirmDialog == null) {
-            mUploadConfirmDialog = new TipDialogUtils(getActivity());
-            mUploadConfirmDialog.setTipConfirmText(getContext().getString(R.string.security_warn_confirm_dialog_upload_button), ContextCompat.getColor(getContext(), R.color.c_f34a4a));
-            mUploadConfirmDialog.setTipMessageText(getContext().getString(R.string.security_warn_confirm_dialog_upload_title));
-            mUploadConfirmDialog.setTipDialogUtilsClickListener(new TipDialogUtils.TipDialogUtilsClickListener() {
-                @Override
-                public void onCancelClick() {
-                    mUploadConfirmDialog.dismiss();
-                }
-
-                @Override
-                public void onConfirmClick() {
-                    mUploadConfirmDialog.dismiss();
-                }
-            });
-        }
-        mUploadConfirmDialog.show();
-    }
 
     public void show(FragmentManager fragmentManager) {
         show(fragmentManager, SecurityWarnConfirmDialog.class.getSimpleName());
