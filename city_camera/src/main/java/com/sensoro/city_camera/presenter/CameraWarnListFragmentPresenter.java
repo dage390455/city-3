@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import com.sensoro.city_camera.IMainViews.ICameraWarnListFragmentView;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.activity.SecurityWarnDetailActivity;
+import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
@@ -22,10 +23,10 @@ import com.sensoro.common.model.CalendarDateModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
-import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
 import com.sensoro.common.server.bean.EventCameraWarnStatusModel;
+import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
+import com.sensoro.common.server.security.response.HandleAlarmRsp;
 import com.sensoro.common.server.security.response.SecurityAlarmListRsp;
-import com.sensoro.common.server.security.response.SecurityWarnRecordResp;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.CalendarPopUtils;
 
@@ -45,27 +46,28 @@ import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 
 /**
  * 安防预警列表
+ *
  * @author wangqinghao
  */
 public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnListFragmentView> implements IOnCreate, Runnable,
-CalendarPopUtils.OnCalendarPopupCallbackListener{
+        CalendarPopUtils.OnCalendarPopupCallbackListener, SecurityWarnConfirmDialog.SecurityConfirmCallback {
 
     public static final int FILTER_STATUS_ALL = 0;
     public static final int FILTER_STATUS_UNPROCESS = 2;
     public static final int FILTER_STATUS_EFFECTIVE = 3;
     public static final int FILTER_STATUS_INVALID = 4;
 
-    public static final long  FILTER_TIME_ALL = 0;
-    public static final long  FILTER_TIME_24H = 24*3600;
-    public static final long FILTER_TIME_3DAY = 3*24*3600;
-    public static final long  FILTER_TIME_7DAY = 7*24*3600;
+    public static final long FILTER_TIME_ALL = 0;
+    public static final long FILTER_TIME_24H = 24 * 3600;
+    public static final long FILTER_TIME_3DAY = 3 * 24 * 3600;
+    public static final long FILTER_TIME_7DAY = 7 * 24 * 3600;
 
     //搜索文字
     private String tempSearchText;
     //抓拍时间
     private long startTime;
     private long endTime;
-    private String  dateSearchText;
+    private String dateSearchText;
     //处理状态
     private int handleStatus = FILTER_STATUS_UNPROCESS;
 
@@ -73,14 +75,13 @@ CalendarPopUtils.OnCalendarPopupCallbackListener{
     private final List<String> mSearchHistoryList = new ArrayList<>();
     private volatile int cur_page = 0;
 
-    private boolean isReConfirm = false;
-
     private Activity mContext;
     private SecurityAlarmInfo mCurrentSecurityAlarmInfo;
     private CalendarPopUtils mCalendarPopUtils;
 
     private volatile boolean needFresh = false;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
+    public static final int REQUEST_CODE_DETAIL = 100;
 
     private final Comparator<SecurityAlarmInfo> cameraWarnInfoComparator = new Comparator<SecurityAlarmInfo>() {
         @Override
@@ -165,7 +166,6 @@ CalendarPopUtils.OnCalendarPopupCallbackListener{
     }
 
 
-
     /**
      * 搜索数据
      *
@@ -178,9 +178,9 @@ CalendarPopUtils.OnCalendarPopupCallbackListener{
                 getView().showProgressDialog();
                 //查询起始位置，默认0
                 RetrofitServiceHelper.getInstance().getSecurityAlarmList(
-                        (cur_page== 0?0:cur_page*20-1),
-                        (startTime==0?null:startTime+""),
-                        (endTime==0?null:endTime+""), handleStatus, tempSearchText, 0
+                        (cur_page == 0 ? 0 : cur_page * 20 - 1),
+                        (startTime == 0 ? null : startTime + ""),
+                        (endTime == 0 ? null : endTime + ""), handleStatus, tempSearchText, 0
                 ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityAlarmListRsp>(this) {
 
 
@@ -203,11 +203,11 @@ CalendarPopUtils.OnCalendarPopupCallbackListener{
             case Constants.DIRECTION_UP:
                 cur_page++;
                 getView().showProgressDialog();
-                int offsetUp = cur_page== 0?1:cur_page*20-1;
+                int offsetUp = cur_page == 0 ? 1 : cur_page * 20 - 1;
                 RetrofitServiceHelper.getInstance().getSecurityAlarmList(
-                        (cur_page== 0?1:cur_page*20-1),
-                        (startTime==0?null:startTime+""),
-                        (endTime==0?null:endTime+""), handleStatus, tempSearchText, 0
+                        (cur_page == 0 ? 1 : cur_page * 20 - 1),
+                        (startTime == 0 ? null : startTime + ""),
+                        (endTime == 0 ? null : endTime + ""), handleStatus, tempSearchText, 0
                 ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityAlarmListRsp>(this) {
 
 
@@ -241,13 +241,14 @@ CalendarPopUtils.OnCalendarPopupCallbackListener{
 
     /**
      * List Item点击事件处理
+     *
      * @param securityAlarmInfo
      * @param isReConfirm
      */
     public void clickItem(SecurityAlarmInfo securityAlarmInfo, boolean isReConfirm) {
         Intent intent = new Intent(mContext, SecurityWarnDetailActivity.class);
         intent.putExtra("id", securityAlarmInfo.getId());
-        getView().startAC(intent);
+        getView().startACForResult(intent, REQUEST_CODE_DETAIL);
 
     }
 
@@ -350,12 +351,8 @@ CalendarPopUtils.OnCalendarPopupCallbackListener{
     /**
      * Item Button 点击事件处理
      */
-    public void clickItemByConfirmStatus(final SecurityAlarmInfo securityAlarmInfo, boolean isReConfirm) {
-        this.isReConfirm = isReConfirm;
-        mCurrentSecurityAlarmInfo = securityAlarmInfo;
-        getView().toastLong("item Button 点击");
-
-
+    public void clickItemByConfirmStatus(final SecurityAlarmInfo securityAlarmInfo) {
+        getView().showConfirmDialog(securityAlarmInfo);
     }
 
     private void freshSingleWarnLogInfo(SecurityAlarmInfo securityAlarmInfo) {
@@ -397,6 +394,7 @@ CalendarPopUtils.OnCalendarPopupCallbackListener{
 
     /**
      * 日历选择时间回调
+     *
      * @param calendarDateModel
      */
     @Override
@@ -422,13 +420,13 @@ CalendarPopUtils.OnCalendarPopupCallbackListener{
     /**
      * 选择筛选过滤时间
      */
-    public  void filterDataByTime(long filterTimeInval){
-        if(filterTimeInval == 0){
+    public void filterDataByTime(long filterTimeInval) {
+        if (filterTimeInval == 0) {
             startTime = 0;
             endTime = 0;
-        }else{
+        } else {
             endTime = System.currentTimeMillis();
-            startTime = endTime - filterTimeInval*1000;
+            startTime = endTime - filterTimeInval * 1000;
         }
 
         requestSearchData(DIRECTION_DOWN);
@@ -436,9 +434,10 @@ CalendarPopUtils.OnCalendarPopupCallbackListener{
 
     /**
      * 设置 搜索关键字
+     *
      * @param searchText
      */
-    public void setFilterText(String searchText){
+    public void setFilterText(String searchText) {
         if (TextUtils.isEmpty(searchText)) {
             tempSearchText = null;
         } else {
@@ -450,21 +449,23 @@ CalendarPopUtils.OnCalendarPopupCallbackListener{
 
     /**
      * 通过预警处理状态筛选
+     *
      * @param filterStatusType
      */
-    public void filterDataByStatus(int filterStatusType){
+    public void filterDataByStatus(int filterStatusType) {
         handleStatus = filterStatusType;
         requestSearchData(DIRECTION_DOWN);
     }
 
     /**
      * 自定义时间 弹出日历选择日期范围
+     *
      * @param fgMainWarnTitleRoot
      */
     public void doCalendar(LinearLayout fgMainWarnTitleRoot) {
         long temp_startTime = -1;
         long temp_endTime = -1;
-        if (startTime != 0&& endTime !=0) {
+        if (startTime != 0 && endTime != 0) {
             temp_startTime = startTime;
             temp_endTime = endTime;
         }
@@ -474,11 +475,29 @@ CalendarPopUtils.OnCalendarPopupCallbackListener{
     /**
      * 初始化筛选条件
      */
-    public void innitFilterStatus(){
+    public void innitFilterStatus() {
         startTime = 0;
         endTime = 0;
         handleStatus = FILTER_STATUS_UNPROCESS;
         tempSearchText = "";
         getView().initFilterView();
+    }
+
+    @Override
+    public void onConfirmClick(String id, int isEffective, String operationDetail) {
+        RetrofitServiceHelper.getInstance().handleSecurityAlarm(id, isEffective, operationDetail)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CityObserver<HandleAlarmRsp>(this) {
+                    @Override
+                    public void onCompleted(HandleAlarmRsp handleAlarmRsp) {
+                        requestSearchData(Constants.DIRECTION_DOWN);
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+
+                    }
+                });
     }
 }

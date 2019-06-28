@@ -52,4 +52,6 @@
     <string name="online">离线</string>
     <string name="offline">在线</string>
     <string name="contact_count_tip">共%d人</string>
+    <string name="security_warn_timeline_remark">备注：%1$s</string>
+    <string name="security_warn_timeline_title">联系人[%1$s]通过%2$s确认本次预警</string>
 </resources>

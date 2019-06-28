@@ -3,6 +3,9 @@ package com.sensoro.city_camera.IMainViews;
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
+import com.sensoro.common.server.security.bean.SecurityAlarmEventInfo;
+
+import java.util.List;
 
 /**
  * @author bin.tian
@@ -25,4 +28,16 @@ public interface ISecurityWarnDetailView extends IActivityIntent, IProgressDialo
      * @param securityAlarmDetailInfo
      */
     void updateSecurityWarnDetail(SecurityAlarmDetailInfo securityAlarmDetailInfo);
+
+    /**
+     * 更新预警修改数据
+     * @param list
+     */
+    void updateSecurityWarnTimeLine(List<SecurityAlarmEventInfo> list);
+
+    /**
+     * 更新确认信息
+     * @param securityAlarmDetailInfo
+     */
+    void updateSecurityConfirmResult(SecurityAlarmDetailInfo securityAlarmDetailInfo);
 }
