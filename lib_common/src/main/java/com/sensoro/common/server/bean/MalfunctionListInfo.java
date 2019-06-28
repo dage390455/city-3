@@ -1,5 +1,7 @@
 package com.sensoro.common.server.bean;
 
+import com.sensoro.common.model.DeviceNotificationBean;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,7 @@ public class MalfunctionListInfo implements Serializable {
     private long updatedTime;
     private boolean isDeleted;
     private DeviceNotificationBean deviceNotification;
+    private List<DeviceNotificationBean> deviceNotifications;
     private int malfunctionStatus;
     private String id;
     private String _updatedTime;
@@ -197,6 +200,14 @@ public class MalfunctionListInfo implements Serializable {
     private List<?> phoneList;
     private List<Double> deviceLonlat;
 
+    public List<DeviceNotificationBean> getDeviceNotifications() {
+        return deviceNotifications;
+    }
+
+    public void setDeviceNotifications(List<DeviceNotificationBean> deviceNotifications) {
+        this.deviceNotifications = deviceNotifications;
+    }
+
     public static class OwnersBean implements Serializable {
 
         /**
@@ -267,40 +278,6 @@ public class MalfunctionListInfo implements Serializable {
         }
     }
 
-    public static class DeviceNotificationBean implements Serializable {
-
-        /**
-         * types : phone
-         */
-
-        private String types;
-        private String contact;
-        private String content;
-
-        public String getTypes() {
-            return types;
-        }
-
-        public void setTypes(String types) {
-            this.types = types;
-        }
-
-        public String getContact() {
-            return contact;
-        }
-
-        public void setContact(String contact) {
-            this.contact = contact;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
-    }
 
     public static class RecordsBean implements Serializable {
 

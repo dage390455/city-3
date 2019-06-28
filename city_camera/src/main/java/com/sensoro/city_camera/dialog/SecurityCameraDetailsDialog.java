@@ -12,12 +12,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
-import com.sensoro.common.widgets.dialog.TipDialogUtils;
 
 import java.util.ArrayList;
 
@@ -51,14 +49,14 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
     @BindView(R2.id.security_camera_details_verson_tv)
     TextView mCameraVersonTv;
     //联系人
-    @BindView(R.id.layout_camera_details_contact)
+    @BindView(R2.id.layout_camera_details_contact)
     RelativeLayout layoutCameraContact;
     @BindView(R2.id.security_camera_details_contact_tv)
     TextView mCameraContactTv;
     @BindView(R2.id.security_camera_details_contact_amount)
     TextView mCameraContactCountTv;
     //地址
-    @BindView(R.id.layout_camera_details_address)
+    @BindView(R2.id.layout_camera_details_address)
     RelativeLayout layoutCameraAddress;
     @BindView(R2.id.security_camera_details_address_tv)
     TextView mCameraAddressTv;

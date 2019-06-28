@@ -15,6 +15,7 @@ import com.google.gson.JsonObject;
 import com.sensoro.common.base.ContextUtils;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.RxApiManager;
+import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.common.model.SecurityRisksAdapterModel;
 import com.sensoro.common.server.bean.ContractsTemplateInfo;
 import com.sensoro.common.server.bean.DeployControlSettingData;
@@ -561,12 +562,17 @@ public class RetrofitServiceHelper {
      * @param lat
      * @param tags
      * @param name
-     * @param contact
-     * @param content
+     * @param contacts
+     * @param wxPhone
+     * @param imgUrls
+     * @param deployControlSettingData
+     * @param forceReason
+     * @param status
+     * @param signalQuality
      * @return
      */
     public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, List<String> tags, String
-            name, String contact, String content, String wxPhone, List<String> imgUrls, DeployControlSettingData deployControlSettingData, String forceReason, Integer status, String signalQuality) {
+            name, List<DeployContactModel> contacts, String wxPhone, List<String> imgUrls, DeployControlSettingData deployControlSettingData, String forceReason, Integer status, String signalQuality) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("lon", lon);
@@ -581,11 +587,22 @@ public class RetrofitServiceHelper {
             if (name != null) {
                 jsonObject.put("name", name);
             }
-            if (contact != null) {
-                jsonObject.put("contact", contact);
-            }
-            if (content != null) {
-                jsonObject.put("content", content);
+
+
+            if (contacts != null && contacts.size() > 0) {
+                JSONArray jsonArrayContact = new JSONArray();
+                for (DeployContactModel contactModel : contacts) {
+                    JSONObject object = new JSONObject();
+                    if (!TextUtils.isEmpty(contactModel.name)) {
+                        object.put("contact", contactModel.name);
+                    }
+                    if (!TextUtils.isEmpty(contactModel.phone)) {
+                        object.put("content", contactModel.phone);
+                    }
+                    object.put("types", "phone");
+                    jsonArrayContact.put(object);
+                }
+                jsonObject.put("notifications", jsonArrayContact);
             }
             if (imgUrls != null && imgUrls.size() > 0) {
                 JSONArray jsonArrayImg = new JSONArray();
@@ -664,7 +681,7 @@ public class RetrofitServiceHelper {
     }
 
     public Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(String oldSn, String newSn, String taskId, Integer reason, double lon, double lat, List<String> tags, String
-            name, String contact, String content, List<String> imgUrls, String wxPhone, String forceReason, Integer status, String signalQuality) {
+            name, List<DeployContactModel> contacts, List<String> imgUrls, String wxPhone, String forceReason, Integer status, String signalQuality) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(newSn)) {
@@ -688,12 +705,25 @@ public class RetrofitServiceHelper {
             if (!TextUtils.isEmpty(name)) {
                 jsonObject.put("name", name);
             }
-            if (!TextUtils.isEmpty(contact)) {
-                jsonObject.put("contact", contact);
+
+
+            if (contacts != null && contacts.size() > 0) {
+                JSONArray jsonArrayContact = new JSONArray();
+                for (DeployContactModel contactModel : contacts) {
+                    JSONObject object = new JSONObject();
+                    if (!TextUtils.isEmpty(contactModel.name)) {
+                        object.put("contact", contactModel.name);
+                    }
+                    if (!TextUtils.isEmpty(contactModel.phone)) {
+                        object.put("content", contactModel.phone);
+                    }
+                    object.put("types", "phone");
+                    jsonArrayContact.put(object);
+                }
+                jsonObject.put("notifications", jsonArrayContact);
             }
-            if (!TextUtils.isEmpty(content)) {
-                jsonObject.put("content", content);
-            }
+
+
             if (imgUrls != null && imgUrls.size() > 0) {
                 JSONArray jsonArrayImg = new JSONArray();
                 for (String url : imgUrls) {

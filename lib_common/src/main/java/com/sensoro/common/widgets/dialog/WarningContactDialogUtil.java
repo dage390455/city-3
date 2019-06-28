@@ -1,4 +1,4 @@
-package com.sensoro.nameplate.widget;
+package com.sensoro.common.widgets.dialog;
 
 import android.app.Activity;
 import android.view.Display;
@@ -9,54 +9,45 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.sensoro.common.R;
+import com.sensoro.common.adapter.WarningContactDialogAdapter;
 import com.sensoro.common.manger.MaxHeightLinearLayoutManager;
-import com.sensoro.common.server.bean.NamePlateInfo;
+import com.sensoro.common.model.DeviceNotificationBean;
 import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.common.widgets.MaxHeightRecyclerView;
-import com.sensoro.nameplate.R;
-import com.sensoro.nameplate.adapter.AssociationSensorDialogAdapter;
 
 import java.util.List;
 
-public class AssociationSensorConfirmDialogUtil {
+public class WarningContactDialogUtil {
     private final Activity mActivity;
     private final ImageView mIvClose;
-    private final TextView mTvCancel;
-    private final TextView mTvConfirm;
     private final MaxHeightRecyclerView mRvContent;
     private final CustomCornerDialog mDialog;
     private final TextView mTvCount;
-    private AssociationSensorDialogAdapter mAdapter;
-    private OnListener mListener;
+    private WarningContactDialogAdapter mAdapter;
 
-    public AssociationSensorConfirmDialogUtil(Activity activity, boolean cancelable) {
+    public WarningContactDialogUtil(Activity activity, boolean cancelable) {
         this(activity);
         mDialog.setCancelable(cancelable);
     }
 
-    public AssociationSensorConfirmDialogUtil(Activity activity) {
+    public WarningContactDialogUtil(Activity activity) {
         mActivity = activity;
-        final View view = View.inflate(activity, R.layout.item_dialog_association_sensor_confirm, null);
+        final View view = View.inflate(activity, R.layout.dialog_warning_contact, null);
         WindowManager m = mActivity.getWindow().getWindowManager();
         Display d = m.getDefaultDisplay();
         int maxHeight = (int) (d.getHeight() * 0.35);
-        mIvClose = view.findViewById(R.id.iv_close_item_dialog_associate_sensor_confirm);
-        mTvCancel = view.findViewById(R.id.tv_cancel_item_dialog_associate_sensor_confirm);
-        mTvConfirm = view.findViewById(R.id.tv_confirm_item_dialog_associate_sensor_confirm);
-        mTvCount = view.findViewById(R.id.tv_count_item_dialog_associate_sensor_confirm);
-        mRvContent = view.findViewById(R.id.rv_content_item_dialog_associate_sensor_confirm);
+        mIvClose = view.findViewById(R.id.iv_close_warning_contact);
+        mTvCount = view.findViewById(R.id.tv_count_warning_contact);
+        mRvContent = view.findViewById(R.id.rv_content_item_dialog_warning_contact);
 
         mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view, true);
 
         MaxHeightLinearLayoutManager manager = new MaxHeightLinearLayoutManager(mActivity, RecyclerView.VERTICAL, false);
-        mAdapter = new AssociationSensorDialogAdapter(mActivity);
+        mAdapter = new WarningContactDialogAdapter(mActivity);
         mRvContent.setLayoutManager(manager);
         mRvContent.setAdapter(mAdapter);
         mRvContent.setMaxHeight(maxHeight);
-
-
-
-
 
 
         mIvClose.setOnClickListener(new View.OnClickListener() {
@@ -66,29 +57,7 @@ public class AssociationSensorConfirmDialogUtil {
             }
         });
 
-        mTvCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDialog.dismiss();
-            }
-        });
 
-        mTvConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onConfirm();
-                }
-            }
-        });
-    }
-
-    public void setOnListener(OnListener listener) {
-        mListener = listener;
-    }
-
-    public interface OnListener {
-        void onConfirm();
     }
 
     public boolean isShowing() {
@@ -98,15 +67,21 @@ public class AssociationSensorConfirmDialogUtil {
         return false;
     }
 
-    public void show(List<NamePlateInfo> data) {
+    public void show(List<DeviceNotificationBean> data) {
         if (mDialog != null) {
             mAdapter.updateData(data);
             StringBuilder sb = new StringBuilder();
-            sb.append(mActivity.getString(R.string.selectede)).append(data.size()).append(mActivity.getString(R.string.sensor));
+            sb.append(data.size()).append(mActivity.getString(R.string.warning_contact));
             mTvCount.setText(sb.toString());
             mDialog.show();
         }
     }
+
+//    public void show() {
+//        if (mDialog != null) {
+//            mDialog.show();
+//        }
+//    }
 
     public void dismiss() {
         if (mDialog != null) {

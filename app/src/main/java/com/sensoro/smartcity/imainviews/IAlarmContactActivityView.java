@@ -5,6 +5,7 @@ import com.sensoro.common.iwidget.IToast;
 import com.sensoro.common.model.DeployContactModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface IAlarmContactActivityView extends IToast, IActivityIntent {
 //    void setNameAndPhone(String name, String phone);
@@ -20,5 +21,7 @@ public interface IAlarmContactActivityView extends IToast, IActivityIntent {
 //    void setPhone(String phone);
 
     void updateContactData(ArrayList<DeployContactModel> mdContactModelList);
+
+    public void updateRepeatAdapter(List<Integer> list);
 
 }

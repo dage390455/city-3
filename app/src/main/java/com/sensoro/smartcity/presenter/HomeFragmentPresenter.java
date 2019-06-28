@@ -516,7 +516,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     //子线程处理
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
         //后台线程处理消息
         int code = eventData.code;
@@ -525,15 +525,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             case Constants.EVENT_DATA_DEPLOY_RESULT_FINISH:
                 break;
             case Constants.EVENT_DATA_SEARCH_MERCHANT:
-                mContext.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isAttachedView()) {
-                            requestInitData(true);
-                        }
-
-                    }
-                });
+                requestInitData(true);
                 break;
             case Constants.EVENT_DATA_LOCK_SCREEN_ON:
                 //TODO 暂时不加

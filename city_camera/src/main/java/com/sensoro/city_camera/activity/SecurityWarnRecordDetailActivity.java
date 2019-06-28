@@ -346,17 +346,13 @@ public class SecurityWarnRecordDetailActivity
 
     @OnClick({R2.id.include_imv_title_imv_arrows_left, R2.id.vertical_download_iv, R2.id.vertical_capture_iv})
     public void onViewClicked(View view) {
-        switch (view.getId()){
-            case R.id.include_imv_title_imv_arrows_left:
-                finishAc();
-                break;
-            case R.id.vertical_download_iv:
-                mPresenter.doDownload();
-                break;
-            case R.id.vertical_capture_iv:
-                mPresenter.doCapture();
-                break;
-                default:
+        int i = view.getId();
+        if (i == R.id.include_imv_title_imv_arrows_left) {
+            finishAc();
+        } else if (i == R.id.vertical_download_iv) {
+            mPresenter.doDownload();
+        } else if (i == R.id.vertical_capture_iv) {
+            mPresenter.doCapture();
         }
 
     }

@@ -75,7 +75,7 @@ import static com.sensoro.common.constant.Constants.DIRECTION_UP;
 public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragmentView, CameraWarnListFragmentPresenter>
         implements ICameraWarnListFragmentView, CameraWarnFragRcContentAdapter.CameraWarnConfirmStatusClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
 
-    @BindView(R.id.fg_camera_warns_top_search_title_root)
+    @BindView(R2.id.fg_camera_warns_top_search_title_root)
     LinearLayout fgMainWarnTitleRoot;
     @BindView(R2.id.fg_camera_warns_top_search_et_search)
     EditText edFilterContent;
