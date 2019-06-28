@@ -9,6 +9,7 @@ import com.amap.api.maps.model.LatLng;
 import com.sensoro.city_camera.IMainViews.ISecurityWarnDetailView;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.activity.SecurityWarnRecordDetailActivity;
+import com.sensoro.city_camera.dialog.SecurityCameraDetailsDialog;
 import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
 import com.sensoro.city_camera.util.MapUtil;
 import com.sensoro.common.base.BasePresenter;
@@ -26,7 +27,7 @@ import io.reactivex.schedulers.Schedulers;
  * @author : bin.tian
  * date   : 2019-06-24
  */
-public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDetailView> implements SecurityWarnConfirmDialog.SecurityConfirmCallback {
+public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDetailView> implements SecurityWarnConfirmDialog.SecurityConfirmCallback, SecurityCameraDetailsDialog.SecurityCameraDetailsCallback {
     private Activity mActivity;
     private String mSecurityInfoId;
     private SecurityAlarmDetailInfo mSecurityAlarmDetailInfo;
@@ -103,6 +104,13 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
         getView().showConfirmDialog(mSecurityAlarmDetailInfo);
     }
 
+    /**
+     * 显示摄像机详情
+     */
+    public void showCameraDetail(){
+        getView().showCameraDetailsDialog(mSecurityAlarmDetailInfo);
+    }
+
     public void doBack(){
         if (isAttachedView()) {
             getView().finishAc();
@@ -138,5 +146,16 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
         if(isAttachedView()){
             getView().startAC(intent);
         }
+    }
+
+
+    @Override
+    public void onNavi() {
+
+    }
+
+    @Override
+    public void showContactsDetails() {
+
     }
 }

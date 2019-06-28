@@ -49,4 +49,7 @@
     <string name="download_security_warn_record_fail">下载失败</string>
     <string name="capture_security_warn_record_success">保存成功</string>
     <string name="capture_security_warn_record_fail">保存失败</string>
+    <string name="online">离线</string>
+    <string name="offline">在线</string>
+    <string name="contact_count_tip">共%d人</string>
 </resources>

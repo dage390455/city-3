@@ -1,5 +1,6 @@
 package com.sensoro.city_camera.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,7 @@ import com.sensoro.city_camera.IMainViews.ISecurityWarnDetailView;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.constants.SecurityConstants;
+import com.sensoro.city_camera.dialog.SecurityCameraDetailsDialog;
 import com.sensoro.city_camera.dialog.SecurityControlPersonDetailsDialog;
 import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
 import com.sensoro.city_camera.presenter.SecurityWarnDetailPresenter;
@@ -18,9 +20,13 @@ import com.sensoro.city_camera.util.MapUtil;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
+import com.sensoro.common.server.security.bean.SecurityContactsInfo;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.MaxHeightRecyclerView;
 import com.sensoro.common.widgets.ProgressUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,6 +69,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     TextView mConfirmResultTv;
 
     private SecurityWarnConfirmDialog mSecurityWarnConfirmDialog;
+    private SecurityCameraDetailsDialog mSecurityCameraDetailsDialog;
     private ProgressUtils mProgressUtils;
 
 
@@ -99,6 +106,8 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         } else if (viewId == R.id.security_warn_video_tv) {
             mPresenter.toSecurityWarnRecord();
         } else if (viewId == R.id.security_warn_camera_tv) {
+            //摄像机详情
+            mPresenter.showCameraDetail();
 
         } else if (viewId == R.id.security_warn_deploy_tv) {
 
@@ -179,6 +188,38 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         bundle.putInt(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TYPE, securityAlarmDetailInfo.getAlarmType());
         mSecurityWarnConfirmDialog.setArguments(bundle);
         mSecurityWarnConfirmDialog.show(getSupportFragmentManager());
+    }
+
+    @Override
+    public void showCameraDetailsDialog(SecurityAlarmDetailInfo securityAlarmDetailInfo) {
+        if(null == securityAlarmDetailInfo.getCamera()){
+            return;
+        }
+        if (mSecurityCameraDetailsDialog == null) {
+            mSecurityCameraDetailsDialog = new SecurityCameraDetailsDialog();
+            mSecurityCameraDetailsDialog.setSecurityCameraDetailsCallback(mPresenter);
+        }
+        Bundle bundle = new Bundle();
+        bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_SECURITY_ID, securityAlarmDetailInfo.getId());
+        bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_NAME, securityAlarmDetailInfo.getCamera().getName());
+        bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_TYPE, securityAlarmDetailInfo.getCamera().getType());
+        bundle.putInt(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_SATUS, Integer.parseInt(securityAlarmDetailInfo.getCamera().getDeviceStatus()));
+        bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_SN, securityAlarmDetailInfo.getCamera().getSn());
+        bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_BRAND, securityAlarmDetailInfo.getCamera().getBrand());
+        bundle.putStringArrayList(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_LABEL, (ArrayList<String>) securityAlarmDetailInfo.getCamera().getLabel());
+        bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_VERSION, securityAlarmDetailInfo.getCamera().getVersion());
+
+        List<SecurityContactsInfo> contactList =
+                (securityAlarmDetailInfo.getCamera()!= null && securityAlarmDetailInfo.getCamera().getContact()!= null
+                && securityAlarmDetailInfo.getCamera().getContact().size()>0)
+                ?securityAlarmDetailInfo.getCamera().getContact():null;
+        bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_CONTACT,
+                null != contactList?(contactList.get(0).getMobilePhone()+" | "+contactList.get(0).getMobilePhone()):"");
+        bundle.putInt(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_CONTACT_COUNT,contactList!=null?contactList.size():0);
+        bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_ADDRESS,securityAlarmDetailInfo.getCamera().getLocation());
+
+        mSecurityCameraDetailsDialog.setArguments(bundle);
+        mSecurityCameraDetailsDialog.show(getSupportFragmentManager());
     }
 
     @Override
