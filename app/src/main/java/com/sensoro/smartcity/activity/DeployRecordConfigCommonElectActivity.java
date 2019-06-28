@@ -73,7 +73,7 @@ public class DeployRecordConfigCommonElectActivity extends BaseActivity<IDeployR
 
     @Override
     public void finishAc() {
-        finish();
+        mActivity.finish();
     }
 
     @Override

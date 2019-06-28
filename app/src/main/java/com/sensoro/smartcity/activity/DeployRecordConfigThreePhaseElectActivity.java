@@ -20,6 +20,7 @@ import com.sensoro.smartcity.presenter.DeployRecordConfigThreePhaseElectActivity
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 @Route(path = ARouterConstants.ACTIVITY_DEPLOY_RECORD_CONFIG_THREE_PHASE_ELECT_ACTIVITY)
 public class DeployRecordConfigThreePhaseElectActivity extends BaseActivity<IDeployRecordConfigThreePhaseElectActivityView, DeployRecordConfigThreePhaseElectActivityPresenter>
@@ -63,6 +64,15 @@ public class DeployRecordConfigThreePhaseElectActivity extends BaseActivity<IDep
         includeTextTitleTvTitle.setText(R.string.initial_configuration_details);
     }
 
+    @OnClick({R.id.include_text_title_imv_arrows_left})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.include_text_title_imv_arrows_left:
+                finishAc();
+                break;
+        }
+    }
+
 
     @Override
     protected DeployRecordConfigThreePhaseElectActivityPresenter createPresenter() {
@@ -76,7 +86,7 @@ public class DeployRecordConfigThreePhaseElectActivity extends BaseActivity<IDep
 
     @Override
     public void finishAc() {
-        finish();
+        mActivity.finish();
     }
 
     @Override
