@@ -8,7 +8,9 @@ import android.text.TextUtils;
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.city_camera.IMainViews.ISecurityWarnDetailView;
 import com.sensoro.city_camera.R;
+import com.sensoro.city_camera.activity.PhotoPreviewActivity;
 import com.sensoro.city_camera.activity.SecurityWarnRecordDetailActivity;
+import com.sensoro.city_camera.dialog.SecurityCameraDetailsDialog;
 import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
 import com.sensoro.city_camera.util.MapUtil;
 import com.sensoro.common.base.BasePresenter;
@@ -17,7 +19,12 @@ import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
 import com.sensoro.common.server.security.response.HandleAlarmRsp;
 import com.sensoro.common.server.security.response.SecurityAlarmDetailRsp;
+import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
 import com.sensoro.common.utils.AppUtils;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -26,7 +33,7 @@ import io.reactivex.schedulers.Schedulers;
  * @author : bin.tian
  * date   : 2019-06-24
  */
-public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDetailView> implements SecurityWarnConfirmDialog.SecurityConfirmCallback {
+public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDetailView> implements SecurityWarnConfirmDialog.SecurityConfirmCallback, SecurityCameraDetailsDialog.SecurityCameraDetailsCallback {
     private Activity mActivity;
     private String mSecurityInfoId;
     private SecurityAlarmDetailInfo mSecurityAlarmDetailInfo;
@@ -36,9 +43,10 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
         mActivity = (Activity) context;
         mSecurityInfoId = mActivity.getIntent().getStringExtra("id");
         requestSecurityWarnDetailData(mSecurityInfoId);
+        requestSecurityWarnTimeLineData(mSecurityInfoId);
     }
 
-    private void requestSecurityWarnDetailData(String id){
+    private void requestSecurityWarnDetailData(String id) {
         getView().showProgressDialog();
         RetrofitServiceHelper
                 .getInstance()
@@ -48,7 +56,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
                 .subscribe(new CityObserver<SecurityAlarmDetailRsp>(this) {
                     @Override
                     public void onCompleted(SecurityAlarmDetailRsp securityAlarmDetailRsp) {
-                        if (securityAlarmDetailRsp != null){
+                        if (securityAlarmDetailRsp != null) {
                             mSecurityAlarmDetailInfo = securityAlarmDetailRsp.getData();
                             getView().updateSecurityWarnDetail(mSecurityAlarmDetailInfo);
                         }
@@ -62,6 +70,28 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
                         if (isAttachedView()) {
                             getView().dismissProgressDialog();
                         }
+                    }
+                });
+    }
+
+    private void requestSecurityWarnTimeLineData(String id) {
+        RetrofitServiceHelper
+                .getInstance()
+                .getSecurityAlarmTimeLine(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CityObserver<SecurityAlarmTimelineRsp>(this) {
+                    @Override
+                    public void onCompleted(SecurityAlarmTimelineRsp securityAlarmTimelineRsp) {
+                        SecurityAlarmTimelineRsp.SecurityAlarmTimelineData securityAlarmTimelineRspData = securityAlarmTimelineRsp.getData();
+                        if(securityAlarmTimelineRspData != null){
+                            getView().updateSecurityWarnTimeLine(securityAlarmTimelineRspData.list);
+                        }
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+
                     }
                 });
     }
@@ -99,11 +129,18 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 //        MapUtil.locateAndNavigation(mContxt, new LatLng(116.39747132275389, 39.9086268928637));
     }
 
-    public void doConfirm(){
+    public void doConfirm() {
         getView().showConfirmDialog(mSecurityAlarmDetailInfo);
     }
 
-    public void doBack(){
+    /**
+     * 显示摄像机详情
+     */
+    public void showCameraDetail(){
+        getView().showCameraDetailsDialog(mSecurityAlarmDetailInfo);
+    }
+
+    public void doBack() {
         if (isAttachedView()) {
             getView().finishAc();
         }
@@ -117,7 +154,10 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
                 .subscribe(new CityObserver<HandleAlarmRsp>(this) {
                     @Override
                     public void onCompleted(HandleAlarmRsp handleAlarmRsp) {
-                        // TODO 刷新item
+                        mSecurityAlarmDetailInfo.setIsEffective(isEffective);
+                        getView().updateSecurityConfirmResult(mSecurityAlarmDetailInfo);
+                        requestSecurityWarnTimeLineData(mSecurityInfoId);
+                        getView().setIntentResult(Activity.RESULT_OK);
                     }
 
                     @Override
@@ -135,8 +175,26 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
     public void toSecurityWarnRecord() {
         Intent intent = mActivity.getIntent();
         intent.setClass(mActivity, SecurityWarnRecordDetailActivity.class);
-        if(isAttachedView()){
+        if (isAttachedView()) {
             getView().startAC(intent);
         }
+    }
+
+
+    @Override
+    public void onNavi() {
+
+    }
+
+    @Override
+    public void showContactsDetails() {
+
+    }
+
+    public void doPreviewImages(int position) {
+        Intent intent = new Intent(mActivity, PhotoPreviewActivity.class);
+        intent.putExtra(PhotoPreviewPresenter.EXTRA_KEY_POSITION, position);
+        intent.putExtra(PhotoPreviewPresenter.EXTRA_KEY_SECURITY_INFO, mSecurityAlarmDetailInfo);
+        getView().startAC(intent);
     }
 }

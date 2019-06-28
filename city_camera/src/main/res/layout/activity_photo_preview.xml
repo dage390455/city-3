@@ -37,6 +37,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/photo_info_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -44,7 +45,8 @@
         android:paddingStart="20dp"
         android:paddingTop="12dp"
         android:paddingEnd="20dp"
-        android:paddingBottom="12dp">
+        android:paddingBottom="12dp"
+        android:visibility="gone">
 
         <RelativeLayout
             android:id="@+id/rl"
@@ -71,19 +73,20 @@
                 android:singleLine="true"
                 android:text="费家村外来人员预警"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
         </RelativeLayout>
 
         <TextView
             android:id="@+id/security_warn_image_preview_subtitle_tv"
             android:layout_width="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/c_b6b6b6"
-            android:layout_marginTop="5dp"
             android:layout_height="wrap_content"
+            android:layout_below="@id/rl"
+            android:layout_marginTop="5dp"
             android:text="费家村56号超市外 今天12:36"
-            android:layout_below="@id/rl"/>
+            android:textColor="@color/c_b6b6b6"
+            android:textSize="12sp" />
 
 
     </RelativeLayout>

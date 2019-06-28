@@ -470,10 +470,10 @@ public interface RetrofitService {
     Observable<ResponseResult<Integer>> doBindDevice(@Body RequestBody requestBody);
 
 
-    @PUT("alarms/{id}/handle")
+    @PUT("camera-center/alarms/{id}/handle")
     Observable<HandleAlarmRsp> handleSecurityAlarm(@Path("id") String id, @Body RequestBody requestBody);
 
-    @GET("alarms/{id}/events")
+    @GET("camera-center/alarms/{id}/events")
     Observable<SecurityAlarmTimelineRsp> getSecurityAlarmTimeLine(@Path("id") String id);
 
     @GET("camera-center/alarms")
