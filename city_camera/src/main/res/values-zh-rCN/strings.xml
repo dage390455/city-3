@@ -45,4 +45,8 @@
     <string name="invalid_warn">无效预警</string>
     <string name="effective_warn">有效预警</string>
     <string name="unprocessed">未处理</string>
+    <string name="download_security_warn_record_success">下载完成</string>
+    <string name="download_security_warn_record_fail">下载失败</string>
+    <string name="capture_security_warn_record_success">保存成功</string>
+    <string name="capture_security_warn_record_fail">保存失败</string>
 </resources>

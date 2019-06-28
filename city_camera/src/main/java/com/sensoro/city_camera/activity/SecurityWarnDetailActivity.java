@@ -20,6 +20,7 @@ import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.MaxHeightRecyclerView;
+import com.sensoro.common.widgets.ProgressUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,8 +59,11 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     TextView mSecurityWarnNavigationTv;
     @BindView(R2.id.security_warn_alert_confirm_tv)
     TextView mSecurityWarnConfirmTv;
+    @BindView(R2.id.confirm_result_tv)
+    TextView mConfirmResultTv;
 
     private SecurityWarnConfirmDialog mSecurityWarnConfirmDialog;
+    private ProgressUtils mProgressUtils;
 
 
     @Override
@@ -80,10 +84,9 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     }
 
     private void initView() {
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mSubtitle.setVisibility(View.GONE);
         mTitleTv.setText(R.string.security_warn_detail_activity_title);
-
-
     }
 
     @OnClick({R2.id.include_text_title_imv_arrows_left, R2.id.security_warn_video_tv, R2.id.security_warn_camera_tv,
@@ -92,11 +95,9 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     public void onViewClicked(View view) {
         int viewId = view.getId();
         if (viewId == R.id.include_text_title_imv_arrows_left) {
-            finishAc();
+            mPresenter.doBack();
         } else if (viewId == R.id.security_warn_video_tv) {
-            Intent intent = getIntent();
-            intent.setClass(this, SecurityWarnRecordDetailActivity.class);
-            startAC(intent);
+            mPresenter.toSecurityWarnRecord();
         } else if (viewId == R.id.security_warn_camera_tv) {
 
         } else if (viewId == R.id.security_warn_deploy_tv) {
@@ -152,6 +153,17 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
 
         mSecurityWarnTimeTv.setText(DateUtil.getStrTimeToday(this, Long.parseLong(securityAlarmDetailInfo.getAlarmTime()), 0));
         mSecurityWarnCameraNameTv.setText(securityAlarmDetailInfo.getCamera().getName());
+
+        if(securityAlarmDetailInfo.getIsEffective() == SecurityConstants.SECURITY_VALID){
+            mConfirmResultTv.setText(R.string.word_valid);
+            mConfirmResultTv.setBackgroundResource(R.drawable.shape_camera_warn_valid);
+        } else if(securityAlarmDetailInfo.getIsEffective() == SecurityConstants.SECURITY_INVALID){
+            mConfirmResultTv.setText(R.string.word_unvalid);
+            mConfirmResultTv.setBackgroundResource(R.drawable.shape_camera_warn_unvalid);
+        } else {
+            mConfirmResultTv.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
@@ -177,12 +189,12 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
 
     @Override
     public void startAC(Intent intent) {
-
+        mActivity.startActivity(intent);
     }
 
     @Override
     public void finishAc() {
-
+        mActivity.finish();
     }
 
     @Override
@@ -198,5 +210,19 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     @Override
     public void setIntentResult(int resultCode, Intent data) {
 
+    }
+
+    @Override
+    public void showProgressDialog() {
+        if (mProgressUtils != null) {
+            mProgressUtils.showProgress();
+        }
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+        if (mProgressUtils != null) {
+            mProgressUtils.dismissProgress();
+        }
     }
 }

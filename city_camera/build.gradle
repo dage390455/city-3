@@ -21,6 +21,13 @@ android {
                 arguments = [AROUTER_MODULE_NAME: project.getName()]
             }
         }
+        ndk {
+//            moduleName "city"
+            //声明启用Android日志, 在c/c++的源文件中使用的#include <android/log.h> 日志将得到输出
+//            ldLibs "log"
+//            abiFilters 'armeabi','armeabi-v7a'  //只生成armeabi的so
+            abiFilters 'armeabi-v7a'  //只生成armeabi的so
+        }
     }
 
     buildTypes {

@@ -3,6 +3,7 @@ package com.sensoro.city_camera.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.os.Environment;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -14,9 +15,9 @@ import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
-import com.sensoro.common.server.response.DeviceCameraPersonFaceRsp;
+import com.sensoro.common.server.download.DownloadListener;
+import com.sensoro.common.server.download.DownloadUtil;
 import com.sensoro.common.server.security.bean.SecurityRecord;
-import com.sensoro.common.server.security.bean.SecurityWarnRecord;
 import com.sensoro.common.server.security.response.SecurityWarnRecordResp;
 import com.sensoro.common.utils.DateUtil;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
@@ -25,6 +26,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
+import java.util.List;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -32,8 +36,8 @@ import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAU
 
 public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecurityRecordDetailActivityView> {
     private Activity mActivity;
-    private DeviceCameraPersonFaceRsp.DataBean dataBean;
     private String mSecurityWarnId;
+    private SecurityRecord mSecurityRecord;
 
     @Override
     public void initData(Context context) {
@@ -142,13 +146,12 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
             getView().backFromWindowFull();
 
 
-
         }
     }
 
     private void setTitle(String title) {
         try {
-            long l = Long.parseLong(dataBean.getCaptureTime());
+            long l = Long.parseLong(title);
             String time = DateUtil.getStrTime_ymd_hm_ss(l);
             getView().setTitle(time);
         } catch (NumberFormatException e) {
@@ -160,39 +163,45 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
     private void requestVideo() {
         getView().showProgressDialog();
 
-        RetrofitServiceHelper.getInstance().getSecurityWarnRecord(mSecurityWarnId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityWarnRecordResp>(null) {
-            @Override
-            public void onCompleted(SecurityWarnRecordResp securityWarnRecordResp) {
-                SecurityWarnRecord securityWarnRecord = securityWarnRecordResp.securityWarnRecord;
-                if (securityWarnRecord != null) {
-                    SecurityRecord securityRecord = securityWarnRecord.recordList.get(0);
-                    if (securityRecord != null){
-                        setTitle(securityRecord.createTime);
-                        setLastCover(securityRecord.coverUrl);
+        RetrofitServiceHelper
+                .getInstance()
+                .getSecurityWarnRecord(mSecurityWarnId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CityObserver<SecurityWarnRecordResp>(null) {
+                    @Override
+                    public void onCompleted(SecurityWarnRecordResp securityWarnRecordResp) {
+                        List<SecurityRecord> recordList = securityWarnRecordResp.data.list;
+                        if (recordList != null && !recordList.isEmpty()) {
+                            SecurityRecord securityRecord = recordList.get(0);
+                            if (securityRecord != null) {
+                                mSecurityRecord = securityRecord;
+                                setTitle(securityRecord.createTime);
+                                setLastCover(securityRecord.coverUrl);
+                                if (isAttachedView()) {
+                                    getView().startPlayLogic(securityRecord.mediaUrl);
+                                }
+                            }
+
+                        } else {
+                            if (isAttachedView()) {
+                                getView().toastShort(mActivity.getString(R.string.obtain_video_fail));
+                            }
+                        }
+
                         if (isAttachedView()) {
-                            getView().startPlayLogic(securityRecord.mediaUrl);
+                            getView().dismissProgressDialog();
                         }
                     }
 
-                } else {
-                    if (isAttachedView()) {
-                        getView().toastShort(mActivity.getString(R.string.obtain_video_fail));
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        if (isAttachedView()) {
+                            getView().playError(errorMsg);
+                            getView().dismissProgressDialog();
+                        }
                     }
-                }
-
-                if (isAttachedView()) {
-                    getView().dismissProgressDialog();
-                }
-            }
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-                if (isAttachedView()) {
-                    getView().playError(errorMsg);
-                    getView().dismissProgressDialog();
-                }
-            }
-        });
+                });
 
 
     }
@@ -204,5 +213,54 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
 
     public void doRetry() {
         requestVideo();
+    }
+
+    public void doCapture() {
+        if (mSecurityRecord == null) {
+            return;
+        }
+        String fileName = System.currentTimeMillis() + ".jpeg";
+        String[] strings = mSecurityRecord.mediaUrl.split("/?");
+        if (strings.length > 0) {
+            fileName = strings[0];
+            String[] strings1 = fileName.split("/");
+            if (strings1.length > 0) {
+                fileName = strings1[strings1.length - 1];
+            }
+        }
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath(), fileName);
+        getView().capture(file);
+    }
+
+    public void doDownload() {
+        if (mSecurityRecord == null) {
+            return;
+        }
+        String fileName = System.currentTimeMillis() + ".mp4";
+        String[] strings = mSecurityRecord.mediaUrl.split("/?");
+        if (strings.length > 0) {
+            fileName = strings[0];
+            String[] strings1 = fileName.split("/");
+            if (strings1.length > 0) {
+                fileName = strings1[strings1.length - 1];
+            }
+        }
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath(), fileName);
+        new DownloadUtil(new DownloadListener() {
+            @Override
+            public void onFinish(File file) {
+                getView().toastShort(mActivity.getString(R.string.download_security_warn_record_success));
+            }
+
+            @Override
+            public void onProgress(int progress, String totalBytesRead, String fileSize) {
+
+            }
+
+            @Override
+            public void onFailed(String errMsg) {
+                getView().toastShort(mActivity.getString(R.string.download_security_warn_record_fail));
+            }
+        }).downloadFile(mSecurityRecord.mediaUrl, file.getAbsolutePath());
     }
 }

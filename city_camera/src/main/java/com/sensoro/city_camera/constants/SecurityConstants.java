@@ -6,13 +6,13 @@ package com.sensoro.city_camera.constants;
  */
 public interface SecurityConstants {
     /**
-     * 预警有效
-     */
-    int SECURITY_VALID = 0;
-    /**
      * 预警无效
      */
-    int SECURITY_INVALID = 1;
+    int SECURITY_INVALID = 0;
+    /**
+     * 预警有效
+     */
+    int SECURITY_VALID = 1;
     /**
      * 重点
      */

@@ -12,5 +12,5 @@ import java.io.Serializable;
  * date   : 2019-06-27
  */
 public class SecurityWarnRecordResp extends ResponseBase implements Serializable {
-    public SecurityWarnRecord securityWarnRecord;
+    public SecurityWarnRecord data;
 }

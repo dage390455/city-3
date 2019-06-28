@@ -9,5 +9,5 @@ import java.util.List;
  */
 public class SecurityWarnRecord implements Serializable {
     public String id;
-    public List<SecurityRecord> recordList;
+    public List<SecurityRecord> list;
 }

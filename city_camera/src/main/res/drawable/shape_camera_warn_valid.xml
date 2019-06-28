@@ -8,9 +8,9 @@
     <solid android:color="@color/c_f34a4a" />
 
     <!-- 边框的颜色和粗细 -->
-    <stroke
+   <!-- <stroke
         android:width="0.5dp"
-        android:color="@color/c_979797" />
+        android:color="@color/c_979797" />-->
 
     <!-- android:radius 圆角的半径 -->
     <corners
@@ -18,5 +18,11 @@
         android:bottomRightRadius="10dp"
         android:topLeftRadius="0dp"
         android:topRightRadius="0dp" />
+
+    <padding
+        android:bottom="4dp"
+        android:left="8dp"
+        android:right="8dp"
+        android:top="4dp" />
 
 </shape>
