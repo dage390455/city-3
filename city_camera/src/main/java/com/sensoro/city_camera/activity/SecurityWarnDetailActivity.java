@@ -74,9 +74,6 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     @BindView(R2.id.security_warn_deploy_rl)
     View mSecurityWarnDeployRl;
 
-    private SecurityWarnConfirmDialog mSecurityWarnConfirmDialog;
-    private SecurityCameraDetailsDialog mSecurityCameraDetailsDialog;
-    private SecurityControlPersonDetailsDialog mControlPersonDetailsDialog;
     private ProgressUtils mProgressUtils;
     private SecurityWarnTimeLineAdapter mTimeLineAdapter;
     private View mSingleView;
@@ -233,17 +230,15 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
 
     @Override
     public void showConfirmDialog(SecurityAlarmDetailInfo securityAlarmDetailInfo) {
-        if (mSecurityWarnConfirmDialog == null) {
-            mSecurityWarnConfirmDialog = new SecurityWarnConfirmDialog();
-            mSecurityWarnConfirmDialog.setSecurityConfirmCallback(mPresenter);
-        }
+        SecurityWarnConfirmDialog securityWarnConfirmDialog = new SecurityWarnConfirmDialog();
+        securityWarnConfirmDialog.setSecurityConfirmCallback(mPresenter);
         Bundle bundle = new Bundle();
         bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_ID, securityAlarmDetailInfo.getId());
         bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TITLE, securityAlarmDetailInfo.getTaskName());
         bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TIME, securityAlarmDetailInfo.getAlarmTime());
         bundle.putInt(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TYPE, securityAlarmDetailInfo.getAlarmType());
-        mSecurityWarnConfirmDialog.setArguments(bundle);
-        mSecurityWarnConfirmDialog.show(getSupportFragmentManager());
+        securityWarnConfirmDialog.setArguments(bundle);
+        securityWarnConfirmDialog.show(getSupportFragmentManager());
     }
 
     @Override
@@ -251,10 +246,8 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         if(null == securityAlarmDetailInfo.getCamera()){
             return;
         }
-        if (mSecurityCameraDetailsDialog == null) {
-            mSecurityCameraDetailsDialog = new SecurityCameraDetailsDialog();
-            mSecurityCameraDetailsDialog.setSecurityCameraDetailsCallback(mPresenter);
-        }
+        SecurityCameraDetailsDialog securityCameraDetailsDialog = new SecurityCameraDetailsDialog();
+        securityCameraDetailsDialog.setSecurityCameraDetailsCallback(mPresenter);
         Bundle bundle = new Bundle();
         bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_SECURITY_ID, securityAlarmDetailInfo.getId());
         bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_NAME, securityAlarmDetailInfo.getCamera().getName());
@@ -274,8 +267,8 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         bundle.putInt(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_CONTACT_COUNT,contactList!=null?contactList.size():0);
         bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_ADDRESS,securityAlarmDetailInfo.getCamera().getLocation());
 
-        mSecurityCameraDetailsDialog.setArguments(bundle);
-        mSecurityCameraDetailsDialog.show(getSupportFragmentManager());
+        securityCameraDetailsDialog.setArguments(bundle);
+        securityCameraDetailsDialog.show(getSupportFragmentManager());
     }
 
     @Override
@@ -283,13 +276,11 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         if(null ==securityAlarmDetailInfo.getObjectMainJson()){
             return;
         }
-        if (mControlPersonDetailsDialog == null) {
-            mControlPersonDetailsDialog = new SecurityControlPersonDetailsDialog();
-        }
+        SecurityControlPersonDetailsDialog controlPersonDetailsDialog = new SecurityControlPersonDetailsDialog();
         Bundle bundle = new Bundle();
         bundle.putSerializable(SecurityControlPersonDetailsDialog.EXTRA_KEY_DEPLOY_INFO,securityAlarmDetailInfo.getObjectMainJson());
-        mControlPersonDetailsDialog.setArguments(bundle);
-        mControlPersonDetailsDialog.show(getSupportFragmentManager());
+        controlPersonDetailsDialog.setArguments(bundle);
+        controlPersonDetailsDialog.show(getSupportFragmentManager());
 
     }
 
