@@ -14,6 +14,7 @@ import com.sensoro.city_camera.dialog.SecurityCameraDetailsDialog;
 import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
 import com.sensoro.city_camera.util.MapUtil;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.model.DeviceNotificationBean;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
@@ -23,6 +24,7 @@ import com.sensoro.common.server.security.response.HandleAlarmRsp;
 import com.sensoro.common.server.security.response.SecurityAlarmDetailRsp;
 import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -184,12 +186,33 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 
     @Override
     public void onNavi() {
-
+        SecurityCameraInfo camera = mSecurityAlarmDetailInfo.getCamera();
+        if (camera!= null){
+            LatLng destPosition = new LatLng(Double.parseDouble(camera.getLatitude()), Double.parseDouble(camera.getLongitude()));
+            MapUtil.locateAndNavigation(mActivity, destPosition);
+        } else {
+            if (isAttachedView()) {
+                getView().toastShort(mActivity.getString(R.string.location_not_obtained));
+            }
+        }
     }
 
     @Override
     public void showContactsDetails() {
+        List<SecurityContactsInfo> contactsInfos = mSecurityAlarmDetailInfo.getContacts();
+        if (contactsInfos.size()>1){
+            List<DeviceNotificationBean> list = new ArrayList<>(contactsInfos.size());
+            for (SecurityContactsInfo info: contactsInfos){
+                DeviceNotificationBean bean = new DeviceNotificationBean();
+                bean.setTypes("phone");
+                bean.setContact(info.getMobilePhone());
+                list.add(bean);
+            }
 
+            new WarningContactDialogUtil(mActivity).show(list);
+        } else {
+            doContactOwner();
+        }
     }
 
     public void doPreviewImages(int position) {

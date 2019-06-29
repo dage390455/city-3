@@ -27,7 +27,6 @@ import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
 import com.sensoro.common.server.security.bean.SecurityAlarmEventInfo;
 import com.sensoro.common.server.security.bean.SecurityContactsInfo;
-import com.sensoro.common.server.security.bean.SecurityDeployPersonInfo;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -62,8 +61,6 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     TextView mSecurityWarnVideoTv;
     @BindView(R2.id.security_warn_camera_tv)
     TextView mSecurityWarnCameraNameTv;
-    @BindView(R2.id.security_warn_deploy_tv)
-    TextView mSecurityWarnDeployTv;
     @BindView(R2.id.security_warn_log_rv)
     RecyclerView mSecurityLogRv;
     @BindView(R2.id.security_warn_contact_owner_tv)
@@ -74,6 +71,8 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     TextView mSecurityWarnConfirmTv;
     @BindView(R2.id.confirm_result_tv)
     TextView mConfirmResultTv;
+    @BindView(R2.id.security_warn_deploy_rl)
+    View mSecurityWarnDeployRl;
 
     private SecurityWarnConfirmDialog mSecurityWarnConfirmDialog;
     private SecurityCameraDetailsDialog mSecurityCameraDetailsDialog;
@@ -108,29 +107,27 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         mTitleTv.setText(R.string.security_warn_detail_activity_title);
 
         mTimeLineAdapter = new SecurityWarnTimeLineAdapter(this);
-//        mSecurityLogRv.setHasFixedSize(true);
+        mSecurityLogRv.setHasFixedSize(true);
         mSecurityLogRv.setNestedScrollingEnabled(false);
         mSecurityLogRv.setLayoutManager(new LinearLayoutManager(this));
         mSecurityLogRv.setAdapter(mTimeLineAdapter);
     }
 
-    @OnClick({R2.id.include_text_title_imv_arrows_left, R2.id.security_warn_video_tv, R2.id.security_warn_camera_tv,
-            R2.id.security_warn_deploy_tv, R2.id.security_warn_contact_owner_tv,
+    @OnClick({R2.id.include_text_title_imv_arrows_left, R2.id.security_warn_video_rl, R2.id.security_warn_camera_rl,
+            R2.id.security_warn_deploy_rl, R2.id.security_warn_contact_owner_tv,
             R2.id.security_warn_quick_navigation_tv, R2.id.security_warn_alert_confirm_tv})
     public void onViewClicked(View view) {
         int viewId = view.getId();
         if (viewId == R.id.include_text_title_imv_arrows_left) {
             mPresenter.doBack();
-        } else if (viewId == R.id.security_warn_video_tv) {
+        } else if (viewId == R.id.security_warn_video_rl) {
             mPresenter.toSecurityWarnRecord();
-        } else if (viewId == R.id.security_warn_camera_tv) {
+        } else if (viewId == R.id.security_warn_camera_rl) {
             //摄像机详情
             mPresenter.showCameraDetail();
-
-        } else if (viewId == R.id.security_warn_deploy_tv) {
+        } else if (viewId == R.id.security_warn_deploy_rl) {
             //布控详情
             mPresenter.showDeployDetail();
-
         } else if (viewId == R.id.security_warn_contact_owner_tv) {
             mPresenter.doContactOwner();
         } else if (viewId == R.id.security_warn_quick_navigation_tv) {
@@ -164,7 +161,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
                 Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).into((ImageView) rightView);
                 leftView.setOnClickListener(v -> previewImages(0));
                 rightView.setOnClickListener(v -> previewImages(1));
-                mSecurityWarnDeployTv.setVisibility(View.VISIBLE);
+                mSecurityWarnDeployRl.setVisibility(View.VISIBLE);
 
                 break;
             case SecurityConstants.SECURITY_TYPE_FOREIGN:
@@ -179,7 +176,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
                 View singleView = findViewById(R.id.iv_single_photo);
                 singleView.setOnClickListener(v -> previewImages(0));
                 Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).into((ImageView) singleView);
-                mSecurityWarnDeployTv.setVisibility(View.GONE);
+                mSecurityWarnDeployRl.setVisibility(View.GONE);
                 break;
             case SecurityConstants.SECURITY_TYPE_INVADE:
                 mSecurityWarnTypeTv.setText(R.string.invade_type);
@@ -193,7 +190,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
                 View singlePhotoView = findViewById(R.id.iv_single_photo);
                 singlePhotoView.setOnClickListener(v -> previewImages(0));
                 Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).into((ImageView) singlePhotoView);
-                mSecurityWarnDeployTv.setVisibility(View.GONE);
+                mSecurityWarnDeployRl.setVisibility(View.GONE);
                 break;
             default:
         }

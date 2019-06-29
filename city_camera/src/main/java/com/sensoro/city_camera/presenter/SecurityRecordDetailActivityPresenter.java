@@ -220,7 +220,7 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
             return;
         }
         String fileName = System.currentTimeMillis() + ".jpeg";
-        String[] strings = mSecurityRecord.mediaUrl.split("/?");
+        String[] strings = mSecurityRecord.coverUrl.split("\\?");
         if (strings.length > 0) {
             fileName = strings[0];
             String[] strings1 = fileName.split("/");
@@ -237,7 +237,7 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
             return;
         }
         String fileName = System.currentTimeMillis() + ".mp4";
-        String[] strings = mSecurityRecord.mediaUrl.split("/?");
+        String[] strings = mSecurityRecord.mediaUrl.split("\\?");
         if (strings.length > 0) {
             fileName = strings[0];
             String[] strings1 = fileName.split("/");
@@ -254,7 +254,6 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
 
             @Override
             public void onProgress(int progress, String totalBytesRead, String fileSize) {
-
             }
 
             @Override

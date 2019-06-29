@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +49,8 @@ public class PhotoPreviewActivity extends BaseActivity<IPhotoPreviewView, PhotoP
     TextView mSecurityWarnSubTitleTv;
     @BindView(R2.id.photo_info_rl)
     View mPhotoInfoView;
+    @BindView(R2.id.download_iv)
+    View mDownloadView;
 
     private List<String> mUrlList = new ArrayList<>();
 
@@ -164,15 +165,19 @@ public class PhotoPreviewActivity extends BaseActivity<IPhotoPreviewView, PhotoP
         @NonNull
         @Override
         public View instantiateItem(@NonNull ViewGroup container, int position) {
-            TouchImageView img = new TouchImageView(container.getContext());
+            View view = View.inflate(container.getContext(), R2.layout.photo_preview_item_layout, null);
+            TouchImageView touchImageView = view.findViewById(R.id.touchImageView);
+            mDownloadView.setVisibility(View.GONE);
             Glide.with(container.getContext()).load(mUrlList.get(position)).into(new SimpleTarget<GlideDrawable>() {
                 @Override
                 public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-                    img.setImageDrawable(resource);
+                    touchImageView.setImageDrawable(resource);
+                    view.findViewById(R.id.placeholder_iv).setVisibility(View.GONE);
+                    mDownloadView.setVisibility(View.VISIBLE);
                 }
             });
-            container.addView(img, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            return img;
+            container.addView(view);
+            return view;
         }
 
         @Override
