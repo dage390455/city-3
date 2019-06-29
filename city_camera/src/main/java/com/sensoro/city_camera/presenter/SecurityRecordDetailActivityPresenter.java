@@ -34,10 +34,11 @@ import io.reactivex.schedulers.Schedulers;
 
 import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAUSE;
 
-public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecurityRecordDetailActivityView> {
+public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecurityRecordDetailActivityView> implements DownloadListener {
     private Activity mActivity;
     private String mSecurityWarnId;
     private SecurityRecord mSecurityRecord;
+    private DownloadUtil mDownloadUtil;
 
     @Override
     public void initData(Context context) {
@@ -232,6 +233,10 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
         getView().capture(file);
     }
 
+    public void showDownloadDialog() {
+        getView().showDownloadDialog(mSecurityRecord.videoSize);
+    }
+
     public void doDownload() {
         if (mSecurityRecord == null) {
             return;
@@ -246,20 +251,36 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
             }
         }
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath(), fileName);
-        new DownloadUtil(new DownloadListener() {
-            @Override
-            public void onFinish(File file) {
-                getView().toastShort(mActivity.getString(R.string.download_security_warn_record_success));
-            }
 
-            @Override
-            public void onProgress(int progress, String totalBytesRead, String fileSize) {
-            }
+        if(mDownloadUtil == null){
+            mDownloadUtil = new DownloadUtil(this);
+        }
 
-            @Override
-            public void onFailed(String errMsg) {
-                getView().toastShort(mActivity.getString(R.string.download_security_warn_record_fail));
-            }
-        }).downloadFile(mSecurityRecord.mediaUrl, file.getAbsolutePath());
+        mDownloadUtil.downloadFile(mSecurityRecord.mediaUrl, file.getAbsolutePath());
+    }
+
+    public void doDownloadCancel() {
+
+    }
+
+    @Override
+    public void onFinish(File file) {
+        if (isAttachedView()) {
+            getView().doDownloadFinish();
+        }
+    }
+
+    @Override
+    public void onProgress(int progress, String totalBytesRead, String fileSize) {
+        if (isAttachedView()) {
+            getView().updateDownLoadProgress(progress, totalBytesRead, fileSize);
+        }
+    }
+
+    @Override
+    public void onFailed(String errMsg) {
+        if (isAttachedView()) {
+            getView().setDownloadErrorState();
+        }
     }
 }

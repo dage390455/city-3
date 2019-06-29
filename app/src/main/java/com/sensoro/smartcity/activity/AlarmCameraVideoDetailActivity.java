@@ -29,7 +29,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.AlarmCameraVideoDetailAdapter;
 import com.sensoro.smartcity.imainviews.IAlarmCameraVideoDetailActivityView;
 import com.sensoro.smartcity.presenter.AlarmCameraVideoDetailActivityPresenter;
-import com.sensoro.smartcity.widget.dialog.VideoDownloadDialogUtils;
+import com.sensoro.common.widgets.VideoDownloadDialogUtils;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;

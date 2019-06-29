@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +20,7 @@ import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.constants.SecurityConstants;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.dialog.TipDialogUtils;
 
 import butterknife.BindView;
@@ -67,7 +69,6 @@ public class SecurityWarnConfirmDialog extends BaseBottomDialog {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         initUI();
     }
 
@@ -115,7 +116,11 @@ public class SecurityWarnConfirmDialog extends BaseBottomDialog {
         if (i == R.id.iv_alarm_popup_close) {
             showCancelCommitDialog();
         } else if (i == R.id.security_warn_commit_btn) {
-            showUploadConfirmDialog();
+            if (!mSecurityWarnTypeValidRb.isChecked() && !mSecurityWarnTypeInvalidRb.isChecked()) {
+                SensoroToast.getInstance().makeText(getString(R.string.please_complete_the_required_fields_first), Toast.LENGTH_SHORT).show();
+            } else {
+                showUploadConfirmDialog();
+            }
         }
     }
 
@@ -144,8 +149,6 @@ public class SecurityWarnConfirmDialog extends BaseBottomDialog {
     private void showUploadConfirmDialog() {
         if (mUploadConfirmDialog == null) {
             mUploadConfirmDialog = new TipDialogUtils(getActivity());
-            mUploadConfirmDialog.setTipConfirmText(getContext().getString(R.string.security_warn_confirm_dialog_upload_button), ContextCompat.getColor(getContext(), R.color.c_f34a4a));
-            mUploadConfirmDialog.setTipMessageText(getContext().getString(R.string.security_warn_confirm_dialog_upload_title));
             mUploadConfirmDialog.setTipDialogUtilsClickListener(new TipDialogUtils.TipDialogUtilsClickListener() {
                 @Override
                 public void onCancelClick() {
@@ -166,6 +169,12 @@ public class SecurityWarnConfirmDialog extends BaseBottomDialog {
                 }
             });
         }
+        mUploadConfirmDialog.setTipConfirmText(getContext().getString(R.string.security_warn_confirm_dialog_upload_button), ContextCompat.getColor(getContext(), R.color.c_f34a4a));
+        mUploadConfirmDialog.setTipMessageText(
+                getContext().getString(R.string.security_warn_confirm_dialog_upload_title,
+                        mSecurityWarnTypeValidRb.isChecked()
+                                ? getContext().getString(R.string.word_valid)
+                                : getContext().getString(R.string.word_unvalid)));
         mUploadConfirmDialog.show();
     }
 

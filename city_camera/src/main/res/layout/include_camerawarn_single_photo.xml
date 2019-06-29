@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_single_photo_content"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -14,18 +15,20 @@
         android:layout_marginTop="16dp"
         android:background="@color/d8d8d8">
 
-        <ImageView
+        <com.sensoro.city_camera.widget.CustomRoundAngleImageView
             android:id="@+id/iv_single_photo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            app:radius="4dp" />
 
-        <View
+        <com.sensoro.city_camera.widget.CustomRoundAngleImageView
             android:id="@+id/view_single_valid_cover"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#80FFFFFF"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:radius="4dp" />
 
         <TextView
             android:layout_width="wrap_content"
