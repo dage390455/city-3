@@ -18,6 +18,7 @@ import com.sensoro.common.base.BaseFragment;
 import com.sensoro.common.imainview.IFireSecurityWarnView;
 import com.sensoro.common.presenter.FireSecurityWarnPresenter;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.widgets.SensoroTextWidthColorBar;
 import com.shizhefei.view.indicator.FixedIndicatorView;
 import com.shizhefei.view.indicator.IndicatorViewPager;
 import com.shizhefei.view.indicator.slidebar.TextWidthColorBar;
@@ -51,7 +52,7 @@ public class FireSecurityWarnFragment extends BaseFragment<IFireSecurityWarnView
 
     private void initView() {
         mFireSecurityWarnPageAdapter = new FireSecurityWarnPageAdapter(mRootFragment.getFragmentManager());
-        mIndicatorView.setScrollBar(new TextWidthColorBar(getContext(), mIndicatorView, ContextCompat.getColor(getContext(), R.color.c_1DBB99), AppUtils.dp2px(getContext(), 2F)));
+        mIndicatorView.setScrollBar(new SensoroTextWidthColorBar(getContext(), mIndicatorView, ContextCompat.getColor(getContext(), R.color.c_1DBB99), AppUtils.dp2px(getContext(), 2F)));
         mIndicatorView.setSplitMethod(FixedIndicatorView.SPLITMETHOD_EQUALS);
         IndicatorViewPager indicatorViewPager = new IndicatorViewPager(mIndicatorView, mContentViewPager);
         indicatorViewPager.setAdapter(mFireSecurityWarnPageAdapter);
