@@ -360,7 +360,12 @@ public class SecurityWarnRecordDetailActivity
         } else if (i == R.id.vertical_download_iv) {
             mPresenter.showDownloadDialog();
         } else if (i == R.id.vertical_capture_iv) {
-            mPresenter.doCapture();
+            if (getCurPlay().isInPlayingState()){
+                mPresenter.doCapture();
+            } else {
+                //todo 等待UI确认
+                toastShort("视频未播放");
+            }
         }
 
     }
