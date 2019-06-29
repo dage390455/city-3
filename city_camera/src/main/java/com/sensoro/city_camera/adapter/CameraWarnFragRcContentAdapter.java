@@ -76,7 +76,7 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     holder.layoutSinglePhoto.setVisibility(View.GONE);
                     holder.layoutMultPhoto.setVisibility(View.VISIBLE);
                     //加载布控 抓拍 照片
-                    Glide.with(mContext).load(mContext).placeholder(R.drawable.ic_port_default_white).into(holder.ivLeftPhoto);
+                    Glide.with(mContext).load(focusOriPhoto).placeholder(R.drawable.ic_port_default_white).into(holder.ivLeftPhoto);
                     Glide.with(mContext).load(capturePhotoUrl).placeholder(R.drawable.ic_port_default_white).into(holder.ivRightPhoto);
                     holder.tvRightMatchrate.setText(focusMatchrate);
                     holder.viewMulUnvalidCover.setVisibility(!isWarnValid?View.VISIBLE:View.GONE);
