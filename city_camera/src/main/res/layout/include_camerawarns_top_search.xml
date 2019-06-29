@@ -75,7 +75,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/fg_camera_warns_top_search_rl_date_edit"
+        android:id="@+id/fg_camera_warns_top_filter_rl"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@color/white"
@@ -90,50 +90,75 @@
             android:layout_marginBottom="12dp"
             android:background="@color/d8d8d8" />
 
-        <ImageView
-            android:id="@+id/iv_search_camera_warns_time"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
+        <RelativeLayout
+            android:id="@+id/layout_filter_capture_time"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginRight="44dp"
+            android:layout_marginRight="24dp"
             android:layout_toLeftOf="@+id/view_line"
-            android:src="@drawable/ic_arrow_down" />
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
-        <TextView
-            android:id="@+id/tv_search_camera_warns_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/iv_search_camera_warns_time"
-            android:gravity="center"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:text="@string/capture_time"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/iv_search_camera_warns_time"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_arrow_down" />
 
-        <TextView
-            android:id="@+id/tv_search_camera_warns_status"
+            <TextView
+                android:id="@+id/tv_search_camera_warns_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/iv_search_camera_warns_time"
+                android:gravity="center"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:text="@string/capture_time"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_filter_process_status"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="20dp"
             android:layout_toRightOf="@+id/view_line"
-            android:gravity="center"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:text="@string/process_status"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
-        <ImageView
-            android:id="@+id/iv_search_camera_warns_status"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="4dp"
-            android:layout_toEndOf="@+id/tv_search_camera_warns_status"
-            android:src="@drawable/ic_arrow_down" />
+            <TextView
+                android:id="@+id/tv_search_camera_warns_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:text="@string/process_status"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/iv_search_camera_warns_status"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="4dp"
+                android:layout_toEndOf="@+id/tv_search_camera_warns_status"
+                android:src="@drawable/ic_arrow_down" />
+
+
+        </RelativeLayout>
+
+
     </RelativeLayout>
 
 

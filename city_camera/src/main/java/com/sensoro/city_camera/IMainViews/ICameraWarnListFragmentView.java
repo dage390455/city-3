@@ -1,5 +1,6 @@
 package com.sensoro.city_camera.IMainViews;
 
+import com.sensoro.city_camera.model.FilterModel;
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
@@ -75,17 +76,34 @@ public interface ICameraWarnListFragmentView extends IToast, IActivityIntent, IP
     void showHistoryClearDialog();
 
     /**
-     * 设置自定义抓拍时间过滤条件文字
+     * 刷新 抓拍时间 选择列表
+     * @param capturetimeList
      */
-    void setCustomizeCaptureTime(String strDateRange);
+    void updateFilterCapturetimeList(List<FilterModel> capturetimeList);
+
     /**
-     * 初始化筛选条件状态
+     * 刷新 处理状态 选择列表
+     * @param processStatusList
      */
-    void initFilterView();
+    void updateFilterProcessStatusList(List<FilterModel> processStatusList);
+
+    /**
+     * 设置抓拍时间View
+     * @param capturetimeModel
+     */
+    void setFilterCapturetimeView(FilterModel capturetimeModel);
+
+    /**
+     * 设置处理状态View
+     * @param processStatusModel
+     */
+    void setFilterProcessStatusView(FilterModel processStatusModel);
 
     /**
      * 确认预警
      * @param securityAlarmInfo
      */
     void showConfirmDialog(SecurityAlarmInfo securityAlarmInfo);
+
+
 }

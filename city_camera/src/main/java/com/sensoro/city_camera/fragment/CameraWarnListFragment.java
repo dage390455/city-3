@@ -19,6 +19,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +39,9 @@ import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.adapter.CameraWarnFragRcContentAdapter;
 import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
+import com.sensoro.city_camera.model.FilterModel;
 import com.sensoro.city_camera.presenter.CameraWarnListFragmentPresenter;
+import com.sensoro.city_camera.widget.FilterPopUtils;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseFragment;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
@@ -57,14 +60,6 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.sensoro.city_camera.presenter.CameraWarnListFragmentPresenter.FILTER_STATUS_ALL;
-import static com.sensoro.city_camera.presenter.CameraWarnListFragmentPresenter.FILTER_STATUS_EFFECTIVE;
-import static com.sensoro.city_camera.presenter.CameraWarnListFragmentPresenter.FILTER_STATUS_INVALID;
-import static com.sensoro.city_camera.presenter.CameraWarnListFragmentPresenter.FILTER_STATUS_UNPROCESS;
-import static com.sensoro.city_camera.presenter.CameraWarnListFragmentPresenter.FILTER_TIME_24H;
-import static com.sensoro.city_camera.presenter.CameraWarnListFragmentPresenter.FILTER_TIME_3DAY;
-import static com.sensoro.city_camera.presenter.CameraWarnListFragmentPresenter.FILTER_TIME_7DAY;
-import static com.sensoro.city_camera.presenter.CameraWarnListFragmentPresenter.FILTER_TIME_ALL;
 import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.common.constant.Constants.DIRECTION_UP;
 
@@ -83,38 +78,21 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     ImageView ivFilterContentClear;
     @BindView(R2.id.tv_top_search_alarm_search_cancel)
     TextView tvFilterCancal;
+    @BindView(R2.id.fg_camera_warns_top_filter_rl)
+    RelativeLayout layouFilterContent;
+    @BindView(R2.id.layout_filter_capture_time)
+    RelativeLayout layoutCaptureTime;
     @BindView(R2.id.tv_search_camera_warns_time)
     TextView tvFilterCapturetime;
     @BindView(R2.id.iv_search_camera_warns_time)
     ImageView ivFilterCapturetime;
+
+    @BindView(R2.id.layout_filter_process_status)
+    RelativeLayout layoutProcessStatus;
     @BindView(R2.id.tv_search_camera_warns_status)
     TextView tvFilterProcessStatus;
     @BindView(R2.id.iv_search_camera_warns_status)
     ImageView ivFilterProcessStatus;
-    //抓拍时间
-    @BindView(R2.id.layout_camerawarns_time_filter_content)
-    LinearLayout layoutFilterCapturetimeContent;
-    @BindView(R2.id.tv_search_camera_warns_time_Unlimited)
-    TextView tvFilterCapturetimeUnlimited;
-    @BindView(R2.id.tv_search_camera_warns_time_24h)
-    TextView tvFilterCapturetime24h;
-    @BindView(R2.id.tv_search_camera_warns_time_3day)
-    TextView tvFilterCapturetime3Days;
-    @BindView(R2.id.tv_search_camera_warns_time_7day)
-    TextView tvFilterCapturetime7Days;
-    @BindView(R2.id.tv_search_camera_warns_time_customizetime)
-    TextView tvFilterCapturetimeCustomize;
-    //处理状态
-    @BindView(R2.id.layout_camerawarns_status_filter_content)
-    LinearLayout layoutFilterStatusContent;
-    @BindView(R2.id.tv_search_camera_warns_status_unlimited)
-    TextView tvFilterStatusUnlimited;
-    @BindView(R2.id.tv_search_status_unprocessed)
-    TextView tvFilterStatusUnprocessed;
-    @BindView(R2.id.tv_search_status_effective_warn)
-    TextView tvFilterStatusEffective;
-    @BindView(R2.id.tv_search_status_invalid_warn)
-    TextView tvFilterStatusInvalid;
 
     @BindView(R2.id.fg_camera_warns_rc_content)
     RecyclerView rvCameraWarnsContent;
@@ -131,9 +109,6 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     @BindView(R2.id.ic_no_content)
     LinearLayout icNoContent;
 
-
-
-
     private CameraWarnFragRcContentAdapter mRcContentAdapter;
     private boolean isShowDialog = true;
     private ProgressUtils mProgressUtils;
@@ -144,6 +119,11 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     private static final String TAG = "wqh_Test";
     private SecurityWarnConfirmDialog mSecurityWarnConfirmDialog;
 
+    private FilterPopUtils mCapturetimeFilterPopUtils;
+    private FilterPopUtils mProcessStatusFilterPopUtils;
+
+    public static final int WARN_FILTER_TIME = 0;
+    public static final int WARN_FILTER_STATUS = 1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -160,7 +140,8 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     @SuppressLint("ClickableViewAccessibility")
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
-
+        mCapturetimeFilterPopUtils = new FilterPopUtils(getActivity());
+        mProcessStatusFilterPopUtils = new FilterPopUtils(getActivity());
 
         //返回顶部
         returnTopAnimation = AnimationUtils.loadAnimation(mRootFragment.getContext(), R.anim.return_top_in_anim);
@@ -212,6 +193,34 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
                 edFilterContent.setCursorVisible(true);
             }
         });
+        //抓拍时间筛选
+        mCapturetimeFilterPopUtils.setSelectDeviceTypeItemClickListener(new FilterPopUtils.SelectFilterTypeItemClickListener() {
+            @Override
+            public void onSelectFilterTypeItemClick(View view, int position) {
+                //选择类型的pop点击事件
+                if(position == 4){//自定义时间
+                    mPresenter.doCalendar(fgMainWarnTitleRoot);
+                }else {
+                    mPresenter.setFilterCapturetime(position);
+                }
+                setWarnFilterContent(WARN_FILTER_TIME);
+                //mCapturetimeFilterPopUtils.dismiss();
+
+
+            }
+        });
+        //处理状态筛选
+        mProcessStatusFilterPopUtils.setSelectDeviceTypeItemClickListener(new FilterPopUtils.SelectFilterTypeItemClickListener() {
+            @Override
+            public void onSelectFilterTypeItemClick(View view, int position) {
+                //处理状态类型
+                mPresenter.setFilterProcessStatus(position);
+                setWarnFilterContent(WARN_FILTER_STATUS);
+                //mProcessStatusFilterPopUtils.dismiss();
+            }
+        });
+
+
         initRcContent();
         initRcSearchHistory();
         initClearHistoryDialog();
@@ -426,40 +435,41 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
         }
     }
 
-    /**
-     * 设置抓拍事件过滤条件
-     * @param strDataRange
-     */
+
+
     @Override
-    public void setCustomizeCaptureTime(String strDataRange) {
-
-        tvFilterCapturetimeCustomize.setText(strDataRange);
-        setFilterTvStyle(tvFilterCapturetimeCustomize,true);
-
-        tvFilterCapturetime.setText(strDataRange);
-        setFilterTvStyle(tvFilterCapturetime,true);
+    public void updateFilterProcessStatusList(List<FilterModel> processStatusList) {
+        mProcessStatusFilterPopUtils.updateSelectDeviceStatusList(processStatusList);
 
     }
 
     @Override
-    public void initFilterView() {
-        edFilterContent.setText("");
-        //抓拍时间
-        setFilterTvStyle(tvFilterCapturetimeUnlimited,false);
-        setFilterTvStyle(tvFilterCapturetime24h,false);
-        setFilterTvStyle(tvFilterCapturetime3Days,false);
-        setFilterTvStyle(tvFilterCapturetime7Days,false);
-        tvFilterCapturetimeCustomize.setText(R.string.customize_time);
-        setFilterTvStyle(tvFilterCapturetimeUnlimited,true);
+    public void updateFilterCapturetimeList(List<FilterModel> capturetimeList) {
+        mCapturetimeFilterPopUtils.updateSelectDeviceStatusList(capturetimeList);
 
-        //处理状态
-        setFilterTvStyle(tvFilterStatusUnlimited,false);
-        setFilterTvStyle(tvFilterStatusUnprocessed,true);
-        setFilterTvStyle(tvFilterStatusEffective,false);
-        setFilterTvStyle(tvFilterStatusInvalid,false);
-        //设置标题
-        setFilterTvStyle(tvFilterProcessStatus,true);
-        tvFilterProcessStatus.setText(tvFilterStatusUnprocessed.getText());
+    }
+
+    @Override
+    public void setFilterCapturetimeView(FilterModel capturetimeModel) {
+        if (capturetimeModel.isSpecialShow) {
+            tvFilterCapturetime.setTextColor(getResources().getColor(R.color.c_a6a6a6));
+            tvFilterCapturetime.setText(R.string.capture_time);
+        } else {
+            tvFilterCapturetime.setTextColor(getResources().getColor(R.color.c_252525));
+            tvFilterCapturetime.setText(capturetimeModel.statusTitle);
+        }
+
+    }
+
+    @Override
+    public void setFilterProcessStatusView(FilterModel processStatusModel) {
+        if (processStatusModel.isSpecialShow) {
+            tvFilterProcessStatus.setTextColor(getResources().getColor(R.color.c_a6a6a6));
+            tvFilterProcessStatus.setText(R.string.process_status);
+        } else {
+            tvFilterProcessStatus.setTextColor(getResources().getColor(R.color.c_252525));
+            tvFilterProcessStatus.setText(processStatusModel.statusTitle);
+        }
 
     }
 
@@ -477,6 +487,8 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
         mSecurityWarnConfirmDialog.setArguments(bundle);
         mSecurityWarnConfirmDialog.show(getChildFragmentManager());
     }
+
+
 
 
     @Override
@@ -594,14 +606,9 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     @OnClick({R2.id.fg_camera_warns_top_search_frame_search, R2.id.fg_camera_warns_top_search_et_search,
             R2.id.fg_camera_warns_top_search_imv_clear, R2.id.btn_search_clear,
             R2.id.tv_top_search_alarm_search_cancel, R2.id.alarm_return_top,
-            R2.id.layout_camerawarns_status_filter_content, R2.id.tv_search_camera_warns_status_unlimited,
-            R2.id.tv_search_status_unprocessed, R2.id.tv_search_status_effective_warn,
-            R2.id.tv_search_status_invalid_warn, R2.id.layout_camerawarns_time_filter_content,
-            R2.id.tv_search_camera_warns_time_Unlimited,
-            R2.id.tv_search_camera_warns_time_24h, R2.id.tv_search_camera_warns_time_3day,
-            R2.id.tv_search_camera_warns_time_7day, R2.id.tv_search_camera_warns_time_customizetime,
             R2.id.iv_search_camera_warns_status, R2.id.tv_search_camera_warns_status,
-            R2.id.tv_search_camera_warns_time, R2.id.iv_search_camera_warns_time
+            R2.id.tv_search_camera_warns_time, R2.id.iv_search_camera_warns_time,
+            R2.id.layout_filter_process_status,R2.id.layout_filter_capture_time
     })
     public void onViewClicked(View view) {
         int i = view.getId();
@@ -621,155 +628,68 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
         } else if (i == R.id.alarm_return_top) {
             rvCameraWarnsContent.smoothScrollToPosition(0);
             mReturnTopImageView.setVisibility(View.GONE);
-        } else if (i == R.id.tv_search_camera_warns_time || i == R.id.iv_search_camera_warns_time) {
-            setWarnFilterContent(WARN_FILTER_STATUS, false);
-            setWarnFilterContent(WARN_FILTER_TIME, layoutFilterCapturetimeContent.getVisibility() == View.GONE);
-        } else if (i == R.id.iv_search_camera_warns_status || i == R.id.tv_search_camera_warns_status) {
-            setWarnFilterContent(WARN_FILTER_TIME, false);
-            setWarnFilterContent(WARN_FILTER_STATUS, layoutFilterStatusContent.getVisibility() == View.GONE);
-
+        } else if (i == R.id.layout_filter_capture_time || i == R.id.tv_search_camera_warns_time || i == R.id.iv_search_camera_warns_time) {
+            setWarnFilterContent(WARN_FILTER_TIME);
+        } else if (i== R.id.layout_filter_process_status || i == R.id.iv_search_camera_warns_status || i == R.id.tv_search_camera_warns_status) {
+            setWarnFilterContent(WARN_FILTER_STATUS);
             //抓拍时间筛选
-        } else if (i == R.id.tv_search_camera_warns_time_customizetime) {
-            mPresenter.doCalendar(fgMainWarnTitleRoot);
-            setFilterTimeDefault();
-            setWarnFilterContent(WARN_FILTER_TIME, false);
-        }else if(i == R.id.tv_search_camera_warns_time_Unlimited){
-            mPresenter.filterDataByTime(FILTER_TIME_ALL);
-            setFilterTimeDefault();
-            setFilterTvStyle(tvFilterCapturetimeUnlimited,true);
-            setWarnFilterContent(WARN_FILTER_TIME, false);
-            //抓拍时间 选择栏标题设置
-            setFilterTvStyle(tvFilterCapturetime,false);
-            tvFilterCapturetime.setText(R.string.capture_time);
-
-        }else if(i == R.id.tv_search_camera_warns_time_24h){
-            mPresenter.filterDataByTime(FILTER_TIME_24H);
-            setFilterTimeDefault();
-            setFilterTvStyle(tvFilterCapturetime24h,true);
-            setWarnFilterContent(WARN_FILTER_TIME, false);
-
-            //抓拍时间 选择栏标题设置
-            setFilterTvStyle(tvFilterCapturetime,true);
-            tvFilterCapturetime.setText(R.string.twentyfour_hours);
-
-
-        }else if(i == R.id.tv_search_camera_warns_time_3day){
-            mPresenter.filterDataByTime(FILTER_TIME_3DAY);
-            setFilterTimeDefault();
-            setFilterTvStyle(tvFilterCapturetime3Days,true);
-            setWarnFilterContent(WARN_FILTER_TIME, false);
-            //抓拍时间 选择栏标题设置
-            setFilterTvStyle(tvFilterCapturetime,true);
-            tvFilterCapturetime.setText(R.string.three_days);
-        }else if(i == R.id.tv_search_camera_warns_time_7day){
-            mPresenter.filterDataByTime(FILTER_TIME_7DAY);
-            setFilterTimeDefault();
-            setFilterTvStyle(tvFilterCapturetime7Days,true);
-            setWarnFilterContent(WARN_FILTER_TIME, false);
-            //抓拍时间 选择栏标题设置
-            setFilterTvStyle(tvFilterCapturetime,true);
-            tvFilterCapturetime.setText(R.string.seven_days);
-        }//处理状态
-        else if(i == R.id.tv_search_camera_warns_status_unlimited){
-            mPresenter.filterDataByStatus(FILTER_STATUS_ALL);
-            setFilterStatusDefault();
-            setFilterTvStyle(tvFilterStatusUnlimited,true);
-            setWarnFilterContent(WARN_FILTER_STATUS, false);
-            setWarnFilterContent(WARN_FILTER_TIME, false);
-            //处理状态 选择栏标题设置
-            setFilterTvStyle(tvFilterProcessStatus,false);
-            tvFilterProcessStatus.setText(R.string.process_status);
-        }else if(i == R.id.tv_search_status_unprocessed){
-            mPresenter.filterDataByStatus(FILTER_STATUS_UNPROCESS);
-            setFilterStatusDefault();
-            setFilterTvStyle(tvFilterStatusUnprocessed,true);
-            setWarnFilterContent(WARN_FILTER_STATUS, false);
-            //处理状态 选择栏标题设置
-            setFilterTvStyle(tvFilterProcessStatus,true);
-            tvFilterProcessStatus.setText(R.string.unprocessed);
-        }else if(i == R.id.tv_search_status_effective_warn){
-            mPresenter.filterDataByStatus(FILTER_STATUS_EFFECTIVE);
-            setFilterStatusDefault();
-            setFilterTvStyle(tvFilterStatusEffective,true);
-            setWarnFilterContent(WARN_FILTER_STATUS, false);
-            //处理状态 选择栏标题设置
-            setFilterTvStyle(tvFilterProcessStatus,true);
-            tvFilterProcessStatus.setText(R.string.effective_warn);
-        }else if(i == R.id.tv_search_status_invalid_warn){
-            mPresenter.filterDataByStatus(FILTER_STATUS_INVALID);
-            setFilterStatusDefault();
-            setFilterTvStyle(tvFilterStatusInvalid,true);
-            setWarnFilterContent(WARN_FILTER_STATUS, false);
-            //处理状态 选择栏标题设置
-            setFilterTvStyle(tvFilterProcessStatus,true);
-            tvFilterProcessStatus.setText(R.string.invalid_warn);
         }
-
     }
 
 
-
-    public static final int WARN_FILTER_TIME = 0;
-    public static final int WARN_FILTER_STATUS = 1;
-
-
     /**
+     * 设置 抓拍时间 处理状态
      * @param filterType 0 时间 1 处理状态
-     * @param isVisiable true 显示 false 隐藏
      */
-    private void setWarnFilterContent(int filterType, boolean isVisiable) {
+    private void setWarnFilterContent(int filterType) {
         if (WARN_FILTER_TIME == filterType) {
-            layoutFilterCapturetimeContent.setVisibility(isVisiable ? View.VISIBLE : View.GONE);
-            ivFilterCapturetime.setImageResource(isVisiable ? R.drawable.ic_arrow_up : R.drawable.ic_arrow_down);
-
+            //隐藏 状态选择弹窗
+            if(mProcessStatusFilterPopUtils.isShowing()){
+                mProcessStatusFilterPopUtils.dismiss();
+                ivFilterProcessStatus.setImageResource(R.drawable.ic_arrow_down);
+                mPresenter.setFilterProcessStatus(-1);
+            }
+            //显示/隐藏 时间选择弹窗
+            if (mCapturetimeFilterPopUtils.isShowing()) {
+                mCapturetimeFilterPopUtils.dismiss();
+                //向下箭头
+                ivFilterCapturetime.setImageResource(R.drawable.ic_arrow_down);
+                mPresenter.setFilterCapturetime(-1);
+            } else {
+                mCapturetimeFilterPopUtils.showAsDropDown(layouFilterContent);
+                //标题绿色 向上箭头
+                ivFilterCapturetime.setImageResource(R.drawable.ic_arrow_up);
+                tvFilterCapturetime.setText(R.string.capture_time);
+                tvFilterCapturetime.getPaint().setFakeBoldText(true);
+                tvFilterCapturetime.setTextColor(getResources().getColor(R.color.c_1dbb99));
+            }
 
         } else if (WARN_FILTER_STATUS == filterType) {
-            layoutFilterStatusContent.setVisibility(isVisiable ? View.VISIBLE : View.GONE);
-            ivFilterProcessStatus.setImageResource(isVisiable ? R.drawable.ic_arrow_up : R.drawable.ic_arrow_down);
+            //隐藏 时间选择弹窗
+            if(mCapturetimeFilterPopUtils.isShowing()){
+                mCapturetimeFilterPopUtils.dismiss();
+                ivFilterCapturetime.setImageResource(R.drawable.ic_arrow_down);
+                mPresenter.setFilterCapturetime(-1);
+            }
+            //显示/隐藏 状态选择弹窗
+            if (mProcessStatusFilterPopUtils.isShowing()) {
+                mProcessStatusFilterPopUtils.dismiss();
+                //向下箭头
+                ivFilterProcessStatus.setImageResource(R.drawable.ic_arrow_down);
+                mPresenter.setFilterProcessStatus(-1);
+            } else {
+                mProcessStatusFilterPopUtils.showAsDropDown(layouFilterContent);
+                //标题绿色 向上箭头
+                ivFilterProcessStatus.setImageResource(R.drawable.ic_arrow_up);
+                tvFilterProcessStatus.setText(R.string.process_status);
+                tvFilterProcessStatus.getPaint().setFakeBoldText(true);
+                tvFilterProcessStatus.setTextColor(getResources().getColor(R.color.c_1dbb99));
+
+            }
 
         }
 
 
-    }
-
-    /**
-     * 设置自定义时间显示文字
-     */
-    public void setFilterCustomText(String dateRangeStr){
-        tvFilterCapturetimeCustomize.setText(dateRangeStr);
-        setFilterTvStyle(tvFilterCapturetimeCustomize,true);
-    }
-
-    /**
-     * 抓拍时间初始化
-     */
-    public void setFilterTimeDefault() {
-        //抓拍时间
-        setFilterTvStyle(tvFilterCapturetimeUnlimited,false);
-        setFilterTvStyle(tvFilterCapturetime24h,false);
-        setFilterTvStyle(tvFilterCapturetime3Days,false);
-        setFilterTvStyle(tvFilterCapturetime7Days,false);
-        tvFilterCapturetimeCustomize.setText(R.string.customize_time);
-        setFilterTvStyle(tvFilterCapturetimeCustomize,false);
-    }
-    /**
-     * 抓拍状态初始化
-     */
-    public void setFilterStatusDefault() {
-        //处理状态
-        setFilterTvStyle(tvFilterStatusUnlimited,false);
-        setFilterTvStyle(tvFilterStatusUnprocessed,false);
-        setFilterTvStyle(tvFilterStatusEffective,false);
-        setFilterTvStyle(tvFilterStatusInvalid,false);
-    }
-    /**
-     * 设置选择前后字体样式
-     * @param tv
-     * @param isBold
-     */
-    public void setFilterTvStyle(TextView tv, boolean isBold){
-        tv.getPaint().setFakeBoldText(isBold);
-        tv.setTextColor(isBold?getResources().getColor(R.color.c_252525):getResources().getColor(R.color.c_a6a6a6));
     }
 
 

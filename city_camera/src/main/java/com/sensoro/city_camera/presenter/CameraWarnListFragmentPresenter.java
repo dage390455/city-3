@@ -12,6 +12,7 @@ import com.sensoro.city_camera.IMainViews.ICameraWarnListFragmentView;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.activity.SecurityWarnDetailActivity;
 import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
+import com.sensoro.city_camera.model.FilterModel;
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
@@ -52,15 +53,22 @@ import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnListFragmentView> implements IOnCreate, Runnable,
         CalendarPopUtils.OnCalendarPopupCallbackListener, SecurityWarnConfirmDialog.SecurityConfirmCallback {
 
-    public static final int FILTER_STATUS_ALL = 0;
-    public static final int FILTER_STATUS_UNPROCESS = 2;
-    public static final int FILTER_STATUS_EFFECTIVE = 3;
-    public static final int FILTER_STATUS_INVALID = 4;
+    public static final long FILTER_STATUS_ALL = 0;
+    public static final long FILTER_STATUS_UNPROCESS = 2;
+    public static final long FILTER_STATUS_EFFECTIVE = 3;
+    public static final long FILTER_STATUS_INVALID = 4;
 
     public static final long FILTER_TIME_ALL = 0;
     public static final long FILTER_TIME_24H = 24 * 3600;
     public static final long FILTER_TIME_3DAY = 3 * 24 * 3600;
     public static final long FILTER_TIME_7DAY = 7 * 24 * 3600;
+
+    //筛选条件
+    private FilterModel mCurrentCapturetimeModel;
+    private FilterModel mCurrentProcessStatusModel;
+    private List<FilterModel> mCapturetimeModelList = new ArrayList<>();
+    private List<FilterModel> mProcessStatusModelList = new ArrayList<>();
+
 
     //搜索文字
     private String tempSearchText;
@@ -69,7 +77,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
     private long endTime;
     private String dateSearchText;
     //处理状态
-    private int handleStatus = FILTER_STATUS_UNPROCESS;
+    private long handleStatus = FILTER_STATUS_UNPROCESS;
 
     private final List<SecurityAlarmInfo> mSecurityAlarmInfoList = new ArrayList<>();
     private final List<String> mSearchHistoryList = new ArrayList<>();
@@ -102,6 +110,9 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
+        initCapturetimeDialog();
+        initProcessStatusDialog();
+
         mCalendarPopUtils = new CalendarPopUtils(mContext);
         mCalendarPopUtils
                 .setMonthStatus(1)
@@ -119,6 +130,27 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
             getView().updateSearchHistoryList(mSearchHistoryList);
         }
 
+    }
+    public void initCapturetimeDialog() {
+
+        mCapturetimeModelList = new ArrayList<>();
+        mCurrentCapturetimeModel = new FilterModel(mContext.getString(R.string.Unlimited),FILTER_TIME_ALL,true,true);
+        mCapturetimeModelList.add(mCurrentCapturetimeModel);
+        mCapturetimeModelList.add(new FilterModel(mContext.getString(R.string.twentyfour_hours),FILTER_TIME_24H,false,false));
+        mCapturetimeModelList.add(new FilterModel(mContext.getString(R.string.three_days),FILTER_TIME_3DAY,false,false));
+        mCapturetimeModelList.add(new FilterModel(mContext.getString(R.string.seven_days),FILTER_TIME_7DAY,false,false));
+        mCapturetimeModelList.add(new FilterModel(mContext.getString(R.string.customize_time),0L,false,false));
+        getView().updateFilterCapturetimeList(mCapturetimeModelList);
+    }
+    public void initProcessStatusDialog() {
+
+        mProcessStatusModelList = new ArrayList<>();
+        mProcessStatusModelList.add(new FilterModel(mContext.getString(R.string.word_all),FILTER_STATUS_ALL,false,true));
+        mCurrentProcessStatusModel = new FilterModel(mContext.getString(R.string.unprocessed),FILTER_STATUS_UNPROCESS,true,false);
+        mProcessStatusModelList.add(mCurrentProcessStatusModel);
+        mProcessStatusModelList.add(new FilterModel(mContext.getString(R.string.effective_warn),FILTER_STATUS_EFFECTIVE,false,false));
+        mProcessStatusModelList.add(new FilterModel(mContext.getString(R.string.invalid_warn),FILTER_STATUS_INVALID,false,false));
+        getView().updateFilterProcessStatusList(mProcessStatusModelList);
     }
 
     private void freshUI(final int direction, SecurityAlarmListRsp securityAlarmListRsp) {
@@ -180,7 +212,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                 RetrofitServiceHelper.getInstance().getSecurityAlarmList(
                         (cur_page == 0 ? 0 : cur_page * 20 - 1),
                         (startTime == 0 ? null : startTime + ""),
-                        (endTime == 0 ? null : endTime + ""), handleStatus, tempSearchText, 0
+                        (endTime == 0 ? null : endTime + ""), (int)handleStatus, tempSearchText, 0
                 ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityAlarmListRsp>(this) {
 
 
@@ -207,7 +239,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                 RetrofitServiceHelper.getInstance().getSecurityAlarmList(
                         (cur_page == 0 ? 1 : cur_page * 20 - 1),
                         (startTime == 0 ? null : startTime + ""),
-                        (endTime == 0 ? null : endTime + ""), handleStatus, tempSearchText, 0
+                        (endTime == 0 ? null : endTime + ""), (int)handleStatus, tempSearchText, 0
                 ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityAlarmListRsp>(this) {
 
 
@@ -404,8 +436,12 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                 .getCalendarYearMothDayFormatDate(endTime);*/
         dateSearchText = DateUtil.getMonthDate(startTime) + " ~ " + DateUtil
                 .getMonthDate(endTime);
+        //更新自定义时间文字
+        mCurrentCapturetimeModel.statusTitle = dateSearchText;
+        mCapturetimeModelList.add(mCapturetimeModelList.size()-1,mCurrentCapturetimeModel);
+        getView().updateFilterCapturetimeList(mCapturetimeModelList);
 
-        getView().setCustomizeCaptureTime(dateSearchText);
+        getView().setFilterCapturetimeView(mCurrentCapturetimeModel);
         endTime += 1000 * 60 * 60 * 24;
         requestSearchData(DIRECTION_DOWN);
 
@@ -446,6 +482,34 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         }
 
     }
+       /**
+     * 设置抓拍时间View
+     */
+    public void setFilterCapturetime(int positon) {
+        if (positon > -1 && positon < mCapturetimeModelList.size()) {
+            mCurrentCapturetimeModel = mCapturetimeModelList.get(positon);
+        }
+        //重制自定义时间内容
+        if(!TextUtils.isEmpty(dateSearchText)){
+            mCapturetimeModelList.get(mCapturetimeModelList.size()-1).statusTitle = mContext.getString(R.string.customize_time);
+            getView().updateFilterCapturetimeList(mCapturetimeModelList);
+        }
+        getView().setFilterCapturetimeView(mCurrentCapturetimeModel);
+        filterDataByTime(mCurrentCapturetimeModel.status);
+
+
+    }
+    /**
+     * 设置处理状态View
+     */
+    public void setFilterProcessStatus(int positon){
+        if (positon > -1 && positon < mProcessStatusModelList.size()) {
+            mCurrentProcessStatusModel = mProcessStatusModelList.get(positon);
+        }
+        getView().setFilterProcessStatusView(mCurrentProcessStatusModel);
+        filterDataByStatus(mCurrentProcessStatusModel.status);
+
+    }
 
 
     /**
@@ -453,7 +517,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
      *
      * @param filterStatusType
      */
-    public void filterDataByStatus(int filterStatusType) {
+    public void filterDataByStatus(long filterStatusType) {
         handleStatus = filterStatusType;
         requestSearchData(DIRECTION_DOWN);
     }
@@ -481,7 +545,8 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         endTime = 0;
         handleStatus = FILTER_STATUS_UNPROCESS;
         tempSearchText = "";
-        getView().initFilterView();
+        getView().setFilterCapturetimeView(mCurrentCapturetimeModel);
+        getView().setFilterProcessStatusView(mCurrentProcessStatusModel);
     }
 
     @Override

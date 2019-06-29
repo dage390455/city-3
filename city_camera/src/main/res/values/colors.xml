@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#1DBB99</color>
     <color name="transBlock">#80000000</color>
+    <color name="c_B2000000">#B2000000</color>
 </resources>

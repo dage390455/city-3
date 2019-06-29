@@ -37,11 +37,6 @@
 
             <include layout="@layout/item_include_search_history_rv" />
 
-            <include layout="@layout/include_search_capture_time" />
-
-            <include layout="@layout/include_search_handle_status" />
-
-
         </RelativeLayout>
 
 
