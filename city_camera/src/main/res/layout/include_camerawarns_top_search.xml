@@ -10,14 +10,16 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:orientation="horizontal">
+
 
         <RelativeLayout
             android:id="@+id/fg_camera_warns_top_search_frame_search"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:background="@drawable/shape_bg_full_corner">
@@ -48,7 +50,7 @@
                 android:cursorVisible="true"
                 android:drawableStart="@mipmap/main_search"
                 android:drawablePadding="8dp"
-                android:hint="@string/warn_fragment_search_tip"
+                android:hint="@string/security_search_tip"
                 android:imeOptions="actionSearch"
                 android:singleLine="true"
                 android:textColor="@color/c_252525"
@@ -67,7 +69,8 @@
             android:text="@string/cancel"
             android:textColor="@color/c_252525"
             android:textSize="14sp"
-            android:visibility="gone" />
+            android:visibility="visible" />
+
 
     </LinearLayout>
 
@@ -132,7 +135,6 @@
             android:layout_toEndOf="@+id/tv_search_camera_warns_status"
             android:src="@drawable/ic_arrow_down" />
     </RelativeLayout>
-
 
 
 </LinearLayout>
