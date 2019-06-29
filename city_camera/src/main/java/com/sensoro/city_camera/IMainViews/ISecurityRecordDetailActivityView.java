@@ -30,4 +30,14 @@ public interface ISecurityRecordDetailActivityView extends IActivityIntent, IToa
     void onVideoPause();
 
     void capture(File file);
+
+    void showDownloadDialog(String videoSize);
+
+    void setDownloadStartState(String videoSize);
+
+    void updateDownLoadProgress(int progress, String totalBytesRead, String fileSize);
+
+    void doDownloadFinish();
+
+    void setDownloadErrorState();
 }

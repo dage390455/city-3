@@ -20,6 +20,7 @@ import com.sensoro.city_camera.widget.AiGSYVideoPlayer;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.common.widgets.VideoDownloadDialogUtils;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
@@ -40,7 +41,7 @@ import butterknife.OnClick;
  */
 public class SecurityWarnRecordDetailActivity
         extends BaseActivity<ISecurityRecordDetailActivityView, SecurityRecordDetailActivityPresenter>
-        implements ISecurityRecordDetailActivityView, AiGSYVideoPlayer.CaptureClickListener, AiGSYVideoPlayer.DownloadClickListener {
+        implements ISecurityRecordDetailActivityView, AiGSYVideoPlayer.CaptureClickListener, AiGSYVideoPlayer.DownloadClickListener, VideoDownloadDialogUtils.TipDialogUtilsClickListener {
 
     @BindView(R2.id.include_imv_title_imv_arrows_left)
     ImageView includeImvTitleImvArrowsLeft;
@@ -59,6 +60,7 @@ public class SecurityWarnRecordDetailActivity
     private boolean isPlay;
     private boolean isPause;
     private ProgressUtils mProgressUtils;
+    private VideoDownloadDialogUtils mDownloadUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -81,6 +83,9 @@ public class SecurityWarnRecordDetailActivity
 
         gsyPlayerAcCameraPersonDetail.setCaptureClickListener(this);
         gsyPlayerAcCameraPersonDetail.setDownloadClickListener(this);
+
+        mDownloadUtils = new VideoDownloadDialogUtils(mActivity);
+        mDownloadUtils.setTipDialogUtilsClickListener(this);
     }
 
     private void initViewHeight() {
@@ -329,6 +334,9 @@ public class SecurityWarnRecordDetailActivity
             mProgressUtils.destroyProgress();
         }
 
+        if (mDownloadUtils != null) {
+            mDownloadUtils.destory();
+        }
 
         GSYVideoManager.releaseAllVideos();
 
@@ -350,7 +358,7 @@ public class SecurityWarnRecordDetailActivity
         if (i == R.id.include_imv_title_imv_arrows_left) {
             finishAc();
         } else if (i == R.id.vertical_download_iv) {
-            mPresenter.doDownload();
+            mPresenter.showDownloadDialog();
         } else if (i == R.id.vertical_capture_iv) {
             mPresenter.doCapture();
         }
@@ -413,6 +421,56 @@ public class SecurityWarnRecordDetailActivity
 
     @Override
     public void onDownloadClick() {
+        mPresenter.showDownloadDialog();
+    }
+
+    @Override
+    public void showDownloadDialog(String videoSize) {
+        if (mDownloadUtils != null) {
+            mDownloadUtils.show(videoSize);
+        }
+    }
+
+    @Override
+    public void onCancelClick(boolean isCancelDownload) {
+        if (mDownloadUtils != null) {
+            mDownloadUtils.dismiss();
+            if (isCancelDownload) {
+                mPresenter.doDownloadCancel();
+            }
+        }
+    }
+
+    @Override
+    public void onConfirmClick() {
         mPresenter.doDownload();
+    }
+
+    @Override
+    public void setDownloadStartState(String videoSize) {
+        if (mDownloadUtils.isShowing()) {
+            mDownloadUtils.setDownloadStartState(videoSize);
+        }
+    }
+
+    @Override
+    public void updateDownLoadProgress(int progress, String totalBytesRead, String fileSize) {
+        if (mDownloadUtils.isShowing()) {
+            mDownloadUtils.updateDownLoadProgress(progress, totalBytesRead, fileSize);
+        }
+    }
+
+    @Override
+    public void doDownloadFinish() {
+        if (mDownloadUtils.isShowing()) {
+            mDownloadUtils.doDownloadFinish();
+        }
+    }
+
+    @Override
+    public void setDownloadErrorState() {
+        if (mDownloadUtils.isShowing()) {
+            mDownloadUtils.setDownloadErrorState();
+        }
     }
 }

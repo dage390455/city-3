@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.widget.dialog;
+package com.sensoro.common.widgets;
 
 import android.app.Activity;
 import android.content.res.Resources;
@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 
-import com.sensoro.common.widgets.CustomCornerDialog;
-import com.sensoro.smartcity.R;
+
+import com.sensoro.common.R;
 
 import java.util.Locale;
 
