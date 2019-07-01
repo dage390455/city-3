@@ -243,7 +243,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
 
     @Override
     public void showCameraDetailsDialog(SecurityAlarmDetailInfo securityAlarmDetailInfo) {
-        if(null == securityAlarmDetailInfo.getCamera()){
+        if(null == securityAlarmDetailInfo || null == securityAlarmDetailInfo.getCamera()){
             return;
         }
         SecurityCameraDetailsDialog securityCameraDetailsDialog = new SecurityCameraDetailsDialog();
@@ -273,7 +273,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
 
     @Override
     public void showDeployDetail(SecurityAlarmDetailInfo securityAlarmDetailInfo) {
-        if(null ==securityAlarmDetailInfo.getObjectMainJson()){
+        if(null == securityAlarmDetailInfo || null ==securityAlarmDetailInfo.getObjectMainJson()){
             return;
         }
         SecurityControlPersonDetailsDialog controlPersonDetailsDialog = new SecurityControlPersonDetailsDialog();
