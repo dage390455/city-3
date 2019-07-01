@@ -1,105 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fg_camera_warns_top_search_title_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:orientation="vertical"
-    android:paddingTop="20dp">
+    android:orientation="vertical">
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
+    <RelativeLayout
+        android:id="@+id/fg_camera_warns_top_search_frame_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="20dp"
-        android:orientation="horizontal">
+        android:layout_toLeftOf="@+id/tv_top_search_alarm_search_cancel"
+        android:background="@drawable/shape_bg_full_corner">
 
-
-        <RelativeLayout
-            android:id="@+id/fg_camera_warns_top_search_frame_search"
-            android:layout_width="0dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:background="@drawable/shape_bg_full_corner">
-
-            <ImageView
-                android:id="@+id/fg_camera_warns_top_search_imv_clear"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="6dp"
-                android:contentDescription="@null"
-                android:padding="7dp"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/search_monitor_clear_search"
-                android:visibility="gone" />
-
-            <EditText
-                android:id="@+id/fg_camera_warns_top_search_et_search"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_toStartOf="@id/fg_camera_warns_top_search_imv_clear"
-                android:background="@null"
-                android:cursorVisible="true"
-                android:drawableStart="@mipmap/main_search"
-                android:drawablePadding="8dp"
-                android:hint="@string/security_search_tip"
-                android:imeOptions="actionSearch"
-                android:singleLine="true"
-                android:textColor="@color/c_252525"
-                android:textColorHint="@color/c_a6a6a6"
-                android:textCursorDrawable="@drawable/my_cursor"
-                android:textSize="12sp" />
-
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/tv_top_search_alarm_search_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:padding="10dp"
-            android:text="@string/cancel"
-            android:textColor="@color/c_252525"
-            android:textSize="14sp"
+        <ImageView
+            android:id="@+id/fg_camera_warns_top_search_imv_clear"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="6dp"
+            android:contentDescription="@null"
+            android:padding="7dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/search_monitor_clear_search"
             android:visibility="gone" />
 
+        <EditText
+            android:id="@+id/fg_camera_warns_top_search_et_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_toStartOf="@id/fg_camera_warns_top_search_imv_clear"
+            android:background="@null"
+            android:cursorVisible="true"
+            android:drawableStart="@mipmap/main_search"
+            android:drawablePadding="8dp"
+            android:hint="@string/security_search_tip"
+            android:imeOptions="actionSearch"
+            android:singleLine="true"
+            android:textColor="@color/c_252525"
+            android:textColorHint="@color/c_a6a6a6"
+            android:textCursorDrawable="@drawable/my_cursor"
+            android:textSize="12sp" />
 
-    </LinearLayout>
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/tv_top_search_alarm_search_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/fg_camera_warns_top_search_frame_search"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center_vertical"
+        android:padding="10dp"
+        android:text="@string/cancel"
+        android:textColor="@color/c_252525"
+        android:textSize="14sp"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/fg_camera_warns_top_filter_rl"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/white"
-        android:gravity="center_vertical">
-
-        <View
-            android:id="@+id/view_line"
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:background="@color/d8d8d8" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fg_camera_warns_top_search_frame_search"
+        android:background="@color/white">
 
         <RelativeLayout
             android:id="@+id/layout_filter_capture_time"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="24dp"
             android:layout_toLeftOf="@+id/view_line"
             android:orientation="horizontal"
             android:paddingLeft="20dp"
-            android:paddingRight="20dp">
+            android:paddingTop="12dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="12dp">
 
             <ImageView
                 android:id="@+id/iv_search_camera_warns_time"
@@ -127,12 +113,14 @@
         <RelativeLayout
             android:id="@+id/layout_filter_process_status"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@+id/view_line"
             android:paddingLeft="20dp"
-            android:paddingRight="20dp">
+            android:paddingTop="12dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="12dp">
 
             <TextView
                 android:id="@+id/tv_search_camera_warns_status"
@@ -158,8 +146,19 @@
 
         </RelativeLayout>
 
+        <View
+            android:id="@+id/view_line"
+            android:layout_width="0.5dp"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/layout_filter_capture_time"
+            android:layout_alignBottom="@+id/layout_filter_capture_time"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:background="@color/d8d8d8" />
+
 
     </RelativeLayout>
 
 
-</LinearLayout>
+</RelativeLayout>

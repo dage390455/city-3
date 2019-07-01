@@ -71,7 +71,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
         implements ICameraWarnListFragmentView, CameraWarnFragRcContentAdapter.CameraWarnConfirmStatusClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
 
     @BindView(R2.id.fg_camera_warns_top_search_title_root)
-    LinearLayout fgMainWarnTitleRoot;
+    RelativeLayout fgMainWarnTitleRoot;
     @BindView(R2.id.fg_camera_warns_top_search_et_search)
     EditText edFilterContent;
     @BindView(R2.id.fg_camera_warns_top_search_imv_clear)

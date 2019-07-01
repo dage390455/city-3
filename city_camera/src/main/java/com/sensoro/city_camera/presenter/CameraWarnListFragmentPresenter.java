@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.sensoro.city_camera.IMainViews.ICameraWarnListFragmentView;
 import com.sensoro.city_camera.R;
@@ -530,7 +531,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
      *
      * @param fgMainWarnTitleRoot
      */
-    public void doCalendar(LinearLayout fgMainWarnTitleRoot) {
+    public void doCalendar(RelativeLayout fgMainWarnTitleRoot) {
         long temp_startTime = -1;
         long temp_endTime = -1;
         if (startTime != 0 && endTime != 0) {
