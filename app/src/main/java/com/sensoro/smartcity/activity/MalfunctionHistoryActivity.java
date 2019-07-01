@@ -27,9 +27,9 @@ import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MalfunctionHistoryRcContentAdapter;
 import com.sensoro.smartcity.imainviews.IMalfunctionHistoryActivityView;
-import com.sensoro.common.model.CalendarDateModel;
+import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.presenter.MalfunctionHistoryActivityPresenter;
-import com.sensoro.common.widgets.CalendarPopUtils;
+import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
 
 import java.util.List;
 

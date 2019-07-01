@@ -83,7 +83,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private final MainPresenter.TaskRunnable mRunnable = new MainPresenter.TaskRunnable();
     private final NetWorkTaskRunnable mNetWorkTaskRunnable = new NetWorkTaskRunnable();
     //
-    private FireSecurityWarnFragment mFireSecurityWarnFragment;
+    private FireSecurityWarnFragment warnFragment;
     private HomeFragment homeFragment;
     private ManagerFragment managerFragment;
     private MalfunctionFragment malfunctionFragment;
@@ -276,14 +276,14 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private void initViewPager() {
         //
         homeFragment = new HomeFragment();
-        mFireSecurityWarnFragment = new FireSecurityWarnFragment();
+        warnFragment = new FireSecurityWarnFragment();
         managerFragment = new ManagerFragment();
         malfunctionFragment = new MalfunctionFragment();
         if (mFragmentList.size() > 0) {
             mFragmentList.clear();
         }
         mFragmentList.add(homeFragment);
-        mFragmentList.add(mFireSecurityWarnFragment);
+        mFragmentList.add(warnFragment);
         mFragmentList.add(malfunctionFragment);
         mFragmentList.add(managerFragment);
         getView().updateMainPageAdapterData(mFragmentList);

@@ -10,7 +10,6 @@ import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
-import com.sensoro.common.model.DeviceNotificationBean;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
@@ -33,9 +32,9 @@ import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.imainviews.IAlarmDetailLogActivityView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.CityAppUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
@@ -132,7 +131,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                     mContext.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (isAttachedView()) {
+                            if (isAttachedView()){
                                 refreshData(false);
                             }
 
@@ -315,15 +314,15 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     }
 
     public void doContactOwner() {
+        String tempNumber = deviceAlarmLogInfo.getDeviceNotification().getContent();
 
-        List<DeviceNotificationBean> deviceNotifications = deviceAlarmLogInfo.getDeviceNotifications();
-        if (null != deviceNotifications && deviceNotifications.size() > 0) {
-            WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
-            dialogUtil.show(deviceNotifications);
+        if (TextUtils.isEmpty(tempNumber)) {
+            if (isAttachedView()) {
+                getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
+            }
         } else {
-            getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
+            AppUtils.diallPhone(tempNumber, mContext);
         }
-
     }
 
     public void doNavigation() {

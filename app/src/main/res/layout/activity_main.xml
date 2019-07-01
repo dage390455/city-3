@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <com.sensoro.common.widgets.HomeViewPager
+    <com.sensoro.smartcity.widget.HomeViewPager
         android:id="@+id/ac_main_hvp_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"

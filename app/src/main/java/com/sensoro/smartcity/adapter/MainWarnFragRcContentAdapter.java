@@ -23,13 +23,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainFireWarnFragRcContentAdapter extends RecyclerView.Adapter<MainFireWarnFragRcContentAdapter.MyViewHolder> implements Constants {
+public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnFragRcContentAdapter.MyViewHolder> implements Constants {
 
     private final Context mContext;
     private AlarmConfirmStatusClickListener mListener;
     private final List<DeviceAlarmLogInfo> mList = new ArrayList<>();
 
-    public MainFireWarnFragRcContentAdapter(Context context) {
+    public MainWarnFragRcContentAdapter(Context context) {
         mContext = context;
     }
 

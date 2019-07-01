@@ -6,26 +6,25 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.amap.api.maps.model.LatLng;
+import com.sensoro.common.server.bean.MalfunctionDataBean;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.MalfunctionHistoryActivity;
+import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
+import com.sensoro.smartcity.imainviews.IMalfunctionDetailActivityView;
 import com.sensoro.common.iwidget.IOnCreate;
-import com.sensoro.common.model.DeviceNotificationBean;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
-import com.sensoro.common.server.bean.MalfunctionDataBean;
 import com.sensoro.common.server.bean.MalfunctionListInfo;
 import com.sensoro.common.server.response.DeviceInfoListRsp;
 import com.sensoro.common.server.response.MalfunctionCountRsp;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.MalfunctionHistoryActivity;
-import com.sensoro.smartcity.activity.ScanActivity;
-import com.sensoro.smartcity.imainviews.IMalfunctionDetailActivityView;
 import com.sensoro.smartcity.util.CityAppUtils;
-import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -154,21 +153,12 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
     }
 
     public void doContactOwner() {
-
-        List<DeviceNotificationBean> deviceNotifications = mMalfunctionInfo.getDeviceNotifications();
-        if (null != deviceNotifications && deviceNotifications.size() > 0) {
-            WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mActivity);
-            dialogUtil.show(deviceNotifications);
-        } else {
+        String tempNumber = mMalfunctionInfo.getDeviceNotification().getContent();
+        if (TextUtils.isEmpty(tempNumber)) {
             getView().toastShort(mActivity.getString(R.string.no_find_contact_phone_number));
+        } else {
+            AppUtils.diallPhone(tempNumber, mActivity);
         }
-
-//        String tempNumber = mMalfunctionInfo.getDeviceNotification().getContent();
-//        if (TextUtils.isEmpty(tempNumber)) {
-//            getView().toastShort(mActivity.getString(R.string.no_find_contact_phone_number));
-//        } else {
-//            AppUtils.diallPhone(tempNumber, mActivity);
-//        }
     }
 
     public void doNavigation() {

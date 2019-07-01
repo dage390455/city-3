@@ -80,10 +80,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     TextView acMonitoringPointTvAlertContactName;
     @BindView(R.id.ac_monitoring_point_tv_alert_contact_phone)
     TextView acMonitoringPointTvAlertContactPhone;
-    @BindView(R.id.ac_monitoring_point_imv_phone_arrow)
-    ImageView acMonitoringPointImvPhoneArrow;
-    @BindView(R.id.ac_monitoring_point_tv_phonecount)
-    TextView acMonitoringPointTvPhoneCount;
+    @BindView(R.id.ac_monitoring_point_imv_phone)
+    ImageView acMonitoringPointImvPhone;
     @BindView(R.id.ac_monitoring_point_tv_location_navigation)
     TextView acMonitoringPointTvLocationNavigation;
     @BindView(R.id.ac_monitoring_point_tv_location)
@@ -108,6 +106,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     TextView acMonitoringPointTvStatus;
     @BindView(R.id.ac_monitoring_point_view)
     View acMonitoringPointView;
+    @BindView(R.id.ac_monitoring_point_imv_phone_view)
+    View acMonitoringPointImvPhoneView;
     @BindView(R.id.ac_monitoring_point_tv_device_type)
     TextView acMonitoringPointTvDeviceType;
     @BindView(R.id.ac_monitoring_point_ll_operation)
@@ -447,18 +447,6 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     @Override
-    public void setContractCount(int count) {
-
-        if (count > 1) {
-            setContactPhoneIconVisible(true);
-            acMonitoringPointTvPhoneCount.setText(getResources().getString(R.string.total) + count + getResources().getString(R.string.person));
-        } else {
-            acMonitoringPointTvPhoneCount.setText("");
-            setContactPhoneIconVisible(false);
-        }
-    }
-
-    @Override
     public void setDeviceLocation(String location, boolean isArrowsRight) {
         acMonitoringPointTvLocation.setText(location);
         acMonitoringPointImvLocation.setVisibility(isArrowsRight ? View.VISIBLE : View.GONE);
@@ -588,7 +576,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
 
     @Override
     public void setContactPhoneIconVisible(boolean isVisible) {
-        acMonitoringPointImvPhoneArrow.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+        acMonitoringPointImvPhone.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
@@ -597,7 +585,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         acMonitoringPointTvAlertContactName.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
         acMonitoringPointView.setVisibility(View.GONE);
         acMonitoringPointTvAlertContactPhone.setVisibility(View.GONE);
-        acMonitoringPointImvPhoneArrow.setVisibility(View.GONE);
+        acMonitoringPointImvPhone.setVisibility(View.GONE);
+        acMonitoringPointImvPhoneView.setVisibility(View.GONE);
 
     }
 

@@ -26,8 +26,6 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
 
     void setContractPhone(String contractPhone);
 
-    void setContractCount(int count);
-
     void setDeviceLocation(String location, boolean isArrowsRight);
 
     void updateDeviceInfoAdapter(List<MonitoringPointRcContentAdapterModel> data);
@@ -133,7 +131,6 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
     void dismissCloseDemoDialog();
 
     void showOperationTipLoadingDialog(String text);
-
     void setDeviceCamerasText(String text);
 
     void setDeviceDetailConfigInfo(String actual,String trans);

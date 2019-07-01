@@ -17,10 +17,10 @@ import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
-import com.sensoro.common.adapter.MainFragmentPageAdapter;
+import com.sensoro.smartcity.adapter.MainFragmentPageAdapter;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.presenter.MainPresenter;
-import com.sensoro.common.widgets.HomeViewPager;
+import com.sensoro.smartcity.widget.HomeViewPager;
 
 import java.util.List;
 

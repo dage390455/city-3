@@ -12,7 +12,7 @@ import com.sensoro.common.server.response.MalfunctionListRsp;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IMalfunctionHistoryActivityView;
-import com.sensoro.common.model.CalendarDateModel;
+import com.sensoro.smartcity.model.CalendarDateModel;
 
 import java.util.ArrayList;
 import java.util.Collections;

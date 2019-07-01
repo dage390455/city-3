@@ -723,6 +723,158 @@ public class RetrofitServiceHelper {
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
         return retrofitService.doDevicePointDeploy(sn, body);
     }
+    public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, List<String> tags, String
+            name, String contact,String phone, String wxPhone, List<String> imgUrls, DeployControlSettingData deployControlSettingData, String forceReason, Integer status, String signalQuality) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("lon", lon);
+            jsonObject.put("lat", lat);
+            JSONArray jsonArray = new JSONArray();
+            if (tags != null && tags.size() > 0) {
+                for (String temp : tags) {
+                    jsonArray.put(temp);
+                }
+            }
+            jsonObject.put("tags", jsonArray);
+            if (name != null) {
+                jsonObject.put("name", name);
+            }
+
+            if ()
+            if (contacts != null && contacts.size() > 0) {
+                JSONArray jsonArrayContact = new JSONArray();
+                for (DeployContactModel contactModel : contacts) {
+                    JSONObject object = new JSONObject();
+                    if (!TextUtils.isEmpty(contactModel.name)) {
+                        object.put("contact", contactModel.name);
+                    }
+                    if (!TextUtils.isEmpty(contactModel.phone)) {
+                        object.put("content", contactModel.phone);
+                    }
+                    object.put("types", "phone");
+                    jsonArrayContact.put(object);
+                }
+                jsonObject.put("notifications", jsonArrayContact);
+            }
+            if (imgUrls != null && imgUrls.size() > 0) {
+                JSONArray jsonArrayImg = new JSONArray();
+                for (String url : imgUrls) {
+                    jsonArrayImg.put(url);
+                }
+                jsonObject.put("imgUrls", jsonArrayImg);
+            }
+            if (!TextUtils.isEmpty(wxPhone)) {
+                jsonObject.put("wxPhone", wxPhone);
+            }
+            if (!TextUtils.isEmpty(forceReason)) {
+                jsonObject.put("forceReason", forceReason);
+                if (status != null) {
+                    jsonObject.put("status", status);
+                }
+                if (!TextUtils.isEmpty(signalQuality)) {
+                    jsonObject.put("signalQuality", signalQuality);
+                }
+            }
+
+//            if (settingMap != null) {
+//                JSONObject jsonObjectOut = new JSONObject();
+//                for (Map.Entry<String, DeployControlSettingData> entrySet : settingMap.entrySet()) {
+//                    String key = entrySet.getKey();
+//                    if (!TextUtils.isEmpty(key)) {
+//                        DeployControlSettingData value = entrySet.getValue();
+//                        JSONObject jsonObjectIn = new JSONObject();
+//                        jsonObjectIn.put("initValue", value.getSwitchSpec());
+//                        Double diameterValue = value.getWireDiameter();
+//                        if (diameterValue != null) {
+//                            jsonObjectIn.put("wireDiameter", diameterValue);
+//                        }
+//                        int wireMaterial = value.getWireMaterial();
+//                        jsonObjectIn.put("wireMaterial", wireMaterial);
+//                        jsonObjectOut.put(key, jsonObjectIn);
+//
+//                    }
+//                }
+//                jsonObject.put("config", jsonObjectOut);
+//            }
+            if (deployControlSettingData != null) {
+                JSONObject jsonObjectOut = new JSONObject();
+                Integer switchSpec = deployControlSettingData.getSwitchSpec();
+                if (switchSpec != null) {
+                    jsonObjectOut.put("switchSpec", switchSpec);
+                }
+                Double wireDiameter = deployControlSettingData.getWireDiameter();
+                if (wireDiameter != null) {
+                    jsonObjectOut.put("wireDiameter", wireDiameter);
+                }
+                Integer wireMaterial = deployControlSettingData.getWireMaterial();
+                if (wireMaterial != null) {
+                    jsonObjectOut.put("wireMaterial", wireMaterial);
+                }
+                Integer inputValue = deployControlSettingData.getInputValue();
+                if (inputValue != null) {
+                    jsonObjectOut.put("inputValue", inputValue);
+                }
+                Integer transformer = deployControlSettingData.getTransformer();
+                if (transformer != null) {
+                    jsonObjectOut.put("transformer", transformer);
+                }
+                Integer recommTrans = deployControlSettingData.getRecommTrans();
+                if (recommTrans != null) {
+                    jsonObjectOut.put("recommTrans", recommTrans);
+                }
+                //
+                List<DeployControlSettingData.wireData> input = deployControlSettingData.getInput();
+                if (input != null && input.size() > 0) {
+                    JSONArray jsonArrayInput = new JSONArray();
+                    for (DeployControlSettingData.wireData wireData : input) {
+                        JSONObject jsonObjectInput = new JSONObject();
+                        Integer wireMaterial1 = wireData.getWireMaterial();
+                        if (wireMaterial1 != null) {
+                            jsonObjectInput.put("wireMaterial", wireMaterial1);
+                        }
+                        Double wireDiameter1 = wireData.getWireDiameter();
+                        if (wireDiameter1 != null) {
+                            jsonObjectInput.put("wireDiameter", wireDiameter1);
+                        }
+                        Integer count = wireData.getCount();
+                        if (count != null) {
+                            jsonObjectInput.put("count", count);
+                        }
+                        jsonArrayInput.put(jsonObjectInput);
+                    }
+                    jsonObjectOut.put("input", jsonArrayInput);
+                }
+                //
+                List<DeployControlSettingData.wireData> output = deployControlSettingData.getOutput();
+                if (output != null && output.size() > 0) {
+                    JSONArray jsonArrayOutput = new JSONArray();
+                    for (DeployControlSettingData.wireData wireData : output) {
+                        JSONObject jsonObjectOutput = new JSONObject();
+                        Integer wireMaterial1 = wireData.getWireMaterial();
+                        if (wireMaterial1 != null) {
+                            jsonObjectOutput.put("wireMaterial", wireMaterial1);
+                        }
+                        Double wireDiameter1 = wireData.getWireDiameter();
+                        if (wireDiameter1 != null) {
+                            jsonObjectOutput.put("wireDiameter", wireDiameter1);
+                        }
+                        Integer count = wireData.getCount();
+                        if (count != null) {
+                            jsonObjectOutput.put("count", count);
+                        }
+                        jsonArrayOutput.put(jsonObjectOutput);
+                    }
+                    jsonObjectOut.put("output", jsonArrayOutput);
+                }
+                jsonObject.put("config", jsonObjectOut);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.doDevicePointDeploy(sn, body);
+    }
 
     /**
      * 获取蓝牙信息，包括蓝牙密码和基带信息
