@@ -724,7 +724,7 @@ public class RetrofitServiceHelper {
         return retrofitService.doDevicePointDeploy(sn, body);
     }
     public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, List<String> tags, String
-            name, String contact,String phone, String wxPhone, List<String> imgUrls, DeployControlSettingData deployControlSettingData, String forceReason, Integer status, String signalQuality) {
+            name, String contact, String content, String wxPhone, List<String> imgUrls, DeployControlSettingData deployControlSettingData, String forceReason, Integer status, String signalQuality) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("lon", lon);
@@ -739,22 +739,11 @@ public class RetrofitServiceHelper {
             if (name != null) {
                 jsonObject.put("name", name);
             }
-
-            if ()
-            if (contacts != null && contacts.size() > 0) {
-                JSONArray jsonArrayContact = new JSONArray();
-                for (DeployContactModel contactModel : contacts) {
-                    JSONObject object = new JSONObject();
-                    if (!TextUtils.isEmpty(contactModel.name)) {
-                        object.put("contact", contactModel.name);
-                    }
-                    if (!TextUtils.isEmpty(contactModel.phone)) {
-                        object.put("content", contactModel.phone);
-                    }
-                    object.put("types", "phone");
-                    jsonArrayContact.put(object);
-                }
-                jsonObject.put("notifications", jsonArrayContact);
+            if (contact != null) {
+                jsonObject.put("contact", contact);
+            }
+            if (content != null) {
+                jsonObject.put("content", content);
             }
             if (imgUrls != null && imgUrls.size() > 0) {
                 JSONArray jsonArrayImg = new JSONArray();
