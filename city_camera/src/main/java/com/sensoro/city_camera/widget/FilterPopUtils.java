@@ -119,8 +119,8 @@ public class FilterPopUtils {
             int[] location = new int[2];
             // 获取控件在屏幕的位置
             view.getLocationOnScreen(location);
-            Point point = new Point();
-            mActivity.getWindowManager().getDefaultDisplay().getSize(point);
+//            Point point = new Point();
+//            mActivity.getWindowManager().getDefaultDisplay().getSize(point);
 
             //int tempHeight = mPopupWindow.getHeight();
             //if (tempHeight == WindowManager.LayoutParams.MATCH_PARENT || point.y <= tempHeight) {
