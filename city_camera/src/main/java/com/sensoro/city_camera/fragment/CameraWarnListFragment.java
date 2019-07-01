@@ -116,7 +116,6 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     private SearchHistoryAdapter mSearchHistoryAdapter;
     //删除历史记录
     private TipOperationDialogUtils historyClearDialog;
-    private static final String TAG = "wqh_Test";
     private SecurityWarnConfirmDialog mSecurityWarnConfirmDialog;
 
     private FilterPopUtils mCapturetimeFilterPopUtils;
@@ -367,7 +366,6 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
 
     @Override
     public void updateCameraWarnsListAdapter(List<SecurityAlarmInfo> securityAlarmInfoList) {
-        Log.d(TAG, "updateCameraWarnsListAdapter: " + securityAlarmInfoList.size());
         if (securityAlarmInfoList.size() > 0) {
             mRcContentAdapter.setData(securityAlarmInfoList);
             mRcContentAdapter.notifyDataSetChanged();
