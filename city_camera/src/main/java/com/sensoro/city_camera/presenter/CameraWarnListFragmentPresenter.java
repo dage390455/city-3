@@ -131,25 +131,27 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         }
 
     }
+
     public void initCapturetimeDialog() {
 
         mCapturetimeModelList = new ArrayList<>();
-        mCurrentCapturetimeModel = new FilterModel(mContext.getString(R.string.Unlimited),FILTER_TIME_ALL,true,true);
+        mCurrentCapturetimeModel = new FilterModel(mContext.getString(R.string.Unlimited), FILTER_TIME_ALL, true, true);
         mCapturetimeModelList.add(mCurrentCapturetimeModel);
-        mCapturetimeModelList.add(new FilterModel(mContext.getString(R.string.twentyfour_hours),FILTER_TIME_24H,false,false));
-        mCapturetimeModelList.add(new FilterModel(mContext.getString(R.string.three_days),FILTER_TIME_3DAY,false,false));
-        mCapturetimeModelList.add(new FilterModel(mContext.getString(R.string.seven_days),FILTER_TIME_7DAY,false,false));
-        mCapturetimeModelList.add(new FilterModel(mContext.getString(R.string.customize_time),0L,false,false));
+        mCapturetimeModelList.add(new FilterModel(mContext.getString(R.string.twentyfour_hours), FILTER_TIME_24H, false, false));
+        mCapturetimeModelList.add(new FilterModel(mContext.getString(R.string.three_days), FILTER_TIME_3DAY, false, false));
+        mCapturetimeModelList.add(new FilterModel(mContext.getString(R.string.seven_days), FILTER_TIME_7DAY, false, false));
+        mCapturetimeModelList.add(new FilterModel(mContext.getString(R.string.customize_time), 0L, false, false));
         getView().updateFilterCapturetimeList(mCapturetimeModelList);
     }
+
     public void initProcessStatusDialog() {
 
         mProcessStatusModelList = new ArrayList<>();
-        mProcessStatusModelList.add(new FilterModel(mContext.getString(R.string.word_all),FILTER_STATUS_ALL,false,true));
-        mCurrentProcessStatusModel = new FilterModel(mContext.getString(R.string.unprocessed),FILTER_STATUS_UNPROCESS,true,false);
+        mProcessStatusModelList.add(new FilterModel(mContext.getString(R.string.word_all), FILTER_STATUS_ALL, false, true));
+        mCurrentProcessStatusModel = new FilterModel(mContext.getString(R.string.unprocessed), FILTER_STATUS_UNPROCESS, true, false);
         mProcessStatusModelList.add(mCurrentProcessStatusModel);
-        mProcessStatusModelList.add(new FilterModel(mContext.getString(R.string.effective_warn),FILTER_STATUS_EFFECTIVE,false,false));
-        mProcessStatusModelList.add(new FilterModel(mContext.getString(R.string.invalid_warn),FILTER_STATUS_INVALID,false,false));
+        mProcessStatusModelList.add(new FilterModel(mContext.getString(R.string.effective_warn), FILTER_STATUS_EFFECTIVE, false, false));
+        mProcessStatusModelList.add(new FilterModel(mContext.getString(R.string.invalid_warn), FILTER_STATUS_INVALID, false, false));
         getView().updateFilterProcessStatusList(mProcessStatusModelList);
     }
 
@@ -212,7 +214,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                 RetrofitServiceHelper.getInstance().getSecurityAlarmList(
                         (cur_page == 0 ? 0 : cur_page * 20 - 1),
                         (startTime == 0 ? null : startTime + ""),
-                        (endTime == 0 ? null : endTime + ""), (int)handleStatus, tempSearchText, 0
+                        (endTime == 0 ? null : endTime + ""), (int) handleStatus, tempSearchText, 0
                 ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityAlarmListRsp>(this) {
 
 
@@ -239,7 +241,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                 RetrofitServiceHelper.getInstance().getSecurityAlarmList(
                         (cur_page == 0 ? 1 : cur_page * 20 - 1),
                         (startTime == 0 ? null : startTime + ""),
-                        (endTime == 0 ? null : endTime + ""), (int)handleStatus, tempSearchText, 0
+                        (endTime == 0 ? null : endTime + ""), (int) handleStatus, tempSearchText, 0
                 ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityAlarmListRsp>(this) {
 
 
@@ -438,7 +440,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                 .getMonthDate(endTime);
         //更新自定义时间文字
         mCurrentCapturetimeModel.statusTitle = dateSearchText;
-        mCapturetimeModelList.add(mCapturetimeModelList.size()-1,mCurrentCapturetimeModel);
+        mCapturetimeModelList.add(mCapturetimeModelList.size() - 1, mCurrentCapturetimeModel);
         getView().updateFilterCapturetimeList(mCapturetimeModelList);
 
         getView().setFilterCapturetimeView(mCurrentCapturetimeModel);
@@ -482,33 +484,34 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         }
 
     }
-       /**
+
+    /**
      * 设置抓拍时间View
      */
     public void setFilterCapturetime(int positon) {
         if (positon > -1 && positon < mCapturetimeModelList.size()) {
             mCurrentCapturetimeModel = mCapturetimeModelList.get(positon);
-        }
-        //重制自定义时间内容
-        if(!TextUtils.isEmpty(dateSearchText)){
-            mCapturetimeModelList.get(mCapturetimeModelList.size()-1).statusTitle = mContext.getString(R.string.customize_time);
-            getView().updateFilterCapturetimeList(mCapturetimeModelList);
+            //重制自定义时间内容
+            if (!TextUtils.isEmpty(dateSearchText)) {
+                mCapturetimeModelList.get(mCapturetimeModelList.size() - 1).statusTitle = mContext.getString(R.string.customize_time);
+                getView().updateFilterCapturetimeList(mCapturetimeModelList);
+            }
+            filterDataByTime(mCurrentCapturetimeModel.status);
         }
         getView().setFilterCapturetimeView(mCurrentCapturetimeModel);
-        filterDataByTime(mCurrentCapturetimeModel.status);
 
 
     }
+
     /**
      * 设置处理状态View
      */
-    public void setFilterProcessStatus(int positon){
+    public void setFilterProcessStatus(int positon) {
         if (positon > -1 && positon < mProcessStatusModelList.size()) {
             mCurrentProcessStatusModel = mProcessStatusModelList.get(positon);
+            filterDataByStatus(mCurrentProcessStatusModel.status);
         }
         getView().setFilterProcessStatusView(mCurrentProcessStatusModel);
-        filterDataByStatus(mCurrentProcessStatusModel.status);
-
     }
 
 

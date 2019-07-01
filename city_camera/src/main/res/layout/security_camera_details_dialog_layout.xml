@@ -154,6 +154,20 @@
             android:textColor="@color/c_252525"
             android:textSize="16sp" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/label_rv"
+            android:layout_width="wrap_content"
+            android:layout_height="22dp"
+            android:layout_below="@id/line2"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="33dp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginTop="17dp"
+            android:gravity="right|center_horizontal">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+
         <RadioGroup
             android:id="@+id/security_camera_details_label_rg"
             android:layout_width="wrap_content"
@@ -161,7 +175,10 @@
             android:layout_below="@id/line2"
             android:layout_alignParentRight="true"
             android:layout_marginTop="12dp"
-            android:orientation="horizontal">
+            android:layout_toRightOf="@id/security_camera_details_label_title"
+            android:gravity="right|center_horizontal"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <RadioButton
                 android:id="@+id/security_camera_details_label1"
@@ -185,6 +202,8 @@
                 android:textColor="@color/security_warn_result_color"
                 android:textSize="10sp"
                 android:textStyle="bold" />
+
+
         </RadioGroup>
 
         <View
