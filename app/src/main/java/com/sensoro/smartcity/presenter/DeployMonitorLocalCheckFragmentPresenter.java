@@ -429,7 +429,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                                         //需要写频点信息
                                         if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                                             if (deployAnalyzerModel.settingData != null) {
-                                                SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec(), deployAnalyzerModel.settingData.getInputValue());
+                                                SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec(), deployAnalyzerModel.settingData.getTransformer());
                                                 if (sensoroDevice != null) {
                                                     //频点信息写入状态回调
                                                     final SensoroWriteCallback configWriteCallback = new SensoroWriteCallback() {
@@ -489,7 +489,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
                             if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
                                 //需要写入配置信息
                                 if (deployAnalyzerModel.settingData != null) {
-                                    SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec(), deployAnalyzerModel.settingData.getInputValue());
+                                    SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, deployAnalyzerModel.settingData.getSwitchSpec(), deployAnalyzerModel.settingData.getTransformer());
                                     if (sensoroDevice != null) {
                                         //配置信息写入回调
                                         SensoroWriteCallback configWriteCallback = new SensoroWriteCallback() {

@@ -1002,7 +1002,7 @@
     <string name="delete_this_group">Delete</string>
     <string name="not_matched_current_transformer">No recommendation, please contact Sensoro R &amp; D personnel to confirm</string>
     <string name="air_open_arguments">Parameter</string>
-    <string name="air_open_rated_current">Rated current/A (0&#8211;560)</string>
+    <string name="air_open_rated_current">Rated current/A (1&#8211;600)</string>
     <string name="diameter_arguments_tip">Wire parameters  please choose according to the actual situation on site</string>
     <string name="match_result">Result</string>
     <string name="look_detail">Detail</string>
@@ -1178,5 +1178,20 @@
     <string name="fire_warn_title">消防预警</string>
     <string name="security_warn_title">安防预警</string>
     <string name="app_name_city_camera">app_name_city_camera</string>
+
+    <string name="recommend_transformer_dialog_top">According to the current, the recommended current transformer model:</string>
+    <string name="recommend_transformer_dialog_bottom">Please select the transformer type installed on site (need to be larger than the recommended value, otherwise the sensor will not work)</string>
+    <string name="recommend">Recommend</string>
+    <string name="config_air_rated_current">Air rated current</string>
+    <string name="config_input">Input</string>
+    <string name="config_output">OutPut</string>
+    <string name="config_recommend_trans">Recommended transformer</string>
+    <string name="config_actual_trans">Actual transformer</string>
+    <string name="device_detail_config_info">Init config info</string>
+    <string name="device_detail_config_trans">Install trans model</string>
+    <string name="initial_configuration_details">Config details</string>
+    <string name="please_add_config_input">Please add input config</string>
+    <string name="please_add_config_out">Please add output config</string>
+    <string name="please_enter_the_configuration_parameters_correctly">Please enter the configuration parameters correctly</string>
 
 </resources>

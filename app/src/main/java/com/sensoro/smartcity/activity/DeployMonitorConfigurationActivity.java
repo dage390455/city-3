@@ -8,7 +8,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +18,7 @@ import com.bigkoo.pickerview.listener.OnOptionsSelectChangeListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
@@ -27,9 +27,7 @@ import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapt
 import com.sensoro.smartcity.imainviews.IDeployMonitorConfigurationView;
 import com.sensoro.smartcity.model.MaterialValueModel;
 import com.sensoro.smartcity.presenter.DeployMonitorConfigurationPresenter;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.widget.dialog.BleConfigurationDialogUtils;
-import com.sensoro.smartcity.widget.dialog.EarlyWarningThresholdDialogUtils;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
 import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
 
@@ -45,8 +43,8 @@ import static com.sensoro.smartcity.constant.CityConstants.MATERIAL_VALUE_MAP;
 
 public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMonitorConfigurationView, DeployMonitorConfigurationPresenter>
         implements IDeployMonitorConfigurationView {
-    @BindView(R.id.include_text_title_imv_arrows_left)
-    ImageView includeTextTitleImvArrowsLeft;
+    @BindView(R.id.include_text_title_tv_cancel)
+    TextView includeTextTitleImvArrowsLeft;
     @BindView(R.id.include_text_title_tv_title)
     TextView includeTextTitleTvTitle;
     @BindView(R.id.include_text_title_tv_subtitle)
@@ -65,10 +63,6 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     LinearLayout llWireDiameter;
     @BindView(R.id.ac_deploy_configuration_et_root)
     LinearLayout acDeployConfigurationEtRoot;
-    @BindView(R.id.ac_deploy_configuration_tv_enter_tip)
-    TextView acDeployConfigurationTvEnterTip;
-    @BindView(R.id.ac_deploy_configuration_tv_configuration)
-    TextView acDeployConfigurationTvConfiguration;
     @BindView(R.id.ll_current_info)
     LinearLayout llCurrentInfo;
     @BindView(R.id.ac_deploy_configuration_tv_near)
@@ -77,11 +71,13 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     TextView tvCurrentValue;
     @BindView(R.id.ac_deploy_configuration_tv_diameter)
     TextView acDeployConfigurationTvDiameter;
+    @BindView(R.id.tv_config_common_rated_current)
+    TextView tvConfigCommonRatedCurrent;
 
     private final List<String> marterials = new ArrayList<>();
     private BleConfigurationDialogUtils bleConfigDialog;
     private OptionsPickerView pvCustomOptions;
-    private EarlyWarningThresholdDialogUtils overCurrentDialog;
+    //    private EarlyWarningThresholdDialogUtils overCurrentDialog;
     private MonitorPointOperatingDialogUtil mOperatingUtil;
     private TipOperationDialogUtils mTipUtils;
 
@@ -103,10 +99,11 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     }
 
     private void initView() {
-        includeTextTitleTvSubtitle.setText(R.string.cancel);
+        includeTextTitleImvArrowsLeft.setText(R.string.cancel);
+        includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
+        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_1DBB99));
         initTipDialog();
         initOperatingDialog();
-        includeTextTitleTvSubtitle.setVisibility(View.GONE);
         includeTextTitleTvTitle.setText(mActivity.getString(R.string.initial_configuration));
         initCustomOptionPicker();
         acDeployConfigurationEtEnter.addTextChangedListener(new TextWatcher() {
@@ -158,7 +155,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
             }
         });
         bleConfigDialog = new BleConfigurationDialogUtils(mActivity, mActivity.getString(R.string.connecting));
-        overCurrentDialog = new EarlyWarningThresholdDialogUtils(mActivity, mActivity.getString(R.string.over_current));
+//        overCurrentDialog = new EarlyWarningThresholdDialogUtils(mActivity, mActivity.getString(R.string.over_current));
 
         marterials.add(getString(R.string.cu));
         marterials.add(getString(R.string.al));
@@ -290,15 +287,17 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     }
 
 
-    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.include_text_title_tv_subtitle, R.id.ac_deploy_configuration_tv_configuration, R.id.ll_wire_material, R.id.ll_wire_diameter, R.id.ll_current_info})
+    @OnClick({R.id.include_text_title_tv_cancel, R.id.include_text_title_tv_subtitle, R.id.tv_config_common_rated_current, R.id.ll_wire_material, R.id.ll_wire_diameter, R.id.ll_current_info})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.ac_deploy_configuration_tv_configuration:
+            case R.id.include_text_title_tv_cancel:
+                finishAc();
+                break;
+            case R.id.include_text_title_tv_subtitle:
                 mPresenter.doConfiguration(acDeployConfigurationEtEnter.getText().toString(), acDeployConfigurationTvWireMaterial.getText().toString(), acDeployConfigurationTvDiameter.getText().toString(), tvCurrentValue.getText().toString());
                 break;
-            case R.id.include_text_title_imv_arrows_left:
-            case R.id.include_text_title_tv_subtitle:
-                finishAc();
+            case R.id.tv_config_common_rated_current:
+                acDeployConfigurationEtEnter.requestFocus();
                 break;
             case R.id.ll_wire_material:
                 AppUtils.showDialog(mActivity, new SelectDialog.SelectDialogListener() {
@@ -334,8 +333,8 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
 
     @Override
     public void updateBtnStatus(boolean canConfig) {
-        acDeployConfigurationTvConfiguration.setEnabled(canConfig);
-        acDeployConfigurationTvConfiguration.setBackgroundResource(canConfig ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_corner_dfdf_shadow);
+//        acDeployConfigurationTvConfiguration.setEnabled(canConfig);
+//        acDeployConfigurationTvConfiguration.setBackgroundResource(canConfig ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_corner_dfdf_shadow);
 
     }
 
@@ -362,8 +361,8 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
 
     @Override
     public void setTvEnterValueRange(int minValue, int maxValue) {
-        String string = String.format(Locale.CHINESE, "%s%d-%d", mActivity.getString(R.string.deploy_configuration_enter_tip), minValue, maxValue);
-        acDeployConfigurationTvEnterTip.setText(string);
+        String string = mActivity.getString(R.string.deploy_configuration_enter_tip);
+        tvConfigCommonRatedCurrent.setText(string + "/A (" + minValue + "-" + maxValue + ")");
     }
 
     @Override
@@ -373,9 +372,9 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
 
     @Override
     public void showOverCurrentDialog(ArrayList<EarlyWarningthresholdDialogUtilsAdapterModel> overCurrentDataList) {
-        if (overCurrentDialog != null) {
-            overCurrentDialog.show(overCurrentDataList);
-        }
+//        if (overCurrentDialog != null) {
+//            overCurrentDialog.show(overCurrentDataList);
+//        }
     }
 
     @Override
@@ -404,7 +403,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
 
     @Override
     public void setAcDeployConfigurationTvConfigurationText(String text) {
-        acDeployConfigurationTvConfiguration.setText(text);
+        includeTextTitleTvSubtitle.setText(text);
     }
 
     @Override
@@ -449,16 +448,6 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     }
 
     @Override
-    public void setTitleImvArrowsLeftVisible(boolean isVisible) {
-        includeTextTitleImvArrowsLeft.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
-    }
-
-    @Override
-    public void setTitleTvSubtitleVisible(boolean isVisible) {
-        includeTextTitleTvSubtitle.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-    }
-
-    @Override
     public void updatePvCustomOptions(List<String> list) {
         if (pvCustomOptions != null && list != null) {
             pvCustomOptions.setPicker(list);
@@ -471,9 +460,9 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
             bleConfigDialog.onDestroy();
         }
 
-        if (overCurrentDialog != null) {
-            overCurrentDialog.destory();
-        }
+//        if (overCurrentDialog != null) {
+//            overCurrentDialog.destory();
+//        }
         if (mOperatingUtil != null) {
             mOperatingUtil.destroy();
         }

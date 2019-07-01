@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.SpannableString;
@@ -22,6 +23,7 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
@@ -68,7 +70,6 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
 import com.sensoro.smartcity.activity.CameraListActivity;
 import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
-import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapENActivity;
 import com.sensoro.smartcity.adapter.MonitorDetailOperationAdapter;
@@ -322,8 +323,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 getView().setDeviceOperationVisible(false);
             }
         }
+        //正常状态下也开启蓝牙
         if (status == Constants.SENSOR_STATUS_ALARM || status == Constants.SENSOR_STATUS_MALFUNCTION
-                || PreferencesHelper.getInstance().getUserData().hasDeviceFirmwareUpdate
+                || status == Constants.SENSOR_STATUS_NORMAL || PreferencesHelper.getInstance().getUserData().hasDeviceFirmwareUpdate
                 || PreferencesHelper.getInstance().getUserData().hasDeviceDemoMode) {
             mHandler.removeCallbacks(bleRunnable);
             mHandler.post(bleRunnable);
@@ -514,44 +516,76 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     private void setMonitorConfigInfo(DeployControlSettingData deployControlSettingData) {
         if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
-            final String[] switchSpecStr = {"-", "-", "-"};
+            mDeviceInfo.setConfig(deployControlSettingData);
+            final String[] values = {"-", "-"};
             if (deployControlSettingData != null) {
                 Integer switchSpec = deployControlSettingData.getSwitchSpec();
                 if (switchSpec != null) {
-                    switchSpecStr[0] = switchSpec + "A";
-                }
-                Integer wireMaterial = deployControlSettingData.getWireMaterial();
-                if (wireMaterial != null) {
-                    switch (wireMaterial) {
-                        case 0:
-                            switchSpecStr[1] = mContext.getString(R.string.cu);
-                            break;
-                        case 1:
-                            switchSpecStr[1] = mContext.getString(R.string.al);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                Double wireDiameter = deployControlSettingData.getWireDiameter();
-                if (wireDiameter != null) {
-                    String formatDouble = WidgetUtil.getFormatDouble(wireDiameter, 2);
-                    switchSpecStr[2] = formatDouble + "m㎡";
+                    values[0] = switchSpec + "A";
                 }
             }
-            mContext.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (isAttachedView()) {
-                        getView().setMonitorSwitchSpec(switchSpecStr[0]);
-                        getView().setMonitorWireMaterial(switchSpecStr[1]);
-                        getView().setMonitorWireDiameter(switchSpecStr[2]);
-                    }
-
+            if (hasNesConfigInfo(deployControlSettingData)) {
+                //新数据
+                Integer transformer = deployControlSettingData.getTransformer();
+                if (transformer != null) {
+                    values[1] = transformer + "A";
                 }
-            });
+                getView().setDeviceDetailConfigInfo(mContext.getString(R.string.actual_overcurrent_threshold) + ":" + values[0], mContext.getString(R.string.device_detail_config_trans) + ":" + values[1]);
+            } else {
+                //传统数据
+                getView().setDeviceDetailConfigInfo(mContext.getString(R.string.actual_overcurrent_threshold) + ":" + values[0], null);
+            }
+//            final String[] switchSpecStr = {"-", "-", "-"};
+//            if (deployControlSettingData != null) {
+//                Integer switchSpec = deployControlSettingData.getSwitchSpec();
+//                if (switchSpec != null) {
+//                    switchSpecStr[0] = switchSpec + "A";
+//                }
+//                Integer wireMaterial = deployControlSettingData.getWireMaterial();
+//                if (wireMaterial != null) {
+//                    switch (wireMaterial) {
+//                        case 0:
+//                            switchSpecStr[1] = mContext.getString(R.string.cu);
+//                            break;
+//                        case 1:
+//                            switchSpecStr[1] = mContext.getString(R.string.al);
+//                            break;
+//                        default:
+//                            break;
+//                    }
+//                }
+//                Double wireDiameter = deployControlSettingData.getWireDiameter();
+//                if (wireDiameter != null) {
+//                    String formatDouble = WidgetUtil.getFormatDouble(wireDiameter, 2);
+//                    switchSpecStr[2] = formatDouble + "m㎡";
+//                }
+//            }
+//            mContext.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (isAttachedView()) {
+//                        getView().setMonitorSwitchSpec(switchSpecStr[0]);
+//                        getView().setMonitorWireMaterial(switchSpecStr[1]);
+//                        getView().setMonitorWireDiameter(switchSpecStr[2]);
+//                    }
+//
+//                }
+//            });
 
         }
+    }
+
+    private boolean hasNesConfigInfo(DeployControlSettingData deployControlSettingData) {
+        //三相电中 并且有新数据
+        if (Constants.DEVICE_CONTROL_NEW_CONFIG_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
+            if (deployControlSettingData != null) {
+                List<DeployControlSettingData.wireData> inputList = deployControlSettingData.getInput();
+                List<DeployControlSettingData.wireData> outputList = deployControlSettingData.getOutput();
+                return inputList != null && inputList.size() > 0 && outputList != null && outputList.size() > 0;
+            }
+        }
+        return false;
+
     }
 
     private void requestBlePassword() {
@@ -1123,23 +1157,21 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(DeviceInfo deviceInfo) {
         if (deviceInfo.getSn().equalsIgnoreCase(mDeviceInfo.getSn())) {
-            if (AppUtils.isActivityTop(mContext, MonitorPointElectricDetailActivity.class)) {
-                mContext.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+            mContext.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (isAttachedView()) {
+                        mDeviceInfo.cloneSocketData(deviceInfo);
+                        // 单项数值设置
                         if (isAttachedView()) {
-                            mDeviceInfo.cloneSocketData(deviceInfo);
-                            // 单项数值设置
-                            if (isAttachedView()) {
-                                freshLocationDeviceInfo();
-                                freshTopData();
-                                handleDeviceInfoAdapter();
-                            }
-
+                            freshLocationDeviceInfo();
+                            freshTopData();
+                            handleDeviceInfoAdapter();
                         }
+
                     }
-                });
-            }
+                }
+            });
         }
     }
 
@@ -1151,20 +1183,18 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             if (split.length > 0) {
                 final String temp = split[0];
                 if (!TextUtils.isEmpty(temp)) {
-                    if (AppUtils.isActivityTop(mContext, MonitorPointElectricDetailActivity.class)) {
-                        mContext.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
-                                    mHandler.removeCallbacks(DeviceTaskOvertime);
-                                    if (isAttachedView()) {
-                                        getView().dismissOperatingLoadingDialog();
-                                        getView().showOperationSuccessToast();
-                                    }
+                    mContext.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
+                                mHandler.removeCallbacks(DeviceTaskOvertime);
+                                if (isAttachedView()) {
+                                    getView().dismissOperatingLoadingDialog();
+                                    getView().showOperationSuccessToast();
                                 }
                             }
-                        });
-                    }
+                        }
+                    });
                 }
             }
 
@@ -1605,7 +1635,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         getView().dismissTipDialog();
         getView().showOperationTipLoadingDialog();
         mScheduleNo = null;
-        RetrofitServiceHelper.getInstance().doMonitorPointOperation(sns, mOperationType, null, null, null, null, null)
+        RetrofitServiceHelper.getInstance().doMonitorPointOperation(sns, mOperationType, null, null, null, null, null, null)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>(this) {
             @Override
             public void onCompleted(MonitorPointOperationRequestRsp response) {
@@ -1618,7 +1648,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     String[] split = scheduleNo.split(",");
                     if (split.length > 0) {
                         mScheduleNo = split[0];
-                        mHandler.postDelayed(DeviceTaskOvertime, 10 * 1000);
+                        mHandler.postDelayed(DeviceTaskOvertime, 15 * 1000);
                     } else {
                         getView().dismissOperatingLoadingDialog();
                         getView().showErrorTipDialog(mContext.getString(R.string.monitor_point_operation_schedule_no_error));
@@ -1711,13 +1741,22 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 getView().showTipDialog(false, null, mContext.getString(R.string.is_device_self_check), mContext.getString(R.string.device_self_check_tip_message), R.color.c_a6a6a6, mContext.getString(R.string.self_check), R.color.c_1dbb99, MonitorPointOperationCode.SELF_CHECK);
                 break;
             case MonitorPointOperationCode.AIR_SWITCH_CONFIG:
-                Intent intent = new Intent(mContext, DeployMonitorConfigurationActivity.class);
-                intent.putExtra(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
+                //
                 DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
                 deployAnalyzerModel.deviceType = mDeviceInfo.getDeviceType();
                 deployAnalyzerModel.sn = mDeviceInfo.getSn();
-                intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
-                getView().startAC(intent);
+                if (Constants.DEVICE_CONTROL_NEW_CONFIG_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType())) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
+                    bundle.putSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+                    startActivity(ARouterConstants.ACTIVITY_THREE_PHASE_ELECT_CONFIG_ACTIVITY, bundle, mContext);
+                } else {
+                    Intent intent = new Intent(mContext, DeployMonitorConfigurationActivity.class);
+                    intent.putExtra(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
+                    intent.putExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+                    getView().startAC(intent);
+                }
+
                 break;
             case MonitorPointOperationCode.AIR_SWITCH_POWER_OFF:
                 //断电
@@ -2110,6 +2149,23 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             getView().startAC(intent);
         } else {
             getView().setDeviceCamerasText(mContext.getString(R.string.device_detail_camera_no_camera));
+        }
+    }
+
+    public void goConfigDetailInfo() {
+        DeployControlSettingData settingData = mDeviceInfo.getConfig();
+        if (hasNesConfigInfo(settingData)) {
+            //新界面
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA, settingData);
+            startActivity(ARouterConstants.ACTIVITY_DEPLOY_RECORD_CONFIG_THREE_PHASE_ELECT_ACTIVITY, bundle, mContext);
+        } else {
+            Bundle bundle = new Bundle();
+            if (settingData != null) {
+                bundle.putSerializable(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA, settingData);
+            }
+            startActivity(ARouterConstants.ACTIVITY_DEPLOY_RECORD_CONFIG_COMMON_ELECT_ACTIVITY, bundle, mContext);
+            //旧界面
         }
     }
 }

@@ -336,6 +336,13 @@ public interface Constants {
             add("acrel_fires");
             add("acrel_single");
 //            add("mantun_fires");
+            add("acrel_alpha");
+        }
+    };
+    ArrayList<String> DEVICE_CONTROL_NEW_CONFIG_DEVICE_TYPES = new ArrayList<String>(2) {
+        {
+            add("acrel_fires");
+            add("acrel_alpha");
         }
     };
     ArrayList<String> DEVICE_UPDATE_FIRMWARE_CHIP_TYPES = new ArrayList<String>(3) {
