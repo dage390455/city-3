@@ -86,6 +86,8 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_DEVICE_CAMERA_DEPLOY = "extra_grants_has_device_camera_deploy";
     String EXTRA_GRANTS_HAS_NAMEPLATE_LIST = "extra_grants_has_nameplate_list";
     String EXTRA_GRANTS_HAS_NAMEPLATE_DEPLOY = "extra_grants_has_nameplate_deploy";
+    String EXTRA_GRANTS_HAS_MONITOR_TASK_LIST = "extra_grants_has_monitor_task_list";
+    String EXTRA_GRANTS_HAS_MONITOR_TASK_CONFIRM = "extra_grants_has_monitor_task_confirm";
     String EXTRA_DEVICE_INFO = "extra_device_info";
     String EXTRA_DEPLOY_ANALYZER_MODEL = "extra_deploy_analyzer_model";
     String EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA = "extra_deploy_configuration_setting_data";

@@ -36,18 +36,21 @@ public class FireSecurityWarnPresenter extends BasePresenter<IFireSecurityWarnVi
     private void initViewPager(Context context) {
         mFragmentList.clear();
         //
+        boolean hasMonitorTaskList = PreferencesHelper.getInstance().getUserData().hasMonitorTaskList;
         if (isModel) {
             Object fragmentCameraList = ARouter.getInstance().build(ARouterConstants.FRAGMENT_CAMERA_LIST).navigation(mActivity);
             if (fragmentCameraList instanceof Fragment) {
                 mFragmentList.add((Fragment) fragmentCameraList);
                 mFragmentTitleList.add(context.getString(R.string.fire_warn_title));
             }
-            Object cameraWarn = ARouter.getInstance().build(ARouterConstants.FRAGMENT_CAMERA_WARN_LIST).navigation(mActivity);
+            if (hasMonitorTaskList) {
+                Object cameraWarn = ARouter.getInstance().build(ARouterConstants.FRAGMENT_CAMERA_WARN_LIST).navigation(mActivity);
 
-            if (cameraWarn instanceof Fragment) {
-                Fragment fragment = (Fragment) cameraWarn;
-                mFragmentList.add(fragment);
-                mFragmentTitleList.add(context.getString(com.sensoro.common.R.string.security_warn_title));
+                if (cameraWarn instanceof Fragment) {
+                    Fragment fragment = (Fragment) cameraWarn;
+                    mFragmentList.add(fragment);
+                    mFragmentTitleList.add(context.getString(com.sensoro.common.R.string.security_warn_title));
+                }
             }
         } else {
             Object fireWarnFragment = ARouter.getInstance().build(ARouterConstants.FRAGMENT_FIRE_WARN_FRAGMENT).navigation(mActivity);
@@ -55,19 +58,18 @@ public class FireSecurityWarnPresenter extends BasePresenter<IFireSecurityWarnVi
                 mFragmentList.add((Fragment) fireWarnFragment);
                 mFragmentTitleList.add(context.getString(R.string.fire_warn_title));
             }
-            Object cameraWarn = ARouter.getInstance().build(ARouterConstants.FRAGMENT_CAMERA_WARN_LIST).navigation(mActivity);
-
-            if (cameraWarn instanceof Fragment) {
-                Fragment fragment = (Fragment) cameraWarn;
-                mFragmentList.add(fragment);
-                mFragmentTitleList.add(context.getString(com.sensoro.common.R.string.security_warn_title));
+            if (hasMonitorTaskList) {
+                Object cameraWarn = ARouter.getInstance().build(ARouterConstants.FRAGMENT_CAMERA_WARN_LIST).navigation(mActivity);
+                if (cameraWarn instanceof Fragment) {
+                    Fragment fragment = (Fragment) cameraWarn;
+                    mFragmentList.add(fragment);
+                    mFragmentTitleList.add(context.getString(com.sensoro.common.R.string.security_warn_title));
+                }
             }
         }
-        boolean hasFireSecurityList = PreferencesHelper.getInstance().getUserData().hasFireSecurityList;
-        //TODO 控制显示安防预警权限后续添加，这里直接赋值测试
-        hasFireSecurityList = true;
-        //通过权限控制
-        getView().setHasFireSecurityView(hasFireSecurityList);
+        // 控制显示安防预警列表查看权限
+
+        getView().setHasFireSecurityView(hasMonitorTaskList);
         getView().updateFireSecurityPageAdapterData(mFragmentTitleList, mFragmentList);
     }
 
