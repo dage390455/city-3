@@ -40,10 +40,10 @@ android {
             storePassword 'sensoro'
         }
         debug {
-//            keyAlias 'sensoro'
-//            keyPassword 'sensoro'
-//            storeFile file('./sensoro.keystore')
-//            storePassword 'sensoro'
+            keyAlias 'sensoro'
+            keyPassword 'sensoro'
+            storeFile file('./sensoro.keystore')
+            storePassword 'sensoro'
         }
     }
 
