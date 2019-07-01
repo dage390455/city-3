@@ -520,6 +520,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
+
                     <TextView
                         android:id="@+id/ac_monitoring_point_tv_alert_contact_name"
                         android:layout_width="wrap_content"
@@ -554,28 +555,56 @@
                         app:layout_constraintBottom_toBottomOf="@id/ac_monitoring_point_tv_alert_contact_name"
                         app:layout_constraintStart_toStartOf="@id/ac_monitoring_point_view" />
 
-                    <ImageView
-                        android:id="@+id/ac_monitoring_point_imv_phone"
+                    <!--<ImageView-->
+                    <!--android:id="@+id/ac_monitoring_point_imv_phone"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginEnd="14dp"-->
+                    <!--android:contentDescription="@null"-->
+                    <!--android:padding="8dp"-->
+                    <!--android:src="@drawable/monitoring_phone"-->
+                    <!--app:layout_constraintBottom_toBottomOf="@id/ac_monitoring_point_tv_alert_contact_name"-->
+                    <!--app:layout_constraintEnd_toEndOf="parent"-->
+                    <!--app:layout_constraintTop_toTopOf="@id/ac_monitoring_point_tv_alert_contact"-->
+                    <!--tools:layout_editor_absoluteX="344dp" />-->
+
+                    <!--<View-->
+                    <!--android:id="@+id/ac_monitoring_point_imv_phone_view"-->
+                    <!--android:layout_width="1dp"-->
+                    <!--android:layout_height="0dp"-->
+                    <!--android:layout_marginEnd="14dp"-->
+                    <!--android:background="@color/c_dfdfdf"-->
+                    <!--app:layout_constraintBottom_toBottomOf="@id/ac_monitoring_point_imv_phone"-->
+                    <!--app:layout_constraintEnd_toStartOf="@id/ac_monitoring_point_imv_phone"-->
+                    <!--app:layout_constraintTop_toTopOf="@id/ac_monitoring_point_imv_phone" />-->
+
+
+                    <TextView
+                        android:id="@+id/ac_monitoring_point_tv_phonecount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="14dp"
-                        android:contentDescription="@null"
-                        android:padding="8dp"
-                        android:src="@drawable/monitoring_phone"
-                        app:layout_constraintBottom_toBottomOf="@id/ac_monitoring_point_tv_alert_contact_name"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/ac_monitoring_point_tv_alert_contact"
-                        tools:layout_editor_absoluteX="344dp" />
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:lineSpacingMultiplier="1.5"
+                        android:textColor="@color/c_a6a6a6"
+                        android:textSize="14dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toLeftOf="@id/ac_monitoring_point_imv_phone_arrow" />
 
-                    <View
-                        android:id="@+id/ac_monitoring_point_imv_phone_view"
-                        android:layout_width="1dp"
-                        android:layout_height="0dp"
-                        android:layout_marginEnd="14dp"
-                        android:background="@color/c_dfdfdf"
-                        app:layout_constraintBottom_toBottomOf="@id/ac_monitoring_point_imv_phone"
-                        app:layout_constraintEnd_toStartOf="@id/ac_monitoring_point_imv_phone"
-                        app:layout_constraintTop_toTopOf="@id/ac_monitoring_point_imv_phone" />
+                    <ImageView
+                        android:id="@+id/ac_monitoring_point_imv_phone_arrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginBottom="8dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/arrows_right"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+
+                        />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View

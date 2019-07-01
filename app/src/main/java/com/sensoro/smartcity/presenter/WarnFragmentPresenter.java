@@ -10,10 +10,12 @@ import android.widget.LinearLayout;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.manger.ThreadPoolManager;
+import com.sensoro.common.model.DeviceNotificationBean;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
@@ -28,13 +30,12 @@ import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmDetailLogActivity;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IWarnFragmentView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.smartcity.widget.dialog.WarningContactDialogUtil;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
 
@@ -100,11 +101,12 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
     }
 
     public void doContactOwner(DeviceAlarmLogInfo deviceAlarmLogInfo) {
-        String phoneNumber = deviceAlarmLogInfo.getDeviceNotification().getContent();
-        if (TextUtils.isEmpty(phoneNumber)) {
-            getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
+        List<DeviceNotificationBean> deviceNotifications = deviceAlarmLogInfo.getDeviceNotifications();
+        if (null != deviceNotifications && deviceNotifications.size() > 0) {
+            WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
+            dialogUtil.show(deviceNotifications);
         } else {
-            AppUtils.diallPhone(phoneNumber, mContext);
+            getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
         }
 
     }

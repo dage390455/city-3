@@ -31,6 +31,7 @@ import com.sensoro.common.iwidget.IOnResume;
 import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeviceNotificationBean;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
@@ -86,6 +87,7 @@ import com.sensoro.smartcity.model.TaskOptionModel;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.dialog.TipDeviceUpdateDialogUtils;
+import com.sensoro.smartcity.widget.dialog.WarningContactDialogUtil;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
 
@@ -114,8 +116,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         , TipDeviceUpdateDialogUtils.TipDialogUpdateClickListener, IOnStart {
     private Activity mContext;
     private volatile DeviceInfo mDeviceInfo;
-    private String content;
-    private boolean hasPhoneNumber;
     private String mScheduleNo;
     private GeocodeSearch geocoderSearch;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
@@ -260,36 +260,24 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         String name = mDeviceInfo.getName();
         getView().setStatusInfo(statusText, textColor);
         getView().setTitleNameTextView(TextUtils.isEmpty(name) ? sn : name);
-        //
-        String contact = null;
-        String phone = null;
-        try {
-            contact = mDeviceInfo.getAlarms().getNotification().getContact();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            phone = mDeviceInfo.getAlarms().getNotification().getContent();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (TextUtils.isEmpty(contact) && TextUtils.isEmpty(phone)) {
-            getView().setNoContact();
-            hasPhoneNumber = false;
-        } else {
-            if (TextUtils.isEmpty(contact)) {
-                contact = mContext.getString(R.string.not_set);
-            }
-            hasPhoneNumber = !TextUtils.isEmpty(phone);
-            getView().setContactPhoneIconVisible(hasPhoneNumber);
-            if (hasPhoneNumber) {
-                this.content = phone;
+
+
+        AlarmInfo alarms = mDeviceInfo.getAlarms();
+        if (alarms != null) {
+            List<DeviceNotificationBean> notifications = alarms.getNotifications();
+            //设置共x人
+            if (null != notifications && notifications.size() > 0) {
+                getView().setContractName(notifications.get(0).getContact());
+                getView().setContractPhone(notifications.get(0).getContent());
+                getView().setContractCount(notifications.size());
             } else {
-                this.content = mContext.getString(R.string.not_set);
+                getView().setNoContact();
             }
-            getView().setContractName(contact);
-            getView().setContractPhone(content);
+        } else {
+            getView().setNoContact();
         }
+
+
         long updatedTime = mDeviceInfo.getUpdatedTime();
         if (updatedTime == 0) {
             getView().setUpdateTime("-");
@@ -1421,12 +1409,30 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     }
 
     public void doContact() {
-        if (hasPhoneNumber) {
-            if (TextUtils.isEmpty(content) || mContext.getString(R.string.not_set).equals(content)) {
+
+        AlarmInfo alarms = mDeviceInfo.getAlarms();
+        if (alarms != null) {
+            List<DeviceNotificationBean> notifications = alarms.getNotifications();
+
+            if (null != notifications) {
+                if (notifications.size() > 1) {
+                    WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
+                    dialogUtil.show(notifications);
+                } else if (notifications.size() == 1) {
+                    DeviceNotificationBean notificationBean = notifications.get(0);
+                    if (TextUtils.isEmpty(notificationBean.getContent()) || mContext.getString(R.string.not_set).equals(notificationBean.getContent())) {
+                        getView().toastShort(mContext.getString(R.string.phone_contact_not_set));
+                        return;
+                    }
+                    AppUtils.diallPhone(notificationBean.getContent(), mContext);
+                } else {
+                    getView().toastShort(mContext.getString(R.string.phone_contact_not_set));
+
+                }
+            } else {
                 getView().toastShort(mContext.getString(R.string.phone_contact_not_set));
-                return;
+
             }
-            AppUtils.diallPhone(content, mContext);
         }
 
     }

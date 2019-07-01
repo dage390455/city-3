@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -25,7 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AlarmContactRcContentAdapter extends RecyclerView.Adapter<AlarmContactRcContentAdapter.AlarmContactRcContentHolder> {
+public class AlarmContactListViewAdapter extends BaseAdapter {
 
     private final Context mContext;
     public final List<DeployContactModel> mList = new ArrayList<>();
@@ -36,7 +37,7 @@ public class AlarmContactRcContentAdapter extends RecyclerView.Adapter<AlarmCont
     public int mFocusPos = -1;//焦点位置
 
 
-    public AlarmContactRcContentAdapter(Context context) {
+    public AlarmContactListViewAdapter(Context context) {
         mContext = context;
     }
 
@@ -45,27 +46,33 @@ public class AlarmContactRcContentAdapter extends RecyclerView.Adapter<AlarmCont
         listener = onAlarmContactAdapterListener;
     }
 
-    /**
-     * 监听焦点
-     */
-    public interface OnAlarmContactAdapterListener {
-        void onPhoneFocusChange(boolean hasFocus);
-
-        void onNameFocusChange(boolean hasFocus);
+    @Override
+    public int getCount() {
+        return mList.size();
     }
 
     @Override
-    public AlarmContactRcContentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_adapter_add_alarm_cantact, parent, false);
-
-        return new AlarmContactRcContentHolder(view);
+    public Object getItem(int position) {
+        return mList.get(position);
     }
 
     @Override
-    public void onBindViewHolder(final AlarmContactRcContentHolder itemHolder, final int position) {
+    public long getItemId(int position) {
+        return position;
+    }
 
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        AlarmContactRcContentHolder itemHolder;
 
+        if (convertView == null) {
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_adapter_add_alarm_cantact, parent, false);
+
+            itemHolder = new AlarmContactRcContentHolder(convertView);
+            convertView.setTag(itemHolder);
+        } else {
+            itemHolder = (AlarmContactRcContentHolder) convertView.getTag();
+        }
         if (mList.size() == 1 && position == 0) {
             itemHolder.itemAdapterAlarmLlContactDelete.setVisibility(View.GONE);
         } else {
@@ -204,13 +211,25 @@ public class AlarmContactRcContentAdapter extends RecyclerView.Adapter<AlarmCont
         DeployContactModel deployContactModel = mList.get(position);
         itemHolder.itemAdapterEtAlarmContactName.setText(deployContactModel.name == null ? "" : deployContactModel.name);
         itemHolder.itemAdapterEtAlarmContactPhone.setText(deployContactModel.phone == null ? "" : deployContactModel.phone);
+
+        return convertView;
+    }
+
+    /**
+     * 监听焦点
+     */
+    public interface OnAlarmContactAdapterListener {
+        void onPhoneFocusChange(boolean hasFocus);
+
+        void onNameFocusChange(boolean hasFocus);
     }
 
 
-    @Override
-    public int getItemCount() {
-        return mList.size();
-    }
+//
+//    @Override
+//    public int getItemCount() {
+//        return mList.size();
+//    }
 
 
     class AlarmContactRcContentHolder extends RecyclerView.ViewHolder {

@@ -280,9 +280,6 @@ dependencies {
     if (!isModule.toBoolean()) {
         implementation project(':nameplate')
     }
-    if (!isModule.toBoolean()) {
-        implementation project(':city_camera')
-    }
     //个推
     implementation deps.getui
     //3D地图so及jar

@@ -48,7 +48,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 
-
 public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDeployMonitorUploadCheckFragmentView> implements IOnCreate, IOnDestroy {
     private DeployMonitorCheckActivity mActivity;
     private CharSequence originName;
@@ -259,7 +258,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
         if (deployAnalyzerModel.tagList.size() > 0) {
             bundle.putStringArrayList(Constants.EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
         }
-        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_TAG,bundle,mActivity);
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_TAG, bundle, mActivity);
     }
 
     public void doSettingPhoto() {
@@ -268,7 +267,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
             bundle.putSerializable(Constants.EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
         }
         bundle.putString(Constants.EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
-        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_PIC,bundle,mActivity);
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_PIC, bundle, mActivity);
 
 //        Intent intent = new Intent(mActivity, DeployMonitorDeployPicActivity.class);
 //        if (getRealImageSize() > 0) {
@@ -466,7 +465,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
     }
 
     private void doDeployResult(double lon, double lan, List<String> imgUrls) {
-        DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+//        DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
         switch (deployAnalyzerModel.deployType) {
             case Constants.TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
@@ -479,7 +478,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                     settingData = deployAnalyzerModel.settingData;
                 }
                 RetrofitServiceHelper.getInstance().doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, settingData, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        deployAnalyzerModel.deployContactModelList, deployAnalyzerModel.weChatAccount, imgUrls, settingData, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new CityObserver<DeviceDeployRsp>(this) {
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
@@ -506,7 +505,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
                         deployAnalyzerModel.mDeviceDetail.getTaskId(), 1, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                        deployContactModel.name, deployContactModel.phone, imgUrls, null, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).
+                        deployAnalyzerModel.deployContactModelList, imgUrls, null, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).
                         subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
                     @Override
                     public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
@@ -532,8 +531,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
             case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
-                        null, 2, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress, deployContactModel.name,
-                        deployContactModel.phone, imgUrls, null, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).
+                        null, 2, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress, deployAnalyzerModel.deployContactModelList, imgUrls, null, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).
                         subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
                     @Override
                     public void onCompleted(DeviceDeployRsp deviceDeployRsp) {

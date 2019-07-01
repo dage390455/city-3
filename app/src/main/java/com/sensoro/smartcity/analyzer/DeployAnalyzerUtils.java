@@ -812,20 +812,17 @@ public class DeployAnalyzerUtils {
                             deployAnalyzerModel.updatedTime = data.getUpdatedTime();
                             AlarmInfo alarmInfo = data.getAlarms();
                             if (alarmInfo != null) {
-                                DeviceNotificationBean notification = alarmInfo.getNotification();
-                                if (notification != null) {
-                                    String contact = notification.getContact();
-                                    String content = notification.getContent();
-                                    if (TextUtils.isEmpty(contact) || TextUtils.isEmpty(content)) {
-//                        getView().setContactEditText(mContext.getResources().getString(R.string.tips_hint_contact));
-                                    } else {
-                                        deployAnalyzerModel.deployContactModelList.clear();
-                                        DeployContactModel deployContactModel = new DeployContactModel();
-                                        deployContactModel.name = contact;
-                                        deployContactModel.phone = content;
-                                        deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                                deployAnalyzerModel.deployContactModelList.clear();
+                                List<DeviceNotificationBean> notifications = alarmInfo.getNotifications();
+                                for (DeviceNotificationBean notification : notifications) {
+                                    DeployContactModel deployContactModel = new DeployContactModel();
+                                    if (!TextUtils.isEmpty(notification.getContact())) {
+                                        deployContactModel.name = notification.getContact();
                                     }
-
+                                    if (!TextUtils.isEmpty(notification.getContent())) {
+                                        deployContactModel.phone = notification.getContent();
+                                    }
+                                    deployAnalyzerModel.deployContactModelList.add(deployContactModel);
                                 }
                             }
                             Intent intent = new Intent();
@@ -869,18 +866,17 @@ public class DeployAnalyzerUtils {
                         }
                         AlarmInfo alarmInfo = data.getAlarms();
                         if (alarmInfo != null) {
-                            DeviceNotificationBean notification = alarmInfo.getNotification();
-                            if (notification != null) {
-                                String contact = notification.getContact();
-                                String content = notification.getContent();
-                                if (!TextUtils.isEmpty(contact) && !TextUtils.isEmpty(content)) {
-                                    deployAnalyzerModel.deployContactModelList.clear();
-                                    DeployContactModel deployContactModel = new DeployContactModel();
-                                    deployContactModel.name = contact;
-                                    deployContactModel.phone = content;
-                                    deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                            List<DeviceNotificationBean> notifications = alarmInfo.getNotifications();
+                            deployAnalyzerModel.deployContactModelList.clear();
+                            for (DeviceNotificationBean notification : notifications) {
+                                DeployContactModel deployContactModel = new DeployContactModel();
+                                if (!TextUtils.isEmpty(notification.getContact())) {
+                                    deployContactModel.name = notification.getContact();
                                 }
-
+                                if (!TextUtils.isEmpty(notification.getContent())) {
+                                    deployContactModel.phone = notification.getContent();
+                                }
+                                deployAnalyzerModel.deployContactModelList.add(deployContactModel);
                             }
                         }
                         Intent intent = new Intent();
@@ -1104,17 +1100,17 @@ public class DeployAnalyzerUtils {
                         deployAnalyzerModel.updatedTime = data.getUpdatedTime();
                         AlarmInfo alarmInfo = data.getAlarms();
                         if (alarmInfo != null) {
-                            DeviceNotificationBean notification = alarmInfo.getNotification();
-                            if (notification != null) {
-                                String contact = notification.getContact();
-                                String content = notification.getContent();
-                                if (!TextUtils.isEmpty(contact) && !TextUtils.isEmpty(content)) {
-                                    deployAnalyzerModel.deployContactModelList.clear();
-                                    DeployContactModel deployContactModel = new DeployContactModel();
-                                    deployContactModel.name = contact;
-                                    deployContactModel.phone = content;
-                                    deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                            List<DeviceNotificationBean> notifications = alarmInfo.getNotifications();
+                            deployAnalyzerModel.deployContactModelList.clear();
+                            for (DeviceNotificationBean notification : notifications) {
+                                DeployContactModel deployContactModel = new DeployContactModel();
+                                if (!TextUtils.isEmpty(notification.getContact())) {
+                                    deployContactModel.name = notification.getContact();
                                 }
+                                if (!TextUtils.isEmpty(notification.getContent())) {
+                                    deployContactModel.phone = notification.getContent();
+                                }
+                                deployAnalyzerModel.deployContactModelList.add(deployContactModel);
                             }
                         }
                         getNesDeviceInfo();
