@@ -63,11 +63,22 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
             holder.tvTaskName.setText(securityAlarmInfo.getTaskName());
             holder.tvWarnDeviceName.setText(securityAlarmInfo.getDeviceName());
             holder.tvWarnTime.setText(DateUtil.getStrTimeToday(mContext, warnTime, 0));
-            //预警是否有效
-            boolean isWarnValid = (securityAlarmInfo.getIsEffective() > 0);
-            //isReConfirm = isWarnValid;
-            holder.tvCamerawarnValid.setBackgroundResource(isWarnValid ? R.drawable.shape_camera_warn_valid : R.drawable.shape_camera_warn_unvalid);
-            holder.tvCamerawarnValid.setText(isWarnValid ? R.string.word_valid : R.string.word_unvalid);
+            boolean isShowCover;
+            //预警是否有效 处理
+            if (securityAlarmInfo.getIsHandle() > 0) {
+                boolean isWarnValid = (securityAlarmInfo.getIsHandle() > 0 && securityAlarmInfo.getIsEffective() > 0);
+                //已经处理 隐藏处理按钮/显示是否有效
+                holder.btnWarnConfim.setVisibility(View.INVISIBLE);
+                holder.tvCamerawarnValid.setVisibility(View.VISIBLE);
+                holder.tvCamerawarnValid.setBackgroundResource(isWarnValid ? R.drawable.shape_camera_warn_valid : R.drawable.shape_camera_warn_unvalid);
+                holder.tvCamerawarnValid.setText(isWarnValid ? R.string.word_valid : R.string.word_unvalid);
+                isShowCover = isWarnValid;
+            }else{
+                //未处理 显示处理按钮/隐藏是否有效标签
+                holder.btnWarnConfim.setVisibility(View.VISIBLE);
+                holder.tvCamerawarnValid.setVisibility(View.GONE);
+                isShowCover = false;
+            }
             holder.btnWarnConfim.setVisibility(securityAlarmInfo.getIsHandle() == 0 ? View.VISIBLE : View.INVISIBLE);
             //根据预警类型设置UI
             switch (warnType) {
@@ -81,7 +92,7 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     Glide.with(mContext).load(focusPhotoUrl).placeholder(R.drawable.ic_port_default_white).into(holder.ivLeftPhoto);
                     Glide.with(mContext).load(capturePhotoUrl).placeholder(R.drawable.ic_port_default_white).into(holder.ivRightPhoto);
                     holder.tvRightMatchrate.setText(focusMatchrate);
-                    holder.viewMulUnvalidCover.setVisibility(!isWarnValid ? View.VISIBLE : View.GONE);
+                    holder.viewMulUnvalidCover.setVisibility(!isShowCover ? View.VISIBLE : View.GONE);
                     break;
                 case 2:
                     holder.tvWarnType.setText(R.string.external_type);
@@ -90,7 +101,7 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     holder.layoutMultPhoto.setVisibility(View.GONE);
                     //加载抓拍图片
                     Glide.with(mContext).load(capturePhotoUrl).placeholder(R.drawable.ic_port_default_white).into(holder.ivSiglePhoto);
-                    holder.viewSingleUnvalidCover.setVisibility(!isWarnValid ? View.VISIBLE : View.GONE);
+                    holder.viewSingleUnvalidCover.setVisibility(!isShowCover ? View.VISIBLE : View.GONE);
                     break;
                 case 3:
                     holder.tvWarnType.setText(R.string.invade_type);
@@ -102,7 +113,7 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                             .load(capturePhotoUrl)
                             .placeholder(R.drawable.ic_port_default_white)
                             .into(holder.ivSiglePhoto);
-                    holder.viewSingleUnvalidCover.setVisibility(!isWarnValid ? View.VISIBLE : View.GONE);
+                    holder.viewSingleUnvalidCover.setVisibility(!isShowCover ? View.VISIBLE : View.GONE);
                     break;
                 default:
             }

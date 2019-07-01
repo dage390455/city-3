@@ -196,7 +196,6 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
         mCapturetimeFilterPopUtils.setSelectDeviceTypeItemClickListener(new FilterPopUtils.SelectFilterTypeItemClickListener() {
             @Override
             public void onSelectFilterTypeItemClick(View view, int position) {
-                //隐藏搜索历史弹窗
                 //隐藏搜索历史弹窗 显示取消按钮
                 if(llSearchHistory.getVisibility() == View.VISIBLE ){
                     llSearchHistory.setVisibility( View.GONE);
