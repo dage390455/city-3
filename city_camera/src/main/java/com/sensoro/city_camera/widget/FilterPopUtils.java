@@ -8,13 +8,11 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,6 +47,7 @@ public class FilterPopUtils {
         view.findViewById(R.id.pop_inspection_task_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                listener.onDismissPop();
                 mRl.startAnimation(dismissTranslateAnimation);
             }
         });
@@ -118,14 +117,18 @@ public class FilterPopUtils {
             mPopupWindow.showAsDropDown(view);
         } else {  // 适配 android 7.0
             int[] location = new int[2];
+            // 获取控件在屏幕的位置
             view.getLocationOnScreen(location);
             Point point = new Point();
             mActivity.getWindowManager().getDefaultDisplay().getSize(point);
-            int tempHeight = mPopupWindow.getHeight();
-            if (tempHeight == WindowManager.LayoutParams.MATCH_PARENT || point.y <= tempHeight) {
-                mPopupWindow.setHeight(point.y - location[1] - view.getHeight());
-            }
+
+            //int tempHeight = mPopupWindow.getHeight();
+            //if (tempHeight == WindowManager.LayoutParams.MATCH_PARENT || point.y <= tempHeight) {
+            //mPopupWindow.setHeight(point.y - location[1] - view.getHeight());
+            //}
+            mPopupWindow.setClippingEnabled(false);
             mPopupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0], location[1] + view.getHeight());
+
         }
         mPopupWindow.showAsDropDown(view);
         int i = mSelectStateAdapter.getItemCount() / 3;
@@ -136,6 +139,24 @@ public class FilterPopUtils {
         showTranslateAnimation.setDuration(i);
         dismissTranslateAnimation.setDuration(i);
         mRl.startAnimation(showTranslateAnimation);
+    }
+
+    /**
+     * 获取导航栏高度
+     *
+     * @return
+     */
+    private int getDaoHangHeight() {
+        int result = 0;
+        int resourceId = 0;
+        int rid = mActivity.getResources().getIdentifier("config_showNavigationBar", "bool", "android");
+        if (rid != 0) {
+            resourceId = mActivity.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+            return mActivity.getResources().getDimensionPixelSize(resourceId);
+        } else {
+            return 0;
+        }
+
     }
 
     public void setUpAnimation() {
@@ -160,5 +181,7 @@ public class FilterPopUtils {
 
     public interface SelectFilterTypeItemClickListener {
         void onSelectFilterTypeItemClick(View view, int position);
+
+        void onDismissPop();
     }
 }

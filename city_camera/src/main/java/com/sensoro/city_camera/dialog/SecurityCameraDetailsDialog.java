@@ -13,9 +13,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
+import com.sensoro.city_camera.adapter.LabelAdapter;
 
 import java.util.ArrayList;
 
@@ -46,6 +49,9 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
     RadioButton mCameraLabelRb1;
     @BindView(R2.id.security_camera_details_label2)
     RadioButton mCameraLabelRb2;
+    @BindView(R2.id.label_rv)
+    RecyclerView mLabelRv;
+
     @BindView(R2.id.security_camera_details_verson_tv)
     TextView mCameraVersonTv;
     //联系人
@@ -60,6 +66,7 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
     RelativeLayout layoutCameraAddress;
     @BindView(R2.id.security_camera_details_address_tv)
     TextView mCameraAddressTv;
+    private LabelAdapter mLabelAdapter;
 
     public static final String EXTRA_KEY_SECURITY_ID = "security_id";
     public static final String EXTRA_KEY_CAMERA_NAME = "camera_name";
@@ -91,7 +98,7 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
 
     private void initUI() {
         Bundle bundle = getArguments();
-        if (bundle != null){
+        if (bundle != null) {
             id = bundle.getString(EXTRA_KEY_SECURITY_ID);
             String name = bundle.getString(EXTRA_KEY_CAMERA_NAME);
             String type = bundle.getString(EXTRA_KEY_CAMERA_TYPE);
@@ -106,16 +113,27 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
 
             mCameraNameTv.setText(name);
             mCameraTypeTv.setText(type);
-            mCameraStatusTv.setText(deviceStatus == 0?R.string.offline:R.string.online);
-            mCameraStatusTv.setTextColor(deviceStatus == 0?getResources().getColor(R.color.c_1dbb99)
-                    :getResources().getColor(R.color.c_f35a58));
+            mCameraStatusTv.setText(deviceStatus == 0 ? R.string.offline : R.string.online);
+            mCameraStatusTv.setTextColor(deviceStatus == 0 ? getResources().getColor(R.color.c_1dbb99)
+                    : getResources().getColor(R.color.c_f35a58));
             mCameraSNTv.setText(sn);
             mCameraBrandTv.setText(brand);
             mCameraVersonTv.setText(version);
             mCameraContactTv.setText(contactStr);
-            mCameraContactCountTv.setText(String.format(getString(R.string.contact_count_tip),contactCount));
+            mCameraContactCountTv.setText(String.format(getString(R.string.contact_count_tip), contactCount));
             mCameraAddressTv.setText(address);
-            //add Camera label
+
+            if (labelList.isEmpty()) {
+                mLabelRv.setVisibility(View.INVISIBLE);
+            } else {
+                mLabelRv.setVisibility(View.VISIBLE);
+                mLabelAdapter = new LabelAdapter(getActivity());
+                LinearLayoutManager manager = new LinearLayoutManager(getActivity());
+                manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                mLabelRv.setLayoutManager(manager);
+                mLabelRv.setAdapter(mLabelAdapter);
+                mLabelAdapter.updateLabelList(labelList);
+            }
 
 
         }
@@ -127,16 +145,16 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
         dismiss();
     }
 
-    @OnClick({R2.id.iv_camera_details_popup_close,R2.id.layout_camera_details_contact,
-    R2.id.layout_camera_details_address})
+    @OnClick({R2.id.iv_camera_details_popup_close, R2.id.layout_camera_details_contact,
+            R2.id.layout_camera_details_address})
     public void onViewClicked(View view) {
         int i = view.getId();
         if (i == R.id.iv_camera_details_popup_close) {
             dismiss();
-        }else if(i == R.id.layout_camera_details_contact){
+        } else if (i == R.id.layout_camera_details_contact) {
             //联系人点击事件处理
             mSecurityCameraDetailsCallback.showContactsDetails();
-        }else if(i == R.id.layout_camera_details_address){
+        } else if (i == R.id.layout_camera_details_address) {
             //地址点击事件处理
             mSecurityCameraDetailsCallback.onNavi();
         }
@@ -145,13 +163,16 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
     public void show(FragmentManager fragmentManager) {
         show(fragmentManager, SecurityWarnConfirmDialog.class.getSimpleName());
     }
+
     private SecurityCameraDetailsCallback mSecurityCameraDetailsCallback;
+
     public interface SecurityCameraDetailsCallback {
 
         /**
          * 导航
          */
         void onNavi();
+
         /**
          *
          */

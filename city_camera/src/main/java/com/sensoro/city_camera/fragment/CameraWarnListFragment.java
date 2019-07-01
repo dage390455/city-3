@@ -198,15 +198,18 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             @Override
             public void onSelectFilterTypeItemClick(View view, int position) {
                 //选择类型的pop点击事件
-                if(position == 4){//自定义时间
+                if (position == 4) {//自定义时间
                     mPresenter.doCalendar(fgMainWarnTitleRoot);
-                }else {
+                } else {
                     mPresenter.setFilterCapturetime(position);
                 }
                 setWarnFilterContent(WARN_FILTER_TIME);
                 //mCapturetimeFilterPopUtils.dismiss();
+            }
 
-
+            @Override
+            public void onDismissPop() {
+                layoutCaptureTime.performClick();
             }
         });
         //处理状态筛选
@@ -217,6 +220,11 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
                 mPresenter.setFilterProcessStatus(position);
                 setWarnFilterContent(WARN_FILTER_STATUS);
                 //mProcessStatusFilterPopUtils.dismiss();
+            }
+
+            @Override
+            public void onDismissPop() {
+                layoutProcessStatus.performClick();
             }
         });
 
@@ -436,7 +444,6 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     }
 
 
-
     @Override
     public void updateFilterProcessStatusList(List<FilterModel> processStatusList) {
         mProcessStatusFilterPopUtils.updateSelectDeviceStatusList(processStatusList);
@@ -487,8 +494,6 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
         mSecurityWarnConfirmDialog.setArguments(bundle);
         mSecurityWarnConfirmDialog.show(getChildFragmentManager());
     }
-
-
 
 
     @Override
@@ -608,7 +613,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             R2.id.tv_top_search_alarm_search_cancel, R2.id.alarm_return_top,
             R2.id.iv_search_camera_warns_status, R2.id.tv_search_camera_warns_status,
             R2.id.tv_search_camera_warns_time, R2.id.iv_search_camera_warns_time,
-            R2.id.layout_filter_process_status,R2.id.layout_filter_capture_time
+            R2.id.layout_filter_process_status, R2.id.layout_filter_capture_time
     })
     public void onViewClicked(View view) {
         int i = view.getId();
@@ -630,21 +635,21 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             mReturnTopImageView.setVisibility(View.GONE);
         } else if (i == R.id.layout_filter_capture_time || i == R.id.tv_search_camera_warns_time || i == R.id.iv_search_camera_warns_time) {
             setWarnFilterContent(WARN_FILTER_TIME);
-        } else if (i== R.id.layout_filter_process_status || i == R.id.iv_search_camera_warns_status || i == R.id.tv_search_camera_warns_status) {
+        } else if (i == R.id.layout_filter_process_status || i == R.id.iv_search_camera_warns_status || i == R.id.tv_search_camera_warns_status) {
             setWarnFilterContent(WARN_FILTER_STATUS);
-            //抓拍时间筛选
         }
     }
 
 
     /**
      * 设置 抓拍时间 处理状态
+     *
      * @param filterType 0 时间 1 处理状态
      */
     private void setWarnFilterContent(int filterType) {
         if (WARN_FILTER_TIME == filterType) {
             //隐藏 状态选择弹窗
-            if(mProcessStatusFilterPopUtils.isShowing()){
+            if (mProcessStatusFilterPopUtils.isShowing()) {
                 mProcessStatusFilterPopUtils.dismiss();
                 ivFilterProcessStatus.setImageResource(R.drawable.ic_arrow_down);
                 mPresenter.setFilterProcessStatus(-1);
@@ -666,7 +671,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
 
         } else if (WARN_FILTER_STATUS == filterType) {
             //隐藏 时间选择弹窗
-            if(mCapturetimeFilterPopUtils.isShowing()){
+            if (mCapturetimeFilterPopUtils.isShowing()) {
                 mCapturetimeFilterPopUtils.dismiss();
                 ivFilterCapturetime.setImageResource(R.drawable.ic_arrow_down);
                 mPresenter.setFilterCapturetime(-1);
@@ -696,7 +701,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == CameraWarnListFragmentPresenter.REQUEST_CODE_DETAIL && resultCode == Activity.RESULT_OK){
+        if (requestCode == CameraWarnListFragmentPresenter.REQUEST_CODE_DETAIL && resultCode == Activity.RESULT_OK) {
             mPresenter.requestSearchData(DIRECTION_DOWN);
         }
     }
