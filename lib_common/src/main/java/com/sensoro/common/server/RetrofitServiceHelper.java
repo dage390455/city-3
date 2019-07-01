@@ -878,7 +878,7 @@ public class RetrofitServiceHelper {
     }
 
     public Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(String oldSn, String newSn, String taskId, Integer reason, double lon, double lat, List<String> tags, String
-            name, List<DeployContactModel> contacts, List<String> imgUrls, String wxPhone, String forceReason, Integer status, String signalQuality) {
+            name, String contact, String content, List<String> imgUrls, String wxPhone, String forceReason, Integer status, String signalQuality) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(newSn)) {
@@ -902,25 +902,12 @@ public class RetrofitServiceHelper {
             if (!TextUtils.isEmpty(name)) {
                 jsonObject.put("name", name);
             }
-
-
-            if (contacts != null && contacts.size() > 0) {
-                JSONArray jsonArrayContact = new JSONArray();
-                for (DeployContactModel contactModel : contacts) {
-                    JSONObject object = new JSONObject();
-                    if (!TextUtils.isEmpty(contactModel.name)) {
-                        object.put("contact", contactModel.name);
-                    }
-                    if (!TextUtils.isEmpty(contactModel.phone)) {
-                        object.put("content", contactModel.phone);
-                    }
-                    object.put("types", "phone");
-                    jsonArrayContact.put(object);
-                }
-                jsonObject.put("notifications", jsonArrayContact);
+            if (!TextUtils.isEmpty(contact)) {
+                jsonObject.put("contact", contact);
             }
-
-
+            if (!TextUtils.isEmpty(content)) {
+                jsonObject.put("content", content);
+            }
             if (imgUrls != null && imgUrls.size() > 0) {
                 JSONArray jsonArrayImg = new JSONArray();
                 for (String url : imgUrls) {
