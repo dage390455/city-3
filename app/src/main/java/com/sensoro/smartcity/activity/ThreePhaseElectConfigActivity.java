@@ -3,54 +3,61 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.CustomListener;
 import com.bigkoo.pickerview.listener.OnDismissListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.WireMaterialDiameterAdapter;
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.smartcity.imainviews.IWireMaterialDiameterCalculatorView;
-import com.sensoro.smartcity.model.WireMaterialDiameterModel;
-import com.sensoro.smartcity.presenter.WireMaterialDiameterCalculatorPresenter;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.common.widgets.TipOperationDialogUtils;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.WireMaterialDiameterAdapter;
+import com.sensoro.smartcity.imainviews.IThreePhaseElectConfigActivityView;
+import com.sensoro.smartcity.model.WireMaterialDiameterModel;
+import com.sensoro.smartcity.presenter.ThreePhaseElectConfigActivityPresenter;
+import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
+import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMaterialDiameterCalculatorView, WireMaterialDiameterCalculatorPresenter>
-        implements IWireMaterialDiameterCalculatorView {
+@Route(path = ARouterConstants.ACTIVITY_THREE_PHASE_ELECT_CONFIG_ACTIVITY)
+public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElectConfigActivityView, ThreePhaseElectConfigActivityPresenter>
+        implements IThreePhaseElectConfigActivityView {
 
-    @BindView(R.id.include_imv_title_imv_arrows_left)
-    ImageView includeImvTitleImvArrowsLeft;
-    @BindView(R.id.include_imv_title_tv_title)
+    @BindView(R.id.include_text_title_tv_cancel)
+    TextView includeImvTitleImvArrowsLeft;
+    @BindView(R.id.include_text_title_tv_title)
     TextView includeImvTitleTvTitle;
-    @BindView(R.id.include_imv_title_imv_subtitle)
-    ImageView includeImvTitleImvSubtitle;
+    @BindView(R.id.include_text_title_tv_subtitle)
+    TextView includeTextTitleTvSubtitle;
+    @BindView(R.id.include_text_title_divider)
+    View includeTextTitleDivider;
     @BindView(R.id.et_input_rated_current_ac_wire_material_diameter1)
     EditText etInputRatedCurrentAcWireMaterialDiameter1;
     @BindView(R.id.ll_input_rated_current_ac_wire_material_diameter1)
@@ -59,42 +66,8 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
     RecyclerView rvInLineAcWireMaterialDiameter;
     @BindView(R.id.rv_out_line_ac_wire_material_diameter)
     RecyclerView rvOutLineAcWireMaterialDiameter;
-    @BindView(R.id.tv_recommend_transformer_ac_wire_material_diameter)
-    TextView tvRecommendTransformerAcWireMaterialDiameter;
-    @BindView(R.id.tv_current_transformer_ac_wire_material_diameter)
-    TextView tvCurrentTransformerAcWireMaterialDiameter;
-    @BindView(R.id.tv_leakage_current_ac_wire_material_diameter)
-    TextView tvLeakageCurrentAcWireMaterialDiameter;
-    @BindView(R.id.tv_electrical_fire_ac_wire_material_diameter)
-    TextView tvElectricalFireAcWireMaterialDiameter;
-    @BindView(R.id.tv_electrical_fire_value_ac_wire_material_diameter)
-    TextView tvElectricalFireValueAcWireMaterialDiameter;
-    @BindView(R.id.tv_in_line_total_ac_wire_material_diameter)
-    TextView tvInLineTotalAcWireMaterialDiameter;
-    @BindView(R.id.tv_in_line_total_value_ac_wire_material_diameter)
-    TextView tvInLineTotalValueAcWireMaterialDiameter;
-    @BindView(R.id.tv_out_line_total_ac_wire_material_diameter)
-    TextView tvOutLineTotalAcWireMaterialDiameter;
-    @BindView(R.id.tv_out_line_total_value_ac_wire_material_diameter)
-    TextView tvOutLineTotalValueAcWireMaterialDiameter;
-    @BindView(R.id.view_divider1_ac_wire_material_diameter)
-    View viewDivider1AcWireMaterialDiameter;
-    @BindView(R.id.tv_actual_over_current_threshold_ac_wire_material_diameter)
-    TextView tvActualOverCurrentThresholdAcWireMaterialDiameter;
-    @BindView(R.id.tv_actual_over_current_threshold_value_ac_wire_material_diameter)
-    TextView tvActualOverCurrentThresholdValueAcWireMaterialDiameter;
-    @BindView(R.id.tv_rule_description_ac_wire_material_diameter)
-    TextView tvRuleDescriptionAcWireMaterialDiameter;
-    @BindView(R.id.cl_detail_ac_wire_material_diameter)
-    ConstraintLayout clDetailAcWireMaterialDiameter;
-    @BindView(R.id.tv_look_detail_ac_wire_material_diameter)
-    TextView tvLookDetailAcWireMaterialDiameter;
     @BindView(R.id.nsv_ac_wire_material_diameter)
     NestedScrollView nsvViewAcWireMaterialDiameter;
-    @BindView(R.id.ll_match_result_ac_wire_material_diameter)
-    LinearLayout llMatchResultAcWireMaterialDiameter;
-    @BindView(R.id.fl_detail_ac_wire_material_diameter)
-    FrameLayout flDetailAcWireMaterialDiameter;
     @BindView(R.id.ll_root_ac_wire_material_diameter)
     LinearLayout llRootAcWireMaterialDiameter;
     @BindView(R.id.tv_in_line_add_ac_wire_material_diameter)
@@ -105,6 +78,10 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
     TextView tvOutLineAddAcWireMaterialDiameter;
     @BindView(R.id.fl_out_line_add_ac_wire_material_diameter)
     FrameLayout flOutLineAddAcWireMaterialDiameter;
+    @BindView(R.id.tv_actual_value)
+    TextView tvActualValue;
+    @BindView(R.id.tv_three_phase_elect_config_current_range)
+    TextView tThreePhaseElectConfigCurrentRange;
     private WireMaterialDiameterAdapter mInLineAdapter;
     private WireMaterialDiameterAdapter mOutLineAdapter;
     private OptionsPickerView<String> pvCustomOptions;
@@ -113,21 +90,24 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
     private Drawable mDetailUpDrawable;
     private Drawable addBlackDrawable;
     private Drawable addWhiteDrawable;
-
+    private MonitorPointOperatingDialogUtil mOperatingUtil;
+    private TipOperationDialogUtils mTipUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_wire_material_diameter);
+        setContentView(R.layout.activity_three_phase_elect_config);
         ButterKnife.bind(this);
         initView();
         mPresenter.initData(mActivity);
     }
 
     private void initView() {
-        includeImvTitleTvTitle.setText(mActivity.getString(R.string.wire_material_diameter_calculator));
+        includeImvTitleTvTitle.setText(mActivity.getString(R.string.monitor_point_detail_air_switch_config));
         includeImvTitleTvTitle.getPaint().setFakeBoldText(true);
-        includeImvTitleImvSubtitle.setVisibility(View.GONE);
-
+        includeTextTitleTvSubtitle.setText(R.string.save);
+        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_1DBB99));
+        mOperatingUtil = new MonitorPointOperatingDialogUtil(mActivity, false);
+        mTipUtils = new TipOperationDialogUtils(mActivity, false);
         initRcInline();
 
         initRcOutline();
@@ -136,18 +116,17 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
 
         initEtListener();
 
-        AppUtils.getInputSoftStatus(llRootAcWireMaterialDiameter, new AppUtils.InputSoftStatusListener() {
-
-            @Override
-            public void onKeyBoardClose() {
-                mPresenter.checkRecommendTransformer();
-            }
-
-            @Override
-            public void onKeyBoardOpen() {
-                setResultVisible(false);
-            }
-        });
+//        AppUtils.getInputSoftStatus(llRootAcWireMaterialDiameter, new AppUtils.InputSoftStatusListener() {
+//
+//            @Override
+//            public void onKeyBoardClose() {
+//                mPresenter.handleRecommendTransformer();
+//            }
+//
+//            @Override
+//            public void onKeyBoardOpen() {
+//            }
+//        });
 
         addBlackDrawable = mActivity.getDrawable(R.drawable.wire_add);
         if (addBlackDrawable != null) {
@@ -161,33 +140,27 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
 
     private void initEtListener() {
 
-//        etInputRatedCurrentAcWireMaterialDiameter1.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                String s1 = s.toString();
-//                if (!TextUtils.isEmpty(s1)) {
-//                    try {
-//                        int i = Integer.parseInt(s1);
-//                        if (i > 560 || i <= 0) {
-//                            toastShort(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.rated_current_colon), "1-560"));
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                        toastShort(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.rated_current_colon), "1-560"));
-//                    }
-//                }
-//            }
-//        });
+        etInputRatedCurrentAcWireMaterialDiameter1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String s1 = s.toString();
+                if (!TextUtils.isEmpty(s1)) {
+                    mPresenter.handleRecommendTransformer();
+                } else {
+                    setActualCurrentValue(null);
+                }
+            }
+        });
 
         etInputRatedCurrentAcWireMaterialDiameter1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
@@ -296,8 +269,8 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
     }
 
     @Override
-    protected WireMaterialDiameterCalculatorPresenter createPresenter() {
-        return new WireMaterialDiameterCalculatorPresenter();
+    protected ThreePhaseElectConfigActivityPresenter createPresenter() {
+        return new ThreePhaseElectConfigActivityPresenter();
     }
 
     @Override
@@ -416,72 +389,96 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
     }
 
     @Override
-    public void setRecommendBtnStatus(boolean isClickable) {
-        tvRecommendTransformerAcWireMaterialDiameter.setClickable(isClickable);
-        tvRecommendTransformerAcWireMaterialDiameter.setBackground(mActivity.getDrawable(isClickable ? R.drawable.shape_bg_corner_4_29c_shadow : R.drawable.shape_bg_corner_dfdf_shadow));
-    }
-
-    @Override
-    public void setRatedCurrentTransformer(String ratedCurrent) {
-        tvCurrentTransformerAcWireMaterialDiameter.setText(ratedCurrent);
-    }
-
-    @Override
-    public void setLeakageCurrentTransformer(String leakage) {
-        tvLeakageCurrentAcWireMaterialDiameter.setText(leakage);
-    }
-
-    @Override
-    public void setResultVisible(boolean isVisible) {
-        llMatchResultAcWireMaterialDiameter.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        if (!isVisible) {
-            clDetailAcWireMaterialDiameter.setVisibility(View.GONE);
-            tvLookDetailAcWireMaterialDiameter.setText(mActivity.getString(R.string.details));
+    public void setActualCurrentValue(Integer value) {
+        if (null == value) {
+            tvActualValue.setText("-");
+        } else {
+            tvActualValue.setText(value + "A");
         }
 
     }
 
     @Override
-    public void setOutLineTotalCurrentValue(int value) {
-        tvOutLineTotalValueAcWireMaterialDiameter.setText(String.format(Locale.ROOT, "%dA", value));
+    public void setInputRated(String value) {
+        if (value != null) {
+            etInputRatedCurrentAcWireMaterialDiameter1.setText(value);
+            etInputRatedCurrentAcWireMaterialDiameter1.setSelection(value.length());
+        }
+
     }
 
     @Override
-    public void setInLineTotalCurrentValue(int value) {
-        tvInLineTotalValueAcWireMaterialDiameter.setText(String.format(Locale.ROOT, "%dA", value));
+    public void setSubtitleText(String text) {
+        includeTextTitleTvSubtitle.setText(text);
     }
 
     @Override
-    public void setAirRatedCurrentValue(int ratedCurrent) {
-        tvElectricalFireValueAcWireMaterialDiameter.setText(String.format(Locale.ROOT, "%dA", ratedCurrent));
+    public void dismissOperatingLoadingDialog() {
+        if (mOperatingUtil != null) {
+            mOperatingUtil.dismiss();
+        }
     }
 
     @Override
-    public void setActualCurrentValue(int actualRatedCurrent) {
-        tvActualOverCurrentThresholdValueAcWireMaterialDiameter.setText(String.format(Locale.ROOT, "%dA", actualRatedCurrent));
+    public void showErrorTipDialog(String errorMsg) {
+        if (mTipUtils.isShowing()) {
+            mTipUtils.setTipMessageText(errorMsg);
+            return;
+        }
+        mTipUtils.setTipEtRootVisible(false);
+        mTipUtils.setTipTitleText(mActivity.getString(R.string.request_failed));
+        mTipUtils.setTipMessageText(errorMsg);
+        mTipUtils.setTipCancelText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
+        mTipUtils.setTipConfirmVisible(false);
+        mTipUtils.show();
+    }
+
+    @Override
+    public void showOperationSuccessToast() {
+        SensoroSuccessToast.getInstance().showToast(mActivity, Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void dismissTipDialog() {
+        if (mTipUtils != null) {
+            mTipUtils.dismiss();
+        }
+    }
+
+    @Override
+    public void showOperationTipLoadingDialog() {
+        if (mOperatingUtil != null) {
+            mOperatingUtil.setTipText(mActivity.getString(R.string.configuring));
+            mOperatingUtil.show();
+        }
+    }
+
+    @Override
+    public void setTvEnterValueRange(int minValue, int maxValue) {
+        String string = mActivity.getString(R.string.deploy_configuration_enter_tip);
+        tThreePhaseElectConfigCurrentRange.setText(string + "/A (" + minValue + "-" + maxValue + ")");
     }
 
 
-    @OnClick({R.id.include_imv_title_imv_arrows_left, R.id.ll_input_rated_current_ac_wire_material_diameter1,
-            R.id.tv_recommend_transformer_ac_wire_material_diameter, R.id.fl_detail_ac_wire_material_diameter,
-            R.id.fl_in_line_add_ac_wire_material_diameter, R.id.fl_out_line_add_ac_wire_material_diameter})
+    @OnClick({R.id.include_text_title_tv_cancel, R.id.ll_input_rated_current_ac_wire_material_diameter1,
+            R.id.fl_in_line_add_ac_wire_material_diameter, R.id.fl_out_line_add_ac_wire_material_diameter, R.id.include_text_title_tv_subtitle})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.include_imv_title_imv_arrows_left:
+            case R.id.include_text_title_tv_cancel:
                 AppUtils.dismissInputMethodManager(mActivity, etInputRatedCurrentAcWireMaterialDiameter1);
                 finishAc();
                 break;
-            case R.id.ll_input_rated_current_ac_wire_material_diameter1:
-                etInputRatedCurrentAcWireMaterialDiameter1.setCursorVisible(true);
-                etInputRatedCurrentAcWireMaterialDiameter1.requestFocus();
-                etInputRatedCurrentAcWireMaterialDiameter1.setFocusableInTouchMode(true);
+//            case R.id.ll_input_rated_current_ac_wire_material_diameter1:
+//                etInputRatedCurrentAcWireMaterialDiameter1.setCursorVisible(true);
+//                etInputRatedCurrentAcWireMaterialDiameter1.requestFocus();
+//                etInputRatedCurrentAcWireMaterialDiameter1.setFocusableInTouchMode(true);
 //                etInputRatedCurrentAcWireMaterialDiameter1.performClick();
-                break;
-            case R.id.tv_recommend_transformer_ac_wire_material_diameter:
-                AppUtils.dismissInputMethodManager(mActivity, etInputRatedCurrentAcWireMaterialDiameter1, true);
-                mPresenter.doRecommendTransformer();
-                scrollBottom();
-                break;
+//                break;
+//            case R.id.tv_recommend_transformer_ac_wire_material_diameter:
+//                AppUtils.dismissInputMethodManager(mActivity, etInputRatedCurrentAcWireMaterialDiameter1, true);
+//                mPresenter.handleRecommendTransformer();
+//                scrollBottom();
+//                break;
             case R.id.fl_detail_ac_wire_material_diameter:
                 doDetailClick();
                 break;
@@ -497,6 +494,10 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
                 llInputRatedCurrentAcWireMaterialDiameter1.setFocusableInTouchMode(true);
                 mPresenter.doAddOutLine();
                 break;
+            case R.id.include_text_title_tv_subtitle:
+                //保存
+                mPresenter.doSave();
+                break;
         }
     }
 
@@ -510,33 +511,39 @@ public class WireMaterialDiameterCalculatorActivity extends BaseActivity<IWireMa
     }
 
     private void doDetailClick() {
-        if (clDetailAcWireMaterialDiameter.getVisibility() == View.VISIBLE) {
-
-            if (mDetailDownDrawable == null) {
-                mDetailDownDrawable = mActivity.getDrawable(R.drawable.arrow_down_elect);
-                if (mDetailDownDrawable != null) {
-                    mDetailDownDrawable.setBounds(0, 0, mDetailDownDrawable.getMinimumWidth(), mDetailDownDrawable.getMinimumHeight());
-                }
-            }
-            tvLookDetailAcWireMaterialDiameter.setCompoundDrawables(null, null, mDetailDownDrawable, null);
-            clDetailAcWireMaterialDiameter.setVisibility(View.GONE);
-            tvLookDetailAcWireMaterialDiameter.setText(mActivity.getString(R.string.details));
-        } else {
-            if (mDetailUpDrawable == null) {
-                mDetailUpDrawable = mActivity.getDrawable(R.drawable.arrow_up_elect);
-                if (mDetailUpDrawable != null) {
-                    mDetailUpDrawable.setBounds(0, 0, mDetailUpDrawable.getMinimumWidth(), mDetailUpDrawable.getMinimumHeight());
-                }
-            }
-            tvLookDetailAcWireMaterialDiameter.setCompoundDrawables(null, null, mDetailUpDrawable, null);
-            clDetailAcWireMaterialDiameter.setVisibility(View.VISIBLE);
-            tvLookDetailAcWireMaterialDiameter.setText(mActivity.getString(R.string.collapse));
-        }
+//        if (clDetailAcWireMaterialDiameter.getVisibility() == View.VISIBLE) {
+//
+//            if (mDetailDownDrawable == null) {
+//                mDetailDownDrawable = mActivity.getDrawable(R.drawable.arrow_down_elect);
+//                if (mDetailDownDrawable != null) {
+//                    mDetailDownDrawable.setBounds(0, 0, mDetailDownDrawable.getMinimumWidth(), mDetailDownDrawable.getMinimumHeight());
+//                }
+//            }
+//            tvLookDetailAcWireMaterialDiameter.setCompoundDrawables(null, null, mDetailDownDrawable, null);
+//            clDetailAcWireMaterialDiameter.setVisibility(View.GONE);
+//            tvLookDetailAcWireMaterialDiameter.setText(mActivity.getString(R.string.look_detail));
+//        } else {
+//            if (mDetailUpDrawable == null) {
+//                mDetailUpDrawable = mActivity.getDrawable(R.drawable.arrow_up_elect);
+//                if (mDetailUpDrawable != null) {
+//                    mDetailUpDrawable.setBounds(0, 0, mDetailUpDrawable.getMinimumWidth(), mDetailUpDrawable.getMinimumHeight());
+//                }
+//            }
+//            tvLookDetailAcWireMaterialDiameter.setCompoundDrawables(null, null, mDetailUpDrawable, null);
+//            clDetailAcWireMaterialDiameter.setVisibility(View.VISIBLE);
+//            tvLookDetailAcWireMaterialDiameter.setText(mActivity.getString(R.string.collapse));
+//        }
         scrollBottom();
     }
 
     @Override
     protected void onDestroy() {
+        if (mTipUtils != null) {
+            mTipUtils.destroy();
+        }
+        if (mOperatingUtil != null) {
+            mOperatingUtil.destroy();
+        }
         if (pvCustomOptions != null) {
             pvCustomOptions.dismiss();
         }

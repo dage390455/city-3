@@ -2,30 +2,32 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.ContactAdapter;
-import com.sensoro.smartcity.adapter.MonitorDeployDetailPhotoAdapter;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
-import com.sensoro.smartcity.presenter.DeployRecordDetailActivityPresenter;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.bean.DeployRecordInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.utils.AppUtils;
-import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TouchRecycleView;
-import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.ContactAdapter;
+import com.sensoro.smartcity.adapter.MonitorDeployDetailPhotoAdapter;
+import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
+import com.sensoro.smartcity.presenter.DeployRecordDetailActivityPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,26 +78,20 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     TextView acDeployRecordDetailTvDeployStaff;
     @BindView(R.id.ac_deploy_device_detail_deploy_record_location_line)
     View acDeployDeviceDetailDeployRecordLocationLine;
-    @BindView(R.id.ac_deploy_record_detail_tv_material)
-    TextView acDeployRecordDetailTvMaterial;
-    @BindView(R.id.ac_deploy_device_detail_deploy_record_material_line)
-    View acDeployDeviceDetailDeployRecordMaterialLine;
-    @BindView(R.id.ac_deploy_record_detail_tv_diameter)
-    TextView acDeployRecordDetailTvDiameter;
-    @BindView(R.id.ac_deploy_device_detail_deploy_record_diameter_line)
-    View acDeployDeviceDetailDeployRecordDiameterLine;
-    @BindView(R.id.ac_deploy_record_detail_tv_rated_current)
-    TextView acDeployRecordDetailTvRatedCurrent;
-    @BindView(R.id.ac_deploy_device_detail_deploy_record_rated_current_line)
-    View acDeployDeviceDetailDeployRecordRatedCurrentLine;
-    @BindView(R.id.ac_deploy_record_detail_ll_material)
-    LinearLayout acDeployRecordDetailLlMaterial;
-    @BindView(R.id.ac_deploy_record_detail_ll_diameter)
-    LinearLayout acDeployRecordDetailLlDiameter;
-    @BindView(R.id.ac_deploy_record_detail_ll_rated_current)
-    LinearLayout acDeployRecordDetailLlRatedCurrent;
     @BindView(R.id.tv_ac_deploy_device_record_detail_force_deploy_reson)
     TextView tvAcDeployDeviceRecordDetailForceDeployReason;
+    @BindView(R.id.iv_deploy_record_config)
+    ImageView ivDeployRecordConfig;
+    @BindView(R.id.tv_deploy_record_config_actual)
+    TextView tvDeployRecordConfigActual;
+    @BindView(R.id.tv_deploy_record_config_trans)
+    TextView tvDeployRecordConfigTrans;
+    @BindView(R.id.ll_deploy_record_config)
+    LinearLayout llDeployRecordConfig;
+    @BindView(R.id.rl_deploy_record_config)
+    RelativeLayout rlDeployRecordConfig;
+    @BindView(R.id.line_deploy_record_config)
+    View lineDeployRecordConfig;
     private TagAdapter mTagAdapter;
     private ContactAdapter mContactAdapter;
     private MonitorDeployDetailPhotoAdapter mDeployPicAdapter;
@@ -209,7 +205,7 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     }
 
 
-    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_deploy_record_detail_ll_fixed_point, R.id.include_text_title_tv_subtitle})
+    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_deploy_record_detail_ll_fixed_point, R.id.include_text_title_tv_subtitle, R.id.rl_deploy_record_config})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
@@ -217,6 +213,9 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
                 break;
             case R.id.ac_deploy_record_detail_ll_fixed_point:
                 mPresenter.doFixedPoint();
+                break;
+            case R.id.rl_deploy_record_config:
+                mPresenter.goConfigDetail();
                 break;
             case R.id.include_text_title_tv_subtitle:
                 finishAc();
@@ -310,27 +309,8 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
 
     @Override
     public void setDeployDetailDeploySettingVisible(boolean isVisible) {
-        acDeployRecordDetailLlMaterial.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        acDeployDeviceDetailDeployRecordMaterialLine.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        acDeployRecordDetailLlDiameter.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        acDeployDeviceDetailDeployRecordDiameterLine.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        acDeployRecordDetailLlRatedCurrent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        acDeployDeviceDetailDeployRecordRatedCurrentLine.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-    }
-
-    @Override
-    public void setDeployDeviceDetailDeploySetting(String setting) {
-        acDeployRecordDetailTvRatedCurrent.setText(setting);
-    }
-
-    @Override
-    public void setDeployDeviceRecordMaterial(String material) {
-        acDeployRecordDetailTvMaterial.setText(material);
-    }
-
-    @Override
-    public void setDeployDeviceRecordDiameter(String diameter) {
-        acDeployRecordDetailTvDiameter.setText(diameter);
+        rlDeployRecordConfig.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        lineDeployRecordConfig.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -346,6 +326,19 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     @Override
     public void setDeployRecordDetailDeployStaff(String text) {
         acDeployRecordDetailTvDeployStaff.setText(text);
+    }
+
+    @Override
+    public void setDeployDetailConfigInfo(String actual, String trans) {
+        lineDeployRecordConfig.setVisibility(View.VISIBLE);
+        rlDeployRecordConfig.setVisibility(View.VISIBLE);
+        tvDeployRecordConfigActual.setText(actual);
+        if (TextUtils.isEmpty(trans)) {
+            tvDeployRecordConfigTrans.setVisibility(View.GONE);
+        } else {
+            tvDeployRecordConfigTrans.setVisibility(View.VISIBLE);
+            tvDeployRecordConfigTrans.setText(trans);
+        }
     }
 
 

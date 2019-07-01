@@ -388,7 +388,7 @@ public class DeviceInfo implements Serializable, Comparable {
      * @param deviceInfo
      * @return
      */
-    public DeviceInfo cloneSocketData(DeviceInfo deviceInfo) {
+    public synchronized DeviceInfo cloneSocketData(DeviceInfo deviceInfo) {
         if (deviceInfo != null) {
             this.status = deviceInfo.getStatus();
             Map<String, MalfunctionDataBean> malfunctionData = deviceInfo.getMalfunctionData();

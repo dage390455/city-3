@@ -410,6 +410,9 @@
             android:name=".activity.DeployCameraLiveDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
+        <activity android:name=".activity.ThreePhaseElectConfigActivity" />
+        <activity android:name=".activity.DeployRecordConfigThreePhaseElectActivity" />
+        <activity android:name=".activity.DeployRecordConfigCommonElectActivity" />
 
 
         <provider

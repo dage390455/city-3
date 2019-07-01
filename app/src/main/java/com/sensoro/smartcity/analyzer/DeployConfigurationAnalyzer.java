@@ -30,6 +30,15 @@ public class DeployConfigurationAnalyzer {
                 break;
             case "acrel_fires":
                 //安科瑞三相电，跟默认值一样
+                result[0] = 1;
+                result[1] = 400;
+                break;
+            case "acrel_alpha":
+                //安科瑞alpha
+//                result[0] = 1;
+//                result[1] = 600;
+                result[0] = 1;
+                result[1] = 400;
                 break;
             case "acrel_single":
                 //安科瑞单相电
@@ -47,7 +56,7 @@ public class DeployConfigurationAnalyzer {
 
     }
 
-    public static SensoroDevice configurationData(String deviceType, SensoroDevice sensoroDevice, int actualValue, int enterValue) {
+    public static SensoroDevice configurationData(String deviceType, SensoroDevice sensoroDevice, int actualValue, Integer trans) {
         if (TextUtils.isEmpty(deviceType)) {
             return null;
         }
@@ -58,7 +67,10 @@ public class DeployConfigurationAnalyzer {
                 break;
             case "acrel_fires":
                 //安科瑞三相电
-                configAcrelFires(sensoroDevice.getSensoroSensorTest(), actualValue, enterValue);
+                configAcrelFires(sensoroDevice.getSensoroSensorTest(), actualValue, trans);
+                break;
+            case "acrel_alpha":
+                configAcrelAlpha(sensoroDevice.getSensoroSensorTest(), actualValue, trans);
                 break;
             case "acrel_single":
                 //安科瑞单相电
@@ -75,33 +87,64 @@ public class DeployConfigurationAnalyzer {
         return sensoroDevice;
     }
 
-    private static void configAcrelFires(SensoroSensor sensoroSensor, int actualValue, int enterValue) {
-        //在开始配置的时候，已经校验过，mEnterValue的值是50 到560
-        //真实额定电流值
-        //实际输入的电流值
-        int enterDev;
-        if (enterValue <= 250) {
-            enterDev = 250;
-        } else {
-            enterDev = 400;
+    private static void configAcrelFires(SensoroSensor sensoroSensor, int actualValue, Integer trans) {
+        if (trans != null) {
+            //在开始配置的时候，已经校验过，mEnterValue的值是50 到560
+            //真实额定电流值
+            //实际输入的电流值
+//        int enterDev;
+//        if (enterValue <= 250) {
+//            enterDev = 250;
+//        } else {
+//            enterDev = 400;
+//        }
+            sensoroSensor.acrelFires.leakageTh = 1000;//漏电
+            sensoroSensor.acrelFires.t1Th = 80;//A项线温度
+            sensoroSensor.acrelFires.t2Th = 80;//B项线温度
+            sensoroSensor.acrelFires.t3Th = 80;//C项线温度
+            sensoroSensor.acrelFires.t4Th = 60;//箱体温度
+            sensoroSensor.acrelFires.valHighSet = 1200;
+            sensoroSensor.acrelFires.valLowSet = 800;
+            sensoroSensor.acrelFires.currHighSet = 1000 * actualValue / trans; //修改为输入的值
+            sensoroSensor.acrelFires.passwd = new Random().nextInt(9999) + 1;// 1-9999 4位随机数
+            sensoroSensor.acrelFires.currHighType = 1;//打开保护，不关联脱扣
+            sensoroSensor.acrelFires.valLowType = 0;//关闭保护，不关联脱扣
+            sensoroSensor.acrelFires.valHighType = 1;//打开保护，不关联脱扣
+            sensoroSensor.acrelFires.chEnable = 0x1E;//打开温度，关闭漏电保护
+            sensoroSensor.acrelFires.connectSw = 0;//关联脱扣器全部关闭
+            sensoroSensor.acrelFires.ict = 2000;//漏电互感器变比 2000
+            sensoroSensor.acrelFires.ct = trans / 5;
+            sensoroSensor.acrelFires.cmd = 2; //自检
         }
-        sensoroSensor.acrelFires.leakageTh = 1000;//漏电
-        sensoroSensor.acrelFires.t1Th = 80;//A项线温度
-        sensoroSensor.acrelFires.t2Th = 80;//B项线温度
-        sensoroSensor.acrelFires.t3Th = 80;//C项线温度
-        sensoroSensor.acrelFires.t4Th = 60;//箱体温度
-        sensoroSensor.acrelFires.valHighSet = 1200;
-        sensoroSensor.acrelFires.valLowSet = 800;
-        sensoroSensor.acrelFires.currHighSet = 1000 * actualValue / enterDev; //修改为输入的值
-        sensoroSensor.acrelFires.passwd = new Random().nextInt(9999) + 1;// 1-9999 4位随机数
-        sensoroSensor.acrelFires.currHighType = 1;//打开保护，不关联脱扣
-        sensoroSensor.acrelFires.valLowType = 0;//关闭保护，不关联脱扣
-        sensoroSensor.acrelFires.valHighType = 1;//打开保护，不关联脱扣
-        sensoroSensor.acrelFires.chEnable = 0x1E;//打开温度，关闭漏电保护
-        sensoroSensor.acrelFires.connectSw = 0;//关联脱扣器全部关闭
-        sensoroSensor.acrelFires.ict = 2000;//漏电互感器变比 2000
-        sensoroSensor.acrelFires.ct = enterDev / 5;
-        sensoroSensor.acrelFires.cmd = 2; //自检
+
+    }
+
+    private static void configAcrelAlpha(SensoroSensor sensoroSensor, int actualValue, Integer trans) {
+        if (trans != null) {
+            //在开始配置的时候，已经校验过，mEnterValue的值是50 到560
+            //真实额定电流值
+            //实际输入的电流值
+            sensoroSensor.acrelFires.leakageTh = 1000;//漏电
+            sensoroSensor.acrelFires.t1Th = 80;//A项线温度
+            sensoroSensor.acrelFires.t2Th = 80;//B项线温度
+            sensoroSensor.acrelFires.t3Th = 80;//C项线温度
+            sensoroSensor.acrelFires.t4Th = 60;//箱体温度
+            sensoroSensor.acrelFires.valHighSet = 1200;
+            sensoroSensor.acrelFires.valLowSet = 800;
+            sensoroSensor.acrelFires.currHighSet = 1000 * actualValue / trans; //修改为输入的值
+            sensoroSensor.acrelFires.passwd = new Random().nextInt(9999) + 1;// 1-9999 4位随机数
+            sensoroSensor.acrelFires.currHighType = 1;//打开保护，不关联脱扣
+            sensoroSensor.acrelFires.valLowType = 0;//关闭保护，不关联脱扣
+            sensoroSensor.acrelFires.valHighType = 1;//打开保护，不关联脱扣
+            sensoroSensor.acrelFires.chEnable = 0x1E;//打开温度，关闭漏电保护
+            sensoroSensor.acrelFires.connectSw = 0;//关联脱扣器全部关闭
+            sensoroSensor.acrelFires.ict = 2000;//漏电互感器变比 2000
+            //TODO in、buzz
+            sensoroSensor.acrelFires.in = trans;
+            sensoroSensor.acrelFires.buzzer = 0x0200;
+            sensoroSensor.acrelFires.cmd = 2; //自检
+        }
+
     }
 
     private static void configFhsjElectFires(SensoroSensor sensoroSensor, int value) {
