@@ -3,9 +3,6 @@ package com.sensoro.smartcity.fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -23,27 +20,33 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.MainWarnFragRcContentAdapter;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseFragment;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
+import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.common.widgets.SpacesItemDecoration;
+import com.sensoro.common.widgets.TipOperationDialogUtils;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.MainWarnFragRcContentAdapter;
 import com.sensoro.smartcity.imainviews.IWarnFragmentView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.presenter.WarnFragmentPresenter;
-import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.common.widgets.ProgressUtils;
-import com.sensoro.common.callback.RecycleViewItemClickListener;
-import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
-import com.sensoro.common.widgets.SpacesItemDecoration;
-import com.sensoro.common.widgets.TipOperationDialogUtils;
-import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import java.util.List;
@@ -54,7 +57,7 @@ import butterknife.OnClick;
 
 import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.common.constant.Constants.DIRECTION_UP;
-
+@Route(path = ARouterConstants.FRAGMENT_FIRE_WARN_FRAGMENT)
 public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPresenter> implements
         IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.fg_main_top_search_title_root)
