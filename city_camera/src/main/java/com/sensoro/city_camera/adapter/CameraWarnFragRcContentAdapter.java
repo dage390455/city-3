@@ -15,6 +15,7 @@ import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
+import com.sensoro.city_camera.constants.SecurityConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
 import com.sensoro.common.utils.DateUtil;
@@ -83,7 +84,7 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
             //根据预警类型设置UI
             switch (warnType) {
                 //1-重点人员/2-外来人员/3-人员入侵
-                case 1:
+                case SecurityConstants.SECURITY_TYPE_FOCUS:
                     holder.tvWarnType.setText(R.string.focus_type);
                     holder.tvWarnType.setBackgroundResource(R.drawable.security_type_focus_bg);
                     holder.layoutSinglePhoto.setVisibility(View.GONE);
@@ -94,7 +95,7 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     holder.tvRightMatchrate.setText(focusMatchrate);
                     holder.viewMulUnvalidCover.setVisibility(!isShowCover ? View.VISIBLE : View.GONE);
                     break;
-                case 2:
+                case SecurityConstants.SECURITY_TYPE_FOREIGN:
                     holder.tvWarnType.setText(R.string.external_type);
                     holder.tvWarnType.setBackgroundResource(R.drawable.security_type_foreign_bg);
                     holder.layoutSinglePhoto.setVisibility(View.VISIBLE);
@@ -103,7 +104,7 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     Glide.with(mContext).load(capturePhotoUrl).placeholder(R.drawable.ic_port_default_white).into(holder.ivSiglePhoto);
                     holder.viewSingleUnvalidCover.setVisibility(!isShowCover ? View.VISIBLE : View.GONE);
                     break;
-                case 3:
+                case SecurityConstants.SECURITY_TYPE_INVADE:
                     holder.tvWarnType.setText(R.string.invade_type);
                     holder.tvWarnType.setBackgroundResource(R.drawable.security_type_invade_bg);
                     holder.layoutSinglePhoto.setVisibility(View.VISIBLE);
