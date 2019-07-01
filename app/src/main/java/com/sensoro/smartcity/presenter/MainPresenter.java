@@ -16,6 +16,8 @@ import androidx.fragment.app.Fragment;
 import com.igexin.sdk.PushManager;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.base.ContextUtils;
+import com.sensoro.common.constant.Constants;
+import com.sensoro.common.fragment.FireSecurityWarnFragment;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.manger.ActivityTaskManager;
@@ -34,17 +36,15 @@ import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
 import com.sensoro.common.server.response.DevicesMergeTypesRsp;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.fragment.HomeFragment;
 import com.sensoro.smartcity.fragment.MalfunctionFragment;
 import com.sensoro.smartcity.fragment.ManagerFragment;
-import com.sensoro.smartcity.fragment.WarnFragment;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
@@ -83,7 +83,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private final MainPresenter.TaskRunnable mRunnable = new MainPresenter.TaskRunnable();
     private final NetWorkTaskRunnable mNetWorkTaskRunnable = new NetWorkTaskRunnable();
     //
-    private WarnFragment warnFragment;
+    private FireSecurityWarnFragment warnFragment;
     private HomeFragment homeFragment;
     private ManagerFragment managerFragment;
     private MalfunctionFragment malfunctionFragment;
@@ -276,7 +276,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private void initViewPager() {
         //
         homeFragment = new HomeFragment();
-        warnFragment = new WarnFragment();
+        warnFragment = new FireSecurityWarnFragment();
         managerFragment = new ManagerFragment();
         malfunctionFragment = new MalfunctionFragment();
         if (mFragmentList.size() > 0) {

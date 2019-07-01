@@ -723,6 +723,7 @@ public class RetrofitServiceHelper {
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
         return retrofitService.doDevicePointDeploy(sn, body);
     }
+
     public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, List<String> tags, String
             name, String contact, String content, String wxPhone, List<String> imgUrls, DeployControlSettingData deployControlSettingData, String forceReason, Integer status, String signalQuality) {
         JSONObject jsonObject = new JSONObject();
@@ -933,6 +934,77 @@ public class RetrofitServiceHelper {
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
         return retrofitService.doInspectionChangeDeviceDeploy(oldSn, body);
     }
+
+    public Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(String oldSn, String newSn, String taskId, Integer reason, double lon, double lat, List<String> tags, String
+            name, List<DeployContactModel> contacts, List<String> imgUrls, String wxPhone, String forceReason, Integer status, String signalQuality) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(newSn)) {
+                jsonObject.put("newSn", newSn);
+            }
+            if (!TextUtils.isEmpty(taskId)) {
+                jsonObject.put("taskId", taskId);
+            }
+            if (reason != null) {
+                jsonObject.put("reason", reason);
+            }
+            jsonObject.put("lon", lon);
+            jsonObject.put("lat", lat);
+            JSONArray jsonArray = new JSONArray();
+            if (tags != null && tags.size() > 0) {
+                for (String temp : tags) {
+                    jsonArray.put(temp);
+                }
+            }
+            jsonObject.put("tags", jsonArray);
+            if (!TextUtils.isEmpty(name)) {
+                jsonObject.put("name", name);
+            }
+
+
+            if (contacts != null && contacts.size() > 0) {
+                JSONArray jsonArrayContact = new JSONArray();
+                for (DeployContactModel contactModel : contacts) {
+                    JSONObject object = new JSONObject();
+                    if (!TextUtils.isEmpty(contactModel.name)) {
+                        object.put("contact", contactModel.name);
+                    }
+                    if (!TextUtils.isEmpty(contactModel.phone)) {
+                        object.put("content", contactModel.phone);
+                    }
+                    object.put("types", "phone");
+                    jsonArrayContact.put(object);
+                }
+                jsonObject.put("notifications", jsonArrayContact);
+            }
+
+
+            if (imgUrls != null && imgUrls.size() > 0) {
+                JSONArray jsonArrayImg = new JSONArray();
+                for (String url : imgUrls) {
+                    jsonArrayImg.put(url);
+                }
+                jsonObject.put("imgUrls", jsonArrayImg);
+            }
+            if (!TextUtils.isEmpty(wxPhone)) {
+                jsonObject.put("wxPhone", wxPhone);
+            }
+            if (!TextUtils.isEmpty(forceReason)) {
+                jsonObject.put("forceReason", forceReason);
+                if (status != null) {
+                    jsonObject.put("status", status);
+                }
+                if (!TextUtils.isEmpty(signalQuality)) {
+                    jsonObject.put("signalQuality", signalQuality);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.doInspectionChangeDeviceDeploy(oldSn, body);
+    }
+
 
     /**
      * 基站部署
@@ -2476,6 +2548,7 @@ public class RetrofitServiceHelper {
 
     /**
      * 获取预警录像信息
+     *
      * @param id
      * @return
      */
