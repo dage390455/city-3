@@ -57,6 +57,8 @@ public class UserPermissionFactory {
         eventLoginData.hasNameplateList = getHasNameplateList(grants);
         eventLoginData.hasNameplateDeploy = getHasNameplateDeploy(grants);
         eventLoginData.hasDeviceCameraDeploy = getHasDeviceCameraDeploy(grants);
+        eventLoginData.hasMonitorTaskList = getHasMonitorTaskList(grants);
+        eventLoginData.hasMonitorTaskConfirm = getHasMonitorTaskConfirm(grants);
         String controllerAid = userInfo.getControllerAid();
         //通过controllerAid来判断是否可以返回主账户
         eventLoginData.hasControllerAid = !TextUtils.isEmpty(controllerAid);
@@ -523,5 +525,38 @@ public class UserPermissionFactory {
         }
         return false;
     }
+
+    /**
+     * 检查是否有安防布控查看权限
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasMonitorTaskList(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsMonitorTask = grants.getMonitorTask();
+            if (grantsMonitorTask != null) {
+                return grantsMonitorTask.contains("list");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 检查是否有安防布控预警确认权限
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasMonitorTaskConfirm(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsMonitorTask = grants.getMonitorTask();
+            if (grantsMonitorTask != null) {
+                return grantsMonitorTask.contains("confirm");
+            }
+        }
+        return false;
+    }
+
 
 }
