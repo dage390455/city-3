@@ -47,7 +47,7 @@ public class FilterPopUtils {
         view.findViewById(R.id.pop_inspection_task_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onDismissPop();
+                listener.onBottomClickDismissPop();
                 mRl.startAnimation(dismissTranslateAnimation);
             }
         });
@@ -69,6 +69,13 @@ public class FilterPopUtils {
         mPopupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_B2000000)));
         mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
+        mPopupWindow.setOutsideTouchable(true);
+        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                listener.onOutsideDismissPop();
+            }
+        });
 //        mPopupWindow.setFocusable(true);
         initAnimation();
 
@@ -182,6 +189,14 @@ public class FilterPopUtils {
     public interface SelectFilterTypeItemClickListener {
         void onSelectFilterTypeItemClick(View view, int position);
 
-        void onDismissPop();
+        /**
+         * 点击底部消失处理
+         */
+        void onBottomClickDismissPop();
+
+        /**
+         * popwindow 点击外部消失处理
+         */
+        void onOutsideDismissPop();
     }
 }
