@@ -71,7 +71,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
         implements ICameraWarnListFragmentView, CameraWarnFragRcContentAdapter.CameraWarnConfirmStatusClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
 
     @BindView(R2.id.fg_camera_warns_top_search_title_root)
-    LinearLayout fgMainWarnTitleRoot;
+    RelativeLayout fgMainWarnTitleRoot;
     @BindView(R2.id.fg_camera_warns_top_search_et_search)
     EditText edFilterContent;
     @BindView(R2.id.fg_camera_warns_top_search_imv_clear)
@@ -196,6 +196,12 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
         mCapturetimeFilterPopUtils.setSelectDeviceTypeItemClickListener(new FilterPopUtils.SelectFilterTypeItemClickListener() {
             @Override
             public void onSelectFilterTypeItemClick(View view, int position) {
+                //隐藏搜索历史弹窗 显示取消按钮
+                if (llSearchHistory.getVisibility() == View.VISIBLE) {
+                    llSearchHistory.setVisibility(View.GONE);
+                    refreshLayout.setVisibility(View.VISIBLE);
+                    tvFilterCancal.setVisibility(View.VISIBLE);
+                }
                 //选择类型的pop点击事件
                 if (position == 4) {//自定义时间
                     mPresenter.doCalendar(fgMainWarnTitleRoot);
@@ -207,14 +213,28 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             }
 
             @Override
-            public void onDismissPop() {
+            public void onBottomClickDismissPop() {
                 layoutCaptureTime.performClick();
+            }
+
+            @Override
+            public void onOutsideDismissPop() {
+                //隐藏 时间选择弹窗
+                ivFilterCapturetime.setImageResource(R.drawable.ic_arrow_down);
+                mPresenter.setFilterCapturetime(-1);
+
             }
         });
         //处理状态筛选
         mProcessStatusFilterPopUtils.setSelectDeviceTypeItemClickListener(new FilterPopUtils.SelectFilterTypeItemClickListener() {
             @Override
             public void onSelectFilterTypeItemClick(View view, int position) {
+                //隐藏搜索历史弹窗 显示取消按钮
+                if (llSearchHistory.getVisibility() == View.VISIBLE) {
+                    llSearchHistory.setVisibility(View.GONE);
+                    refreshLayout.setVisibility(View.VISIBLE);
+                    tvFilterCancal.setVisibility(View.VISIBLE);
+                }
                 //处理状态类型
                 mPresenter.setFilterProcessStatus(position);
                 setWarnFilterContent(WARN_FILTER_STATUS);
@@ -222,8 +242,16 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             }
 
             @Override
-            public void onDismissPop() {
+            public void onBottomClickDismissPop() {
                 layoutProcessStatus.performClick();
+            }
+
+            @Override
+            public void onOutsideDismissPop() {
+                //隐藏 状态选择弹窗
+                ivFilterProcessStatus.setImageResource(R.drawable.ic_arrow_down);
+                mPresenter.setFilterProcessStatus(-1);
+
             }
         });
 

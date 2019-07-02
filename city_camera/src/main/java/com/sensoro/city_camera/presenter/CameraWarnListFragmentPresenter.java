@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.sensoro.city_camera.IMainViews.ICameraWarnListFragmentView;
 import com.sensoro.city_camera.R;
@@ -132,8 +133,14 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
 
     }
 
+
     public void initCapturetimeDialog() {
 
+        initCaptureTimeData();
+        getView().updateFilterCapturetimeList(mCapturetimeModelList);
+    }
+
+    private void initCaptureTimeData(){
         mCapturetimeModelList = new ArrayList<>();
         mCurrentCapturetimeModel = new FilterModel(mContext.getString(R.string.Unlimited), FILTER_TIME_ALL, true, true);
         mCapturetimeModelList.add(mCurrentCapturetimeModel);
@@ -141,9 +148,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         mCapturetimeModelList.add(new FilterModel(mContext.getString(R.string.three_days), FILTER_TIME_3DAY, false, false));
         mCapturetimeModelList.add(new FilterModel(mContext.getString(R.string.seven_days), FILTER_TIME_7DAY, false, false));
         mCapturetimeModelList.add(new FilterModel(mContext.getString(R.string.customize_time), 0L, false, false));
-        getView().updateFilterCapturetimeList(mCapturetimeModelList);
     }
-
     public void initProcessStatusDialog() {
 
         mProcessStatusModelList = new ArrayList<>();
@@ -432,15 +437,18 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
      */
     @Override
     public void onCalendarPopupCallback(CalendarDateModel calendarDateModel) {
+        mCurrentCapturetimeModel = mCapturetimeModelList.get(mCapturetimeModelList.size()-1);
         startTime = DateUtil.strToDate(calendarDateModel.startDate).getTime();
         endTime = DateUtil.strToDate(calendarDateModel.endDate).getTime();
         /*dateSearchText = DateUtil.getCalendarYearMothDayFormatDate(startTime) + " ~ " + DateUtil
                 .getCalendarYearMothDayFormatDate(endTime);*/
         dateSearchText = DateUtil.getMonthDate(startTime) + " ~ " + DateUtil
                 .getMonthDate(endTime);
+        int elmentPos = mCapturetimeModelList.indexOf(mCurrentCapturetimeModel);
         //更新自定义时间文字
         mCurrentCapturetimeModel.statusTitle = dateSearchText;
-        mCapturetimeModelList.add(mCapturetimeModelList.size() - 1, mCurrentCapturetimeModel);
+        //更新抓拍时间列表数据
+        mCapturetimeModelList.get(elmentPos).statusTitle = dateSearchText;
         getView().updateFilterCapturetimeList(mCapturetimeModelList);
 
         getView().setFilterCapturetimeView(mCurrentCapturetimeModel);
@@ -530,7 +538,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
      *
      * @param fgMainWarnTitleRoot
      */
-    public void doCalendar(LinearLayout fgMainWarnTitleRoot) {
+    public void doCalendar(RelativeLayout fgMainWarnTitleRoot) {
         long temp_startTime = -1;
         long temp_endTime = -1;
         if (startTime != 0 && endTime != 0) {
