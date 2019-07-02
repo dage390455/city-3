@@ -434,6 +434,7 @@
                     android:layout_height="@dimen/view_divider_height"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
+                    android:visibility="gone"
                     android:background="@color/c_dfdfdf" />
 
                 <LinearLayout
@@ -441,7 +442,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="0dp"
@@ -460,6 +461,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
+                        android:gravity="end"
                         android:layout_marginStart="8dp"
                         android:text="@string/required"
                         android:lineSpacingExtra="4dp"
@@ -484,6 +486,7 @@
                     android:layout_height="@dimen/view_divider_height"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
+                    android:visibility="gone"
                     android:background="@color/c_dfdfdf" />
             </LinearLayout>
 
