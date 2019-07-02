@@ -46,7 +46,7 @@ public class PhotoPreviewPresenter extends BasePresenter<IPhotoPreviewView> {
 
         getView().updatePhotoInfo(securityAlarmDetailInfo.getAlarmType(),
                 securityAlarmDetailInfo.getTaskName(),
-                securityAlarmDetailInfo.getCamera().getName() + "  " + DateUtil.getStrTimeToday(mActivity, Long.parseLong(securityAlarmDetailInfo.getAlarmTime()), 0));
+                securityAlarmDetailInfo.getCamera().getName() + "  " + DateUtil.getStrTimeToday(mActivity, securityAlarmDetailInfo.getAlarmTime(), 0));
     }
 
 

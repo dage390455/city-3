@@ -237,7 +237,7 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
     }
 
     public void showDownloadDialog() {
-        if (mSecurityRecord != null) {
+        if (mSecurityRecord != null && isAttachedView()) {
             getView().showDownloadDialog(mSecurityRecord.videoSize);
         }
     }
@@ -245,6 +245,9 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
     public void doDownload() {
         if (mSecurityRecord == null) {
             return;
+        }
+        if (isAttachedView()){
+            getView().setDownloadStartState(mSecurityRecord.videoSize);
         }
         String fileName = System.currentTimeMillis() + ".mp4";
         String[] strings = mSecurityRecord.mediaUrl.split("\\?");

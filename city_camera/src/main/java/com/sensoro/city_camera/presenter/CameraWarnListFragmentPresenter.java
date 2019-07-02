@@ -260,7 +260,10 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
     public void clickItem(SecurityAlarmInfo securityAlarmInfo) {
         Intent intent = new Intent(mContext, SecurityWarnDetailActivity.class);
         intent.putExtra("id", securityAlarmInfo.getId());
-        getView().startACForResult(intent, REQUEST_CODE_DETAIL);
+        intent.putExtra("SecurityAlarmInfo", securityAlarmInfo);
+        if(isAttachedView()){
+            getView().startACForResult(intent, REQUEST_CODE_DETAIL);
+        }
 
     }
 

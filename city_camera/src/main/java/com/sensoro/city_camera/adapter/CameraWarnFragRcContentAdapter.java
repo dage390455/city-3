@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.constants.SecurityConstants;
@@ -91,9 +92,19 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     holder.layoutSinglePhoto.setVisibility(View.GONE);
                     holder.layoutMultiPhoto.setVisibility(View.VISIBLE);
                     //加载布控 抓拍 照片
-                    Glide.with(mContext).load(focusPhotoUrl).placeholder(R.drawable.ic_port_default_white).centerCrop()
+                    Glide.with(mContext)
+                            .load(focusPhotoUrl)
+                            .skipMemoryCache(false)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .placeholder(R.drawable.ic_port_default_white)
+                            .centerCrop()
                             .dontAnimate().into(holder.ivLeftPhoto);
-                    Glide.with(mContext).load(capturePhotoUrl).placeholder(R.drawable.ic_port_default_white).centerCrop()
+                    Glide.with(mContext)
+                            .load(capturePhotoUrl)
+                            .skipMemoryCache(false)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .placeholder(R.drawable.ic_port_default_white)
+                            .centerCrop()
                             .dontAnimate().into(holder.ivRightPhoto);
                     holder.tvRightMatchRate.setText(focusMatchRate);
                     holder.ivLeftPhoto.setAlpha(isShowInValidCover ?0.5f:1f);
@@ -105,7 +116,12 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     holder.layoutSinglePhoto.setVisibility(View.VISIBLE);
                     holder.layoutMultiPhoto.setVisibility(View.GONE);
                     //加载抓拍图片
-                    Glide.with(mContext).load(capturePhotoUrl).placeholder(R.drawable.ic_port_default_white).centerCrop()
+                    Glide.with(mContext)
+                            .load(capturePhotoUrl)
+                            .skipMemoryCache(false)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .placeholder(R.drawable.ic_port_default_white)
+                            .centerCrop()
                             .dontAnimate().into(holder.ivSinglePhoto);
                     holder.ivSinglePhoto.setAlpha(isShowInValidCover ?0.5f:1f);
                     break;
@@ -117,6 +133,8 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     //加载抓拍照片
                     Glide.with(mContext)
                             .load(capturePhotoUrl)
+                            .skipMemoryCache(false)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .centerCrop()
                             .dontAnimate()
                             .placeholder(R.drawable.ic_port_default_white)

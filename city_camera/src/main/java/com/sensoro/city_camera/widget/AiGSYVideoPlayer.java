@@ -22,9 +22,6 @@ public class AiGSYVideoPlayer extends CityStandardGSYVideoPlayer {
     private ImageView mCaptureIv;
     private ImageView mDownloadIv;
 
-    private CaptureClickListener mCaptureClickListener;
-    private DownloadClickListener mDownloadClickListener;
-
     public AiGSYVideoPlayer(Context context, Boolean fullFlag) {
         super(context, fullFlag);
     }
@@ -45,8 +42,8 @@ public class AiGSYVideoPlayer extends CityStandardGSYVideoPlayer {
         mCaptureIv = findViewById(R.id.capture_iv);
         mDownloadIv = findViewById(R.id.download_iv);
 
-        mCaptureIv.setOnClickListener(v -> capture());
-        mDownloadIv.setOnClickListener(v -> download());
+        mCaptureIv.setOnClickListener(v -> AiGSYVideoPlayerUtil.getInstance().capture());
+        mDownloadIv.setOnClickListener(v -> AiGSYVideoPlayerUtil.getInstance().download());
     }
 
     @Override
@@ -74,39 +71,9 @@ public class AiGSYVideoPlayer extends CityStandardGSYVideoPlayer {
         saveFrame(file, aiVideoCaptureListener::result);
     }
 
-    private void capture() {
-        if (mCaptureClickListener != null) {
-            mCaptureClickListener.onCaptureClick();
-        }
-    }
 
-    private void download() {
-        if (mDownloadClickListener != null) {
-            mDownloadClickListener.onDownloadClick();
-        }
-    }
 
-    public interface CaptureClickListener {
-        /**
-         * 点击截图
-         */
-        void onCaptureClick();
-    }
 
-    public interface DownloadClickListener {
-        /**
-         * 点击下载录像
-         */
-        void onDownloadClick();
-    }
-
-    public void setCaptureClickListener(CaptureClickListener captureClickListener) {
-        mCaptureClickListener = captureClickListener;
-    }
-
-    public void setDownloadClickListener(DownloadClickListener downloadClickListener) {
-        mDownloadClickListener = downloadClickListener;
-    }
 
     public interface AiVideoCaptureListener extends GSYVideoShotSaveListener{
         @Override
