@@ -127,7 +127,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
         }
         List<SecurityContactsInfo> contacts = mSecurityAlarmDetailInfo.getContacts();
 
-        if (contacts.isEmpty()) {
+        if (contacts == null || contacts.isEmpty()) {
             if (isAttachedView()) {
                 getView().toastShort(mActivity.getString(R.string.no_find_contact_phone_number));
             }
@@ -137,6 +137,9 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
     }
 
     public void doNavigation() {
+        if(mSecurityAlarmDetailInfo == null){
+            return;
+        }
         SecurityCameraInfo camera = mSecurityAlarmDetailInfo.getCamera();
         if (camera != null) {
             if (!TextUtils.isEmpty(camera.getLatitude()) && !TextUtils.isEmpty(camera.getLongitude())) {
@@ -245,9 +248,11 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
     }
 
     public void doPreviewImages(int position) {
-        Intent intent = new Intent(mActivity, PhotoPreviewActivity.class);
-        intent.putExtra(PhotoPreviewPresenter.EXTRA_KEY_POSITION, position);
-        intent.putExtra(PhotoPreviewPresenter.EXTRA_KEY_SECURITY_INFO, mSecurityAlarmDetailInfo);
-        getView().startAC(intent);
+        if(mSecurityAlarmDetailInfo != null){
+            Intent intent = new Intent(mActivity, PhotoPreviewActivity.class);
+            intent.putExtra(PhotoPreviewPresenter.EXTRA_KEY_POSITION, position);
+            intent.putExtra(PhotoPreviewPresenter.EXTRA_KEY_SECURITY_INFO, mSecurityAlarmDetailInfo);
+            getView().startAC(intent);
+        }
     }
 }
