@@ -102,7 +102,7 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
             List<SecurityContactsInfo> constantsList = (List<SecurityContactsInfo>) mSecurityCameraInfo.getContact();
             String contactStr;
 
-            if (constantsList!= null && constantsList.size() > 0) {
+            if (constantsList != null && constantsList.size() > 0) {
                 SecurityContactsInfo contactsInfo = constantsList.get(0);
                 contactStr = TextUtils.isEmpty(contactsInfo.getName()) ? contactsInfo.getMobilePhone()
                         : contactsInfo.getName() + "|" + contactsInfo.getMobilePhone();
@@ -122,7 +122,7 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
             mCameraNameTv.setText(mSecurityCameraInfo.getName());
             mCameraTypeTv.setText(mSecurityCameraInfo.getType());
             mCameraStatusTv.setText(cameraStaus == SecurityConstants.SECURITY_DEVICE_ONLINE ? R.string.offline : R.string.online);
-            mCameraStatusTv.setTextColor(cameraStaus == 0 ? getResources().getColor(R.color.c_1dbb99)
+            mCameraStatusTv.setTextColor(cameraStaus == SecurityConstants.SECURITY_DEVICE_ONLINE ? getResources().getColor(R.color.c_1dbb99)
                     : getResources().getColor(R.color.c_f35a58));
             mCameraSNTv.setText(mSecurityCameraInfo.getSn());
             mCameraBrandTv.setText(mSecurityCameraInfo.getBrand());
