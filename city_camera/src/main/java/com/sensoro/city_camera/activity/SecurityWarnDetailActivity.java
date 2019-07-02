@@ -202,14 +202,18 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     @Override
     public void updateSecurityConfirmResult(SecurityAlarmDetailInfo securityAlarmDetailInfo) {
         if (mCover != null) {
-            mCover.setVisibility(securityAlarmDetailInfo.getIsEffective() == SecurityConstants.SECURITY_VALID || securityAlarmDetailInfo.getIsEffective() == SecurityConstants.SECURITY_INVALID ? View.VISIBLE : View.GONE);
+            mCover.setVisibility(securityAlarmDetailInfo.getIsEffective() == SecurityConstants.SECURITY_VALID
+                    || securityAlarmDetailInfo.getIsEffective() == SecurityConstants.SECURITY_INVALID
+                    ? View.VISIBLE : View.GONE);
         }
-        if (securityAlarmDetailInfo.getIsEffective() == SecurityConstants.SECURITY_VALID) {
+        if (securityAlarmDetailInfo.getIsHandle() != SecurityConstants.SECURITY_IS_NOT_HANDLE
+                && securityAlarmDetailInfo.getIsEffective() == SecurityConstants.SECURITY_VALID) {
             mConfirmResultTv.setText(R.string.word_valid);
             mConfirmResultTv.setBackgroundResource(R.drawable.shape_camera_warn_valid);
             mSecurityWarnConfirmTv.setVisibility(View.GONE);
             mCover.setVisibility(View.VISIBLE);
-        } else if (securityAlarmDetailInfo.getIsEffective() == SecurityConstants.SECURITY_INVALID) {
+        } else if (securityAlarmDetailInfo.getIsHandle() != SecurityConstants.SECURITY_IS_NOT_HANDLE
+                && securityAlarmDetailInfo.getIsEffective() == SecurityConstants.SECURITY_INVALID) {
             mConfirmResultTv.setText(R.string.word_unvalid);
             mConfirmResultTv.setBackgroundResource(R.drawable.shape_camera_warn_unvalid);
             mSecurityWarnConfirmTv.setVisibility(View.GONE);
@@ -243,7 +247,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
 
     @Override
     public void showCameraDetailsDialog(SecurityAlarmDetailInfo securityAlarmDetailInfo) {
-        if(null == securityAlarmDetailInfo || null == securityAlarmDetailInfo.getCamera()){
+        if (null == securityAlarmDetailInfo || null == securityAlarmDetailInfo.getCamera()) {
             return;
         }
         SecurityCameraDetailsDialog securityCameraDetailsDialog = new SecurityCameraDetailsDialog();
@@ -259,13 +263,13 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_VERSION, securityAlarmDetailInfo.getCamera().getVersion());
 
         List<SecurityContactsInfo> contactList =
-                (securityAlarmDetailInfo.getCamera()!= null && securityAlarmDetailInfo.getCamera().getContact()!= null
-                && securityAlarmDetailInfo.getCamera().getContact().size()>0)
-                ?securityAlarmDetailInfo.getCamera().getContact():null;
+                (securityAlarmDetailInfo.getCamera() != null && securityAlarmDetailInfo.getCamera().getContact() != null
+                        && securityAlarmDetailInfo.getCamera().getContact().size() > 0)
+                        ? securityAlarmDetailInfo.getCamera().getContact() : null;
         bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_CONTACT,
-                null != contactList?(contactList.get(0).getMobilePhone()+" | "+contactList.get(0).getMobilePhone()):"");
-        bundle.putInt(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_CONTACT_COUNT,contactList!=null?contactList.size():0);
-        bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_ADDRESS,securityAlarmDetailInfo.getCamera().getLocation());
+                null != contactList ? (contactList.get(0).getMobilePhone() + " | " + contactList.get(0).getMobilePhone()) : "");
+        bundle.putInt(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_CONTACT_COUNT, contactList != null ? contactList.size() : 0);
+        bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_ADDRESS, securityAlarmDetailInfo.getCamera().getLocation());
 
         securityCameraDetailsDialog.setArguments(bundle);
         securityCameraDetailsDialog.show(getSupportFragmentManager());
@@ -273,12 +277,12 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
 
     @Override
     public void showDeployDetail(SecurityAlarmDetailInfo securityAlarmDetailInfo) {
-        if(null == securityAlarmDetailInfo || null ==securityAlarmDetailInfo.getObjectMainJson()){
+        if (null == securityAlarmDetailInfo || null == securityAlarmDetailInfo.getObjectMainJson()) {
             return;
         }
         SecurityControlPersonDetailsDialog controlPersonDetailsDialog = new SecurityControlPersonDetailsDialog();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(SecurityControlPersonDetailsDialog.EXTRA_KEY_DEPLOY_INFO,securityAlarmDetailInfo.getObjectMainJson());
+        bundle.putSerializable(SecurityControlPersonDetailsDialog.EXTRA_KEY_DEPLOY_INFO, securityAlarmDetailInfo.getObjectMainJson());
         controlPersonDetailsDialog.setArguments(bundle);
         controlPersonDetailsDialog.show(getSupportFragmentManager());
 

@@ -25,5 +25,9 @@ public interface SecurityConstants {
      * 入侵
      */
     int SECURITY_TYPE_INVADE = 3;
+    /**
+     * 预警未处理
+     */
+    int SECURITY_IS_NOT_HANDLE = 0;
 
 }

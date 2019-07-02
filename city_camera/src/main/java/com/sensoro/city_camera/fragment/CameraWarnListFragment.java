@@ -196,9 +196,11 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
         mCapturetimeFilterPopUtils.setSelectDeviceTypeItemClickListener(new FilterPopUtils.SelectFilterTypeItemClickListener() {
             @Override
             public void onSelectFilterTypeItemClick(View view, int position) {
-                //隐藏搜索历史弹窗
+                //隐藏搜索历史弹窗 显示取消按钮
                 if(llSearchHistory.getVisibility() == View.VISIBLE ){
-                    setSearchHistoryVisible(false);
+                    llSearchHistory.setVisibility( View.GONE);
+                    refreshLayout.setVisibility( View.VISIBLE);
+                    tvFilterCancal.setVisibility(View.VISIBLE);
                 }
                 //选择类型的pop点击事件
                 if (position == 4) {//自定义时间
@@ -219,9 +221,11 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
         mProcessStatusFilterPopUtils.setSelectDeviceTypeItemClickListener(new FilterPopUtils.SelectFilterTypeItemClickListener() {
             @Override
             public void onSelectFilterTypeItemClick(View view, int position) {
-                //隐藏搜索历史弹窗
+                //隐藏搜索历史弹窗 显示取消按钮
                 if(llSearchHistory.getVisibility() == View.VISIBLE ){
-                    setSearchHistoryVisible(false);
+                    llSearchHistory.setVisibility( View.GONE);
+                    refreshLayout.setVisibility( View.VISIBLE);
+                    tvFilterCancal.setVisibility(View.VISIBLE);
                 }
                 //处理状态类型
                 mPresenter.setFilterProcessStatus(position);
