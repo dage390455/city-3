@@ -36,14 +36,10 @@ public class PhotoPreviewPresenter extends BasePresenter<IPhotoPreviewView> {
         Intent intent = mActivity.getIntent();
         SecurityAlarmDetailInfo securityAlarmDetailInfo = (SecurityAlarmDetailInfo) intent.getSerializableExtra(EXTRA_KEY_SECURITY_INFO);
 
-        ArrayList<String> imageUrls = new ArrayList<>(2);
-        String imageUrl = securityAlarmDetailInfo.getImageUrl();
+        ArrayList<String> imageUrls = new ArrayList<>(1);
+        String imageUrl = securityAlarmDetailInfo.getSceneUrl();
         if (!TextUtils.isEmpty(imageUrl)) {
             imageUrls.add(imageUrl);
-        }
-        String faceUrl = securityAlarmDetailInfo.getFaceUrl();
-        if (!TextUtils.isEmpty(faceUrl)) {
-            imageUrls.add(faceUrl);
         }
 
         getView().updatePhotoList(imageUrls, intent.getIntExtra(EXTRA_KEY_POSITION, 0));

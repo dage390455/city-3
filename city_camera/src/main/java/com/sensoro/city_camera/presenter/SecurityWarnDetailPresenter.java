@@ -26,8 +26,6 @@ import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,9 +119,18 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 
     public void doNavigation() {
         SecurityCameraInfo camera = mSecurityAlarmDetailInfo.getCamera();
-        if (camera != null) {
-            LatLng destPosition = new LatLng(Double.parseDouble(camera.getLatitude()), Double.parseDouble(camera.getLongitude()));
-            MapUtil.locateAndNavigation(mActivity, destPosition);
+        if (camera!= null){
+            if(!TextUtils.isEmpty(camera.getLatitude()) && !TextUtils.isEmpty(camera.getLongitude())){
+                LatLng destPosition = null;
+                try {
+                    destPosition = new LatLng(Double.parseDouble(camera.getLatitude()), Double.parseDouble(camera.getLongitude()));
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+                if (destPosition != null){
+                    MapUtil.locateAndNavigation(mActivity, destPosition);
+                }
+            }
         } else {
             if (isAttachedView()) {
                 getView().toastShort(mActivity.getString(R.string.location_not_obtained));
@@ -192,15 +199,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 
     @Override
     public void onNavi() {
-        SecurityCameraInfo camera = mSecurityAlarmDetailInfo.getCamera();
-        if (camera != null) {
-            LatLng destPosition = new LatLng(Double.parseDouble(camera.getLatitude()), Double.parseDouble(camera.getLongitude()));
-            MapUtil.locateAndNavigation(mActivity, destPosition);
-        } else {
-            if (isAttachedView()) {
-                getView().toastShort(mActivity.getString(R.string.location_not_obtained));
-            }
-        }
+        doNavigation();
     }
 
     @Override

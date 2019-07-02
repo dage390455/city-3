@@ -234,7 +234,9 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
     }
 
     public void showDownloadDialog() {
-        getView().showDownloadDialog(mSecurityRecord.videoSize);
+        if (mSecurityRecord != null) {
+            getView().showDownloadDialog(mSecurityRecord.videoSize);
+        }
     }
 
     public void doDownload() {

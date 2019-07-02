@@ -27,8 +27,8 @@
     <string name="security_warn_detail_activity_title">预警日志</string>
     <string name="security_warn_video_title">预警录像</string>
     <string name="security_warn_deploy_title">布控信息</string>
-    <string name="toast_image_download_success">下载成功</string>
-    <string name="toast_image_download_failed">下载失败</string>
+    <string name="toast_image_download_success">已保存至本地</string>
+    <string name="toast_image_download_failed">保存失败</string>
     <string name="word_base_info">基本信息</string>
     <string name="word_device_sn">设备号</string>
     <string name="title_camera_brand">摄像机品牌</string>
@@ -47,7 +47,7 @@
     <string name="unprocessed">未处理</string>
     <string name="download_security_warn_record_success">下载完成</string>
     <string name="download_security_warn_record_fail">下载失败</string>
-    <string name="capture_security_warn_record_success">保存成功</string>
+    <string name="capture_security_warn_record_success">已保存至本地</string>
     <string name="capture_security_warn_record_fail">保存失败</string>
     <string name="online">离线</string>
     <string name="offline">在线</string>
