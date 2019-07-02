@@ -192,7 +192,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
                 edFilterContent.setCursorVisible(true);
             }
         });
-        //抓拍时间筛选
+        //抓拍时间筛选-选择回调处理
         mCapturetimeFilterPopUtils.setSelectDeviceTypeItemClickListener(new FilterPopUtils.SelectFilterTypeItemClickListener() {
             @Override
             public void onSelectFilterTypeItemClick(View view, int position) {
@@ -209,7 +209,6 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
                     mPresenter.setFilterCapturetime(position);
                 }
                 setWarnFilterContent(WARN_FILTER_TIME);
-                //mCapturetimeFilterPopUtils.dismiss();
             }
 
             @Override
@@ -238,7 +237,6 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
                 //处理状态类型
                 mPresenter.setFilterProcessStatus(position);
                 setWarnFilterContent(WARN_FILTER_STATUS);
-                //mProcessStatusFilterPopUtils.dismiss();
             }
 
             @Override
