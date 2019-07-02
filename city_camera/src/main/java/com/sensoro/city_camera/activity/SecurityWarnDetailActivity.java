@@ -26,12 +26,10 @@ import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
 import com.sensoro.common.server.security.bean.SecurityAlarmEventInfo;
-import com.sensoro.common.server.security.bean.SecurityContactsInfo;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -248,29 +246,15 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     @Override
     public void showCameraDetailsDialog(SecurityAlarmDetailInfo securityAlarmDetailInfo) {
         if (null == securityAlarmDetailInfo || null == securityAlarmDetailInfo.getCamera()) {
+            toastShort(getString(R.string.security_camera_info_error));
             return;
         }
+
         SecurityCameraDetailsDialog securityCameraDetailsDialog = new SecurityCameraDetailsDialog();
         securityCameraDetailsDialog.setSecurityCameraDetailsCallback(mPresenter);
         Bundle bundle = new Bundle();
         bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_SECURITY_ID, securityAlarmDetailInfo.getId());
-        bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_NAME, securityAlarmDetailInfo.getCamera().getName());
-        bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_TYPE, securityAlarmDetailInfo.getCamera().getType());
-        bundle.putInt(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_SATUS, Integer.parseInt(securityAlarmDetailInfo.getCamera().getDeviceStatus()));
-        bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_SN, securityAlarmDetailInfo.getCamera().getSn());
-        bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_BRAND, securityAlarmDetailInfo.getCamera().getBrand());
-        bundle.putStringArrayList(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_LABEL, (ArrayList<String>) securityAlarmDetailInfo.getCamera().getLabel());
-        bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_VERSION, securityAlarmDetailInfo.getCamera().getVersion());
-
-        List<SecurityContactsInfo> contactList =
-                (securityAlarmDetailInfo.getCamera() != null && securityAlarmDetailInfo.getCamera().getContact() != null
-                        && securityAlarmDetailInfo.getCamera().getContact().size() > 0)
-                        ? securityAlarmDetailInfo.getCamera().getContact() : null;
-        bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_CONTACT,
-                null != contactList ? (contactList.get(0).getMobilePhone() + " | " + contactList.get(0).getMobilePhone()) : "");
-        bundle.putInt(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_CONTACT_COUNT, contactList != null ? contactList.size() : 0);
-        bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_ADDRESS, securityAlarmDetailInfo.getCamera().getLocation());
-
+        bundle.putSerializable(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_INFO, securityAlarmDetailInfo.getCamera());
         securityCameraDetailsDialog.setArguments(bundle);
         securityCameraDetailsDialog.show(getSupportFragmentManager());
     }

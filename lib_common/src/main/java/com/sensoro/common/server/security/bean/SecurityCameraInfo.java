@@ -32,7 +32,7 @@ public class SecurityCameraInfo implements Serializable {
     private String latitude;
     private String longitude;
     private String location;
-    private List<SecurityContactsInfo> contact;
+    private List<SecurityContactsInfo> contacts;
     private String installationMode;
     private String orientation;
     private List<String> label;
@@ -118,11 +118,11 @@ public class SecurityCameraInfo implements Serializable {
     }
 
     public List<SecurityContactsInfo> getContact() {
-        return contact;
+        return contacts;
     }
 
     public void setContact(List<SecurityContactsInfo> contact) {
-        this.contact = contact;
+        this.contacts = contact;
     }
 
     public String getInstallationMode() {
