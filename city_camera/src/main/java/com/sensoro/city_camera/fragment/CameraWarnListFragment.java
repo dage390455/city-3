@@ -197,9 +197,9 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             @Override
             public void onSelectFilterTypeItemClick(View view, int position) {
                 //隐藏搜索历史弹窗 显示取消按钮
-                if(llSearchHistory.getVisibility() == View.VISIBLE ){
-                    llSearchHistory.setVisibility( View.GONE);
-                    refreshLayout.setVisibility( View.VISIBLE);
+                if (llSearchHistory.getVisibility() == View.VISIBLE) {
+                    llSearchHistory.setVisibility(View.GONE);
+                    refreshLayout.setVisibility(View.VISIBLE);
                     tvFilterCancal.setVisibility(View.VISIBLE);
                 }
                 //选择类型的pop点击事件
@@ -213,8 +213,16 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             }
 
             @Override
-            public void onDismissPop() {
+            public void onBottomClickDismissPop() {
                 layoutCaptureTime.performClick();
+            }
+
+            @Override
+            public void onOutsideDismissPop() {
+                //隐藏 时间选择弹窗
+                ivFilterCapturetime.setImageResource(R.drawable.ic_arrow_down);
+                mPresenter.setFilterCapturetime(-1);
+
             }
         });
         //处理状态筛选
@@ -222,9 +230,9 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             @Override
             public void onSelectFilterTypeItemClick(View view, int position) {
                 //隐藏搜索历史弹窗 显示取消按钮
-                if(llSearchHistory.getVisibility() == View.VISIBLE ){
-                    llSearchHistory.setVisibility( View.GONE);
-                    refreshLayout.setVisibility( View.VISIBLE);
+                if (llSearchHistory.getVisibility() == View.VISIBLE) {
+                    llSearchHistory.setVisibility(View.GONE);
+                    refreshLayout.setVisibility(View.VISIBLE);
                     tvFilterCancal.setVisibility(View.VISIBLE);
                 }
                 //处理状态类型
@@ -234,8 +242,16 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             }
 
             @Override
-            public void onDismissPop() {
+            public void onBottomClickDismissPop() {
                 layoutProcessStatus.performClick();
+            }
+
+            @Override
+            public void onOutsideDismissPop() {
+                //隐藏 状态选择弹窗
+                ivFilterProcessStatus.setImageResource(R.drawable.ic_arrow_down);
+                mPresenter.setFilterProcessStatus(-1);
+
             }
         });
 

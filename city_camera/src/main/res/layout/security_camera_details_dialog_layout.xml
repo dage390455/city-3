@@ -160,8 +160,8 @@
             android:layout_height="22dp"
             android:layout_below="@id/line2"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="33dp"
             android:layout_gravity="right|center_vertical"
+            android:layout_marginLeft="33dp"
             android:layout_marginTop="17dp"
             android:gravity="right|center_horizontal">
 
@@ -314,6 +314,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/line4"
         android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:paddingBottom="16dp">
 
         <TextView

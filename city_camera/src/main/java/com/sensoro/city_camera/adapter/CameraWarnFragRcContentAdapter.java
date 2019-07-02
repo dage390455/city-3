@@ -67,7 +67,7 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
             boolean isShowCover;
             //预警是否有效 处理
             if (securityAlarmInfo.getIsHandle() > 0) {
-                boolean isWarnValid = (securityAlarmInfo.getIsHandle() > 0 && securityAlarmInfo.getIsEffective() > 0);
+                boolean isWarnValid = (securityAlarmInfo.getIsHandle() != SecurityConstants.SECURITY_IS_NOT_HANDLE  && securityAlarmInfo.getIsEffective() > 0);
                 //已经处理 隐藏处理按钮/显示是否有效
                 holder.btnWarnConfim.setVisibility(View.INVISIBLE);
                 holder.tvCamerawarnValid.setVisibility(View.VISIBLE);
