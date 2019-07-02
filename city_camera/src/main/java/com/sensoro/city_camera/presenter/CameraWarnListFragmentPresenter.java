@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.RelativeLayout;
 
 import com.sensoro.city_camera.IMainViews.ICameraWarnListFragmentView;
@@ -90,21 +91,6 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     public static final int REQUEST_CODE_DETAIL = 100;
 
-    private final Comparator<SecurityAlarmInfo> cameraWarnInfoComparator = new Comparator<SecurityAlarmInfo>() {
-        @Override
-        public int compare(SecurityAlarmInfo o1, SecurityAlarmInfo o2) {
-            long l = o2.getAlarmTime() - o1.getAlarmTime();
-            if (l > 0) {
-                return 1;
-            } else if (l < 0) {
-                return -1;
-            } else {
-                return 0;
-            }
-
-        }
-    };
-
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
@@ -165,18 +151,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                     mSecurityAlarmInfoList.clear();
                 }
                 synchronized (mSecurityAlarmInfoList) {
-                    out:
-                    for (int i = 0; i < securityAlarmInfoList.size(); i++) {
-                        SecurityAlarmInfo securityAlarmInfo = securityAlarmInfoList.get(i);
-                        for (int j = 0; j < mSecurityAlarmInfoList.size(); j++) {
-                            if (mSecurityAlarmInfoList.get(j).getId().equals(securityAlarmInfo.getId())) {
-                                mSecurityAlarmInfoList.set(i, securityAlarmInfo);
-                                break out;
-                            }
-                        }
-                        mSecurityAlarmInfoList.add(securityAlarmInfo);
-                    }
-                    Collections.sort(mSecurityAlarmInfoList, cameraWarnInfoComparator);
+                    mSecurityAlarmInfoList.addAll(securityAlarmInfoList);
                     mContext.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -390,43 +365,6 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
      */
     public void clickItemByConfirmStatus(final SecurityAlarmInfo securityAlarmInfo) {
         getView().showConfirmDialog(securityAlarmInfo);
-    }
-
-    private void freshSingleWarnLogInfo(SecurityAlarmInfo securityAlarmInfo) {
-        synchronized (securityAlarmInfo) {
-            // 处理只针对当前集合做处理
-            boolean canRefresh = false;
-            for (int i = 0; i < mSecurityAlarmInfoList.size(); i++) {
-                SecurityAlarmInfo tempLogInfo = mSecurityAlarmInfoList.get(i);
-                if (tempLogInfo.getId().equals(securityAlarmInfo.getId())) {
-                    //刷新单个信息
-                    /*AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
-                    deviceAlarmLogInfo.setSort(1);
-                    for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
-                        if (recordInfo.getType().equals("recovery")) {
-                            deviceAlarmLogInfo.setSort(4);
-                            break;
-                        }
-                    }
-                    mDeviceAlarmLogInfoList.set(i, deviceAlarmLogInfo);*/
-                    canRefresh = true;
-                    break;
-                }
-            }
-            if (canRefresh) {
-                Collections.sort(mSecurityAlarmInfoList, cameraWarnInfoComparator);
-                mContext.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isAttachedView()) {
-                            getView().updateCameraWarnsListAdapter(mSecurityAlarmInfoList);
-                        }
-
-                    }
-                });
-            }
-
-        }
     }
 
     /**

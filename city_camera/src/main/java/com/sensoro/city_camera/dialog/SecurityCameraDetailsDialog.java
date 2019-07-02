@@ -123,7 +123,7 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
             mCameraTypeTv.setText(mSecurityCameraInfo.getType());
             mCameraStatusTv.setText(cameraStaus == SecurityConstants.SECURITY_DEVICE_ONLINE ? R.string.offline : R.string.online);
             mCameraStatusTv.setTextColor(cameraStaus == SecurityConstants.SECURITY_DEVICE_ONLINE ? getResources().getColor(R.color.c_1dbb99)
-                    : getResources().getColor(R.color.c_f35a58));
+                    : getResources().getColor(R.color.c_a6a6a6));
             mCameraSNTv.setText(mSecurityCameraInfo.getSn());
             mCameraBrandTv.setText(mSecurityCameraInfo.getBrand());
             mCameraVersonTv.setText(mSecurityCameraInfo.getVersion());
