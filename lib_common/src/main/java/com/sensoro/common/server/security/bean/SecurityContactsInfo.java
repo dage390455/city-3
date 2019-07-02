@@ -12,8 +12,8 @@ public class SecurityContactsInfo implements Serializable {
      * mobilePhone : 13888888888
      */
 
-    private String name;
     private String mobile;
+    private String name;
 
     public String getName() {
         return name;

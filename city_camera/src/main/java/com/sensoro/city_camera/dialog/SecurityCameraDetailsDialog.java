@@ -1,6 +1,7 @@
 package com.sensoro.city_camera.dialog;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +20,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.adapter.LabelAdapter;
+import com.sensoro.city_camera.constants.SecurityConstants;
+import com.sensoro.common.server.security.bean.SecurityCameraInfo;
+import com.sensoro.common.server.security.bean.SecurityContactsInfo;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,17 +73,10 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
     private LabelAdapter mLabelAdapter;
 
     public static final String EXTRA_KEY_SECURITY_ID = "security_id";
-    public static final String EXTRA_KEY_CAMERA_NAME = "camera_name";
-    public static final String EXTRA_KEY_CAMERA_TYPE = "camera_type";
-    public static final String EXTRA_KEY_CAMERA_SATUS = "camera_status";
-    public static final String EXTRA_KEY_CAMERA_SN = "camera_sn";
-    public static final String EXTRA_KEY_CAMERA_BRAND = "camera_brand";
-    public static final String EXTRA_KEY_CAMERA_LABEL = "camera_label";
-    public static final String EXTRA_KEY_CAMERA_VERSION = "camera_version";
-    public static final String EXTRA_KEY_CAMERA_CONTACT = "camera_contect";
-    public static final String EXTRA_KEY_CAMERA_CONTACT_COUNT = "camera_contect_count";
-    public static final String EXTRA_KEY_CAMERA_ADDRESS = "camera_address";
+    public static final String EXTRA_KEY_CAMERA_INFO = "camera_info";
     private String id;
+    private SecurityCameraInfo mSecurityCameraInfo;
+    private int contactCount;
 
     @Nullable
     @Override
@@ -100,28 +97,39 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
         Bundle bundle = getArguments();
         if (bundle != null) {
             id = bundle.getString(EXTRA_KEY_SECURITY_ID);
-            String name = bundle.getString(EXTRA_KEY_CAMERA_NAME);
-            String type = bundle.getString(EXTRA_KEY_CAMERA_TYPE);
-            int deviceStatus = bundle.getInt(EXTRA_KEY_CAMERA_SATUS);
-            String sn = bundle.getString(EXTRA_KEY_CAMERA_SN);
-            String brand = bundle.getString(EXTRA_KEY_CAMERA_BRAND);
-            ArrayList<String> labelList = bundle.getStringArrayList(EXTRA_KEY_CAMERA_LABEL);
-            String version = bundle.getString(EXTRA_KEY_CAMERA_VERSION);
-            String contactStr = bundle.getString(EXTRA_KEY_CAMERA_CONTACT);
-            int contactCount = bundle.getInt(EXTRA_KEY_CAMERA_CONTACT_COUNT);
-            String address = bundle.getString(EXTRA_KEY_CAMERA_ADDRESS);
+            mSecurityCameraInfo = (SecurityCameraInfo) bundle.getSerializable(EXTRA_KEY_CAMERA_INFO);
+            List<String> labelList = mSecurityCameraInfo.getLabel();
+            List<SecurityContactsInfo> constantsList = (List<SecurityContactsInfo>) mSecurityCameraInfo.getContact();
+            String contactStr;
 
-            mCameraNameTv.setText(name);
-            mCameraTypeTv.setText(type);
-            mCameraStatusTv.setText(deviceStatus == 0 ? R.string.offline : R.string.online);
-            mCameraStatusTv.setTextColor(deviceStatus == 0 ? getResources().getColor(R.color.c_1dbb99)
+            if (constantsList!= null && constantsList.size() > 0) {
+                SecurityContactsInfo contactsInfo = constantsList.get(0);
+                contactStr = TextUtils.isEmpty(contactsInfo.getName()) ? contactsInfo.getMobilePhone()
+                        : contactsInfo.getName() + "|" + contactsInfo.getMobilePhone();
+                contactCount = constantsList.size();
+            } else {
+                contactStr = "";
+                contactCount = 0;
+            }
+            int cameraStaus;
+            try {
+                cameraStaus = Integer.parseInt(mSecurityCameraInfo.getDeviceStatus());
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                cameraStaus = 0;
+            }
+
+            mCameraNameTv.setText(mSecurityCameraInfo.getName());
+            mCameraTypeTv.setText(mSecurityCameraInfo.getType());
+            mCameraStatusTv.setText(cameraStaus == SecurityConstants.SECURITY_DEVICE_ONLINE ? R.string.offline : R.string.online);
+            mCameraStatusTv.setTextColor(cameraStaus == 0 ? getResources().getColor(R.color.c_1dbb99)
                     : getResources().getColor(R.color.c_f35a58));
-            mCameraSNTv.setText(sn);
-            mCameraBrandTv.setText(brand);
-            mCameraVersonTv.setText(version);
+            mCameraSNTv.setText(mSecurityCameraInfo.getSn());
+            mCameraBrandTv.setText(mSecurityCameraInfo.getBrand());
+            mCameraVersonTv.setText(mSecurityCameraInfo.getVersion());
             mCameraContactTv.setText(contactStr);
             mCameraContactCountTv.setText(String.format(getString(R.string.contact_count_tip), contactCount));
-            mCameraAddressTv.setText(address);
+            mCameraAddressTv.setText(mSecurityCameraInfo.getLocation());
 
             if (labelList.isEmpty()) {
                 mLabelRv.setVisibility(View.INVISIBLE);
@@ -152,8 +160,11 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
         if (i == R.id.iv_camera_details_popup_close) {
             dismiss();
         } else if (i == R.id.layout_camera_details_contact) {
-            //联系人点击事件处理
-            mSecurityCameraDetailsCallback.showContactsDetails();
+            if (null != mSecurityCameraInfo.getContact() && mSecurityCameraInfo.getContact().size() > 0) {
+                //联系人点击事件处理
+                mSecurityCameraDetailsCallback.showContactsDetails();
+            }
+
         } else if (i == R.id.layout_camera_details_address) {
             //地址点击事件处理
             mSecurityCameraDetailsCallback.onNavi();
