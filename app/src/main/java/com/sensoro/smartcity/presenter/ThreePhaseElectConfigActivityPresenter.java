@@ -154,6 +154,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
                 //设备详情 下行
                 onCreate();
                 getView().setSubtitleText(mActivity.getString(R.string.air_switch_config));
+                //TODO 回显字段
                 break;
 
         }

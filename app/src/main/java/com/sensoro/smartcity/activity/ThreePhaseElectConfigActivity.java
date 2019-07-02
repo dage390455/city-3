@@ -177,6 +177,7 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
     }
 
     private void initCustomOptionPicker() {//条件选择器初始化，自定义布局
+        boolean[] bs = {false};
         pvCustomOptions = new OptionsPickerBuilder(mActivity, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
@@ -200,8 +201,10 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
                         tvComplete.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                pvCustomOptions.returnData();
-
+                                bs[0] = true;
+                                if (pvCustomOptions.isShowing()) {
+                                    pvCustomOptions.returnData();
+                                }
                             }
                         });
                         llSubtitle.setOnClickListener(new View.OnClickListener() {
