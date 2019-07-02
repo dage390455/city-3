@@ -1,6 +1,7 @@
 package com.sensoro.city_camera.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,14 +10,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.ortiz.touchview.TouchImageView;
 import com.sensoro.city_camera.IMainViews.IPhotoPreviewView;
 import com.sensoro.city_camera.R;
@@ -168,9 +169,9 @@ public class PhotoPreviewActivity extends BaseActivity<IPhotoPreviewView, PhotoP
             View view = View.inflate(container.getContext(), R.layout.photo_preview_item_layout, null);
             TouchImageView touchImageView = view.findViewById(R.id.touchImageView);
             mDownloadView.setVisibility(View.GONE);
-            Glide.with(container.getContext()).load(mUrlList.get(position)).into(new SimpleTarget<GlideDrawable>() {
+            Glide.with(container.getContext()).load(mUrlList.get(position)).into(new SimpleTarget<Drawable>() {
                 @Override
-                public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                     touchImageView.setImageDrawable(resource);
                     view.findViewById(R.id.placeholder_iv).setVisibility(View.GONE);
                     mDownloadView.setVisibility(View.VISIBLE);
