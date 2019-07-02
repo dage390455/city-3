@@ -1743,6 +1743,10 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     Bundle bundle = new Bundle();
                     bundle.putInt(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
                     bundle.putSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+                    DeployControlSettingData settingData = mDeviceInfo.getConfig();
+                    if (settingData!=null){
+                        bundle.putSerializable(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA, settingData);
+                    }
                     startActivity(ARouterConstants.ACTIVITY_THREE_PHASE_ELECT_CONFIG_ACTIVITY, bundle, mContext);
                 } else {
                     Intent intent = new Intent(mContext, DeployMonitorConfigurationActivity.class);
