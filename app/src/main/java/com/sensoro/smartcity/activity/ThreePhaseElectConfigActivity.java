@@ -92,6 +92,8 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
     private Drawable addWhiteDrawable;
     private MonitorPointOperatingDialogUtil mOperatingUtil;
     private TipOperationDialogUtils mTipUtils;
+    private TextView mTvComplete;
+    private TextView mTvDelete;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -181,30 +183,31 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
         pvCustomOptions = new OptionsPickerBuilder(mActivity, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                mPresenter.doSelectComplete(options1, options2, options3 + 1);
+                if (pvCustomOptions.isShowing()) {
+                    mPresenter.doSelectComplete(options1, options2, options3 + 1);
+                }
             }
         }).setTitleText(mActivity.getString(R.string.diameter))
                 .setLayoutRes(R.layout.item_picker_calculator, new CustomListener() {
                     @Override
                     public void customLayout(View v) {
-                        TextView tvDelete = v.findViewById(R.id.tv_delete_item_picker_calculator);
-                        TextView tvComplete = v.findViewById(R.id.tv_complete_item_picker_calculator);
+                        mTvDelete = v.findViewById(R.id.tv_delete_item_picker_calculator);
+                        mTvComplete = v.findViewById(R.id.tv_complete_item_picker_calculator);
                         LinearLayout llSubtitle = v.findViewById(R.id.ll_subtitle_item_picker_calculator);
                         mTvTitlePicker = v.findViewById(R.id.tv_title_item_picker_calculator);
-                        tvDelete.setOnClickListener(new View.OnClickListener() {
+                        mTvDelete.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 mPresenter.doDeleteGroup();
+                                mTvDelete.setClickable(false);
                             }
                         });
 
-                        tvComplete.setOnClickListener(new View.OnClickListener() {
+                        mTvComplete.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                bs[0] = true;
-                                if (pvCustomOptions.isShowing()) {
-                                    pvCustomOptions.returnData();
-                                }
+                                pvCustomOptions.returnData();
+                                mTvComplete.setClickable(false);
                             }
                         });
                         llSubtitle.setOnClickListener(new View.OnClickListener() {
@@ -365,6 +368,8 @@ public class ThreePhaseElectConfigActivity extends BaseActivity<IThreePhaseElect
     @Override
     public void showPickerView() {
         if (pvCustomOptions != null) {
+            mTvComplete.setClickable(true);
+            mTvDelete.setClickable(true);
             pvCustomOptions.show();
         }
     }
