@@ -57,4 +57,5 @@
     <string name="security_search_tip">设备名称/任务名称/人员姓名</string>
     <string name="security_camera_info_error">相机详情信息不存在</string>
     <string name="camera_contact_no_exist">相机联系人不存在</string>
+    <string name="owner_contact_no_exist">业主联系人不存在</string>
 </resources>

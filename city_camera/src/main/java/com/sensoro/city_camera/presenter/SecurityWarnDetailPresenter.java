@@ -99,8 +99,10 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
                 });
     }
 
-
-    public void doContactOwner() {
+    /**
+     * 联系：相机联系人电话
+     */
+    public void doCameraContact() {
         if (null == mSecurityAlarmDetailInfo || null == mSecurityAlarmDetailInfo.getCamera()
                 || null == mSecurityAlarmDetailInfo.getCamera().getContact()) {
             getView().toastShort(mActivity.getString(R.string.camera_contact_no_exist));
@@ -117,17 +119,34 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
         }
     }
 
+
+    public void doContactOwner() {
+        if (null == mSecurityAlarmDetailInfo || null == mSecurityAlarmDetailInfo.getContacts()) {
+            getView().toastShort(mActivity.getString(R.string.owner_contact_no_exist));
+            return;
+        }
+        List<SecurityContactsInfo> contacts = mSecurityAlarmDetailInfo.getContacts();
+
+        if (contacts.isEmpty()) {
+            if (isAttachedView()) {
+                getView().toastShort(mActivity.getString(R.string.no_find_contact_phone_number));
+            }
+        } else {
+            AppUtils.diallPhone(contacts.get(0).getMobilePhone(), mActivity);
+        }
+    }
+
     public void doNavigation() {
         SecurityCameraInfo camera = mSecurityAlarmDetailInfo.getCamera();
-        if (camera!= null){
-            if(!TextUtils.isEmpty(camera.getLatitude()) && !TextUtils.isEmpty(camera.getLongitude())){
+        if (camera != null) {
+            if (!TextUtils.isEmpty(camera.getLatitude()) && !TextUtils.isEmpty(camera.getLongitude())) {
                 LatLng destPosition = null;
                 try {
                     destPosition = new LatLng(Double.parseDouble(camera.getLatitude()), Double.parseDouble(camera.getLongitude()));
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
-                if (destPosition != null){
+                if (destPosition != null) {
                     MapUtil.locateAndNavigation(mActivity, destPosition);
                 }
             }
@@ -221,7 +240,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 
             new WarningContactDialogUtil(mActivity).show(list);
         } else {
-            doContactOwner();
+            doCameraContact();
         }
     }
 
