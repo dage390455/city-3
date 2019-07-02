@@ -29,5 +29,9 @@ public interface SecurityConstants {
      * 预警未处理
      */
     int SECURITY_IS_NOT_HANDLE = 0;
+    /**
+     * 相机在线
+     */
+    int SECURITY_DEVICE_ONLINE = 1;
 
 }
