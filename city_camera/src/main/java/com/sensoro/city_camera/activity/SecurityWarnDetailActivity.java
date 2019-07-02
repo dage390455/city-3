@@ -269,6 +269,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         SecurityControlPersonDetailsDialog controlPersonDetailsDialog = new SecurityControlPersonDetailsDialog();
         Bundle bundle = new Bundle();
         bundle.putSerializable(SecurityControlPersonDetailsDialog.EXTRA_KEY_DEPLOY_INFO, securityAlarmDetailInfo.getObjectMainJson());
+        bundle.putString(SecurityControlPersonDetailsDialog.EXTRA_KEY_DEPLOY_IMAGE,securityAlarmDetailInfo.getImageUrl());
         controlPersonDetailsDialog.setArguments(bundle);
         controlPersonDetailsDialog.show(getSupportFragmentManager());
 

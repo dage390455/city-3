@@ -89,7 +89,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
                     @Override
                     public void onCompleted(SecurityAlarmTimelineRsp securityAlarmTimelineRsp) {
                         SecurityAlarmTimelineRsp.SecurityAlarmTimelineData securityAlarmTimelineRspData = securityAlarmTimelineRsp.getData();
-                        if(securityAlarmTimelineRspData != null){
+                        if (securityAlarmTimelineRspData != null) {
                             getView().updateSecurityWarnTimeLine(securityAlarmTimelineRspData.list);
                         }
                     }
@@ -103,7 +103,12 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 
 
     public void doContactOwner() {
-        List<SecurityContactsInfo> contacts = mSecurityAlarmDetailInfo.getContacts();
+        if (null == mSecurityAlarmDetailInfo || null == mSecurityAlarmDetailInfo.getCamera()
+                || null == mSecurityAlarmDetailInfo.getCamera().getContact()) {
+            getView().toastShort(mActivity.getString(R.string.camera_contact_no_exist));
+            return;
+        }
+        List<SecurityContactsInfo> contacts = mSecurityAlarmDetailInfo.getCamera().getContact();
 
         if (contacts.isEmpty()) {
             if (isAttachedView()) {
@@ -116,7 +121,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 
     public void doNavigation() {
         SecurityCameraInfo camera = mSecurityAlarmDetailInfo.getCamera();
-        if (camera!= null){
+        if (camera != null) {
             LatLng destPosition = new LatLng(Double.parseDouble(camera.getLatitude()), Double.parseDouble(camera.getLongitude()));
             MapUtil.locateAndNavigation(mActivity, destPosition);
         } else {
@@ -133,13 +138,14 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
     /**
      * 显示摄像机详情
      */
-    public void showCameraDetail(){
+    public void showCameraDetail() {
         getView().showCameraDetailsDialog(mSecurityAlarmDetailInfo);
     }
+
     /**
      * 显示布控信息详情
      */
-    public void showDeployDetail(){
+    public void showDeployDetail() {
         getView().showDeployDetail(mSecurityAlarmDetailInfo);
     }
 
@@ -187,7 +193,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
     @Override
     public void onNavi() {
         SecurityCameraInfo camera = mSecurityAlarmDetailInfo.getCamera();
-        if (camera!= null){
+        if (camera != null) {
             LatLng destPosition = new LatLng(Double.parseDouble(camera.getLatitude()), Double.parseDouble(camera.getLongitude()));
             MapUtil.locateAndNavigation(mActivity, destPosition);
         } else {
@@ -199,10 +205,15 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 
     @Override
     public void showContactsDetails() {
-        List<SecurityContactsInfo> contactsInfos = mSecurityAlarmDetailInfo.getContacts();
-        if (contactsInfos.size()>1){
+        if (null == mSecurityAlarmDetailInfo || null == mSecurityAlarmDetailInfo.getCamera()
+                || null == mSecurityAlarmDetailInfo.getCamera().getContact()) {
+            getView().toastShort(mActivity.getString(R.string.camera_contact_no_exist));
+            return;
+        }
+        List<SecurityContactsInfo> contactsInfos = mSecurityAlarmDetailInfo.getCamera().getContact();
+        if (contactsInfos.size() > 1) {
             List<DeviceNotificationBean> list = new ArrayList<>(contactsInfos.size());
-            for (SecurityContactsInfo info: contactsInfos){
+            for (SecurityContactsInfo info : contactsInfos) {
                 DeviceNotificationBean bean = new DeviceNotificationBean();
                 bean.setTypes("phone");
                 bean.setContact(info.getMobilePhone());
