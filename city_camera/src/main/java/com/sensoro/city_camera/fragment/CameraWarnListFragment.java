@@ -408,6 +408,13 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     }
 
     @Override
+    public void SmoothToTopList() {
+        rvCameraWarnsContent.smoothScrollToPosition(0);
+        mReturnTopImageView.setVisibility(View.GONE);
+
+    }
+
+    @Override
     public void onPullRefreshComplete() {
         refreshLayout.finishRefresh();
         refreshLayout.finishLoadMore();

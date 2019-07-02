@@ -187,6 +187,9 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                             if (isAttachedView()) {
                                 getView().updateCameraWarnsListAdapter(mSecurityAlarmInfoList);
                             }
+                            if(direction == Constants.DIRECTION_DOWN){
+                                getView().SmoothToTopList();
+                            }
 
                         }
                     });
