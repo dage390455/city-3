@@ -1,6 +1,7 @@
 package com.sensoro.city_camera.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.constants.SecurityConstants;
@@ -64,7 +68,7 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
             holder.tvTaskName.setText(securityAlarmInfo.getTaskName());
             holder.tvWarnDeviceName.setText(securityAlarmInfo.getDeviceName());
             holder.tvWarnTime.setText(DateUtil.getStrTimeToday(mContext, warnTime, 0));
-            boolean isShowCover;
+            boolean isShowInValidCover;//是否设置无效半透明
             //预警是否有效 处理
             if (securityAlarmInfo.getIsHandle() > 0) {
                 boolean isWarnValid = (securityAlarmInfo.getIsHandle() != SecurityConstants.SECURITY_IS_NOT_HANDLE  && securityAlarmInfo.getIsEffective() > 0);
@@ -73,12 +77,12 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                 holder.tvCamerawarnValid.setVisibility(View.VISIBLE);
                 holder.tvCamerawarnValid.setBackgroundResource(isWarnValid ? R.drawable.shape_camera_warn_valid : R.drawable.shape_camera_warn_unvalid);
                 holder.tvCamerawarnValid.setText(isWarnValid ? R.string.word_valid : R.string.word_unvalid);
-                isShowCover = isWarnValid;
+                isShowInValidCover = !isWarnValid;
             }else{
                 //未处理 显示处理按钮/隐藏是否有效标签
                 holder.btnWarnConfim.setVisibility(View.VISIBLE);
                 holder.tvCamerawarnValid.setVisibility(View.GONE);
-                isShowCover = false;
+                isShowInValidCover = false;
             }
             holder.btnWarnConfim.setVisibility(securityAlarmInfo.getIsHandle() == 0 ? View.VISIBLE : View.INVISIBLE);
             //根据预警类型设置UI
@@ -90,10 +94,13 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     holder.layoutSinglePhoto.setVisibility(View.GONE);
                     holder.layoutMultPhoto.setVisibility(View.VISIBLE);
                     //加载布控 抓拍 照片
-                    Glide.with(mContext).load(focusPhotoUrl).placeholder(R.drawable.ic_port_default_white).into(holder.ivLeftPhoto);
-                    Glide.with(mContext).load(capturePhotoUrl).placeholder(R.drawable.ic_port_default_white).into(holder.ivRightPhoto);
+                    Glide.with(mContext).load(focusPhotoUrl).placeholder(R.drawable.ic_port_default_white).centerCrop()
+                            .dontAnimate().into(holder.ivLeftPhoto);
+                    Glide.with(mContext).load(capturePhotoUrl).placeholder(R.drawable.ic_port_default_white).centerCrop()
+                            .dontAnimate().into(holder.ivRightPhoto);
                     holder.tvRightMatchrate.setText(focusMatchrate);
-                    holder.viewMulUnvalidCover.setVisibility(!isShowCover ? View.VISIBLE : View.GONE);
+                    holder.ivLeftPhoto.setAlpha(isShowInValidCover ?0.5f:1f);
+                    holder.ivRightPhoto.setAlpha(isShowInValidCover ?0.5f:1f);
                     break;
                 case SecurityConstants.SECURITY_TYPE_FOREIGN:
                     holder.tvWarnType.setText(R.string.external_type);
@@ -101,8 +108,9 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     holder.layoutSinglePhoto.setVisibility(View.VISIBLE);
                     holder.layoutMultPhoto.setVisibility(View.GONE);
                     //加载抓拍图片
-                    Glide.with(mContext).load(capturePhotoUrl).placeholder(R.drawable.ic_port_default_white).into(holder.ivSiglePhoto);
-                    holder.viewSingleUnvalidCover.setVisibility(!isShowCover ? View.VISIBLE : View.GONE);
+                    Glide.with(mContext).load(capturePhotoUrl).placeholder(R.drawable.ic_port_default_white).centerCrop()
+                            .dontAnimate().into(holder.ivSiglePhoto);
+                    holder.ivSiglePhoto.setAlpha(isShowInValidCover ?0.5f:1f);
                     break;
                 case SecurityConstants.SECURITY_TYPE_INVADE:
                     holder.tvWarnType.setText(R.string.invade_type);
@@ -112,9 +120,11 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     //加载抓拍照片
                     Glide.with(mContext)
                             .load(capturePhotoUrl)
+                            .centerCrop()
+                            .dontAnimate()
                             .placeholder(R.drawable.ic_port_default_white)
                             .into(holder.ivSiglePhoto);
-                    holder.viewSingleUnvalidCover.setVisibility(!isShowCover ? View.VISIBLE : View.GONE);
+                    holder.ivSiglePhoto.setAlpha(isShowInValidCover ?0.5f:1f);
                     break;
                 default:
             }
@@ -158,8 +168,6 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
         RelativeLayout layoutSinglePhoto;
         @BindView(R2.id.iv_single_photo)
         ImageView ivSiglePhoto;
-        @BindView(R2.id.view_single_valid_cover)
-        View viewSingleUnvalidCover;
         //======多个照片====
         @BindView(R2.id.layout_mult_photo_content)
         RelativeLayout layoutMultPhoto;
@@ -173,8 +181,6 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
         RelativeLayout layoutMultRightContent;
         @BindView(R2.id.iv_right_photo)
         ImageView ivRightPhoto;
-        @BindView(R2.id.view_mul_valid_cover)
-        View viewMulUnvalidCover;
         @BindView(R2.id.tv_right_matchrate)
         TextView tvRightMatchrate;
 

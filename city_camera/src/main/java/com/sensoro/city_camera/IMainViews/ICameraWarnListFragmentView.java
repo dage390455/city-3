@@ -21,6 +21,11 @@ public interface ICameraWarnListFragmentView extends IToast, IActivityIntent, IP
     void updateCameraWarnsListAdapter(List<SecurityAlarmInfo> securityAlarmInfoList);
 
     /**
+     * 安防预警列表移动到顶部
+     */
+    void SmoothToTopList();
+
+    /**
      * 下拉刷新完成
      */
     void onPullRefreshComplete();

@@ -26,8 +26,6 @@ import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,7 +87,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
                     @Override
                     public void onCompleted(SecurityAlarmTimelineRsp securityAlarmTimelineRsp) {
                         SecurityAlarmTimelineRsp.SecurityAlarmTimelineData securityAlarmTimelineRspData = securityAlarmTimelineRsp.getData();
-                        if(securityAlarmTimelineRspData != null){
+                        if (securityAlarmTimelineRspData != null) {
                             getView().updateSecurityWarnTimeLine(securityAlarmTimelineRspData.list);
                         }
                     }
@@ -101,9 +99,16 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
                 });
     }
 
-
-    public void doContactOwner() {
-        List<SecurityContactsInfo> contacts = mSecurityAlarmDetailInfo.getContacts();
+    /**
+     * 联系：相机联系人电话
+     */
+    public void doCameraContact() {
+        if (null == mSecurityAlarmDetailInfo || null == mSecurityAlarmDetailInfo.getCamera()
+                || null == mSecurityAlarmDetailInfo.getCamera().getContact()) {
+            getView().toastShort(mActivity.getString(R.string.camera_contact_no_exist));
+            return;
+        }
+        List<SecurityContactsInfo> contacts = mSecurityAlarmDetailInfo.getCamera().getContact();
 
         if (contacts.isEmpty()) {
             if (isAttachedView()) {
@@ -114,11 +119,40 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
         }
     }
 
+
+    public void doContactOwner() {
+        if (null == mSecurityAlarmDetailInfo || null == mSecurityAlarmDetailInfo.getContacts()) {
+            getView().toastShort(mActivity.getString(R.string.owner_contact_no_exist));
+            return;
+        }
+        List<SecurityContactsInfo> contacts = mSecurityAlarmDetailInfo.getContacts();
+
+        if (contacts == null || contacts.isEmpty()) {
+            if (isAttachedView()) {
+                getView().toastShort(mActivity.getString(R.string.no_find_contact_phone_number));
+            }
+        } else {
+            AppUtils.diallPhone(contacts.get(0).getMobilePhone(), mActivity);
+        }
+    }
+
     public void doNavigation() {
+        if(mSecurityAlarmDetailInfo == null){
+            return;
+        }
         SecurityCameraInfo camera = mSecurityAlarmDetailInfo.getCamera();
-        if (camera!= null){
-            LatLng destPosition = new LatLng(Double.parseDouble(camera.getLatitude()), Double.parseDouble(camera.getLongitude()));
-            MapUtil.locateAndNavigation(mActivity, destPosition);
+        if (camera != null) {
+            if (!TextUtils.isEmpty(camera.getLatitude()) && !TextUtils.isEmpty(camera.getLongitude())) {
+                LatLng destPosition = null;
+                try {
+                    destPosition = new LatLng(Double.parseDouble(camera.getLatitude()), Double.parseDouble(camera.getLongitude()));
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+                if (destPosition != null) {
+                    MapUtil.locateAndNavigation(mActivity, destPosition);
+                }
+            }
         } else {
             if (isAttachedView()) {
                 getView().toastShort(mActivity.getString(R.string.location_not_obtained));
@@ -133,13 +167,14 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
     /**
      * 显示摄像机详情
      */
-    public void showCameraDetail(){
+    public void showCameraDetail() {
         getView().showCameraDetailsDialog(mSecurityAlarmDetailInfo);
     }
+
     /**
      * 显示布控信息详情
      */
-    public void showDeployDetail(){
+    public void showDeployDetail() {
         getView().showDeployDetail(mSecurityAlarmDetailInfo);
     }
 
@@ -186,23 +221,20 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 
     @Override
     public void onNavi() {
-        SecurityCameraInfo camera = mSecurityAlarmDetailInfo.getCamera();
-        if (camera!= null){
-            LatLng destPosition = new LatLng(Double.parseDouble(camera.getLatitude()), Double.parseDouble(camera.getLongitude()));
-            MapUtil.locateAndNavigation(mActivity, destPosition);
-        } else {
-            if (isAttachedView()) {
-                getView().toastShort(mActivity.getString(R.string.location_not_obtained));
-            }
-        }
+        doNavigation();
     }
 
     @Override
     public void showContactsDetails() {
-        List<SecurityContactsInfo> contactsInfos = mSecurityAlarmDetailInfo.getContacts();
-        if (contactsInfos.size()>1){
+        if (null == mSecurityAlarmDetailInfo || null == mSecurityAlarmDetailInfo.getCamera()
+                || null == mSecurityAlarmDetailInfo.getCamera().getContact()) {
+            getView().toastShort(mActivity.getString(R.string.camera_contact_no_exist));
+            return;
+        }
+        List<SecurityContactsInfo> contactsInfos = mSecurityAlarmDetailInfo.getCamera().getContact();
+        if (contactsInfos.size() > 1) {
             List<DeviceNotificationBean> list = new ArrayList<>(contactsInfos.size());
-            for (SecurityContactsInfo info: contactsInfos){
+            for (SecurityContactsInfo info : contactsInfos) {
                 DeviceNotificationBean bean = new DeviceNotificationBean();
                 bean.setTypes("phone");
                 bean.setContact(info.getMobilePhone());
@@ -211,14 +243,16 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 
             new WarningContactDialogUtil(mActivity).show(list);
         } else {
-            doContactOwner();
+            doCameraContact();
         }
     }
 
     public void doPreviewImages(int position) {
-        Intent intent = new Intent(mActivity, PhotoPreviewActivity.class);
-        intent.putExtra(PhotoPreviewPresenter.EXTRA_KEY_POSITION, position);
-        intent.putExtra(PhotoPreviewPresenter.EXTRA_KEY_SECURITY_INFO, mSecurityAlarmDetailInfo);
-        getView().startAC(intent);
+        if(mSecurityAlarmDetailInfo != null){
+            Intent intent = new Intent(mActivity, PhotoPreviewActivity.class);
+            intent.putExtra(PhotoPreviewPresenter.EXTRA_KEY_POSITION, position);
+            intent.putExtra(PhotoPreviewPresenter.EXTRA_KEY_SECURITY_INFO, mSecurityAlarmDetailInfo);
+            getView().startAC(intent);
+        }
     }
 }

@@ -19,15 +19,6 @@
             android:id="@+id/iv_single_photo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            app:radius="4dp" />
-
-        <com.sensoro.city_camera.widget.CustomRoundAngleImageView
-            android:id="@+id/view_single_valid_cover"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#80FFFFFF"
-            android:visibility="gone"
             app:radius="4dp" />
 
         <TextView
