@@ -26,12 +26,10 @@ import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
 import com.sensoro.common.server.security.bean.SecurityAlarmEventInfo;
-import com.sensoro.common.server.security.bean.SecurityContactsInfo;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -152,9 +150,11 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
                     mMultiView.setVisibility(View.VISIBLE);
                 }
                 mLeftImageView = findViewById(R.id.iv_left_photo);
-                Glide.with(this).load(securityAlarmDetailInfo.getImageUrl()).into(mLeftImageView);
+                Glide.with(this).load(securityAlarmDetailInfo.getImageUrl()).centerCrop()
+                        .dontAnimate().into(mLeftImageView);
                 mRightImageView = findViewById(R.id.iv_right_photo);
-                Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).into(mRightImageView);
+                Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).centerCrop()
+                        .dontAnimate().into(mRightImageView);
                 mRightImageView.setOnClickListener(v -> previewImages(0));
                 mSecurityWarnDeployRl.setVisibility(View.VISIBLE);
                 TextView matchRateTv = findViewById(R.id.tv_right_matchrate);
@@ -170,7 +170,8 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
                 }
                 mLeftImageView = findViewById(R.id.iv_single_photo);
                 mLeftImageView.setOnClickListener(v -> previewImages(0));
-                Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).into(mLeftImageView);
+                Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).centerCrop()
+                        .dontAnimate().into(mLeftImageView);
                 mSecurityWarnDeployRl.setVisibility(View.GONE);
                 break;
             case SecurityConstants.SECURITY_TYPE_INVADE:
@@ -183,7 +184,8 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
                 }
                 mLeftImageView = findViewById(R.id.iv_single_photo);
                 mLeftImageView.setOnClickListener(v -> previewImages(0));
-                Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).into(mLeftImageView);
+                Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).centerCrop()
+                        .dontAnimate().into(mLeftImageView);
                 mSecurityWarnDeployRl.setVisibility(View.GONE);
                 break;
             default:

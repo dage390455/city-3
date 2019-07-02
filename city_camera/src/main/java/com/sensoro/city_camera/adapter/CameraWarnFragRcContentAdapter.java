@@ -94,8 +94,10 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     holder.layoutSinglePhoto.setVisibility(View.GONE);
                     holder.layoutMultPhoto.setVisibility(View.VISIBLE);
                     //加载布控 抓拍 照片
-                    Glide.with(mContext).load(focusPhotoUrl).placeholder(R.drawable.ic_port_default_white).into(holder.ivLeftPhoto);
-                    Glide.with(mContext).load(capturePhotoUrl).placeholder(R.drawable.ic_port_default_white).into(holder.ivRightPhoto);
+                    Glide.with(mContext).load(focusPhotoUrl).placeholder(R.drawable.ic_port_default_white).centerCrop()
+                            .dontAnimate().into(holder.ivLeftPhoto);
+                    Glide.with(mContext).load(capturePhotoUrl).placeholder(R.drawable.ic_port_default_white).centerCrop()
+                            .dontAnimate().into(holder.ivRightPhoto);
                     holder.tvRightMatchrate.setText(focusMatchrate);
                     holder.ivLeftPhoto.setAlpha(isShowInValidCover ?0.5f:1f);
                     holder.ivRightPhoto.setAlpha(isShowInValidCover ?0.5f:1f);
@@ -106,7 +108,8 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     holder.layoutSinglePhoto.setVisibility(View.VISIBLE);
                     holder.layoutMultPhoto.setVisibility(View.GONE);
                     //加载抓拍图片
-                    Glide.with(mContext).load(capturePhotoUrl).placeholder(R.drawable.ic_port_default_white).into(holder.ivSiglePhoto);
+                    Glide.with(mContext).load(capturePhotoUrl).placeholder(R.drawable.ic_port_default_white).centerCrop()
+                            .dontAnimate().into(holder.ivSiglePhoto);
                     holder.ivSiglePhoto.setAlpha(isShowInValidCover ?0.5f:1f);
                     break;
                 case SecurityConstants.SECURITY_TYPE_INVADE:
@@ -117,6 +120,8 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     //加载抓拍照片
                     Glide.with(mContext)
                             .load(capturePhotoUrl)
+                            .centerCrop()
+                            .dontAnimate()
                             .placeholder(R.drawable.ic_port_default_white)
                             .into(holder.ivSiglePhoto);
                     holder.ivSiglePhoto.setAlpha(isShowInValidCover ?0.5f:1f);
