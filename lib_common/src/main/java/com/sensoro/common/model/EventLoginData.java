@@ -39,8 +39,8 @@ public final class EventLoginData implements Serializable {
     public boolean hasStationList = false;
     public boolean hasNameplateList = false;
     public boolean hasNameplateDeploy = false;
-    public boolean hasMonitorTaskList = true;
-    public boolean hasMonitorTaskConfirm = true;
+    public boolean hasMonitorTaskList = false;
+    public boolean hasMonitorTaskConfirm = false;
 //    "nameplate": [
 //            "modify",
 //            "deploy",

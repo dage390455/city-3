@@ -33,6 +33,7 @@ import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseFragment;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.utils.AppUtils;
@@ -57,6 +58,7 @@ import butterknife.OnClick;
 
 import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.common.constant.Constants.DIRECTION_UP;
+
 @Route(path = ARouterConstants.FRAGMENT_FIRE_WARN_FRAGMENT)
 public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPresenter> implements
         IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
@@ -106,6 +108,10 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     protected void initData(Context activity) {
         initView();
         mPresenter.initData(activity);
+        if (PreferencesHelper.getInstance().getUserData().hasMonitorTaskList) {
+            //如果有布控权限，去除顶部的padding
+            fgMainWarnTitleRoot.setPadding(0, 0, 0, 0);
+        }
     }
 
 
@@ -179,9 +185,9 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     private void initClearHistoryDialog() {
         historyClearDialog = new TipOperationDialogUtils(mRootFragment.getActivity(), true);
         historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
-        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
-        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_1dbb99));
-        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record), R.color.c_a6a6a6);
+        historyClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_1dbb99));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear), getResources().getColor(R.color.c_a6a6a6));
         historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
