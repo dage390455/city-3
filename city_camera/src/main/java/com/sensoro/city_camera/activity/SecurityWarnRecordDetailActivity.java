@@ -335,7 +335,7 @@ public class SecurityWarnRecordDetailActivity
         }
 
         if (mDownloadUtils != null) {
-            mDownloadUtils.destory();
+            mDownloadUtils.destroy();
         }
 
         GSYVideoManager.releaseAllVideos();

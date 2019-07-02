@@ -36,6 +36,10 @@ import butterknife.ButterKnife;
 public class SecurityWarnTimeLineAdapter extends RecyclerView.Adapter<SecurityWarnTimeLineAdapter.SecurityTimeLineViewHolder> {
     private List<SecurityAlarmEventInfo> mDataList = new ArrayList<>();
     private Context mContext;
+    /**
+     * 带备注的消息
+     */
+    private final String EVENT_INFO_TYPE_WITH_REMARK = "2";
 
     public SecurityWarnTimeLineAdapter(Context context) {
         mContext = context;
@@ -53,7 +57,7 @@ public class SecurityWarnTimeLineAdapter extends RecyclerView.Adapter<SecurityWa
     public void onBindViewHolder(@NonNull SecurityTimeLineViewHolder holder, int position) {
         SecurityAlarmEventInfo securityAlarmEventInfo = mDataList.get(position);
         if (securityAlarmEventInfo != null) {
-            if (TextUtils.equals(securityAlarmEventInfo.type, "2")) {
+            if (TextUtils.equals(securityAlarmEventInfo.type, EVENT_INFO_TYPE_WITH_REMARK)) {
                 holder.mIconIv.setImageResource(R.drawable.icon_security_log_remarked);
                 if (!TextUtils.isEmpty(securityAlarmEventInfo.content)) {
                     holder.mRemarksTv.setVisibility(View.VISIBLE);

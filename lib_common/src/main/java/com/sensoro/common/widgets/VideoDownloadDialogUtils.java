@@ -80,7 +80,7 @@ public class VideoDownloadDialogUtils {
     public void setTipMessageText(String text){
         mTvMessage.setText(text);
     }
-    public void setTipCacnleText(String text, @ColorInt int color){
+    public void setTipCancelText(String text, @ColorInt int color){
         mTvCancel.setText(text);
         mTvConfirm.setTextColor(color);
     }
@@ -118,7 +118,7 @@ public class VideoDownloadDialogUtils {
         }
     }
 
-    public void destory(){
+    public void destroy(){
         if(mDialog != null){
             mDialog.cancel();
             mDialog = null;

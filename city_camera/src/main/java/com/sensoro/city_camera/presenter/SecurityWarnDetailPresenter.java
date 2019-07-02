@@ -102,7 +102,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
     /**
      * 联系：相机联系人电话
      */
-    public void doCameraContact() {
+    private void doCameraContact() {
         if (null == mSecurityAlarmDetailInfo || null == mSecurityAlarmDetailInfo.getCamera()
                 || null == mSecurityAlarmDetailInfo.getCamera().getContact()) {
             getView().toastShort(mActivity.getString(R.string.camera_contact_no_exist));
