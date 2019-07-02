@@ -615,7 +615,9 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
                                     mHandler.postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            getView().finishAc();
+                                            if (isAttachedView()) {
+                                                getView().finishAc();
+                                            }
                                         }
                                     }, 1000);
                                 }
