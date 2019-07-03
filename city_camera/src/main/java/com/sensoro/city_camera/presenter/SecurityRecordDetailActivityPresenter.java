@@ -304,15 +304,19 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
     }
 
     private void insertVideoToMediaStore(String filePath, boolean isVideo) {
-        long createTime = System.currentTimeMillis();
-        ContentValues values = initCommonContentValues(filePath, createTime);
-        values.put(MediaStore.Video.VideoColumns.DATE_TAKEN, createTime);
-        if(isVideo){
-            values.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
-        } else {
-            values.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
+        try {
+            long createTime = System.currentTimeMillis();
+            ContentValues values = initCommonContentValues(filePath, createTime);
+            values.put(MediaStore.Video.VideoColumns.DATE_TAKEN, createTime);
+            if(isVideo){
+                values.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
+            } else {
+                values.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
+            }
+            mActivity.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        mActivity.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
     }
 
     private ContentValues initCommonContentValues(String filePath, long time) {

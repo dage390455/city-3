@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
 
@@ -12,9 +13,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.Request;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.SizeReadyCallback;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.sensoro.city_camera.IMainViews.IPhotoPreviewView;
 import com.sensoro.city_camera.R;
@@ -74,101 +80,26 @@ public class PhotoPreviewPresenter extends BasePresenter<IPhotoPreviewView> {
 
     private void downloadImage(String url) {
         Glide.with(mActivity)
-                .asBitmap()
+                .downloadOnly()
                 .load(url)
-                .into(new FutureTarget<Bitmap>() {
+                .addListener(new RequestListener<File>() {
                     @Override
-                    public void onLoadStarted(@Nullable Drawable placeholder) {
-
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<File> target, boolean isFirstResource) {
+                        mActivity.runOnUiThread(() -> getView().toastShort(mActivity.getString(R.string.toast_image_download_failed)));
+                        return false;
                     }
 
                     @Override
-                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                        getView().toastShort(mActivity.getString(R.string.toast_image_download_failed));
-                    }
-
-                    @Override
-                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                        // 下载成功回调函数
-                        // 数据处理方法，保存bytes到文件 FileUtil.copy(file, bytes);
-                        String[] split = url.split("/");
-                        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath(), split[split.length - 1]);
+                    public boolean onResourceReady(File resource, Object model, Target<File> target, DataSource dataSource, boolean isFirstResource) {
                         ThreadPoolManager.getInstance().execute(() -> {
-                            boolean b = FileUtil.saveImageToGallery(file, resource, mActivity);
-                            if (b) {
-                                mActivity.runOnUiThread(() -> getView().toastShort(mActivity.getString(R.string.toast_image_download_success)));
-                            } else {
-                                mActivity.runOnUiThread(() -> getView().toastShort(mActivity.getString(R.string.toast_image_download_failed)));
-                            }
-
+                            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath(), System.currentTimeMillis()+".jpg");
+                            FileUtil.copy(resource, file);
+                            mActivity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                                    Uri.fromFile(new File(file.getPath()))));
+                            mActivity.runOnUiThread(() -> getView().toastShort(mActivity.getString(R.string.toast_image_download_success)));
                         });
-                    }
-
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                    }
-
-                    @Override
-                    public void getSize(@NonNull SizeReadyCallback cb) {
-
-                    }
-
-                    @Override
-                    public void removeCallback(@NonNull SizeReadyCallback cb) {
-
-                    }
-
-                    @Override
-                    public void setRequest(@Nullable Request request) {
-
-                    }
-
-                    @Nullable
-                    @Override
-                    public Request getRequest() {
-                        return null;
-                    }
-
-                    @Override
-                    public void onStart() {
-
-                    }
-
-                    @Override
-                    public void onStop() {
-
-                    }
-
-                    @Override
-                    public void onDestroy() {
-
-                    }
-
-                    @Override
-                    public boolean cancel(boolean mayInterruptIfRunning) {
                         return false;
                     }
-
-                    @Override
-                    public boolean isCancelled() {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean isDone() {
-                        return false;
-                    }
-
-                    @Override
-                    public Bitmap get() throws ExecutionException, InterruptedException {
-                        return null;
-                    }
-
-                    @Override
-                    public Bitmap get(long timeout, TimeUnit unit) throws ExecutionException, InterruptedException, TimeoutException {
-                        return null;
-                    }
-                });
+                }).submit();
     }
 }
