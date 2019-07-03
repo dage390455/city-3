@@ -12,8 +12,7 @@
         android:layout_height="190dp"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
-        android:background="@color/d8d8d8">
+        android:layout_marginTop="16dp">
 
         <com.sensoro.city_camera.widget.CustomRoundAngleImageView
             android:id="@+id/iv_single_photo"

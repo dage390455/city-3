@@ -1,9 +1,13 @@
 package com.sensoro.city_camera.presenter;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -278,6 +282,11 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
         if (isAttachedView()) {
             getView().doDownloadFinish();
         }
+
+        insertVideoToMediaStore(file.getAbsolutePath(), true);
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        intent.setData(Uri.fromFile(file));
+        mActivity.sendBroadcast(intent);
     }
 
     @Override
@@ -292,5 +301,40 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
         if (isAttachedView()) {
             getView().setDownloadErrorState();
         }
+    }
+
+    private void insertVideoToMediaStore(String filePath, boolean isVideo) {
+        try {
+            long createTime = System.currentTimeMillis();
+            ContentValues values = initCommonContentValues(filePath, createTime);
+            values.put(MediaStore.Video.VideoColumns.DATE_TAKEN, createTime);
+            if(isVideo){
+                values.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
+            } else {
+                values.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
+            }
+            mActivity.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private ContentValues initCommonContentValues(String filePath, long time) {
+        ContentValues values = new ContentValues();
+        File saveFile = new File(filePath);
+        values.put(MediaStore.MediaColumns.TITLE, saveFile.getName());
+        values.put(MediaStore.MediaColumns.DISPLAY_NAME, saveFile.getName());
+        values.put(MediaStore.MediaColumns.DATE_MODIFIED, time);
+        values.put(MediaStore.MediaColumns.DATE_ADDED, time);
+        values.put(MediaStore.MediaColumns.DATA, saveFile.getAbsolutePath());
+        values.put(MediaStore.MediaColumns.SIZE, saveFile.length());
+        return values;
+    }
+
+    public void onCaptureFinished(File file) {
+        insertVideoToMediaStore(file.getAbsolutePath(), false);
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        intent.setData(Uri.fromFile(file));
+        mActivity.sendBroadcast(intent);
     }
 }
