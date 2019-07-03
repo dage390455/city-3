@@ -929,7 +929,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             mTipUtils.dismiss();
         }
         //控制线径显示
-        mTipUtils.setDiameterVisible(isEdit && Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType));
+        mTipUtils.setDiameterVisible(false);
         mTipUtils.setTipEtRootVisible(isEdit);
         mTipUtils.setTipTitleText(title);
         mTipUtils.setTipMessageText(message, messageColor);

@@ -1502,6 +1502,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 mOperationType = MonitorPointOperationCode.AIR_SWITCH_POWER_ON_STR;
                 //上电
                 break;
+            case MonitorPointOperationCode.ERASURE_TIME:
+                mOperationType = MonitorPointOperationCode.ERASURE_TIME_STR;
+                break;
             default:
                 break;
         }
@@ -1705,7 +1708,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     @Override
     public void onClickOperation(View view, int position, TaskOptionModel taskOptionModel) {
-
+        taskOptionModel.optionType = MonitorPointOperationCode.ERASURE_TIME;
         switch (taskOptionModel.optionType) {
             case MonitorPointOperationCode.ERASURE:
                 getView().showTipDialog(false, null, mContext.getString(R.string.is_device_erasure), mContext.getString(R.string.device_erasure_tip_message), R.color.c_a6a6a6, mContext.getString(R.string.erasure), R.color.c_f34a4a, MonitorPointOperationCode.ERASURE);
@@ -1744,7 +1747,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     bundle.putInt(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
                     bundle.putSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                     DeployControlSettingData settingData = mDeviceInfo.getConfig();
-                    if (settingData!=null){
+                    if (settingData != null) {
                         bundle.putSerializable(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA, settingData);
                     }
                     startActivity(ARouterConstants.ACTIVITY_THREE_PHASE_ELECT_CONFIG_ACTIVITY, bundle, mContext);
@@ -1764,6 +1767,10 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 getView().showTipDialog(false, mDeviceInfo.getDeviceType(), mContext.getString(R.string.command_elec_connect_title), mContext.getString(R.string.command_elec_connect_desc), R.color.c_f34a4a, mContext.getString(R.string.command_elec_connect_btn_title), R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_POWER_ON);
                 //上电
                 break;
+            case MonitorPointOperationCode.ERASURE_TIME:
+                getView().showTipDialog(true, mDeviceInfo.getDeviceType(), mContext.getString(R.string.command_smoke_mute_time_title), mContext.getString(R.string.command_smoke_mute_time_desc), R.color.c_f34a4a, mContext.getString(R.string.erasure), R.color.c_f34a4a, MonitorPointOperationCode.ERASURE_TIME);
+                break;
+
         }
     }
 

@@ -330,6 +330,16 @@ public class MonitorPointModelsFactory {
         closeModel.drawableResId = closeClickable ? R.drawable.power_on : R.drawable.power_on_gray;
         closeModel.textColorResId = closeClickable ? R.color.c_252525 : R.color.c_a6a6a6;
         map.put(closeModel.id, closeModel);
+        //TODO 定时消音
+        TaskOptionModel muteTimeModel = new TaskOptionModel();
+        muteTimeModel.id = MonitorPointOperationCode.ERASURE_TIME_STR;
+        muteTimeModel.optionType = MonitorPointOperationCode.ERASURE_TIME;
+        boolean muteTimeModelClickable = status != Constants.SENSOR_STATUS_LOST && status != Constants.SENSOR_STATUS_INACTIVE;
+        muteTimeModel.clickable = muteTimeModelClickable;
+        muteTimeModel.contentResId = R.string.monitor_point_detail_erasure_time;
+        muteTimeModel.drawableResId = closeClickable ? R.drawable.erasure_clickable : R.drawable.erasure_not_clickable;
+        muteTimeModel.textColorResId = closeClickable ? R.color.c_252525 : R.color.c_a6a6a6;
+        map.put(muteTimeModel.id, muteTimeModel);
         return map;
     }
 }

@@ -29,4 +29,7 @@ public interface MonitorPointOperationCode {
     int ERASURE_LONG = 0x09;
     String ERASURE_LONG_STR = "mute2";
 
+    int ERASURE_TIME = 0x10;
+    String ERASURE_TIME_STR = "mute2";
+
 }
