@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.LoginActivity;
 
@@ -43,9 +44,9 @@ public class SplashScreen {
                 //glide加载图片
                 Glide.with(activity)
                         .load("")
-                        .placeholder(R.drawable.splash)
-                        .error(R.drawable.splash)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .apply(new RequestOptions().placeholder(R.drawable.splash)
+                                .error(R.drawable.splash)
+                                .diskCacheStrategy(DiskCacheStrategy.NONE))
                         .into(root);
 
                 splashDialog = new Dialog(activity, R.style.AppTheme_StartWithLogin);

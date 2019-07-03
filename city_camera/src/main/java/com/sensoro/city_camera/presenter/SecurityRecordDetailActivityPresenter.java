@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.city_camera.IMainViews.ISecurityRecordDetailActivityView;
 import com.sensoro.city_camera.R;
 import com.sensoro.common.base.BasePresenter;
@@ -50,8 +51,9 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
     }
 
     private void setLastCover(String coverUrl) {
-        Glide.with(mActivity).load(coverUrl)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
+        Glide.with(mActivity).
+                load(coverUrl)
+                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))//缓存全尺寸
                 .into(getView().getImageView());
 
     }
@@ -252,7 +254,7 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
         }
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath(), fileName);
 
-        if(mDownloadUtil == null){
+        if (mDownloadUtil == null) {
             mDownloadUtil = new DownloadUtil(this);
         }
 

@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.Request;
 import com.bumptech.glide.request.target.SizeReadyCallback;
-import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.sensoro.city_camera.IMainViews.IPhotoPreviewView;
 import com.sensoro.city_camera.R;
@@ -99,8 +98,13 @@ public class PhotoPreviewPresenter extends BasePresenter<IPhotoPreviewView> {
                         String[] split = url.split("/");
                         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath(), split[split.length - 1]);
                         ThreadPoolManager.getInstance().execute(() -> {
-                            FileUtil.copy(file.getAbsolutePath(), bytes);
-                            mActivity.runOnUiThread(() -> getView().toastShort(mActivity.getString(R.string.toast_image_download_success)));
+                            boolean b = FileUtil.saveImageToGallery(file, resource, mActivity);
+                            if (b) {
+                                mActivity.runOnUiThread(() -> getView().toastShort(mActivity.getString(R.string.toast_image_download_success)));
+                            } else {
+                                mActivity.runOnUiThread(() -> getView().toastShort(mActivity.getString(R.string.toast_image_download_failed)));
+                            }
+
                         });
                     }
 

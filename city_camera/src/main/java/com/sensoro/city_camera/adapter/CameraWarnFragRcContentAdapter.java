@@ -11,8 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.MultiTransformation;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.constants.SecurityConstants;
@@ -67,14 +66,14 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
             boolean isShowCover;
             //预警是否有效 处理
             if (securityAlarmInfo.getIsHandle() > 0) {
-                boolean isWarnValid = (securityAlarmInfo.getIsHandle() != SecurityConstants.SECURITY_IS_NOT_HANDLE  && securityAlarmInfo.getIsEffective() > 0);
+                boolean isWarnValid = (securityAlarmInfo.getIsHandle() != SecurityConstants.SECURITY_IS_NOT_HANDLE && securityAlarmInfo.getIsEffective() > 0);
                 //已经处理 隐藏处理按钮/显示是否有效
                 holder.btnWarnConfim.setVisibility(View.INVISIBLE);
                 holder.tvCamerawarnValid.setVisibility(View.VISIBLE);
                 holder.tvCamerawarnValid.setBackgroundResource(isWarnValid ? R.drawable.shape_camera_warn_valid : R.drawable.shape_camera_warn_unvalid);
                 holder.tvCamerawarnValid.setText(isWarnValid ? R.string.word_valid : R.string.word_unvalid);
                 isShowCover = isWarnValid;
-            }else{
+            } else {
                 //未处理 显示处理按钮/隐藏是否有效标签
                 holder.btnWarnConfim.setVisibility(View.VISIBLE);
                 holder.tvCamerawarnValid.setVisibility(View.GONE);
@@ -90,8 +89,8 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     holder.layoutSinglePhoto.setVisibility(View.GONE);
                     holder.layoutMultPhoto.setVisibility(View.VISIBLE);
                     //加载布控 抓拍 照片
-                    Glide.with(mContext).load(focusPhotoUrl).placeholder(R.drawable.ic_port_default_white).into(holder.ivLeftPhoto);
-                    Glide.with(mContext).load(capturePhotoUrl).placeholder(R.drawable.ic_port_default_white).into(holder.ivRightPhoto);
+                    Glide.with(mContext).load(focusPhotoUrl).apply(new RequestOptions().placeholder(R.drawable.ic_port_default_white)).into(holder.ivLeftPhoto);
+                    Glide.with(mContext).load(capturePhotoUrl).apply(new RequestOptions().placeholder(R.drawable.ic_port_default_white)).into(holder.ivRightPhoto);
                     holder.tvRightMatchrate.setText(focusMatchrate);
                     holder.viewMulUnvalidCover.setVisibility(!isShowCover ? View.VISIBLE : View.GONE);
                     break;
@@ -101,7 +100,7 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     holder.layoutSinglePhoto.setVisibility(View.VISIBLE);
                     holder.layoutMultPhoto.setVisibility(View.GONE);
                     //加载抓拍图片
-                    Glide.with(mContext).load(capturePhotoUrl).placeholder(R.drawable.ic_port_default_white).into(holder.ivSiglePhoto);
+                    Glide.with(mContext).load(capturePhotoUrl).apply(new RequestOptions().placeholder(R.drawable.ic_port_default_white)).into(holder.ivSiglePhoto);
                     holder.viewSingleUnvalidCover.setVisibility(!isShowCover ? View.VISIBLE : View.GONE);
                     break;
                 case SecurityConstants.SECURITY_TYPE_INVADE:
@@ -112,7 +111,7 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     //加载抓拍照片
                     Glide.with(mContext)
                             .load(capturePhotoUrl)
-                            .placeholder(R.drawable.ic_port_default_white)
+                            .apply(new RequestOptions().placeholder(R.drawable.ic_port_default_white))
                             .into(holder.ivSiglePhoto);
                     holder.viewSingleUnvalidCover.setVisibility(!isShowCover ? View.VISIBLE : View.GONE);
                     break;
