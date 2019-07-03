@@ -237,6 +237,9 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
             if (strings1.length > 0) {
                 fileName = strings1[strings1.length - 1];
             }
+            if(!fileName.toLowerCase().endsWith(".jpeg") && !fileName.toLowerCase().endsWith(".jpg")){
+                fileName = System.currentTimeMillis() + ".jpeg";
+            }
         }
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath(), fileName);
         getView().capture(file);
@@ -263,6 +266,9 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
             if (strings1.length > 0) {
                 fileName = strings1[strings1.length - 1];
             }
+            if (!fileName.toLowerCase().endsWith(".mp4")){
+                fileName = System.currentTimeMillis() + ".mp4";
+            }
         }
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath(), fileName);
 
@@ -274,7 +280,7 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
     }
 
     public void doDownloadCancel() {
-        if (mDownloadUtil == null) {
+        if (mDownloadUtil != null) {
             mDownloadUtil.cancelDownload();
         }
     }
