@@ -63,6 +63,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
     public static final long FILTER_TIME_24H = 24 * 3600;
     public static final long FILTER_TIME_3DAY = 3 * 24 * 3600;
     public static final long FILTER_TIME_7DAY = 7 * 24 * 3600;
+    public static final long FILTER_TIME_CUSTOM = -1;
 
     //筛选条件
     private FilterModel mCurrentCaptureTimeModel;
@@ -73,10 +74,13 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
 
     //搜索文字
     private String tempSearchText;
-    //抓拍时间
+    //搜索抓拍时间参数
     private long startTime;
     private long endTime;
     private String dateSearchText;
+    //自定义日历开始结束时间参数
+    private long customStartTime;
+    private long customEndTime;
     //处理状态
     private long handleStatus = FILTER_STATUS_UNPROCESS;
 
@@ -128,7 +132,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         mCaptureTimeModelList.add(new FilterModel(mContext.getString(R.string.twentyfour_hours), FILTER_TIME_24H, false, false));
         mCaptureTimeModelList.add(new FilterModel(mContext.getString(R.string.three_days), FILTER_TIME_3DAY, false, false));
         mCaptureTimeModelList.add(new FilterModel(mContext.getString(R.string.seven_days), FILTER_TIME_7DAY, false, false));
-        mCaptureTimeModelList.add(new FilterModel(mContext.getString(R.string.customize_time), 0L, false, false));
+        mCaptureTimeModelList.add(new FilterModel(mContext.getString(R.string.customize_time), FILTER_TIME_CUSTOM, false, false));
     }
 
     public void initProcessStatusDialog() {
@@ -261,7 +265,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         Intent intent = new Intent(mContext, SecurityWarnDetailActivity.class);
         intent.putExtra("id", securityAlarmInfo.getId());
         intent.putExtra("SecurityAlarmInfo", securityAlarmInfo);
-        if(isAttachedView()){
+        if (isAttachedView()) {
             getView().startACForResult(intent, REQUEST_CODE_DETAIL);
         }
 
@@ -378,12 +382,12 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
     @Override
     public void onCalendarPopupCallback(CalendarDateModel calendarDateModel) {
         mCurrentCaptureTimeModel = mCaptureTimeModelList.get(mCaptureTimeModelList.size() - 1);
-        startTime = DateUtil.strToDate(calendarDateModel.startDate).getTime();
-        endTime = DateUtil.strToDate(calendarDateModel.endDate).getTime();
+        customStartTime = DateUtil.strToDate(calendarDateModel.startDate).getTime();
+        customEndTime = DateUtil.strToDate(calendarDateModel.endDate).getTime();
         /*dateSearchText = DateUtil.getCalendarYearMothDayFormatDate(startTime) + " ~ " + DateUtil
                 .getCalendarYearMothDayFormatDate(endTime);*/
-        dateSearchText = DateUtil.getMonthDate(startTime) + " ~ " + DateUtil
-                .getMonthDate(endTime);
+        dateSearchText = DateUtil.getMonthDate(customStartTime) + " ~ " + DateUtil
+                .getMonthDate(customEndTime);
         int elmentPos = mCaptureTimeModelList.indexOf(mCurrentCaptureTimeModel);
         //更新自定义时间文字
         mCurrentCaptureTimeModel.statusTitle = dateSearchText;
@@ -392,8 +396,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         getView().updateFilterCaptureTimeList(mCaptureTimeModelList);
 
         getView().setFilterCaptureTimeView(mCurrentCaptureTimeModel);
-        endTime += 1000 * 60 * 60 * 24;
-        requestSearchData(DIRECTION_DOWN);
+        filterDataByTime(mCurrentCaptureTimeModel.status);
 
         getView().setSearchHistoryVisible(false);
         if (!TextUtils.isEmpty(tempSearchText)) {
@@ -406,9 +409,13 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
      * 选择筛选过滤时间
      */
     public void filterDataByTime(long filterTimeInval) {
-        if (filterTimeInval == 0) {
+        //不限
+        if (filterTimeInval == FILTER_TIME_ALL) {
             startTime = 0;
             endTime = 0;
+        } else if (filterTimeInval == FILTER_TIME_CUSTOM) {
+            startTime = customStartTime;
+            endTime = customEndTime + 1000 * 60 * 60 * 24;
         } else {
             endTime = System.currentTimeMillis();
             startTime = endTime - filterTimeInval * 1000;
@@ -436,19 +443,16 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
      */
     public void setFilterCapturetime(int positon) {
         if (positon > -1 && positon < mCaptureTimeModelList.size()) {
-            //init  更新抓拍时间选项列表
-            startTime = 0;
-            endTime = 0;
-            dateSearchText = "";
-            mCaptureTimeModelList.get(mCaptureTimeModelList.size()-1).statusTitle = mContext.getString(R.string.customize_time);
-            getView().updateFilterCaptureTimeList(mCaptureTimeModelList);
-
-            mCurrentCaptureTimeModel = mCaptureTimeModelList.get(positon);
-            //重制自定义时间内容
-            if (!TextUtils.isEmpty(dateSearchText)) {
+            if (customStartTime != 0 || customEndTime != 0) {
+                //init  更新抓拍时间选项列表
+                customStartTime = 0;
+                customEndTime = 0;
+                dateSearchText = "";
                 mCaptureTimeModelList.get(mCaptureTimeModelList.size() - 1).statusTitle = mContext.getString(R.string.customize_time);
                 getView().updateFilterCaptureTimeList(mCaptureTimeModelList);
             }
+
+            mCurrentCaptureTimeModel = mCaptureTimeModelList.get(positon);
             filterDataByTime(mCurrentCaptureTimeModel.status);
         }
         getView().setFilterCaptureTimeView(mCurrentCaptureTimeModel);
@@ -484,11 +488,12 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
      * @param fgMainWarnTitleRoot
      */
     public void doCalendar(RelativeLayout fgMainWarnTitleRoot) {
+
         long temp_startTime = -1;
         long temp_endTime = -1;
-        if (startTime != 0 && endTime != 0) {
-            temp_startTime = startTime;
-            temp_endTime = endTime;
+        if (customStartTime != 0 && customEndTime != 0) {
+            temp_startTime = customStartTime;
+            temp_endTime = customEndTime;
         }
         mCalendarPopUtils.show(fgMainWarnTitleRoot, temp_startTime, temp_endTime);
     }
@@ -499,6 +504,8 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
     public void initFilterStatus() {
         startTime = 0;
         endTime = 0;
+        customStartTime = 0;
+        customEndTime = 0;
         handleStatus = FILTER_STATUS_UNPROCESS;
         tempSearchText = "";
         getView().setFilterCaptureTimeView(mCurrentCaptureTimeModel);
