@@ -8,6 +8,9 @@ import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
 
 import java.util.List;
 
+/**
+ * @author qinghao.wang
+ */
 public interface ICameraWarnListFragmentView extends IToast, IActivityIntent, IProgressDialog {
     /**
      * 取消搜索数据
@@ -19,6 +22,11 @@ public interface ICameraWarnListFragmentView extends IToast, IActivityIntent, IP
      * @param securityAlarmInfoList
      */
     void updateCameraWarnsListAdapter(List<SecurityAlarmInfo> securityAlarmInfoList);
+
+    /**
+     * 安防预警列表移动到顶部
+     */
+    void SmoothToTopList();
 
     /**
      * 下拉刷新完成
@@ -77,9 +85,9 @@ public interface ICameraWarnListFragmentView extends IToast, IActivityIntent, IP
 
     /**
      * 刷新 抓拍时间 选择列表
-     * @param capturetimeList
+     * @param captureTimeList
      */
-    void updateFilterCapturetimeList(List<FilterModel> capturetimeList);
+    void updateFilterCaptureTimeList(List<FilterModel> captureTimeList);
 
     /**
      * 刷新 处理状态 选择列表
@@ -89,9 +97,9 @@ public interface ICameraWarnListFragmentView extends IToast, IActivityIntent, IP
 
     /**
      * 设置抓拍时间View
-     * @param capturetimeModel
+     * @param captureTimeModel
      */
-    void setFilterCapturetimeView(FilterModel capturetimeModel);
+    void setFilterCaptureTimeView(FilterModel captureTimeModel);
 
     /**
      * 设置处理状态View

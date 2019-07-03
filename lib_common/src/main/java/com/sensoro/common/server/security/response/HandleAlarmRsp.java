@@ -24,6 +24,7 @@ public class HandleAlarmRsp extends ResponseBase implements Serializable {
 
     public static class HandleAlarmData {
         public String id;
+        public int status;
     }
 }
 

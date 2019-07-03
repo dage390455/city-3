@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.city_camera.IMainViews.ISecurityWarnDetailView;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
@@ -26,6 +28,8 @@ import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
 import com.sensoro.common.server.security.bean.SecurityAlarmEventInfo;
+import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
+import com.sensoro.common.server.security.bean.SecurityCameraInfo;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -76,17 +80,17 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     private SecurityWarnTimeLineAdapter mTimeLineAdapter;
     private View mSingleView;
     private View mMultiView;
-    private View mCover;
+    private ImageView mLeftImageView, mRightImageView;
 
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.security_warn_detail_layout);
         ButterKnife.bind(this);
+        initView();
 
         mPresenter.initData(this);
 
-        initView();
 
         MapUtil.startLocation(this);
     }
@@ -132,15 +136,16 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         }
     }
 
+
     @Override
-    public void updateSecurityWarnDetail(SecurityAlarmDetailInfo securityAlarmDetailInfo) {
-        if (securityAlarmDetailInfo == null) {
+    public void updateSecurityWarnDetail(SecurityAlarmInfo securityAlarmInfo) {
+        if (securityAlarmInfo == null) {
             finish();
             return;
         }
 
-        mSecurityWarnTitleTv.setText(securityAlarmDetailInfo.getTaskName());
-        switch (securityAlarmDetailInfo.getAlarmType()) {
+        mSecurityWarnTitleTv.setText(securityAlarmInfo.getTaskName());
+        switch (securityAlarmInfo.getAlarmType()) {
             case SecurityConstants.SECURITY_TYPE_FOCUS:
                 mSecurityWarnTypeTv.setText(R.string.focus_type);
                 mSecurityWarnTypeTv.setBackgroundResource(R.drawable.security_type_focus_bg);
@@ -149,15 +154,25 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
                     mMultiView = ((ViewStub) findViewById(R.id.multi_image_vs)).inflate();
                     mMultiView.setVisibility(View.VISIBLE);
                 }
-                mCover = findViewById(R.id.view_mul_valid_cover);
-                View leftView = findViewById(R.id.iv_left_photo);
-                Glide.with(this).load(securityAlarmDetailInfo.getImageUrl()).into((ImageView) leftView);
-                View rightView = findViewById(R.id.iv_right_photo);
-                Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).into((ImageView) rightView);
-                leftView.setOnClickListener(v -> previewImages(0));
-                rightView.setOnClickListener(v -> previewImages(1));
+                mLeftImageView = findViewById(R.id.iv_left_photo);
+                Glide.with(this)
+                        .load(securityAlarmInfo.getImageUrl())
+                        .apply(new RequestOptions().skipMemoryCache(false)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL).centerCrop()
+                                .dontAnimate())
+                        .into(mLeftImageView);
+                mRightImageView = findViewById(R.id.iv_right_photo);
+                Glide.with(this)
+                        .load(securityAlarmInfo.getFaceUrl())
+                        .apply(new RequestOptions().skipMemoryCache(false)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .centerCrop()
+                                .dontAnimate())
+                        .into(mRightImageView);
+                mRightImageView.setOnClickListener(v -> previewImages(0));
                 mSecurityWarnDeployRl.setVisibility(View.VISIBLE);
-
+                TextView matchRateTv = findViewById(R.id.tv_right_matchrate);
+                matchRateTv.setText(String.format("%s%%", Double.valueOf(securityAlarmInfo.getScore()).intValue()));
                 break;
             case SecurityConstants.SECURITY_TYPE_FOREIGN:
                 mSecurityWarnTypeTv.setText(R.string.external_type);
@@ -167,10 +182,15 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
                     mSingleView = ((ViewStub) findViewById(R.id.single_image_vs)).inflate();
                     mSingleView.setVisibility(View.VISIBLE);
                 }
-                mCover = findViewById(R.id.view_single_valid_cover);
-                View singleView = findViewById(R.id.iv_single_photo);
-                singleView.setOnClickListener(v -> previewImages(0));
-                Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).into((ImageView) singleView);
+                mLeftImageView = findViewById(R.id.iv_single_photo);
+                mLeftImageView.setOnClickListener(v -> previewImages(0));
+                Glide.with(this)
+                        .load(securityAlarmInfo.getFaceUrl())
+                        .apply(new RequestOptions().skipMemoryCache(false)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .centerCrop()
+                                .dontAnimate())
+                        .into(mLeftImageView);
                 mSecurityWarnDeployRl.setVisibility(View.GONE);
                 break;
             case SecurityConstants.SECURITY_TYPE_INVADE:
@@ -181,45 +201,63 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
                     mSingleView = ((ViewStub) findViewById(R.id.single_image_vs)).inflate();
                     mSingleView.setVisibility(View.VISIBLE);
                 }
-                mCover = findViewById(R.id.view_single_valid_cover);
-                View singlePhotoView = findViewById(R.id.iv_single_photo);
-                singlePhotoView.setOnClickListener(v -> previewImages(0));
-                Glide.with(this).load(securityAlarmDetailInfo.getFaceUrl()).into((ImageView) singlePhotoView);
+                mLeftImageView = findViewById(R.id.iv_single_photo);
+                mLeftImageView.setOnClickListener(v -> previewImages(0));
+                Glide.with(this)
+                        .load(securityAlarmInfo.getFaceUrl())
+                        .apply(new RequestOptions().skipMemoryCache(false)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .centerCrop()
+                                .dontAnimate())
+                        .into(mLeftImageView);
                 mSecurityWarnDeployRl.setVisibility(View.GONE);
                 break;
             default:
         }
 
-        mSecurityWarnTimeTv.setText(DateUtil.getStrTimeToday(this, Long.parseLong(securityAlarmDetailInfo.getAlarmTime()), 0));
-        mSecurityWarnCameraNameTv.setText(securityAlarmDetailInfo.getCamera().getName());
+        mSecurityWarnTimeTv.setText(DateUtil.getStrTimeToday(this, securityAlarmInfo.getAlarmTime(), 0));
+        if (securityAlarmInfo instanceof SecurityAlarmDetailInfo) {
+            SecurityAlarmDetailInfo securityAlarmDetailInfo = (SecurityAlarmDetailInfo) securityAlarmInfo;
+            SecurityCameraInfo camera = securityAlarmDetailInfo.getCamera();
+            if (camera != null) {
+                mSecurityWarnCameraNameTv.setText(camera.getName());
+            }
+        } else {
+            mSecurityWarnCameraNameTv.setText(securityAlarmInfo.getDeviceName());
+        }
 
-        updateSecurityConfirmResult(securityAlarmDetailInfo);
+        updateSecurityConfirmResult(securityAlarmInfo);
 
     }
 
     @Override
-    public void updateSecurityConfirmResult(SecurityAlarmDetailInfo securityAlarmDetailInfo) {
-        if (mCover != null) {
-            mCover.setVisibility(securityAlarmDetailInfo.getIsEffective() == SecurityConstants.SECURITY_VALID
-                    || securityAlarmDetailInfo.getIsEffective() == SecurityConstants.SECURITY_INVALID
-                    ? View.VISIBLE : View.GONE);
-        }
-        if (securityAlarmDetailInfo.getIsHandle() != SecurityConstants.SECURITY_IS_NOT_HANDLE
-                && securityAlarmDetailInfo.getIsEffective() == SecurityConstants.SECURITY_VALID) {
+    public void updateSecurityConfirmResult(SecurityAlarmInfo securityAlarmInfo) {
+        if (securityAlarmInfo.getIsHandle() != SecurityConstants.SECURITY_IS_NOT_HANDLE
+                && securityAlarmInfo.getIsEffective() == SecurityConstants.SECURITY_VALID) {
             mConfirmResultTv.setText(R.string.word_valid);
             mConfirmResultTv.setBackgroundResource(R.drawable.shape_camera_warn_valid);
+            mConfirmResultTv.setVisibility(View.VISIBLE);
             mSecurityWarnConfirmTv.setVisibility(View.GONE);
-            mCover.setVisibility(View.VISIBLE);
-        } else if (securityAlarmDetailInfo.getIsHandle() != SecurityConstants.SECURITY_IS_NOT_HANDLE
-                && securityAlarmDetailInfo.getIsEffective() == SecurityConstants.SECURITY_INVALID) {
+        } else if (securityAlarmInfo.getIsHandle() != SecurityConstants.SECURITY_IS_NOT_HANDLE
+                && securityAlarmInfo.getIsEffective() == SecurityConstants.SECURITY_INVALID) {
             mConfirmResultTv.setText(R.string.word_unvalid);
+            mConfirmResultTv.setVisibility(View.VISIBLE);
             mConfirmResultTv.setBackgroundResource(R.drawable.shape_camera_warn_unvalid);
             mSecurityWarnConfirmTv.setVisibility(View.GONE);
-            mCover.setVisibility(View.VISIBLE);
         } else {
             mSecurityWarnConfirmTv.setVisibility(View.VISIBLE);
             mConfirmResultTv.setVisibility(View.GONE);
-            mCover.setVisibility(View.GONE);
+        }
+
+        if (securityAlarmInfo.getIsHandle() != SecurityConstants.SECURITY_IS_NOT_HANDLE) {
+            if (securityAlarmInfo.getIsEffective() == SecurityConstants.SECURITY_INVALID) {
+                if (mRightImageView != null) {
+                    mRightImageView.setAlpha(0.5f);
+                    mLeftImageView.setAlpha(0.5f);
+                } else {
+                    mLeftImageView.setAlpha(0.5f);
+                }
+            }
         }
     }
 
@@ -237,7 +275,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         Bundle bundle = new Bundle();
         bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_ID, securityAlarmDetailInfo.getId());
         bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TITLE, securityAlarmDetailInfo.getTaskName());
-        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TIME, securityAlarmDetailInfo.getAlarmTime());
+        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TIME, String.valueOf(securityAlarmDetailInfo.getAlarmTime()));
         bundle.putInt(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TYPE, securityAlarmDetailInfo.getAlarmType());
         securityWarnConfirmDialog.setArguments(bundle);
         securityWarnConfirmDialog.show(getSupportFragmentManager());
@@ -267,6 +305,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         SecurityControlPersonDetailsDialog controlPersonDetailsDialog = new SecurityControlPersonDetailsDialog();
         Bundle bundle = new Bundle();
         bundle.putSerializable(SecurityControlPersonDetailsDialog.EXTRA_KEY_DEPLOY_INFO, securityAlarmDetailInfo.getObjectMainJson());
+        bundle.putString(SecurityControlPersonDetailsDialog.EXTRA_KEY_DEPLOY_IMAGE, securityAlarmDetailInfo.getImageUrl());
         controlPersonDetailsDialog.setArguments(bundle);
         controlPersonDetailsDialog.show(getSupportFragmentManager());
 

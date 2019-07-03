@@ -35,6 +35,9 @@ import io.reactivex.schedulers.Schedulers;
 
 import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAUSE;
 
+/**
+ * @author bin.tian
+ */
 public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecurityRecordDetailActivityView> implements DownloadListener {
     private Activity mActivity;
     private String mSecurityWarnId;
@@ -236,12 +239,17 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
     }
 
     public void showDownloadDialog() {
-        getView().showDownloadDialog(mSecurityRecord.videoSize);
+        if (mSecurityRecord != null && isAttachedView()) {
+            getView().showDownloadDialog(mSecurityRecord.videoSize);
+        }
     }
 
     public void doDownload() {
         if (mSecurityRecord == null) {
             return;
+        }
+        if (isAttachedView()){
+            getView().setDownloadStartState(mSecurityRecord.videoSize);
         }
         String fileName = System.currentTimeMillis() + ".mp4";
         String[] strings = mSecurityRecord.mediaUrl.split("\\?");

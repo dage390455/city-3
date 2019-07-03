@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * 安防预警详情信息
  */
-public class SecurityAlarmDetailInfo implements Serializable {
+public class SecurityAlarmDetailInfo extends SecurityAlarmInfo implements Serializable {
 
 
     /**
@@ -45,79 +45,13 @@ public class SecurityAlarmDetailInfo implements Serializable {
      * contacts : [{"name":"齐哲","mobilePhone":"13888888888"},{"name":"巴哲","mobilePhone":"13999999999"}]
      */
 
-    private String id;
-    private String alarmLogId;
-    private String infoId;
-    private Object structuredInfojson;
-    private SecurityDeployPersonInfo objectMainJson;
     private SecurityCameraInfo camera;
-    private String deviceName;
-    private String address;
-    private String libId;
-    private String libName;
-    private String taskId;
-    private String taskName;
-    private String sceneUrl;
-    private String faceRect;
-    private double score;
-    private String captureTime;
-    private String alarmTime;
-    private int isHandle;
-    private int isEffective;
-    private Object operationDetail;
-    private String faceUrl;
-    private String imageUrl;
-    private int cid;
-    private int taskType;
-    private int alarmType;
-    private double latitude;
-    private double longitude;
-    private String captureId;
     private String personInfoUrl;
     private String aid;
     private String feature;
     private List<String> alarmNotifyUserIds;
     private List<SecurityContactsInfo> contacts;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getAlarmLogId() {
-        return alarmLogId;
-    }
-
-    public void setAlarmLogId(String alarmLogId) {
-        this.alarmLogId = alarmLogId;
-    }
-
-    public String getInfoId() {
-        return infoId;
-    }
-
-    public void setInfoId(String infoId) {
-        this.infoId = infoId;
-    }
-
-    public Object getStructuredInfojson() {
-        return structuredInfojson;
-    }
-
-    public void setStructuredInfojson(Object structuredInfojson) {
-        this.structuredInfojson = structuredInfojson;
-    }
-
-    public SecurityDeployPersonInfo getObjectMainJson() {
-        return objectMainJson;
-    }
-
-    public void setObjectMainJson(SecurityDeployPersonInfo objectMainJson) {
-        this.objectMainJson = objectMainJson;
-    }
 
     public SecurityCameraInfo getCamera() {
         return camera;
@@ -125,182 +59,6 @@ public class SecurityAlarmDetailInfo implements Serializable {
 
     public void setCamera(SecurityCameraInfo camera) {
         this.camera = camera;
-    }
-
-    public String getDeviceName() {
-        return deviceName;
-    }
-
-    public void setDeviceName(String deviceName) {
-        this.deviceName = deviceName;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getLibId() {
-        return libId;
-    }
-
-    public void setLibId(String libId) {
-        this.libId = libId;
-    }
-
-    public String getLibName() {
-        return libName;
-    }
-
-    public void setLibName(String libName) {
-        this.libName = libName;
-    }
-
-    public String getTaskId() {
-        return taskId;
-    }
-
-    public void setTaskId(String taskId) {
-        this.taskId = taskId;
-    }
-
-    public String getTaskName() {
-        return taskName;
-    }
-
-    public void setTaskName(String taskName) {
-        this.taskName = taskName;
-    }
-
-    public String getSceneUrl() {
-        return sceneUrl;
-    }
-
-    public void setSceneUrl(String sceneUrl) {
-        this.sceneUrl = sceneUrl;
-    }
-
-    public String getFaceRect() {
-        return faceRect;
-    }
-
-    public void setFaceRect(String faceRect) {
-        this.faceRect = faceRect;
-    }
-
-    public double getScore() {
-        return score;
-    }
-
-    public void setScore(double score) {
-        this.score = score;
-    }
-
-    public String getCaptureTime() {
-        return captureTime;
-    }
-
-    public void setCaptureTime(String captureTime) {
-        this.captureTime = captureTime;
-    }
-
-    public String getAlarmTime() {
-        return alarmTime;
-    }
-
-    public void setAlarmTime(String alarmTime) {
-        this.alarmTime = alarmTime;
-    }
-
-    public int getIsHandle() {
-        return isHandle;
-    }
-
-    public void setIsHandle(int isHandle) {
-        this.isHandle = isHandle;
-    }
-
-    public int getIsEffective() {
-        return isEffective;
-    }
-
-    public void setIsEffective(int isEffective) {
-        this.isEffective = isEffective;
-    }
-
-    public Object getOperationDetail() {
-        return operationDetail;
-    }
-
-    public void setOperationDetail(Object operationDetail) {
-        this.operationDetail = operationDetail;
-    }
-
-    public String getFaceUrl() {
-        return faceUrl;
-    }
-
-    public void setFaceUrl(String faceUrl) {
-        this.faceUrl = faceUrl;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public int getCid() {
-        return cid;
-    }
-
-    public void setCid(int cid) {
-        this.cid = cid;
-    }
-
-    public int getTaskType() {
-        return taskType;
-    }
-
-    public void setTaskType(int taskType) {
-        this.taskType = taskType;
-    }
-
-    public int getAlarmType() {
-        return alarmType;
-    }
-
-    public void setAlarmType(int alarmType) {
-        this.alarmType = alarmType;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public String getCaptureId() {
-        return captureId;
-    }
-
-    public void setCaptureId(String captureId) {
-        this.captureId = captureId;
     }
 
     public String getPersonInfoUrl() {

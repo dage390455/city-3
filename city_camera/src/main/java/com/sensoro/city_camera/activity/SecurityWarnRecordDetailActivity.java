@@ -3,6 +3,7 @@ package com.sensoro.city_camera.activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.presenter.SecurityRecordDetailActivityPresenter;
 import com.sensoro.city_camera.widget.AiGSYVideoPlayer;
+import com.sensoro.city_camera.widget.AiGSYVideoPlayerUtil;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -41,7 +43,8 @@ import butterknife.OnClick;
  */
 public class SecurityWarnRecordDetailActivity
         extends BaseActivity<ISecurityRecordDetailActivityView, SecurityRecordDetailActivityPresenter>
-        implements ISecurityRecordDetailActivityView, AiGSYVideoPlayer.CaptureClickListener, AiGSYVideoPlayer.DownloadClickListener, VideoDownloadDialogUtils.TipDialogUtilsClickListener {
+        implements ISecurityRecordDetailActivityView, AiGSYVideoPlayerUtil.CaptureClickListener,
+        AiGSYVideoPlayerUtil.DownloadClickListener, VideoDownloadDialogUtils.TipDialogUtilsClickListener {
 
     @BindView(R2.id.include_imv_title_imv_arrows_left)
     ImageView includeImvTitleImvArrowsLeft;
@@ -81,8 +84,8 @@ public class SecurityWarnRecordDetailActivity
         initViewHeight();
         initGsyVideo();
 
-        gsyPlayerAcCameraPersonDetail.setCaptureClickListener(this);
-        gsyPlayerAcCameraPersonDetail.setDownloadClickListener(this);
+        AiGSYVideoPlayerUtil.getInstance().setCaptureClickListener(this);
+        AiGSYVideoPlayerUtil.getInstance().setDownloadClickListener(this);
 
         mDownloadUtils = new VideoDownloadDialogUtils(mActivity);
         mDownloadUtils.setTipDialogUtilsClickListener(this);
@@ -335,11 +338,11 @@ public class SecurityWarnRecordDetailActivity
         }
 
         if (mDownloadUtils != null) {
-            mDownloadUtils.destory();
+            mDownloadUtils.destroy();
         }
 
         GSYVideoManager.releaseAllVideos();
-
+        AiGSYVideoPlayerUtil.getInstance().clearListener();
     }
 
     @Override
@@ -456,6 +459,7 @@ public class SecurityWarnRecordDetailActivity
     @Override
     public void updateDownLoadProgress(int progress, String totalBytesRead, String fileSize) {
         if (mDownloadUtils.isShowing()) {
+            Log.d("updateDownLoadProgress", "updateDownLoadProgress: "+progress);
             mDownloadUtils.updateDownLoadProgress(progress, totalBytesRead, fileSize);
         }
     }
