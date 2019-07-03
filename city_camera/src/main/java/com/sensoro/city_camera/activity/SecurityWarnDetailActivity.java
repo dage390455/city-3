@@ -1,7 +1,6 @@
 package com.sensoro.city_camera.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewStub;
@@ -14,8 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.city_camera.IMainViews.ISecurityWarnDetailView;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
@@ -159,16 +157,18 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
                 mLeftImageView = findViewById(R.id.iv_left_photo);
                 Glide.with(this)
                         .load(securityAlarmInfo.getImageUrl())
-                        .skipMemoryCache(false)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL).centerCrop()
-                        .dontAnimate().into(mLeftImageView);
+                        .apply(new RequestOptions().skipMemoryCache(false)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL).centerCrop()
+                                .dontAnimate())
+                        .into(mLeftImageView);
                 mRightImageView = findViewById(R.id.iv_right_photo);
                 Glide.with(this)
                         .load(securityAlarmInfo.getFaceUrl())
-                        .skipMemoryCache(false)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .centerCrop()
-                        .dontAnimate().into(mRightImageView);
+                        .apply(new RequestOptions().skipMemoryCache(false)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .centerCrop()
+                                .dontAnimate())
+                        .into(mRightImageView);
                 mRightImageView.setOnClickListener(v -> previewImages(0));
                 mSecurityWarnDeployRl.setVisibility(View.VISIBLE);
                 TextView matchRateTv = findViewById(R.id.tv_right_matchrate);
@@ -186,10 +186,11 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
                 mLeftImageView.setOnClickListener(v -> previewImages(0));
                 Glide.with(this)
                         .load(securityAlarmInfo.getFaceUrl())
-                        .skipMemoryCache(false)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .centerCrop()
-                        .dontAnimate().into(mLeftImageView);
+                        .apply(new RequestOptions().skipMemoryCache(false)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .centerCrop()
+                                .dontAnimate())
+                        .into(mLeftImageView);
                 mSecurityWarnDeployRl.setVisibility(View.GONE);
                 break;
             case SecurityConstants.SECURITY_TYPE_INVADE:
@@ -204,20 +205,21 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
                 mLeftImageView.setOnClickListener(v -> previewImages(0));
                 Glide.with(this)
                         .load(securityAlarmInfo.getFaceUrl())
-                        .skipMemoryCache(false)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .centerCrop()
-                        .dontAnimate().into(mLeftImageView);
+                        .apply(new RequestOptions().skipMemoryCache(false)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .centerCrop()
+                                .dontAnimate())
+                        .into(mLeftImageView);
                 mSecurityWarnDeployRl.setVisibility(View.GONE);
                 break;
             default:
         }
 
         mSecurityWarnTimeTv.setText(DateUtil.getStrTimeToday(this, securityAlarmInfo.getAlarmTime(), 0));
-        if (securityAlarmInfo instanceof SecurityAlarmDetailInfo){
+        if (securityAlarmInfo instanceof SecurityAlarmDetailInfo) {
             SecurityAlarmDetailInfo securityAlarmDetailInfo = (SecurityAlarmDetailInfo) securityAlarmInfo;
             SecurityCameraInfo camera = securityAlarmDetailInfo.getCamera();
-            if(camera != null){
+            if (camera != null) {
                 mSecurityWarnCameraNameTv.setText(camera.getName());
             }
         } else {
@@ -247,9 +249,9 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
             mConfirmResultTv.setVisibility(View.GONE);
         }
 
-        if(securityAlarmInfo.getIsHandle() != SecurityConstants.SECURITY_IS_NOT_HANDLE){
-            if(securityAlarmInfo.getIsEffective() == SecurityConstants.SECURITY_INVALID){
-                if(mRightImageView != null){
+        if (securityAlarmInfo.getIsHandle() != SecurityConstants.SECURITY_IS_NOT_HANDLE) {
+            if (securityAlarmInfo.getIsEffective() == SecurityConstants.SECURITY_INVALID) {
+                if (mRightImageView != null) {
                     mRightImageView.setAlpha(0.5f);
                     mLeftImageView.setAlpha(0.5f);
                 } else {

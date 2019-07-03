@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
@@ -69,14 +70,14 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
             boolean isShowInValidCover;//是否设置无效半透明
             //预警是否有效 处理
             if (securityAlarmInfo.getIsHandle() > 0) {
-                boolean isWarnValid = (securityAlarmInfo.getIsHandle() != SecurityConstants.SECURITY_IS_NOT_HANDLE  && securityAlarmInfo.getIsEffective() > 0);
+                boolean isWarnValid = (securityAlarmInfo.getIsHandle() != SecurityConstants.SECURITY_IS_NOT_HANDLE && securityAlarmInfo.getIsEffective() > 0);
                 //已经处理 隐藏处理按钮/显示是否有效
                 holder.btnWarnConfirm.setVisibility(View.INVISIBLE);
                 holder.tvCameraWarnValid.setVisibility(View.VISIBLE);
                 holder.tvCameraWarnValid.setBackgroundResource(isWarnValid ? R.drawable.shape_camera_warn_valid : R.drawable.shape_camera_warn_unvalid);
                 holder.tvCameraWarnValid.setText(isWarnValid ? R.string.word_valid : R.string.word_unvalid);
                 isShowInValidCover = !isWarnValid;
-            }else{
+            } else {
                 //未处理 显示处理按钮/隐藏是否有效标签
                 holder.btnWarnConfirm.setVisibility(View.VISIBLE);
                 holder.tvCameraWarnValid.setVisibility(View.GONE);
@@ -94,21 +95,22 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     //加载布控 抓拍 照片
                     Glide.with(mContext)
                             .load(focusPhotoUrl)
-                            .skipMemoryCache(false)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .placeholder(R.drawable.ic_port_default_white)
-                            .centerCrop()
-                            .dontAnimate().into(holder.ivLeftPhoto);
+                            .apply(new RequestOptions().skipMemoryCache(false).diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .placeholder(R.drawable.ic_port_default_white)
+                                    .centerCrop()
+                                    .dontAnimate())
+                            .into(holder.ivLeftPhoto);
                     Glide.with(mContext)
                             .load(capturePhotoUrl)
-                            .skipMemoryCache(false)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .placeholder(R.drawable.ic_port_default_white)
-                            .centerCrop()
-                            .dontAnimate().into(holder.ivRightPhoto);
+                            .apply(new RequestOptions().skipMemoryCache(false)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .placeholder(R.drawable.ic_port_default_white)
+                                    .centerCrop()
+                                    .dontAnimate())
+                            .into(holder.ivRightPhoto);
                     holder.tvRightMatchRate.setText(focusMatchRate);
-                    holder.ivLeftPhoto.setAlpha(isShowInValidCover ?0.5f:1f);
-                    holder.ivRightPhoto.setAlpha(isShowInValidCover ?0.5f:1f);
+                    holder.ivLeftPhoto.setAlpha(isShowInValidCover ? 0.5f : 1f);
+                    holder.ivRightPhoto.setAlpha(isShowInValidCover ? 0.5f : 1f);
                     break;
                 case SecurityConstants.SECURITY_TYPE_FOREIGN:
                     holder.tvWarnType.setText(R.string.external_type);
@@ -118,12 +120,13 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     //加载抓拍图片
                     Glide.with(mContext)
                             .load(capturePhotoUrl)
-                            .skipMemoryCache(false)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .placeholder(R.drawable.ic_port_default_white)
-                            .centerCrop()
-                            .dontAnimate().into(holder.ivSinglePhoto);
-                    holder.ivSinglePhoto.setAlpha(isShowInValidCover ?0.5f:1f);
+                            .apply(new RequestOptions().skipMemoryCache(false)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .placeholder(R.drawable.ic_port_default_white)
+                                    .centerCrop()
+                                    .dontAnimate())
+                            .into(holder.ivSinglePhoto);
+                    holder.ivSinglePhoto.setAlpha(isShowInValidCover ? 0.5f : 1f);
                     break;
                 case SecurityConstants.SECURITY_TYPE_INVADE:
                     holder.tvWarnType.setText(R.string.invade_type);
@@ -133,13 +136,13 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                     //加载抓拍照片
                     Glide.with(mContext)
                             .load(capturePhotoUrl)
-                            .skipMemoryCache(false)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .centerCrop()
-                            .dontAnimate()
-                            .placeholder(R.drawable.ic_port_default_white)
+                            .apply(new RequestOptions().skipMemoryCache(false)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .centerCrop()
+                                    .dontAnimate()
+                                    .placeholder(R.drawable.ic_port_default_white))
                             .into(holder.ivSinglePhoto);
-                    holder.ivSinglePhoto.setAlpha(isShowInValidCover ?0.5f:1f);
+                    holder.ivSinglePhoto.setAlpha(isShowInValidCover ? 0.5f : 1f);
                     break;
                 default:
             }

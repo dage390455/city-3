@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.common.server.bean.DeviceCameraFacePic;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
@@ -74,18 +75,19 @@ public class CameraDetailListAdapter extends RecyclerView.Adapter<CameraDetailLi
         holder.flAvatarItemAdapterCameraDetailList.setTag(position);
 
         holder.viewAboveItemAdapterCameraDetailList.setVisibility(position <= 0 ? View.GONE : View.VISIBLE);
-        holder.viewBelowItemAdapterCameraDetailList.setVisibility(position >= getItemCount()-1 ? View.GONE : View.VISIBLE);
+        holder.viewBelowItemAdapterCameraDetailList.setVisibility(position >= getItemCount() - 1 ? View.GONE : View.VISIBLE);
 
         holder.clRootItemAdapterCameraDetailList.setBackgroundResource(mClickPosition == position ? R.drawable.shape_bg_solid_ee_full_corner_4 : R.drawable.shape_bg_solid_white_bottom_left_right_corner);
 
         DeviceCameraFacePic model = mList.get(position);
         Glide.with(mContext)                             //配置上下文
                 .load(Constants.CAMERA_BASE_URL + model.getFaceUrl())
-                .bitmapTransform(new GlideCircleTransform(mContext))
+                .apply(new RequestOptions().transform(new GlideCircleTransform(mContext)).error(R.drawable.person_locus_placeholder).placeholder(R.drawable.person_locus_placeholder).diskCacheStrategy(DiskCacheStrategy.ALL))
+
 //                    .thumbnail(0.01f)//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-                .error(R.drawable.person_locus_placeholder)           //设置错误图片
-                .placeholder(R.drawable.person_locus_placeholder)//设置占位图片
-                .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
+                //设置错误图片
+                //设置占位图片
+                //缓存全尺寸
                 .into(holder.ivAvatarItemAdapterCameraDetailList);
 
         String strTime_hm;
@@ -94,7 +96,7 @@ public class CameraDetailListAdapter extends RecyclerView.Adapter<CameraDetailLi
             strTime_hm = DateUtil.getStrTime_MM_dd_hms(l);
         } catch (Exception e) {
             e.printStackTrace();
-            strTime_hm  = mContext.getString(R.string.unknown);
+            strTime_hm = mContext.getString(R.string.unknown);
         }
         holder.tvTimeItemAdapterCameraDetailList.setText(strTime_hm);
     }
@@ -114,7 +116,7 @@ public class CameraDetailListAdapter extends RecyclerView.Adapter<CameraDetailLi
         return mList;
     }
 
-    public void setOnCameraDetailListClickListener(CameraDetailListClickListener listener){
+    public void setOnCameraDetailListClickListener(CameraDetailListClickListener listener) {
         mListener = listener;
     }
 
@@ -140,7 +142,7 @@ public class CameraDetailListAdapter extends RecyclerView.Adapter<CameraDetailLi
 
         public CameraDetailListViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 

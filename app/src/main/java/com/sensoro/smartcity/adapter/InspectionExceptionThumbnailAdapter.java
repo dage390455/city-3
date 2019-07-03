@@ -2,14 +2,16 @@ package com.sensoro.smartcity.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.smartcity.R;
 
@@ -54,10 +56,9 @@ public class InspectionExceptionThumbnailAdapter extends RecyclerView.Adapter<In
 
         Glide.with((Activity) mContext)
                 .load(url)
-                .error(R.drawable.ic_default_image)
-                .placeholder(R.drawable.ic_default_image)
+                .apply(new RequestOptions().error(R.drawable.ic_default_image)
+                        .placeholder(R.drawable.ic_default_image).diskCacheStrategy(DiskCacheStrategy.ALL))
                 .thumbnail(0.01f)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.itemAdapterInspectionExceptionImvThumbnail);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

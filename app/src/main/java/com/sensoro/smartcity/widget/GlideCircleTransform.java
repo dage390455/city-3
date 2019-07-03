@@ -8,11 +8,15 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 
+import androidx.annotation.NonNull;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapResource;
+
+import java.security.MessageDigest;
 
 
 /**
@@ -20,7 +24,7 @@ import com.bumptech.glide.load.resource.bitmap.BitmapResource;
  */
 
 public class GlideCircleTransform implements Transformation<Bitmap> {
-    private  int radius = -1;
+    private int radius = -1;
 
 //    private final float radius;
 
@@ -70,24 +74,48 @@ public class GlideCircleTransform implements Transformation<Bitmap> {
     public GlideCircleTransform(BitmapPool pool) {
         this.mBitmapPool = pool;
     }
+
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
+    }
+
+    @NonNull
     @Override
-    public Resource<Bitmap> transform(Resource<Bitmap> resource, int outWidth, int outHeight) {
+    public Resource<Bitmap> transform(@NonNull Context context, @NonNull Resource<Bitmap> resource, int outWidth, int outHeight) {
         Bitmap source = resource.get();
         int size;
-        if(radius == -1){
+        if (radius == -1) {
             size = Math.min(source.getWidth(), source.getHeight());
-        }else{
-            size = radius*2;
+        } else {
+            size = radius * 2;
             int width = source.getWidth();
             int height = source.getHeight();
 
-            float scaleWidth = (float)size / width;
-            float scaleHeight = (float)size / height;
+            float scaleWidth = (float) size / width;
+            float scaleHeight = (float) size / height;
 
             float min = Math.max(scaleHeight, scaleWidth);
             Matrix matrix = new Matrix();
-            matrix.postScale(scaleWidth,scaleHeight);
-            source = Bitmap.createBitmap(source,0,0,width,height,matrix,true);
+            matrix.postScale(scaleWidth, scaleHeight);
+            source = Bitmap.createBitmap(source, 0, 0, width, height, matrix, true);
 ////            BitmapFactory.
 //            BitmapFactory.Options options = new BitmapFactory.Options();
 //            options.inJustDecodeBounds = true;
@@ -136,29 +164,8 @@ public class GlideCircleTransform implements Transformation<Bitmap> {
         return BitmapResource.obtain(bitmap, mBitmapPool);
     }
 
-    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) >= reqHeight
-                    && (halfWidth / inSampleSize) >= reqWidth) {
-                inSampleSize *= 2;
-            }
-        }
-
-        return inSampleSize;
-    }
     @Override
-    public String getId() {
-        return getClass().getName() + "";
+    public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+
     }
 }

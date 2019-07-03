@@ -2,6 +2,7 @@ package com.sensoro.smartcity.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,9 +15,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.model.ImageItem;
@@ -259,34 +261,35 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     }
 
 
-
     @Override
     public void displayPic(ImageItem[] selImages, int index) {
-        DrawableRequestBuilder<String> builder = Glide.with((Activity) mActivity)                             //配置上下文
-                .load(selImages[index].path)
-                .error(R.drawable.ic_default_image)           //设置错误图片
-                .placeholder(R.drawable.ic_default_image)//设置占位图片
-                .thumbnail(0.01f)
-                .diskCacheStrategy(DiskCacheStrategy.ALL);
-        switch (index) {
-            case 0:
-                acDeployPicLlAddDevicePic.setVisibility(View.GONE);
-                acDeployPicRlDevicePic.setVisibility(View.VISIBLE);
-                builder.into(acDeployPicImvDevicePic);
-                break;
-            case 1:
-                acDeployPicLlInstallationSite.setVisibility(View.GONE);
-                acDeployPicRlInstallationSitePic.setVisibility(View.VISIBLE);
-                builder.into(acDeployPicImvInstallationSitePic);
-                break;
-            case 2:
-                acDeployPicLlShopPic.setVisibility(View.GONE);
-                acDeployPicRlShopPic.setVisibility(View.VISIBLE);
-                builder.into(acDeployPicImvShopPic);
-                break;
+        try {
+            RequestBuilder<Drawable> builder = Glide.with((Activity) mActivity)                             //配置上下文
+                    .load(selImages[index].path)
+                    .apply(new RequestOptions().error(R.drawable.ic_default_image)           //设置错误图片
+                            .placeholder(R.drawable.ic_default_image).diskCacheStrategy(DiskCacheStrategy.ALL))
+                    //设置占位图片
+                    .thumbnail(0.01f);
+            switch (index) {
+                case 0:
+                    acDeployPicLlAddDevicePic.setVisibility(View.GONE);
+                    acDeployPicRlDevicePic.setVisibility(View.VISIBLE);
+                    builder.into(acDeployPicImvDevicePic);
+                    break;
+                case 1:
+                    acDeployPicLlInstallationSite.setVisibility(View.GONE);
+                    acDeployPicRlInstallationSitePic.setVisibility(View.VISIBLE);
+                    builder.into(acDeployPicImvInstallationSitePic);
+                    break;
+                case 2:
+                    acDeployPicLlShopPic.setVisibility(View.GONE);
+                    acDeployPicRlShopPic.setVisibility(View.VISIBLE);
+                    builder.into(acDeployPicImvShopPic);
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-
     }
 
     @Override
@@ -314,7 +317,7 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
 
     @Override
     public void showDeployPicExampleDialog(DeployPicInfo item, int position) {
-        mPicExampleDialogUtils.show(item.imgUrl,item.title,item.description,position);
+        mPicExampleDialogUtils.show(item.imgUrl, item.title, item.description, position);
     }
 
     @Override
@@ -329,7 +332,7 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
 
     @Override
     public void updateIndexData(ImageItem imageItem, int mAddPicIndex) {
-        mDeployPicAdapter.updateIndexData(imageItem,mAddPicIndex);
+        mDeployPicAdapter.updateIndexData(imageItem, mAddPicIndex);
     }
 
     @Override
