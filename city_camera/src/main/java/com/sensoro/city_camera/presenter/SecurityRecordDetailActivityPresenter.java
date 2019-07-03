@@ -274,7 +274,9 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
     }
 
     public void doDownloadCancel() {
-
+        if (mDownloadUtil == null) {
+            mDownloadUtil.cancelDownload();
+        }
     }
 
     @Override
