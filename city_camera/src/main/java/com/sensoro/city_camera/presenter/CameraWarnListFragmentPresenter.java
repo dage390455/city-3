@@ -436,6 +436,13 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
      */
     public void setFilterCapturetime(int positon) {
         if (positon > -1 && positon < mCaptureTimeModelList.size()) {
+            //init  更新抓拍时间选项列表
+            startTime = 0;
+            endTime = 0;
+            dateSearchText = "";
+            mCaptureTimeModelList.get(mCaptureTimeModelList.size()-1).statusTitle = mContext.getString(R.string.customize_time);
+            getView().updateFilterCaptureTimeList(mCaptureTimeModelList);
+
             mCurrentCaptureTimeModel = mCaptureTimeModelList.get(positon);
             //重制自定义时间内容
             if (!TextUtils.isEmpty(dateSearchText)) {
