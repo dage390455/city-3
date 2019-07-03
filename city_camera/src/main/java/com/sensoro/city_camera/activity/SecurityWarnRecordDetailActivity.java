@@ -298,6 +298,7 @@ public class SecurityWarnRecordDetailActivity
         gsyPlayerAcCameraPersonDetail.doCapture(file, (success, file1) -> {
             if(success){
                 toastShort(getString(R.string.capture_security_warn_record_success));
+                mPresenter.onCaptureFinished(file);
             } else {
                 toastShort(getString(R.string.capture_security_warn_record_fail));
             }
