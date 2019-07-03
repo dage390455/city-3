@@ -237,11 +237,18 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                     @Override
                     public void onCompleted(SecurityAlarmListRsp securityAlarmListRsp) {
                         getView().dismissProgressDialog();
-                        if (securityAlarmListRsp.getData().list.size() == 0) {
+                        //根据数据条数判断是否有更多数据
+                        if (mSecurityAlarmInfoList.size() == securityAlarmListRsp.getData().total) {
                             getView().toastShort(mContext.getString(R.string.no_more_data));
                             getView().onPullRefreshCompleteNoMoreData();
                             cur_page--;
-                        } else {
+                        }
+                        /*if (securityAlarmListRsp.getData().list.size() == 0) {
+                            getView().toastShort(mContext.getString(R.string.no_more_data));
+                            getView().onPullRefreshCompleteNoMoreData();
+                            cur_page--;
+                        }*/
+                        else {
                             freshUI(direction, securityAlarmListRsp);
                             getView().onPullRefreshComplete();
                         }

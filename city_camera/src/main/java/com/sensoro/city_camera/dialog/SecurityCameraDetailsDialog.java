@@ -185,7 +185,7 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
         void onNavi();
 
         /**
-         *
+         *显示联系人
          */
         void showContactsDetails();
     }
