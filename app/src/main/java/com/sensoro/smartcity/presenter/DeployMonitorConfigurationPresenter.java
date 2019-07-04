@@ -6,13 +6,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
-import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
-import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
-import com.sensoro.smartcity.imainviews.IDeployMonitorConfigurationView;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.EventData;
@@ -21,7 +16,10 @@ import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeployControlSettingData;
 import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
-import com.sensoro.common.utils.AppUtils;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
+import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
+import com.sensoro.smartcity.imainviews.IDeployMonitorConfigurationView;
 import com.sensoro.smartcity.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -67,8 +65,6 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         switch (configurationSource) {
             case DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE:
                 //部署
-                getView().setTitleImvArrowsLeftVisible(true);
-                getView().setTitleTvSubtitleVisible(false);
                 getView().setAcDeployConfigurationTvConfigurationText(mActivity.getString(R.string.save));
                 deployControlSettingData = (DeployControlSettingData) mActivity.getIntent().getSerializableExtra(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA);
                 if (deployControlSettingData != null) {
@@ -91,8 +87,6 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                 }
                 break;
             case DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL:
-                getView().setTitleImvArrowsLeftVisible(false);
-                getView().setTitleTvSubtitleVisible(true);
                 onCreate();
                 getView().setAcDeployConfigurationTvConfigurationText(mActivity.getString(R.string.air_switch_config));
                 //详情
@@ -234,18 +228,18 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                 break;
             case DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL:
                 //详情
-                requestCmd(mEnterValue, materialValue, diameterValue);
+                requestCmd(inputValue, mEnterValue, materialValue, diameterValue);
                 break;
         }
 
     }
 
-    private void requestCmd(final Integer value, final int material, final Double diameter) {
+    private void requestCmd(Integer inputValue, final Integer value, final int material, final Double diameter) {
         ArrayList<String> sns = new ArrayList<>();
         sns.add(deployAnalyzerModel.sn);
         getView().showOperationTipLoadingDialog();
         mScheduleNo = null;
-        RetrofitServiceHelper.getInstance().doMonitorPointOperation(sns, "config", null, null, value, material, diameter)
+        RetrofitServiceHelper.getInstance().doMonitorPointOperation(sns, "config", null, null, inputValue, value, material, diameter)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>(this) {
             @Override
             public void onCompleted(MonitorPointOperationRequestRsp response) {
@@ -258,7 +252,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                     if (split.length > 0) {
                         mScheduleNo = split[0];
                         mHandler.removeCallbacks(DeviceTaskOvertime);
-                        mHandler.postDelayed(DeviceTaskOvertime, 10 * 1000);
+                        mHandler.postDelayed(DeviceTaskOvertime, 15 * 1000);
                     } else {
                         getView().dismissOperatingLoadingDialog();
                         getView().showErrorTipDialog(mActivity.getString(R.string.monitor_point_operation_schedule_no_error));
@@ -268,6 +262,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                     deployControlSettingData.setSwitchSpec(value);
                     deployControlSettingData.setWireDiameter(diameter);
                     deployControlSettingData.setWireMaterial(material);
+                    deployControlSettingData.setInputValue(inputValue);
                 }
             }
 
@@ -297,28 +292,28 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
             if (split.length > 0) {
                 final String temp = split[0];
                 if (!TextUtils.isEmpty(temp)) {
-                    if (AppUtils.isActivityTop(mActivity, DeployMonitorConfigurationActivity.class)) {
-                        mActivity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
-                                    mHandler.removeCallbacks(DeviceTaskOvertime);
-                                    if (isAttachedView()) {
-                                        getView().dismissOperatingLoadingDialog();
-                                        getView().showOperationSuccessToast();
-                                        //
-                                        pushConfigResult();
-                                        mHandler.postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
+                                mHandler.removeCallbacks(DeviceTaskOvertime);
+                                if (isAttachedView()) {
+                                    getView().dismissOperatingLoadingDialog();
+                                    getView().showOperationSuccessToast();
+                                    //
+                                    pushConfigResult();
+                                    mHandler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (isAttachedView()) {
                                                 getView().finishAc();
                                             }
-                                        }, 1000);
-                                    }
+                                        }
+                                    }, 1000);
                                 }
                             }
-                        });
-                    }
+                        }
+                    });
                 }
             }
 
@@ -326,9 +321,9 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
     }
 
     public void showOverCurrentDialog() {
-        if (isAttachedView()) {
-            getView().showOverCurrentDialog(overCurrentDataList);
-        }
+//        if (isAttachedView()) {
+//            getView().showOverCurrentDialog(overCurrentDataList);
+//        }
     }
 
     private void pushConfigResult() {

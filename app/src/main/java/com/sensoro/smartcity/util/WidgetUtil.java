@@ -18,8 +18,10 @@ import android.graphics.drawable.GradientDrawable;
 import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.provider.Settings;
+
 import androidx.annotation.NonNull;
 import androidx.core.graphics.drawable.DrawableCompat;
+
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -1233,7 +1235,6 @@ public class WidgetUtil {
     }
 
 
-
     @NonNull
     public static void changeIconColor(Context context, ImageView imageView, int resColor) {
         Drawable drawable = imageView.getDrawable();
@@ -1450,6 +1451,16 @@ public class WidgetUtil {
             return String.valueOf(d);
         }
     }
+
+    public static String getFormatDouble(double value) {
+        try {
+            DecimalFormat df = new DecimalFormat("###.#");
+            return df.format(value);
+        } catch (Exception e) {
+            return String.valueOf(value);
+        }
+    }
+
 
     public static boolean isNewVersion(String oldVersion, String newVersion) {
         if (TextUtils.isEmpty(oldVersion) && TextUtils.isEmpty(newVersion)) {

@@ -3,28 +3,29 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.DeployMapActivity;
-import com.sensoro.smartcity.activity.DeployMapENActivity;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
-import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
 import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.bean.DeployControlSettingData;
 import com.sensoro.common.server.bean.DeployRecordInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.DeployMapActivity;
+import com.sensoro.smartcity.activity.DeployMapENActivity;
+import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRecordDetailActivityView> {
     private Activity mActivity;
@@ -131,35 +132,55 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
             String deviceType = mDeployRecordInfo.getDeviceType();
             String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deviceType);
             getView().setDeployDeviceRecordDeviceType(deviceTypeName);
+            //
             boolean isFire = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType);
             getView().setDeployDetailDeploySettingVisible(isFire);
             if (isFire) {
+                DeployControlSettingData deployControlSettingData = mDeployRecordInfo.getConfig();
                 //TODO 是否配置过电器火灾字段字段
-                if (mDeployRecordInfo.getConfig() != null) {
-                    DeployControlSettingData deployControlSettingData = mDeployRecordInfo.getConfig();
-                    if (deployControlSettingData != null) {
-                        Integer switchSpec = deployControlSettingData.getSwitchSpec();
-                        if (switchSpec != null) {
-                            getView().setDeployDeviceDetailDeploySetting(String.format(Locale.CHINA, "%sA", switchSpec));
-                        }
-                        //线材
-                        Integer material = deployControlSettingData.getWireMaterial();
-                        if (material != null) {
-                            switch (material) {
-                                case 0:
-                                    getView().setDeployDeviceRecordMaterial(mActivity.getString(R.string.cu));
-                                    break;
-                                case 1:
-                                    getView().setDeployDeviceRecordMaterial(mActivity.getString(R.string.al));
-                                    break;
-                            }
-                        }
-                        //线径
-                        Double diameter = deployControlSettingData.getWireDiameter();
-                        if (diameter != null) {
-                            getView().setDeployDeviceRecordDiameter(diameter + "mm²");
-                        }
+//                if (mDeployRecordInfo.getConfig() != null) {
+//                    DeployControlSettingData deployControlSettingData = mDeployRecordInfo.getConfig();
+//                    if (deployControlSettingData != null) {
+//                        Integer switchSpec = deployControlSettingData.getSwitchSpec();
+//                        if (switchSpec != null) {
+//                            getView().setDeployDeviceDetailDeploySetting(String.format(Locale.CHINA, "%sA", switchSpec));
+//                        }
+//                        //线材
+//                        Integer material = deployControlSettingData.getWireMaterial();
+//                        if (material != null) {
+//                            switch (material) {
+//                                case 0:
+//                                    getView().setDeployDeviceRecordMaterial(mActivity.getString(R.string.cu));
+//                                    break;
+//                                case 1:
+//                                    getView().setDeployDeviceRecordMaterial(mActivity.getString(R.string.al));
+//                                    break;
+//                            }
+//                        }
+//                        //线径
+//                        Double diameter = deployControlSettingData.getWireDiameter();
+//                        if (diameter != null) {
+//                            getView().setDeployDeviceRecordDiameter(diameter + "mm²");
+//                        }
+//                    }
+//                }
+                final String[] values = {"-", "-"};
+                if (deployControlSettingData != null) {
+                    Integer switchSpec = deployControlSettingData.getSwitchSpec();
+                    if (switchSpec != null) {
+                        values[0] = switchSpec + "A";
                     }
+                }
+                if (hasNesConfigInfo(deployControlSettingData)) {
+                    //新数据
+                    Integer transformer = deployControlSettingData.getTransformer();
+                    if (transformer != null) {
+                        values[1] = transformer + "A";
+                    }
+                    getView().setDeployDetailConfigInfo(mActivity.getString(R.string.actual_overcurrent_threshold) + ":" + values[0], mActivity.getString(R.string.device_detail_config_trans) + ":" + values[1]);
+                } else {
+                    //传统数据
+                    getView().setDeployDetailConfigInfo(mActivity.getString(R.string.actual_overcurrent_threshold) + ":" + values[0], null);
                 }
                 getView().setDeployDetailDeploySettingVisible(true);
             } else {
@@ -168,6 +189,15 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
         }
     }
 
+    private boolean hasNesConfigInfo(DeployControlSettingData deployControlSettingData) {
+        if (deployControlSettingData != null) {
+            List<DeployControlSettingData.wireData> inputList = deployControlSettingData.getInput();
+            List<DeployControlSettingData.wireData> outputList = deployControlSettingData.getOutput();
+            return inputList != null && inputList.size() > 0 && outputList != null && outputList.size() > 0;
+        }
+        return false;
+
+    }
 
     @Override
     public void onDestroy() {
@@ -204,6 +234,23 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
             getView().startACForResult(intentPreview, Constants.REQUEST_CODE_PREVIEW);
         } else {
             getView().toastShort(mActivity.getString(R.string.no_photos_added));
+        }
+    }
+
+    public void goConfigDetail() {
+        DeployControlSettingData settingData = mDeployRecordInfo.getConfig();
+        if (hasNesConfigInfo(settingData)) {
+            //新界面
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA, settingData);
+            startActivity(ARouterConstants.ACTIVITY_DEPLOY_RECORD_CONFIG_THREE_PHASE_ELECT_ACTIVITY, bundle, mActivity);
+        } else {
+            Bundle bundle = new Bundle();
+            if (settingData != null) {
+                bundle.putSerializable(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA, settingData);
+            }
+            startActivity(ARouterConstants.ACTIVITY_DEPLOY_RECORD_CONFIG_COMMON_ELECT_ACTIVITY, bundle, mActivity);
+            //旧界面
         }
     }
 }

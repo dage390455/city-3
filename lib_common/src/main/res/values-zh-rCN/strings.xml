@@ -690,7 +690,7 @@
     <string name="please_select_device_pic">请选择一张设备照片</string>
     <string name="please_select_installation_site">请选择一张现场照片</string>
     <string name="rated_current">额定电流/A</string>
-    <string name="deploy_configuration_enter_tip">请输入安装现场空气开关的额定电流，范围：</string>
+    <string name="deploy_configuration_enter_tip">空开标注额定电流</string>
     <string name="deploy_configuration">开始配置</string>
     <string name="if_it_is_a_store_please_upload">需能看清店面名称</string>
     <string name="check_ble_status">请检查蓝牙状态</string>
@@ -975,7 +975,7 @@
     <string name="delete_this_group">删除本组</string>
     <string name="not_matched_current_transformer">暂无推荐，请联系升哲研发人员确认</string>
     <string name="air_open_arguments">空开参数</string>
-    <string name="air_open_rated_current">空开标注额定电流/A (1&#8211;560)</string>
+    <string name="air_open_rated_current">空开标注额定电流/A (1&#8211;600)</string>
     <string name="diameter_arguments_tip">电线参数  请根据现场实际情况进行选择</string>
     <string name="match_result">匹配结果</string>
     <string name="look_detail">查看详情</string>
@@ -1121,4 +1121,21 @@
     <string name="temperature_information">温度信息</string>
     <string name="external">外部：</string>
     <string name="internal">内部：</string>
+
+    <string name="recommend_transformer_dialog_top">根据电流，推荐电流互感器型号：</string>
+    <string name="recommend_transformer_dialog_bottom">请选择现场安装的互感器型号（需大于推荐值，否则传感器将无法工作）</string>
+    <string name="recommend">推荐</string>
+    <string name="config_air_rated_current">空开额定电流</string>
+    <string name="config_recommend_trans">推荐互感器型号</string>
+    <string name="config_actual_trans">实际互感器型号</string>
+    <string name="config_input">进线</string>
+    <string name="please_add_config_input">请添加进线</string>
+    <string name="please_add_config_out">请添加出线</string>
+    <string name="config_output">出线</string>
+    <string name="device_detail_config_info">初始配置信息</string>
+    <string name="device_detail_config_trans">安装互感器型号</string>
+    <string name="initial_configuration_details">初始配置详情</string>
+    <string name="please_enter_the_configuration_parameters_correctly">请正确输入配置参数</string>
+
+
 </resources>
