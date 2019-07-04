@@ -101,7 +101,6 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import io.reactivex.ObservableSource;
@@ -457,10 +456,36 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     private void handleDeviceModeInfo() {
         if (mDeviceInfo != null) {
-            if (Objects.requireNonNull(PreferencesHelper.getInstance().getConfigDeviceType(mDeviceInfo.getDeviceType())).isDemoSupported()) {
-                if ("fhsj_smoke".equals(mDeviceInfo.getDeviceType())) {
-                    if (WidgetUtil.isContainVersion("2.1.1", bleUpdateModel.currentFirmVersion)) {
-                        //只针对泛海三江烟感并且在2.1.1版本及以上
+            DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(mDeviceInfo.getDeviceType());
+            if (configDeviceType != null) {
+                if (configDeviceType.isDemoSupported()) {
+                    if ("fhsj_smoke".equals(mDeviceInfo.getDeviceType())) {
+                        if (WidgetUtil.isContainVersion("2.1.1", bleUpdateModel.currentFirmVersion)) {
+                            //只针对泛海三江烟感并且在2.1.1版本及以上
+                            if (PreferencesHelper.getInstance().getUserData().hasDeviceDemoMode) {
+                                Integer demoMode = mDeviceInfo.getDemoMode();
+                                if (demoMode != null) {
+                                    switch (demoMode) {
+                                        case 0:
+                                            //正常模式
+                                            deviceDemoMode = Constants.DEVICE_DEMO_MODE_CLOSE;
+                                            break;
+                                        case 1:
+                                            //演示模式
+                                            deviceDemoMode = Constants.DEVICE_DEMO_MODE_OPEN;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                            } else {
+                                deviceDemoMode = Constants.DEVICE_DEMO_MODE_NO_PERMISSION;
+                            }
+                        } else {
+                            deviceDemoMode = Constants.DEVICE_DEMO_MODE_NOT_SUPPORT;
+                        }
+
+                    } else {
                         if (PreferencesHelper.getInstance().getUserData().hasDeviceDemoMode) {
                             Integer demoMode = mDeviceInfo.getDemoMode();
                             if (demoMode != null) {
@@ -480,33 +505,10 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         } else {
                             deviceDemoMode = Constants.DEVICE_DEMO_MODE_NO_PERMISSION;
                         }
-                    } else {
-                        deviceDemoMode = Constants.DEVICE_DEMO_MODE_NOT_SUPPORT;
                     }
-
                 } else {
-                    if (PreferencesHelper.getInstance().getUserData().hasDeviceDemoMode) {
-                        Integer demoMode = mDeviceInfo.getDemoMode();
-                        if (demoMode != null) {
-                            switch (demoMode) {
-                                case 0:
-                                    //正常模式
-                                    deviceDemoMode = Constants.DEVICE_DEMO_MODE_CLOSE;
-                                    break;
-                                case 1:
-                                    //演示模式
-                                    deviceDemoMode = Constants.DEVICE_DEMO_MODE_OPEN;
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                    } else {
-                        deviceDemoMode = Constants.DEVICE_DEMO_MODE_NO_PERMISSION;
-                    }
+                    deviceDemoMode = Constants.DEVICE_DEMO_MODE_NOT_SUPPORT;
                 }
-            } else {
-                deviceDemoMode = Constants.DEVICE_DEMO_MODE_NOT_SUPPORT;
             }
             //TODO delete
 //            deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
@@ -1438,41 +1440,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         getView().startAC(intent);
     }
 
-    private final OnConfigInfoObserver onConfigInfoObserver = new OnConfigInfoObserver() {
-        @Override
-        public void onStart(String msg) {
-            if (isAttachedView()) {
-                getView().dismissTipDialog();
-                getView().showOperationTipLoadingDialog();
-            }
-        }
 
-        @Override
-        public void onSuccess(Object o) {
-            if (isAttachedView()) {
-                getView().dismissOperatingLoadingDialog();
-                getView().showOperationSuccessToast();
-            }
-        }
-
-        @Override
-        public void onFailed(String errorMsg) {
-            if (isAttachedView()) {
-                bleRequestCmd();
-            }
-        }
-
-        @Override
-        public void onOverTime(String overTimeMsg) {
-            if (isAttachedView()) {
-                bleRequestCmd();
-            }
-        }
-    };
-
-    public void doOperation(int type) {
-
-
+    public void doOperation(int type, String beepMuteTime) {
+        Integer beepMuteTimeInt = null;
         switch (type) {
             case MonitorPointOperationCode.ERASURE:
                 mOperationType = MonitorPointOperationCode.ERASURE_STR;
@@ -1503,28 +1473,74 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 //上电
                 break;
             case MonitorPointOperationCode.ERASURE_TIME:
+                if (TextUtils.isEmpty(beepMuteTime)) {
+                    getView().toastShort(mContext.getString(com.sensoro.common.R.string.input_not_null));
+                    return;
+                }
+                try {
+                    beepMuteTimeInt = Integer.parseInt(beepMuteTime);
+                } catch (Exception e) {
+                    getView().toastShort(mContext.getString(com.sensoro.common.R.string.enter_the_correct_number_format));
+                    return;
+                }
+                if (beepMuteTimeInt < 1 || beepMuteTimeInt > 30) {
+                    getView().toastShort(mContext.getString(com.sensoro.common.R.string.monitor_point_operation_error_value_range) + "1~30");
+                    return;
+                }
                 mOperationType = MonitorPointOperationCode.ERASURE_TIME_STR;
                 break;
             default:
                 break;
         }
+        Integer finalBeepMuteTimeInt = beepMuteTimeInt;
+        final OnConfigInfoObserver onConfigInfoObserver = new OnConfigInfoObserver() {
+            @Override
+            public void onStart(String msg) {
+                if (isAttachedView()) {
+                    getView().dismissTipDialog();
+                    getView().showOperationTipLoadingDialog();
+                }
+            }
+
+            @Override
+            public void onSuccess(Object o) {
+                if (isAttachedView()) {
+                    getView().dismissOperatingLoadingDialog();
+                    getView().showOperationSuccessToast();
+                }
+            }
+
+            @Override
+            public void onFailed(String errorMsg) {
+                if (isAttachedView()) {
+                    bleRequestCmd(finalBeepMuteTimeInt);
+                }
+            }
+
+            @Override
+            public void onOverTime(String overTimeMsg) {
+                if (isAttachedView()) {
+                    bleRequestCmd(finalBeepMuteTimeInt);
+                }
+            }
+        };
         //断电、上电不走蓝牙操作
         if (MonitorPointOperationCode.AIR_SWITCH_POWER_OFF == type || MonitorPointOperationCode.AIR_SWITCH_POWER_ON == type) {
-            requestServerCmd();
+            requestServerCmd(null);
         } else {
             //其他先进行本地蓝牙，失败则进行下行
-            if (doBleMuteOperation(onConfigInfoObserver)) {
+            if (doBleMuteOperation(onConfigInfoObserver, finalBeepMuteTimeInt)) {
                 //
                 return;
             } else {
-                requestServerCmd();
+                requestServerCmd(finalBeepMuteTimeInt);
             }
         }
 
 
     }
 
-    private boolean doBleMuteOperation(final OnConfigInfoObserver onConfigInfoObserver) {
+    private boolean doBleMuteOperation(final OnConfigInfoObserver onConfigInfoObserver, Integer beepMuteTime) {
         String sn = mDeviceInfo.getSn();
         if (bleDeviceMap.containsKey(sn) && !TextUtils.isEmpty(bleUpdateModel.blePassword)) {
             BLEDevice bleDevice = bleDeviceMap.get(sn);
@@ -1579,7 +1595,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             @Override
                             public void onConnectedSuccess(BLEDevice bleDevice, int cmd) {
                                 if (isAttachedView()) {
-                                    OperationCmdAnalyzer.doOperation(mDeviceInfo.getDeviceType(), mOperationType, sensoroDeviceConnection, bleMuteOperationWriteCallback);
+                                    OperationCmdAnalyzer.doOperation(mDeviceInfo.getDeviceType(), mOperationType, beepMuteTime, sensoroDeviceConnection, bleMuteOperationWriteCallback);
                                 }
 
                             }
@@ -1604,7 +1620,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     } catch (Throwable e) {
                         e.printStackTrace();
                         mHandler.removeCallbacks(configOvertime);
-                        bleRequestCmd();
+                        bleRequestCmd(beepMuteTime);
                     }
                     return true;
                 }
@@ -1614,7 +1630,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         return false;
     }
 
-    private void bleRequestCmd() {
+    private void bleRequestCmd(Integer beepMuteTime) {
         if (sensoroDeviceConnection != null) {
             sensoroDeviceConnection.disconnect();
         }
@@ -1622,17 +1638,17 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             getView().dismissTipDialog();
             getView().toastShort(mContext.getString(R.string.unknown_error));
         } else {
-            requestServerCmd();
+            requestServerCmd(beepMuteTime);
         }
     }
 
-    private void requestServerCmd() {
+    private void requestServerCmd(Integer beepMuteTime) {
         ArrayList<String> sns = new ArrayList<>();
         sns.add(mDeviceInfo.getSn());
         getView().dismissTipDialog();
         getView().showOperationTipLoadingDialog();
         mScheduleNo = null;
-        RetrofitServiceHelper.getInstance().doMonitorPointOperation(sns, mOperationType, null, null, null, null, null, null)
+        RetrofitServiceHelper.getInstance().doMonitorPointOperation(sns, mOperationType, null, null, null, null, null, null, beepMuteTime)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>(this) {
             @Override
             public void onCompleted(MonitorPointOperationRequestRsp response) {
@@ -1661,7 +1677,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 getView().showErrorTipDialog(errorMsg);
             }
         });
-
     }
 
     private void clearOperationType() {
@@ -1708,7 +1723,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     @Override
     public void onClickOperation(View view, int position, TaskOptionModel taskOptionModel) {
-        taskOptionModel.optionType = MonitorPointOperationCode.ERASURE_TIME;
         switch (taskOptionModel.optionType) {
             case MonitorPointOperationCode.ERASURE:
                 getView().showTipDialog(false, null, mContext.getString(R.string.is_device_erasure), mContext.getString(R.string.device_erasure_tip_message), R.color.c_a6a6a6, mContext.getString(R.string.erasure), R.color.c_f34a4a, MonitorPointOperationCode.ERASURE);
@@ -1768,7 +1782,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 //上电
                 break;
             case MonitorPointOperationCode.ERASURE_TIME:
-                getView().showTipDialog(true, mDeviceInfo.getDeviceType(), mContext.getString(R.string.command_smoke_mute_time_title), mContext.getString(R.string.command_smoke_mute_time_desc), R.color.c_f34a4a, mContext.getString(R.string.erasure), R.color.c_f34a4a, MonitorPointOperationCode.ERASURE_TIME);
+                getView().showTipDialog(true, mDeviceInfo.getDeviceType(), mContext.getString(R.string.command_smoke_mute_time_title), mContext.getString(R.string.command_smoke_mute_time_desc), R.color.c_a6a6a6, mContext.getString(R.string.erasure), R.color.c_f34a4a, MonitorPointOperationCode.ERASURE_TIME);
                 break;
 
         }

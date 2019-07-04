@@ -976,7 +976,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
 
     @Override
     public void onConfirmClick(String content, String diameter) {
-        mPresenter.doOperation(mTipDialogType);
+        mPresenter.doOperation(mTipDialogType,content);
     }
 
     @Override

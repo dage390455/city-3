@@ -13,7 +13,7 @@ import java.util.Random;
  */
 public class OperationCmdAnalyzer {
 
-    public static void doOperation(String deviceType, String mOperationType, SensoroDeviceConnection sensoroDeviceConnection, SensoroWriteCallback callback) {
+    public static void doOperation(String deviceType, String mOperationType, Integer beepMuteTime, SensoroDeviceConnection sensoroDeviceConnection, SensoroWriteCallback callback) {
 
         switch (deviceType) {
             case "smoke":
@@ -42,6 +42,9 @@ public class OperationCmdAnalyzer {
             case "baymax_lpg":
             case "baymax_ch4":
                 doBaymax(mOperationType, sensoroDeviceConnection, callback);
+                break;
+            case "lite_smoke":
+                sensoroDeviceConnection.writeAppBeepMuteTime(beepMuteTime,callback);
                 break;
 
         }

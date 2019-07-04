@@ -1416,7 +1416,7 @@ public class RetrofitServiceHelper {
         return retrofitService.getDevicesMergeTypes();
     }
 
-    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer inputValue, Integer switchSpec, Integer wireMaterial, Double diameter) {
+    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer inputValue, Integer switchSpec, Integer wireMaterial, Double diameter, Integer beepMuteTime) {
         JSONObject jsonObject = new JSONObject();
 
         try {
@@ -1453,6 +1453,11 @@ public class RetrofitServiceHelper {
             if (switchSpec != null || wireMaterial != null || diameter != null) {
                 jsonObject.put("config", jsonObjectConfig);
             }
+            if (beepMuteTime != null) {
+                JSONObject jsonParameters = new JSONObject();
+                jsonParameters.put("beepMuteTime", beepMuteTime);
+                jsonObject.put("parameters", jsonParameters);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -1461,6 +1466,14 @@ public class RetrofitServiceHelper {
         return retrofitService.doMonitorPointOperation(body);
     }
 
+    /**
+     * 针对三相电的
+     *
+     * @param snList
+     * @param type
+     * @param deployControlSettingData
+     * @return
+     */
     public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, DeployControlSettingData deployControlSettingData) {
         JSONObject jsonObject = new JSONObject();
 
