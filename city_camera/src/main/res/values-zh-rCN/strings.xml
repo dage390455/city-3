@@ -54,6 +54,12 @@
     <string name="contact_count_tip">共%d人</string>
     <string name="security_warn_timeline_remark">备注：%1$s</string>
     <string name="security_warn_timeline_title">联系人[%1$s]通过%2$s确认本次预警</string>
+    <string name="security_warn_timeline_call_success"> 电话拨打成功</string>
+    <string name="security_warn_timeline_call_failure"> 电话拨打失败</string>
+    <string name="security_warn_timeline_call_process"> 电话拨打中</string>
+    <string name="security_warn_timeline_sms_success"> 短信发送成功</string>
+    <string name="security_warn_timeline_sms_failure"> 短信发送失败</string>
+    <string name="security_warn_timeline_sms_process"> 短信发送中</string>
     <string name="security_search_tip">设备名称/任务名称/人员姓名</string>
     <string name="security_camera_info_error">相机详情信息不存在</string>
     <string name="camera_contact_no_exist">相机联系人不存在</string>
