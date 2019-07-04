@@ -18,6 +18,7 @@ public interface SearchHistoryTypeConstants {
     int TYPE_SEARCH_HISTORY_NAMEPLATE_ADD_FROM_LIST = 14;
     int TYPE_SEARCH_BASESTATION = 15;
     int TYPE_SEARCH_NAMEPLATE_LIST = 16;
+    int TYPE_SETTINGNOTIFICATION = 17;
     String SEARCH_HISTORY_KEY = "search_history_key";
 
     String SP_FILE_WARN = "search_history_warn";
@@ -32,6 +33,7 @@ public interface SearchHistoryTypeConstants {
     //
     String SP_FILE_DEPLOY_NAMEPLATE_NAME = "search_history_deploy_nameplate_name";
     String SP_FILE_NAMEPLATELIST_NAME = "sp_file_nameplatelist_name";
+    String SP_FILE_SETTINGNOTIFICATION_NAME = "sp_file_settingnotification_name";
 
 
 }

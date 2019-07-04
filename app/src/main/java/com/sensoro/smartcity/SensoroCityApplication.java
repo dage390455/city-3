@@ -16,12 +16,12 @@ import com.baidu.ocr.sdk.model.AccessToken;
 import com.github.moduth.blockcanary.BlockCanary;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.sensoro.common.base.BaseApplication;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.utils.Repause;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceManager;
 import com.sensoro.smartcity.callback.BleObserver;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.push.AppBlockCanaryContext;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
@@ -61,6 +61,7 @@ public class SensoroCityApplication extends BaseApplication implements Repause
         super.onCreate();
         instance = this;
         init();
+
     }
 
 //    private void customAdaptForExternal() {
