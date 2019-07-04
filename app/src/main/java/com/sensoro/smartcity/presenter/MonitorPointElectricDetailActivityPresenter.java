@@ -1058,7 +1058,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 final HashMap<String, AlarmInfo.RuleInfo> ruleInfoHashMap = new HashMap<>();
                 //先填充数据
                 if (alarms != null) {
-                    AlarmInfo.RuleInfo rules[] = alarms.getRules();
+                    AlarmInfo.RuleInfo[] rules = alarms.getRules();
                     if (rules != null && rules.length > 0) {
                         for (AlarmInfo.RuleInfo ruleInfo : rules) {
                             String sensorTypeStr = ruleInfo.getSensorTypes();
