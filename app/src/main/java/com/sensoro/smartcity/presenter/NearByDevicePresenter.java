@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -15,7 +14,6 @@ import com.sensoro.common.base.ContextUtils;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
-import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
@@ -34,28 +32,20 @@ import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.imainviews.INearByDeviceActivityView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
-import com.sensoro.smartcity.model.OKBLEBeaconRegion;
-import com.sensoro.smartcity.util.NotificationUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityView> implements BLEDeviceListener<BLEDevice> {
-    private volatile ArrayList<DeviceInfo> deviceInfos = new ArrayList<DeviceInfo>();
-    private volatile ArrayList<IBeacon> iBeacons = new ArrayList<IBeacon>();
     private Activity mActivity;
-    private ConcurrentHashMap<String, BLEDevice> mNearByDeviceMap = new ConcurrentHashMap<>();
-    //    private ConcurrentHashMap<String, DeviceInfo> deviceInfoHashMap = new ConcurrentHashMap<>();
-    private NotificationUtils notificationUtils;
+    private final LinkedHashMap<String, IBeacon> mNearByIBeaconMap = new LinkedHashMap<>();
+    private final List<String> mNearByIDevice = new ArrayList<>();
 
     private String mUuid = "70DC44C3-E2A8-4B22-A2C6-129B41A4BDBC";
     //    private String mUuid="23A01AF0-232A-4518-9C0E-323FB773F5EF";
@@ -65,225 +55,123 @@ public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityVi
     private boolean deviceinSwstate = true;
     private String deviceoutContent = "进入";
     private String deviceinContent = "离开";
-    private boolean onScanCycleFinish = false;
-
-    private OKBLEBeaconRegion okbleBeaconRegion = OKBLEBeaconRegion.getInstance(mUuid);
-    private Map<String, RegionObject> monitoringBeaconRegions = new HashMap<String, RegionObject>();
-    private final int regionExitOverTime = 10 * 1000;//退出区域的超时时间，持续regionExitOverTime这么长的时间内没有再次扫描到这个区域，则视为退出区域
-    private int monitoringBeaconRegionID = 0;//监控的iBeacon区域的id
-    private final List<String> sns = new ArrayList<>();
-
-    private class RegionObject {
-        boolean hasEntered;
-        OKBLEBeaconRegion region;
-        int regionID;
-
-        public RegionObject(OKBLEBeaconRegion region, int regionID) {
-            super();
-            this.region = region;
-            this.regionID = regionID;
-        }
-    }
-
-
-    Handler handler = new Handler(Looper.getMainLooper()) {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            String key = (String) msg.obj;
-            //收到消息，表示已经持续了一段时间没有扫描到区域内的beacon了，视为退出区域
-            if (monitoringBeaconRegions.containsKey(key)) {
-                RegionObject regionObject = monitoringBeaconRegions.get(key);
-                OKBLEBeaconRegion beaconRegion = regionObject.region;
-
-                regionObject.hasEntered = false;
-//                if (regionListener != null) {
-//                    if (okbleScanManager.isScanning()) {
-//                        regionListener.onExitBeaconRegion(beaconRegion);
-//                    }
-//                }
-                notificationUtils.sendNotification(deviceoutContent);
-
-            }
-        }
-    };
-
-    public void startMonitoringForRegion(OKBLEBeaconRegion region) {
-        String key = region.getIdentifier();
-        if (!monitoringBeaconRegions.containsKey(key)) {
-            monitoringBeaconRegionID++;
-
-            RegionObject regionObject = new RegionObject(region, monitoringBeaconRegionID);
-
-            monitoringBeaconRegions.put(key, regionObject);
-        }
-    }
+    private volatile boolean isNearby = false;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private final ArrayList<DeviceInfo> deviceInfos = new ArrayList<>();
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
 
-        notificationUtils = new NotificationUtils(context);
         getView().showProgressDialog();
         mActivity = (Activity) context;
         refreshSp();
-        registerBleObserver();
+        initBle();
 
     }
 
-    public void registerBleObserver() {
+    private void initBle() {
         BleObserver.getInstance().registerBleObserver(this);
-        ThreadPoolManager.getInstance().execute(new Runnable() {
-
-
+        final Runnable bleCheckTask = new Runnable() {
             @Override
             public void run() {
                 boolean bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.isBluetoothEnabled();
                 if (bleHasOpen) {
                     try {
                         bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.startService();
-                        startMonitoringForRegion(okbleBeaconRegion);
-
+                        //
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 } else {
-
-                    mActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            getView().dismissProgressDialog();
-
-                            SensoroToast.getInstance().makeText("蓝牙未开启", Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
+                    SensoroToast.getInstance().makeText("蓝牙未开启", Toast.LENGTH_SHORT).show();
                 }
+                mHandler.postDelayed(this, 3000);
             }
-        });
-    }
+        };
+        mHandler.post(bleCheckTask);
+        getView().showProgressDialog();
+        final Runnable checkNearbyTask = new Runnable() {
+            @Override
+            public void run() {
+                boolean currentNearby = !mNearByIBeaconMap.isEmpty();
+                if (isNearby != currentNearby) {
+                    getView().toastLong("进出状态：" + currentNearby);
+                    if (currentNearby) {
+                        if (deviceinSwstate) {
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (TextUtils.isEmpty(deviceinContent)) {
+                                        SensoroCityApplication.getInstance().mNotificationUtils.sendNotification("进入！！");
+                                    } else {
+                                        SensoroCityApplication.getInstance().mNotificationUtils.sendNotification(deviceinContent);
+                                    }
 
-    public void onRefresh() {
-        deviceInfos.clear();
+                                }
+                            });
+                        }
+                    } else {
+                        if (deviceoutSwstate) {
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (TextUtils.isEmpty(deviceinContent)) {
+                                        SensoroCityApplication.getInstance().mNotificationUtils.sendNotification("出去！！！");
+                                    } else {
+                                        SensoroCityApplication.getInstance().mNotificationUtils.sendNotification(deviceoutContent);
+                                    }
 
-        if (null != mNearByDeviceMap && mNearByDeviceMap.size() > 0) {
-            Iterator<Map.Entry<String, BLEDevice>> iterator = mNearByDeviceMap.entrySet().iterator();
-
-            while (iterator.hasNext()) {
-
-                Map.Entry<String, BLEDevice> next = iterator.next();
-                getDeviceBriefInfo(next.getValue());
-
+                                }
+                            });
+                        }
+                    }
+                    isNearby = currentNearby;
+                }
+                mHandler.postDelayed(this, 300);
             }
-        } else {
-
-            getView().onPullRefreshComplete();
-            getView().toastLong("附近暂无设备");
-            getView().updateAdapter(deviceInfos);
-
-        }
+        };
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getDeviceBriefInfo();
+                mHandler.post(checkNearbyTask);
+            }
+        }, 5000);
     }
 
     @Override
     public void onGoneDevice(BLEDevice bleDevice) {
-
-//        if (bleDevice.iBeacon != null) {
-//            IBeacon iBeacon = bleDevice.iBeacon;
-//            String uuid = iBeacon.getUuid();
-//            if (deviceoutSwstate && onScanCycleFinish) {
-//                if (uuid.equals(mUuid) /*&& (iBeacon.getMajor() == major)*/) {
-//
-//                    notificationUtils.sendNotification(bleDevice.getSn() + deviceoutContent);
-//                    mNearByDeviceMap.remove(bleDevice.getSn());
-//                }
-//            }
-//        }
-
-        if (bleDevice.iBeacon != null) {
-            IBeacon iBeacon = bleDevice.iBeacon;
-            String uuid = iBeacon.getUuid();
-            if (uuid.equals(mUuid)) {
-                iBeacons.remove(iBeacon);
+        if (bleDevice != null) {
+            String sn = bleDevice.getSn();
+            if (!TextUtils.isEmpty(sn)) {
+                mNearByIDevice.remove(sn);
+                IBeacon iBeacon = bleDevice.iBeacon;
+                if (iBeacon != null) {
+                    String uuid = iBeacon.getUuid();
+                    if (mUuid.equals(uuid)) {
+                        mNearByIBeaconMap.remove(sn);
+                    }
+                }
             }
-        }
 
-    }
-
-    private void handleEnterRegion(RegionObject regionObject) {
-        handler.removeMessages(regionObject.regionID);//移除超时时间后回调退出区域的消息
-        Message msg = new Message();
-        msg.what = regionObject.regionID;
-        msg.obj = regionObject.region.getIdentifier();
-        handler.sendMessageDelayed(msg, regionExitOverTime);//重新发送一个延时消息，
-
-        if (!regionObject.hasEntered) {
-            regionObject.hasEntered = true;
-            notificationUtils.sendNotification(deviceinContent);
-
-//            if(regionListener!=null){
-//                if(okbleScanManager.isScanning()){
-//                    regionListener.onEnterBeaconRegion(regionObject.region);
-//                }
-//            }
         }
     }
 
     @Override
     public void onNewDevice(BLEDevice bleDevice) {
-
-
-        if (bleDevice.iBeacon != null) {
-            IBeacon iBeacon = bleDevice.iBeacon;
-            String uuid = iBeacon.getUuid();
-
-            if (monitoringBeaconRegions.size() > 0) {
-                String key = iBeacon.macAddress;
-
-                if (monitoringBeaconRegions.containsKey(key)) {
-                    //如果正在监控这个区域
-                    RegionObject regionObject = monitoringBeaconRegions.get(key);
-                    handleEnterRegion(regionObject);
-                }
-
-            }
-            if (uuid.equals(mUuid)) {
-                for (int i = 0; i < iBeacons.size(); i++) {
-                    String btAddress = iBeacons.get(i).macAddress;
-                    if (btAddress.equals(iBeacon.macAddress)) {
-                        iBeacons.set(i, iBeacon);
-                        return;
+        if (bleDevice != null) {
+            String sn = bleDevice.getSn();
+            if (!TextUtils.isEmpty(sn)) {
+                mNearByIDevice.add(sn);
+                IBeacon iBeacon = bleDevice.iBeacon;
+                if (iBeacon != null) {
+                    String uuid = iBeacon.getUuid();
+                    if (mUuid.equals(uuid)) {
+                        mNearByIBeaconMap.put(sn, iBeacon);
                     }
                 }
-                iBeacons.add(iBeacon);
             }
-        }
-
-
-//        if (!mNearByDeviceMap.containsKey(bleDevice.getSn())) {
-//            if (deviceinSwstate && onScanCycleFinish) {
-//                if (bleDevice.iBeacon != null) {
-//                    IBeacon iBeacon = bleDevice.iBeacon;
-//                    String uuid = iBeacon.getUuid();
-//                    if (uuid.equals(mUuid)/* && (iBeacon.getMajor() == major)*/) {
-//
-//
-//                        iBeacons.add(iBeacon);
-////                        String content = bleDevice.getSn();
-////                        notificationUtils.sendNotification(content + deviceinContent);
-//                    }
-//
-//                }
-//            }
-//
-//
-//        }
-
-        if (!mNearByDeviceMap.containsKey(bleDevice.getSn())) {
-            mNearByDeviceMap.put(bleDevice.getSn(), bleDevice);
-        }
-
-        if (!onScanCycleFinish) {
-            getDeviceBriefInfo(bleDevice);
         }
 
 
@@ -294,17 +182,25 @@ public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityVi
     public void onUpdateDevices(ArrayList<BLEDevice> deviceList) {
         for (BLEDevice bleDevice : deviceList) {
             String sn = bleDevice.getSn();
-            mNearByDeviceMap.put(sn, bleDevice);
-        }
-        onScanCycleFinish = true;
+            if (!TextUtils.isEmpty(sn)) {
+                mNearByIDevice.add(sn);
+                IBeacon iBeacon = bleDevice.iBeacon;
+                if (iBeacon != null) {
+                    String uuid = iBeacon.getUuid();
+                    if (mUuid.equals(uuid)) {
+                        mNearByIBeaconMap.put(sn, iBeacon);
+                    }
+                }
+            }
 
+        }
     }
 
 
-    public void getDeviceBriefInfo(BLEDevice bleDevice) {
-
-
-        RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(1, null, null, null, bleDevice.getSn()).subscribeOn
+    public void getDeviceBriefInfo() {
+        getView().showProgressDialog();
+        deviceInfos.clear();
+        RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(mNearByIDevice, 1, null, null, null, null).subscribeOn
                 (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(NearByDevicePresenter.this) {
             @Override
             public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
@@ -313,7 +209,6 @@ public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityVi
                     deviceInfos.addAll(deviceInfoListRsp.getData());
                     getView().dismissProgressDialog();
                     getView().onPullRefreshComplete();
-//                            deviceInfoHashMap.put(bleDevice.getSn(), deviceInfoListRsp.getData().get(0));
 
                 }
                 getView().updateAdapter(deviceInfos);
@@ -412,10 +307,10 @@ public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityVi
 
     @Override
     public void onDestroy() {
+        mHandler.removeCallbacksAndMessages(null);
         BleObserver.getInstance().unregisterBleObserver(this);
         SensoroCityApplication.getInstance().bleDeviceManager.stopService();
-        mNearByDeviceMap.clear();
-        deviceInfos.clear();
+        mNearByIBeaconMap.clear();
 
     }
 

@@ -57,6 +57,7 @@ public class UserPermissionFactory {
         eventLoginData.hasNameplateList = getHasNameplateList(grants);
         eventLoginData.hasNameplateDeploy = getHasNameplateDeploy(grants);
         eventLoginData.hasDeviceCameraDeploy = getHasDeviceCameraDeploy(grants);
+        eventLoginData.hasIBeaconSearchDemo = getHasIBeaconSearchDemo(grants);
         String controllerAid = userInfo.getControllerAid();
         //通过controllerAid来判断是否可以返回主账户
         eventLoginData.hasControllerAid = !TextUtils.isEmpty(controllerAid);
@@ -519,6 +520,22 @@ public class UserPermissionFactory {
             List<String> grantsNameplate = grants.getNameplate();
             if (grantsNameplate != null) {
                 return grantsNameplate.contains("deploy");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 是否有ibeacon附近扫描权限
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasIBeaconSearchDemo(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsDevice = grants.getDevice();
+            if (grantsDevice != null) {
+                return grantsDevice.contains("_iBeaconSearchDemo");
             }
         }
         return false;

@@ -68,6 +68,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
             getView().setStationManagerVisible(userData.hasStationList);
             //TODO 是否显示铭牌管理
             getView().setNameplateVisible(userData.hasNameplateList);
+            PreferencesHelper.getInstance().getUserData().hasDeviceCameraDeploy
         }
     }
 

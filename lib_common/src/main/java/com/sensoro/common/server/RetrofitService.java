@@ -55,6 +55,7 @@ import com.sensoro.common.server.response.UpdateRsp;
 import com.sensoro.common.server.response.UserAccountControlRsp;
 import com.sensoro.common.server.response.UserAccountRsp;
 
+import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -148,7 +149,7 @@ public interface RetrofitService {
                                                           @Query("all") int all);
 
     @GET(DEVICE_BRIEF_LIST)
-    Observable<DeviceInfoListRsp> getDeviceBriefInfoList(@Query("page") int page, @Query("count")
+    Observable<DeviceInfoListRsp> getDeviceBriefInfoList(@Query("sns") List<String> sns, @Query("page") int page, @Query("count")
             int count, @Query("all") int all, @Query("showIndoorDevice") int showIndoorDevice,
                                                          @Query("sensorTypes") String sensorTypes, @Query("mergeTypes") String mergeTypes, @Query("status") Integer status, @Query("search") String search);
 

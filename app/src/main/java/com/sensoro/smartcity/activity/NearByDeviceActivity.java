@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -19,6 +20,7 @@ import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.widgets.BoldTextView;
 import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
@@ -84,7 +86,7 @@ public class NearByDeviceActivity extends BaseActivity<INearByDeviceActivityView
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
-                mPresenter.onRefresh();
+                mPresenter.getDeviceBriefInfo();
             }
         });
         adapter.setOnContentItemClickListener(new MainHomeFragRcContentAdapter.OnContentItemClickListener() {
@@ -179,12 +181,12 @@ public class NearByDeviceActivity extends BaseActivity<INearByDeviceActivityView
 
     @Override
     public void toastShort(String msg) {
-
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void toastLong(String msg) {
-
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_LONG).show();
     }
 
     @Override

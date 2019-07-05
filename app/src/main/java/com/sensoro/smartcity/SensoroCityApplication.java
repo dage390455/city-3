@@ -47,7 +47,7 @@ public class SensoroCityApplication extends BaseApplication implements Repause
         .Listener, SensoroPushListener, OnResultListener<AccessToken>, AMapLocationListener, Runnable {
     public IWXAPI api;
     private static volatile SensoroCityApplication instance;
-    private NotificationUtils mNotificationUtils;
+    public NotificationUtils mNotificationUtils;
     public boolean isAPPBack = true;
     private static PushHandler pushHandler;
 
