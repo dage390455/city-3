@@ -69,7 +69,7 @@ public class FilterPopUtils {
         mPopupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_B2000000)));
         mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
-        mPopupWindow.setOutsideTouchable(true);
+        mPopupWindow.setFocusable(true);
         mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {

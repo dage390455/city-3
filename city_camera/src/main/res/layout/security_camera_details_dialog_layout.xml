@@ -40,7 +40,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginLeft="4dp"
                 android:singleLine="true"
                 android:text="费家村56号超市外"
                 android:textColor="@color/c_000000"

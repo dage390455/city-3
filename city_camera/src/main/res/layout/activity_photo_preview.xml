@@ -27,8 +27,8 @@
 
         <ImageView
             android:id="@+id/download_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="6dp"
             android:layout_marginEnd="16dp"
@@ -73,7 +73,7 @@
                 android:singleLine="true"
                 android:text="费家村外来人员预警"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
         </RelativeLayout>
