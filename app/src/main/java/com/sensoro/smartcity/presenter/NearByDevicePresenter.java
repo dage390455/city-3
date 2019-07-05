@@ -42,6 +42,7 @@ import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -50,7 +51,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityView> implements BLEDeviceListener<BLEDevice> {
     private volatile ArrayList<DeviceInfo> deviceInfos = new ArrayList<DeviceInfo>();
-    //    private volatile ArrayList<IBeacon> iBeacons = new ArrayList<IBeacon>();
+    private volatile ArrayList<IBeacon> iBeacons = new ArrayList<IBeacon>();
     private Activity mActivity;
     private ConcurrentHashMap<String, BLEDevice> mNearByDeviceMap = new ConcurrentHashMap<>();
     //    private ConcurrentHashMap<String, DeviceInfo> deviceInfoHashMap = new ConcurrentHashMap<>();
@@ -70,6 +71,7 @@ public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityVi
     private Map<String, RegionObject> monitoringBeaconRegions = new HashMap<String, RegionObject>();
     private final int regionExitOverTime = 10 * 1000;//退出区域的超时时间，持续regionExitOverTime这么长的时间内没有再次扫描到这个区域，则视为退出区域
     private int monitoringBeaconRegionID = 0;//监控的iBeacon区域的id
+    private final List<String> sns = new ArrayList<>();
 
     private class RegionObject {
         boolean hasEntered;
@@ -201,7 +203,7 @@ public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityVi
             IBeacon iBeacon = bleDevice.iBeacon;
             String uuid = iBeacon.getUuid();
             if (uuid.equals(mUuid)) {
-//                iBeacons.remove(iBeacon);
+                iBeacons.remove(iBeacon);
             }
         }
 
@@ -244,16 +246,16 @@ public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityVi
                 }
 
             }
-//            if (uuid.equals(mUuid)) {
-//                for (int i = 0; i < iBeacons.size(); i++) {
-//                    String btAddress = iBeacons.get(i).macAddress;
-//                    if (btAddress.equals(iBeacon.macAddress)) {
-//                        iBeacons.set(i, iBeacon);
-//                        break;
-//                    }
-//                }
-//                iBeacons.add(iBeacon);
-//            }
+            if (uuid.equals(mUuid)) {
+                for (int i = 0; i < iBeacons.size(); i++) {
+                    String btAddress = iBeacons.get(i).macAddress;
+                    if (btAddress.equals(iBeacon.macAddress)) {
+                        iBeacons.set(i, iBeacon);
+                        return;
+                    }
+                }
+                iBeacons.add(iBeacon);
+            }
         }
 
 
