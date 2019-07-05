@@ -44,10 +44,34 @@ public class OperationCmdAnalyzer {
                 doBaymax(mOperationType, sensoroDeviceConnection, callback);
                 break;
             case "lite_smoke":
-                sensoroDeviceConnection.writeAppBeepMuteTime(beepMuteTime,callback);
+                doLiteSmoke(mOperationType, beepMuteTime,sensoroDeviceConnection, callback);
                 break;
 
         }
+
+
+    }
+
+    private static void doLiteSmoke(String mOperationType, Integer beepMuteTime, SensoroDeviceConnection sensoroDeviceConnection, SensoroWriteCallback callback) {
+        MsgNode1V1M5.Cayman.Builder builder = MsgNode1V1M5.Cayman.newBuilder();
+        switch (mOperationType) {
+            case MonitorPointOperationCode.ERASURE_STR:
+                builder.setCmd(4);
+                break;
+            case MonitorPointOperationCode.RESET_STR:
+                builder.setCmd(2);
+                break;
+            case MonitorPointOperationCode.SELF_CHECK_STR:
+                builder.setCmd(1);
+                break;
+            case MonitorPointOperationCode.ERASURE_TIME_STR:
+                sensoroDeviceConnection.writeAppBeepMuteTime(beepMuteTime,callback);
+                return;
+            default:
+                callback.onWriteFailure(0, 0);
+                return;
+        }
+        sensoroDeviceConnection.writeCaymanCmd(builder, callback);
 
 
     }
@@ -188,7 +212,6 @@ public class OperationCmdAnalyzer {
             case MonitorPointOperationCode.ERASURE_STR:
                 builder.setSmokeCtrl(MsgNode1V1M5.SmokeCtrl.SMOKE_ERASURE);
                 break;
-
             case MonitorPointOperationCode.ERASURE_LONG_STR:
                 builder.setSmokeCtrl(MsgNode1V1M5.SmokeCtrl.SMOKE_ERASURE_LONE);
                 break;
