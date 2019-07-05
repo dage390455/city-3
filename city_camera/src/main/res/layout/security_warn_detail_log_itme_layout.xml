@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
-        android:textColor="@color/c_252525"
+        android:textColor="@color/c_a6a6a6"
         android:textSize="14sp" />
 
     <TextView

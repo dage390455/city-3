@@ -104,7 +104,6 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mSubtitle.setVisibility(View.GONE);
         mTitleTv.setText(R.string.security_warn_detail_activity_title);
-
         mTimeLineAdapter = new SecurityWarnTimeLineAdapter(this);
         mSecurityLogRv.setHasFixedSize(true);
         mSecurityLogRv.setNestedScrollingEnabled(false);
