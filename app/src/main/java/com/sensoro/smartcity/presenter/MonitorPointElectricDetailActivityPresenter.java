@@ -266,11 +266,31 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             List<DeviceNotificationBean> notifications = alarms.getNotifications();
             //设置共x人
             if (null != notifications && notifications.size() > 0) {
-                getView().setContractName(notifications.get(0).getContact());
-                getView().setContractPhone(notifications.get(0).getContent());
+                DeviceNotificationBean deviceNotificationBean = notifications.get(0);
+                String contact = deviceNotificationBean.getContact();
+                if (!TextUtils.isEmpty(contact)) {
+                    getView().setContractName(contact);
+                }
+                String content = deviceNotificationBean.getContent();
+                if (!TextUtils.isEmpty(content)) {
+                    getView().setContractPhone(content);
+                }
                 getView().setContractCount(notifications.size());
             } else {
-                getView().setNoContact();
+                DeviceNotificationBean notification = alarms.getNotification();
+                if (notification != null) {
+                    String contact = notification.getContact();
+                    if (!TextUtils.isEmpty(contact)) {
+                        getView().setContractName(contact);
+                    }
+                    String content = notification.getContent();
+                    if (!TextUtils.isEmpty(content)) {
+                        getView().setContractPhone(content);
+                    }
+                    getView().setContractCount(1);
+                } else {
+                    getView().setNoContact();
+                }
             }
         } else {
             getView().setNoContact();
@@ -1415,7 +1435,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         AlarmInfo alarms = mDeviceInfo.getAlarms();
         if (alarms != null) {
             List<DeviceNotificationBean> notifications = alarms.getNotifications();
-
             if (null != notifications) {
                 if (notifications.size() > 1) {
                     WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
@@ -1432,9 +1451,16 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
                 }
             } else {
-                getView().toastShort(mContext.getString(R.string.phone_contact_not_set));
+                DeviceNotificationBean notification = alarms.getNotification();
+                if (notification != null && !TextUtils.isEmpty(notification.getContent())) {
+                    AppUtils.diallPhone(notification.getContent(), mContext);
+                } else {
+                    getView().toastShort(mContext.getString(R.string.phone_contact_not_set));
+                }
 
             }
+        } else {
+            getView().toastShort(mContext.getString(R.string.phone_contact_not_set));
         }
 
     }

@@ -118,7 +118,16 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
 //            if (mDeployRecordInfo.getNotification() != null) {
 //                contacts.add(mDeployRecordInfo.getNotification());
 //            }
-            getView().updateContactList(mDeployRecordInfo.getNotifications());
+            List<DeployRecordInfo.NotificationBean> notifications = mDeployRecordInfo.getNotifications();
+            if (notifications != null && notifications.size() > 0) {
+                getView().updateContactList(notifications);
+            } else {
+                ArrayList<DeployRecordInfo.NotificationBean> contacts = new ArrayList<>();
+                if (mDeployRecordInfo.getNotification() != null) {
+                    contacts.add(mDeployRecordInfo.getNotification());
+                }
+                getView().updateContactList(contacts);
+            }
             if (mDeployRecordInfo.getLonlat() != null) {
                 getView().setPositionStatus(1);
             } else {

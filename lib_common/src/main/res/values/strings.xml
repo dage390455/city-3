@@ -496,6 +496,7 @@
     <string name="deploy_device_detail_deploy_photo">Deploy Photos</string>
     <string name="deploy_device_detail_deploy_location">Location</string>
     <string name="deploy_device_detail_upload">Upload</string>
+    <string name="deploy_device_detail_deploy_title">Device Deploy</string>
     //部署记录详情
     <string name="deploy_record_name_address">Name/Address</string>
     //巡检
