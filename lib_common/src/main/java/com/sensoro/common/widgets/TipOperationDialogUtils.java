@@ -125,6 +125,7 @@ public class TipOperationDialogUtils {
         if (mDialog != null) {
             mEt.getText().clear();
             mEt.setText("10");
+            mEt.setSelection("10".length());
             mDialog.show();
             mEtDiameter.setCursorVisible(false);
             mEt.setCursorVisible(true);
