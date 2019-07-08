@@ -13,21 +13,12 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
-        android:background="@color/d8d8d8">
+        android:background="@color/c_f4f4f4">
 
         <com.sensoro.city_camera.widget.CustomRoundAngleImageView
             android:id="@+id/iv_single_photo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            app:radius="4dp" />
-
-        <com.sensoro.city_camera.widget.CustomRoundAngleImageView
-            android:id="@+id/view_single_valid_cover"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#80FFFFFF"
-            android:visibility="gone"
             app:radius="4dp" />
 
         <TextView

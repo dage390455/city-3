@@ -5,6 +5,7 @@ import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
 import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
 import com.sensoro.common.server.security.bean.SecurityAlarmEventInfo;
+import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
 
 import java.util.List;
 
@@ -31,9 +32,9 @@ public interface ISecurityWarnDetailView extends IActivityIntent, IProgressDialo
 
     /**
      * 更新安防预警详情数据
-     * @param securityAlarmDetailInfo
+     * @param securityAlarmInfo
      */
-    void updateSecurityWarnDetail(SecurityAlarmDetailInfo securityAlarmDetailInfo);
+    void updateSecurityWarnDetail(SecurityAlarmInfo securityAlarmInfo);
 
     /**
      * 更新预警修改数据
@@ -43,7 +44,7 @@ public interface ISecurityWarnDetailView extends IActivityIntent, IProgressDialo
 
     /**
      * 更新确认信息
-     * @param securityAlarmDetailInfo
+     * @param securityAlarmInfo
      */
-    void updateSecurityConfirmResult(SecurityAlarmDetailInfo securityAlarmDetailInfo);
+    void updateSecurityConfirmResult(SecurityAlarmInfo securityAlarmInfo);
 }

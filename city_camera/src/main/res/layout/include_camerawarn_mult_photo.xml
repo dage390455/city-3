@@ -22,14 +22,13 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:layout_toLeftOf="@+id/space_center"
-            android:background="@color/d8d8d8">
+            android:background="@color/c_f4f4f4">
 
             <com.sensoro.city_camera.widget.CustomRoundAngleImageView
                 android:id="@+id/iv_left_photo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:radius="4dp"
-                android:scaleType="centerCrop" />
+                app:radius="4dp" />
 
             <TextView
                 android:id="@+id/tv_left_photolabel"
@@ -59,22 +58,14 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/space_center"
-            android:background="@color/d8d8d8">
+            android:background="@color/c_f4f4f4">
 
             <com.sensoro.city_camera.widget.CustomRoundAngleImageView
                 android:id="@+id/iv_right_photo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:radius="4dp"
-                android:scaleType="centerCrop" />
+                app:radius="4dp" />
 
-            <com.sensoro.city_camera.widget.CustomRoundAngleImageView
-                android:id="@+id/view_mul_valid_cover"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#80FFFFFF"
-                app:radius="4dp"
-                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tv_right_photolabel"

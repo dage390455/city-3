@@ -26,6 +26,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.model.DeployContactModel;
+import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.DpUtils;
 import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -35,9 +38,7 @@ import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeployDeviceDetailAlarmContactAdapter;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
-import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.smartcity.presenter.DeployMonitorDetailActivityPresenter;
-import com.sensoro.common.utils.AppUtils;
 
 import java.util.List;
 
@@ -573,9 +574,11 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
         if (TextUtils.isEmpty(setting)) {
             acDeployDeviceDetailTvDeploySetting.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
             acDeployDeviceDetailTvDeploySetting.setText(mActivity.getString(R.string.required));
+            acDeployDeviceDetailTvDeploySetting.setPadding(0, 0, 0, 0);
         } else {
             acDeployDeviceDetailTvDeploySetting.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
             acDeployDeviceDetailTvDeploySetting.setText(setting);
+            acDeployDeviceDetailTvDeploySetting.setPadding(0, DpUtils.dp2px(mActivity, 10), 0, DpUtils.dp2px(mActivity, 10));
         }
     }
 

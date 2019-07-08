@@ -305,7 +305,9 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                                     mHandler.postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            getView().finishAc();
+                                            if (isAttachedView()) {
+                                                getView().finishAc();
+                                            }
                                         }
                                     }, 1000);
                                 }

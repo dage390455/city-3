@@ -2505,22 +2505,22 @@ public class RetrofitServiceHelper {
     /**
      * 获取安防预警列表
      *
-     * @param startTime          查询范围开始时间 精确到秒
-     * @param endTime            查询范围结束时间 精确到秒
+     * @param startTime          查询范围开始时间 精确到ms
+     * @param endTime            查询范围结束时间 精确到ms
      * @param alarmOperationType 预警操作类型，1-已处理/2-未处理/3-有效/4-无效
-     * @param taskName           任务名称，多个名称时逗号分隔(支持模糊匹配)
+     * @param searchText         搜索关键字
      * @param alarmType          预警日志类型，1-重点人员/2-外来人员/3-人员入侵
      *                           查询条数，默认20
      * @param offset             查询起始位置，默认0
      * @return
      */
     public Observable<SecurityAlarmListRsp> getSecurityAlarmList(int offset, String startTime, String endTime, int alarmOperationType,
-                                                                 String taskName, int alarmType) {
+                                                                 String searchText, int alarmType) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("limit", SECURITY_ALARMLIST_PAGE_COUNT);
         paramMap.put("offset", offset);
-        if (!TextUtils.isEmpty(taskName)) {
-            paramMap.put("taskName", taskName);
+        if (!TextUtils.isEmpty(searchText)) {
+            paramMap.put("searchText", searchText);
         }
         if (0 != alarmOperationType) {
             paramMap.put("alarmOperationType", alarmOperationType);

@@ -10,6 +10,9 @@ import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import java.io.File;
 
 
+/**
+ * @author bin.tian
+ */
 public interface ISecurityRecordDetailActivityView extends IActivityIntent, IToast, IProgressDialog {
     void startPlayLogic(String url1);
 

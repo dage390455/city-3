@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +45,7 @@ import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseFragment;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.LogUtils;
@@ -60,8 +60,6 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
-import static com.sensoro.common.constant.Constants.DIRECTION_UP;
 
 /**
  * @author wangqinghao
@@ -77,15 +75,15 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     @BindView(R2.id.fg_camera_warns_top_search_imv_clear)
     ImageView ivFilterContentClear;
     @BindView(R2.id.tv_top_search_alarm_search_cancel)
-    TextView tvFilterCancal;
+    TextView tvFilterCancel;
     @BindView(R2.id.fg_camera_warns_top_filter_rl)
-    RelativeLayout layouFilterContent;
+    RelativeLayout layoutFilterContent;
     @BindView(R2.id.layout_filter_capture_time)
     RelativeLayout layoutCaptureTime;
     @BindView(R2.id.tv_search_camera_warns_time)
-    TextView tvFilterCapturetime;
+    TextView tvFilterCaptureTime;
     @BindView(R2.id.iv_search_camera_warns_time)
-    ImageView ivFilterCapturetime;
+    ImageView ivFilterCaptureTime;
 
     @BindView(R2.id.layout_filter_process_status)
     RelativeLayout layoutProcessStatus;
@@ -114,11 +112,10 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     private ProgressUtils mProgressUtils;
     private Animation returnTopAnimation;
     private SearchHistoryAdapter mSearchHistoryAdapter;
-    //删除历史记录
-    private TipOperationDialogUtils historyClearDialog;
-    private SecurityWarnConfirmDialog mSecurityWarnConfirmDialog;
-
-    private FilterPopUtils mCapturetimeFilterPopUtils;
+    //删除历史记录确认
+    private TipOperationDialogUtils mHistoryClearDialog;
+    //抓拍时间 处理状态 筛选PopuWindow
+    private FilterPopUtils mCaptureTimeFilterPopUtils;
     private FilterPopUtils mProcessStatusFilterPopUtils;
 
     public static final int WARN_FILTER_TIME = 0;
@@ -139,7 +136,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     @SuppressLint("ClickableViewAccessibility")
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
-        mCapturetimeFilterPopUtils = new FilterPopUtils(getActivity());
+        mCaptureTimeFilterPopUtils = new FilterPopUtils(getActivity());
         mProcessStatusFilterPopUtils = new FilterPopUtils(getActivity());
 
         //返回顶部
@@ -154,9 +151,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
                     // 当按了搜索之后关闭软键盘
                     String text = edFilterContent.getText().toString();
                     mPresenter.setFilterText(text);
-                    mPresenter.save(text);
                     edFilterContent.clearFocus();
-                    mPresenter.requestSearchData(DIRECTION_DOWN);
                     AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), edFilterContent);
                     setSearchHistoryVisible(false);
 
@@ -192,24 +187,23 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
                 edFilterContent.setCursorVisible(true);
             }
         });
-        //抓拍时间筛选
-        mCapturetimeFilterPopUtils.setSelectDeviceTypeItemClickListener(new FilterPopUtils.SelectFilterTypeItemClickListener() {
+        //抓拍时间筛选-选择回调处理
+        mCaptureTimeFilterPopUtils.setSelectDeviceTypeItemClickListener(new FilterPopUtils.SelectFilterTypeItemClickListener() {
             @Override
             public void onSelectFilterTypeItemClick(View view, int position) {
                 //隐藏搜索历史弹窗 显示取消按钮
                 if (llSearchHistory.getVisibility() == View.VISIBLE) {
                     llSearchHistory.setVisibility(View.GONE);
                     refreshLayout.setVisibility(View.VISIBLE);
-                    tvFilterCancal.setVisibility(View.VISIBLE);
+                    tvFilterCancel.setVisibility(View.VISIBLE);
                 }
-                //选择类型的pop点击事件
-                if (position == 4) {//自定义时间
+                //自定义时间
+                if (position == 4) {
                     mPresenter.doCalendar(fgMainWarnTitleRoot);
                 } else {
                     mPresenter.setFilterCapturetime(position);
                 }
                 setWarnFilterContent(WARN_FILTER_TIME);
-                //mCapturetimeFilterPopUtils.dismiss();
             }
 
             @Override
@@ -220,12 +214,12 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             @Override
             public void onOutsideDismissPop() {
                 //隐藏 时间选择弹窗
-                ivFilterCapturetime.setImageResource(R.drawable.ic_arrow_down);
+                ivFilterCaptureTime.setImageResource(R.drawable.ic_arrow_down);
                 mPresenter.setFilterCapturetime(-1);
 
             }
         });
-        //处理状态筛选
+        //处理状态筛选-选择回调处理
         mProcessStatusFilterPopUtils.setSelectDeviceTypeItemClickListener(new FilterPopUtils.SelectFilterTypeItemClickListener() {
             @Override
             public void onSelectFilterTypeItemClick(View view, int position) {
@@ -233,12 +227,11 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
                 if (llSearchHistory.getVisibility() == View.VISIBLE) {
                     llSearchHistory.setVisibility(View.GONE);
                     refreshLayout.setVisibility(View.VISIBLE);
-                    tvFilterCancal.setVisibility(View.VISIBLE);
+                    tvFilterCancel.setVisibility(View.VISIBLE);
                 }
                 //处理状态类型
                 mPresenter.setFilterProcessStatus(position);
                 setWarnFilterContent(WARN_FILTER_STATUS);
-                //mProcessStatusFilterPopUtils.dismiss();
             }
 
             @Override
@@ -276,7 +269,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
                 isShowDialog = false;
                 String text = edFilterContent.getText().toString();
-                mPresenter.requestSearchData(DIRECTION_DOWN);
+                mPresenter.requestSearchData(Constants.DIRECTION_DOWN);
             }
         });
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -284,7 +277,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
                 isShowDialog = false;
                 String text = edFilterContent.getText().toString();
-                mPresenter.requestSearchData(DIRECTION_UP);
+                mPresenter.requestSearchData(Constants.DIRECTION_UP);
             }
         });
         rvCameraWarnsContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -342,7 +335,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
                         AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), edFilterContent);
                         setSearchHistoryVisible(false);
                         mPresenter.save(text);
-                        mPresenter.requestSearchData(DIRECTION_DOWN);
+                        mPresenter.requestSearchData(Constants.DIRECTION_DOWN);
                     }
                 });
         rvSearchHistory.setAdapter(mSearchHistoryAdapter);
@@ -350,12 +343,12 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
 
 
     private void initClearHistoryDialog() {
-        historyClearDialog = new TipOperationDialogUtils(mRootFragment.getActivity(), true);
-        historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
-        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record), R.color.c_a6a6a6);
-        historyClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_1dbb99));
-        historyClearDialog.setTipConfirmText(getString(R.string.clear), getResources().getColor(R.color.c_a6a6a6));
-        historyClearDialog.setTipDialogUtilsClickListener(this);
+        mHistoryClearDialog = new TipOperationDialogUtils(mRootFragment.getActivity(), true);
+        mHistoryClearDialog.setTipTitleText(getString(R.string.history_clear_all));
+        mHistoryClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record), R.color.c_a6a6a6);
+        mHistoryClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_1dbb99));
+        mHistoryClearDialog.setTipConfirmText(getString(R.string.clear), getResources().getColor(R.color.c_a6a6a6));
+        mHistoryClearDialog.setTipDialogUtilsClickListener(this);
     }
 
 
@@ -380,6 +373,9 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
 
     }
 
+    /**
+     * 取消搜索数据
+     */
     @Override
     public void cancelSearchData() {
         //取消搜索
@@ -408,6 +404,13 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     }
 
     @Override
+    public void SmoothToTopList() {
+        rvCameraWarnsContent.smoothScrollToPosition(0);
+        mReturnTopImageView.setVisibility(View.GONE);
+
+    }
+
+    @Override
     public void onPullRefreshComplete() {
         refreshLayout.finishRefresh();
         refreshLayout.finishLoadMore();
@@ -421,17 +424,16 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     @Override
     public void setSearchButtonTextCancelVisible(boolean isVisible) {
         if (isVisible) {
-            tvFilterCancal.setVisibility(View.VISIBLE);
+            tvFilterCancel.setVisibility(View.VISIBLE);
         } else if (TextUtils.isEmpty(edFilterContent.getText().toString())) {
-            tvFilterCancal.setVisibility(View.GONE);
-//            setEditTextState(true);
+            tvFilterCancel.setVisibility(View.GONE);
         }
 
     }
 
     @Override
     public boolean getSearchTextCancelVisible() {
-        return tvFilterCancal.getVisibility() == View.VISIBLE;
+        return tvFilterCancel.getVisibility() == View.VISIBLE;
 
     }
 
@@ -464,8 +466,8 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
 
     @Override
     public void showHistoryClearDialog() {
-        if (historyClearDialog != null) {
-            historyClearDialog.show();
+        if (mHistoryClearDialog != null) {
+            mHistoryClearDialog.show();
         }
     }
 
@@ -477,19 +479,19 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     }
 
     @Override
-    public void updateFilterCapturetimeList(List<FilterModel> capturetimeList) {
-        mCapturetimeFilterPopUtils.updateSelectDeviceStatusList(capturetimeList);
+    public void updateFilterCaptureTimeList(List<FilterModel> captureTimeList) {
+        mCaptureTimeFilterPopUtils.updateSelectDeviceStatusList(captureTimeList);
 
     }
 
     @Override
-    public void setFilterCapturetimeView(FilterModel capturetimeModel) {
-        if (capturetimeModel.isSpecialShow) {
-            tvFilterCapturetime.setTextColor(getResources().getColor(R.color.c_a6a6a6));
-            tvFilterCapturetime.setText(R.string.capture_time);
+    public void setFilterCaptureTimeView(FilterModel captureTimeModel) {
+        if (captureTimeModel.isSpecialShow) {
+            tvFilterCaptureTime.setTextColor(getResources().getColor(R.color.c_a6a6a6));
+            tvFilterCaptureTime.setText(R.string.capture_time);
         } else {
-            tvFilterCapturetime.setTextColor(getResources().getColor(R.color.c_252525));
-            tvFilterCapturetime.setText(capturetimeModel.statusTitle);
+            tvFilterCaptureTime.setTextColor(getResources().getColor(R.color.c_252525));
+            tvFilterCaptureTime.setText(captureTimeModel.statusTitle);
         }
 
     }
@@ -508,17 +510,17 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
 
     @Override
     public void showConfirmDialog(SecurityAlarmInfo securityAlarmInfo) {
-        if (mSecurityWarnConfirmDialog == null) {
-            mSecurityWarnConfirmDialog = new SecurityWarnConfirmDialog();
-            mSecurityWarnConfirmDialog.setSecurityConfirmCallback(mPresenter);
+        if (securityAlarmInfo != null) {
+            SecurityWarnConfirmDialog securityWarnConfirmDialog = new SecurityWarnConfirmDialog();
+            securityWarnConfirmDialog.setSecurityConfirmCallback(mPresenter);
+            Bundle bundle = new Bundle();
+            bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_ID, securityAlarmInfo.getId());
+            bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TITLE, securityAlarmInfo.getTaskName());
+            bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TIME, String.valueOf(securityAlarmInfo.getAlarmTime()));
+            bundle.putInt(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TYPE, securityAlarmInfo.getAlarmType());
+            securityWarnConfirmDialog.setArguments(bundle);
+            securityWarnConfirmDialog.show(getChildFragmentManager());
         }
-        Bundle bundle = new Bundle();
-        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_ID, securityAlarmInfo.getId());
-        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TITLE, securityAlarmInfo.getTaskName());
-        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TIME, String.valueOf(securityAlarmInfo.getAlarmTime()));
-        bundle.putInt(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TYPE, securityAlarmInfo.getAlarmType());
-        mSecurityWarnConfirmDialog.setArguments(bundle);
-        mSecurityWarnConfirmDialog.show(getChildFragmentManager());
     }
 
 
@@ -604,7 +606,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
 
     @Override
     public void onCancelClick() {
-        historyClearDialog.dismiss();
+        mHistoryClearDialog.dismiss();
 
     }
 
@@ -614,7 +616,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     @Override
     public void onConfirmClick(String content, String diameter) {
         mPresenter.clearSearchHistory();
-        historyClearDialog.dismiss();
+        mHistoryClearDialog.dismiss();
     }
 
     @Override
@@ -627,9 +629,9 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
         }
-        if (historyClearDialog != null) {
-            historyClearDialog.destroy();
-            historyClearDialog = null;
+        if (mHistoryClearDialog != null) {
+            mHistoryClearDialog.destroy();
+            mHistoryClearDialog = null;
         }
         super.onDestroyView();
     }
@@ -681,25 +683,25 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
                 mPresenter.setFilterProcessStatus(-1);
             }
             //显示/隐藏 时间选择弹窗
-            if (mCapturetimeFilterPopUtils.isShowing()) {
-                mCapturetimeFilterPopUtils.dismiss();
+            if (mCaptureTimeFilterPopUtils.isShowing()) {
+                mCaptureTimeFilterPopUtils.dismiss();
                 //向下箭头
-                ivFilterCapturetime.setImageResource(R.drawable.ic_arrow_down);
+                ivFilterCaptureTime.setImageResource(R.drawable.ic_arrow_down);
                 mPresenter.setFilterCapturetime(-1);
             } else {
-                mCapturetimeFilterPopUtils.showAsDropDown(layouFilterContent);
+                mCaptureTimeFilterPopUtils.showAsDropDown(layoutFilterContent);
                 //标题绿色 向上箭头
-                ivFilterCapturetime.setImageResource(R.drawable.ic_arrow_up);
-                tvFilterCapturetime.setText(R.string.capture_time);
-                tvFilterCapturetime.getPaint().setFakeBoldText(true);
-                tvFilterCapturetime.setTextColor(getResources().getColor(R.color.c_1dbb99));
+                ivFilterCaptureTime.setImageResource(R.drawable.ic_arrow_up);
+                //tvFilterCaptureTime.setText(R.string.capture_time);
+                tvFilterCaptureTime.getPaint().setFakeBoldText(true);
+                tvFilterCaptureTime.setTextColor(getResources().getColor(R.color.c_1dbb99));
             }
 
         } else if (WARN_FILTER_STATUS == filterType) {
             //隐藏 时间选择弹窗
-            if (mCapturetimeFilterPopUtils.isShowing()) {
-                mCapturetimeFilterPopUtils.dismiss();
-                ivFilterCapturetime.setImageResource(R.drawable.ic_arrow_down);
+            if (mCaptureTimeFilterPopUtils.isShowing()) {
+                mCaptureTimeFilterPopUtils.dismiss();
+                ivFilterCaptureTime.setImageResource(R.drawable.ic_arrow_down);
                 mPresenter.setFilterCapturetime(-1);
             }
             //显示/隐藏 状态选择弹窗
@@ -709,10 +711,10 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
                 ivFilterProcessStatus.setImageResource(R.drawable.ic_arrow_down);
                 mPresenter.setFilterProcessStatus(-1);
             } else {
-                mProcessStatusFilterPopUtils.showAsDropDown(layouFilterContent);
+                mProcessStatusFilterPopUtils.showAsDropDown(layoutFilterContent);
                 //标题绿色 向上箭头
                 ivFilterProcessStatus.setImageResource(R.drawable.ic_arrow_up);
-                tvFilterProcessStatus.setText(R.string.process_status);
+                //tvFilterProcessStatus.setText(R.string.process_status);
                 tvFilterProcessStatus.getPaint().setFakeBoldText(true);
                 tvFilterProcessStatus.setTextColor(getResources().getColor(R.color.c_1dbb99));
 
@@ -728,7 +730,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CameraWarnListFragmentPresenter.REQUEST_CODE_DETAIL && resultCode == Activity.RESULT_OK) {
-            mPresenter.requestSearchData(DIRECTION_DOWN);
+            mPresenter.requestSearchData(Constants.DIRECTION_DOWN);
         }
     }
 }

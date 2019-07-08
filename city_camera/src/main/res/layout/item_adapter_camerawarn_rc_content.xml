@@ -44,7 +44,6 @@
             android:layout_height="22dp"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="4dp"
-            android:layout_marginRight="100dp"
             android:layout_toLeftOf="@+id/btn_camerawarn_confim"
             android:layout_toRightOf="@+id/tv_camera_warn_type"
             android:text="外来人员布控任务"

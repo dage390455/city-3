@@ -1,6 +1,8 @@
 package com.sensoro.common.server.security.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author  预警详情时间线事件
@@ -8,18 +10,24 @@ import java.io.Serializable;
 
 public class SecurityAlarmEventInfo implements Serializable, Comparable<SecurityAlarmEventInfo>{
     public String id;
+    public String type;//1 创建 2:处理结果信息 3 系统电话  4.系统短信
     public String name;
     public String content;
-    public int status;
+    public String source;//预警事件来源，Web/App
     public String handlerId;
     public EventHandler handler;
+    public int status;
     public long createTime;
-    public String type;//2:处理结果信息
-    public String source;//预警事件来源，Web/App
+    public List<EventRecord> records = new ArrayList<>();
 
     public static class EventHandler{
          public String email;
          public String name;
+    }
+    public static class EventRecord{
+        public String content;
+        public int status;
+        public String createTime;
     }
 
     @Override

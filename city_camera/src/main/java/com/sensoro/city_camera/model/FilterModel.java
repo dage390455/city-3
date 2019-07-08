@@ -2,6 +2,7 @@ package com.sensoro.city_camera.model;
 
 /**
  * 筛选模式
+ * @author qinghao.wang
  */
 public class FilterModel {
     //对应含义

@@ -10,6 +10,7 @@ import com.sensoro.city_camera.IMainViews.ISecurityWarnDetailView;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.activity.PhotoPreviewActivity;
 import com.sensoro.city_camera.activity.SecurityWarnRecordDetailActivity;
+import com.sensoro.city_camera.constants.SecurityConstants;
 import com.sensoro.city_camera.dialog.SecurityCameraDetailsDialog;
 import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
 import com.sensoro.city_camera.util.MapUtil;
@@ -18,6 +19,7 @@ import com.sensoro.common.model.DeviceNotificationBean;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
+import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
 import com.sensoro.common.server.security.bean.SecurityCameraInfo;
 import com.sensoro.common.server.security.bean.SecurityContactsInfo;
 import com.sensoro.common.server.security.response.HandleAlarmRsp;
@@ -25,8 +27,6 @@ import com.sensoro.common.server.security.response.SecurityAlarmDetailRsp;
 import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,12 +47,24 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
     public void initData(Context context) {
         mActivity = (Activity) context;
         mSecurityInfoId = mActivity.getIntent().getStringExtra("id");
+
+        updatePreData();
+
         requestSecurityWarnDetailData(mSecurityInfoId);
         requestSecurityWarnTimeLineData(mSecurityInfoId);
     }
 
+    private void updatePreData() {
+        SecurityAlarmInfo securityAlarmInfo = (SecurityAlarmInfo) mActivity.getIntent().getSerializableExtra("SecurityAlarmInfo");
+        if (securityAlarmInfo != null && isAttachedView()) {
+            getView().updateSecurityWarnDetail(securityAlarmInfo);
+        }
+    }
+
     private void requestSecurityWarnDetailData(String id) {
-        getView().showProgressDialog();
+        if (isAttachedView()) {
+            getView().showProgressDialog();
+        }
         RetrofitServiceHelper
                 .getInstance()
                 .getSecurityAlarmDetails(id)
@@ -89,7 +101,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
                     @Override
                     public void onCompleted(SecurityAlarmTimelineRsp securityAlarmTimelineRsp) {
                         SecurityAlarmTimelineRsp.SecurityAlarmTimelineData securityAlarmTimelineRspData = securityAlarmTimelineRsp.getData();
-                        if(securityAlarmTimelineRspData != null){
+                        if (securityAlarmTimelineRspData != null) {
                             getView().updateSecurityWarnTimeLine(securityAlarmTimelineRspData.list);
                         }
                     }
@@ -101,9 +113,16 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
                 });
     }
 
-
-    public void doContactOwner() {
-        List<SecurityContactsInfo> contacts = mSecurityAlarmDetailInfo.getContacts();
+    /**
+     * 联系：相机联系人电话
+     */
+    private void doCameraContact() {
+        if (null == mSecurityAlarmDetailInfo || null == mSecurityAlarmDetailInfo.getCamera()
+                || null == mSecurityAlarmDetailInfo.getCamera().getContact()) {
+            getView().toastShort(mActivity.getString(R.string.camera_contact_no_exist));
+            return;
+        }
+        List<SecurityContactsInfo> contacts = mSecurityAlarmDetailInfo.getCamera().getContact();
 
         if (contacts.isEmpty()) {
             if (isAttachedView()) {
@@ -114,11 +133,40 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
         }
     }
 
+
+    public void doContactOwner() {
+        if (null == mSecurityAlarmDetailInfo || null == mSecurityAlarmDetailInfo.getContacts()) {
+            getView().toastShort(mActivity.getString(R.string.owner_contact_no_exist));
+            return;
+        }
+        List<SecurityContactsInfo> contacts = mSecurityAlarmDetailInfo.getContacts();
+
+        if (contacts == null || contacts.isEmpty()) {
+            if (isAttachedView()) {
+                getView().toastShort(mActivity.getString(R.string.no_find_contact_phone_number));
+            }
+        } else {
+            AppUtils.diallPhone(contacts.get(0).getMobilePhone(), mActivity);
+        }
+    }
+
     public void doNavigation() {
+        if (mSecurityAlarmDetailInfo == null) {
+            return;
+        }
         SecurityCameraInfo camera = mSecurityAlarmDetailInfo.getCamera();
-        if (camera!= null){
-            LatLng destPosition = new LatLng(Double.parseDouble(camera.getLatitude()), Double.parseDouble(camera.getLongitude()));
-            MapUtil.locateAndNavigation(mActivity, destPosition);
+        if (camera != null) {
+            if (!TextUtils.isEmpty(camera.getLatitude()) && !TextUtils.isEmpty(camera.getLongitude())) {
+                LatLng destPosition = null;
+                try {
+                    destPosition = new LatLng(Double.parseDouble(camera.getLatitude()), Double.parseDouble(camera.getLongitude()));
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+                if (destPosition != null) {
+                    MapUtil.locateAndNavigation(mActivity, destPosition);
+                }
+            }
         } else {
             if (isAttachedView()) {
                 getView().toastShort(mActivity.getString(R.string.location_not_obtained));
@@ -127,20 +175,27 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
     }
 
     public void doConfirm() {
-        getView().showConfirmDialog(mSecurityAlarmDetailInfo);
+        if (isAttachedView()) {
+            getView().showConfirmDialog(mSecurityAlarmDetailInfo);
+        }
     }
 
     /**
      * 显示摄像机详情
      */
-    public void showCameraDetail(){
-        getView().showCameraDetailsDialog(mSecurityAlarmDetailInfo);
+    public void showCameraDetail() {
+        if (isAttachedView()) {
+            getView().showCameraDetailsDialog(mSecurityAlarmDetailInfo);
+        }
     }
+
     /**
      * 显示布控信息详情
      */
-    public void showDeployDetail(){
-        getView().showDeployDetail(mSecurityAlarmDetailInfo);
+    public void showDeployDetail() {
+        if (isAttachedView()) {
+            getView().showDeployDetail(mSecurityAlarmDetailInfo);
+        }
     }
 
     public void doBack() {
@@ -158,6 +213,11 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
                     @Override
                     public void onCompleted(HandleAlarmRsp handleAlarmRsp) {
                         mSecurityAlarmDetailInfo.setIsEffective(isEffective);
+                        if (handleAlarmRsp.data != null && handleAlarmRsp.data.status > 0) {
+                            mSecurityAlarmDetailInfo.setIsHandle(handleAlarmRsp.data.status);
+                        } else {
+                            mSecurityAlarmDetailInfo.setIsHandle(1);//消息是否处理过返回后台没有确认，只是说大于0，而且后台返回数据结构为{"data":{"status":1}}
+                        }
                         getView().updateSecurityConfirmResult(mSecurityAlarmDetailInfo);
                         requestSecurityWarnTimeLineData(mSecurityInfoId);
                         getView().setIntentResult(Activity.RESULT_OK);
@@ -186,23 +246,22 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 
     @Override
     public void onNavi() {
-        SecurityCameraInfo camera = mSecurityAlarmDetailInfo.getCamera();
-        if (camera!= null){
-            LatLng destPosition = new LatLng(Double.parseDouble(camera.getLatitude()), Double.parseDouble(camera.getLongitude()));
-            MapUtil.locateAndNavigation(mActivity, destPosition);
-        } else {
-            if (isAttachedView()) {
-                getView().toastShort(mActivity.getString(R.string.location_not_obtained));
-            }
-        }
+        doNavigation();
     }
 
     @Override
     public void showContactsDetails() {
-        List<SecurityContactsInfo> contactsInfos = mSecurityAlarmDetailInfo.getContacts();
-        if (contactsInfos.size()>1){
+        if (null == mSecurityAlarmDetailInfo || null == mSecurityAlarmDetailInfo.getCamera()
+                || null == mSecurityAlarmDetailInfo.getCamera().getContact()) {
+            if (isAttachedView()) {
+                getView().toastShort(mActivity.getString(R.string.camera_contact_no_exist));
+            }
+            return;
+        }
+        List<SecurityContactsInfo> contactsInfos = mSecurityAlarmDetailInfo.getCamera().getContact();
+        if (contactsInfos.size() > 1) {
             List<DeviceNotificationBean> list = new ArrayList<>(contactsInfos.size());
-            for (SecurityContactsInfo info: contactsInfos){
+            for (SecurityContactsInfo info : contactsInfos) {
                 DeviceNotificationBean bean = new DeviceNotificationBean();
                 bean.setTypes("phone");
                 bean.setContact(info.getMobilePhone());
@@ -211,14 +270,18 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 
             new WarningContactDialogUtil(mActivity).show(list);
         } else {
-            doContactOwner();
+            doCameraContact();
         }
     }
 
     public void doPreviewImages(int position) {
-        Intent intent = new Intent(mActivity, PhotoPreviewActivity.class);
-        intent.putExtra(PhotoPreviewPresenter.EXTRA_KEY_POSITION, position);
-        intent.putExtra(PhotoPreviewPresenter.EXTRA_KEY_SECURITY_INFO, mSecurityAlarmDetailInfo);
-        getView().startAC(intent);
+        if (mSecurityAlarmDetailInfo != null) {
+            Intent intent = new Intent(mActivity, PhotoPreviewActivity.class);
+            intent.putExtra(PhotoPreviewPresenter.EXTRA_KEY_POSITION, position);
+            intent.putExtra(PhotoPreviewPresenter.EXTRA_KEY_SECURITY_INFO, mSecurityAlarmDetailInfo);
+            if (isAttachedView()) {
+                getView().startAC(intent);
+            }
+        }
     }
 }

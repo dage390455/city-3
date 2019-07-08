@@ -74,6 +74,8 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         mInLineList = new ArrayList<>(5);
         mOutLineList = new ArrayList<>(5);
         initPickerData();
+        recommendedTransformerDialogUtils = new RecommendedTransformerDialogUtils(mActivity);
+        recommendedTransformerDialogUtils.setOnRecommendedTransformerDialogUtilsListener(this);
         //
         Object settingDataValue = getBundleValue(mActivity, Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA);
         Object deviceValue = getBundleValue(mActivity, Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
@@ -95,60 +97,14 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         }
         //
         int tempValue = 0;
+        Integer inputValue = deployControlSettingData.getInputValue();
+        List<DeployControlSettingData.wireData> input = deployControlSettingData.getInput();
+        List<DeployControlSettingData.wireData> output = deployControlSettingData.getOutput();
+        Integer switchSpec = deployControlSettingData.getSwitchSpec();
         switch (configurationSource) {
             case DEPLOY_CONFIGURATION_SOURCE_TYPE_DEPLOY_DEVICE:
                 //部署
-                //回显
                 getView().setSubtitleText(mActivity.getString(R.string.save));
-                Integer inputValue = deployControlSettingData.getInputValue();
-                if (inputValue != null) {
-                    tempValue = inputValue;
-                }
-                List<DeployControlSettingData.wireData> input = deployControlSettingData.getInput();
-                if (input != null && input.size() > 0) {
-                    for (DeployControlSettingData.wireData wireData : input) {
-                        WireMaterialDiameterModel wireMaterialDiameterModel = new WireMaterialDiameterModel();
-                        Integer count = wireData.getCount();
-                        if (count != null) {
-                            wireMaterialDiameterModel.count = count;
-                        }
-                        Double wireDiameter = wireData.getWireDiameter();
-                        if (wireDiameter != null) {
-                            wireMaterialDiameterModel.diameter = WidgetUtil.getFormatDouble(wireDiameter);
-                        }
-                        Integer wireMaterial = wireData.getWireMaterial();
-                        if (wireMaterial != null) {
-                            wireMaterialDiameterModel.material = wireMaterial;
-                        }
-                        mInLineList.add(wireMaterialDiameterModel);
-
-                    }
-                }
-                List<DeployControlSettingData.wireData> output = deployControlSettingData.getOutput();
-                if (output != null && output.size() > 0) {
-                    for (DeployControlSettingData.wireData wireData : output) {
-                        WireMaterialDiameterModel wireMaterialDiameterModel = new WireMaterialDiameterModel();
-                        Integer count = wireData.getCount();
-                        if (count != null) {
-                            wireMaterialDiameterModel.count = count;
-                        }
-                        Double wireDiameter = wireData.getWireDiameter();
-                        if (wireDiameter != null) {
-                            wireMaterialDiameterModel.diameter = WidgetUtil.getFormatDouble(wireDiameter);
-                        }
-                        Integer wireMaterial = wireData.getWireMaterial();
-                        if (wireMaterial != null) {
-                            wireMaterialDiameterModel.material = wireMaterial;
-                        }
-                        mOutLineList.add(wireMaterialDiameterModel);
-                    }
-                }
-                Integer switchSpec = deployControlSettingData.getSwitchSpec();
-                if (switchSpec != null) {
-                    getView().setActualCurrentValue(switchSpec);
-                }
-
-
                 break;
             case DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL:
                 //设备详情 下行
@@ -157,9 +113,51 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
                 break;
 
         }
-        //
-        recommendedTransformerDialogUtils = new RecommendedTransformerDialogUtils(mActivity);
-        recommendedTransformerDialogUtils.setOnRecommendedTransformerDialogUtilsListener(this);
+        //回显值
+        if (inputValue != null) {
+            tempValue = inputValue;
+        }
+        if (input != null && input.size() > 0) {
+            for (DeployControlSettingData.wireData wireData : input) {
+                WireMaterialDiameterModel wireMaterialDiameterModel = new WireMaterialDiameterModel();
+                Integer count = wireData.getCount();
+                if (count != null) {
+                    wireMaterialDiameterModel.count = count;
+                }
+                Double wireDiameter = wireData.getWireDiameter();
+                if (wireDiameter != null) {
+                    wireMaterialDiameterModel.diameter = WidgetUtil.getFormatDouble(wireDiameter);
+                }
+                Integer wireMaterial = wireData.getWireMaterial();
+                if (wireMaterial != null) {
+                    wireMaterialDiameterModel.material = wireMaterial;
+                }
+                mInLineList.add(wireMaterialDiameterModel);
+
+            }
+        }
+
+        if (output != null && output.size() > 0) {
+            for (DeployControlSettingData.wireData wireData : output) {
+                WireMaterialDiameterModel wireMaterialDiameterModel = new WireMaterialDiameterModel();
+                Integer count = wireData.getCount();
+                if (count != null) {
+                    wireMaterialDiameterModel.count = count;
+                }
+                Double wireDiameter = wireData.getWireDiameter();
+                if (wireDiameter != null) {
+                    wireMaterialDiameterModel.diameter = WidgetUtil.getFormatDouble(wireDiameter);
+                }
+                Integer wireMaterial = wireData.getWireMaterial();
+                if (wireMaterial != null) {
+                    wireMaterialDiameterModel.material = wireMaterial;
+                }
+                mOutLineList.add(wireMaterialDiameterModel);
+            }
+        }
+        if (switchSpec != null) {
+            getView().setActualCurrentValue(switchSpec);
+        }
         getView().updateInLineData(mInLineList);
         getView().updateOutLineData(mOutLineList);
 
@@ -171,7 +169,9 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
 
     @Override
     public void onDestroy() {
-        EventBus.getDefault().unregister(this);
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
         if (mInLineList != null) {
             mInLineList.clear();
         }
@@ -615,7 +615,9 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
                                     mHandler.postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            getView().finishAc();
+                                            if (isAttachedView()) {
+                                                getView().finishAc();
+                                            }
                                         }
                                     }, 1000);
                                 }

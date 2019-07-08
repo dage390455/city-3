@@ -17,6 +17,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * @author qinghao.wang
+ */
 public class LabelAdapter extends RecyclerView.Adapter<LabelAdapter.LabelHolder> {
     private final Context mContext;
     List<String> mLabelTitleList = new ArrayList<>();

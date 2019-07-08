@@ -1,13 +1,18 @@
 package com.sensoro.city_camera.presenter;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.city_camera.IMainViews.ISecurityRecordDetailActivityView;
 import com.sensoro.city_camera.R;
 import com.sensoro.common.base.BasePresenter;
@@ -34,6 +39,9 @@ import io.reactivex.schedulers.Schedulers;
 
 import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAUSE;
 
+/**
+ * @author bin.tian
+ */
 public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecurityRecordDetailActivityView> implements DownloadListener {
     private Activity mActivity;
     private String mSecurityWarnId;
@@ -50,8 +58,9 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
     }
 
     private void setLastCover(String coverUrl) {
-        Glide.with(mActivity).load(coverUrl)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
+        Glide.with(mActivity).
+                load(coverUrl)
+                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))//缓存全尺寸
                 .into(getView().getImageView());
 
     }
@@ -228,18 +237,26 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
             if (strings1.length > 0) {
                 fileName = strings1[strings1.length - 1];
             }
+            if(!fileName.toLowerCase().endsWith(".jpeg") && !fileName.toLowerCase().endsWith(".jpg")){
+                fileName = System.currentTimeMillis() + ".jpeg";
+            }
         }
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath(), fileName);
         getView().capture(file);
     }
 
     public void showDownloadDialog() {
-        getView().showDownloadDialog(mSecurityRecord.videoSize);
+        if (mSecurityRecord != null && isAttachedView()) {
+            getView().showDownloadDialog(mSecurityRecord.videoSize);
+        }
     }
 
     public void doDownload() {
         if (mSecurityRecord == null) {
             return;
+        }
+        if (isAttachedView()){
+            getView().setDownloadStartState(mSecurityRecord.videoSize);
         }
         String fileName = System.currentTimeMillis() + ".mp4";
         String[] strings = mSecurityRecord.mediaUrl.split("\\?");
@@ -249,10 +266,13 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
             if (strings1.length > 0) {
                 fileName = strings1[strings1.length - 1];
             }
+            if (!fileName.toLowerCase().endsWith(".mp4")){
+                fileName = System.currentTimeMillis() + ".mp4";
+            }
         }
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath(), fileName);
 
-        if(mDownloadUtil == null){
+        if (mDownloadUtil == null) {
             mDownloadUtil = new DownloadUtil(this);
         }
 
@@ -260,7 +280,9 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
     }
 
     public void doDownloadCancel() {
-
+        if (mDownloadUtil != null) {
+            mDownloadUtil.cancelDownload();
+        }
     }
 
     @Override
@@ -268,6 +290,11 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
         if (isAttachedView()) {
             getView().doDownloadFinish();
         }
+
+        insertVideoToMediaStore(file.getAbsolutePath(), true);
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        intent.setData(Uri.fromFile(file));
+        mActivity.sendBroadcast(intent);
     }
 
     @Override
@@ -282,5 +309,40 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
         if (isAttachedView()) {
             getView().setDownloadErrorState();
         }
+    }
+
+    private void insertVideoToMediaStore(String filePath, boolean isVideo) {
+        try {
+            long createTime = System.currentTimeMillis();
+            ContentValues values = initCommonContentValues(filePath, createTime);
+            values.put(MediaStore.Video.VideoColumns.DATE_TAKEN, createTime);
+            if(isVideo){
+                values.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
+            } else {
+                values.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
+            }
+            mActivity.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private ContentValues initCommonContentValues(String filePath, long time) {
+        ContentValues values = new ContentValues();
+        File saveFile = new File(filePath);
+        values.put(MediaStore.MediaColumns.TITLE, saveFile.getName());
+        values.put(MediaStore.MediaColumns.DISPLAY_NAME, saveFile.getName());
+        values.put(MediaStore.MediaColumns.DATE_MODIFIED, time);
+        values.put(MediaStore.MediaColumns.DATE_ADDED, time);
+        values.put(MediaStore.MediaColumns.DATA, saveFile.getAbsolutePath());
+        values.put(MediaStore.MediaColumns.SIZE, saveFile.length());
+        return values;
+    }
+
+    public void onCaptureFinished(File file) {
+        insertVideoToMediaStore(file.getAbsolutePath(), false);
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        intent.setData(Uri.fromFile(file));
+        mActivity.sendBroadcast(intent);
     }
 }

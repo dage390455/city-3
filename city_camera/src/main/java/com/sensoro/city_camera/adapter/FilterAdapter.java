@@ -22,6 +22,7 @@ import butterknife.ButterKnife;
 
 /**
  * 筛选选项的
+ * @author qinghao.wang
  */
 public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.InspectionTaskStateSelectHolder> {
     private final Context mContext;

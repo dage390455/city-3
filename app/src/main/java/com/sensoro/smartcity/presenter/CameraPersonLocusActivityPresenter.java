@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
@@ -19,8 +22,9 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.PolylineOptions;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.EventData;
@@ -260,7 +264,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                                         mActivity.runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                if (isAttachedView()){
+                                                if (isAttachedView()) {
                                                     getView().addMarker(avatarMarkerOptions, -1);
                                                 }
                                             }
@@ -330,49 +334,47 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
     private void loadAvatar(final DeviceCameraPersonFaceRsp.DataBean dataBean, final LatLng latLng, final int tag) {
 
         Glide.with(mActivity)
-                .load(Constants.CAMERA_BASE_URL + dataBean.getFaceUrl())
                 .asBitmap()
+                .load(Constants.CAMERA_BASE_URL + dataBean.getFaceUrl())
                 .thumbnail(0.1f)
+                .apply(new RequestOptions().transform(new GlideCircleTransform(mActivity, dp24)).error(R.drawable.deploy_pic_placeholder)           //设置错误图片
+                        .placeholder(R.drawable.ic_default_cround_image)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL))
 //                .override(size,size)
-                .transform(new GlideCircleTransform(mActivity, dp24))
-                .error(R.drawable.deploy_pic_placeholder)           //设置错误图片
-                .placeholder(R.drawable.ic_default_cround_image)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        imageView.setImageBitmap(resource);
-                        Bitmap viewBitmap = getViewBitmap(imageView);
-                        if (avatarMarkerOptions == null) {
-                            avatarMarkerOptions = new MarkerOptions()
-                                    .position(latLng)
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        if (isAttachedView()){
+                            imageView.setImageBitmap(resource);
+                            Bitmap viewBitmap = getViewBitmap(imageView);
+                            if (avatarMarkerOptions == null) {
+                                avatarMarkerOptions = new MarkerOptions()
+                                        .position(latLng)
 //                            .icon(BitmapDescriptorFactory.fromView(resource))
-                                    .icon(BitmapDescriptorFactory.fromBitmap(viewBitmap))
-                                    .anchor(0.5f, 0.96f)
-                                    .draggable(false).title("").snippet("")
-                                    .zIndex(10f);
-                            if (isAttachedView()) {
-                                mActivity.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (isAttachedView()){
-                                            getView().addMarker(avatarMarkerOptions, tag);
+                                        .icon(BitmapDescriptorFactory.fromBitmap(viewBitmap))
+                                        .anchor(0.5f, 0.96f)
+                                        .draggable(false).title("").snippet("")
+                                        .zIndex(10f);
+                                if (isAttachedView()) {
+                                    mActivity.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (isAttachedView()) {
+                                                getView().addMarker(avatarMarkerOptions, tag);
+                                            }
                                         }
-                                    }
-                                });
+                                    });
 
-                            }
-                        } else {
+                                }
+                            } else {
 //                            avatarMarkerOptions.position(latLng).icon(BitmapDescriptorFactory.fromBitmap(resource));
 //                    avatarMarkerOptions.icon(BitmapDescriptorFactory.fromBitmap(resource));
-                            getView().updateAvatarMarker(latLng, viewBitmap);
+                                getView().updateAvatarMarker(latLng, viewBitmap);
+                            }
+                            playBean = dataBean;
                         }
-                        playBean = dataBean;
-
-
                     }
                 });
-//
     }
 
 
@@ -588,11 +590,13 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
     }
 
     private void loadLastCover() {
-        Glide.with(mActivity).load(Constants.CAMERA_BASE_URL + playBean.getSceneUrl()).asBitmap().into(new SimpleTarget<Bitmap>() {
+        Glide.with(mActivity).asBitmap().load(Constants.CAMERA_BASE_URL + playBean.getSceneUrl()).into(new SimpleTarget<Bitmap>() {
             @Override
-            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                BitmapDrawable bitmapDrawable = new BitmapDrawable(resource);
-                getView().setLastCover(bitmapDrawable);
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                if (isAttachedView()){
+                    BitmapDrawable bitmapDrawable = new BitmapDrawable(resource);
+                    getView().setLastCover(bitmapDrawable);
+                }
             }
         });
     }

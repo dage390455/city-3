@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.widget.LinearLayout;
+import android.util.Log;
 import android.widget.RelativeLayout;
 
 import com.sensoro.city_camera.IMainViews.ICameraWarnListFragmentView;
@@ -63,20 +63,24 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
     public static final long FILTER_TIME_24H = 24 * 3600;
     public static final long FILTER_TIME_3DAY = 3 * 24 * 3600;
     public static final long FILTER_TIME_7DAY = 7 * 24 * 3600;
+    public static final long FILTER_TIME_CUSTOM = -1;
 
     //筛选条件
-    private FilterModel mCurrentCapturetimeModel;
+    private FilterModel mCurrentCaptureTimeModel;
     private FilterModel mCurrentProcessStatusModel;
-    private List<FilterModel> mCapturetimeModelList = new ArrayList<>();
+    private List<FilterModel> mCaptureTimeModelList = new ArrayList<>();
     private List<FilterModel> mProcessStatusModelList = new ArrayList<>();
 
 
     //搜索文字
     private String tempSearchText;
-    //抓拍时间
+    //搜索抓拍时间参数
     private long startTime;
     private long endTime;
     private String dateSearchText;
+    //自定义日历开始结束时间参数
+    private long customStartTime;
+    private long customEndTime;
     //处理状态
     private long handleStatus = FILTER_STATUS_UNPROCESS;
 
@@ -85,33 +89,17 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
     private volatile int cur_page = 0;
 
     private Activity mContext;
-    private SecurityAlarmInfo mCurrentSecurityAlarmInfo;
     private CalendarPopUtils mCalendarPopUtils;
 
     private volatile boolean needFresh = false;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     public static final int REQUEST_CODE_DETAIL = 100;
 
-    private final Comparator<SecurityAlarmInfo> cameraWarnInfoComparator = new Comparator<SecurityAlarmInfo>() {
-        @Override
-        public int compare(SecurityAlarmInfo o1, SecurityAlarmInfo o2) {
-            long l = o2.getAlarmTime() - o1.getAlarmTime();
-            if (l > 0) {
-                return 1;
-            } else if (l < 0) {
-                return -1;
-            } else {
-                return 0;
-            }
-
-        }
-    };
-
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        initCapturetimeDialog();
+        initCaptureTimeDialog();
         initProcessStatusDialog();
 
         mCalendarPopUtils = new CalendarPopUtils(mContext);
@@ -119,11 +107,10 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                 .setMonthStatus(1)
                 .setOnCalendarPopupCallbackListener(this);
 
-        if (true) {
-            innitFilterStatus();
-            requestSearchData(Constants.DIRECTION_DOWN);
-            mHandler.post(this);
-        }
+        initFilterStatus();
+        requestSearchData(Constants.DIRECTION_DOWN);
+        mHandler.post(this);
+
         //安防历史搜索记录
         List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
         if (list != null) {
@@ -134,21 +121,18 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
     }
 
 
-    public void initCapturetimeDialog() {
-
-        initCaptureTimeData();
-        getView().updateFilterCapturetimeList(mCapturetimeModelList);
+    public void initCaptureTimeDialog() {
+        mCaptureTimeModelList = new ArrayList<>();
+        mCurrentCaptureTimeModel = new FilterModel(mContext.getString(R.string.Unlimited), FILTER_TIME_ALL, true, true);
+        mCaptureTimeModelList.add(mCurrentCaptureTimeModel);
+        mCaptureTimeModelList.add(new FilterModel(mContext.getString(R.string.twentyfour_hours), FILTER_TIME_24H, false, false));
+        mCaptureTimeModelList.add(new FilterModel(mContext.getString(R.string.three_days), FILTER_TIME_3DAY, false, false));
+        mCaptureTimeModelList.add(new FilterModel(mContext.getString(R.string.seven_days), FILTER_TIME_7DAY, false, false));
+        mCaptureTimeModelList.add(new FilterModel(mContext.getString(R.string.customize_time), FILTER_TIME_CUSTOM, false, false));
+        getView().updateFilterCaptureTimeList(mCaptureTimeModelList);
     }
 
-    private void initCaptureTimeData(){
-        mCapturetimeModelList = new ArrayList<>();
-        mCurrentCapturetimeModel = new FilterModel(mContext.getString(R.string.Unlimited), FILTER_TIME_ALL, true, true);
-        mCapturetimeModelList.add(mCurrentCapturetimeModel);
-        mCapturetimeModelList.add(new FilterModel(mContext.getString(R.string.twentyfour_hours), FILTER_TIME_24H, false, false));
-        mCapturetimeModelList.add(new FilterModel(mContext.getString(R.string.three_days), FILTER_TIME_3DAY, false, false));
-        mCapturetimeModelList.add(new FilterModel(mContext.getString(R.string.seven_days), FILTER_TIME_7DAY, false, false));
-        mCapturetimeModelList.add(new FilterModel(mContext.getString(R.string.customize_time), 0L, false, false));
-    }
+
     public void initProcessStatusDialog() {
 
         mProcessStatusModelList = new ArrayList<>();
@@ -169,23 +153,15 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                     mSecurityAlarmInfoList.clear();
                 }
                 synchronized (mSecurityAlarmInfoList) {
-                    out:
-                    for (int i = 0; i < securityAlarmInfoList.size(); i++) {
-                        SecurityAlarmInfo securityAlarmInfo = securityAlarmInfoList.get(i);
-                        for (int j = 0; j < mSecurityAlarmInfoList.size(); j++) {
-                            if (mSecurityAlarmInfoList.get(j).getId().equals(securityAlarmInfo.getId())) {
-                                mSecurityAlarmInfoList.set(i, securityAlarmInfo);
-                                break out;
-                            }
-                        }
-                        mSecurityAlarmInfoList.add(securityAlarmInfo);
-                    }
-                    Collections.sort(mSecurityAlarmInfoList, cameraWarnInfoComparator);
+                    mSecurityAlarmInfoList.addAll(securityAlarmInfoList);
                     mContext.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             if (isAttachedView()) {
                                 getView().updateCameraWarnsListAdapter(mSecurityAlarmInfoList);
+                            }
+                            if (direction == Constants.DIRECTION_DOWN) {
+                                getView().SmoothToTopList();
                             }
 
                         }
@@ -244,7 +220,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                 getView().showProgressDialog();
                 int offsetUp = cur_page == 0 ? 1 : cur_page * 20 - 1;
                 RetrofitServiceHelper.getInstance().getSecurityAlarmList(
-                        (cur_page == 0 ? 1 : cur_page * 20 - 1),
+                        (cur_page == 0 ? 0 : cur_page * 20 - 1),
                         (startTime == 0 ? null : startTime + ""),
                         (endTime == 0 ? null : endTime + ""), (int) handleStatus, tempSearchText, 0
                 ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityAlarmListRsp>(this) {
@@ -261,11 +237,18 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                     @Override
                     public void onCompleted(SecurityAlarmListRsp securityAlarmListRsp) {
                         getView().dismissProgressDialog();
-                        if (securityAlarmListRsp.getData().list.size() == 0) {
+                        //根据数据条数判断是否有更多数据
+                        if (mSecurityAlarmInfoList.size() == securityAlarmListRsp.getData().total) {
                             getView().toastShort(mContext.getString(R.string.no_more_data));
                             getView().onPullRefreshCompleteNoMoreData();
                             cur_page--;
-                        } else {
+                        }
+                        /*if (securityAlarmListRsp.getData().list.size() == 0) {
+                            getView().toastShort(mContext.getString(R.string.no_more_data));
+                            getView().onPullRefreshCompleteNoMoreData();
+                            cur_page--;
+                        }*/
+                        else {
                             freshUI(direction, securityAlarmListRsp);
                             getView().onPullRefreshComplete();
                         }
@@ -286,23 +269,10 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
     public void clickItem(SecurityAlarmInfo securityAlarmInfo) {
         Intent intent = new Intent(mContext, SecurityWarnDetailActivity.class);
         intent.putExtra("id", securityAlarmInfo.getId());
-        getView().startACForResult(intent, REQUEST_CODE_DETAIL);
-
-    }
-
-    /**
-     * 单个安防预警确认
-     *
-     * @param securityAlarmInfo
-     */
-    public void cameraWarnConfirm(final SecurityAlarmInfo securityAlarmInfo) {
-        getView().toastLong(securityAlarmInfo.getTaskName());
-    }
-
-    /**
-     * 刷新单条数据
-     */
-    public void refreshSigleCameraWarnInfo() {
+        intent.putExtra("SecurityAlarmInfo", securityAlarmInfo);
+        if (isAttachedView()) {
+            getView().startACForResult(intent, REQUEST_CODE_DETAIL);
+        }
 
     }
 
@@ -393,43 +363,6 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         getView().showConfirmDialog(securityAlarmInfo);
     }
 
-    private void freshSingleWarnLogInfo(SecurityAlarmInfo securityAlarmInfo) {
-        synchronized (securityAlarmInfo) {
-            // 处理只针对当前集合做处理
-            boolean canRefresh = false;
-            for (int i = 0; i < mSecurityAlarmInfoList.size(); i++) {
-                SecurityAlarmInfo tempLogInfo = mSecurityAlarmInfoList.get(i);
-                if (tempLogInfo.getId().equals(securityAlarmInfo.getId())) {
-                    //刷新单个信息
-                    /*AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
-                    deviceAlarmLogInfo.setSort(1);
-                    for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
-                        if (recordInfo.getType().equals("recovery")) {
-                            deviceAlarmLogInfo.setSort(4);
-                            break;
-                        }
-                    }
-                    mDeviceAlarmLogInfoList.set(i, deviceAlarmLogInfo);*/
-                    canRefresh = true;
-                    break;
-                }
-            }
-            if (canRefresh) {
-                Collections.sort(mSecurityAlarmInfoList, cameraWarnInfoComparator);
-                mContext.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isAttachedView()) {
-                            getView().updateCameraWarnsListAdapter(mSecurityAlarmInfoList);
-                        }
-
-                    }
-                });
-            }
-
-        }
-    }
-
     /**
      * 日历选择时间回调
      *
@@ -437,30 +370,27 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
      */
     @Override
     public void onCalendarPopupCallback(CalendarDateModel calendarDateModel) {
-        mCurrentCapturetimeModel = mCapturetimeModelList.get(mCapturetimeModelList.size()-1);
-        startTime = DateUtil.strToDate(calendarDateModel.startDate).getTime();
-        endTime = DateUtil.strToDate(calendarDateModel.endDate).getTime();
+        mCurrentCaptureTimeModel = mCaptureTimeModelList.get(mCaptureTimeModelList.size() - 1);
+        customStartTime = DateUtil.strToDate(calendarDateModel.startDate).getTime();
+        customEndTime = DateUtil.strToDate(calendarDateModel.endDate).getTime();
         /*dateSearchText = DateUtil.getCalendarYearMothDayFormatDate(startTime) + " ~ " + DateUtil
                 .getCalendarYearMothDayFormatDate(endTime);*/
-        dateSearchText = DateUtil.getMonthDate(startTime) + " ~ " + DateUtil
-                .getMonthDate(endTime);
-        int elmentPos = mCapturetimeModelList.indexOf(mCurrentCapturetimeModel);
+        dateSearchText = DateUtil.getMonthDate(customStartTime) + " ~ " + DateUtil
+                .getMonthDate(customEndTime);
+        int elmentPos = mCaptureTimeModelList.indexOf(mCurrentCaptureTimeModel);
         //更新自定义时间文字
-        mCurrentCapturetimeModel.statusTitle = dateSearchText;
+        mCurrentCaptureTimeModel.statusTitle = dateSearchText;
         //更新抓拍时间列表数据
-        mCapturetimeModelList.get(elmentPos).statusTitle = dateSearchText;
-        getView().updateFilterCapturetimeList(mCapturetimeModelList);
+        mCaptureTimeModelList.get(elmentPos).statusTitle = dateSearchText;
+        getView().updateFilterCaptureTimeList(mCaptureTimeModelList);
 
-        getView().setFilterCapturetimeView(mCurrentCapturetimeModel);
-        endTime += 1000 * 60 * 60 * 24;
-        requestSearchData(DIRECTION_DOWN);
+        getView().setFilterCaptureTimeView(mCurrentCaptureTimeModel);
+        filterDataByTime(mCurrentCaptureTimeModel.status);
 
         getView().setSearchHistoryVisible(false);
         if (!TextUtils.isEmpty(tempSearchText)) {
             save(tempSearchText);
         }
-
-
     }
 
 
@@ -468,9 +398,13 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
      * 选择筛选过滤时间
      */
     public void filterDataByTime(long filterTimeInval) {
-        if (filterTimeInval == 0) {
+        //不限
+        if (filterTimeInval == FILTER_TIME_ALL) {
             startTime = 0;
             endTime = 0;
+        } else if (filterTimeInval == FILTER_TIME_CUSTOM) {
+            startTime = customStartTime;
+            endTime = customEndTime + 1000 * 60 * 60 * 24;
         } else {
             endTime = System.currentTimeMillis();
             startTime = endTime - filterTimeInval * 1000;
@@ -490,25 +424,47 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         } else {
             tempSearchText = searchText;
         }
+        save(searchText);
+        requestSearchData(Constants.DIRECTION_DOWN);
 
     }
 
     /**
-     * 设置抓拍时间View
+     * 设置抓拍时间 不限/24h/3day/7day
      */
     public void setFilterCapturetime(int positon) {
-        if (positon > -1 && positon < mCapturetimeModelList.size()) {
-            mCurrentCapturetimeModel = mCapturetimeModelList.get(positon);
-            //重制自定义时间内容
-            if (!TextUtils.isEmpty(dateSearchText)) {
-                mCapturetimeModelList.get(mCapturetimeModelList.size() - 1).statusTitle = mContext.getString(R.string.customize_time);
-                getView().updateFilterCapturetimeList(mCapturetimeModelList);
+        if (positon > -1 && positon < mCaptureTimeModelList.size()) {
+            if (customStartTime != 0 || customEndTime != 0) {
+                //init  更新抓拍时间选项列表
+                customStartTime = 0;
+                customEndTime = 0;
+                dateSearchText = "";
+                mCaptureTimeModelList.get(mCaptureTimeModelList.size() - 1).statusTitle = mContext.getString(R.string.customize_time);
+                getView().updateFilterCaptureTimeList(mCaptureTimeModelList);
             }
-            filterDataByTime(mCurrentCapturetimeModel.status);
+
+            mCurrentCaptureTimeModel = mCaptureTimeModelList.get(positon);
+            filterDataByTime(mCurrentCaptureTimeModel.status);
         }
-        getView().setFilterCapturetimeView(mCurrentCapturetimeModel);
+        getView().setFilterCaptureTimeView(mCurrentCaptureTimeModel);
 
 
+    }
+
+    /**
+     * 自定义时间：弹出日历选择日期范围
+     *
+     * @param fgMainWarnTitleRoot
+     */
+    public void doCalendar(RelativeLayout fgMainWarnTitleRoot) {
+
+        long temp_startTime = -1;
+        long temp_endTime = -1;
+        if (customStartTime != 0 && customEndTime != 0) {
+            temp_startTime = customStartTime;
+            temp_endTime = customEndTime;
+        }
+        mCalendarPopUtils.show(fgMainWarnTitleRoot, temp_startTime, temp_endTime);
     }
 
     /**
@@ -534,29 +490,16 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
     }
 
     /**
-     * 自定义时间 弹出日历选择日期范围
-     *
-     * @param fgMainWarnTitleRoot
-     */
-    public void doCalendar(RelativeLayout fgMainWarnTitleRoot) {
-        long temp_startTime = -1;
-        long temp_endTime = -1;
-        if (startTime != 0 && endTime != 0) {
-            temp_startTime = startTime;
-            temp_endTime = endTime;
-        }
-        mCalendarPopUtils.show(fgMainWarnTitleRoot, temp_startTime, temp_endTime);
-    }
-
-    /**
      * 初始化筛选条件
      */
-    public void innitFilterStatus() {
+    public void initFilterStatus() {
         startTime = 0;
         endTime = 0;
+        customStartTime = 0;
+        customEndTime = 0;
         handleStatus = FILTER_STATUS_UNPROCESS;
         tempSearchText = "";
-        getView().setFilterCapturetimeView(mCurrentCapturetimeModel);
+        getView().setFilterCaptureTimeView(mCurrentCaptureTimeModel);
         getView().setFilterProcessStatusView(mCurrentProcessStatusModel);
     }
 

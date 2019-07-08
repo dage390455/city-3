@@ -17,6 +17,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.common.server.response.AlarmCloudVideoRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.common.utils.AppUtils;
@@ -78,7 +79,7 @@ public class AlarmCameraVideoDetailAdapter extends RecyclerView.Adapter<AlarmCam
             @Override
             public void onClick(View v) {
                 Integer position = (Integer) holder.ivDownloadItemAdapterAlarmCameraVideoDetail.getTag();
-                if (mListener !=  null) {
+                if (mListener != null) {
                     mListener.onAlarmCameraVideoDownloadClick(mList.get(position));
                 }
             }
@@ -105,9 +106,9 @@ public class AlarmCameraVideoDetailAdapter extends RecyclerView.Adapter<AlarmCam
         if (dataBean != null) {
             Glide.with(mContext)
                     .load(dataBean.getCoverUrl())
-                    .error(R.drawable.camera_placeholder)
+                    .apply(new RequestOptions().error(R.drawable.camera_placeholder).placeholder(R.drawable.camera_placeholder))
+
 //                    .bitmapTransform(new GlideRoundTransform(mContext,dp4))
-                    .placeholder(R.drawable.camera_placeholder)
                     .into(holder.ivPicItemAdapterAlarmCameraVideoDetail);
             holder.tvNameItemAdapterAlarmCameraVideoDetail.setText(dataBean.getLocation());
 
@@ -153,6 +154,7 @@ public class AlarmCameraVideoDetailAdapter extends RecyclerView.Adapter<AlarmCam
         ImageView ivDownloadItemAdapterAlarmCameraVideoDetail;
         @BindView(R.id.cl_root_item_adapter_alarm_camera_video_detail)
         ConstraintLayout clRootItemAdapterAlarmCameraVideoDetail;
+
         public CameraLiveDetailViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
