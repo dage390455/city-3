@@ -113,7 +113,8 @@ public class SecurityWarnTimeLineAdapter extends RecyclerView.Adapter<SecurityWa
                     holder.mIconIv.setImageResource(R.drawable.icon_security_phone_log);
                     holder.mTitleTv.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
                     SpannableStringBuilder ssb = new SpannableStringBuilder();
-                    for (int i = 0; i < securityAlarmEventInfo.records.size(); i++) {
+                    int mTimeLineRecordCount = securityAlarmEventInfo.records.size();
+                    for (int i = 0; i < mTimeLineRecordCount; i++) {
                         SecurityAlarmEventInfo.EventRecord callRecord = securityAlarmEventInfo.records.get(i);
                         ssb.append(callRecord.content);
                         ssb.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.c_252525)), ssb.length() - callRecord.content.length(), ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -132,25 +133,28 @@ public class SecurityWarnTimeLineAdapter extends RecyclerView.Adapter<SecurityWa
                 }
 
             } else if (mEventType == SECURITY_TIMELINE_EVENT_TYPE_SMS) {
-                holder.mIconIv.setImageResource(R.drawable.icon_security_msg_log);
-                holder.mTitleTv.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
-                SpannableStringBuilder ssb = new SpannableStringBuilder();
-                for (int i = 0; i < securityAlarmEventInfo.records.size(); i++) {
-                    SecurityAlarmEventInfo.EventRecord callRecord = securityAlarmEventInfo.records.get(i);
-                    ssb.append(callRecord.content);
-                    ssb.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.c_252525)), ssb.length() - callRecord.content.length(), ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    if (SECURITY_TIMELINE_STATUS_SUCCESS == callRecord.status) {
-                        ssb.append(mContext.getString(R.string.security_warn_timeline_sms_success));
-                    } else if (SECURITY_TIMELINE_STATUS_PROCESS == callRecord.status) {
-                        ssb.append(mContext.getString(R.string.security_warn_timeline_sms_process));
-                    } else {
-                        ssb.append(mContext.getString(R.string.security_warn_timeline_sms_failure));
+                if (securityAlarmEventInfo.records != null && securityAlarmEventInfo.records.size() > 0) {
+                    holder.mIconIv.setImageResource(R.drawable.icon_security_msg_log);
+                    holder.mTitleTv.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
+                    SpannableStringBuilder ssb = new SpannableStringBuilder();
+                    int mTimeLineRecordCount = securityAlarmEventInfo.records.size();
+                    for (int i = 0; i < mTimeLineRecordCount; i++) {
+                        SecurityAlarmEventInfo.EventRecord callRecord = securityAlarmEventInfo.records.get(i);
+                        ssb.append(callRecord.content);
+                        ssb.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.c_252525)), ssb.length() - callRecord.content.length(), ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        if (SECURITY_TIMELINE_STATUS_SUCCESS == callRecord.status) {
+                            ssb.append(mContext.getString(R.string.security_warn_timeline_sms_success));
+                        } else if (SECURITY_TIMELINE_STATUS_PROCESS == callRecord.status) {
+                            ssb.append(mContext.getString(R.string.security_warn_timeline_sms_process));
+                        } else {
+                            ssb.append(mContext.getString(R.string.security_warn_timeline_sms_failure));
+                        }
+                        if (i != securityAlarmEventInfo.records.size() - 1) {
+                            ssb.append(";");
+                        }
                     }
-                    if (i != securityAlarmEventInfo.records.size() - 1) {
-                        ssb.append(";");
-                    }
+                    holder.mTitleTv.setText(ssb);
                 }
-                holder.mTitleTv.setText(ssb);
 
             }
             holder.mTimeTv.setText(DateUtil.getStrTimeToday(mContext, securityAlarmEventInfo.createTime, 0));
