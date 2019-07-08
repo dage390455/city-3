@@ -2,11 +2,12 @@ package com.sensoro.common.widgets;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import androidx.annotation.ColorInt;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.ColorInt;
 
 import com.sensoro.common.R;
 
@@ -123,8 +124,9 @@ public class TipOperationDialogUtils {
     public void show() {
         if (mDialog != null) {
             mEt.getText().clear();
+            mEt.setText("10");
             mDialog.show();
-            mEtDiameter.setCursorVisible(true);
+            mEtDiameter.setCursorVisible(false);
             mEt.setCursorVisible(true);
 //            WindowManager m = mDialog.getWindow().getWindowManager();
 //            Display d = m.getDefaultDisplay();
