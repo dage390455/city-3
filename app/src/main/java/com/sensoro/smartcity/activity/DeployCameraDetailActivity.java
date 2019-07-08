@@ -119,7 +119,7 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mLoadBleConfigDialogBuilder = new ProgressUtils.Builder(mActivity);
         mLoadBleConfigDialog = new ProgressUtils(mLoadBleConfigDialogBuilder.setMessage(mActivity.getString(R.string.get_the_middle_profile)).build());
-        includeTextTitleTvTitle.setText(R.string.device_deployment);
+        includeTextTitleTvTitle.setText(R.string.deploy_device_detail_deploy_title);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
 //        updateUploadState(true);
         initUploadDialog();

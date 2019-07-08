@@ -517,6 +517,7 @@
     <string name="deploy_device_detail_deploy_photo">部署照片</string>
     <string name="deploy_device_detail_deploy_location">部署位置</string>
     <string name="deploy_device_detail_upload">上传</string>
+    <string name="deploy_device_detail_deploy_title">设备部署</string>
     //部署记录详情
     <string name="deploy_record_name_address">名称/地址</string>
     //巡检
