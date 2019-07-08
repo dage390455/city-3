@@ -10,7 +10,7 @@
         android:background="@color/white"
         android:orientation="vertical">
 
-        <include layout="@layout/item_include_text_title"></include>
+        <include layout="@layout/item_include_text_title"/>
 
 
         <LinearLayout
@@ -140,6 +140,108 @@
 
             <EditText
                 android:id="@+id/deviceout_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/shape_et_search"
+                android:cursorVisible="true"
+                android:enabled="true"
+                android:gravity="top"
+                android:hint="请输入"
+                android:inputType="textMultiLine"
+                android:maxLength="100"
+                android:padding="10dp"
+                android:scrollbars="vertical"
+                android:textColor="@color/c_626262"
+                android:textCursorDrawable="@drawable/my_cursor"
+                android:textSize="14dp" />
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginBottom="24dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="uuid"
+                android:textColor="@color/c_a6a6a6"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/tv_device_uuid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/shape_et_search"
+                android:enabled="true"
+                android:gravity="top"
+                android:maxLength="100"
+                android:padding="10dp"
+                android:scrollbars="vertical"
+                android:textColor="@color/c_626262"
+                android:textCursorDrawable="@drawable/my_cursor"
+                android:textSize="14dp" />
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginBottom="24dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="major"
+                android:textColor="@color/c_a6a6a6"
+                android:textSize="14dp" />
+
+            <EditText
+                android:id="@+id/et_device_major"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/shape_et_search"
+                android:cursorVisible="true"
+                android:enabled="true"
+                android:gravity="top"
+                android:hint="请输入"
+                android:inputType="textMultiLine"
+                android:maxLength="100"
+                android:padding="10dp"
+                android:scrollbars="vertical"
+                android:textColor="@color/c_626262"
+                android:textCursorDrawable="@drawable/my_cursor"
+                android:textSize="14dp" />
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginBottom="24dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="mirror"
+                android:textColor="@color/c_a6a6a6"
+                android:textSize="14dp" />
+
+            <EditText
+                android:id="@+id/et_device_mirror"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
