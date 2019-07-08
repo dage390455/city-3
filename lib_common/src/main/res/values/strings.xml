@@ -1160,4 +1160,8 @@
     <string name="please_add_config_out">Please add output config</string>
     <string name="please_enter_the_configuration_parameters_correctly">Please enter the configuration parameters correctly</string>
 
+
+
+    <string name="duration">Duration</string>
+
 </resources>

@@ -46,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="12dp"
-            android:text="@string/minute"
+            android:text="@string/duration"
             android:textColor="@color/c_a6a6a6"
             android:textSize="14dp" />
 
@@ -70,7 +70,7 @@
             android:paddingTop="12dp"
             android:paddingEnd="16dp"
             android:paddingBottom="12dp"
-            android:text="min"
+            android:text="@string/minute"
             android:textColor="@color/c_a6a6a6"
             android:textSize="14dp" />
 

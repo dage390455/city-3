@@ -650,7 +650,7 @@
     <string name="air_switch_config">配置</string>
     <string name="is_device_air_switch_config">是否进行初始配置</string>
     <string name="configuring">配置中</string>
-    <string name="monitor_point_operation_error_value_range">输入错误，数值范围:</string>
+    <string name="monitor_point_operation_error_value_range">时长输入错误，数值范围:</string>
     <string name="enter_the_correct_number_format">请输入正确的数字</string>
     <string name="input_not_null">输入不能为空</string>
     <string name="main_home_menu_scan_login">扫码登录</string>
@@ -1140,6 +1140,11 @@
     <string name="device_detail_config_trans">安装互感器型号</string>
     <string name="initial_configuration_details">初始配置详情</string>
     <string name="please_enter_the_configuration_parameters_correctly">请正确输入配置参数</string>
+
+
+
+    <string name="duration">时长</string>
+
 
 
 </resources>
