@@ -673,6 +673,9 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
                 case MonitorPointOperationCode.AIR_SWITCH_POWER_ON:
                     mOperatingUtil.setTipText(mActivity.getString(R.string.configuring));
                     break;
+                case MonitorPointOperationCode.ERASURE_TIME:
+                    mOperatingUtil.setTipText(mActivity.getString(R.string.erasuring));
+                    break;
 
             }
             if (!mOperatingUtil.isShowing()) {
@@ -940,7 +943,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             mTipUtils.dismiss();
         }
         //控制线径显示
-        mTipUtils.setDiameterVisible(isEdit && Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType));
+        mTipUtils.setDiameterVisible(false);
         mTipUtils.setTipEtRootVisible(isEdit);
         mTipUtils.setTipTitleText(title);
         mTipUtils.setTipMessageText(message, messageColor);
@@ -987,7 +990,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
 
     @Override
     public void onConfirmClick(String content, String diameter) {
-        mPresenter.doOperation(mTipDialogType);
+        mPresenter.doOperation(mTipDialogType, content);
     }
 
     @Override
