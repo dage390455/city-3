@@ -145,7 +145,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
         tipBleDialogUtils = new TipBleDialogUtils(mActivity);
         mLoadBleConfigDialogBuilder = new ProgressUtils.Builder(mActivity);
         mLoadBleConfigDialog = new ProgressUtils(mLoadBleConfigDialogBuilder.setMessage(mActivity.getString(R.string.loading)).setCancelable(false).build());
-        includeTextTitleTvTitle.setText(R.string.device_deployment);
+        includeTextTitleTvTitle.setText(R.string.deploy_device_detail_deploy_title);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
 //        updateUploadState(true);
         initUploadDialog();
