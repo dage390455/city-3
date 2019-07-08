@@ -1,6 +1,7 @@
 package com.sensoro.common.server.security.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public class SecurityAlarmEventInfo implements Serializable, Comparable<Security
     public EventHandler handler;
     public int status;
     public long createTime;
-    public List<EventRecord> records;
+    public List<EventRecord> records = new ArrayList<>();
 
     public static class EventHandler{
          public String email;
