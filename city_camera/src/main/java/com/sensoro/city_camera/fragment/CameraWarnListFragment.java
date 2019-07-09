@@ -46,6 +46,7 @@ import com.sensoro.common.base.BaseFragment;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.LogUtils;
@@ -307,10 +308,10 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     }
 
     private void initRcSearchHistory() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mRootFragment.getActivity()) {
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mRootFragment.getActivity(),true) {
             @Override
             public boolean canScrollVertically() {
-                return false;
+                return true;
             }
 
             @Override
@@ -318,9 +319,9 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
                 return false;
             }
         };
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rvSearchHistory.setLayoutManager(layoutManager);
-        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mRootFragment.getActivity(), 6)));
+        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mRootFragment.getActivity(), 4)));
         mSearchHistoryAdapter = new SearchHistoryAdapter(mRootFragment.getActivity(), new
                 RecycleViewItemClickListener() {
                     @Override

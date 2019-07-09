@@ -112,7 +112,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         mHandler.post(this);
 
         //安防历史搜索记录
-        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
+        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_SECURITY_WARN);
         if (list != null) {
             mSearchHistoryList.addAll(list);
             getView().updateSearchHistoryList(mSearchHistoryList);
@@ -340,7 +340,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         if (TextUtils.isEmpty(text)) {
             return;
         }
-        List<String> warnList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN, text);
+        List<String> warnList = PreferencesSaveAnalyzer.handleDeployRecord(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_SECURITY_WARN, text);
         mSearchHistoryList.clear();
         mSearchHistoryList.addAll(warnList);
         getView().updateSearchHistoryList(mSearchHistoryList);
@@ -351,7 +351,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
      * 清除历史搜索记录
      */
     public void clearSearchHistory() {
-        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
+        PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_SECURITY_WARN);
         mSearchHistoryList.clear();
         getView().updateSearchHistoryList(mSearchHistoryList);
     }
@@ -375,8 +375,14 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         customEndTime = DateUtil.strToDate(calendarDateModel.endDate).getTime();
         /*dateSearchText = DateUtil.getCalendarYearMothDayFormatDate(startTime) + " ~ " + DateUtil
                 .getCalendarYearMothDayFormatDate(endTime);*/
-        dateSearchText = DateUtil.getMonthDate(customStartTime) + " ~ " + DateUtil
-                .getMonthDate(customEndTime);
+        String customStartTimeStr = DateUtil.getMonthDate(customStartTime);
+        String customEndTimeStr = DateUtil.getMonthDate(customEndTime);
+        if (customStartTimeStr.equalsIgnoreCase(customEndTimeStr)) {
+            dateSearchText = customStartTimeStr;
+        } else {
+            dateSearchText = DateUtil.getMonthDate(customStartTime) + " ~ " + DateUtil
+                    .getMonthDate(customEndTime);
+        }
         int elmentPos = mCaptureTimeModelList.indexOf(mCurrentCaptureTimeModel);
         //更新自定义时间文字
         mCurrentCaptureTimeModel.statusTitle = dateSearchText;
