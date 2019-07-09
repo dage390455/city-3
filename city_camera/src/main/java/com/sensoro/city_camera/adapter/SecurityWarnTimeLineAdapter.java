@@ -96,7 +96,9 @@ public class SecurityWarnTimeLineAdapter extends RecyclerView.Adapter<SecurityWa
                 holder.mTitleTv.setTextColor(mContext.getResources().getColor(R.color.c_252525));
                 //安防预警处理
                 SpannableStringBuilder ssb = new SpannableStringBuilder();
-                ssb.append(mContext.getString(R.string.security_warn_timeline_title, securityAlarmEventInfo.handler.name, securityAlarmEventInfo.source));
+                if (securityAlarmEventInfo.handler != null) {
+                    ssb.append(mContext.getString(R.string.security_warn_timeline_title, securityAlarmEventInfo.handler.name, securityAlarmEventInfo.source));
+                }
                 ssb.append(" ");
                 if (securityAlarmEventInfo.status == SecurityConstants.SECURITY_INVALID) {
                     String invalid = mContext.getString(R.string.word_unvalid);
