@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.city_camera.IMainViews.ISecurityRecordDetailActivityView;
 import com.sensoro.city_camera.R;
+import com.sensoro.city_camera.constants.SecurityConstants;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.EventData;
@@ -47,6 +48,7 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
     private String mSecurityWarnId;
     private SecurityRecord mSecurityRecord;
     private DownloadUtil mDownloadUtil;
+
 
     @Override
     public void initData(Context context) {
@@ -229,16 +231,24 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
         if (mSecurityRecord == null) {
             return;
         }
-        String fileName = System.currentTimeMillis() + ".jpeg";
-        String[] strings = mSecurityRecord.coverUrl.split("\\?");
-        if (strings.length > 0) {
-            fileName = strings[0];
-            String[] strings1 = fileName.split("/");
-            if (strings1.length > 0) {
-                fileName = strings1[strings1.length - 1];
-            }
-            if(!fileName.toLowerCase().endsWith(".jpeg") && !fileName.toLowerCase().endsWith(".jpg")){
-                fileName = System.currentTimeMillis() + ".jpeg";
+        String fileName = System.currentTimeMillis() + SecurityConstants.IMAGE_SUFFIX_JPEG;
+        if (mSecurityRecord.coverUrl != null) {
+            String[] strings = mSecurityRecord.coverUrl.split("\\?");
+            if (strings.length > 0) {
+                fileName = strings[0];
+                String[] strings1 = fileName.split("/");
+                if (strings1.length > 0) {
+                    fileName = strings1[strings1.length - 1];
+                }
+                if (fileName.toLowerCase().endsWith(SecurityConstants.IMAGE_SUFFIX_JPEG)
+                        && fileName.length() > SecurityConstants.IMAGE_SUFFIX_JPEG.length()) {
+
+                } else if (fileName.toLowerCase().endsWith(SecurityConstants.IMAGE_SUFFIX_JPG)
+                        && fileName.length() > SecurityConstants.IMAGE_SUFFIX_JPG.length()) {
+
+                } else {
+                    fileName = System.currentTimeMillis() + SecurityConstants.IMAGE_SUFFIX_JPEG;
+                }
             }
         }
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath(), fileName);
@@ -255,19 +265,22 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
         if (mSecurityRecord == null) {
             return;
         }
-        if (isAttachedView()){
+        if (isAttachedView()) {
             getView().setDownloadStartState(mSecurityRecord.videoSize);
         }
-        String fileName = System.currentTimeMillis() + ".mp4";
-        String[] strings = mSecurityRecord.mediaUrl.split("\\?");
-        if (strings.length > 0) {
-            fileName = strings[0];
-            String[] strings1 = fileName.split("/");
-            if (strings1.length > 0) {
-                fileName = strings1[strings1.length - 1];
-            }
-            if (!fileName.toLowerCase().endsWith(".mp4")){
-                fileName = System.currentTimeMillis() + ".mp4";
+        String fileName = System.currentTimeMillis() + SecurityConstants.VIDEO_SUFFIX_MP4;
+        if(mSecurityRecord.mediaUrl != null){
+            String[] strings = mSecurityRecord.mediaUrl.split("\\?");
+            if (strings.length > 0) {
+                fileName = strings[0];
+                String[] strings1 = fileName.split("/");
+                if (strings1.length > 0) {
+                    fileName = strings1[strings1.length - 1];
+                }
+                if (!fileName.toLowerCase().endsWith(SecurityConstants.VIDEO_SUFFIX_MP4)
+                        || fileName.length() <= SecurityConstants.VIDEO_SUFFIX_MP4.length()) {
+                    fileName = System.currentTimeMillis() + SecurityConstants.VIDEO_SUFFIX_MP4;
+                }
             }
         }
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath(), fileName);
@@ -316,7 +329,7 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
             long createTime = System.currentTimeMillis();
             ContentValues values = initCommonContentValues(filePath, createTime);
             values.put(MediaStore.Video.VideoColumns.DATE_TAKEN, createTime);
-            if(isVideo){
+            if (isVideo) {
                 values.put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4");
             } else {
                 values.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
