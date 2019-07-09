@@ -209,7 +209,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mRootFragment.getActivity()) {
             @Override
             public boolean canScrollVertically() {
-                return false;
+                return true;
             }
 
             @Override
@@ -217,7 +217,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
                 return false;
             }
         };
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
         rvSearchHistory.setLayoutManager(layoutManager);
 //        int spacingInPixels = AppUtils.dp2px(mRootFragment.getActivity(),12);
         rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mRootFragment.getActivity(), 6)));
