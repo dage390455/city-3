@@ -75,6 +75,8 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     TextView mConfirmResultTv;
     @BindView(R2.id.security_warn_deploy_rl)
     View mSecurityWarnDeployRl;
+    @BindView(R2.id.security_record_icon)
+    ImageView mSecurityRecordIv;
 
     private ProgressUtils mProgressUtils;
     private SecurityWarnTimeLineAdapter mTimeLineAdapter;
@@ -265,6 +267,13 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         if (mTimeLineAdapter != null) {
             mTimeLineAdapter.setDataList(list);
         }
+    }
+
+    @Override
+    public void updateVideoRecordEnable(boolean isVideoRecordEnable) {
+        mSecurityRecordIv.setImageResource(isVideoRecordEnable ? R.drawable.icon_security_video : R.drawable.icon_security_video_disable);
+        mSecurityWarnVideoTv.setText(isVideoRecordEnable ? R.string.security_warn_video_title : R.string.security_warn_video_title_transcoding);
+        mSecurityWarnVideoTv.setEnabled(isVideoRecordEnable);
     }
 
     @Override

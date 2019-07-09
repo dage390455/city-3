@@ -103,7 +103,7 @@
                 android:layout_marginTop="20dp">
 
                 <ImageView
-                    android:id="@+id/icon"
+                    android:id="@+id/security_record_icon"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/icon_security_video" />
@@ -113,12 +113,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
-                    android:layout_toRightOf="@id/icon"
+                    android:layout_toRightOf="@id/security_record_icon"
                     android:drawableEnd="@drawable/arrows_right"
                     android:gravity="center_vertical"
                     android:singleLine="true"
                     android:text="@string/security_warn_video_title"
-                    android:textColor="@color/c_252525"
+                    android:textColor="@color/security_warn_record_color"
                     android:textSize="16sp" />
 
             </RelativeLayout>

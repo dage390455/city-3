@@ -22,9 +22,11 @@ import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
 import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
 import com.sensoro.common.server.security.bean.SecurityCameraInfo;
 import com.sensoro.common.server.security.bean.SecurityContactsInfo;
+import com.sensoro.common.server.security.bean.SecurityRecord;
 import com.sensoro.common.server.security.response.HandleAlarmRsp;
 import com.sensoro.common.server.security.response.SecurityAlarmDetailRsp;
 import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
+import com.sensoro.common.server.security.response.SecurityWarnRecordResp;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
 
@@ -52,6 +54,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 
         requestSecurityWarnDetailData(mSecurityInfoId);
         requestSecurityWarnTimeLineData(mSecurityInfoId);
+        requestVideo(mSecurityInfoId);
     }
 
     private void updatePreData() {
@@ -283,5 +286,33 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
                 getView().startAC(intent);
             }
         }
+    }
+
+    private void requestVideo(String id) {
+        RetrofitServiceHelper
+                .getInstance()
+                .getSecurityWarnRecord(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CityObserver<SecurityWarnRecordResp>(null) {
+                    @Override
+                    public void onCompleted(SecurityWarnRecordResp securityWarnRecordResp) {
+                        List<SecurityRecord> recordList = securityWarnRecordResp.data.list;
+                        if (recordList != null && !recordList.isEmpty()) {
+                            SecurityRecord securityRecord = recordList.get(0);
+                            if (securityRecord != null) {
+                                if (isAttachedView()){
+                                    getView().updateVideoRecordEnable(securityRecord.status != SecurityConstants.VIDEO_STATUS_TRANSCODING);
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                    }
+                });
+
+
     }
 }

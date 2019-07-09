@@ -64,4 +64,5 @@
     <string name="security_camera_info_error">相机详情信息不存在</string>
     <string name="camera_contact_no_exist">相机联系人不存在</string>
     <string name="owner_contact_no_exist">业主联系人不存在</string>
+    <string name="security_warn_video_title_transcoding">预警录像（获取中…)</string>
 </resources>
