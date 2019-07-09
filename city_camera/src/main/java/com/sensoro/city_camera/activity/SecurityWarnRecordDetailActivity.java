@@ -276,8 +276,8 @@ public class SecurityWarnRecordDetailActivity
     public void backFromWindowFull() {
         if (orientationUtils != null) {
             orientationUtils.backToProtVideo();
+            orientationUtils.setEnable(false);
         }
-        orientationUtils.setEnable(false);
         if (GSYVideoManager.backFromWindowFull(this)) {
             return;
         }
@@ -296,7 +296,7 @@ public class SecurityWarnRecordDetailActivity
     @Override
     public void capture(File file) {
         gsyPlayerAcCameraPersonDetail.doCapture(file, (success, file1) -> {
-            if(success){
+            if (success) {
                 toastShort(getString(R.string.capture_security_warn_record_success));
                 mPresenter.onCaptureFinished(file);
             } else {
@@ -460,7 +460,7 @@ public class SecurityWarnRecordDetailActivity
     @Override
     public void updateDownLoadProgress(int progress, String totalBytesRead, String fileSize) {
         if (mDownloadUtils.isShowing()) {
-            Log.d("updateDownLoadProgress", "updateDownLoadProgress: "+progress);
+            Log.d("updateDownLoadProgress", "updateDownLoadProgress: " + progress);
             mDownloadUtils.updateDownLoadProgress(progress, totalBytesRead, fileSize);
         }
     }

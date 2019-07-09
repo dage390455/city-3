@@ -47,6 +47,8 @@
             android:layout_toLeftOf="@+id/btn_camerawarn_confim"
             android:layout_toRightOf="@+id/tv_camera_warn_type"
             android:text="外来人员布控任务"
+            android:ellipsize="end"
+            android:singleLine="true"
             android:textColor="@color/c_252525"
             android:textSize="16sp"
             android:textStyle="bold" />
