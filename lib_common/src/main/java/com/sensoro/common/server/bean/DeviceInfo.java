@@ -461,6 +461,27 @@ public class DeviceInfo implements Serializable, Comparable {
             if (updatedTime != 0) {
                 this.updatedTime = updatedTime;
             }
+            //
+            String blePassword = deviceInfo.getBlePassword();
+            if (!TextUtils.isEmpty(blePassword)) {
+                this.blePassword = blePassword;
+            }
+            String firmwareVersion = deviceInfo.getFirmwareVersion();
+            if (!TextUtils.isEmpty(firmwareVersion)) {
+                this.firmwareVersion = firmwareVersion;
+            }
+            String band = deviceInfo.getBand();
+            if (!TextUtils.isEmpty(band)) {
+                this.band = band;
+            }
+            String hardwareVersion = deviceInfo.getHardwareVersion();
+            if (!TextUtils.isEmpty(hardwareVersion)) {
+                this.hardwareVersion = hardwareVersion;
+            }
+            Integer demoMode = deviceInfo.getDemoMode();
+            if (demoMode != null) {
+                this.demoMode = demoMode;
+            }
         }
         return this;
     }
