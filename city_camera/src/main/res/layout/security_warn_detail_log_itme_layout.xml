@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_marginTop="12dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="12dp">
 
     <ImageView
         android:id="@+id/icon"
@@ -15,6 +15,7 @@
         android:layout_toRightOf="@id/icon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_marginLeft="5dp"
         android:textColor="@color/c_a6a6a6"
         android:textSize="14sp" />
@@ -25,10 +26,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/security_warn_detail_log_item_title_tv"
         android:layout_alignLeft="@id/security_warn_detail_log_item_title_tv"
+        android:layout_centerVertical="true"
         android:layout_marginTop="6dp"
-        android:visibility="gone"
         android:textColor="@color/c_252525"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/security_warn_detail_log_item_time_tv"

@@ -20,38 +20,36 @@
         android:layout_marginRight="20dp"
         android:layout_marginBottom="16dp">
 
-        <TextView
-            android:id="@+id/tv_camera_warn_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="3dp"
-            android:background="@drawable/security_type_focus_bg"
-            android:gravity="center"
-            android:paddingLeft="4dp"
-            android:paddingTop="2dp"
-            android:paddingRight="4dp"
-            android:paddingBottom="2dp"
-            android:text="@string/external_type"
-            android:textColor="@color/white"
-            android:textSize="10sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tv_camera_task_name"
-            android:layout_width="wrap_content"
-            android:layout_height="22dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="4dp"
+        <RelativeLayout
             android:layout_toLeftOf="@+id/btn_camerawarn_confim"
-            android:layout_toRightOf="@+id/tv_camera_warn_type"
-            android:text="外来人员布控任务"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:textColor="@color/c_252525"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_camera_warn_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@drawable/security_type_focus_bg"
+                android:gravity="center"
+                android:text="@string/external_type"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_camera_task_name"
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
+                android:layout_marginLeft="4dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/tv_camera_warn_type"
+                android:text="外来人员布控任务"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/c_252525"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tv_camera_warn_device_name"
