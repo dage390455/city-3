@@ -3,6 +3,7 @@ package com.sensoro.smartcity.model;
 public class UuidSettingModel {
     public String name;
     public String uuid;
+    public boolean isCheck;
 
     public UuidSettingModel() {
     }

@@ -21,10 +21,19 @@ public class UuidSettingActivityPresenter extends BasePresenter<IUuidSettingActi
         mData.add(new UuidSettingModel("微信", "FDA50693-A4E2-4FB1-AFCF-C6EB07647825"));
         mData.add(new UuidSettingModel("微信2", "AB8190D5-D11E-4941-ACC4-42F30510B408"));
         mData.add(new UuidSettingModel("Kontakt", "F7826DA6-4FA2-4E98-8024-BC5B71E0893E"));
+        getView().updateNormalAdapter(mData);
     }
 
     @Override
     public void onDestroy() {
+
+    }
+
+    public void doSave() {
+
+    }
+
+    public void addNewUUID() {
 
     }
 }

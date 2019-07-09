@@ -119,13 +119,11 @@ public class NearByDeviceActivity extends BaseActivity<INearByDeviceActivityView
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ll_select_time_ac_camera_detail:
-                finish();
-
+                finishAc();
                 break;
 
             case R.id.include_text_title_tv_subtitle:
-
-                startActivity(new Intent(mActivity, SettingNotificationActivity.class));
+                startAC(new Intent(mActivity, SettingNotificationActivity.class));
                 break;
 
             default:
@@ -135,21 +133,18 @@ public class NearByDeviceActivity extends BaseActivity<INearByDeviceActivityView
 
     @Override
     protected void onDestroy() {
-
-
         super.onDestroy();
     }
 
 
     @Override
     public void startAC(Intent intent) {
-
-        startActivity(intent);
+        mActivity.startActivity(intent);
     }
 
     @Override
     public void finishAc() {
-
+        mActivity.finish();
     }
 
     @Override

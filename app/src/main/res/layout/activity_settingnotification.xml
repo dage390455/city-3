@@ -10,7 +10,7 @@
         android:background="@color/white"
         android:orientation="vertical">
 
-        <include layout="@layout/item_include_text_title"/>
+        <include layout="@layout/item_include_text_title" />
 
 
         <LinearLayout
@@ -158,6 +158,7 @@
 
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -173,23 +174,39 @@
                 android:textColor="@color/c_a6a6a6"
                 android:textSize="14dp" />
 
-            <TextView
-                android:id="@+id/tv_device_uuid"
+            <LinearLayout
+                android:id="@+id/ll_device_uuid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:background="@drawable/shape_et_search"
-                android:enabled="true"
-                android:gravity="top"
-                android:maxLength="100"
-                android:padding="10dp"
-                android:scrollbars="vertical"
-                android:textColor="@color/c_626262"
-                android:textCursorDrawable="@drawable/my_cursor"
-                android:textSize="14dp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_device_uuid"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_et_search"
+                    android:enabled="true"
+                    android:gravity="top"
+                    android:maxLength="100"
+                    android:padding="10dp"
+                    android:scrollbars="vertical"
+                    android:textColor="@color/c_626262"
+                    android:textCursorDrawable="@drawable/my_cursor"
+                    android:textSize="14dp" />
+
+                <ImageView
+                    android:layout_marginStart="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/arrows_right" />
+            </LinearLayout>
 
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -225,6 +242,7 @@
 
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

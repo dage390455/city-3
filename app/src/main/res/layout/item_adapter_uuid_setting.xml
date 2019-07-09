@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_uuid_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正在使用"
+            android:textColor="@color/c_252525" />
+
+        <TextView
+            android:id="@+id/tv_uuid_item_uuid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="111111111"
+            android:textColor="@color/c_a6a6a6" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_uuid_item_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:src="@drawable/merchant_switch_header"
+        android:visibility="gone" />
+
+</LinearLayout>

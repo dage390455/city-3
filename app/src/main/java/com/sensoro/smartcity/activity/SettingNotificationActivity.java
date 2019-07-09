@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -41,6 +42,9 @@ public class SettingNotificationActivity extends BaseActivity<ISettingNotificati
     Switch deviceoutSw;
     @BindView(R.id.deviceout_edit)
     EditText deviceoutEdit;
+    @BindView(R.id.ll_device_uuid)
+    LinearLayout llDeviceUuid;
+
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -82,7 +86,7 @@ public class SettingNotificationActivity extends BaseActivity<ISettingNotificati
     }
 
 
-    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.include_text_title_tv_subtitle})
+    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.include_text_title_tv_subtitle, R.id.ll_device_uuid})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
@@ -98,7 +102,9 @@ public class SettingNotificationActivity extends BaseActivity<ISettingNotificati
                 String devicein = deviceinEdit.getText().toString().trim();
                 mPresenter.doSave(deviceoutSwstate, deviceinSwstate, deviceout, devicein);
                 break;
-
+            case R.id.ll_device_uuid:
+                startAC(new Intent(mActivity,UuidSettingActivity.class));
+                break;
         }
     }
 
@@ -124,6 +130,7 @@ public class SettingNotificationActivity extends BaseActivity<ISettingNotificati
 
     @Override
     public void startAC(Intent intent) {
+        mActivity.startActivity(intent);
     }
 
     @Override
