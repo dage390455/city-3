@@ -2,10 +2,12 @@ package com.sensoro.city_camera.dialog;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -13,16 +15,21 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.adapter.LabelAdapter;
 import com.sensoro.city_camera.constants.SecurityConstants;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.security.bean.SecurityCameraInfo;
 import com.sensoro.common.server.security.bean.SecurityContactsInfo;
+import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.widgets.SpacesItemDecoration;
 
 import java.util.List;
 
@@ -93,6 +100,34 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
         initUI();
     }
 
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        //fixHeight();
+//    }
+
+    private void fixHeight() {
+        final View view = getView();
+        if (null == view || null == getContext()) {
+            return;
+        }
+
+        View parent = (View) view.getParent();
+        BottomSheetBehavior behavior = BottomSheetBehavior.from(parent);
+        view.measure(0, 0);
+
+        int screenHeight = AppUtils.getAndroiodScreenHeight(getContext());
+        if (screenHeight != -1) {
+            behavior.setPeekHeight((int) (screenHeight * 0.98));
+        } else {
+        behavior.setPeekHeight(view.getMeasuredHeight());
+        }
+
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) parent.getLayoutParams();
+        params.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
+        parent.setLayoutParams(params);
+    }
+
     private void initUI() {
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -136,11 +171,30 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
             } else {
                 mLabelRv.setVisibility(View.VISIBLE);
                 mLabelAdapter = new LabelAdapter(getActivity());
-                LinearLayoutManager manager = new LinearLayoutManager(getActivity());
-                manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-                mLabelRv.setLayoutManager(manager);
+                SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(getActivity()) {
+                    @Override
+                    public boolean canScrollVertically() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean canScrollHorizontally() {
+                        return false;
+                    }
+                };
+                layoutManager.setOrientation(RecyclerView.VERTICAL);
+                mLabelRv.setLayoutManager(layoutManager);
+                mLabelRv.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(getActivity(), 4)));
                 mLabelRv.setAdapter(mLabelAdapter);
+                mLabelRv.setHasFixedSize(true);
+                mLabelRv.setNestedScrollingEnabled(false);
+
+                for (int i = 0; i < 5; i++) {
+                    labelList.add("测试" + i);
+                }
                 mLabelAdapter.updateLabelList(labelList);
+                //layoutCameraDetailsContent.setFocusableInTouchMode(true);
+                //layoutCameraDetailsContent.requestFocus();
             }
 
 
@@ -185,7 +239,7 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
         void onNavi();
 
         /**
-         *显示联系人
+         * 显示联系人
          */
         void showContactsDetails();
     }
