@@ -150,12 +150,13 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     // 当按了搜索之后关闭软键盘
-                    String text = edFilterContent.getText().toString();
-                    mPresenter.setFilterText(text);
-                    edFilterContent.clearFocus();
-                    AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), edFilterContent);
-                    setSearchHistoryVisible(false);
-
+                    String text = edFilterContent.getText().toString().trim();
+                    if (!TextUtils.isEmpty(text)) {
+                        mPresenter.setFilterText(text);
+                        edFilterContent.clearFocus();
+                        AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), edFilterContent);
+                        setSearchHistoryVisible(false);
+                    }
                     return true;
                 }
                 return false;
