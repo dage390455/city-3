@@ -36,7 +36,6 @@ import butterknife.OnClick;
 public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContactActivityView, AlarmContactActivityPresenter>
         implements IAlarmContactActivityView, RecycleViewItemClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener, AlarmContactRcContentAdapter.OnAlarmContactAdapterListener {
 
-
     @BindView(R.id.alarm_contact_tv_add)
     TextView alarmContactTvAdd;
     @BindView(R.id.include_text_title_tv_cancel)
