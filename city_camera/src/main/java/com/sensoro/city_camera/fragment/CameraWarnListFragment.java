@@ -308,7 +308,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     }
 
     private void initRcSearchHistory() {
-        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mRootFragment.getActivity(),true) {
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mRootFragment.getActivity(), true) {
             @Override
             public boolean canScrollVertically() {
                 return true;
