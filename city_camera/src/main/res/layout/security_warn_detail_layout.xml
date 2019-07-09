@@ -58,18 +58,17 @@
                     android:id="@+id/security_warn_type_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:textColor="@color/white"
+                    android:layout_alignBaseline="@+id/security_warn_title_tv"
                     android:textSize="10sp" />
 
                 <TextView
-                    android:id="@+id/security_warn_title_tv"
+                    android:id="@id/security_warn_title_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="4dp"
                     android:layout_toRightOf="@id/security_warn_type_tv"
-                    android:singleLine="true"
                     android:textColor="@color/c_000000"
                     android:textSize="20sp"
                     android:textStyle="bold" />
