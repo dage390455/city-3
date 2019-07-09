@@ -108,6 +108,8 @@ public class SecurityWarnTimeLineAdapter extends RecyclerView.Adapter<SecurityWa
                     ssb.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.c_f35a58)), ssb.length() - valid.length(), ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
                 holder.mTitleTv.setText(ssb);
+                holder.mRemarksTv.setText(securityAlarmEventInfo.content);
+                holder.mRemarksTv.setVisibility(View.VISIBLE);
             } else if (mEventType == SECURITY_TIMELINE_EVENT_TYPE_CALL) {
                 if (securityAlarmEventInfo.records != null && securityAlarmEventInfo.records.size() > 0) {
                     holder.mIconIv.setImageResource(R.drawable.icon_security_phone_log);
@@ -130,6 +132,7 @@ public class SecurityWarnTimeLineAdapter extends RecyclerView.Adapter<SecurityWa
                         }
                     }
                     holder.mTitleTv.setText(ssb);
+                    holder.mRemarksTv.setVisibility(View.GONE);
                 }
 
             } else if (mEventType == SECURITY_TIMELINE_EVENT_TYPE_SMS) {
@@ -154,6 +157,7 @@ public class SecurityWarnTimeLineAdapter extends RecyclerView.Adapter<SecurityWa
                         }
                     }
                     holder.mTitleTv.setText(ssb);
+                    holder.mRemarksTv.setVisibility(View.GONE);
                 }
 
             }
