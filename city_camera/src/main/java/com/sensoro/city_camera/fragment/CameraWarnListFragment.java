@@ -333,6 +333,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
                             edFilterContent.setSelection(edFilterContent.getText().toString().length());
                         }
                         ivFilterContentClear.setVisibility(View.VISIBLE);
+                        mPresenter.setFilterText(text);//搜索关键字
                         edFilterContent.clearFocus();
                         AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), edFilterContent);
                         setSearchHistoryVisible(false);
