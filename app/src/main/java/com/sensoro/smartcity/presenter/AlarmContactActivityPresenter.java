@@ -13,6 +13,7 @@ import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.utils.RegexUtils;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IAlarmContactActivityView;
 
@@ -104,7 +105,7 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
             }
         }
         if (arrayList.size() > 1) {
-            Toast.makeText(mContext, mContext.getResources().getString(R.string.duplicate_phone_number), Toast.LENGTH_SHORT).show();
+            SensoroToast.getInstance().makeText(mContext, mContext.getResources().getString(R.string.duplicate_phone_number), Toast.LENGTH_SHORT).show();
             getView().updateRepeatAdapter(arrayList);
             return;
         }

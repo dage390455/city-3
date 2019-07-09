@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.model.DeployContactModel;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 
 import java.util.ArrayList;
@@ -264,7 +265,7 @@ public class AlarmContactListViewAdapter extends BaseAdapter {
 
     public void addNewDataAdapter() {
         if (mList.size() >= 10) {
-            Toast.makeText(mContext, mContext.getResources().getString(R.string.add_up_to_10_contacts), Toast.LENGTH_SHORT).show();
+            SensoroToast.getInstance().makeText(mContext, mContext.getResources().getString(R.string.add_up_to_10_contacts), Toast.LENGTH_SHORT).show();
             return;
         }
         DeployContactModel deployContactModel = new DeployContactModel();
