@@ -320,7 +320,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
                 return false;
             }
         };
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
         rvSearchHistory.setLayoutManager(layoutManager);
         rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mRootFragment.getActivity(), 4)));
         mSearchHistoryAdapter = new SearchHistoryAdapter(mRootFragment.getActivity(), new
@@ -393,7 +393,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
 
     @Override
     public void updateCameraWarnsListAdapter(List<SecurityAlarmInfo> securityAlarmInfoList) {
-        if (securityAlarmInfoList.size() > 0) {
+        if (null != securityAlarmInfoList) {
             mRcContentAdapter.setData(securityAlarmInfoList);
             mRcContentAdapter.notifyDataSetChanged();
         }
@@ -409,6 +409,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     @Override
     public void SmoothToTopList() {
         rvCameraWarnsContent.smoothScrollToPosition(0);
+        //refreshLayout.resetNoMoreData();
         mReturnTopImageView.setVisibility(View.GONE);
 
     }
