@@ -23,8 +23,6 @@ public class SettingNotificationActivityPresenter extends BasePresenter<ISetting
 
 
         if (!TextUtils.isEmpty(oldText)) {
-
-
             String[] split = oldText.split(",");
 
             if (!TextUtils.isEmpty(split[0])) {
@@ -41,9 +39,8 @@ public class SettingNotificationActivityPresenter extends BasePresenter<ISetting
             if (!TextUtils.isEmpty(split[3])) {
                 getView().setDeviceOutEditContent(split[3]);
             }
-
-
         }
+
     }
 
     @Override

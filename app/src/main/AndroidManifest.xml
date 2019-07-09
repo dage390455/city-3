@@ -27,11 +27,9 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission
         android:name="android.permission.CHANGE_CONFIGURATION"
-        tools:ignore="ProtectedPermissions" />
-    <!--通知亮屏-->
+        tools:ignore="ProtectedPermissions" /> <!-- 通知亮屏 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
-
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission
@@ -42,19 +40,14 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
-
     <uses-permission
         android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
-        tools:ignore="ProtectedPermissions" />
-    <!-- 在SDCard中创建与删除文件权限 -->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <!-- 相机权限 -->
+        tools:ignore="ProtectedPermissions" /> <!-- 在SDCard中创建与删除文件权限 -->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" /> <!-- 相机权限 -->
     <!-- 新添加微信分享小程序权限 -->
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <!-- 调用硬件相机权限 -->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" /> <!-- 调用硬件相机权限 -->
     <uses-permission android:name="android.permission.FLASHLIGHT" />
 
     <uses-feature
@@ -81,7 +74,7 @@
     <permission
         android:name="getui.permission.GetuiService.${applicationId}"
         android:protectionLevel="normal" />
-    <!--TODO 正式版和测试版需要进行图标切换-->
+
     <application
         android:name=".SensoroCityApplication"
         android:allowBackup="true"
@@ -92,11 +85,11 @@
         android:theme="@style/MyTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:theme">
-        <!--适配华为（huawei）刘海屏-->
+        <activity android:name=".activity.UuidSettingActivity"></activity>
+        <!-- 适配华为（huawei）刘海屏 -->
         <meta-data
             android:name="android.notch_support"
-            android:value="true" />
-        <!--适配小米（xiaomi）刘海屏-->
+            android:value="true" /> <!-- 适配小米（xiaomi）刘海屏 -->
         <meta-data
             android:name="notch.config"
             android:value="portrait|landscape" />
@@ -105,8 +98,7 @@
             android:value="2.4" />
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="feb394e9f7754ae572cc77a0bfc723e5" />
-        <!-- android:value="6e1be3076c19f3cf3d148223a2873733"/> -->
+            android:value="feb394e9f7754ae572cc77a0bfc723e5" /> <!-- android:value="6e1be3076c19f3cf3d148223a2873733"/> -->
         <!-- feb394e9f7754ae572cc77a0bfc723e5 -->
         <!-- 如果您项目中的所有页面都只需要以高或宽中的一个作为基准进行适配的话, 那就只需要填写高或宽中的一个设计图尺寸即可 -->
         <meta-data
@@ -143,9 +135,7 @@
             android:value="${GETUI_APP_KEY}" />
         <meta-data
             android:name="PUSH_APPSECRET"
-            android:value="${GETUI_APP_SECRET}" />
-
-        <!-- 配置SDK核心服务 -->
+            android:value="${GETUI_APP_SECRET}" /> <!-- 配置SDK核心服务 -->
         <service
             android:name="com.igexin.sdk.PushService"
             android:exported="true"
@@ -270,12 +260,8 @@
             android:name="com.igexin.download.DownloadProvider"
             android:authorities="downloads.${applicationId}"
             android:exported="true"
-            android:process=":pushservice" />
-
-        <!-- 用户自定义服务继承自GTIntentService,作为SDK与APP桥梁服务,用来接收各种消息和命令回复 -->
-        <service android:name=".push.SensoroPushIntentService" />
-
-        <!-- 用户自定义服务名 -->
+            android:process=":pushservice" /> <!-- 用户自定义服务继承自GTIntentService,作为SDK与APP桥梁服务,用来接收各种消息和命令回复 -->
+        <service android:name=".push.SensoroPushIntentService" /> <!-- 用户自定义服务名 -->
         <service
             android:name=".push.SensoroPushService"
             android:exported="true"
@@ -284,46 +270,43 @@
 
         <meta-data
             android:name="InstallChannel"
-            android:value="${AVOS_CHANNEL_VALUE}" />
-        <!--&lt;!&ndash; 您从百度网站获取的APP KEY &ndash;&gt;-->
-        <!--<meta-data-->
-        <!--android:name="BaiduMobAd_STAT_ID"-->
-        <!--android:value="bb510e227a" /> &lt;!&ndash; abcd1234 &ndash;&gt;-->
-        <!--&lt;!&ndash; 渠道商编号 &ndash;&gt;-->
-        <!--<meta-data-->
-        <!--android:name="BaiduMobAd_CHANNEL"-->
-        <!--android:value="Baidu Market" />-->
-
-        <!--&lt;!&ndash; 是否开启错误日志统计，默认为false &ndash;&gt;-->
-        <!--<meta-data-->
-        <!--android:name="BaiduMobAd_EXCEPTION_LOG"-->
-        <!--android:value="true" />-->
-        <!--&lt;!&ndash; 日志发送策略，可选值：APP_START、ONCE_A_DAY、SET_TIME_INTERVAL，默认为APP_START &ndash;&gt;-->
-        <!--<meta-data-->
-        <!--android:name="BaiduMobAd_SEND_STRATEGY"-->
-        <!--android:value="APP_START" />-->
-        <!--&lt;!&ndash; 日志发送策略 为SET_TIME_INTERVAL时，需设定时间间隔(取消下行注释)。取值为1-24的整数，默认为1 &ndash;&gt;-->
-        <!--&lt;!&ndash; <meta-data android:name="BaiduMobAd_TIME_INTERVAL" android:value="2" /> &ndash;&gt;-->
-        <!--&lt;!&ndash; 日志仅在wifi网络下发送，默认为false &ndash;&gt;-->
-        <!--<meta-data-->
-        <!--android:name="BaiduMobAd_ONLY_WIFI"-->
-        <!--android:value="false" />-->
-        <!--&lt;!&ndash; 是否获取基站位置信息 ,默认为true &ndash;&gt;-->
-        <!--<meta-data-->
-        <!--android:name="BaiduMobAd_CELL_LOCATION"-->
-        <!--android:value="true" />-->
-        <!--&lt;!&ndash; 是否获取GPS位置信息，默认为true &ndash;&gt;-->
-        <!--<meta-data-->
-        <!--android:name="BaiduMobAd_GPS_LOCATION"-->
-        <!--android:value="true" />-->
-        <!--&lt;!&ndash; 是否获取WIFI位置信息，默认为true &ndash;&gt;-->
-        <!--<meta-data-->
-        <!--android:name="BaiduMobAd_WIFI_LOCATION"-->
-        <!--android:value="true" />-->
+            android:value="${AVOS_CHANNEL_VALUE}" /> <!-- &lt;!&ndash; 您从百度网站获取的APP KEY &ndash;&gt; -->
+        <!-- <meta-data -->
+        <!-- android:name="BaiduMobAd_STAT_ID" -->
+        <!-- android:value="bb510e227a" /> &lt;!&ndash; abcd1234 &ndash;&gt; -->
+        <!-- &lt;!&ndash; 渠道商编号 &ndash;&gt; -->
+        <!-- <meta-data -->
+        <!-- android:name="BaiduMobAd_CHANNEL" -->
+        <!-- android:value="Baidu Market" /> -->
+        <!-- &lt;!&ndash; 是否开启错误日志统计，默认为false &ndash;&gt; -->
+        <!-- <meta-data -->
+        <!-- android:name="BaiduMobAd_EXCEPTION_LOG" -->
+        <!-- android:value="true" /> -->
+        <!-- &lt;!&ndash; 日志发送策略，可选值：APP_START、ONCE_A_DAY、SET_TIME_INTERVAL，默认为APP_START &ndash;&gt; -->
+        <!-- <meta-data -->
+        <!-- android:name="BaiduMobAd_SEND_STRATEGY" -->
+        <!-- android:value="APP_START" /> -->
+        <!-- &lt;!&ndash; 日志发送策略 为SET_TIME_INTERVAL时，需设定时间间隔(取消下行注释)。取值为1-24的整数，默认为1 &ndash;&gt; -->
+        <!-- &lt;!&ndash; <meta-data android:name="BaiduMobAd_TIME_INTERVAL" android:value="2" /> &ndash;&gt; -->
+        <!-- &lt;!&ndash; 日志仅在wifi网络下发送，默认为false &ndash;&gt; -->
+        <!-- <meta-data -->
+        <!-- android:name="BaiduMobAd_ONLY_WIFI" -->
+        <!-- android:value="false" /> -->
+        <!-- &lt;!&ndash; 是否获取基站位置信息 ,默认为true &ndash;&gt; -->
+        <!-- <meta-data -->
+        <!-- android:name="BaiduMobAd_CELL_LOCATION" -->
+        <!-- android:value="true" /> -->
+        <!-- &lt;!&ndash; 是否获取GPS位置信息，默认为true &ndash;&gt; -->
+        <!-- <meta-data -->
+        <!-- android:name="BaiduMobAd_GPS_LOCATION" -->
+        <!-- android:value="true" /> -->
+        <!-- &lt;!&ndash; 是否获取WIFI位置信息，默认为true &ndash;&gt; -->
+        <!-- <meta-data -->
+        <!-- android:name="BaiduMobAd_WIFI_LOCATION" -->
+        <!-- android:value="true" /> -->
         <meta-data
             android:name="com.fengmap.mapapi.appkey"
-            android:value="7b11a3fcdc47cdacf522976dd5ca4c61" />
-        <!-- <receiver -->
+            android:value="7b11a3fcdc47cdacf522976dd5ca4c61" /> <!-- <receiver -->
         <!-- android:name=".push.AppRegister" -->
         <!-- android:permission="com.tencent.mm.plugin.permission.SEND" > -->
         <!-- <intent-filter> -->
@@ -347,7 +330,6 @@
             android:name=".widget.imagepicker.ui.ImagePreviewActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/ImagePickerThemeFullScreen" />
-
         <activity
             android:name=".widget.imagepicker.ui.ImagePreviewDelActivity"
             android:configChanges="orientation|screenSize"
@@ -372,10 +354,8 @@
         <activity android:name=".temp.TestUpdateActivity" />
         <activity android:name=".activity.DeployMonitorCheckActivity" />
         <activity android:name=".activity.DeployRepairInstructionActivity" />
-
         <activity android:name=".activity.SecurityRisksActivity" />
         <activity android:name=".activity.SecurityRiskTagManagerActivity" />
-
         <activity android:name=".temp.RecyclerViewActivity" />
         <activity android:name=".activity.CameraListActivity" />
         <activity android:name=".activity.BaseStationListActivity" />
@@ -384,7 +364,6 @@
             android:name=".activity.CameraDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
-
         <activity android:name=".activity.WireMaterialDiameterCalculatorActivity" />
         <activity
             android:name=".activity.CameraPersonLocusActivity"
@@ -401,18 +380,13 @@
             android:name=".activity.AlarmCameraVideoDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".temp.LineChartActivity2" />
-
-
         <activity android:name=".activity.SelfCheckActivity" />
         <activity android:name=".activity.FrequencyPointActivity" />
         <activity android:name=".activity.NetWorkInfoActivity" />
-
-
         <activity
             android:name=".activity.DeployCameraLiveDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.NearByDeviceActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -421,11 +395,9 @@
             android:name=".activity.SettingNotificationActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
-
         <activity android:name=".activity.ThreePhaseElectConfigActivity" />
         <activity android:name=".activity.DeployRecordConfigThreePhaseElectActivity" />
         <activity android:name=".activity.DeployRecordConfigCommonElectActivity" />
-
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"
@@ -437,8 +409,7 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-
-        <receiver android:name="com.sensoro.smartcity.util.PhoneReceiver">
+        <receiver android:name=".util.PhoneReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE" />
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
