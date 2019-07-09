@@ -371,7 +371,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
 
     @Override
     public void onFragmentStop() {
-
+        dismissInput();
     }
 
     /**
@@ -522,6 +522,11 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             securityWarnConfirmDialog.setArguments(bundle);
             securityWarnConfirmDialog.show(getChildFragmentManager());
         }
+    }
+
+    @Override
+    public void dismissInput() {
+        AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), edFilterContent, false);
     }
 
 
