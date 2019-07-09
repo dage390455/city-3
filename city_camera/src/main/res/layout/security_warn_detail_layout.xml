@@ -68,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="4dp"
-                    android:layout_toRightOf="@id/security_warn_type_tv"
+                    android:text="     案例看电视剧放辣椒\n水电费"
                     android:textColor="@color/c_000000"
                     android:textSize="20sp"
                     android:textStyle="bold" />

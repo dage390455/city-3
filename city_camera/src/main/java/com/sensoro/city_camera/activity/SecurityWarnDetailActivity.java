@@ -145,7 +145,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
             return;
         }
 
-        mSecurityWarnTitleTv.setText(securityAlarmInfo.getTaskName());
+        mSecurityWarnTitleTv.setText(getString(R.string.start_include_backspace_text, securityAlarmInfo.getTaskName()));
         switch (securityAlarmInfo.getAlarmType()) {
             case SecurityConstants.SECURITY_TYPE_FOCUS:
                 mSecurityWarnTypeTv.setText(R.string.focus_type);
