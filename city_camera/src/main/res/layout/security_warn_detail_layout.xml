@@ -19,24 +19,13 @@
             android:layout_height="match_parent"
             android:paddingEnd="20dp">
 
-            <RelativeLayout
+            <include
                 android:id="@+id/image_rl"
-                android:layout_width="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp">
-
-                <ViewStub
-                    android:id="@+id/single_image_vs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout="@layout/include_camerawarn_single_photo" />
-
-                <ViewStub
-                    android:id="@+id/multi_image_vs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout="@layout/include_camerawarn_mult_photo" />
-            </RelativeLayout>
+                android:layout_width="match_parent"
+                layout="@layout/include_camerawarn_mult_photo"/>
 
             <TextView
                 android:id="@+id/confirm_result_tv"

@@ -1,29 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="277dp"
+    android:layout_height="wrap_content"
     android:layout_marginTop="12dp"
     android:background="@color/white">
 
-    <include layout="@layout/include_camerawarn_single_photo" />
-
-    <include layout="@layout/include_camerawarn_mult_photo" />
+    <include
+        android:id="@+id/image_rl"
+        layout="@layout/include_camerawarn_mult_photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp" />
 
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/image_rl"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="12dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="16dp">
 
         <RelativeLayout
-            android:layout_toLeftOf="@+id/btn_camerawarn_confim"
+            android:id="@+id/rl"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/btn_camerawarn_confim">
+
             <TextView
                 android:id="@+id/tv_camera_warn_type"
                 android:layout_width="wrap_content"
@@ -39,13 +46,13 @@
             <TextView
                 android:id="@+id/tv_camera_task_name"
                 android:layout_width="wrap_content"
-                android:layout_height="22dp"
-                android:layout_marginLeft="4dp"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="4dp"
                 android:layout_toRightOf="@+id/tv_camera_warn_type"
-                android:text="外来人员布控任务"
                 android:ellipsize="end"
                 android:singleLine="true"
+                android:text="外来人员布控任务"
                 android:textColor="@color/c_252525"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -54,22 +61,26 @@
         <TextView
             android:id="@+id/tv_camera_warn_device_name"
             android:layout_width="wrap_content"
-            android:layout_height="17dp"
-            android:layout_alignParentBottom="true"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rl"
             android:layout_marginTop="4dp"
             android:text="费家村56号超市外"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:textColor="@color/c_a6a6a6"
             android:textSize="12sp" />
 
         <TextView
             android:id="@+id/tv_camera_warn_time"
             android:layout_width="wrap_content"
-            android:layout_height="17dp"
-            android:layout_alignParentBottom="true"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/tv_camera_warn_device_name"
+            android:layout_alignBottom="@id/tv_camera_warn_device_name"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="4dp"
             android:layout_toLeftOf="@+id/btn_camerawarn_confim"
             android:layout_toRightOf="@+id/tv_camera_warn_device_name"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:text="今天12:36"
             android:textColor="@color/c_a6a6a6"
             android:textSize="12sp" />
@@ -78,9 +89,8 @@
             android:id="@+id/btn_camerawarn_confim"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="8dp"
+            android:layout_centerVertical="true"
             android:background="@drawable/shape_confim_bg"
             android:gravity="center"
             android:paddingLeft="8dp"
