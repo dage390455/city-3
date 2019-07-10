@@ -8,4 +8,5 @@ import java.util.List;
 public interface IUuidSettingActivityView extends IActivityIntent {
     void updateNormalAdapter(List<UuidSettingModel> data);
     void updateMyAdapter(List<UuidSettingModel> data);
+    void setCurrentUUID(String uuid);
 }

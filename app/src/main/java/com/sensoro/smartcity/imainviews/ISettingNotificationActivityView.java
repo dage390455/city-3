@@ -10,4 +10,10 @@ public interface ISettingNotificationActivityView extends IActivityIntent {
     void setDeviceInEditContent(String text);
 
     void setDeviceOutEditContent(String text);
+
+    void setDeviceUUID(String uuid);
+
+    void setDeviceMajor(String major);
+
+    void setDeviceMirror(String mirror);
 }

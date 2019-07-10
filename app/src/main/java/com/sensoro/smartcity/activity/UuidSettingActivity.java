@@ -59,6 +59,9 @@ public class UuidSettingActivity extends BaseActivity<IUuidSettingActivityView, 
     }
 
     private void initView() {
+        includeTextTitleTvTitle.setText("区域选择");
+        includeTextTitleTvSubtitle.setTextColor(getResources().getColor(R.color.c_1dbb99));
+        includeTextTitleTvSubtitle.setText(R.string.save);
         initNormalAdapter();
         initMyAdapter();
     }
@@ -71,6 +74,12 @@ public class UuidSettingActivity extends BaseActivity<IUuidSettingActivityView, 
         rvUuidNormal.setAdapter(normalUuidSettingAdapter);
         CustomDivider dividerItemDecoration = new CustomDivider(mActivity, DividerItemDecoration.VERTICAL);
         rvUuidNormal.addItemDecoration(dividerItemDecoration);
+        normalUuidSettingAdapter.setOnUUIDClickListener(new UUIDSettingAdapter.OnUUIDClickListener() {
+            @Override
+            public void onClick(UuidSettingModel currentUUID) {
+                mPresenter.clickNormalUUID(currentUUID);
+            }
+        });
     }
 
     private void initMyAdapter() {
@@ -81,6 +90,12 @@ public class UuidSettingActivity extends BaseActivity<IUuidSettingActivityView, 
         rvUuidCustom.setAdapter(myUuidSettingAdapter);
         CustomDivider dividerItemDecoration = new CustomDivider(mActivity, DividerItemDecoration.VERTICAL);
         rvUuidCustom.addItemDecoration(dividerItemDecoration);
+        myUuidSettingAdapter.setOnUUIDClickListener(new UUIDSettingAdapter.OnUUIDClickListener() {
+            @Override
+            public void onClick(UuidSettingModel currentUUID) {
+                mPresenter.clickMyUUID(currentUUID);
+            }
+        });
     }
 
     @Override
@@ -136,5 +151,10 @@ public class UuidSettingActivity extends BaseActivity<IUuidSettingActivityView, 
     @Override
     public void updateMyAdapter(List<UuidSettingModel> data) {
         myUuidSettingAdapter.updateData(data);
+    }
+
+    @Override
+    public void setCurrentUUID(String uuid) {
+        tvCurrentUuid.setText(uuid);
     }
 }

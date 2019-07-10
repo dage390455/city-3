@@ -44,6 +44,12 @@ public class SettingNotificationActivity extends BaseActivity<ISettingNotificati
     EditText deviceoutEdit;
     @BindView(R.id.ll_device_uuid)
     LinearLayout llDeviceUuid;
+    @BindView(R.id.tv_device_uuid)
+    TextView tvDeviceUuid;
+    @BindView(R.id.et_device_major)
+    EditText etDeviceMajor;
+    @BindView(R.id.et_device_mirror)
+    EditText etDeviceMirror;
 
 
     @Override
@@ -96,14 +102,17 @@ public class SettingNotificationActivity extends BaseActivity<ISettingNotificati
 
                 //保存
 
-                boolean deviceoutSwstate = deviceoutSw.isChecked();
                 boolean deviceinSwstate = deviceinSw.isChecked();
-                String deviceout = deviceoutEdit.getText().toString().trim();
                 String devicein = deviceinEdit.getText().toString().trim();
-                mPresenter.doSave(deviceoutSwstate, deviceinSwstate, deviceout, devicein);
+                boolean deviceoutSwstate = deviceoutSw.isChecked();
+                String deviceout = deviceoutEdit.getText().toString().trim();
+                String currentUUid = tvDeviceUuid.getText().toString().trim();
+                String major = etDeviceMajor.getText().toString().trim();
+                String mirror = etDeviceMirror.getText().toString().trim();
+                mPresenter.doSave(deviceinSwstate, devicein, deviceoutSwstate, deviceout, currentUUid, major, mirror);
                 break;
             case R.id.ll_device_uuid:
-                startAC(new Intent(mActivity,UuidSettingActivity.class));
+                mPresenter.goSettingUUID(tvDeviceUuid.getText().toString());
                 break;
         }
     }
@@ -120,12 +129,41 @@ public class SettingNotificationActivity extends BaseActivity<ISettingNotificati
 
     @Override
     public void setDeviceInEditContent(String text) {
-        deviceinEdit.setText(text);
+        if (text != null) {
+            deviceinEdit.setText(text);
+        }
+
     }
 
     @Override
     public void setDeviceOutEditContent(String text) {
-        deviceoutEdit.setText(text);
+        if (text != null) {
+            deviceoutEdit.setText(text);
+        }
+
+    }
+
+    @Override
+    public void setDeviceUUID(String uuid) {
+        if (uuid != null) {
+            tvDeviceUuid.setText(uuid);
+        }
+    }
+
+    @Override
+    public void setDeviceMajor(String major) {
+        if (major != null) {
+            etDeviceMajor.setText(major);
+            etDeviceMajor.setSelection(major.length());
+        }
+    }
+
+    @Override
+    public void setDeviceMirror(String mirror) {
+        if (mirror != null) {
+            etDeviceMirror.setText(mirror);
+            etDeviceMirror.setSelection(mirror.length());
+        }
     }
 
     @Override

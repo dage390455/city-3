@@ -23,7 +23,6 @@ import butterknife.ButterKnife;
 public class UUIDSettingAdapter extends RecyclerView.Adapter<UUIDSettingAdapter.UUIDSettingViewHolder> {
     private final Activity mActivity;
     final List<UuidSettingModel> mList = new ArrayList<>();
-    private UuidSettingModel currentUuidSettingModel;
 
     public UUIDSettingAdapter(Activity activity) {
         mActivity = activity;
@@ -41,6 +40,8 @@ public class UUIDSettingAdapter extends RecyclerView.Adapter<UUIDSettingAdapter.
         UuidSettingModel uuidSettingModel = mList.get(position);
         if (!TextUtils.isEmpty(uuidSettingModel.name)) {
             holder.tvUuidItemName.setText(uuidSettingModel.name);
+        } else {
+            holder.tvUuidItemName.setText("自定义UUID " + (position + 1));
         }
         if (!TextUtils.isEmpty(uuidSettingModel.uuid)) {
             holder.tvUuidItemUuid.setText(uuidSettingModel.uuid);
@@ -54,11 +55,23 @@ public class UUIDSettingAdapter extends RecyclerView.Adapter<UUIDSettingAdapter.
                     UuidSettingModel currentUuidSettingModel = mList.get(i);
                     currentUuidSettingModel.isCheck = i == position;
                 }
-                currentUuidSettingModel = mList.get(position);
                 notifyDataSetChanged();
+                if (listener != null) {
+                    listener.onClick(mList.get(position));
+                }
             }
         });
 
+    }
+
+    public interface OnUUIDClickListener {
+        void onClick(UuidSettingModel currentUUID);
+    }
+
+    private OnUUIDClickListener listener;
+
+    public void setOnUUIDClickListener(OnUUIDClickListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -70,15 +83,6 @@ public class UUIDSettingAdapter extends RecyclerView.Adapter<UUIDSettingAdapter.
         mList.clear();
         mList.addAll(notifications);
         notifyDataSetChanged();
-    }
-
-    public UuidSettingModel getCurrentUuidSettingModel() {
-        if (currentUuidSettingModel == null) {
-            if (mList.size() > 0) {
-                return mList.get(0);
-            }
-        }
-        return currentUuidSettingModel;
     }
 
     class UUIDSettingViewHolder extends RecyclerView.ViewHolder {

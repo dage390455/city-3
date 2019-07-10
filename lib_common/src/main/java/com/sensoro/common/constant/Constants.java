@@ -364,6 +364,9 @@ public interface Constants {
 
     //安全隐患，标签
     String PREFERENCE_SECURITY_RISK_TAG = "preference_security_risk_tag";
+    String PREFERENCE_UUID_SETTING_TAG = "preference_uuid_setting_tag";
+    String PREFERENCE_UUID_SETTING_MY_UUID_TAG = "preference_uuid_setting_my_uuid_tag";
+    String PREFERENCE_UUID_SETTING_CURRENT_UUID_NO_SETTING_TAG = "preference_uuid_setting_current_uuid_no_setting_tag";
     String PREFERENCE_KEY_SECURITY_RISK_LOCATION = "preference_key_security_risk_location";
     String PREFERENCE_KEY_SECURITY_RISK_BEHAVIOR = "preference_key_security_risk_behavior";
     //铭牌部署 关联传感器的来源
@@ -394,6 +397,7 @@ public interface Constants {
     String[] INDEX_STATUS_ARRAY = {"全部状态", "预警", "正常", "失联", "未激活"};
     int EVENT_DATA_UPDATE_BASE_STATION = 0x64;
     int TYPE_SCAN_DEPLOY_CAMERA = 0x65;
+    int EVENT_DATA_ADD_NEW_UUID_CONTENT = 0x66;
 
 
     //

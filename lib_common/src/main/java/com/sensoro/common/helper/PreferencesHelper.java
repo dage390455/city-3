@@ -10,6 +10,7 @@ import com.sensoro.common.base.ContextUtils;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.model.EventLoginData;
+import com.sensoro.common.model.IbeaconSettingData;
 import com.sensoro.common.model.SecurityRisksTagModel;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.AlarmPopupDataBean;
@@ -888,4 +889,49 @@ public final class PreferencesHelper implements Constants {
         ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_SECURITY_RISK_TAG, Context.MODE_PRIVATE)
                 .edit().putString(Constants.PREFERENCE_KEY_SECURITY_RISK_BEHAVIOR, sb.toString()).apply();
     }
+
+    public void saveMyUUID(List<String> uuids) {
+        if (uuids != null && !uuids.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < uuids.size(); i++) {
+                sb.append(uuids.get(i));
+                if (i != uuids.size() - 1) {
+                    sb.append("#");
+                }
+            }
+            ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_UUID_SETTING_TAG, Context.MODE_PRIVATE)
+                    .edit().putString(Constants.PREFERENCE_UUID_SETTING_MY_UUID_TAG, sb.toString()).apply();
+        }
+    }
+
+    public List<String> getSaveMyUUID() {
+        String data = ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_UUID_SETTING_TAG, Context.MODE_PRIVATE)
+                .getString(Constants.PREFERENCE_UUID_SETTING_MY_UUID_TAG, null);
+        if (!TextUtils.isEmpty(data)) {
+            String[] split = data.split("#");
+            return Arrays.asList(split);
+        }
+        return null;
+    }
+
+    public boolean setIbeaconSettingData(IbeaconSettingData ibeaconSettingData) {
+        if (ibeaconSettingData != null) {
+            String json = RetrofitServiceHelper.getInstance().getGson().toJson(ibeaconSettingData);
+            ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_UUID_SETTING_TAG, Context.MODE_PRIVATE)
+                    .edit().putString(Constants.PREFERENCE_UUID_SETTING_CURRENT_UUID_NO_SETTING_TAG, json).apply();
+            return true;
+        }
+        return false;
+    }
+
+    public IbeaconSettingData getIbeaconSettingData() {
+        String data = ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_UUID_SETTING_TAG, Context.MODE_PRIVATE)
+                .getString(Constants.PREFERENCE_UUID_SETTING_CURRENT_UUID_NO_SETTING_TAG, null);
+        if (!TextUtils.isEmpty(data)) {
+            return RetrofitServiceHelper.getInstance().getGson().fromJson(data, IbeaconSettingData.class);
+        }
+        return null;
+    }
+
+
 }

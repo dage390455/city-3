@@ -22,7 +22,6 @@ import com.sensoro.common.widgets.BoldTextView;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
 import com.sensoro.smartcity.imainviews.INearByDeviceActivityView;
 import com.sensoro.smartcity.presenter.NearByDevicePresenter;
@@ -36,7 +35,6 @@ import butterknife.OnClick;
 public class NearByDeviceActivity extends BaseActivity<INearByDeviceActivityView, NearByDevicePresenter> implements INearByDeviceActivityView {
 
 
-    SensoroCityApplication sensoroCityApplication;
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
     @BindView(R.id.include_text_title_tv_title)
@@ -66,7 +64,6 @@ public class NearByDeviceActivity extends BaseActivity<INearByDeviceActivityView
         setContentView(R.layout.activity_nearbydevice_list);
 
         ButterKnife.bind(this);
-        sensoroCityApplication = (SensoroCityApplication) getApplication();
         includeTextTitleTvTitle.setText("附近设备");
 //        includeTextTitleTvSubtitle.setText("");
         includeTextTitleTvSubtitle.setText("通知设置");
@@ -123,7 +120,7 @@ public class NearByDeviceActivity extends BaseActivity<INearByDeviceActivityView
                 break;
 
             case R.id.include_text_title_tv_subtitle:
-                startAC(new Intent(mActivity, SettingNotificationActivity.class));
+                mPresenter.goNoSetting();
                 break;
 
             default:
@@ -198,9 +195,4 @@ public class NearByDeviceActivity extends BaseActivity<INearByDeviceActivityView
         refreshLayout.finishRefresh();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mPresenter.refreshSp();
-    }
 }

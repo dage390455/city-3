@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/c_f4f4f4"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <include layout="@layout/item_include_text_title" />
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <include layout="@layout/item_include_text_title" />
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <LinearLayout
@@ -65,9 +65,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:background="@color/white"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp" />
+                    android:background="@color/white" />
             </LinearLayout>
 
             <LinearLayout
@@ -89,22 +87,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:background="@color/white"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp" />
+                    android:background="@color/white" />
             </LinearLayout>
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_add_new_uuid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:padding="4dp"
-            android:text="添加自定义UUID"
-            android:textSize="16dp" />
-    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 
-</androidx.core.widget.NestedScrollView>
+    <TextView
+        android:id="@+id/tv_add_new_uuid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="添加自定义UUID"
+        android:textColor="@color/c_252525"
+        android:textSize="16dp" />
+</LinearLayout>

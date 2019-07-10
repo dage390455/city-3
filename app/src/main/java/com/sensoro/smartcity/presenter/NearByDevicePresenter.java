@@ -3,17 +3,16 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.sensoro.common.base.BasePresenter;
-import com.sensoro.common.base.ContextUtils;
 import com.sensoro.common.constant.Constants;
-import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.iwidget.IOnCreate;
+import com.sensoro.common.model.IbeaconSettingData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
@@ -28,12 +27,17 @@ import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
+import com.sensoro.smartcity.activity.SettingNotificationActivity;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.imainviews.INearByDeviceActivityView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -42,35 +46,34 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityView> implements BLEDeviceListener<BLEDevice> {
+public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityView> implements BLEDeviceListener<BLEDevice>, IOnCreate {
     private Activity mActivity;
     private final LinkedHashMap<String, IBeacon> mNearByIBeaconMap = new LinkedHashMap<>();
     private final List<String> mNearByIDevice = new ArrayList<>();
 
-    private String mUuid = "70DC44C3-E2A8-4B22-A2C6-129B41A4BDBC";
     //    private String mUuid="23A01AF0-232A-4518-9C0E-323FB773F5EF";
 
-    private int major = 51050;
-    private boolean deviceoutSwstate = true;
-    private boolean deviceinSwstate = true;
-    private String deviceoutContent = "进入";
-    private String deviceinContent = "离开";
+    //    private int major = 51050;
+//    private boolean deviceoutSwstate = true;
+//    private boolean deviceinSwstate = true;
+//    private String deviceoutContent = "进入";
+//    private String deviceinContent = "离开";
     private volatile boolean isNearby = false;
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private final ArrayList<DeviceInfo> deviceInfos = new ArrayList<>();
+    private volatile IbeaconSettingData ibeaconSettingData = new IbeaconSettingData();
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
-
-        getView().showProgressDialog();
+        onCreate();
         mActivity = (Activity) context;
-        refreshSp();
-        initBle();
+        init();
 
     }
 
     private void initBle() {
+        getView().showProgressDialog();
         BleObserver.getInstance().registerBleObserver(this);
         final Runnable bleCheckTask = new Runnable() {
             @Override
@@ -98,28 +101,28 @@ public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityVi
                 if (isNearby != currentNearby) {
                     getView().toastLong("进出状态：" + currentNearby);
                     if (currentNearby) {
-                        if (deviceinSwstate) {
+                        if (ibeaconSettingData.switchIn) {
                             mHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (TextUtils.isEmpty(deviceinContent)) {
+                                    if (TextUtils.isEmpty(ibeaconSettingData.switchInMessage)) {
                                         SensoroCityApplication.getInstance().mNotificationUtils.sendNotification("进入！！");
                                     } else {
-                                        SensoroCityApplication.getInstance().mNotificationUtils.sendNotification(deviceinContent);
+                                        SensoroCityApplication.getInstance().mNotificationUtils.sendNotification(ibeaconSettingData.switchInMessage);
                                     }
 
                                 }
                             });
                         }
                     } else {
-                        if (deviceoutSwstate) {
+                        if (ibeaconSettingData.switchOut) {
                             mHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (TextUtils.isEmpty(deviceinContent)) {
+                                    if (TextUtils.isEmpty(ibeaconSettingData.switchOutMessage)) {
                                         SensoroCityApplication.getInstance().mNotificationUtils.sendNotification("出去！！！");
                                     } else {
-                                        SensoroCityApplication.getInstance().mNotificationUtils.sendNotification(deviceoutContent);
+                                        SensoroCityApplication.getInstance().mNotificationUtils.sendNotification(ibeaconSettingData.switchOutMessage);
                                     }
 
                                 }
@@ -149,7 +152,7 @@ public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityVi
                 IBeacon iBeacon = bleDevice.iBeacon;
                 if (iBeacon != null) {
                     String uuid = iBeacon.getUuid();
-                    if (mUuid.equals(uuid)) {
+                    if (ibeaconSettingData.currentUUID.equals(uuid)) {
                         mNearByIBeaconMap.remove(sn);
                     }
                 }
@@ -167,7 +170,7 @@ public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityVi
                 IBeacon iBeacon = bleDevice.iBeacon;
                 if (iBeacon != null) {
                     String uuid = iBeacon.getUuid();
-                    if (mUuid.equals(uuid)) {
+                    if (ibeaconSettingData.currentUUID.equals(uuid)) {
                         mNearByIBeaconMap.put(sn, iBeacon);
                     }
                 }
@@ -187,7 +190,7 @@ public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityVi
                 IBeacon iBeacon = bleDevice.iBeacon;
                 if (iBeacon != null) {
                     String uuid = iBeacon.getUuid();
-                    if (mUuid.equals(uuid)) {
+                    if (ibeaconSettingData.currentUUID.equals(uuid)) {
                         mNearByIBeaconMap.put(sn, iBeacon);
                     }
                 }
@@ -307,6 +310,7 @@ public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityVi
 
     @Override
     public void onDestroy() {
+        EventBus.getDefault().unregister(this);
         mHandler.removeCallbacksAndMessages(null);
         BleObserver.getInstance().unregisterBleObserver(this);
         SensoroCityApplication.getInstance().bleDeviceManager.stopService();
@@ -315,29 +319,13 @@ public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityVi
     }
 
 
-    public void refreshSp() {
-
-
-        SharedPreferences sp = ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_SETTINGNOTIFICATION_NAME, Context
-                .MODE_PRIVATE);
-        String oldText = sp.getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
-        if (!TextUtils.isEmpty(oldText)) {
-            String[] split = oldText.split(",");
-            if (!TextUtils.isEmpty(split[0])) {
-                deviceinSwstate = Boolean.parseBoolean(split[0]);
-            }
-            if (!TextUtils.isEmpty(split[1])) {
-                deviceoutSwstate = Boolean.parseBoolean(split[1]);
-            }
-            if (!TextUtils.isEmpty(split[2])) {
-                deviceinContent = split[2];
-            }
-            if (!TextUtils.isEmpty(split[3])) {
-                deviceoutContent = split[3];
-            }
-
-
+    public void init() {
+        ibeaconSettingData.currentUUID = "70DC44C3-E2A8-4B22-A2C6-129B41A4BDBC";
+        IbeaconSettingData ibeaconSettingData = PreferencesHelper.getInstance().getIbeaconSettingData();
+        if (ibeaconSettingData != null) {
+            this.ibeaconSettingData = ibeaconSettingData;
         }
+        initBle();
     }
 
 
@@ -348,5 +336,23 @@ public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityVi
         intent.putExtra(Constants.EXTRA_DEVICE_INFO, deviceInfos.get(position));
         getView().startAC(intent);
 
+    }
+
+    public void goNoSetting() {
+        Intent intent = new Intent(mActivity, SettingNotificationActivity.class);
+        intent.putExtra("ibeaconSettingData", ibeaconSettingData);
+        getView().startAC(intent);
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(IbeaconSettingData ibeaconSettingData) {
+        if (ibeaconSettingData != null) {
+            this.ibeaconSettingData = ibeaconSettingData;
+        }
     }
 }
