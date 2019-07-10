@@ -198,7 +198,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                 getView().showProgressDialog();
                 //查询起始位置，默认0
                 RetrofitServiceHelper.getInstance().getSecurityAlarmList(
-                        (cur_page == 0 ? 0 : cur_page * 20 - 1),
+                        cur_page * 20,
                         (startTime == 0 ? null : startTime + ""),
                         (endTime == 0 ? null : endTime + ""), (int) handleStatus, tempSearchText, 0
                 ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityAlarmListRsp>(this) {
@@ -231,7 +231,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                 cur_page++;
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getSecurityAlarmList(
-                        (cur_page == 0 ? 0 : cur_page * 20 - 1),
+                        cur_page * 20,
                         (startTime == 0 ? null : startTime + ""),
                         (endTime == 0 ? null : endTime + ""), (int) handleStatus, tempSearchText, 0
                 ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityAlarmListRsp>(this) {
@@ -395,8 +395,8 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         if (customStartTimeStr.equalsIgnoreCase(customEndTimeStr)) {
             dateSearchText = customStartTimeStr;
         } else {
-            dateSearchText = getMonthDate(customStartDate) + " ~ " + DateUtil
-                    .getMonthDate(customEndDate);
+            dateSearchText = getMonthDate(customStartDate) + " ~ " +
+                    getMonthDate(customEndDate);
         }
         int elmentPos = mCaptureTimeModelList.indexOf(mCurrentCaptureTimeModel);
         //更新自定义时间文字

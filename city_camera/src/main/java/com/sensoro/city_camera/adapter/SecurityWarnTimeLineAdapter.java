@@ -114,7 +114,7 @@ public class SecurityWarnTimeLineAdapter extends RecyclerView.Adapter<SecurityWa
                 if (TextUtils.isEmpty(securityAlarmEventInfo.content)) {
                     holder.mRemarksTv.setVisibility(View.GONE);
                 } else {
-                    holder.mRemarksTv.setText(mContext.getString(R.string.security_warn_timeline_remark, securityAlarmEventInfo.content));
+                    holder.mRemarksTv.setText(mContext.getString(R.string.security_warn_timeline_remark, securityAlarmEventInfo.content), TextView.BufferType.SPANNABLE);
                     holder.mRemarksTv.setVisibility(View.VISIBLE);
                 }
             } else if (mEventType == SECURITY_TIMELINE_EVENT_TYPE_CALL) {
