@@ -538,7 +538,9 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
-
+                        if(isAttachedView() && mContext != null){
+                            getView().toastShort(errorMsg);
+                        }
                     }
                 });
     }

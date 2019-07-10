@@ -228,7 +228,9 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
-
+                        if(isAttachedView() && mActivity != null){
+                            getView().toastShort(errorMsg);
+                        }
                     }
                 });
     }
