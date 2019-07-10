@@ -95,6 +95,8 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     View mLeftPhotoRl;
     @BindView(R2.id.right_image_rl)
     View mRightPhotoRl;
+    @BindView(R2.id.security_warn_video_rl)
+    View mSecurityVideoRl;
 
     private ProgressUtils mProgressUtils;
     private SecurityWarnTimeLineAdapter mTimeLineAdapter;
@@ -285,19 +287,22 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         mSecurityRecordIv.setImageResource(isVideoRecordEnable ? R.drawable.icon_security_video : R.drawable.icon_security_video_disable);
         mSecurityWarnVideoTv.setText(isVideoRecordEnable ? R.string.security_warn_video_title : R.string.security_warn_video_title_transcoding);
         mSecurityWarnVideoTv.setEnabled(isVideoRecordEnable);
+        mSecurityVideoRl.setClickable(isVideoRecordEnable);
     }
 
     @Override
     public void showConfirmDialog(SecurityAlarmDetailInfo securityAlarmDetailInfo) {
-        SecurityWarnConfirmDialog securityWarnConfirmDialog = new SecurityWarnConfirmDialog();
-        securityWarnConfirmDialog.setSecurityConfirmCallback(mPresenter);
-        Bundle bundle = new Bundle();
-        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_ID, securityAlarmDetailInfo.getId());
-        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TITLE, securityAlarmDetailInfo.getTaskName());
-        bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TIME, String.valueOf(securityAlarmDetailInfo.getAlarmTime()));
-        bundle.putInt(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TYPE, securityAlarmDetailInfo.getAlarmType());
-        securityWarnConfirmDialog.setArguments(bundle);
-        securityWarnConfirmDialog.show(getSupportFragmentManager());
+        if(securityAlarmDetailInfo != null){
+            SecurityWarnConfirmDialog securityWarnConfirmDialog = new SecurityWarnConfirmDialog();
+            securityWarnConfirmDialog.setSecurityConfirmCallback(mPresenter);
+            Bundle bundle = new Bundle();
+            bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_ID, securityAlarmDetailInfo.getId());
+            bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TITLE, securityAlarmDetailInfo.getTaskName());
+            bundle.putString(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TIME, String.valueOf(securityAlarmDetailInfo.getAlarmTime()));
+            bundle.putInt(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TYPE, securityAlarmDetailInfo.getAlarmType());
+            securityWarnConfirmDialog.setArguments(bundle);
+            securityWarnConfirmDialog.show(getSupportFragmentManager());
+        }
     }
 
     @Override

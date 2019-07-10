@@ -106,6 +106,7 @@
                     android:drawableEnd="@drawable/arrows_right"
                     android:gravity="center_vertical"
                     android:singleLine="true"
+                    android:clickable="false"
                     android:text="@string/security_warn_video_title"
                     android:textColor="@color/security_warn_record_color"
                     android:textSize="16sp" />
