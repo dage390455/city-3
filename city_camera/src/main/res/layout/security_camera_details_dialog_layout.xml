@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:descendantFocusability="blocksDescendants">
 
     <ImageView
         android:id="@+id/iv_camera_details_popup_close"
@@ -22,7 +23,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/iv_camera_details_popup_close"
         android:layout_marginTop="4dp"
-        android:fillViewport="false"
+        android:fillViewport="true"
         android:maxHeight="492dp">
 
         <RelativeLayout
@@ -37,7 +38,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
-                android:paddingTop="20dp"
                 android:paddingRight="20dp"
                 android:paddingBottom="15dp">
 
