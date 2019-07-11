@@ -54,12 +54,6 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
     TextView mCameraSNTv;
     @BindView(R2.id.security_camera_details_brand_tv)
     TextView mCameraBrandTv;
-    @BindView(R2.id.security_camera_details_label_rg)
-    RadioGroup mCameraLabelRg;
-    @BindView(R2.id.security_camera_details_label1)
-    RadioButton mCameraLabelRb1;
-    @BindView(R2.id.security_camera_details_label2)
-    RadioButton mCameraLabelRb2;
     @BindView(R2.id.label_rv)
     RecyclerView mLabelRv;
 
@@ -98,34 +92,6 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
         super.onViewCreated(view, savedInstanceState);
 
         initUI();
-    }
-
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        //fixHeight();
-//    }
-
-    private void fixHeight() {
-        final View view = getView();
-        if (null == view || null == getContext()) {
-            return;
-        }
-
-        View parent = (View) view.getParent();
-        BottomSheetBehavior behavior = BottomSheetBehavior.from(parent);
-        view.measure(0, 0);
-
-        int screenHeight = AppUtils.getAndroiodScreenHeight(getContext());
-        if (screenHeight != -1) {
-            behavior.setPeekHeight((int) (screenHeight * 0.98));
-        } else {
-        behavior.setPeekHeight(view.getMeasuredHeight());
-        }
-
-        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) parent.getLayoutParams();
-        params.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
-        parent.setLayoutParams(params);
     }
 
     private void initUI() {
@@ -189,12 +155,7 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
                 mLabelRv.setHasFixedSize(true);
                 mLabelRv.setNestedScrollingEnabled(false);
 
-                for (int i = 0; i < 5; i++) {
-                    labelList.add("测试" + i);
-                }
                 mLabelAdapter.updateLabelList(labelList);
-                //layoutCameraDetailsContent.setFocusableInTouchMode(true);
-                //layoutCameraDetailsContent.requestFocus();
             }
 
 
