@@ -65,5 +65,5 @@
     <string name="camera_contact_no_exist">相机联系人不存在</string>
     <string name="owner_contact_no_exist">业主联系人不存在</string>
     <string name="security_warn_video_title_transcoding">预警录像（获取中…)</string>
-    <string name="start_include_backspace_text">&#160;&#160;&#160;&#160;&#160;&#160;%1$s</string>
+    <string name="start_include_backspace_text">&#160;%1$s</string>
 </resources>
