@@ -170,26 +170,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                         }
 
                         if (!isFirst) {
-                            ThreadPoolManager.getInstance().execute(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        Thread.sleep(200);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                    boolean pingNetCanUse = NetWorkUtils.ping();
-                                    NetWorkStateModel netWorkStateModel = new NetWorkStateModel();
-                                    netWorkStateModel.ping = pingNetCanUse;
-                                    EventBus.getDefault().post(netWorkStateModel);
-                                    try {
-                                        LogUtils.loge("CONNECTIVITY_ACTION--->>重新拉取");
-                                    } catch (Throwable throwable) {
-                                        throwable.printStackTrace();
-                                    }
-
-                                }
-                            });
+                            mHandler.removeCallbacks(mNetWorkTaskRunnable);
+                            mHandler.postDelayed(mNetWorkTaskRunnable, 2000);
                         }
                         isFirst = false;
 
@@ -525,20 +507,23 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             ThreadPoolManager.getInstance().execute(new Runnable() {
                 @Override
                 public void run() {
-                    boolean pingNetCanUse = NetWorkUtils.ping();
-                    NetWorkStateModel netWorkStateModel = new NetWorkStateModel();
-                    netWorkStateModel.ping = pingNetCanUse;
-                    EventBus.getDefault().post(netWorkStateModel);
-                    //TODO 暂时去掉频繁后台请求
-//                            Beta.checkUpgrade(false, false);
                     try {
+                        boolean pingNetCanUse = NetWorkUtils.ping();
+                        NetWorkStateModel netWorkStateModel = new NetWorkStateModel();
+                        netWorkStateModel.ping = pingNetCanUse;
+                        EventBus.getDefault().post(netWorkStateModel);
+                        //TODO 暂时去掉频繁后台请求
+//                            Beta.checkUpgrade(false, false);
+
                         LogUtils.loge("TaskRunnable == pingNetCanUse = " + pingNetCanUse + ",检查更新");
                     } catch (Throwable throwable) {
                         throwable.printStackTrace();
+                    } finally {
+                        mHandler.postDelayed(mNetWorkTaskRunnable, 30 * 1000);
                     }
                 }
             });
-            mHandler.postDelayed(mNetWorkTaskRunnable, 30 * 1000);
+
         }
 
     }
@@ -781,7 +766,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
         if (netWorkStateModel != null) {
             if (!netWorkStateModel.ping) {
                 if (!SensoroCityApplication.getInstance().isAPPBack) {
-                    getView().toastShort(mContext.getString(R.string.disconnected_from_network));
+                    getView().toastLong(mContext.getString(R.string.disconnected_from_network));
                     try {
                         com.sensoro.common.utils.LogUtils.loge("CONNECTIVITY_ACTION msg");
                     } catch (Throwable throwable) {
