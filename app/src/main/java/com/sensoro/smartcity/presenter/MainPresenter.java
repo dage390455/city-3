@@ -34,13 +34,16 @@ import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
+import com.sensoro.common.server.bean.UserInfo;
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
 import com.sensoro.common.server.response.DevicesMergeTypesRsp;
+import com.sensoro.common.server.response.LoginRsp;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
+import com.sensoro.smartcity.factory.UserPermissionFactory;
 import com.sensoro.smartcity.fragment.HomeFragment;
 import com.sensoro.smartcity.fragment.MalfunctionFragment;
 import com.sensoro.smartcity.fragment.ManagerFragment;
@@ -76,6 +79,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private long exitTime = 0;
     private volatile Socket mSocket = null;
     private final MainPresenter.DeviceInfoListener mInfoListener = new MainPresenter.DeviceInfoListener();
+    private final MainPresenter.PermissionListener mPermissionListener = new MainPresenter.PermissionListener();
     private final MainPresenter.DeviceAlarmCountListener mAlarmCountListener = new MainPresenter.DeviceAlarmCountListener();
     private final DeviceAlarmDisplayStatusListener mAlarmDisplayStatusListener = new DeviceAlarmDisplayStatusListener();
     private final DeviceFlushListener mDeviceFlushListener = new DeviceFlushListener();
@@ -248,6 +252,23 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             public void onErrorMsg(int errorCode, String errorMsg) {
             }
         });
+        //获取一下最新的权限信息
+        RetrofitServiceHelper.getInstance().getPermissionChangeInfo().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<LoginRsp>(this) {
+            @Override
+            public void onCompleted(LoginRsp loginRsp) {
+                EventLoginData userData = PreferencesHelper.getInstance().getUserData();
+                UserInfo userInfo = loginRsp.getData();
+                EventLoginData loginData = UserPermissionFactory.createLoginData(userInfo, userData.phoneId);
+                if (!userData.equals(loginData)) {
+                    //TODO 权限发生变化需要弹窗
+                }
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().toastShort(errorMsg);
+            }
+        });
     }
 
     private void initViewPager() {
@@ -336,6 +357,34 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                             }
 
                         }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private final class PermissionListener implements Emitter.Listener {
+
+        @Override
+        public void call(Object... args) {
+            try {
+                synchronized (MainPresenter.PermissionListener.class) {
+                    for (Object arg : args) {
+                        if (arg instanceof JSONObject) {
+                            final JSONObject jsonObject = (JSONObject) arg;
+                            String json = jsonObject.toString();
+                            try {
+                                LogUtils.loge(this, "socket-->>> PermissionListener jsonArray = " + json);
+                                //5c6a500306b3eb2db3d5bd14
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+
+                        }
+
                     }
                 }
             } catch (Exception e) {
@@ -537,6 +586,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             options.path = "/city";
             options.transports = transports;
             mSocket = IO.socket(RetrofitServiceHelper.getInstance().BASE_URL + "app", options);
+            mSocket.on(Constants.SOCKET_EVENT_PERMISSION_CHANGE, mPermissionListener);
             if (hasDeviceBriefControl()) {
                 mSocket.on(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.on(Constants.SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
@@ -614,6 +664,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
         try {
             if (mSocket != null) {
                 mSocket.disconnect();
+                mSocket.off(Constants.SOCKET_EVENT_PERMISSION_CHANGE, mPermissionListener);
                 if (hasDeviceBriefControl()) {
                     mSocket.off(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                     mSocket.off(Constants.SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
@@ -634,6 +685,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             options.path = "/city";
             options.transports = transports;
             mSocket = IO.socket(RetrofitServiceHelper.getInstance().BASE_URL + "app", options);
+            mSocket.on(Constants.SOCKET_EVENT_PERMISSION_CHANGE, mPermissionListener);
             if (hasDeviceBriefControl()) {
                 mSocket.on(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.on(Constants.SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
@@ -664,6 +716,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
         }
         if (mSocket != null) {
             mSocket.disconnect();
+            mSocket.off(Constants.SOCKET_EVENT_PERMISSION_CHANGE, mPermissionListener);
             if (hasDeviceBriefControl()) {
                 mSocket.off(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.off(Constants.SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
@@ -766,7 +819,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
         if (netWorkStateModel != null) {
             if (!netWorkStateModel.ping) {
                 if (!SensoroCityApplication.getInstance().isAPPBack) {
-                    getView().toastLong(mContext.getString(R.string.disconnected_from_network));
+                    getView().toastShort(mContext.getString(R.string.disconnected_from_network));
                     try {
                         com.sensoro.common.utils.LogUtils.loge("CONNECTIVITY_ACTION msg");
                     } catch (Throwable throwable) {

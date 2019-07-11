@@ -477,15 +477,18 @@ public interface RetrofitService {
     Observable<SecurityAlarmTimelineRsp> getSecurityAlarmTimeLine(@Path("id") String id);
 
     @GET("camera-center/alarms")
-    Observable<SecurityAlarmListRsp> getSecurityAlarmList( @QueryMap Map<String, Object> param);
+    Observable<SecurityAlarmListRsp> getSecurityAlarmList(@QueryMap Map<String, Object> param);
+
     @GET("camera-center/alarms/{id}")
     Observable<SecurityAlarmDetailRsp> getSecurityAlarmDetails(@Path("id") String id);
+
     @POST("token/devices_history")
     Observable<SecurityAlarmDetailRsp> getSecurityDeviceVideoHistort(@Path("id") String id, @Body RequestBody requestBody);
 
     @GET("camera-center/alarms/{id}/videos")
     Observable<SecurityWarnRecordResp> getSecurityWarnRecord(@Path("id") String id);
 
-
+    @GET("users/me")
+    Observable<LoginRsp> getPermissionChangeInfo();
 }
 

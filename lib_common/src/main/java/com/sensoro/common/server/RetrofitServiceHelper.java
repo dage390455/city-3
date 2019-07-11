@@ -29,8 +29,6 @@ import com.sensoro.common.server.response.BaseStationChartDetailRsp;
 import com.sensoro.common.server.response.BaseStationDetailRsp;
 import com.sensoro.common.server.response.BaseStationListRsp;
 import com.sensoro.common.server.response.CameraFilterRsp;
-import com.sensoro.common.server.security.response.SecurityAlarmDetailRsp;
-import com.sensoro.common.server.security.response.SecurityAlarmListRsp;
 import com.sensoro.common.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.common.server.response.ContractAddRsp;
 import com.sensoro.common.server.response.ContractInfoRsp;
@@ -76,6 +74,8 @@ import com.sensoro.common.server.response.UpdateRsp;
 import com.sensoro.common.server.response.UserAccountControlRsp;
 import com.sensoro.common.server.response.UserAccountRsp;
 import com.sensoro.common.server.security.response.HandleAlarmRsp;
+import com.sensoro.common.server.security.response.SecurityAlarmDetailRsp;
+import com.sensoro.common.server.security.response.SecurityAlarmListRsp;
 import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
 import com.sensoro.common.server.security.response.SecurityWarnRecordResp;
 import com.sensoro.common.utils.AppUtils;
@@ -356,6 +356,7 @@ public class RetrofitServiceHelper {
         cacheBuilder.maxAge(0, TimeUnit.SECONDS);
         //这个是控制缓存的过时时间
         cacheBuilder.maxStale(7, TimeUnit.DAYS);
+        cacheBuilder.noCache();
         final CacheControl cacheControl = cacheBuilder.build();
         //缓存拦截器
         final Interceptor cacheControlInterceptor = new Interceptor() {
@@ -363,6 +364,11 @@ public class RetrofitServiceHelper {
             public Response intercept(Chain chain) throws IOException {
                 Request request = chain.request();
                 if (!NetWorkUtils.isNetworkConnected(ContextUtils.getContext())) {
+                    //
+//                    NetWorkStateModel netWorkStateModel = new NetWorkStateModel();
+//                    netWorkStateModel.ping = false;
+//                    EventBus.getDefault().post(netWorkStateModel);
+                    //
                     request = request.newBuilder().cacheControl(cacheControl).build();
                 }
                 Response originalResponse = chain.proceed(request);
@@ -2483,5 +2489,9 @@ public class RetrofitServiceHelper {
      */
     public Observable<SecurityWarnRecordResp> getSecurityWarnRecord(@NonNull String id) {
         return retrofitService.getSecurityWarnRecord(id);
+    }
+
+    public Observable<LoginRsp> getPermissionChangeInfo() {
+        return retrofitService.getPermissionChangeInfo();
     }
 }
