@@ -1176,8 +1176,8 @@
     <string name="please_go_to_setting">Please go to Settings - Rights Management to open</string>
 
 
-    <string name="fire_warn_title">Fire warning</string>
-    <string name="security_warn_title">Security warning</string>
+    <string name="fire_warn_title">Fire Warn</string>
+    <string name="security_warn_title">Security Warn</string>
     <string name="app_name_city_camera">app_name_city_camera</string>
 
     <string name="recommend_transformer_dialog_top">According to the current, the recommended current transformer model:</string>

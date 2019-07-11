@@ -21,11 +21,11 @@
 
             <include
                 android:id="@+id/image_rl"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_height="wrap_content"
+                layout="@layout/include_camerawarn_mult_photo"
                 android:layout_width="match_parent"
-                layout="@layout/include_camerawarn_mult_photo"/>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp" />
 
             <TextView
                 android:id="@+id/confirm_result_tv"
@@ -56,7 +56,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toEndOf="@+id/security_warn_type_tv"
+                    android:layout_marginLeft="4dp"
+                    android:text="     案例看电视剧放辣椒\n水电费"
                     android:textColor="@color/c_000000"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -102,10 +103,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_toRightOf="@id/security_record_icon"
+                    android:clickable="false"
                     android:drawableEnd="@drawable/arrows_right"
                     android:gravity="center_vertical"
                     android:singleLine="true"
-                    android:clickable="false"
+
                     android:text="@string/security_warn_video_title"
                     android:textColor="@color/security_warn_record_color"
                     android:textSize="16sp" />
