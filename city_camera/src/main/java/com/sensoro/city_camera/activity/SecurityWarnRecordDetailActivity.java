@@ -2,10 +2,12 @@ package com.sensoro.city_camera.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,6 +81,11 @@ public class SecurityWarnRecordDetailActivity
     }
 
     private void initView() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT;
+            getWindow().setAttributes(lp);
+        }
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 
         initViewHeight();
@@ -153,7 +160,7 @@ public class SecurityWarnRecordDetailActivity
                 .setLockLand(false)
                 .setAutoFullWithSize(false)
                 .setShowFullAnimation(false)
-                .setNeedLockFull(true)
+                .setNeedLockFull(false)
 //                .setUrl(url)
                 .setCacheWithPlay(false)
 //                .setVideoTitle("测试视频")
