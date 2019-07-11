@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -56,6 +58,8 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
     TextView mCameraBrandTv;
     @BindView(R2.id.label_rv)
     RecyclerView mLabelRv;
+    @BindView(R2.id.scroview_camera_details)
+    NestedScrollView mNestedScrollView;
 
     @BindView(R2.id.security_camera_details_verson_tv)
     TextView mCameraVersonTv;
@@ -92,6 +96,16 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
         super.onViewCreated(view, savedInstanceState);
 
         initUI();
+        mNestedScrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mNestedScrollView.requestDisallowInterceptTouchEvent(false);
+                mNestedScrollView.setNestedScrollingEnabled(false);
+                mNestedScrollView.setFillViewport(true);
+                mNestedScrollView.onTouchEvent(event);
+                return true;
+            }
+        });
     }
 
     private void initUI() {
