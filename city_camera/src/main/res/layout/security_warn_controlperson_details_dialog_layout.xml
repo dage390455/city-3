@@ -53,7 +53,7 @@
         android:id="@+id/control_person_nation_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/control_person_name_title"
+        android:layout_below="@id/control_person_name_tv"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="16dp"
         android:text="@string/word_nation"

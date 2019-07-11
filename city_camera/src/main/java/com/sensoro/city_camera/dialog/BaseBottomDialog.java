@@ -66,10 +66,14 @@ public abstract class BaseBottomDialog extends BottomSheetDialogFragment {
         View parent = (View) view.getParent();
         BottomSheetBehavior behavior = BottomSheetBehavior.from(parent);
         view.measure(0, 0);
-
         int screenHeight = AppUtils.getAndroiodScreenHeight(getContext());
         if (screenHeight != -1) {
-            behavior.setPeekHeight((int) (screenHeight * 0.92));
+            int fixHeight = (int)(screenHeight * 0.92);
+            if(view.getMeasuredHeight() > fixHeight){
+                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            } else {
+                behavior.setPeekHeight(fixHeight);
+            }
         } else {
             behavior.setPeekHeight(view.getMeasuredHeight());
         }

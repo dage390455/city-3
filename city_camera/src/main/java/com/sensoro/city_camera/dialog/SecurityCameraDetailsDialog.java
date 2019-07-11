@@ -2,10 +2,13 @@ package com.sensoro.city_camera.dialog;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -13,16 +16,23 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.adapter.LabelAdapter;
 import com.sensoro.city_camera.constants.SecurityConstants;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.security.bean.SecurityCameraInfo;
 import com.sensoro.common.server.security.bean.SecurityContactsInfo;
+import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.widgets.SpacesItemDecoration;
 
 import java.util.List;
 
@@ -47,14 +57,10 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
     TextView mCameraSNTv;
     @BindView(R2.id.security_camera_details_brand_tv)
     TextView mCameraBrandTv;
-    @BindView(R2.id.security_camera_details_label_rg)
-    RadioGroup mCameraLabelRg;
-    @BindView(R2.id.security_camera_details_label1)
-    RadioButton mCameraLabelRb1;
-    @BindView(R2.id.security_camera_details_label2)
-    RadioButton mCameraLabelRb2;
     @BindView(R2.id.label_rv)
     RecyclerView mLabelRv;
+    @BindView(R2.id.scroview_camera_details)
+    NestedScrollView mNestedScrollView;
 
     @BindView(R2.id.security_camera_details_verson_tv)
     TextView mCameraVersonTv;
@@ -91,6 +97,15 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
         super.onViewCreated(view, savedInstanceState);
 
         initUI();
+        mNestedScrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mNestedScrollView.requestDisallowInterceptTouchEvent(false);
+                mNestedScrollView.setNestedScrollingEnabled(false);
+                mNestedScrollView.onTouchEvent(event);
+                return true;
+            }
+        });
     }
 
     private void initUI() {
@@ -136,10 +151,24 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
             } else {
                 mLabelRv.setVisibility(View.VISIBLE);
                 mLabelAdapter = new LabelAdapter(getActivity());
-                LinearLayoutManager manager = new LinearLayoutManager(getActivity());
-                manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-                mLabelRv.setLayoutManager(manager);
+                SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(getActivity()) {
+                    @Override
+                    public boolean canScrollVertically() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean canScrollHorizontally() {
+                        return false;
+                    }
+                };
+                layoutManager.setOrientation(RecyclerView.VERTICAL);
+                mLabelRv.setLayoutManager(layoutManager);
+                mLabelRv.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(getActivity(), 4)));
                 mLabelRv.setAdapter(mLabelAdapter);
+                mLabelRv.setHasFixedSize(true);
+                mLabelRv.setNestedScrollingEnabled(false);
+
                 mLabelAdapter.updateLabelList(labelList);
             }
 
@@ -185,7 +214,7 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
         void onNavi();
 
         /**
-         *显示联系人
+         * 显示联系人
          */
         void showContactsDetails();
     }
