@@ -320,7 +320,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         try {
             for (WireMaterialDiameterModel model : mInLineList) {
                 MaterialValueModel materialValueModel = MATERIAL_VALUE_MAP.get(model.diameter);
-                inLineTotal += model.material == 1 ? materialValueModel.alValue : materialValueModel.cuValue * model.count;
+                inLineTotal += model.material == 1 ? materialValueModel.alValue * model.count : materialValueModel.cuValue * model.count;
                 //
                 DeployControlSettingData.wireData wireData = new DeployControlSettingData.wireData();
                 wireData.setWireMaterial(model.material);
@@ -332,7 +332,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
 
             for (WireMaterialDiameterModel model : mOutLineList) {
                 MaterialValueModel materialValueModel = MATERIAL_VALUE_MAP.get(model.diameter);
-                outLineTotal += model.material == 1 ? materialValueModel.alValue : materialValueModel.cuValue * model.count;
+                outLineTotal += model.material == 1 ? materialValueModel.alValue * model.count : materialValueModel.cuValue * model.count;
                 //
                 DeployControlSettingData.wireData wireData = new DeployControlSettingData.wireData();
                 wireData.setWireMaterial(model.material);
