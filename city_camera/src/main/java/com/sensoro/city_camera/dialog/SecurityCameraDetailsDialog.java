@@ -1,12 +1,17 @@
 package com.sensoro.city_camera.dialog;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -24,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.adapter.LabelAdapter;
@@ -34,6 +40,7 @@ import com.sensoro.common.server.security.bean.SecurityContactsInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -64,7 +71,6 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
 
     @BindView(R2.id.security_camera_details_verson_tv)
     TextView mCameraVersonTv;
-    //联系人
     @BindView(R2.id.layout_camera_details_contact)
     RelativeLayout layoutCameraContact;
     @BindView(R2.id.security_camera_details_contact_tv)
@@ -76,6 +82,8 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
     RelativeLayout layoutCameraAddress;
     @BindView(R2.id.security_camera_details_address_tv)
     TextView mCameraAddressTv;
+    @BindView(R2.id.tv_placeholder)
+    TextView tvPlaceholder;
     private LabelAdapter mLabelAdapter;
 
     public static final String EXTRA_KEY_SECURITY_ID = "security_id";
@@ -92,6 +100,7 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
         return view;
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -107,6 +116,7 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
             }
         });
     }
+
 
     private void initUI() {
         Bundle bundle = getArguments();
@@ -146,10 +156,13 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
             mCameraContactCountTv.setText(String.format(getString(R.string.contact_count_tip), contactCount));
             mCameraAddressTv.setText(mSecurityCameraInfo.getLocation());
 
-            if (labelList.isEmpty()) {
+            if (null == labelList || labelList.isEmpty()) {
                 mLabelRv.setVisibility(View.INVISIBLE);
+                tvPlaceholder.setVisibility(View.GONE);
+
             } else {
                 mLabelRv.setVisibility(View.VISIBLE);
+                tvPlaceholder.setVisibility(View.INVISIBLE);
                 mLabelAdapter = new LabelAdapter(getActivity());
                 SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(getActivity()) {
                     @Override
@@ -168,11 +181,10 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
                 mLabelRv.setAdapter(mLabelAdapter);
                 mLabelRv.setHasFixedSize(true);
                 mLabelRv.setNestedScrollingEnabled(false);
-
                 mLabelAdapter.updateLabelList(labelList);
             }
-
-
+            mNestedScrollView.scrollTo(0, 0);
+            mNestedScrollView.requestFocus();
         }
 
     }
@@ -204,6 +216,7 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
         show(fragmentManager, SecurityWarnConfirmDialog.class.getSimpleName());
     }
 
+
     private SecurityCameraDetailsCallback mSecurityCameraDetailsCallback;
 
     public interface SecurityCameraDetailsCallback {
@@ -217,6 +230,7 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
          * 显示联系人
          */
         void showContactsDetails();
+
     }
 
     public void setSecurityCameraDetailsCallback(SecurityCameraDetailsCallback securityCameraDetailsCallback) {
