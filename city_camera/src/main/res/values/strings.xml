@@ -61,7 +61,7 @@
     <string name="security_warn_timeline_sms_failure">message failed to send</string>
     <string name="security_warn_timeline_sms_process">Sending a text message;</string>
     <string name="security_search_tip">Device Name/Task Name/Person Name</string>
-    <string name="security_camera_info_error">Camera details do not exist</string>
+    <string name="security_camera_info_error">Information acquisition failed, please try again</string>
     <string name="camera_contact_no_exist">Camera contact does not exist</string>
     <string name="owner_contact_no_exist">Owner contact does not exist</string>
     <string name="security_warn_video_title_transcoding">Early warning video (acquiring...)</string>
