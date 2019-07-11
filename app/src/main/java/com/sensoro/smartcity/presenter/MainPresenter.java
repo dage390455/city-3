@@ -766,7 +766,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
         if (netWorkStateModel != null) {
             if (!netWorkStateModel.ping) {
                 if (!SensoroCityApplication.getInstance().isAPPBack) {
-                    getView().toastLong(mContext.getString(R.string.disconnected_from_network));
+                    getView().toastShort(mContext.getString(R.string.disconnected_from_network));
                     try {
                         com.sensoro.common.utils.LogUtils.loge("CONNECTIVITY_ACTION msg");
                     } catch (Throwable throwable) {
