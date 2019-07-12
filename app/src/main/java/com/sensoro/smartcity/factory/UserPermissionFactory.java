@@ -79,6 +79,7 @@ public class UserPermissionFactory {
                 throwable.printStackTrace();
             }
             eventLoginData.phone = contacts;
+            eventLoginData.accountId = account.get_id();
 
             if (totpEnable) {
                 eventLoginData.needAuth = true;

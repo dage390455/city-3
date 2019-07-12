@@ -54,6 +54,7 @@ public interface Constants {
     String EXTRA_SAVE_PWD = "extra_save_pwd";
     String EXTRA_USER_NAME = "extra_user_name";
     String EXTRA_USER_ROLES = "extra_user_roles";
+    String EXTRA_USER_ACCOUNT_ID = "extra_user_account_id";
     String EXTRA_PHONE = "extra_phone";
     String EXTRA_CHARACTER = "extra_character";
     String EXTRA_PHONE_ID = "extra_phone_id";

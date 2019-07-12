@@ -78,6 +78,9 @@ public final class PreferencesHelper implements Constants {
         if (!TextUtils.isEmpty(eventLoginData.roles)) {
             editor.putString(EXTRA_USER_ROLES, eventLoginData.roles);
         }
+        if (!TextUtils.isEmpty(eventLoginData.accountId)) {
+            editor.putString(EXTRA_USER_ACCOUNT_ID, eventLoginData.accountId);
+        }
         //
         editor.putBoolean(EXTRA_IS_SPECIFIC, eventLoginData.isSupperAccount);
         editor.putBoolean(EXTRA_GRANTS_HAS_STATION_DEPLOY, eventLoginData.hasStationDeploy);
@@ -128,6 +131,7 @@ public final class PreferencesHelper implements Constants {
             String userName = sp.getString(EXTRA_USER_NAME, null);
             String phone = sp.getString(EXTRA_PHONE, null);
             String roles = sp.getString(EXTRA_USER_ROLES, null);
+            String accountId = sp.getString(EXTRA_USER_ACCOUNT_ID, null);
             boolean isSupperAccount = sp.getBoolean(EXTRA_IS_SPECIFIC, false);
             boolean hasStationDeploy = sp.getBoolean(EXTRA_GRANTS_HAS_STATION_DEPLOY, false);
             boolean hasStationList = sp.getBoolean(EXTRA_GRANTS_HAS_STATION_LIST, false);
@@ -165,6 +169,7 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.userName = userName;
             eventLoginData.phone = phone;
             eventLoginData.roles = roles;
+            eventLoginData.accountId = accountId;
             eventLoginData.hasSubMerchant = hasSubMerchant;
             eventLoginData.hasMerchantChange = hasMerchantChange;
             eventLoginData.isSupperAccount = isSupperAccount;

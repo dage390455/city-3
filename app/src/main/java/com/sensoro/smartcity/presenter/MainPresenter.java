@@ -25,6 +25,7 @@ import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.model.NetWorkStateModel;
+import com.sensoro.common.model.PermissionChangeSocketModel;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.NetWorkUtils;
 import com.sensoro.common.server.RetrofitServiceHelper;
@@ -43,6 +44,7 @@ import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
+import com.sensoro.smartcity.activity.PermissionChangeActivity;
 import com.sensoro.smartcity.factory.UserPermissionFactory;
 import com.sensoro.smartcity.fragment.HomeFragment;
 import com.sensoro.smartcity.fragment.MalfunctionFragment;
@@ -202,9 +204,18 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                 // 清除activity
                 ActivityTaskManager.getInstance().finishAllActivity();
             }
-            mContext.startActivity(intent);
+            getView().startAC(intent);
         }
     }
+
+    private void openPermissionChange() {
+        if (isAttachedView()) {
+            Intent intent = new Intent(mContext, PermissionChangeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getView().startAC(intent);
+        }
+    }
+
 
     @Override
     public void initData(Context context) {
@@ -253,14 +264,28 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             }
         });
         //获取一下最新的权限信息
+        checkPermissionChangeState();
+    }
+
+    /**
+     * 检查权限是否发生变化
+     */
+    private void checkPermissionChangeState() {
         RetrofitServiceHelper.getInstance().getPermissionChangeInfo().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<LoginRsp>(this) {
             @Override
             public void onCompleted(LoginRsp loginRsp) {
                 EventLoginData userData = PreferencesHelper.getInstance().getUserData();
                 UserInfo userInfo = loginRsp.getData();
                 EventLoginData loginData = UserPermissionFactory.createLoginData(userInfo, userData.phoneId);
-                if (!userData.equals(loginData)) {
-                    //TODO 权限发生变化需要弹窗
+                boolean isSame = userData.equals(loginData);
+                try {
+                    LogUtils.loge("socket-->>> isSame = " + isSame);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+                if (!isSame) {
+                    //权限发生变化需要弹窗
+                    openPermissionChange();
                 }
             }
 
@@ -377,6 +402,20 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                             final JSONObject jsonObject = (JSONObject) arg;
                             String json = jsonObject.toString();
                             try {
+                                //暂时只在这里处理逻辑 后面可以发消息来完成
+                                PermissionChangeSocketModel permissionChangeSocketModel = RetrofitServiceHelper.getInstance().getGson().fromJson(json, PermissionChangeSocketModel.class);
+                                if (permissionChangeSocketModel != null) {
+                                    List<String> accountIds = permissionChangeSocketModel.getAccountIds();
+                                    if (accountIds != null && accountIds.size() > 0) {
+                                        if (PreferencesHelper.getInstance().getUserData().accountId == null) {
+                                            checkPermissionChangeState();
+                                        } else {
+                                            if (accountIds.contains(PreferencesHelper.getInstance().getUserData().accountId)) {
+                                                checkPermissionChangeState();
+                                            }
+                                        }
+                                    }
+                                }
                                 LogUtils.loge(this, "socket-->>> PermissionListener jsonArray = " + json);
                                 //5c6a500306b3eb2db3d5bd14
                             } catch (Throwable throwable) {
@@ -781,6 +820,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                 if (data instanceof EventLoginData) {
                     EventLoginData eventLoginData = (EventLoginData) data;
                     changeAccount(eventLoginData);
+                    checkPermissionChangeState();
                 }
                 break;
             case Constants.EVENT_DATA_CHECK_MERGE_TYPE_CONFIG_DATA:

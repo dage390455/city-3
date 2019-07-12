@@ -1,7 +1,6 @@
 package com.sensoro.common.model;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 public final class EventLoginData implements Serializable {
     public String phoneId;
@@ -9,6 +8,7 @@ public final class EventLoginData implements Serializable {
     public String userName;
     public String phone;
     public String roles;
+    public String accountId;
     public boolean isSupperAccount;
     public boolean hasStationDeploy;
     public boolean hasContract;
@@ -45,50 +45,56 @@ public final class EventLoginData implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EventLoginData that = (EventLoginData) o;
-        return isSupperAccount == that.isSupperAccount &&
-                hasStationDeploy == that.hasStationDeploy &&
-                hasContract == that.hasContract &&
-                hasContractCreate == that.hasContractCreate &&
-                hasContractModify == that.hasContractModify &&
-                hasScanLogin == that.hasScanLogin &&
-                hasSubMerchant == that.hasSubMerchant &&
-                hasMerchantChange == that.hasMerchantChange &&
-                hasInspectionTaskList == that.hasInspectionTaskList &&
-                hasInspectionTaskModify == that.hasInspectionTaskModify &&
-                hasInspectionDeviceList == that.hasInspectionDeviceList &&
-                hasInspectionDeviceModify == that.hasInspectionDeviceModify &&
-                hasAlarmInfo == that.hasAlarmInfo &&
-                hasMalfunction == that.hasMalfunction &&
-                hasDeviceBrief == that.hasDeviceBrief &&
-                hasSignalCheck == that.hasSignalCheck &&
-                hasSignalConfig == that.hasSignalConfig &&
-                hasForceUpload == that.hasForceUpload &&
-                hasDevicePositionCalibration == that.hasDevicePositionCalibration &&
-                hasDeviceMuteShort == that.hasDeviceMuteShort &&
-                hasDeviceMuteLong == that.hasDeviceMuteLong &&
-                hasDeviceFirmwareUpdate == that.hasDeviceFirmwareUpdate &&
-                hasDeviceDemoMode == that.hasDeviceDemoMode &&
-                needAuth == that.needAuth &&
-                hasControllerAid == that.hasControllerAid &&
-                hasDeviceCameraList == that.hasDeviceCameraList &&
-                hasDeviceCameraDeploy == that.hasDeviceCameraDeploy &&
-                hasStationList == that.hasStationList &&
-                hasNameplateList == that.hasNameplateList &&
-                hasNameplateDeploy == that.hasNameplateDeploy &&
-                hasMonitorTaskList == that.hasMonitorTaskList &&
-                hasMonitorTaskConfirm == that.hasMonitorTaskConfirm &&
-                userId.equals(that.userId) &&
-                phone.equals(that.phone) &&
-                roles.equals(that.roles);
+        boolean hasChange = false;
+        try {
+            hasChange = isSupperAccount == that.isSupperAccount &&
+                    hasStationDeploy == that.hasStationDeploy &&
+                    hasContract == that.hasContract &&
+                    hasContractCreate == that.hasContractCreate &&
+                    hasContractModify == that.hasContractModify &&
+                    hasScanLogin == that.hasScanLogin &&
+                    hasSubMerchant == that.hasSubMerchant &&
+                    hasMerchantChange == that.hasMerchantChange &&
+                    hasInspectionTaskList == that.hasInspectionTaskList &&
+                    hasInspectionTaskModify == that.hasInspectionTaskModify &&
+                    hasInspectionDeviceList == that.hasInspectionDeviceList &&
+                    hasInspectionDeviceModify == that.hasInspectionDeviceModify &&
+                    hasAlarmInfo == that.hasAlarmInfo &&
+                    hasMalfunction == that.hasMalfunction &&
+                    hasDeviceBrief == that.hasDeviceBrief &&
+                    hasSignalCheck == that.hasSignalCheck &&
+                    hasSignalConfig == that.hasSignalConfig &&
+                    hasForceUpload == that.hasForceUpload &&
+                    hasDevicePositionCalibration == that.hasDevicePositionCalibration &&
+                    hasDeviceMuteShort == that.hasDeviceMuteShort &&
+                    hasDeviceMuteLong == that.hasDeviceMuteLong &&
+                    hasDeviceFirmwareUpdate == that.hasDeviceFirmwareUpdate &&
+                    hasDeviceDemoMode == that.hasDeviceDemoMode &&
+                    needAuth == that.needAuth &&
+//                    hasControllerAid == that.hasControllerAid &&
+                    hasDeviceCameraList == that.hasDeviceCameraList &&
+                    hasDeviceCameraDeploy == that.hasDeviceCameraDeploy &&
+                    hasStationList == that.hasStationList &&
+                    hasNameplateList == that.hasNameplateList &&
+                    hasNameplateDeploy == that.hasNameplateDeploy &&
+                    hasMonitorTaskList == that.hasMonitorTaskList &&
+                    hasMonitorTaskConfirm == that.hasMonitorTaskConfirm &&
+                    userId.equals(that.userId) &&
+                    phone.equals(that.phone) &&
+                    accountId.equals(that.accountId) &&
+                    roles.equals(that.roles);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return hasChange;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, phone, roles, isSupperAccount, hasStationDeploy, hasContract, hasContractCreate, hasContractModify, hasScanLogin, hasSubMerchant, hasMerchantChange, hasInspectionTaskList, hasInspectionTaskModify, hasInspectionDeviceList, hasInspectionDeviceModify, hasAlarmInfo, hasMalfunction, hasDeviceBrief, hasSignalCheck, hasSignalConfig, hasForceUpload, hasDevicePositionCalibration, hasDeviceMuteShort, hasDeviceMuteLong, hasDeviceFirmwareUpdate, hasDeviceDemoMode, needAuth, hasControllerAid, hasDeviceCameraList, hasDeviceCameraDeploy, hasStationList, hasNameplateList, hasNameplateDeploy, hasMonitorTaskList, hasMonitorTaskConfirm);
-    }
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(userId, accountId, phone, roles, isSupperAccount, hasStationDeploy, hasContract, hasContractCreate, hasContractModify, hasScanLogin, hasSubMerchant, hasMerchantChange, hasInspectionTaskList, hasInspectionTaskModify, hasInspectionDeviceList, hasInspectionDeviceModify, hasAlarmInfo, hasMalfunction, hasDeviceBrief, hasSignalCheck, hasSignalConfig, hasForceUpload, hasDevicePositionCalibration, hasDeviceMuteShort, hasDeviceMuteLong, hasDeviceFirmwareUpdate, hasDeviceDemoMode, needAuth, hasControllerAid, hasDeviceCameraList, hasDeviceCameraDeploy, hasStationList, hasNameplateList, hasNameplateDeploy, hasMonitorTaskList, hasMonitorTaskConfirm);
+//    }
 
     //    "nameplate": [
 //            "modify",
@@ -139,6 +145,7 @@ public final class EventLoginData implements Serializable {
                 ", hasNameplateDeploy=" + hasNameplateDeploy +
                 ", hasMonitorTaskList=" + hasMonitorTaskList +
                 ", hasMonitorTaskConfirm=" + hasMonitorTaskConfirm +
+                ", accountId=" + accountId +
                 '}';
     }
 }
