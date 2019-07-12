@@ -205,6 +205,11 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         }
     }
 
+    @Override
+    public void dismissInput() {
+        AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), fgMainWarnEtSearch, false);
+    }
+
     private void initRcSearchHistory() {
         SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mRootFragment.getActivity()) {
             @Override
@@ -307,12 +312,11 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
 
     @Override
     public void onFragmentStart() {
-
     }
 
     @Override
     public void onFragmentStop() {
-
+        dismissInput();
     }
 
     @Override

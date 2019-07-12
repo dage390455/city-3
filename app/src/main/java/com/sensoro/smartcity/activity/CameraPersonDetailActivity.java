@@ -143,6 +143,7 @@ public class CameraPersonDetailActivity extends BaseActivity<ICameraPersonDetail
                         //开始播放了才能旋转和全屏
                         orientationUtils.setEnable(true);
                         isPlay = true;
+                        isPause = false;
                     }
 
                     @Override

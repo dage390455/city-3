@@ -45,4 +45,8 @@ public interface SecurityConstants {
      * mp4
      */
     String VIDEO_SUFFIX_MP4 = ".mp4";
+    /**
+     * 转码中
+     */
+    int VIDEO_STATUS_TRANSCODING = 0;
 }

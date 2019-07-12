@@ -356,6 +356,7 @@ public class RetrofitServiceHelper {
         cacheBuilder.maxAge(0, TimeUnit.SECONDS);
         //这个是控制缓存的过时时间
         cacheBuilder.maxStale(7, TimeUnit.DAYS);
+        cacheBuilder.noCache();
         final CacheControl cacheControl = cacheBuilder.build();
         //缓存拦截器
         final Interceptor cacheControlInterceptor = new Interceptor() {
@@ -396,9 +397,9 @@ public class RetrofitServiceHelper {
         //
         return builder
                 .addInterceptor(interceptor)
-                .addInterceptor(cacheControlInterceptor)
-                .cookieJar(cookieJar)
-                .cache(cache)
+//                .addInterceptor(cacheControlInterceptor)
+//                .cookieJar(cookieJar)
+//                .cache(cache)
                 .addNetworkInterceptor(logging)
                 .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .build();

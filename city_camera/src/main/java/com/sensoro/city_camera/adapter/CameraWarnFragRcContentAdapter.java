@@ -1,9 +1,12 @@
 package com.sensoro.city_camera.adapter;
 
 import android.content.Context;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -11,14 +14,15 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.constants.SecurityConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.utils.DpUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +39,11 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
     private CameraWarnConfirmStatusClickListener mListener;
     private final List<SecurityAlarmInfo> mList = new ArrayList<>();
 
+    private int mWidth, mHeight;
+
     public CameraWarnFragRcContentAdapter(Context context) {
         mContext = context;
+        initImageViewSize();
     }
 
     @Override
@@ -90,8 +97,10 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                 case SecurityConstants.SECURITY_TYPE_FOCUS:
                     holder.tvWarnType.setText(R.string.focus_type);
                     holder.tvWarnType.setBackgroundResource(R.drawable.security_type_focus_bg);
-                    holder.layoutSinglePhoto.setVisibility(View.GONE);
-                    holder.layoutMultiPhoto.setVisibility(View.VISIBLE);
+                    holder.mSpace.setVisibility(View.VISIBLE);
+                    holder.layoutMultiLeftContent.setVisibility(View.VISIBLE);
+                    holder.layoutMultiRightContent.setVisibility(View.VISIBLE);
+                    holder.tvRightMatchRate.setVisibility(View.VISIBLE);
                     //加载布控 抓拍 照片
                     Glide.with(mContext)
                             .load(focusPhotoUrl)
@@ -115,8 +124,10 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                 case SecurityConstants.SECURITY_TYPE_FOREIGN:
                     holder.tvWarnType.setText(R.string.external_type);
                     holder.tvWarnType.setBackgroundResource(R.drawable.security_type_foreign_bg);
-                    holder.layoutSinglePhoto.setVisibility(View.VISIBLE);
-                    holder.layoutMultiPhoto.setVisibility(View.GONE);
+                    holder.mSpace.setVisibility(View.GONE);
+                    holder.layoutMultiLeftContent.setVisibility(View.GONE);
+                    holder.layoutMultiRightContent.setVisibility(View.VISIBLE);
+                    holder.tvRightMatchRate.setVisibility(View.GONE);
                     //加载抓拍图片
                     Glide.with(mContext)
                             .load(capturePhotoUrl)
@@ -125,14 +136,16 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                                     .placeholder(R.drawable.ic_port_default_white)
                                     .centerCrop()
                                     .dontAnimate())
-                            .into(holder.ivSinglePhoto);
-                    holder.ivSinglePhoto.setAlpha(isShowInValidCover ? 0.5f : 1f);
+                            .into(holder.ivRightPhoto);
+                    holder.ivRightPhoto.setAlpha(isShowInValidCover ? 0.5f : 1f);
                     break;
                 case SecurityConstants.SECURITY_TYPE_INVADE:
                     holder.tvWarnType.setText(R.string.invade_type);
                     holder.tvWarnType.setBackgroundResource(R.drawable.security_type_invade_bg);
-                    holder.layoutSinglePhoto.setVisibility(View.VISIBLE);
-                    holder.layoutMultiPhoto.setVisibility(View.GONE);
+                    holder.mSpace.setVisibility(View.GONE);
+                    holder.layoutMultiLeftContent.setVisibility(View.GONE);
+                    holder.layoutMultiRightContent.setVisibility(View.VISIBLE);
+                    holder.tvRightMatchRate.setVisibility(View.GONE);
                     //加载抓拍照片
                     Glide.with(mContext)
                             .load(capturePhotoUrl)
@@ -141,8 +154,8 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
                                     .centerCrop()
                                     .dontAnimate()
                                     .placeholder(R.drawable.ic_port_default_white))
-                            .into(holder.ivSinglePhoto);
-                    holder.ivSinglePhoto.setAlpha(isShowInValidCover ? 0.5f : 1f);
+                            .into(holder.ivRightPhoto);
+                    holder.ivRightPhoto.setAlpha(isShowInValidCover ? 0.5f : 1f);
                     break;
                 default:
             }
@@ -181,24 +194,21 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        //====单个照片====
-        @BindView(R2.id.layout_single_photo_content)
-        RelativeLayout layoutSinglePhoto;
-        @BindView(R2.id.iv_single_photo)
-        ImageView ivSinglePhoto;
-        //======多个照片====
-        @BindView(R2.id.layout_mult_photo_content)
-        RelativeLayout layoutMultiPhoto;
-
-        @BindView(R2.id.layout_left_photo_content)
+        @BindView(R2.id.left_image_rl)
         RelativeLayout layoutMultiLeftContent;
+
+        @BindView(R2.id.right_image_rl)
+        RelativeLayout layoutMultiRightContent;
+
+        @BindView(R2.id.space_center)
+        View mSpace;
+
         @BindView(R2.id.iv_left_photo)
         ImageView ivLeftPhoto;
 
-        @BindView(R2.id.layout_right_photo_content)
-        RelativeLayout layoutMultiRightContent;
         @BindView(R2.id.iv_right_photo)
         ImageView ivRightPhoto;
+
         @BindView(R2.id.tv_right_matchrate)
         TextView tvRightMatchRate;
 
@@ -220,6 +230,17 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
         MyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            ViewGroup.LayoutParams leftParams = ivLeftPhoto.getLayoutParams();
+            leftParams.height = mHeight;
+            leftParams.width = mWidth;
+            ivLeftPhoto.setLayoutParams(leftParams);
+
+            ViewGroup.LayoutParams rightParams = ivRightPhoto.getLayoutParams();
+            rightParams.height = mHeight;
+            rightParams.width = mWidth;
+            ivRightPhoto.setLayoutParams(rightParams);
+
         }
     }
 
@@ -229,4 +250,14 @@ public class CameraWarnFragRcContentAdapter extends RecyclerView.Adapter<CameraW
         void onItemClick(View view, int position);
     }
 
+    private void initImageViewSize() {
+        WindowManager w = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        Display d = w.getDefaultDisplay();
+        DisplayMetrics metrics = new DisplayMetrics();
+        d.getMetrics(metrics);
+
+        mWidth = (metrics.widthPixels - DpUtils.dp2px(mContext, 52)) / 2;
+        mHeight = mWidth * 380 / 323;
+
+    }
 }
