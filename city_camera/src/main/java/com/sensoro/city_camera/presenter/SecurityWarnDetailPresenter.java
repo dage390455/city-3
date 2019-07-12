@@ -155,6 +155,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 
     public void doNavigation() {
         if (mSecurityAlarmDetailInfo == null) {
+            getView().toastShort(mActivity.getString(R.string.security_camera_info_error));
             return;
         }
         SecurityCameraInfo camera = mSecurityAlarmDetailInfo.getCamera();
@@ -168,6 +169,14 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
                 }
                 if (destPosition != null) {
                     MapUtil.locateAndNavigation(mActivity, destPosition);
+                } else {
+                    if (isAttachedView()) {
+                        getView().toastShort(mActivity.getString(R.string.location_not_obtained));
+                    }
+                }
+            } else {
+                if (isAttachedView()) {
+                    getView().toastShort(mActivity.getString(R.string.location_not_obtained));
                 }
             }
         } else {
@@ -228,7 +237,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
-                        if(isAttachedView() && mActivity != null){
+                        if (isAttachedView() && mActivity != null) {
                             getView().toastShort(errorMsg);
                         }
                     }
@@ -303,7 +312,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
                         if (recordList != null && !recordList.isEmpty()) {
                             SecurityRecord securityRecord = recordList.get(0);
                             if (securityRecord != null) {
-                                if (isAttachedView()){
+                                if (isAttachedView()) {
                                     getView().updateVideoRecordEnable(securityRecord.status != SecurityConstants.VIDEO_STATUS_TRANSCODING);
                                 }
                             }
