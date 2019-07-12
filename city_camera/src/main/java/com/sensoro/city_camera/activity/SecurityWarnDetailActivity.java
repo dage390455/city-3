@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -292,7 +291,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
 
     @Override
     public void showConfirmDialog(SecurityAlarmDetailInfo securityAlarmDetailInfo) {
-        if(securityAlarmDetailInfo != null){
+        if (securityAlarmDetailInfo != null) {
             SecurityWarnConfirmDialog securityWarnConfirmDialog = new SecurityWarnConfirmDialog();
             securityWarnConfirmDialog.setSecurityConfirmCallback(mPresenter);
             Bundle bundle = new Bundle();
@@ -302,6 +301,8 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
             bundle.putInt(SecurityWarnConfirmDialog.EXTRA_KEY_SECURITY_TYPE, securityAlarmDetailInfo.getAlarmType());
             securityWarnConfirmDialog.setArguments(bundle);
             securityWarnConfirmDialog.show(getSupportFragmentManager());
+        } else {
+            toastShort(getString(R.string.security_camera_info_error));
         }
     }
 
@@ -324,6 +325,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     @Override
     public void showDeployDetail(SecurityAlarmDetailInfo securityAlarmDetailInfo) {
         if (null == securityAlarmDetailInfo || null == securityAlarmDetailInfo.getObjectMainJson()) {
+            toastShort(getString(R.string.security_camera_info_error));
             return;
         }
         SecurityControlPersonDetailsDialog controlPersonDetailsDialog = new SecurityControlPersonDetailsDialog();

@@ -2,28 +2,19 @@ package com.sensoro.city_camera.dialog;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.widget.NestedScrollView;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.adapter.LabelAdapter;
@@ -97,15 +88,6 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
         super.onViewCreated(view, savedInstanceState);
 
         initUI();
-        mNestedScrollView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mNestedScrollView.requestDisallowInterceptTouchEvent(false);
-                mNestedScrollView.setNestedScrollingEnabled(false);
-                mNestedScrollView.onTouchEvent(event);
-                return true;
-            }
-        });
     }
 
     private void initUI() {
@@ -114,7 +96,7 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
             id = bundle.getString(EXTRA_KEY_SECURITY_ID);
             mSecurityCameraInfo = (SecurityCameraInfo) bundle.getSerializable(EXTRA_KEY_CAMERA_INFO);
             List<String> labelList = mSecurityCameraInfo.getLabel();
-            List<SecurityContactsInfo> constantsList = (List<SecurityContactsInfo>) mSecurityCameraInfo.getContact();
+            List<SecurityContactsInfo> constantsList = mSecurityCameraInfo.getContact();
             String contactStr;
 
             if (constantsList != null && constantsList.size() > 0) {
@@ -126,18 +108,18 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
                 contactStr = "";
                 contactCount = 0;
             }
-            int cameraStaus;
+            int cameraStatus;
             try {
-                cameraStaus = Integer.parseInt(mSecurityCameraInfo.getDeviceStatus());
+                cameraStatus = Integer.parseInt(mSecurityCameraInfo.getDeviceStatus());
             } catch (NumberFormatException e) {
                 e.printStackTrace();
-                cameraStaus = 0;
+                cameraStatus = 0;
             }
 
             mCameraNameTv.setText(mSecurityCameraInfo.getName());
             mCameraTypeTv.setText(mSecurityCameraInfo.getType());
-            mCameraStatusTv.setText(cameraStaus == SecurityConstants.SECURITY_DEVICE_ONLINE ? R.string.offline : R.string.online);
-            mCameraStatusTv.setTextColor(cameraStaus == SecurityConstants.SECURITY_DEVICE_ONLINE ? getResources().getColor(R.color.c_1dbb99)
+            mCameraStatusTv.setText(cameraStatus == SecurityConstants.SECURITY_DEVICE_ONLINE ? R.string.offline : R.string.online);
+            mCameraStatusTv.setTextColor(cameraStatus == SecurityConstants.SECURITY_DEVICE_ONLINE ? getResources().getColor(R.color.c_1dbb99)
                     : getResources().getColor(R.color.c_a6a6a6));
             mCameraSNTv.setText(mSecurityCameraInfo.getSn());
             mCameraBrandTv.setText(mSecurityCameraInfo.getBrand());
@@ -146,30 +128,21 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
             mCameraContactCountTv.setText(String.format(getString(R.string.contact_count_tip), contactCount));
             mCameraAddressTv.setText(mSecurityCameraInfo.getLocation());
 
-            if (labelList.isEmpty()) {
+            if (null == labelList || labelList.isEmpty()) {
                 mLabelRv.setVisibility(View.INVISIBLE);
             } else {
                 mLabelRv.setVisibility(View.VISIBLE);
                 mLabelAdapter = new LabelAdapter(getActivity());
-                SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(getActivity()) {
-                    @Override
-                    public boolean canScrollVertically() {
-                        return false;
-                    }
 
-                    @Override
-                    public boolean canScrollHorizontally() {
-                        return false;
-                    }
-                };
+                SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(getContext());
                 layoutManager.setOrientation(RecyclerView.VERTICAL);
                 mLabelRv.setLayoutManager(layoutManager);
                 mLabelRv.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(getActivity(), 4)));
                 mLabelRv.setAdapter(mLabelAdapter);
                 mLabelRv.setHasFixedSize(true);
                 mLabelRv.setNestedScrollingEnabled(false);
-
                 mLabelAdapter.updateLabelList(labelList);
+
             }
 
 

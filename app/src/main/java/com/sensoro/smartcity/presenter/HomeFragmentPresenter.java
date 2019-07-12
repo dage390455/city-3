@@ -134,7 +134,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         final SoundPool.OnLoadCompleteListener listener = new SoundPool.OnLoadCompleteListener() {
             @Override
             public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                requestInitData(true);
+                requestInitData(true, true);
             }
         };
         mSoundPool.setOnLoadCompleteListener(listener);
@@ -144,7 +144,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
 
-    public void requestInitData(boolean needShowProgressDialog) {
+    public void requestInitData(boolean needShowProgressDialog, boolean needToast) {
         if (!PreferencesHelper.getInstance().getUserData().hasDeviceBrief) {
             needFreshAll = false;
             return;
@@ -231,7 +231,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 if (mHomeTopModels.size() > 0) {
                     updateHeaderTop(mHomeTopModels.get(0));
                 }
-                getView().toastShort(errorMsg);
+                if (needToast) {
+                    getView().toastShort(errorMsg);
+                }
                 getView().dismissAlarmInfoView();
                 getView().recycleViewRefreshComplete();
                 getView().dismissProgressDialog();
@@ -340,7 +342,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             @Override
             public void run() {
                 if (needFreshAll) {
-                    requestInitData(false);
+                    requestInitData(false, false);
                 } else {
                     if (needRefreshContent) {
                         if (homeTopModelCacheFresh[0] || homeTopModelCacheFresh[1] || homeTopModelCacheFresh[2] || homeTopModelCacheFresh[3] || homeTopModelCacheFresh[4]) {
@@ -530,7 +532,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     @Override
                     public void run() {
                         if (isAttachedView()) {
-                            requestInitData(true);
+                            requestInitData(true, true);
                         }
 
                     }
