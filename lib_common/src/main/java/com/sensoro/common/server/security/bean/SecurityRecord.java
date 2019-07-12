@@ -16,4 +16,5 @@ public class SecurityRecord implements Serializable {
     public String videoSize;
     public String mediaUrl;
     public String coverUrl;
+    public int status;
 }

@@ -1184,18 +1184,11 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 public void run() {
                     if (isAttachedView()) {
                         mDeviceInfo.cloneSocketData(deviceInfo);
-                        bleUpdateModel.blePassword = mDeviceInfo.getBlePassword();
-                        bleUpdateModel.currentFirmVersion = mDeviceInfo.getFirmwareVersion();
-                        bleUpdateModel.band = mDeviceInfo.getBand();
-                        bleUpdateModel.hardwareVersion = mDeviceInfo.getHardwareVersion();
                         // 单项数值设置
                         if (isAttachedView()) {
                             freshLocationDeviceInfo();
                             freshTopData();
                             handleDeviceInfoAdapter();
-                            refreshOperationStatus();
-                            //刷新是否是demo模式
-                            handleDeviceModeInfo();
                         }
 
                     }
@@ -1800,7 +1793,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     bundle.putInt(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
                     bundle.putSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                     DeployControlSettingData settingData = mDeviceInfo.getConfig();
-                    if (settingData != null) {
+                    if (settingData!=null){
                         bundle.putSerializable(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA, settingData);
                     }
                     startActivity(ARouterConstants.ACTIVITY_THREE_PHASE_ELECT_CONFIG_ACTIVITY, bundle, mContext);

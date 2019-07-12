@@ -24,6 +24,7 @@ import com.sensoro.common.manger.ActivityTaskManager;
 import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.EventLoginData;
+import com.sensoro.common.model.NetWorkStateModel;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.NetWorkUtils;
 import com.sensoro.common.server.RetrofitServiceHelper;
@@ -88,13 +89,10 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private ManagerFragment managerFragment;
     private MalfunctionFragment malfunctionFragment;
     private ScreenBroadcastReceiver mScreenReceiver;
-    private volatile boolean pingNetCanUse;
     //默认应后后端要求，默认只能支持websocket协议
     private final String[] transports = {"websocket"};
 
     private final class ScreenBroadcastReceiver extends BroadcastReceiver {
-        private boolean isFirst = true;
-
         @Override
         public void onReceive(Context context, Intent intent) {
 
@@ -116,7 +114,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                         reLogin(false);
                         break;
                     case CONNECTIVITY_ACTION:
-                        boolean netCanUse = false;
                         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
                         if (manager != null) {
                             EventData netCanUseData = new EventData();
@@ -125,27 +122,16 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                             if (activeNetwork != null) {
                                 if (activeNetwork.isConnected()) {
                                     if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                                        //当前WiFi连接可用
                                         netCanUseData.data = ConnectivityManager.TYPE_WIFI;
-
-                                        netCanUse = true;
-                                        try {
-                                            LogUtils.loge("CONNECTIVITY_ACTION--->>当前WiFi连接可用 ");
-                                        } catch (Throwable throwable) {
-                                            throwable.printStackTrace();
-                                        }
+                                        reconnect();
                                     } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
-                                        netCanUse = true;
+                                        //当前移动网络连接可用
                                         netCanUseData.data = ConnectivityManager.TYPE_MOBILE;
-
-                                        try {
-                                            LogUtils.loge("CONNECTIVITY_ACTION--->>当前移动网络连接可用 ");
-                                        } catch (Throwable throwable) {
-                                            throwable.printStackTrace();
-                                        }
+                                        reconnect();
                                     }
                                 } else {
                                     netCanUseData.data = -1;
-
                                     try {
                                         LogUtils.loge("CONNECTIVITY_ACTION--->>当前没有网络连接，请确保你已经打开网络 ");
                                         LogUtils.loge("CONNECTIVITY_ACTION--->>info.getTypeName()" + activeNetwork.getTypeName());
@@ -160,43 +146,10 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                                     }
                                 }
 
-                            } else {   // not connected to the internet
+                            } else {   // 当前没有网络连接，请确保你已经打开网络
                                 netCanUseData.data = -1;
-
-                                try {
-                                    LogUtils.loge("CONNECTIVITY_ACTION--->>当前没有网络连接，请确保你已经打开网络 ");
-                                } catch (Throwable throwable) {
-                                    throwable.printStackTrace();
-                                }
                             }
                             EventBus.getDefault().post(netCanUseData);
-                        }
-
-                        if (netCanUse) {
-                            if (!isFirst) {
-                                ThreadPoolManager.getInstance().execute(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            Thread.sleep(500);
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
-                                        }
-                                        pingNetCanUse = NetWorkUtils.ping();
-                                        if (pingNetCanUse) {
-                                            EventData eventData2 = new EventData();
-                                            eventData2.code = Constants.EVENT_DATA_NET_WORK_CHANGE;
-                                            try {
-                                                LogUtils.loge("CONNECTIVITY_ACTION--->>重新拉取");
-                                            } catch (Throwable throwable) {
-                                                throwable.printStackTrace();
-                                            }
-                                            EventBus.getDefault().post(eventData2);
-                                        }
-                                    }
-                                });
-                            }
-                            isFirst = false;
                         }
                         break;
 
@@ -530,38 +483,23 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             ThreadPoolManager.getInstance().execute(new Runnable() {
                 @Override
                 public void run() {
-                    pingNetCanUse = NetWorkUtils.ping();
-                    mContext.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!pingNetCanUse) {
-                                if (isAttachedView()) {
-                                    //应用在前台时提示
-                                    if (!SensoroCityApplication.getInstance().isAPPBack) {
-                                        getView().toastShort(mContext.getString(R.string.disconnected_from_network));
-                                    }
-                                }
-                                EventData eventData = new EventData();
-                                eventData.code = Constants.EVENT_DATA_NET_WORK_CHANGE;
-                                try {
-                                    LogUtils.loge("CONNECTIVITY_ACTION--->>重新拉取");
-                                } catch (Throwable throwable) {
-                                    throwable.printStackTrace();
-                                }
-                                EventBus.getDefault().post(eventData);
-                            }
-                            //TODO 暂时去掉频繁后台请求
+                    try {
+                        boolean pingNetCanUse = NetWorkUtils.ping();
+                        NetWorkStateModel netWorkStateModel = new NetWorkStateModel();
+                        netWorkStateModel.ping = pingNetCanUse;
+                        EventBus.getDefault().post(netWorkStateModel);
+                        //TODO 暂时去掉频繁后台请求
 //                            Beta.checkUpgrade(false, false);
-                            try {
-                                LogUtils.loge("TaskRunnable == pingNetCanUse = " + pingNetCanUse + ",检查更新");
-                            } catch (Throwable throwable) {
-                                throwable.printStackTrace();
-                            }
-                        }
-                    });
+
+                        LogUtils.loge("TaskRunnable == pingNetCanUse = " + pingNetCanUse + ",检查更新");
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    } finally {
+                        mHandler.postDelayed(mNetWorkTaskRunnable, 30 * 1000);
+                    }
                 }
             });
-            mHandler.postDelayed(mNetWorkTaskRunnable, 30 * 1000);
+
         }
 
     }
@@ -796,6 +734,22 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                     }
                 });
                 break;
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(NetWorkStateModel netWorkStateModel) {
+        if (netWorkStateModel != null) {
+            if (!netWorkStateModel.ping) {
+                if (!SensoroCityApplication.getInstance().isAPPBack) {
+                    getView().toastShort(mContext.getString(R.string.disconnected_from_network));
+                    try {
+                        com.sensoro.common.utils.LogUtils.loge("CONNECTIVITY_ACTION msg");
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                }
+            }
         }
     }
 

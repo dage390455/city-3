@@ -13,6 +13,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
 import com.sensoro.common.server.security.bean.SecurityDeployPersonInfo;
@@ -49,7 +51,6 @@ public class SecurityControlPersonDetailsDialog extends BaseBottomDialog {
     private SecurityDeployPersonInfo mSecurityDeployPersonInfo;
 
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -67,17 +68,21 @@ public class SecurityControlPersonDetailsDialog extends BaseBottomDialog {
 
     private void initUI() {
         Bundle bundle = getArguments();
-        if (bundle != null){
-            mSecurityDeployPersonInfo = (SecurityDeployPersonInfo)bundle.getSerializable(EXTRA_KEY_DEPLOY_INFO);
+        if (bundle != null) {
+            mSecurityDeployPersonInfo = (SecurityDeployPersonInfo) bundle.getSerializable(EXTRA_KEY_DEPLOY_INFO);
             String imageUrl = bundle.getString(EXTRA_KEY_DEPLOY_IMAGE);
-            Glide.with(getActivity()).load(imageUrl).into(mControlPersonPhotoIv);
+            Glide.with(this)
+                    .load(imageUrl)
+                    .apply(new RequestOptions().skipMemoryCache(false)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL).centerCrop()
+                            .dontAnimate())
+                    .into(mControlPersonPhotoIv);
             mControlPersonNameTv.setText(mSecurityDeployPersonInfo.getName());
             mControlPersonNationTv.setText(mSecurityDeployPersonInfo.getNationality());
             mControlPersonTelephoneTv.setText(mSecurityDeployPersonInfo.getMobile());
             mControlPersonIdcardTv.setText(mSecurityDeployPersonInfo.getIdentityCardNumber());
             mControlPersonDescribeTv.setText(mSecurityDeployPersonInfo.getDescription());
         }
-
 
 
     }
@@ -87,14 +92,13 @@ public class SecurityControlPersonDetailsDialog extends BaseBottomDialog {
         dismiss();
     }
 
-    @OnClick({R2.id.iv_alarm_popup_close,R2.id.control_person_describe_tv})
+    @OnClick({R2.id.iv_alarm_popup_close, R2.id.control_person_describe_tv})
     public void onViewClicked(View view) {
         int i = view.getId();
         if (i == R.id.iv_alarm_popup_close) {
             dismiss();
         }
     }
-
 
 
     public void show(FragmentManager fragmentManager) {

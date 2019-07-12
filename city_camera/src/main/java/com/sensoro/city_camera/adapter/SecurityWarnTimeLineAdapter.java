@@ -3,6 +3,7 @@ package com.sensoro.city_camera.adapter;
 import android.content.Context;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -96,7 +97,9 @@ public class SecurityWarnTimeLineAdapter extends RecyclerView.Adapter<SecurityWa
                 holder.mTitleTv.setTextColor(mContext.getResources().getColor(R.color.c_252525));
                 //安防预警处理
                 SpannableStringBuilder ssb = new SpannableStringBuilder();
-                ssb.append(mContext.getString(R.string.security_warn_timeline_title, securityAlarmEventInfo.handler.name, securityAlarmEventInfo.source));
+                if (securityAlarmEventInfo.handler != null) {
+                    ssb.append(mContext.getString(R.string.security_warn_timeline_title, securityAlarmEventInfo.handler.name, securityAlarmEventInfo.source));
+                }
                 ssb.append(" ");
                 if (securityAlarmEventInfo.status == SecurityConstants.SECURITY_INVALID) {
                     String invalid = mContext.getString(R.string.word_unvalid);
@@ -108,8 +111,12 @@ public class SecurityWarnTimeLineAdapter extends RecyclerView.Adapter<SecurityWa
                     ssb.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.c_f35a58)), ssb.length() - valid.length(), ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
                 holder.mTitleTv.setText(ssb);
-                holder.mRemarksTv.setText(securityAlarmEventInfo.content);
-                holder.mRemarksTv.setVisibility(View.VISIBLE);
+                if (TextUtils.isEmpty(securityAlarmEventInfo.content)) {
+                    holder.mRemarksTv.setVisibility(View.GONE);
+                } else {
+                    holder.mRemarksTv.setText(mContext.getString(R.string.security_warn_timeline_remark, securityAlarmEventInfo.content), TextView.BufferType.SPANNABLE);
+                    holder.mRemarksTv.setVisibility(View.VISIBLE);
+                }
             } else if (mEventType == SECURITY_TIMELINE_EVENT_TYPE_CALL) {
                 if (securityAlarmEventInfo.records != null && securityAlarmEventInfo.records.size() > 0) {
                     holder.mIconIv.setImageResource(R.drawable.icon_security_phone_log);

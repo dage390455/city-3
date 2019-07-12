@@ -221,7 +221,7 @@
     <string name="abnormal_reporting_success">Abnormality uploads success</string>
     <string name="abnormal_reporting_failure">Abnormality uploads failed</string>
     <string name="please_wait">Please wait</string>
-    <string name="disconnected_from_network">Network disconnected</string>
+    <string name="disconnected_from_network">It seems to have disconnected from the internet.</string>
     <string name="this_feature_is_not_yet_open">The feature is not available</string>
     <string name="account_has_been_disabled">The account is disabled</string>
     <string name="not_set">Not set</string>
@@ -696,7 +696,7 @@
     <string name="december">December</string>
     <string name="channel_mask_error_tip">Failed to get frequency information when frequency point needs to be configured</string>
     <string name="please_enter_a_valid_mobile_number">Please enter a valid mobile number</string>
-    <string name="enter_the_phone_number_used_to_look_device">填写后业主可在小程序查看该设备</string>
+    <string name="enter_the_phone_number_used_to_look_device">After filling in, the owner can view the device in the applet</string>
     <string name="please_enter_the_mobile_phone_number_and_the_contracted_mobile_phone_number">Please keep the phone number consistent with mini program account</string>
     <string name="title_edit">Edit</string>
     <string name="identification_number_failed">ID card is not identified</string>
@@ -896,7 +896,7 @@
     <string name="mode_switch">Mode Switching</string>
     <string name="no_permission_">No permission：Please contact the administrator to open</string>
     <string name="monitor_top_demo_mode_tips">Press the device self-test button in demo mode to send an alert message</string>
-    <string name="relation_mini_program_account">关联微信小程序账号</string>
+    <string name="relation_mini_program_account">Associate WeChat account</string>
     <string name="after_relation_owner_can_look_device">After you set this account, you will view the device under this account</string>
     <string name="previous_step">Previous</string>
     <string name="name_address_history_record">History Record</string>
@@ -1030,7 +1030,7 @@
     <string name="retry">"Retry"</string>
     <string name="retry_play">"Video loading failed, please try again"</string>
 
-    <string name="mobile_network">"You are now using mobile network,\n please mind your data usage."</string>
+    <string name="mobile_network">You are now using mobile network,  please mind your data usage.</string>
     <string name="camera_manager">Camera Manager</string>
     <string name="basestation_manager">Basestation Manager</string>
     <string name="camera_living">Living</string>
@@ -1179,8 +1179,8 @@
     <string name="please_go_to_setting">Please go to Settings - Rights Management to open</string>
 
 
-    <string name="fire_warn_title">消防预警</string>
-    <string name="security_warn_title">安防预警</string>
+    <string name="fire_warn_title">Fire Warn</string>
+    <string name="security_warn_title">Security Warn</string>
     <string name="app_name_city_camera">app_name_city_camera</string>
 
     <string name="recommend_transformer_dialog_top">According to the current, the recommended current transformer model:</string>

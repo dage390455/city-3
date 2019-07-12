@@ -6,23 +6,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.adapter.LabelAdapter;
 import com.sensoro.city_camera.constants.SecurityConstants;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.security.bean.SecurityCameraInfo;
 import com.sensoro.common.server.security.bean.SecurityContactsInfo;
+import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.widgets.SpacesItemDecoration;
 
 import java.util.List;
 
@@ -47,14 +48,10 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
     TextView mCameraSNTv;
     @BindView(R2.id.security_camera_details_brand_tv)
     TextView mCameraBrandTv;
-    @BindView(R2.id.security_camera_details_label_rg)
-    RadioGroup mCameraLabelRg;
-    @BindView(R2.id.security_camera_details_label1)
-    RadioButton mCameraLabelRb1;
-    @BindView(R2.id.security_camera_details_label2)
-    RadioButton mCameraLabelRb2;
     @BindView(R2.id.label_rv)
     RecyclerView mLabelRv;
+    @BindView(R2.id.scroview_camera_details)
+    NestedScrollView mNestedScrollView;
 
     @BindView(R2.id.security_camera_details_verson_tv)
     TextView mCameraVersonTv;
@@ -99,7 +96,7 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
             id = bundle.getString(EXTRA_KEY_SECURITY_ID);
             mSecurityCameraInfo = (SecurityCameraInfo) bundle.getSerializable(EXTRA_KEY_CAMERA_INFO);
             List<String> labelList = mSecurityCameraInfo.getLabel();
-            List<SecurityContactsInfo> constantsList = (List<SecurityContactsInfo>) mSecurityCameraInfo.getContact();
+            List<SecurityContactsInfo> constantsList = mSecurityCameraInfo.getContact();
             String contactStr;
 
             if (constantsList != null && constantsList.size() > 0) {
@@ -111,18 +108,18 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
                 contactStr = "";
                 contactCount = 0;
             }
-            int cameraStaus;
+            int cameraStatus;
             try {
-                cameraStaus = Integer.parseInt(mSecurityCameraInfo.getDeviceStatus());
+                cameraStatus = Integer.parseInt(mSecurityCameraInfo.getDeviceStatus());
             } catch (NumberFormatException e) {
                 e.printStackTrace();
-                cameraStaus = 0;
+                cameraStatus = 0;
             }
 
             mCameraNameTv.setText(mSecurityCameraInfo.getName());
             mCameraTypeTv.setText(mSecurityCameraInfo.getType());
-            mCameraStatusTv.setText(cameraStaus == SecurityConstants.SECURITY_DEVICE_ONLINE ? R.string.offline : R.string.online);
-            mCameraStatusTv.setTextColor(cameraStaus == SecurityConstants.SECURITY_DEVICE_ONLINE ? getResources().getColor(R.color.c_1dbb99)
+            mCameraStatusTv.setText(cameraStatus == SecurityConstants.SECURITY_DEVICE_ONLINE ? R.string.offline : R.string.online);
+            mCameraStatusTv.setTextColor(cameraStatus == SecurityConstants.SECURITY_DEVICE_ONLINE ? getResources().getColor(R.color.c_1dbb99)
                     : getResources().getColor(R.color.c_a6a6a6));
             mCameraSNTv.setText(mSecurityCameraInfo.getSn());
             mCameraBrandTv.setText(mSecurityCameraInfo.getBrand());
@@ -131,16 +128,21 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
             mCameraContactCountTv.setText(String.format(getString(R.string.contact_count_tip), contactCount));
             mCameraAddressTv.setText(mSecurityCameraInfo.getLocation());
 
-            if (labelList.isEmpty()) {
+            if (null == labelList || labelList.isEmpty()) {
                 mLabelRv.setVisibility(View.INVISIBLE);
             } else {
                 mLabelRv.setVisibility(View.VISIBLE);
                 mLabelAdapter = new LabelAdapter(getActivity());
-                LinearLayoutManager manager = new LinearLayoutManager(getActivity());
-                manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-                mLabelRv.setLayoutManager(manager);
+
+                SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(getContext());
+                layoutManager.setOrientation(RecyclerView.VERTICAL);
+                mLabelRv.setLayoutManager(layoutManager);
+                mLabelRv.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(getActivity(), 4)));
                 mLabelRv.setAdapter(mLabelAdapter);
+                mLabelRv.setHasFixedSize(true);
+                mLabelRv.setNestedScrollingEnabled(false);
                 mLabelAdapter.updateLabelList(labelList);
+
             }
 
 
@@ -185,7 +187,7 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
         void onNavi();
 
         /**
-         *显示联系人
+         * 显示联系人
          */
         void showContactsDetails();
     }

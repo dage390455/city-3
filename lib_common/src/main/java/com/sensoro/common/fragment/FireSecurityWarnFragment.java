@@ -21,7 +21,6 @@ import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.SensoroTextWidthColorBar;
 import com.shizhefei.view.indicator.FixedIndicatorView;
 import com.shizhefei.view.indicator.IndicatorViewPager;
-import com.shizhefei.view.indicator.slidebar.TextWidthColorBar;
 import com.shizhefei.view.indicator.transition.OnTransitionTextListener;
 
 import java.util.ArrayList;
@@ -60,6 +59,22 @@ public class FireSecurityWarnFragment extends BaseFragment<IFireSecurityWarnView
                 14F,
                 ContextCompat.getColor(getContext(), R.color.c_252525),
                 ContextCompat.getColor(getContext(), R.color.c_a6a6a6)));
+//        mContentViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                AppUtils.dismissInputMethodManager(mRootFragment.getActivity());
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//
+//            }
+//        });
     }
 
     @Override

@@ -113,5 +113,5 @@ public interface ICameraWarnListFragmentView extends IToast, IActivityIntent, IP
      */
     void showConfirmDialog(SecurityAlarmInfo securityAlarmInfo);
 
-
+    void dismissInput();
 }

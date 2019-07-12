@@ -5,10 +5,11 @@
     <application>
         <activity
             android:name=".activity.SecurityWarnRecordDetailActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
         <activity android:name=".activity.PhotoPreviewActivity" />
         <activity android:name=".activity.SecurityWarnDetailActivity" />
-        <activity android:name=".activity.LauncherActivity"/>
+        <activity android:name=".activity.LauncherActivity" />
 
 
         <meta-data
