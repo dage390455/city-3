@@ -23,11 +23,11 @@ import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.R2;
 import com.sensoro.city_camera.adapter.SecurityWarnTimeLineAdapter;
 import com.sensoro.city_camera.constants.SecurityConstants;
-import com.sensoro.city_camera.dialog.SecurityCameraDetailsDialog;
 import com.sensoro.city_camera.dialog.SecurityControlPersonDetailsDialog;
 import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
 import com.sensoro.city_camera.presenter.SecurityWarnDetailPresenter;
 import com.sensoro.city_camera.util.MapUtil;
+import com.sensoro.city_camera.widget.popup.SecurityCameraDetailsPopUtils;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
@@ -50,7 +50,7 @@ import butterknife.OnClick;
  * date   : 2019-06-24
  */
 public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetailView, SecurityWarnDetailPresenter>
-        implements ISecurityWarnDetailView, IActivityIntent {
+        implements ISecurityWarnDetailView, IActivityIntent, SecurityCameraDetailsPopUtils.DialogDisplayStatusListener, SecurityCameraDetailsPopUtils.SecurityCameraDetailsCallback {
 
     @BindView(R2.id.include_text_title_imv_arrows_left)
     ImageView mBackIv;
@@ -100,6 +100,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     private ProgressUtils mProgressUtils;
     private SecurityWarnTimeLineAdapter mTimeLineAdapter;
     private int mWidth, mHeight;
+    private SecurityCameraDetailsPopUtils mCameraDetailsPopUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -290,6 +291,15 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     }
 
     @Override
+    public void onRefreshCameraDetailsData(SecurityCameraInfo securityCameraInfo) {
+        if (null == securityCameraInfo) {
+            toastShort(getString(R.string.security_camera_info_error));
+            return;
+        }
+        mCameraDetailsPopUtils.refreshData(securityCameraInfo);
+    }
+
+    @Override
     public void showConfirmDialog(SecurityAlarmDetailInfo securityAlarmDetailInfo) {
         if (securityAlarmDetailInfo != null) {
             SecurityWarnConfirmDialog securityWarnConfirmDialog = new SecurityWarnConfirmDialog();
@@ -309,17 +319,13 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     @Override
     public void showCameraDetailsDialog(SecurityAlarmDetailInfo securityAlarmDetailInfo) {
         if (null == securityAlarmDetailInfo || null == securityAlarmDetailInfo.getCamera()) {
-            toastShort(getString(R.string.security_camera_info_error));
+            toastShort(mActivity.getString(R.string.security_camera_info_error));
             return;
         }
+        mCameraDetailsPopUtils = new SecurityCameraDetailsPopUtils(this, this);
+        mCameraDetailsPopUtils.setSecurityCameraDetailsCallback(this);
+        mCameraDetailsPopUtils.show();
 
-        SecurityCameraDetailsDialog securityCameraDetailsDialog = new SecurityCameraDetailsDialog();
-        securityCameraDetailsDialog.setSecurityCameraDetailsCallback(mPresenter);
-        Bundle bundle = new Bundle();
-        bundle.putString(SecurityCameraDetailsDialog.EXTRA_KEY_SECURITY_ID, securityAlarmDetailInfo.getId());
-        bundle.putSerializable(SecurityCameraDetailsDialog.EXTRA_KEY_CAMERA_INFO, securityAlarmDetailInfo.getCamera());
-        securityCameraDetailsDialog.setArguments(bundle);
-        securityCameraDetailsDialog.show(getSupportFragmentManager());
     }
 
     @Override
@@ -418,5 +424,24 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
         rightParams.width = imageViewWidth;
         mRightImageView.setLayoutParams(rightParams);
 
+    }
+
+    //摄像头弹窗回调方法
+    @Override
+    public void onDialogShow() {
+        if (mCameraDetailsPopUtils != null) {
+            mPresenter.onRefreshCameraDetailsData();
+        }
+    }
+
+    @Override
+    public void onNavi() {
+        mPresenter.onNavi();
+
+    }
+
+    @Override
+    public void showContactsDetails() {
+        mPresenter.doCameraContact();
     }
 }

@@ -11,7 +11,6 @@ import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.activity.PhotoPreviewActivity;
 import com.sensoro.city_camera.activity.SecurityWarnRecordDetailActivity;
 import com.sensoro.city_camera.constants.SecurityConstants;
-import com.sensoro.city_camera.dialog.SecurityCameraDetailsDialog;
 import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
 import com.sensoro.city_camera.util.MapUtil;
 import com.sensoro.common.base.BasePresenter;
@@ -40,7 +39,7 @@ import io.reactivex.schedulers.Schedulers;
  * @author : bin.tian
  * date   : 2019-06-24
  */
-public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDetailView> implements SecurityWarnConfirmDialog.SecurityConfirmCallback, SecurityCameraDetailsDialog.SecurityCameraDetailsCallback {
+public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDetailView> implements SecurityWarnConfirmDialog.SecurityConfirmCallback {
     private Activity mActivity;
     private String mSecurityInfoId;
     private SecurityAlarmDetailInfo mSecurityAlarmDetailInfo;
@@ -119,7 +118,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
     /**
      * 联系：相机联系人电话
      */
-    private void doCameraContact() {
+    public void doCameraContact() {
         if (null == mSecurityAlarmDetailInfo || null == mSecurityAlarmDetailInfo.getCamera()
                 || null == mSecurityAlarmDetailInfo.getCamera().getContact()) {
             getView().toastShort(mActivity.getString(R.string.camera_contact_no_exist));
@@ -192,14 +191,6 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
         }
     }
 
-    /**
-     * 显示摄像机详情
-     */
-    public void showCameraDetail() {
-        if (isAttachedView()) {
-            getView().showCameraDetailsDialog(mSecurityAlarmDetailInfo);
-        }
-    }
 
     /**
      * 显示布控信息详情
@@ -258,12 +249,19 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
     }
 
 
-    @Override
     public void onNavi() {
         doNavigation();
     }
 
-    @Override
+    public void onRefreshCameraDetailsData() {
+        if (null == mSecurityAlarmDetailInfo) {
+            getView().toastShort(mActivity.getString(R.string.camera_contact_no_exist));
+            return;
+        }
+        getView().onRefreshCameraDetailsData(mSecurityAlarmDetailInfo.getCamera());
+    }
+
+
     public void showContactsDetails() {
         if (null == mSecurityAlarmDetailInfo || null == mSecurityAlarmDetailInfo.getCamera()
                 || null == mSecurityAlarmDetailInfo.getCamera().getContact()) {
@@ -326,4 +324,15 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 
 
     }
+
+
+    /**
+     * 显示摄像机详情
+     */
+    public void showCameraDetail() {
+        if (isAttachedView()) {
+            getView().showCameraDetailsDialog(mSecurityAlarmDetailInfo);
+        }
+    }
+
 }
