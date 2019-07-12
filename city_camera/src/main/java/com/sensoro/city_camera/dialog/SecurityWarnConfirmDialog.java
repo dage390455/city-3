@@ -58,6 +58,12 @@ public class SecurityWarnConfirmDialog extends BaseBottomDialog {
     public static final String EXTRA_KEY_SECURITY_TYPE = "security_type";
     private String id;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        disableSlideDismiss();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
