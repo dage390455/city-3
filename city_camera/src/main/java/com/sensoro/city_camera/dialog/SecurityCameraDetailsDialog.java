@@ -128,7 +128,7 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
             mCameraContactCountTv.setText(String.format(getString(R.string.contact_count_tip), contactCount));
             mCameraAddressTv.setText(mSecurityCameraInfo.getLocation());
 
-            if (labelList.isEmpty()) {
+            if (null == labelList || labelList.isEmpty()) {
                 mLabelRv.setVisibility(View.INVISIBLE);
             } else {
                 mLabelRv.setVisibility(View.VISIBLE);
