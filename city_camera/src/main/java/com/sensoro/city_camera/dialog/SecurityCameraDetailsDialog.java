@@ -82,8 +82,6 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
     RelativeLayout layoutCameraAddress;
     @BindView(R2.id.security_camera_details_address_tv)
     TextView mCameraAddressTv;
-    @BindView(R2.id.tv_placeholder)
-    TextView tvPlaceholder;
     private LabelAdapter mLabelAdapter;
 
     public static final String EXTRA_KEY_SECURITY_ID = "security_id";
@@ -158,11 +156,9 @@ public class SecurityCameraDetailsDialog extends BaseBottomDialog {
 
             if (null == labelList || labelList.isEmpty()) {
                 mLabelRv.setVisibility(View.INVISIBLE);
-                tvPlaceholder.setVisibility(View.GONE);
 
             } else {
                 mLabelRv.setVisibility(View.VISIBLE);
-                tvPlaceholder.setVisibility(View.INVISIBLE);
                 mLabelAdapter = new LabelAdapter(getActivity());
                 SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(getActivity()) {
                     @Override
