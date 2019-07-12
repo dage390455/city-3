@@ -319,7 +319,7 @@ public class SecurityWarnDetailActivity extends BaseActivity<ISecurityWarnDetail
     @Override
     public void showCameraDetailsDialog(SecurityAlarmDetailInfo securityAlarmDetailInfo) {
         if (null == securityAlarmDetailInfo || null == securityAlarmDetailInfo.getCamera()) {
-            toastShort(mActivity.getString(R.string.security_camera_info_error));
+            toastShort(getString(R.string.security_camera_info_error));
             return;
         }
         mCameraDetailsPopUtils = new SecurityCameraDetailsPopUtils(this, this);
