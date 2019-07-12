@@ -25,7 +25,6 @@ import com.sensoro.common.server.response.DeviceAlarmItemRsp;
 import com.sensoro.common.server.response.DeviceAlarmLogRsp;
 import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
 import com.sensoro.common.server.response.ResponseBase;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmDetailLogActivity;
@@ -99,12 +98,12 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
     }
 
     public void doContactOwner(DeviceAlarmLogInfo deviceAlarmLogInfo) {
-        List<DeviceNotificationBean> deviceNotifications = deviceAlarmLogInfo.getDeviceNotifications();
-        if (null != deviceNotifications && deviceNotifications.size() > 0) {
+        List<DeviceNotificationBean> deviceNotifications = WidgetUtil.handleDeviceNotifications(deviceAlarmLogInfo.getDeviceNotifications());
+        if (deviceNotifications.isEmpty()) {
+            getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
+        } else {
             WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
             dialogUtil.show(deviceNotifications);
-        } else {
-            getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
         }
 
     }
@@ -140,7 +139,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
 //                        }
 //                        mDeviceAlarmLogInfoList.addAll(tempList);
 //                    } else {
-                        mDeviceAlarmLogInfoList.addAll(deviceAlarmLogInfoList);
+                    mDeviceAlarmLogInfoList.addAll(deviceAlarmLogInfoList);
 //                    }
 
 //                    out:

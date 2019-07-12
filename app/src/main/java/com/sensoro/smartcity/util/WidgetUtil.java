@@ -36,6 +36,7 @@ import android.widget.TextView;
 
 import com.sensoro.common.base.ContextUtils;
 import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.model.DeviceNotificationBean;
 import com.sensoro.common.server.bean.DeviceTypeStyles;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.bean.SensorStruct;
@@ -49,6 +50,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -1541,6 +1543,27 @@ public class WidgetUtil {
         } else {
             return diff > 0 ? 1 : -1;
         }
+    }
+
+    public static List<DeviceNotificationBean> handleDeviceNotifications(List<DeviceNotificationBean> deviceNotificationBeans) {
+        final List<DeviceNotificationBean> data = new ArrayList<>();
+        if (null != deviceNotificationBeans && deviceNotificationBeans.size() > 0) {
+            for (DeviceNotificationBean deviceNotificationBean : deviceNotificationBeans) {
+                String types = deviceNotificationBean.getTypes();
+                String contact = deviceNotificationBean.getContact();
+                String content = deviceNotificationBean.getContent();
+                if ("phone".equals(types) || "landLine".equals(types)) {
+                    if (TextUtils.isEmpty(contact)) {
+                        contact = ContextUtils.getContext().getString(R.string.unknown);
+                        deviceNotificationBean.setContact(contact);
+                    }
+                    if (!TextUtils.isEmpty(content)) {
+                        data.add(deviceNotificationBean);
+                    }
+                }
+            }
+        }
+        return data;
     }
 
 }
