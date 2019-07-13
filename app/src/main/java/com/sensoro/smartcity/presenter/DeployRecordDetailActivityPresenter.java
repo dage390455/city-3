@@ -10,6 +10,7 @@ import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeviceNotificationBean;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.bean.DeployControlSettingData;
 import com.sensoro.common.server.bean.DeployRecordInfo;
@@ -21,6 +22,7 @@ import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMapENActivity;
 import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
 import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.smartcity.widget.dialog.WarningContactDialogUtil;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
 
@@ -31,6 +33,7 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
     private Activity mActivity;
     private DeployRecordInfo mDeployRecordInfo;
     private DeployAnalyzerModel deployAnalyzerModel;
+    private List<DeviceNotificationBean> deviceNotificationBeans;
 
     @Override
     public void initData(Context context) {
@@ -114,20 +117,28 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
                 }
                 getView().updateDeployPic(list);
             }
-//            ArrayList<DeployRecordInfo.NotificationBean> contacts = new ArrayList<>();
-//            if (mDeployRecordInfo.getNotification() != null) {
-//                contacts.add(mDeployRecordInfo.getNotification());
-//            }
-            List<DeployRecordInfo.NotificationBean> notifications = mDeployRecordInfo.getNotifications();
-            if (notifications != null && notifications.size() > 0) {
-                getView().updateContactList(notifications);
+            //处理多联系人
+            deviceNotificationBeans = WidgetUtil.handleDeviceNotifications(mDeployRecordInfo.getNotifications());
+            if (deviceNotificationBeans.size() > 0) {
+                DeviceNotificationBean deviceNotificationBean = deviceNotificationBeans.get(0);
+                String contact = deviceNotificationBean.getContact();
+                String content = deviceNotificationBean.getContent();
+                getView().setFirstContact(contact + "(" + content + ")");
             } else {
-                ArrayList<DeployRecordInfo.NotificationBean> contacts = new ArrayList<>();
-                if (mDeployRecordInfo.getNotification() != null) {
-                    contacts.add(mDeployRecordInfo.getNotification());
+                ArrayList<DeviceNotificationBean> contacts = new ArrayList<>();
+                DeviceNotificationBean notification = mDeployRecordInfo.getNotification();
+                if (notification != null) {
+                    contacts.add(notification);
                 }
-                getView().updateContactList(contacts);
+                deviceNotificationBeans = WidgetUtil.handleDeviceNotifications(contacts);
+                if (deviceNotificationBeans.size() > 0) {
+                    DeviceNotificationBean deviceNotificationBean = deviceNotificationBeans.get(0);
+                    String contact = deviceNotificationBean.getContact();
+                    String content = deviceNotificationBean.getContent();
+                    getView().setFirstContact(contact + "(" + content + ")");
+                }
             }
+            getView().setTotalContact(deviceNotificationBeans.size());
             if (mDeployRecordInfo.getLonlat() != null) {
                 getView().setPositionStatus(1);
             } else {
@@ -260,6 +271,16 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
             }
             startActivity(ARouterConstants.ACTIVITY_DEPLOY_RECORD_CONFIG_COMMON_ELECT_ACTIVITY, bundle, mActivity);
             //旧界面
+        }
+    }
+
+    public void showContactDialog() {
+        if (deviceNotificationBeans != null && deviceNotificationBeans.size() > 0) {
+            WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mActivity);
+            dialogUtil.show(deviceNotificationBeans);
+        } else {
+            //暂时先不提示
+//            getView().toastShort(mActivity.getString(R.string.no_find_contact_phone_number));
         }
     }
 }

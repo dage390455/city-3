@@ -39,6 +39,7 @@ import com.sensoro.smartcity.activity.InspectionExceptionDetailActivity;
 import com.sensoro.smartcity.activity.ScanLoginResultActivity;
 import com.sensoro.smartcity.activity.SignalCheckActivity;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -813,7 +814,7 @@ public class DeployAnalyzerUtils {
                             AlarmInfo alarmInfo = data.getAlarms();
                             if (alarmInfo != null) {
                                 deployAnalyzerModel.deployContactModelList.clear();
-                                List<DeviceNotificationBean> notifications = alarmInfo.getNotifications();
+                                List<DeviceNotificationBean> notifications = WidgetUtil.handleDeviceNotifications(alarmInfo.getNotifications());
                                 if (notifications != null && notifications.size() > 0) {
                                     for (DeviceNotificationBean notification : notifications) {
                                         if (!TextUtils.isEmpty(notification.getContent())) {
@@ -828,8 +829,6 @@ public class DeployAnalyzerUtils {
                                 } else {
                                     DeviceNotificationBean notification = alarmInfo.getNotification();
                                     if (notification != null) {
-
-
                                         if (!TextUtils.isEmpty(notification.getContent())) {
                                             DeployContactModel deployContactModel = new DeployContactModel();
                                             deployContactModel.phone = notification.getContent();
@@ -882,9 +881,9 @@ public class DeployAnalyzerUtils {
                         }
                         AlarmInfo alarmInfo = data.getAlarms();
                         if (alarmInfo != null) {
-                            List<DeviceNotificationBean> notifications = alarmInfo.getNotifications();
                             deployAnalyzerModel.deployContactModelList.clear();
-                            if (notifications != null && notifications.size() > 0) {
+                            List<DeviceNotificationBean> notifications = WidgetUtil.handleDeviceNotifications(alarmInfo.getNotifications());
+                            if (notifications.size() > 0) {
                                 for (DeviceNotificationBean notification : notifications) {
                                     if (!TextUtils.isEmpty(notification.getContent())) {
                                         DeployContactModel deployContactModel = new DeployContactModel();
@@ -1130,8 +1129,8 @@ public class DeployAnalyzerUtils {
                         deployAnalyzerModel.updatedTime = data.getUpdatedTime();
                         AlarmInfo alarmInfo = data.getAlarms();
                         if (alarmInfo != null) {
-                            List<DeviceNotificationBean> notifications = alarmInfo.getNotifications();
                             deployAnalyzerModel.deployContactModelList.clear();
+                            List<DeviceNotificationBean> notifications = WidgetUtil.handleDeviceNotifications(alarmInfo.getNotifications());
                             if (notifications != null && notifications.size() > 0) {
                                 for (DeviceNotificationBean notification : notifications) {
                                     if (!TextUtils.isEmpty(notification.getContent())) {

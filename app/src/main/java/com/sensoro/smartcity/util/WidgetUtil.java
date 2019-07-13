@@ -1552,10 +1552,10 @@ public class WidgetUtil {
                 String types = deviceNotificationBean.getTypes();
                 String contact = deviceNotificationBean.getContact();
                 String content = deviceNotificationBean.getContent();
-                if ("phone".equals(types) || "landLine".equals(types)) {
+                //兼容旧数据
+                if (null == types || "phone".equals(types) || "landLine".equals(types)) {
                     if (TextUtils.isEmpty(contact)) {
-                        contact = ContextUtils.getContext().getString(R.string.unknown);
-                        deviceNotificationBean.setContact(contact);
+                        deviceNotificationBean.setContact(ContextUtils.getContext().getString(R.string.unknown));
                     }
                     if (!TextUtils.isEmpty(content)) {
                         data.add(deviceNotificationBean);
