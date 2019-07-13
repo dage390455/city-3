@@ -101,6 +101,9 @@ public class FireSecurityWarnFragment extends BaseFragment<IFireSecurityWarnView
     public void updateFireSecurityPageAdapterData(List<String> fragmentTitleList, List<Fragment> fragments) {
         mFireSecurityWarnPageAdapter.setFragmentData(fragmentTitleList, fragments);
         mFireSecurityWarnPageAdapter.notifyDataSetChanged();
+//        if (fragments != null && fragments.size() == 1) {
+        mContentViewPager.setCurrentItem(0);
+//        }
     }
 
     @Override

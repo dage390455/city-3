@@ -108,10 +108,12 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     protected void initData(Context activity) {
         initView();
         mPresenter.initData(activity);
-        if (PreferencesHelper.getInstance().getUserData().hasMonitorTaskList) {
-            //如果有布控权限，去除顶部的padding
+//        if (PreferencesHelper.getInstance().getUserData().hasMonitorTaskList) {
+//            //如果有布控权限，去除顶部的padding
             fgMainWarnTitleRoot.setPadding(0, 0, 0, 0);
-        }
+//        } else {
+//            fgMainWarnTitleRoot.setPadding(0, AppUtils.dp2px(mRootFragment.getActivity(), 20), 0, 0);
+//        }
     }
 
 
