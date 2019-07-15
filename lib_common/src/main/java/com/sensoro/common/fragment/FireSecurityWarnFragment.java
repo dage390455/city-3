@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.viewpager.widget.ViewPager;
 
 import com.sensoro.common.R;
 import com.sensoro.common.R2;
@@ -18,10 +17,10 @@ import com.sensoro.common.base.BaseFragment;
 import com.sensoro.common.imainview.IFireSecurityWarnView;
 import com.sensoro.common.presenter.FireSecurityWarnPresenter;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.widgets.HomeViewPager;
 import com.sensoro.common.widgets.SensoroTextWidthColorBar;
 import com.shizhefei.view.indicator.FixedIndicatorView;
 import com.shizhefei.view.indicator.IndicatorViewPager;
-import com.shizhefei.view.indicator.slidebar.TextWidthColorBar;
 import com.shizhefei.view.indicator.transition.OnTransitionTextListener;
 
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ import butterknife.BindView;
 public class FireSecurityWarnFragment extends BaseFragment<IFireSecurityWarnView, FireSecurityWarnPresenter> implements IFireSecurityWarnView {
 
     @BindView(R2.id.content_viewPager)
-    ViewPager mContentViewPager;
+    HomeViewPager mContentViewPager;
     @BindView(R2.id.indicatorView)
     FixedIndicatorView mIndicatorView;
     @BindView(R2.id.line_top)
@@ -60,6 +59,22 @@ public class FireSecurityWarnFragment extends BaseFragment<IFireSecurityWarnView
                 14F,
                 ContextCompat.getColor(getContext(), R.color.c_252525),
                 ContextCompat.getColor(getContext(), R.color.c_a6a6a6)));
+//        mContentViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                AppUtils.dismissInputMethodManager(mRootFragment.getActivity());
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//
+//            }
+//        });
     }
 
     @Override
@@ -86,6 +101,12 @@ public class FireSecurityWarnFragment extends BaseFragment<IFireSecurityWarnView
     public void updateFireSecurityPageAdapterData(List<String> fragmentTitleList, List<Fragment> fragments) {
         mFireSecurityWarnPageAdapter.setFragmentData(fragmentTitleList, fragments);
         mFireSecurityWarnPageAdapter.notifyDataSetChanged();
+        mContentViewPager.setCurrentItem(0);
+        if (fragments != null && fragments.size() == 1) {
+            mContentViewPager.setScroll(false);
+        } else {
+            mContentViewPager.setScroll(true);
+        }
     }
 
     @Override

@@ -219,7 +219,7 @@
     <string name="abnormal_reporting_success">异常上报成功</string>
     <string name="abnormal_reporting_failure">异常上报失败</string>
     <string name="please_wait">请稍后</string>
-    <string name="disconnected_from_network">似乎断开了网络连接</string>
+    <string name="disconnected_from_network">似乎已断开与互联网的连接</string>
     <string name="this_feature_is_not_yet_open">此功能暂未开放</string>
     <string name="account_has_been_disabled">账户已停用</string>
     <string name="not_set">未设定</string>
@@ -266,7 +266,7 @@
     <string name="login">登录</string>
     <string name="finish">保存</string>
 
-    <string name="deploy_photo">部署图片</string>
+    <string name="deploy_photo">部署照片</string>
     <string name="input_name">输入名称</string>
     <string name="contract_list">合同管理</string>
     <string name="sensor_detail_sn">设备编号</string>
@@ -517,6 +517,7 @@
     <string name="deploy_device_detail_deploy_photo">部署照片</string>
     <string name="deploy_device_detail_deploy_location">部署位置</string>
     <string name="deploy_device_detail_upload">上传</string>
+    <string name="deploy_device_detail_deploy_title">设备部署</string>
     //部署记录详情
     <string name="deploy_record_name_address">名称/地址</string>
     //巡检
@@ -1171,6 +1172,13 @@
     <string name="device_detail_config_trans">安装互感器型号</string>
     <string name="initial_configuration_details">初始配置详情</string>
     <string name="please_enter_the_configuration_parameters_correctly">请正确输入配置参数</string>
+    <string name="main_page_camera">摄像头</string>
+    <string name="mobile_network">您现在正在使用移动网络，请注意您的流量使用情况</string>
+    <string name="monitor_point_detail_alarm">报警</string>
+    <string name="monitor_point_detail_operat">操作中</string>
+    <string name="seven_day">7天内</string>
+    <string name="three_day">3天内</string>
+    <string name="one_day">1天内</string>
 
 
 </resources>

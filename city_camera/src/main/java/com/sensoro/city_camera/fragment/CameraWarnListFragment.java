@@ -46,6 +46,7 @@ import com.sensoro.common.base.BaseFragment;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.constant.ARouterConstants;
 import com.sensoro.common.constant.Constants;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.LogUtils;
@@ -112,9 +113,9 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     private ProgressUtils mProgressUtils;
     private Animation returnTopAnimation;
     private SearchHistoryAdapter mSearchHistoryAdapter;
-    //删除历史记录
+    //删除历史记录确认
     private TipOperationDialogUtils mHistoryClearDialog;
-
+    //抓拍时间 处理状态 筛选PopuWindow
     private FilterPopUtils mCaptureTimeFilterPopUtils;
     private FilterPopUtils mProcessStatusFilterPopUtils;
 
@@ -149,14 +150,13 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     // 当按了搜索之后关闭软键盘
-                    String text = edFilterContent.getText().toString();
-                    mPresenter.setFilterText(text);
-                    mPresenter.save(text);
-                    edFilterContent.clearFocus();
-                    mPresenter.requestSearchData(Constants.DIRECTION_DOWN);
-                    AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), edFilterContent);
-                    setSearchHistoryVisible(false);
-
+                    String text = edFilterContent.getText().toString().trim();
+                    if (!TextUtils.isEmpty(text)) {
+                        mPresenter.setFilterText(text);
+                        edFilterContent.clearFocus();
+                        AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), edFilterContent);
+                        setSearchHistoryVisible(false);
+                    }
                     return true;
                 }
                 return false;
@@ -199,8 +199,8 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
                     refreshLayout.setVisibility(View.VISIBLE);
                     tvFilterCancel.setVisibility(View.VISIBLE);
                 }
-                //选择类型的pop点击事件
-                if (position == 4) {//自定义时间
+                //自定义时间
+                if (position == 4) {
                     mPresenter.doCalendar(fgMainWarnTitleRoot);
                 } else {
                     mPresenter.setFilterCapturetime(position);
@@ -221,7 +221,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
 
             }
         });
-        //处理状态筛选
+        //处理状态筛选-选择回调处理
         mProcessStatusFilterPopUtils.setSelectDeviceTypeItemClickListener(new FilterPopUtils.SelectFilterTypeItemClickListener() {
             @Override
             public void onSelectFilterTypeItemClick(View view, int position) {
@@ -309,10 +309,10 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     }
 
     private void initRcSearchHistory() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mRootFragment.getActivity()) {
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mRootFragment.getActivity(), true) {
             @Override
             public boolean canScrollVertically() {
-                return false;
+                return true;
             }
 
             @Override
@@ -320,9 +320,9 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
                 return false;
             }
         };
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
         rvSearchHistory.setLayoutManager(layoutManager);
-        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mRootFragment.getActivity(), 6)));
+        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mRootFragment.getActivity(), 4)));
         mSearchHistoryAdapter = new SearchHistoryAdapter(mRootFragment.getActivity(), new
                 RecycleViewItemClickListener() {
                     @Override
@@ -333,6 +333,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
                             edFilterContent.setSelection(edFilterContent.getText().toString().length());
                         }
                         ivFilterContentClear.setVisibility(View.VISIBLE);
+                        mPresenter.setFilterText(text);//搜索关键字
                         edFilterContent.clearFocus();
                         AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), edFilterContent);
                         setSearchHistoryVisible(false);
@@ -372,9 +373,12 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
 
     @Override
     public void onFragmentStop() {
-
+        dismissInput();
     }
 
+    /**
+     * 取消搜索数据
+     */
     @Override
     public void cancelSearchData() {
         //取消搜索
@@ -389,7 +393,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
 
     @Override
     public void updateCameraWarnsListAdapter(List<SecurityAlarmInfo> securityAlarmInfoList) {
-        if (securityAlarmInfoList.size() > 0) {
+        if (null != securityAlarmInfoList) {
             mRcContentAdapter.setData(securityAlarmInfoList);
             mRcContentAdapter.notifyDataSetChanged();
         }
@@ -405,6 +409,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     @Override
     public void SmoothToTopList() {
         rvCameraWarnsContent.smoothScrollToPosition(0);
+        //refreshLayout.resetNoMoreData();
         mReturnTopImageView.setVisibility(View.GONE);
 
     }
@@ -426,7 +431,6 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             tvFilterCancel.setVisibility(View.VISIBLE);
         } else if (TextUtils.isEmpty(edFilterContent.getText().toString())) {
             tvFilterCancel.setVisibility(View.GONE);
-//            setEditTextState(true);
         }
 
     }
@@ -521,6 +525,11 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             securityWarnConfirmDialog.setArguments(bundle);
             securityWarnConfirmDialog.show(getChildFragmentManager());
         }
+    }
+
+    @Override
+    public void dismissInput() {
+        AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), edFilterContent, false);
     }
 
 

@@ -58,6 +58,12 @@ public class SecurityWarnConfirmDialog extends BaseBottomDialog {
     public static final String EXTRA_KEY_SECURITY_TYPE = "security_type";
     private String id;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        disableSlideDismiss();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -80,7 +86,9 @@ public class SecurityWarnConfirmDialog extends BaseBottomDialog {
             String time = bundle.getString(EXTRA_KEY_SECURITY_TIME);
             int type = bundle.getInt(EXTRA_KEY_SECURITY_TYPE);
 
-            mSecurityWarnTitleTv.setText(title);
+            if(getContext() != null){
+                mSecurityWarnTitleTv.setText(getContext().getString(R.string.start_include_backspace_text, title));
+            }
             mSecurityWarnTimeTv.setText(DateUtil.getStrTimeToday(getContext(), Long.parseLong(time), 0));
             switch (type) {
                 case SecurityConstants.SECURITY_TYPE_FOCUS:

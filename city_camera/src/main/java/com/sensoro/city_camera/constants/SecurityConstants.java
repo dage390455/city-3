@@ -33,5 +33,20 @@ public interface SecurityConstants {
      * 相机在线
      */
     int SECURITY_DEVICE_ONLINE = 1;
-
+    /**
+     * jpg
+     */
+    String IMAGE_SUFFIX_JPG = ".jpg";
+    /**
+     * jpeg
+     */
+    String IMAGE_SUFFIX_JPEG = ".jpeg";
+    /**
+     * mp4
+     */
+    String VIDEO_SUFFIX_MP4 = ".mp4";
+    /**
+     * 转码中
+     */
+    int VIDEO_STATUS_TRANSCODING = 0;
 }

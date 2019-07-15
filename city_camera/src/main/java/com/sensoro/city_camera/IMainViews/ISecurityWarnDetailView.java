@@ -6,6 +6,7 @@ import com.sensoro.common.iwidget.IToast;
 import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
 import com.sensoro.common.server.security.bean.SecurityAlarmEventInfo;
 import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
+import com.sensoro.common.server.security.bean.SecurityCameraInfo;
 
 import java.util.List;
 
@@ -47,4 +48,15 @@ public interface ISecurityWarnDetailView extends IActivityIntent, IProgressDialo
      * @param securityAlarmInfo
      */
     void updateSecurityConfirmResult(SecurityAlarmInfo securityAlarmInfo);
+
+    /**
+     * 是否可以查看预警录像
+     * @param isVideoRecordEnable
+     */
+    void updateVideoRecordEnable(boolean isVideoRecordEnable);
+
+    /**
+     * 刷新相机详情弹框数据
+     */
+    void onRefreshCameraDetailsData(SecurityCameraInfo securityCameraInfo);
 }

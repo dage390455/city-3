@@ -14,7 +14,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -75,16 +74,15 @@ public abstract class CityObserver<T> implements Observer<T> {
             String responseMsg = httpException.response().toString();
             try {
                 String errorBody = httpException.response().errorBody().string();
-                JSONObject jsonObject;
+                JSONObject jsonObject = new JSONObject(errorBody);
+                String log = jsonObject.toString();
+                try {
+                    LogUtils.loge(this, "onError = " + log);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 if (AppUtils.isChineseLanguage()) {
                     try {
-                        jsonObject = new JSONObject(errorBody);
-                        String log = jsonObject.toString();
-                        try {
-                            LogUtils.loge(this, "onError = " + log);
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
-                        }
                         int errcode = jsonObject.getInt("errcode");
                         if (errcode == 4000002) {
                             EventData eventData = new EventData();
@@ -101,25 +99,30 @@ public abstract class CityObserver<T> implements Observer<T> {
                     } catch (JSONException e1) {
                         try {
                             jsonObject = new JSONObject(errorBody);
-                            String log = jsonObject.toString();
                             int errcode = jsonObject.getInt("errcode");
                             String errmsg = jsonObject.getString("errmsg");
-                            try {
-                                LogUtils.loge(this, "onError = " + log + ",errcode = " + errcode);
-                            } catch (Throwable throwable) {
-                                throwable.printStackTrace();
-                            }
                             if (viewAttachedAlive()) {
-                                onErrorMsg(code, errmsg);
+                                onErrorMsg(errcode, errmsg);
                             }
                         } catch (JSONException e2) {
-                            if (AppUtils.isChineseLanguage()) {
+                            try {
+                                jsonObject = new JSONObject(errorBody);
+                                int errcode = jsonObject.getInt("code");
+                                if (errcode == 4000002) {
+                                    EventData eventData = new EventData();
+                                    eventData.code = EVENT_DATA_SESSION_ID_OVERTIME;
+                                    EventBus.getDefault().post(eventData);
+                                    String errinfo = jsonObject.getString("message");
+                                    SensoroToast.getInstance().makeText(errinfo, Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                String errmsg = jsonObject.getString("message");
+                                if (viewAttachedAlive()) {
+                                    onErrorMsg(errcode, errmsg);
+                                }
+                            } catch (JSONException e3) {
                                 if (viewAttachedAlive()) {
                                     onErrorMsg(code, "服务器json数据不标准：" + errorBody);
-                                }
-                            } else {
-                                if (viewAttachedAlive()) {
-                                    onErrorMsg(code, "Server json data is not standard:" + errorBody);
                                 }
                             }
 
@@ -127,13 +130,6 @@ public abstract class CityObserver<T> implements Observer<T> {
                     }
                 } else {
                     try {
-                        jsonObject = new JSONObject(errorBody);
-                        String log = jsonObject.toString();
-                        try {
-                            LogUtils.loge(this, "onError = " + log);
-                        } catch (Throwable throwable) {
-                            throwable.printStackTrace();
-                        }
                         int errcode = jsonObject.getInt("errcode");
                         if (errcode == 4000002) {
                             EventData eventData = new EventData();
@@ -149,33 +145,37 @@ public abstract class CityObserver<T> implements Observer<T> {
                         }
                     } catch (JSONException e1) {
                         try {
-                            jsonObject = new JSONObject(errorBody);
-                            String log = jsonObject.toString();
                             int errcode = jsonObject.getInt("errcode");
                             String errinfo = jsonObject.getString("errinfo");
-                            try {
-                                LogUtils.loge(this, "onError = " + log + ",errcode = " + errcode);
-                            } catch (Throwable throwable) {
-                                throwable.printStackTrace();
-                            }
                             if (viewAttachedAlive()) {
-                                onErrorMsg(code, errinfo);
+                                onErrorMsg(errcode, errinfo);
                             }
                         } catch (JSONException e2) {
-                            if (AppUtils.isChineseLanguage()) {
-                                if (viewAttachedAlive()) {
-                                    onErrorMsg(code, "服务器json数据不标准：" + errorBody);
+                            try {
+                                jsonObject = new JSONObject(errorBody);
+                                int errcode = jsonObject.getInt("code");
+                                if (errcode == 4000002) {
+                                    EventData eventData = new EventData();
+                                    eventData.code = EVENT_DATA_SESSION_ID_OVERTIME;
+                                    EventBus.getDefault().post(eventData);
+                                    String errinfo = jsonObject.getString("message");
+                                    SensoroToast.getInstance().makeText(errinfo, Toast.LENGTH_SHORT).show();
+                                    return;
                                 }
-                            } else {
+                                String errmsg = jsonObject.getString("message");
                                 if (viewAttachedAlive()) {
-                                    onErrorMsg(code, "Server json data is not standard:" + errorBody);
+                                    onErrorMsg(errcode, errmsg);
+                                }
+                            } catch (JSONException e3) {
+                                if (viewAttachedAlive()) {
+                                    onErrorMsg(code, "Server json data is not standard：" + errorBody);
                                 }
                             }
                         }
                     }
                 }
 
-            } catch (IOException er) {
+            } catch (Exception er) {
                 if (AppUtils.isChineseLanguage()) {
                     if (viewAttachedAlive()) {
                         onErrorMsg(code, "数据格式不准确： " + responseMsg);
@@ -200,6 +200,7 @@ public abstract class CityObserver<T> implements Observer<T> {
 
         }
         RxApiManager.getInstance().remove(this);
+
     }
 
     @Override

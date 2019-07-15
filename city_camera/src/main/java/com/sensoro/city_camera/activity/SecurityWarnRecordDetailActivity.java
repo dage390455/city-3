@@ -2,10 +2,12 @@ package com.sensoro.city_camera.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +29,7 @@ import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
+import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
@@ -79,6 +82,11 @@ public class SecurityWarnRecordDetailActivity
     }
 
     private void initView() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT;
+            getWindow().setAttributes(lp);
+        }
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 
         initViewHeight();
@@ -153,7 +161,7 @@ public class SecurityWarnRecordDetailActivity
                 .setLockLand(false)
                 .setAutoFullWithSize(false)
                 .setShowFullAnimation(false)
-                .setNeedLockFull(true)
+                .setNeedLockFull(false)
 //                .setUrl(url)
                 .setCacheWithPlay(false)
 //                .setVideoTitle("测试视频")
@@ -164,6 +172,7 @@ public class SecurityWarnRecordDetailActivity
                         //开始播放了才能旋转和全屏
                         orientationUtils.setEnable(true);
                         isPlay = true;
+                        isPause = false;
                     }
 
                     @Override
@@ -182,23 +191,6 @@ public class SecurityWarnRecordDetailActivity
                 }
             }
         }).build(getCurPlay());
-        getCurPlay().getFullscreenButton().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //直接横屏
-                orientationUtils.resolveByClick();
-
-                //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
-                getCurPlay().startWindowFullscreen(mActivity, true, true);
-            }
-        });
-//        getCurPlay().getBackButton().setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                onBackPressed();
-//            }
-//        });
-//        getCurPlay().startPlayLogic();
     }
 
     @Override
@@ -238,8 +230,6 @@ public class SecurityWarnRecordDetailActivity
             @Override
             public void onClick(View v) {
                 mPresenter.doRetry();
-
-
             }
         });
     }
@@ -276,8 +266,8 @@ public class SecurityWarnRecordDetailActivity
     public void backFromWindowFull() {
         if (orientationUtils != null) {
             orientationUtils.backToProtVideo();
+            orientationUtils.setEnable(false);
         }
-        orientationUtils.setEnable(false);
         if (GSYVideoManager.backFromWindowFull(this)) {
             return;
         }
@@ -296,7 +286,7 @@ public class SecurityWarnRecordDetailActivity
     @Override
     public void capture(File file) {
         gsyPlayerAcCameraPersonDetail.doCapture(file, (success, file1) -> {
-            if(success){
+            if (success) {
                 toastShort(getString(R.string.capture_security_warn_record_success));
                 mPresenter.onCaptureFinished(file);
             } else {
@@ -351,6 +341,7 @@ public class SecurityWarnRecordDetailActivity
         super.onConfigurationChanged(newConfig);
         //如果旋转了就全屏
         if (isPlay && !isPause && orientationUtils.isEnable()) {
+            Debuger.printfError("hahahahahahaahah");
             getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
         }
 
@@ -460,7 +451,6 @@ public class SecurityWarnRecordDetailActivity
     @Override
     public void updateDownLoadProgress(int progress, String totalBytesRead, String fileSize) {
         if (mDownloadUtils.isShowing()) {
-            Log.d("updateDownLoadProgress", "updateDownLoadProgress: "+progress);
             mDownloadUtils.updateDownLoadProgress(progress, totalBytesRead, fileSize);
         }
     }

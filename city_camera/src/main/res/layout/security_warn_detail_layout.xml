@@ -19,24 +19,13 @@
             android:layout_height="match_parent"
             android:paddingEnd="20dp">
 
-            <RelativeLayout
+            <include
                 android:id="@+id/image_rl"
+                layout="@layout/include_camerawarn_mult_photo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp">
-
-                <ViewStub
-                    android:id="@+id/single_image_vs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout="@layout/include_camerawarn_single_photo" />
-
-                <ViewStub
-                    android:id="@+id/multi_image_vs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout="@layout/include_camerawarn_mult_photo" />
-            </RelativeLayout>
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp" />
 
             <TextView
                 android:id="@+id/confirm_result_tv"
@@ -58,7 +47,7 @@
                     android:id="@+id/security_warn_type_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                    android:layout_marginTop="5dp"
                     android:textColor="@color/white"
                     android:textSize="10sp" />
 
@@ -68,8 +57,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="4dp"
-                    android:layout_toRightOf="@id/security_warn_type_tv"
-                    android:singleLine="true"
+                    android:text="     案例看电视剧放辣椒\n水电费"
                     android:textColor="@color/c_000000"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -104,7 +92,7 @@
                 android:layout_marginTop="20dp">
 
                 <ImageView
-                    android:id="@+id/icon"
+                    android:id="@+id/security_record_icon"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/icon_security_video" />
@@ -114,12 +102,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
-                    android:layout_toRightOf="@id/icon"
+                    android:layout_toRightOf="@id/security_record_icon"
+                    android:clickable="false"
                     android:drawableEnd="@drawable/arrows_right"
                     android:gravity="center_vertical"
                     android:singleLine="true"
+
                     android:text="@string/security_warn_video_title"
-                    android:textColor="@color/c_252525"
+                    android:textColor="@color/security_warn_record_color"
                     android:textSize="16sp" />
 
             </RelativeLayout>

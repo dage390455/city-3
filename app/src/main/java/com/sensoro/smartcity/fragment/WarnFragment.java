@@ -108,10 +108,12 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     protected void initData(Context activity) {
         initView();
         mPresenter.initData(activity);
-        if (PreferencesHelper.getInstance().getUserData().hasMonitorTaskList) {
-            //如果有布控权限，去除顶部的padding
+//        if (PreferencesHelper.getInstance().getUserData().hasMonitorTaskList) {
+//            //如果有布控权限，去除顶部的padding
             fgMainWarnTitleRoot.setPadding(0, 0, 0, 0);
-        }
+//        } else {
+//            fgMainWarnTitleRoot.setPadding(0, AppUtils.dp2px(mRootFragment.getActivity(), 20), 0, 0);
+//        }
     }
 
 
@@ -205,11 +207,16 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         }
     }
 
+    @Override
+    public void dismissInput() {
+        AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), fgMainWarnEtSearch, false);
+    }
+
     private void initRcSearchHistory() {
         SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mRootFragment.getActivity()) {
             @Override
             public boolean canScrollVertically() {
-                return false;
+                return true;
             }
 
             @Override
@@ -217,7 +224,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
                 return false;
             }
         };
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
         rvSearchHistory.setLayoutManager(layoutManager);
 //        int spacingInPixels = AppUtils.dp2px(mRootFragment.getActivity(),12);
         rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mRootFragment.getActivity(), 6)));
@@ -307,12 +314,11 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
 
     @Override
     public void onFragmentStart() {
-
     }
 
     @Override
     public void onFragmentStop() {
-
+        dismissInput();
     }
 
     @Override

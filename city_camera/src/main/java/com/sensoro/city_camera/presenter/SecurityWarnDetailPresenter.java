@@ -11,7 +11,6 @@ import com.sensoro.city_camera.R;
 import com.sensoro.city_camera.activity.PhotoPreviewActivity;
 import com.sensoro.city_camera.activity.SecurityWarnRecordDetailActivity;
 import com.sensoro.city_camera.constants.SecurityConstants;
-import com.sensoro.city_camera.dialog.SecurityCameraDetailsDialog;
 import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
 import com.sensoro.city_camera.util.MapUtil;
 import com.sensoro.common.base.BasePresenter;
@@ -22,9 +21,11 @@ import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
 import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
 import com.sensoro.common.server.security.bean.SecurityCameraInfo;
 import com.sensoro.common.server.security.bean.SecurityContactsInfo;
+import com.sensoro.common.server.security.bean.SecurityRecord;
 import com.sensoro.common.server.security.response.HandleAlarmRsp;
 import com.sensoro.common.server.security.response.SecurityAlarmDetailRsp;
 import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
+import com.sensoro.common.server.security.response.SecurityWarnRecordResp;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
 
@@ -38,7 +39,7 @@ import io.reactivex.schedulers.Schedulers;
  * @author : bin.tian
  * date   : 2019-06-24
  */
-public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDetailView> implements SecurityWarnConfirmDialog.SecurityConfirmCallback, SecurityCameraDetailsDialog.SecurityCameraDetailsCallback {
+public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDetailView> implements SecurityWarnConfirmDialog.SecurityConfirmCallback {
     private Activity mActivity;
     private String mSecurityInfoId;
     private SecurityAlarmDetailInfo mSecurityAlarmDetailInfo;
@@ -52,6 +53,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 
         requestSecurityWarnDetailData(mSecurityInfoId);
         requestSecurityWarnTimeLineData(mSecurityInfoId);
+        requestVideo(mSecurityInfoId);
     }
 
     private void updatePreData() {
@@ -116,7 +118,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
     /**
      * 联系：相机联系人电话
      */
-    private void doCameraContact() {
+    public void doCameraContact() {
         if (null == mSecurityAlarmDetailInfo || null == mSecurityAlarmDetailInfo.getCamera()
                 || null == mSecurityAlarmDetailInfo.getCamera().getContact()) {
             getView().toastShort(mActivity.getString(R.string.camera_contact_no_exist));
@@ -152,6 +154,7 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 
     public void doNavigation() {
         if (mSecurityAlarmDetailInfo == null) {
+            getView().toastShort(mActivity.getString(R.string.security_camera_info_error));
             return;
         }
         SecurityCameraInfo camera = mSecurityAlarmDetailInfo.getCamera();
@@ -165,6 +168,14 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
                 }
                 if (destPosition != null) {
                     MapUtil.locateAndNavigation(mActivity, destPosition);
+                } else {
+                    if (isAttachedView()) {
+                        getView().toastShort(mActivity.getString(R.string.location_not_obtained));
+                    }
+                }
+            } else {
+                if (isAttachedView()) {
+                    getView().toastShort(mActivity.getString(R.string.location_not_obtained));
                 }
             }
         } else {
@@ -180,14 +191,6 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
         }
     }
 
-    /**
-     * 显示摄像机详情
-     */
-    public void showCameraDetail() {
-        if (isAttachedView()) {
-            getView().showCameraDetailsDialog(mSecurityAlarmDetailInfo);
-        }
-    }
 
     /**
      * 显示布控信息详情
@@ -225,7 +228,9 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
-
+                        if (isAttachedView() && mActivity != null) {
+                            getView().toastShort(errorMsg);
+                        }
                     }
                 });
     }
@@ -244,12 +249,19 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
     }
 
 
-    @Override
     public void onNavi() {
         doNavigation();
     }
 
-    @Override
+    public void onRefreshCameraDetailsData() {
+        if (null == mSecurityAlarmDetailInfo) {
+            getView().toastShort(mActivity.getString(R.string.camera_contact_no_exist));
+            return;
+        }
+        getView().onRefreshCameraDetailsData(mSecurityAlarmDetailInfo.getCamera());
+    }
+
+
     public void showContactsDetails() {
         if (null == mSecurityAlarmDetailInfo || null == mSecurityAlarmDetailInfo.getCamera()
                 || null == mSecurityAlarmDetailInfo.getCamera().getContact()) {
@@ -284,4 +296,43 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
             }
         }
     }
+
+    private void requestVideo(String id) {
+        RetrofitServiceHelper
+                .getInstance()
+                .getSecurityWarnRecord(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CityObserver<SecurityWarnRecordResp>(null) {
+                    @Override
+                    public void onCompleted(SecurityWarnRecordResp securityWarnRecordResp) {
+                        List<SecurityRecord> recordList = securityWarnRecordResp.data.list;
+                        if (recordList != null && !recordList.isEmpty()) {
+                            SecurityRecord securityRecord = recordList.get(0);
+                            if (securityRecord != null) {
+                                if (isAttachedView()) {
+                                    getView().updateVideoRecordEnable(securityRecord.status != SecurityConstants.VIDEO_STATUS_TRANSCODING);
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                    }
+                });
+
+
+    }
+
+
+    /**
+     * 显示摄像机详情
+     */
+    public void showCameraDetail() {
+        if (isAttachedView()) {
+            getView().showCameraDetailsDialog(mSecurityAlarmDetailInfo);
+        }
+    }
+
 }
