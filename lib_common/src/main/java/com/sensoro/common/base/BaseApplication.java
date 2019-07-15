@@ -41,7 +41,7 @@ import me.jessyan.autosize.onAdaptListener;
  */
 public class BaseApplication extends MultiDexApplication {
 
-    public static final String ROOT_PACKAGE = "com.guiying.module";
+    public static final String ROOT_PACKAGE = "com.sensoro.common";
 
     private static BaseApplication sInstance;
 

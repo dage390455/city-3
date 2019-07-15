@@ -10,6 +10,8 @@ import com.sensoro.common.server.response.BaseStationChartDetailRsp;
 import com.sensoro.common.server.response.BaseStationDetailRsp;
 import com.sensoro.common.server.response.BaseStationListRsp;
 import com.sensoro.common.server.response.CameraFilterRsp;
+import com.sensoro.common.server.security.response.SecurityAlarmDetailRsp;
+import com.sensoro.common.server.security.response.SecurityAlarmListRsp;
 import com.sensoro.common.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.common.server.response.ContractAddRsp;
 import com.sensoro.common.server.response.ContractInfoRsp;
@@ -54,6 +56,9 @@ import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.server.response.UpdateRsp;
 import com.sensoro.common.server.response.UserAccountControlRsp;
 import com.sensoro.common.server.response.UserAccountRsp;
+import com.sensoro.common.server.security.response.HandleAlarmRsp;
+import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
+import com.sensoro.common.server.security.response.SecurityWarnRecordResp;
 
 import java.util.Map;
 
@@ -86,6 +91,8 @@ public interface RetrofitService {
     String SCOPE_MASTER = "https://city-api.sensoro.com/";
     //开发环境
     String SCOPE_DEVELOPER = "https://city-dev-api.sensoro.com/";
+//    String SCOPE_DEVELOPER = "https://city-antelope-proxy-dev-api.sensoro.com";
+//    String SCOPE_DEVELOPER = "https://city-dev-api.sensoro.com/camera-center";
 
     String LOGIN = "sessions";
     String LOGOUT = "sessions/current";
@@ -461,5 +468,24 @@ public interface RetrofitService {
 
     @PUT("nameplate/bind/device")
     Observable<ResponseResult<Integer>> doBindDevice(@Body RequestBody requestBody);
+
+
+    @PUT("camera-center/alarms/{id}/handle")
+    Observable<HandleAlarmRsp> handleSecurityAlarm(@Path("id") String id, @Body RequestBody requestBody);
+
+    @GET("camera-center/alarms/{id}/events")
+    Observable<SecurityAlarmTimelineRsp> getSecurityAlarmTimeLine(@Path("id") String id);
+
+    @GET("camera-center/alarms")
+    Observable<SecurityAlarmListRsp> getSecurityAlarmList( @QueryMap Map<String, Object> param);
+    @GET("camera-center/alarms/{id}")
+    Observable<SecurityAlarmDetailRsp> getSecurityAlarmDetails(@Path("id") String id);
+    @POST("token/devices_history")
+    Observable<SecurityAlarmDetailRsp> getSecurityDeviceVideoHistort(@Path("id") String id, @Body RequestBody requestBody);
+
+    @GET("camera-center/alarms/{id}/videos")
+    Observable<SecurityWarnRecordResp> getSecurityWarnRecord(@Path("id") String id);
+
+
 }
 

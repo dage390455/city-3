@@ -4,6 +4,8 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import com.sensoro.common.model.DeviceNotificationBean;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -404,7 +406,7 @@ public class DeviceInfo implements Serializable, Comparable {
                     if (battery != null) {
                         this.alarms.setBattery(battery);
                     }
-                    AlarmInfo.NotificationInfo notification = alarms.getNotification();
+                    DeviceNotificationBean notification = alarms.getNotification();
                     if (notification != null) {
                         this.alarms.setNotification(notification);
                     }
@@ -460,27 +462,6 @@ public class DeviceInfo implements Serializable, Comparable {
             long updatedTime = deviceInfo.getUpdatedTime();
             if (updatedTime != 0) {
                 this.updatedTime = updatedTime;
-            }
-            //
-            String blePassword = deviceInfo.getBlePassword();
-            if (!TextUtils.isEmpty(blePassword)) {
-                this.blePassword = blePassword;
-            }
-            String firmwareVersion = deviceInfo.getFirmwareVersion();
-            if (!TextUtils.isEmpty(firmwareVersion)) {
-                this.firmwareVersion = firmwareVersion;
-            }
-            String band = deviceInfo.getBand();
-            if (!TextUtils.isEmpty(band)) {
-                this.band = band;
-            }
-            String hardwareVersion = deviceInfo.getHardwareVersion();
-            if (!TextUtils.isEmpty(hardwareVersion)) {
-                this.hardwareVersion = hardwareVersion;
-            }
-            Integer demoMode = deviceInfo.getDemoMode();
-            if (demoMode != null) {
-                this.demoMode = demoMode;
             }
         }
         return this;

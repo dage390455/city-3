@@ -140,7 +140,10 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
-        initData(mRootFragment.getActivity());
+
+        if(mRootFragment != null){
+            initData(mRootFragment.getActivity());
+        }
 
     }
 

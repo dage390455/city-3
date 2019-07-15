@@ -1,13 +1,20 @@
 package com.sensoro.common.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.StatFs;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +25,8 @@ import java.io.OutputStream;
  */
 
 public class FileUtil {
+    private static final String TAG = "FileUtil";
+
     public static File getSaveFile(Context context) {
         File file = new File(context.getFilesDir(), "pic.jpg");
         return file;
@@ -360,6 +369,88 @@ public class FileUtil {
             return context.getExternalCacheDir();
         } else {
             return context.getCacheDir();
+        }
+    }
+
+    /**
+     * 复制文件
+     *
+     * @param filename 文件名
+     * @param bytes    数据
+     */
+    public static void copy(String filename, byte[] bytes) {
+        try {
+            //如果手机已插入sd卡,且app具有读写sd卡的权限
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                FileOutputStream output = null;
+                output = new FileOutputStream(filename);
+                output.write(bytes);
+                Log.i(TAG, "copy success，" + filename);
+                output.close();
+            } else {
+                Log.i(TAG, "copy fail, " + filename);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean saveImageToGallery(@NonNull File file, Bitmap bmp, @NonNull Activity activity) {
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            //通知系统相册刷新
+            activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                    Uri.fromFile(new File(file.getPath()))));
+            return true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fos != null) {
+                    fos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * 复制文件
+     *
+     * @param source 输入文件
+     * @param target 输出文件
+     */
+    public static void copy(File source, File target) {
+        FileInputStream fileInputStream = null;
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileInputStream = new FileInputStream(source);
+            fileOutputStream = new FileOutputStream(target);
+            byte[] buffer = new byte[1024];
+            while (fileInputStream.read(buffer) > 0) {
+                fileOutputStream.write(buffer);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fileInputStream != null) {
+                    fileInputStream.close();
+                }
+                if (fileOutputStream != null) {
+                    fileOutputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

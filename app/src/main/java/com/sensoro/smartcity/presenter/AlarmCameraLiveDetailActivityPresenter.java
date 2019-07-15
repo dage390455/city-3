@@ -9,9 +9,12 @@ import android.net.ConnectivityManager;
 import android.text.TextUtils;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.EventData;
@@ -275,11 +278,13 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
     }
 
     private void getLastCoverImage(String lastCover) {
-        Glide.with(mActivity).load(lastCover).asBitmap().into(new SimpleTarget<Bitmap>() {
+        Glide.with(mActivity).asBitmap().load(lastCover).into(new SimpleTarget<Bitmap>() {
             @Override
-            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                BitmapDrawable bitmapDrawable = new BitmapDrawable(resource);
-                getView().setImage(bitmapDrawable);
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                if (isAttachedView()) {
+                    BitmapDrawable bitmapDrawable = new BitmapDrawable(resource);
+                    getView().setImage(bitmapDrawable);
+                }
             }
         });
     }

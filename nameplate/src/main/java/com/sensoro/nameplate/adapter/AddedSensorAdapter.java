@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.R2;
@@ -81,8 +82,7 @@ public class AddedSensorAdapter extends RecyclerView.Adapter<AddedSensorAdapter.
         Glide.with(mContext)
                 .load(plateInfo.iconUrl)
                 .thumbnail(0.1f)
-                .placeholder(R.drawable.ic_default_image)
-                .error(R.drawable.ic_default_image)
+                .apply(new RequestOptions().placeholder(R.drawable.ic_default_image).error(R.drawable.ic_default_image))
                 .into(holder.ivIconItemAdapterAddedSensor);
     }
 
