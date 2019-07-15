@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.widget.imagepicker.loader.ImageLoader;
 
@@ -26,11 +27,12 @@ public class GlideImageLoader implements ImageLoader {
     public void displayImage(Activity activity, String path, ImageView imageView, int width, int height) {
 
         Glide.with(activity)                             //配置上下文
-                .load(Uri.fromFile(new File(path)))      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-                .error(R.drawable.ic_default_image)
+                .load(Uri.fromFile(new File(path)))
+                .apply(new RequestOptions().error(R.drawable.ic_default_image).placeholder(R.drawable.ic_default_image).diskCacheStrategy(DiskCacheStrategy.ALL))//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+
                 //设置错误图片
-                .placeholder(R.drawable.ic_default_image)     //设置占位图片
-                .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
+                //设置占位图片
+                //缓存全尺寸
                 .into(imageView);
     }
 
@@ -39,13 +41,15 @@ public class GlideImageLoader implements ImageLoader {
         if (path instanceof File) {
             File file = (File) path;
             Glide.with(activity)                             //配置上下文
-                    .load(Uri.fromFile(file))      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
+                    .load(Uri.fromFile(file))
+                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+                    //缓存全尺寸
                     .into(imageView);
         } else if (path instanceof String) {
             Glide.with(activity)                             //配置上下文
-                    .load(path)      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
+                    .load(path)
+                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+                    //缓存全尺寸
                     .into(imageView);
         }
 

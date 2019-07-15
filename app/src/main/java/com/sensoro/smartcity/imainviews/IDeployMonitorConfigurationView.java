@@ -49,8 +49,6 @@ public interface IDeployMonitorConfigurationView extends IToast, IActivityIntent
 
     void showOperationSuccessToast();
 
-    void setTitleImvArrowsLeftVisible(boolean isVisible);
-    void setTitleTvSubtitleVisible(boolean isVisible);
     void updatePvCustomOptions(List<String> list);
 }
 

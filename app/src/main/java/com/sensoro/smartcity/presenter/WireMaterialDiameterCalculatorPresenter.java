@@ -165,38 +165,38 @@ public class WireMaterialDiameterCalculatorPresenter extends BasePresenter<IWire
         int outLineTotal = 0;
         for (WireMaterialDiameterModel model : mInLineList) {
             MaterialValueModel materialValueModel = MATERIAL_VALUE_MAP.get(model.diameter);
-            inLineTotal += model.material == 1 ? materialValueModel.alValue : materialValueModel.cuValue * model.count;
+            inLineTotal += model.material == 1 ? materialValueModel.alValue : materialValueModel.cuValue * model.count * 1.5f;
         }
 
         for (WireMaterialDiameterModel model : mOutLineList) {
             MaterialValueModel materialValueModel = MATERIAL_VALUE_MAP.get(model.diameter);
-            outLineTotal += model.material == 1 ? materialValueModel.alValue : materialValueModel.cuValue * model.count;
+            outLineTotal += model.material == 1 ? materialValueModel.alValue : materialValueModel.cuValue * model.count * 1.5f;
         }
-        int ratedCurrent = -1;
-
+        int inputValue;
+        int temp;
         try {
-            ratedCurrent = Integer.parseInt(getView().getEtInputText());
-            if(ratedCurrent < 1 || ratedCurrent > 560) {
-                getView().toastShort(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.rated_current_colon), "1-560"));
+            inputValue = Integer.parseInt(getView().getEtInputText());
+            if (inputValue < 1 || inputValue > 600) {
+                getView().toastShort(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.rated_current_colon), "1-600"));
                 return;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            getView().toastShort(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.rated_current_colon), "1-560"));
+            getView().toastShort(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.rated_current_colon), "1-600"));
             return;
         }
 
-
-        int temp = Math.min(ratedCurrent, inLineTotal);
+        temp = (int) (inputValue * 1.25f);
+        temp = Math.min(temp, inLineTotal);
         int actualRatedCurrent = Math.min(temp, outLineTotal);
 
-        if (actualRatedCurrent > 0 && actualRatedCurrent <= 120) {
+        if (inputValue <= 120) {
             //120A/40mA
             getView().setRatedCurrentTransformer(String.format("%s%s", mActivity.getString(R.string.current_transformer), "120A/40mA"));
-        } else if (actualRatedCurrent <= 200) {
+        } else if (inputValue <= 225) {
             //200A/40mA
             getView().setRatedCurrentTransformer(String.format("%s%s", mActivity.getString(R.string.current_transformer), "200A/40mA"));
-        } else if (actualRatedCurrent <= 400) {
+        } else if (inputValue <= 400) {
             //400/40mA
             getView().setRatedCurrentTransformer(String.format("%s%s", mActivity.getString(R.string.current_transformer), "400/40mA"));
         } else {
@@ -204,7 +204,7 @@ public class WireMaterialDiameterCalculatorPresenter extends BasePresenter<IWire
             return;
         }
 
-        if (actualRatedCurrent <= 120) {
+        if (inputValue <= 120) {
             //l45k
             getView().setLeakageCurrentTransformer(String.format("%s%s", mActivity.getString(R.string.leakage_current_transformer), "L45K"));
         } else {
@@ -213,7 +213,7 @@ public class WireMaterialDiameterCalculatorPresenter extends BasePresenter<IWire
         }
         getView().setResultVisible(true);
 
-        getView().setAirRatedCurrentValue(ratedCurrent);
+        getView().setAirRatedCurrentValue(inputValue);
         getView().setInLineTotalCurrentValue(inLineTotal);
         getView().setOutLineTotalCurrentValue(outLineTotal);
         getView().setActualCurrentValue(actualRatedCurrent);

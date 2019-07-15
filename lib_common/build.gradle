@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-
+apply plugin: 'com.jakewharton.butterknife'
 android {
     compileSdkVersion build_versions.compile_sdk
 
@@ -26,7 +26,14 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "boolean", "IS_MODULE", isModule
         }
+        debug {
+            minifyEnabled false
+//            boolean类型数据
+            buildConfigField "boolean", "IS_MODULE", isModule
+        }
+
     }
 
 }
@@ -79,9 +86,14 @@ dependencies {
     api 'com.tencent.bugly:crashreport_upgrade:latest.release'
     //百度统计
     api 'com.baidu.mobstat:mtj-sdk-circle:latest.integration'
+    //ViewPagerIndicator
+    api 'com.shizhefei:ViewPagerIndicator:1.1.9'
+    //Calendar view
+    implementation project(':calendarview')
 
     androidTestImplementation deps.support.test_espresso
     testImplementation deps.junit
     annotationProcessor deps.butterknife_compiler
     annotationProcessor deps.arouter_compiler
+    api project(path: ':calendarview')
 }

@@ -39,6 +39,8 @@ public final class EventLoginData implements Serializable {
     public boolean hasStationList = false;
     public boolean hasNameplateList = false;
     public boolean hasNameplateDeploy = false;
+    public boolean hasMonitorTaskList = false;
+    public boolean hasMonitorTaskConfirm = false;
 //    "nameplate": [
 //            "modify",
 //            "deploy",
@@ -86,6 +88,8 @@ public final class EventLoginData implements Serializable {
                 ", hasStationList=" + hasStationList +
                 ", hasNameplateList=" + hasNameplateList +
                 ", hasNameplateDeploy=" + hasNameplateDeploy +
+                ", hasMonitorTaskList=" + hasMonitorTaskList +
+                ", hasMonitorTaskConfirm=" + hasMonitorTaskConfirm +
                 '}';
     }
 }

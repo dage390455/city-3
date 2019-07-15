@@ -1,9 +1,14 @@
 package com.sensoro.common.constant;
 
+import com.sensoro.common.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public interface Constants {
+    //
+    int[] MONTHS = {R.string.january, R.string.february, R.string.march, R.string.april, R.string.may, R.string.june
+            , R.string.july, R.string.august, R.string.september, R.string.october, R.string.november, R.string.december};
     //
     String SOCKET_EVENT_DEVICE_INFO = "city-device-update-series";
     String SOCKET_EVENT_DEVICE_ALARM_COUNT = "city.device.stat";
@@ -81,6 +86,8 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_DEVICE_CAMERA_DEPLOY = "extra_grants_has_device_camera_deploy";
     String EXTRA_GRANTS_HAS_NAMEPLATE_LIST = "extra_grants_has_nameplate_list";
     String EXTRA_GRANTS_HAS_NAMEPLATE_DEPLOY = "extra_grants_has_nameplate_deploy";
+    String EXTRA_GRANTS_HAS_MONITOR_TASK_LIST = "extra_grants_has_monitor_task_list";
+    String EXTRA_GRANTS_HAS_MONITOR_TASK_CONFIRM = "extra_grants_has_monitor_task_confirm";
     String EXTRA_DEVICE_INFO = "extra_device_info";
     String EXTRA_DEPLOY_ANALYZER_MODEL = "extra_deploy_analyzer_model";
     String EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA = "extra_deploy_configuration_setting_data";
@@ -329,6 +336,13 @@ public interface Constants {
             add("acrel_fires");
             add("acrel_single");
 //            add("mantun_fires");
+            add("acrel_alpha");
+        }
+    };
+    ArrayList<String> DEVICE_CONTROL_NEW_CONFIG_DEVICE_TYPES = new ArrayList<String>(2) {
+        {
+            add("acrel_fires");
+            add("acrel_alpha");
         }
     };
     ArrayList<String> DEVICE_UPDATE_FIRMWARE_CHIP_TYPES = new ArrayList<String>(3) {

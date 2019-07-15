@@ -6,7 +6,12 @@ import android.text.TextUtils;
 
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployContactModel;
+import com.sensoro.common.model.DeployResultModel;
+import com.sensoro.common.model.DeviceNotificationBean;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.AlarmInfo;
@@ -24,6 +29,7 @@ import com.sensoro.common.server.response.DeviceCameraDetailRsp;
 import com.sensoro.common.server.response.InspectionTaskDeviceDetailRsp;
 import com.sensoro.common.server.response.ResponseBase;
 import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployCameraDetailActivity;
 import com.sensoro.smartcity.activity.DeployMonitorDetailActivity;
@@ -32,11 +38,6 @@ import com.sensoro.smartcity.activity.InspectionActivity;
 import com.sensoro.smartcity.activity.InspectionExceptionDetailActivity;
 import com.sensoro.smartcity.activity.ScanLoginResultActivity;
 import com.sensoro.smartcity.activity.SignalCheckActivity;
-import com.sensoro.common.constant.Constants;
-import com.sensoro.common.model.DeployAnalyzerModel;
-import com.sensoro.common.model.DeployContactModel;
-import com.sensoro.common.model.DeployResultModel;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 
 import java.util.ArrayList;
@@ -811,7 +812,7 @@ public class DeployAnalyzerUtils {
                             deployAnalyzerModel.updatedTime = data.getUpdatedTime();
                             AlarmInfo alarmInfo = data.getAlarms();
                             if (alarmInfo != null) {
-                                AlarmInfo.NotificationInfo notification = alarmInfo.getNotification();
+                                DeviceNotificationBean notification = alarmInfo.getNotification();
                                 if (notification != null) {
                                     String contact = notification.getContact();
                                     String content = notification.getContent();
@@ -868,7 +869,7 @@ public class DeployAnalyzerUtils {
                         }
                         AlarmInfo alarmInfo = data.getAlarms();
                         if (alarmInfo != null) {
-                            AlarmInfo.NotificationInfo notification = alarmInfo.getNotification();
+                            DeviceNotificationBean notification = alarmInfo.getNotification();
                             if (notification != null) {
                                 String contact = notification.getContact();
                                 String content = notification.getContent();
@@ -1103,7 +1104,7 @@ public class DeployAnalyzerUtils {
                         deployAnalyzerModel.updatedTime = data.getUpdatedTime();
                         AlarmInfo alarmInfo = data.getAlarms();
                         if (alarmInfo != null) {
-                            AlarmInfo.NotificationInfo notification = alarmInfo.getNotification();
+                            DeviceNotificationBean notification = alarmInfo.getNotification();
                             if (notification != null) {
                                 String contact = notification.getContact();
                                 String content = notification.getContent();

@@ -173,7 +173,7 @@ public class NotificationUtils extends ContextWrapper {
 //            aClass = LoginActivity.class;
 //        }
         //只在mainActivity推送通知
-        wakeUpAndUnlock(this);
+//        wakeUpAndUnlock(this);
         if (Build.VERSION.SDK_INT >= 26) {
             createNotificationChannel();
             Notification notification = getChannelNotification

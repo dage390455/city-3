@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <com.sensoro.common.widgets.HomeViewPager
+        android:id="@+id/ac_main_hvp_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#1000" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_divider_height"
+        android:background="@color/c_dfdfdf" />
+
+    <com.sensoro.bottomnavigation.BottomNavigationBar
+        android:id="@+id/ac_main_bottom_navigation_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:bnbActiveColor="@color/c_1dbb99"
+        app:bnbBackgroundStyle="background_style_static"
+        app:bnbInactiveColor="@color/c_a6a6a6"
+        app:bnbMode="mode_fixed" />
+
+</LinearLayout>

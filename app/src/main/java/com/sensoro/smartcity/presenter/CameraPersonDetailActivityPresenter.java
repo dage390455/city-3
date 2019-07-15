@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.EventData;
@@ -56,7 +57,8 @@ public class CameraPersonDetailActivityPresenter extends BasePresenter<ICameraPe
 
     private void setLastCover() {
         Glide.with(mActivity).load(Constants.CAMERA_BASE_URL + dataBean.getSceneUrl())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
+                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
+                //缓存全尺寸
                 .into(getView().getImageView());
 
     }

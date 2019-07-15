@@ -15,6 +15,7 @@ import com.google.gson.JsonObject;
 import com.sensoro.common.base.ContextUtils;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.RxApiManager;
+import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.common.model.SecurityRisksAdapterModel;
 import com.sensoro.common.server.bean.ContractsTemplateInfo;
 import com.sensoro.common.server.bean.DeployControlSettingData;
@@ -28,6 +29,8 @@ import com.sensoro.common.server.response.BaseStationChartDetailRsp;
 import com.sensoro.common.server.response.BaseStationDetailRsp;
 import com.sensoro.common.server.response.BaseStationListRsp;
 import com.sensoro.common.server.response.CameraFilterRsp;
+import com.sensoro.common.server.security.response.SecurityAlarmDetailRsp;
+import com.sensoro.common.server.security.response.SecurityAlarmListRsp;
 import com.sensoro.common.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.common.server.response.ContractAddRsp;
 import com.sensoro.common.server.response.ContractInfoRsp;
@@ -72,6 +75,9 @@ import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.server.response.UpdateRsp;
 import com.sensoro.common.server.response.UserAccountControlRsp;
 import com.sensoro.common.server.response.UserAccountRsp;
+import com.sensoro.common.server.security.response.HandleAlarmRsp;
+import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
+import com.sensoro.common.server.security.response.SecurityWarnRecordResp;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.LogUtils;
 
@@ -85,6 +91,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -107,6 +114,8 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.sensoro.common.server.security.constants.SecurityConstants.SECURITY_ALARMLIST_PAGE_COUNT;
 
 public class RetrofitServiceHelper {
     private static final long DEFAULT_TIMEOUT = 8 * 1000;
@@ -146,6 +155,7 @@ public class RetrofitServiceHelper {
                 .registerTypeAdapter(String.class, new StringDeserializer());
         gson = gsonBuilder.create();
         //支持RxJava
+
         builder = new Retrofit.Builder().baseUrl(BASE_URL).client(getNewClient())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
@@ -346,6 +356,7 @@ public class RetrofitServiceHelper {
         cacheBuilder.maxAge(0, TimeUnit.SECONDS);
         //这个是控制缓存的过时时间
         cacheBuilder.maxStale(7, TimeUnit.DAYS);
+        cacheBuilder.noCache();
         final CacheControl cacheControl = cacheBuilder.build();
         //缓存拦截器
         final Interceptor cacheControlInterceptor = new Interceptor() {
@@ -386,9 +397,9 @@ public class RetrofitServiceHelper {
         //
         return builder
                 .addInterceptor(interceptor)
-                .addInterceptor(cacheControlInterceptor)
-                .cookieJar(cookieJar)
-                .cache(cache)
+//                .addInterceptor(cacheControlInterceptor)
+//                .cookieJar(cookieJar)
+//                .cache(cache)
                 .addNetworkInterceptor(logging)
                 .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .build();
@@ -552,10 +563,168 @@ public class RetrofitServiceHelper {
      * @param lat
      * @param tags
      * @param name
-     * @param contact
-     * @param content
+     * @param contacts
+     * @param wxPhone
+     * @param imgUrls
+     * @param deployControlSettingData
+     * @param forceReason
+     * @param status
+     * @param signalQuality
      * @return
      */
+    public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, List<String> tags, String
+            name, List<DeployContactModel> contacts, String wxPhone, List<String> imgUrls, DeployControlSettingData deployControlSettingData, String forceReason, Integer status, String signalQuality) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("lon", lon);
+            jsonObject.put("lat", lat);
+            JSONArray jsonArray = new JSONArray();
+            if (tags != null && tags.size() > 0) {
+                for (String temp : tags) {
+                    jsonArray.put(temp);
+                }
+            }
+            jsonObject.put("tags", jsonArray);
+            if (name != null) {
+                jsonObject.put("name", name);
+            }
+
+
+            if (contacts != null && contacts.size() > 0) {
+                JSONArray jsonArrayContact = new JSONArray();
+                for (DeployContactModel contactModel : contacts) {
+                    JSONObject object = new JSONObject();
+                    if (!TextUtils.isEmpty(contactModel.name)) {
+                        object.put("contact", contactModel.name);
+                    }
+                    if (!TextUtils.isEmpty(contactModel.phone)) {
+                        object.put("content", contactModel.phone);
+                    }
+                    object.put("types", "phone");
+                    jsonArrayContact.put(object);
+                }
+                jsonObject.put("notifications", jsonArrayContact);
+            }
+            if (imgUrls != null && imgUrls.size() > 0) {
+                JSONArray jsonArrayImg = new JSONArray();
+                for (String url : imgUrls) {
+                    jsonArrayImg.put(url);
+                }
+                jsonObject.put("imgUrls", jsonArrayImg);
+            }
+            if (!TextUtils.isEmpty(wxPhone)) {
+                jsonObject.put("wxPhone", wxPhone);
+            }
+            if (!TextUtils.isEmpty(forceReason)) {
+                jsonObject.put("forceReason", forceReason);
+                if (status != null) {
+                    jsonObject.put("status", status);
+                }
+                if (!TextUtils.isEmpty(signalQuality)) {
+                    jsonObject.put("signalQuality", signalQuality);
+                }
+            }
+
+//            if (settingMap != null) {
+//                JSONObject jsonObjectOut = new JSONObject();
+//                for (Map.Entry<String, DeployControlSettingData> entrySet : settingMap.entrySet()) {
+//                    String key = entrySet.getKey();
+//                    if (!TextUtils.isEmpty(key)) {
+//                        DeployControlSettingData value = entrySet.getValue();
+//                        JSONObject jsonObjectIn = new JSONObject();
+//                        jsonObjectIn.put("initValue", value.getSwitchSpec());
+//                        Double diameterValue = value.getWireDiameter();
+//                        if (diameterValue != null) {
+//                            jsonObjectIn.put("wireDiameter", diameterValue);
+//                        }
+//                        int wireMaterial = value.getWireMaterial();
+//                        jsonObjectIn.put("wireMaterial", wireMaterial);
+//                        jsonObjectOut.put(key, jsonObjectIn);
+//
+//                    }
+//                }
+//                jsonObject.put("config", jsonObjectOut);
+//            }
+            if (deployControlSettingData != null) {
+                JSONObject jsonObjectOut = new JSONObject();
+                Integer switchSpec = deployControlSettingData.getSwitchSpec();
+                if (switchSpec != null) {
+                    jsonObjectOut.put("switchSpec", switchSpec);
+                }
+                Double wireDiameter = deployControlSettingData.getWireDiameter();
+                if (wireDiameter != null) {
+                    jsonObjectOut.put("wireDiameter", wireDiameter);
+                }
+                Integer wireMaterial = deployControlSettingData.getWireMaterial();
+                if (wireMaterial != null) {
+                    jsonObjectOut.put("wireMaterial", wireMaterial);
+                }
+                Integer inputValue = deployControlSettingData.getInputValue();
+                if (inputValue != null) {
+                    jsonObjectOut.put("inputValue", inputValue);
+                }
+                Integer transformer = deployControlSettingData.getTransformer();
+                if (transformer != null) {
+                    jsonObjectOut.put("transformer", transformer);
+                }
+                Integer recommTrans = deployControlSettingData.getRecommTrans();
+                if (recommTrans != null) {
+                    jsonObjectOut.put("recommTrans", recommTrans);
+                }
+                //
+                List<DeployControlSettingData.wireData> input = deployControlSettingData.getInput();
+                if (input != null && input.size() > 0) {
+                    JSONArray jsonArrayInput = new JSONArray();
+                    for (DeployControlSettingData.wireData wireData : input) {
+                        JSONObject jsonObjectInput = new JSONObject();
+                        Integer wireMaterial1 = wireData.getWireMaterial();
+                        if (wireMaterial1 != null) {
+                            jsonObjectInput.put("wireMaterial", wireMaterial1);
+                        }
+                        Double wireDiameter1 = wireData.getWireDiameter();
+                        if (wireDiameter1 != null) {
+                            jsonObjectInput.put("wireDiameter", wireDiameter1);
+                        }
+                        Integer count = wireData.getCount();
+                        if (count != null) {
+                            jsonObjectInput.put("count", count);
+                        }
+                        jsonArrayInput.put(jsonObjectInput);
+                    }
+                    jsonObjectOut.put("input", jsonArrayInput);
+                }
+                //
+                List<DeployControlSettingData.wireData> output = deployControlSettingData.getOutput();
+                if (output != null && output.size() > 0) {
+                    JSONArray jsonArrayOutput = new JSONArray();
+                    for (DeployControlSettingData.wireData wireData : output) {
+                        JSONObject jsonObjectOutput = new JSONObject();
+                        Integer wireMaterial1 = wireData.getWireMaterial();
+                        if (wireMaterial1 != null) {
+                            jsonObjectOutput.put("wireMaterial", wireMaterial1);
+                        }
+                        Double wireDiameter1 = wireData.getWireDiameter();
+                        if (wireDiameter1 != null) {
+                            jsonObjectOutput.put("wireDiameter", wireDiameter1);
+                        }
+                        Integer count = wireData.getCount();
+                        if (count != null) {
+                            jsonObjectOutput.put("count", count);
+                        }
+                        jsonArrayOutput.put(jsonObjectOutput);
+                    }
+                    jsonObjectOut.put("output", jsonArrayOutput);
+                }
+                jsonObject.put("config", jsonObjectOut);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.doDevicePointDeploy(sn, body);
+    }
+
     public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, List<String> tags, String
             name, String contact, String content, String wxPhone, List<String> imgUrls, DeployControlSettingData deployControlSettingData, String forceReason, Integer status, String signalQuality) {
         JSONObject jsonObject = new JSONObject();
@@ -631,6 +800,62 @@ public class RetrofitServiceHelper {
                 Integer wireMaterial = deployControlSettingData.getWireMaterial();
                 if (wireMaterial != null) {
                     jsonObjectOut.put("wireMaterial", wireMaterial);
+                }
+                Integer inputValue = deployControlSettingData.getInputValue();
+                if (inputValue != null) {
+                    jsonObjectOut.put("inputValue", inputValue);
+                }
+                Integer transformer = deployControlSettingData.getTransformer();
+                if (transformer != null) {
+                    jsonObjectOut.put("transformer", transformer);
+                }
+                Integer recommTrans = deployControlSettingData.getRecommTrans();
+                if (recommTrans != null) {
+                    jsonObjectOut.put("recommTrans", recommTrans);
+                }
+                //
+                List<DeployControlSettingData.wireData> input = deployControlSettingData.getInput();
+                if (input != null && input.size() > 0) {
+                    JSONArray jsonArrayInput = new JSONArray();
+                    for (DeployControlSettingData.wireData wireData : input) {
+                        JSONObject jsonObjectInput = new JSONObject();
+                        Integer wireMaterial1 = wireData.getWireMaterial();
+                        if (wireMaterial1 != null) {
+                            jsonObjectInput.put("wireMaterial", wireMaterial1);
+                        }
+                        Double wireDiameter1 = wireData.getWireDiameter();
+                        if (wireDiameter1 != null) {
+                            jsonObjectInput.put("wireDiameter", wireDiameter1);
+                        }
+                        Integer count = wireData.getCount();
+                        if (count != null) {
+                            jsonObjectInput.put("count", count);
+                        }
+                        jsonArrayInput.put(jsonObjectInput);
+                    }
+                    jsonObjectOut.put("input", jsonArrayInput);
+                }
+                //
+                List<DeployControlSettingData.wireData> output = deployControlSettingData.getOutput();
+                if (output != null && output.size() > 0) {
+                    JSONArray jsonArrayOutput = new JSONArray();
+                    for (DeployControlSettingData.wireData wireData : output) {
+                        JSONObject jsonObjectOutput = new JSONObject();
+                        Integer wireMaterial1 = wireData.getWireMaterial();
+                        if (wireMaterial1 != null) {
+                            jsonObjectOutput.put("wireMaterial", wireMaterial1);
+                        }
+                        Double wireDiameter1 = wireData.getWireDiameter();
+                        if (wireDiameter1 != null) {
+                            jsonObjectOutput.put("wireDiameter", wireDiameter1);
+                        }
+                        Integer count = wireData.getCount();
+                        if (count != null) {
+                            jsonObjectOutput.put("count", count);
+                        }
+                        jsonArrayOutput.put(jsonObjectOutput);
+                    }
+                    jsonObjectOut.put("output", jsonArrayOutput);
                 }
                 jsonObject.put("config", jsonObjectOut);
             }
@@ -1360,7 +1585,7 @@ public class RetrofitServiceHelper {
         return retrofitService.getDevicesMergeTypes();
     }
 
-    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer switchSpec, Integer wireMaterial, Double diameter) {
+    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer inputValue, Integer switchSpec, Integer wireMaterial, Double diameter) {
         JSONObject jsonObject = new JSONObject();
 
         try {
@@ -1382,6 +1607,9 @@ public class RetrofitServiceHelper {
                 jsonObject.put("rules", jsonRules);
             }
             JSONObject jsonObjectConfig = new JSONObject();
+            if (inputValue != null) {
+                jsonObjectConfig.put("inputValue", inputValue);
+            }
             if (switchSpec != null) {
                 jsonObjectConfig.put("switchSpec", switchSpec);
             }
@@ -1393,6 +1621,96 @@ public class RetrofitServiceHelper {
             }
             if (switchSpec != null || wireMaterial != null || diameter != null) {
                 jsonObject.put("config", jsonObjectConfig);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.doMonitorPointOperation(body);
+    }
+
+    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, DeployControlSettingData deployControlSettingData) {
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            JSONArray jsonSnList = new JSONArray();
+            for (String sn : snList) {
+                jsonSnList.put(sn);
+            }
+            jsonObject.put("snList", jsonSnList);
+            jsonObject.put("type", type);
+            if (deployControlSettingData != null) {
+                JSONObject jsonObjectOut = new JSONObject();
+                Integer switchSpec = deployControlSettingData.getSwitchSpec();
+                if (switchSpec != null) {
+                    jsonObjectOut.put("switchSpec", switchSpec);
+                }
+                Double wireDiameter = deployControlSettingData.getWireDiameter();
+                if (wireDiameter != null) {
+                    jsonObjectOut.put("wireDiameter", wireDiameter);
+                }
+                Integer wireMaterial = deployControlSettingData.getWireMaterial();
+                if (wireMaterial != null) {
+                    jsonObjectOut.put("wireMaterial", wireMaterial);
+                }
+                Integer inputValue = deployControlSettingData.getInputValue();
+                if (inputValue != null) {
+                    jsonObjectOut.put("inputValue", inputValue);
+                }
+                Integer transformer = deployControlSettingData.getTransformer();
+                if (transformer != null) {
+                    jsonObjectOut.put("transformer", transformer);
+                }
+                Integer recommTrans = deployControlSettingData.getRecommTrans();
+                if (recommTrans != null) {
+                    jsonObjectOut.put("recommTrans", recommTrans);
+                }
+                //
+                List<DeployControlSettingData.wireData> input = deployControlSettingData.getInput();
+                if (input != null && input.size() > 0) {
+                    JSONArray jsonArrayInput = new JSONArray();
+                    for (DeployControlSettingData.wireData wireData : input) {
+                        JSONObject jsonObjectInput = new JSONObject();
+                        Integer wireMaterial1 = wireData.getWireMaterial();
+                        if (wireMaterial1 != null) {
+                            jsonObjectInput.put("wireMaterial", wireMaterial1);
+                        }
+                        Double wireDiameter1 = wireData.getWireDiameter();
+                        if (wireDiameter1 != null) {
+                            jsonObjectInput.put("wireDiameter", wireDiameter1);
+                        }
+                        Integer count = wireData.getCount();
+                        if (count != null) {
+                            jsonObjectInput.put("count", count);
+                        }
+                        jsonArrayInput.put(jsonObjectInput);
+                    }
+                    jsonObjectOut.put("input", jsonArrayInput);
+                }
+                //
+                List<DeployControlSettingData.wireData> output = deployControlSettingData.getOutput();
+                if (output != null && output.size() > 0) {
+                    JSONArray jsonArrayOutput = new JSONArray();
+                    for (DeployControlSettingData.wireData wireData : input) {
+                        JSONObject jsonObjectOutput = new JSONObject();
+                        Integer wireMaterial1 = wireData.getWireMaterial();
+                        if (wireMaterial1 != null) {
+                            jsonObjectOutput.put("wireMaterial", wireMaterial1);
+                        }
+                        Double wireDiameter1 = wireData.getWireDiameter();
+                        if (wireDiameter1 != null) {
+                            jsonObjectOutput.put("wireDiameter", wireDiameter1);
+                        }
+                        Integer count = wireData.getCount();
+                        if (count != null) {
+                            jsonObjectOutput.put("count", count);
+                        }
+                        jsonArrayOutput.put(jsonObjectOutput);
+                    }
+                    jsonObjectOut.put("output", jsonArrayOutput);
+                }
+                jsonObject.put("config", jsonObjectOut);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -2078,5 +2396,93 @@ public class RetrofitServiceHelper {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
         return retrofitService.doBindDevice(requestBody);
     }
+    //安防=============
 
+    /**
+     * 处理安防预警信息
+     *
+     * @param id              预警id
+     * @param isEffective     处理结果，0-无效/1-有效.
+     * @param operationDetail 处理备注信息
+     * @return
+     */
+    public Observable<HandleAlarmRsp> handleSecurityAlarm(@NonNull String id, int isEffective, String operationDetail) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("id", id);
+            jsonObject.put("isEffective", isEffective);
+            if (!TextUtils.isEmpty(operationDetail)) {
+                jsonObject.put("operationDetail", operationDetail);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.handleSecurityAlarm(id, requestBody);
+    }
+
+    /**
+     * 获取安防预警详情时间轴事件
+     *
+     * @param id 安防预警ID
+     * @return
+     */
+    public Observable<SecurityAlarmTimelineRsp> getSecurityAlarmTimeLine(@NonNull String id) {
+        return retrofitService.getSecurityAlarmTimeLine(id);
+    }
+
+    /**
+     * 获取安防预警列表
+     *
+     * @param startTime          查询范围开始时间 精确到ms
+     * @param endTime            查询范围结束时间 精确到ms
+     * @param alarmOperationType 预警操作类型，1-已处理/2-未处理/3-有效/4-无效
+     * @param searchText         搜索关键字
+     * @param alarmType          预警日志类型，1-重点人员/2-外来人员/3-人员入侵
+     *                           查询条数，默认20
+     * @param offset             查询起始位置，默认0
+     * @return
+     */
+    public Observable<SecurityAlarmListRsp> getSecurityAlarmList(int offset, String startTime, String endTime, int alarmOperationType,
+                                                                 String searchText, int alarmType) {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("limit", SECURITY_ALARMLIST_PAGE_COUNT);
+        paramMap.put("offset", offset);
+        if (!TextUtils.isEmpty(searchText)) {
+            paramMap.put("searchText", searchText);
+        }
+        if (0 != alarmOperationType) {
+            paramMap.put("alarmOperationType", alarmOperationType);
+        }
+        if (0 != alarmType) {
+            paramMap.put("alarmType", alarmType);
+        }
+        if (!TextUtils.isEmpty(startTime) && !TextUtils.isEmpty(endTime)) {
+            paramMap.put("startTime", startTime);
+            paramMap.put("endTime", endTime);
+        }
+        return retrofitService.getSecurityAlarmList(paramMap);
+
+    }
+
+    /**
+     * 获取预警详情信息
+     *
+     * @param id 预警id.
+     * @return
+     */
+    public Observable<SecurityAlarmDetailRsp> getSecurityAlarmDetails(@NonNull String id) {
+        return retrofitService.getSecurityAlarmDetails(id);
+    }
+
+    /**
+     * 获取预警录像信息
+     *
+     * @param id
+     * @return
+     */
+    public Observable<SecurityWarnRecordResp> getSecurityWarnRecord(@NonNull String id) {
+        return retrofitService.getSecurityWarnRecord(id);
+    }
 }
