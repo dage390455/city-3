@@ -41,6 +41,8 @@ public final class EventLoginData implements Serializable {
     public boolean hasNameplateDeploy = false;
     public boolean hasIBeaconSearchDemo = false;
 //    _iBeaconSearchDemo
+    public boolean hasMonitorTaskList = false;
+    public boolean hasMonitorTaskConfirm = false;
 //    "nameplate": [
 //            "modify",
 //            "deploy",
@@ -89,6 +91,8 @@ public final class EventLoginData implements Serializable {
                 ", hasNameplateList=" + hasNameplateList +
                 ", hasNameplateDeploy=" + hasNameplateDeploy +
                 ", hasIBeaconSearchDemo=" + hasIBeaconSearchDemo +
+                ", hasMonitorTaskList=" + hasMonitorTaskList +
+                ", hasMonitorTaskConfirm=" + hasMonitorTaskConfirm +
                 '}';
     }
 }

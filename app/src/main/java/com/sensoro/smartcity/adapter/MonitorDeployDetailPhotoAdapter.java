@@ -1,16 +1,18 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.sensoro.smartcity.R;
+import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.common.server.bean.ScenesData;
+import com.sensoro.smartcity.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,18 +82,20 @@ public class MonitorDeployDetailPhotoAdapter extends RecyclerView.Adapter<Monito
             if (isVideo) {
                 Glide.with(mContext)                             //配置上下文
                         .load(scenesData.thumbUrl)
+                        .apply(new RequestOptions().error(R.drawable.ic_default_image)           //设置错误图片
+                                .placeholder(R.drawable.ic_default_image)    //设置占位图片
+                                .diskCacheStrategy(DiskCacheStrategy.ALL))
                         .thumbnail(0.01f)//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-                        .error(R.drawable.ic_default_image)           //设置错误图片
-                        .placeholder(R.drawable.ic_default_image)    //设置占位图片
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
+                        //缓存全尺寸
                         .into(ivPicAlarm);
             } else {
                 Glide.with(mContext)                             //配置上下文
                         .load(scenesData.url)
+                        .apply(new RequestOptions().error(R.drawable.ic_default_image)           //设置错误图片
+                                .placeholder(R.drawable.ic_default_image)    //设置占位图片
+                                .diskCacheStrategy(DiskCacheStrategy.ALL))
                         .thumbnail(0.01f)//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-                        .error(R.drawable.ic_default_image)           //设置错误图片
-                        .placeholder(R.drawable.ic_default_image)    //设置占位图片
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
+                        //缓存全尺寸
                         .into(ivPicAlarm);
             }
             iv_record.setVisibility(isVideo ? View.VISIBLE : View.GONE);

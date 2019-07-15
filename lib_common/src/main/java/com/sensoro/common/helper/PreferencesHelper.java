@@ -110,6 +110,8 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_NAMEPLATE_LIST, eventLoginData.hasNameplateList);
         editor.putBoolean(EXTRA_GRANTS_HAS_NAMEPLATE_DEPLOY, eventLoginData.hasNameplateDeploy);
         editor.putBoolean(EXTRA_GRANTS_HAS_IBEACON_SEARCH_DEMO, eventLoginData.hasIBeaconSearchDemo);
+        editor.putBoolean(EXTRA_GRANTS_HAS_MONITOR_TASK_LIST, eventLoginData.hasMonitorTaskList);
+        editor.putBoolean(EXTRA_GRANTS_HAS_MONITOR_TASK_CONFIRM, eventLoginData.hasMonitorTaskConfirm);
         //
         editor.apply();
     }
@@ -158,6 +160,8 @@ public final class PreferencesHelper implements Constants {
             boolean hasNameplateList = sp.getBoolean(EXTRA_GRANTS_HAS_NAMEPLATE_LIST, false);
             boolean hasNameplateDeploy = sp.getBoolean(EXTRA_GRANTS_HAS_NAMEPLATE_DEPLOY, false);
             boolean hasIBeaconSearchDemo = sp.getBoolean(EXTRA_GRANTS_HAS_IBEACON_SEARCH_DEMO, false);
+            boolean hasMonitorTaskList = sp.getBoolean(EXTRA_GRANTS_HAS_MONITOR_TASK_LIST, false);
+            boolean hasMonitorTaskConfirm = sp.getBoolean(EXTRA_GRANTS_HAS_MONITOR_TASK_CONFIRM, false);
             final EventLoginData eventLoginData = new EventLoginData();
             eventLoginData.phoneId = phoneId;
             eventLoginData.userId = userId;
@@ -196,6 +200,8 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasNameplateList = hasNameplateList;
             eventLoginData.hasNameplateDeploy = hasNameplateDeploy;
             eventLoginData.hasIBeaconSearchDemo = hasIBeaconSearchDemo;
+            eventLoginData.hasMonitorTaskList = hasMonitorTaskList;
+            eventLoginData.hasMonitorTaskConfirm = hasMonitorTaskConfirm;
             mEventLoginData = eventLoginData;
         }
         return mEventLoginData;

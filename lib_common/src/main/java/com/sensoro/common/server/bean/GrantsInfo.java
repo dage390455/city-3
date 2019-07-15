@@ -29,6 +29,7 @@ public class GrantsInfo implements Serializable {
     private List<String> control;
     private List<String> camera;
     private List<String> nameplate;
+    private List<String> monitorTask;
     private List<?> sysLog;
 
 
@@ -222,5 +223,13 @@ public class GrantsInfo implements Serializable {
 
     public void setNameplate(List<String> nameplate) {
         this.nameplate = nameplate;
+    }
+
+    public List<String> getMonitorTask() {
+        return monitorTask;
+    }
+
+    public void setMonitorTask(List<String> monitorTask) {
+        this.monitorTask = monitorTask;
     }
 }

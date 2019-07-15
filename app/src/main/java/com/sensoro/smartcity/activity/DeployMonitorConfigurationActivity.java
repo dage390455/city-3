@@ -461,7 +461,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
         }
 
 //        if (overCurrentDialog != null) {
-//            overCurrentDialog.destory();
+//            overCurrentDialog.destroy();
 //        }
         if (mOperatingUtil != null) {
             mOperatingUtil.destroy();

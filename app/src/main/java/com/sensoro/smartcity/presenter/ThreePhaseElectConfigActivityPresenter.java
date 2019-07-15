@@ -320,7 +320,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
         try {
             for (WireMaterialDiameterModel model : mInLineList) {
                 MaterialValueModel materialValueModel = MATERIAL_VALUE_MAP.get(model.diameter);
-                inLineTotal += model.material == 1 ? materialValueModel.alValue : materialValueModel.cuValue * model.count * 1.5f;
+                inLineTotal += model.material == 1 ? materialValueModel.alValue * model.count : materialValueModel.cuValue * model.count;
                 //
                 DeployControlSettingData.wireData wireData = new DeployControlSettingData.wireData();
                 wireData.setWireMaterial(model.material);
@@ -332,7 +332,7 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
 
             for (WireMaterialDiameterModel model : mOutLineList) {
                 MaterialValueModel materialValueModel = MATERIAL_VALUE_MAP.get(model.diameter);
-                outLineTotal += model.material == 1 ? materialValueModel.alValue : materialValueModel.cuValue * model.count * 1.5f;
+                outLineTotal += model.material == 1 ? materialValueModel.alValue * model.count : materialValueModel.cuValue * model.count;
                 //
                 DeployControlSettingData.wireData wireData = new DeployControlSettingData.wireData();
                 wireData.setWireMaterial(model.material);
@@ -349,8 +349,8 @@ public class ThreePhaseElectConfigActivityPresenter extends BasePresenter<IThree
             getView().toastShort(mActivity.getString(R.string.empty_open_rated_current_is_out_of_range));
             return;
         }
-        temp = Math.min(temp, inLineTotal);
-        int actualRatedCurrent = Math.min(temp, outLineTotal);
+        temp = (int) Math.min(temp, inLineTotal * 1.5f);
+        int actualRatedCurrent = (int) Math.min(temp, outLineTotal * 1.5f);
         //
         if ("acrel_alpha".equals(deployAnalyzerModel.deviceType)) {
             if (inputValue > 0 && inputValue <= 120) {

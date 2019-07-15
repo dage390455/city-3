@@ -8,7 +8,7 @@ def keystoreProperties = new Properties()
 // Load your keystore.properties file into the keystoreProperties object.
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 android {
-    def verName = "3.3.4"
+    def verName = "3.3.5"
     def verCode = 1
     def buildCode = 1
     def connector = '_v'
@@ -281,6 +281,9 @@ dependencies {
     //
     if (!isModule.toBoolean()) {
         implementation project(':nameplate')
+    }
+    if (!isModule.toBoolean()) {
+        implementation project(':city_camera')
     }
     //个推
     implementation deps.getui

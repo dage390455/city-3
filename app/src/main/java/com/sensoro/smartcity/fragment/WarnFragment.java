@@ -3,9 +3,6 @@ package com.sensoro.smartcity.fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -23,27 +20,34 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.MainWarnFragRcContentAdapter;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseFragment;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
+import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.common.widgets.SpacesItemDecoration;
+import com.sensoro.common.widgets.TipOperationDialogUtils;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.MainWarnFragRcContentAdapter;
 import com.sensoro.smartcity.imainviews.IWarnFragmentView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.presenter.WarnFragmentPresenter;
-import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.common.widgets.ProgressUtils;
-import com.sensoro.common.callback.RecycleViewItemClickListener;
-import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
-import com.sensoro.common.widgets.SpacesItemDecoration;
-import com.sensoro.common.widgets.TipOperationDialogUtils;
-import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import java.util.List;
@@ -55,6 +59,7 @@ import butterknife.OnClick;
 import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.common.constant.Constants.DIRECTION_UP;
 
+@Route(path = ARouterConstants.FRAGMENT_FIRE_WARN_FRAGMENT)
 public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPresenter> implements
         IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.fg_main_top_search_title_root)
@@ -103,6 +108,12 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     protected void initData(Context activity) {
         initView();
         mPresenter.initData(activity);
+//        if (PreferencesHelper.getInstance().getUserData().hasMonitorTaskList) {
+//            //如果有布控权限，去除顶部的padding
+            fgMainWarnTitleRoot.setPadding(0, 0, 0, 0);
+//        } else {
+//            fgMainWarnTitleRoot.setPadding(0, AppUtils.dp2px(mRootFragment.getActivity(), 20), 0, 0);
+//        }
     }
 
 
@@ -176,9 +187,9 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     private void initClearHistoryDialog() {
         historyClearDialog = new TipOperationDialogUtils(mRootFragment.getActivity(), true);
         historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
-        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
-        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_1dbb99));
-        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record), R.color.c_a6a6a6);
+        historyClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_1dbb99));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear), getResources().getColor(R.color.c_a6a6a6));
         historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
@@ -196,11 +207,16 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         }
     }
 
+    @Override
+    public void dismissInput() {
+        AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), fgMainWarnEtSearch, false);
+    }
+
     private void initRcSearchHistory() {
         SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mRootFragment.getActivity()) {
             @Override
             public boolean canScrollVertically() {
-                return false;
+                return true;
             }
 
             @Override
@@ -208,7 +224,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
                 return false;
             }
         };
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        layoutManager.setOrientation(RecyclerView.VERTICAL);
         rvSearchHistory.setLayoutManager(layoutManager);
 //        int spacingInPixels = AppUtils.dp2px(mRootFragment.getActivity(),12);
         rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mRootFragment.getActivity(), 6)));
@@ -298,12 +314,11 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
 
     @Override
     public void onFragmentStart() {
-
     }
 
     @Override
     public void onFragmentStop() {
-
+        dismissInput();
     }
 
     @Override
