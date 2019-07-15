@@ -316,14 +316,13 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
 
     public void doContactOwner() {
 
-        List<DeviceNotificationBean> deviceNotifications = deviceAlarmLogInfo.getDeviceNotifications();
-        if (null != deviceNotifications && deviceNotifications.size() > 0) {
+        List<DeviceNotificationBean> deviceNotifications = WidgetUtil.handleDeviceNotifications(deviceAlarmLogInfo.getDeviceNotifications());
+        if (deviceNotifications.isEmpty()) {
+            getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
+        } else {
             WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
             dialogUtil.show(deviceNotifications);
-        } else {
-            getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
         }
-
     }
 
     public void doNavigation() {

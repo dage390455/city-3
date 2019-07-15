@@ -25,6 +25,7 @@ import com.sensoro.smartcity.activity.MalfunctionHistoryActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.imainviews.IMalfunctionDetailActivityView;
 import com.sensoro.smartcity.util.CityAppUtils;
+import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.dialog.WarningContactDialogUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -154,13 +155,12 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
     }
 
     public void doContactOwner() {
-
-        List<DeviceNotificationBean> deviceNotifications = mMalfunctionInfo.getDeviceNotifications();
-        if (null != deviceNotifications && deviceNotifications.size() > 0) {
+        List<DeviceNotificationBean> deviceNotifications = WidgetUtil.handleDeviceNotifications(mMalfunctionInfo.getDeviceNotifications());
+        if (deviceNotifications.isEmpty()) {
+            getView().toastShort(mActivity.getString(R.string.no_find_contact_phone_number));
+        } else {
             WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mActivity);
             dialogUtil.show(deviceNotifications);
-        } else {
-            getView().toastShort(mActivity.getString(R.string.no_find_contact_phone_number));
         }
 
 //        String tempNumber = mMalfunctionInfo.getDeviceNotification().getContent();

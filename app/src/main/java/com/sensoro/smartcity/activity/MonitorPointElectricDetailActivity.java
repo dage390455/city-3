@@ -450,9 +450,11 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     public void setContractCount(int count) {
 
         if (count > 1) {
+            acMonitoringPointTvAlertContactPhone.setTextColor(getResources().getColor(R.color.c_252525));
             setContactPhoneIconVisible(true);
             acMonitoringPointTvPhoneCount.setText(getResources().getString(R.string.total) + count + getResources().getString(R.string.person));
         } else {
+            acMonitoringPointTvAlertContactPhone.setTextColor(getResources().getColor(R.color.c_1dbb99));
             acMonitoringPointTvPhoneCount.setText("");
             setContactPhoneIconVisible(false);
         }

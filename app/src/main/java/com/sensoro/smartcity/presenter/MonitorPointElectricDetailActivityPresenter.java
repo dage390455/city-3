@@ -263,9 +263,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
         AlarmInfo alarms = mDeviceInfo.getAlarms();
         if (alarms != null) {
-            List<DeviceNotificationBean> notifications = alarms.getNotifications();
             //设置共x人
-            if (null != notifications && notifications.size() > 0) {
+            List<DeviceNotificationBean> notifications = WidgetUtil.handleDeviceNotifications(alarms.getNotifications());
+            if (notifications.size() > 0) {
                 DeviceNotificationBean deviceNotificationBean = notifications.get(0);
                 String contact = deviceNotificationBean.getContact();
                 if (!TextUtils.isEmpty(contact)) {
@@ -286,8 +286,11 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     String content = notification.getContent();
                     if (!TextUtils.isEmpty(content)) {
                         getView().setContractPhone(content);
+                        getView().setContractCount(1);
+                    } else {
+                        getView().setNoContact();
                     }
-                    getView().setContractCount(1);
+
                 } else {
                     getView().setNoContact();
                 }
@@ -1434,22 +1437,17 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
         AlarmInfo alarms = mDeviceInfo.getAlarms();
         if (alarms != null) {
-            List<DeviceNotificationBean> notifications = alarms.getNotifications();
-            if (null != notifications) {
-                if (notifications.size() > 1) {
-                    WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
-                    dialogUtil.show(notifications);
-                } else if (notifications.size() == 1) {
-                    DeviceNotificationBean notificationBean = notifications.get(0);
-                    if (TextUtils.isEmpty(notificationBean.getContent()) || mContext.getString(R.string.not_set).equals(notificationBean.getContent())) {
-                        getView().toastShort(mContext.getString(R.string.phone_contact_not_set));
-                        return;
-                    }
-                    AppUtils.diallPhone(notificationBean.getContent(), mContext);
-                } else {
+            List<DeviceNotificationBean> notifications = WidgetUtil.handleDeviceNotifications(alarms.getNotifications());
+            if (notifications.size() > 1) {
+                WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
+                dialogUtil.show(notifications);
+            } else if (notifications.size() == 1) {
+                DeviceNotificationBean notificationBean = notifications.get(0);
+                if (TextUtils.isEmpty(notificationBean.getContent()) || mContext.getString(R.string.not_set).equals(notificationBean.getContent())) {
                     getView().toastShort(mContext.getString(R.string.phone_contact_not_set));
-
+                    return;
                 }
+                AppUtils.diallPhone(notificationBean.getContent(), mContext);
             } else {
                 DeviceNotificationBean notification = alarms.getNotification();
                 if (notification != null && !TextUtils.isEmpty(notification.getContent())) {
@@ -1457,7 +1455,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 } else {
                     getView().toastShort(mContext.getString(R.string.phone_contact_not_set));
                 }
-
             }
         } else {
             getView().toastShort(mContext.getString(R.string.phone_contact_not_set));
@@ -1793,7 +1790,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     bundle.putInt(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
                     bundle.putSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                     DeployControlSettingData settingData = mDeviceInfo.getConfig();
-                    if (settingData!=null){
+                    if (settingData != null) {
                         bundle.putSerializable(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA, settingData);
                     }
                     startActivity(ARouterConstants.ACTIVITY_THREE_PHASE_ELECT_CONFIG_ACTIVITY, bundle, mContext);

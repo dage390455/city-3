@@ -10,8 +10,15 @@ import com.sensoro.common.BuildConfig;
 import com.sensoro.common.R;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.imainview.IFireSecurityWarnView;
+import com.sensoro.common.iwidget.IOnCreate;
+import com.sensoro.common.model.EventData;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -19,7 +26,7 @@ import java.util.ArrayList;
  * @author : bin.tian
  * date   : 2019-06-21
  */
-public class FireSecurityWarnPresenter extends BasePresenter<IFireSecurityWarnView> {
+public class FireSecurityWarnPresenter extends BasePresenter<IFireSecurityWarnView> implements IOnCreate {
 
     private Activity mActivity;
     private final ArrayList<Fragment> mFragmentList = new ArrayList<>(2);
@@ -30,11 +37,13 @@ public class FireSecurityWarnPresenter extends BasePresenter<IFireSecurityWarnVi
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
+        onCreate();
         initViewPager(context);
     }
 
     private void initViewPager(Context context) {
         mFragmentList.clear();
+        mFragmentTitleList.clear();
         //
         boolean hasMonitorTaskList = PreferencesHelper.getInstance().getUserData().hasMonitorTaskList;
         if (isModel) {
@@ -73,8 +82,26 @@ public class FireSecurityWarnPresenter extends BasePresenter<IFireSecurityWarnVi
         getView().updateFireSecurityPageAdapterData(mFragmentTitleList, mFragmentList);
     }
 
+
     @Override
     public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+    }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        int code = eventData.code;
+        switch (code) {
+            case Constants.EVENT_DATA_SEARCH_MERCHANT:
+                if (isAttachedView()) {
+                    initViewPager(mActivity);
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
     }
 }

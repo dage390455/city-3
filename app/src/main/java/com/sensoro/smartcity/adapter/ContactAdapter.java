@@ -1,15 +1,16 @@
 package com.sensoro.smartcity.adapter;
 
 import android.app.Activity;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.sensoro.common.model.DeviceNotificationBean;
 import com.sensoro.smartcity.R;
-import com.sensoro.common.server.bean.DeployRecordInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ import butterknife.ButterKnife;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactViewHolder> {
     private final Activity mActivity;
-    List<DeployRecordInfo.NotificationBean> mList = new ArrayList<>();
+    List<DeviceNotificationBean> mList = new ArrayList<>();
 
     public ContactAdapter(Activity activity) {
         mActivity = activity;
@@ -34,7 +35,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
 
     @Override
     public void onBindViewHolder(@NonNull ContactViewHolder holder, int position) {
-        DeployRecordInfo.NotificationBean notificationBean = mList.get(position);
+        DeviceNotificationBean notificationBean = mList.get(position);
 //        if (notificationBean.getContent()!=null&&notificationBean.getContent()!=null) {
         holder.itemAdapterContactNamePhone.setText(notificationBean.getContact() + "：" + notificationBean.getContent());
 //        }
@@ -46,7 +47,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         return mList.size();
     }
 
-    public void updateContact(List<DeployRecordInfo.NotificationBean> notifications) {
+    public void updateContact(List<DeviceNotificationBean> notifications) {
         mList.clear();
         mList.addAll(notifications);
         notifyDataSetChanged();

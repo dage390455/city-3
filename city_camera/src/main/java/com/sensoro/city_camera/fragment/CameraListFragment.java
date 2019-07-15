@@ -2,24 +2,18 @@ package com.sensoro.city_camera.fragment;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.sensoro.city_camera.IMainViews.ICameraListFragmentView;
 import com.sensoro.city_camera.R;
-import com.sensoro.city_camera.activity.SecurityWarnDetailActivity;
-import com.sensoro.city_camera.activity.SecurityWarnRecordDetailActivity;
-import com.sensoro.city_camera.dialog.SecurityCameraDetailsDialog;
-import com.sensoro.city_camera.dialog.SecurityWarnConfirmDialog;
 import com.sensoro.city_camera.presenter.CameraListFragmentPresenter;
 import com.sensoro.common.base.BaseFragment;
 import com.sensoro.common.constant.ARouterConstants;

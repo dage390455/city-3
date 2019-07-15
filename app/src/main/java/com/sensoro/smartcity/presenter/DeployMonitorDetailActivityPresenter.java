@@ -285,7 +285,14 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
             getView().setNameAddressText(deployAnalyzerModel.nameAndAddress);
         }
-        getView().updateContactData(deployAnalyzerModel.deployContactModelList);
+        if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+            String contact = deployContactModel.name;
+            String content = deployContactModel.phone;
+            getView().setFirstContact(contact + "(" + content + ")");
+        }
+        getView().setTotalContact(deployAnalyzerModel.deployContactModelList.size());
+//        getView().updateContactData(deployAnalyzerModel.deployContactModelList);
         getView().updateTagsData(deployAnalyzerModel.tagList);
         tempSignal = deployAnalyzerModel.signal;
         freshSignalInfo();
@@ -801,7 +808,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (isAttachedView()){
+                        if (isAttachedView()) {
                             deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
                             tempSignal = deviceInfo.getSignal();
                             freshSignalInfo();
@@ -850,7 +857,14 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     //TODO 联系人
                     deployAnalyzerModel.deployContactModelList.clear();
                     deployAnalyzerModel.deployContactModelList.addAll((List<DeployContactModel>) data);
-                    getView().updateContactData(deployAnalyzerModel.deployContactModelList);
+                    if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+                        DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+                        String contact = deployContactModel.name;
+                        String content = deployContactModel.phone;
+                        getView().setFirstContact(contact + "(" + content + ")");
+                    }
+                    getView().setTotalContact(deployAnalyzerModel.deployContactModelList.size());
+//                    getView().updateContactData(deployAnalyzerModel.deployContactModelList);
                 }
                 getView().setUploadBtnStatus(checkCanUpload());
                 break;

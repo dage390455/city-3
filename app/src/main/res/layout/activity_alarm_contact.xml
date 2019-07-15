@@ -3,7 +3,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rc_root_add_alarm_contact"
     android:layout_width="match_parent"
-
     android:layout_height="match_parent">
 
 
@@ -15,6 +14,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/c_f4f4f4"
         android:layout_above="@+id/item_adapter_alarm_contact_add_ll"
         android:layout_below="@+id/ac_alarm_contact_title">
 
@@ -23,8 +23,6 @@
             android:id="@+id/root_ll_rc"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
-
             android:background="@color/c_f4f4f4"
             android:orientation="vertical">
 

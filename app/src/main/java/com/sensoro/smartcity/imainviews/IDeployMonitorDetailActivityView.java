@@ -1,12 +1,12 @@
 package com.sensoro.smartcity.imainviews;
 
 import android.graphics.drawable.Drawable;
+
 import androidx.annotation.NonNull;
 
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
-import com.sensoro.common.model.DeployContactModel;
 
 import java.util.List;
 
@@ -17,8 +17,6 @@ public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialo
     void setNameAddressText(String text);
 
     void setDeployWeChatText(String text);
-
-    void updateContactData(List<DeployContactModel> contacts);
 
     void updateTagsData(List<String> tagList);
 
@@ -67,4 +65,8 @@ public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialo
     void setUploadBtnStatus(boolean isEnable);
 
     void setDeployLocalCheckTipText(String tipText);
+
+    void setFirstContact(String contact);
+
+    void setTotalContact(int total);
 }
