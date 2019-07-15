@@ -135,13 +135,13 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     public void toastLong(String msg) {
-
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_LONG).show();
     }
 
 
     @Override
     public void setHpCurrentItem(int position) {
-        acMainHvpContent.setCurrentItem(position,false);
+        acMainHvpContent.setCurrentItem(position, false);
 
     }
 

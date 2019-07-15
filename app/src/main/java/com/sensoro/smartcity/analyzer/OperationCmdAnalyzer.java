@@ -32,6 +32,7 @@ public class OperationCmdAnalyzer {
                 doFhsjElecFires(mOperationType, sensoroDeviceConnection, callback);
                 break;
             case "acrel_fires":
+            case "acrel_alpha":
             case "acrel_single":
                 doAcrel(mOperationType, sensoroDeviceConnection, callback);
                 break;
@@ -76,9 +77,6 @@ public class OperationCmdAnalyzer {
                 builder.setCmd(8);
                 break;
             case MonitorPointOperationCode.AIR_SWITCH_POWER_ON_STR:
-                builder.setCmd(2);
-                break;
-            case MonitorPointOperationCode.SELF_CHECK_STR:
                 builder.setCmd(2);
                 break;
             case MonitorPointOperationCode.QUERY_STR:
@@ -186,6 +184,10 @@ public class OperationCmdAnalyzer {
         switch (mOperationType) {
             case MonitorPointOperationCode.ERASURE_STR:
                 builder.setSmokeCtrl(MsgNode1V1M5.SmokeCtrl.SMOKE_ERASURE);
+                break;
+
+            case MonitorPointOperationCode.ERASURE_LONG_STR:
+                builder.setSmokeCtrl(MsgNode1V1M5.SmokeCtrl.SMOKE_ERASURE_LONE);
                 break;
             default:
                 callback.onWriteFailure(0, 0);

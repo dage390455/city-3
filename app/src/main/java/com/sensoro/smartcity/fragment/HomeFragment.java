@@ -142,7 +142,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                     mPresenter.requestDataByTypes(position, homeTopModel);
                 } else {
                     //尝试刷新所有数据
-                    mPresenter.requestInitData(true);
+                    mPresenter.requestInitData(true, true);
                 }
                 //选择类型的pop点击事件
                 Resources resources = Objects.requireNonNull(mRootFragment.getActivity()).getResources();
@@ -305,9 +305,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             }
         });
         //
-        fgMainHomeRcContent.addOnScrollListener(new RecyclerView.OnScrollListener()
-
-        {
+        fgMainHomeRcContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -893,13 +891,13 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         try {
             HomeTopModel homeTopModel = mMainHomeFragRcContentAdapter.getData().get(currentPosition);
             if (homeTopModel == null) {
-                mPresenter.requestInitData(false);
+                mPresenter.requestInitData(false, true);
                 return;
             }
             mPresenter.requestWithDirection(DIRECTION_DOWN, false, homeTopModel);
         } catch (Exception e) {
             e.printStackTrace();
-            mPresenter.requestInitData(false);
+            mPresenter.requestInitData(false, true);
         }
     }
 

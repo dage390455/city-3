@@ -75,18 +75,31 @@
     <string name="confirm_that_the_alert_type_web_is">通过 Web 确认本次预警类型为</string>
     <string name="below_the_warning_value">低于预警值</string>
     <string name="achieve_warning_value">达到预警值</string>
-    <string name="the_system_calls_to">系统拨打电话至</string>
+
+
     <string name="the_system_sends_msg_to">系统发送短信至</string>
+    <string name="alarm_sms_sent_tip_new">系统发送预警短信至：</string>
+    <string name="alarm_sms_reciver_sent_tip_new">系统发送恢复短信至：</string>
+    <string name="alarm_sms_timeout_sent_tip_new">系统发送超时短信至：</string>
+    <string name="alarm_sms_real_sent_tip_new">系统发送真实火警短信至：</string>
+
+    <string name="the_system_calls_to">系统拨打电话至</string>
+    <string name="alarm_phone_sent_tip_new">系统拨打预警电话至：</string>
+    <string name="alarm_phone_reciver_sent_tip_new">系统拨打恢复电话至：</string>
+    <string name="alarm_phone_timeout_sent_tip_new">系统拨打超时电话至：</string>
+    <string name="alarm_phone_real_sent_tip_new">系统拨打真实火警电话至：</string>
+
+
     <string name="equipment_warning">设备预警</string>
     <string name="value_is">值为</string>
-    <string name="telephone_call">电话拨打中</string>
-    <string name="telephone_answer_success">电话接听成功</string>
-    <string name="telephone_answer_failed">电话接听失败</string>
-    <string name="telephone_answer_unknow">电话接听结果未知</string>
-    <string name="sms_sending">短信发送中</string>
-    <string name="sms_received_successfully">短信接收成功</string>
-    <string name="sms_received_failed">短信接收失败</string>
-    <string name="sms_received_unknow">短信接收结果未知</string>
+    <string name="telephone_call">拨打中</string>
+    <string name="telephone_answer_success">接收成功</string>
+    <string name="telephone_answer_failed">接收失败</string>
+    <string name="telephone_answer_unknow">结果未知</string>
+    <string name="sms_sending">发送中</string>
+    <string name="sms_received_successfully">接收成功</string>
+    <string name="sms_received_failed">接收失败</string>
+    <string name="sms_received_unknow">结果未知</string>
     <string name="personal">个人</string>
     <string name="legal_representative">法定代表人</string>
     <string name="inspection">巡检</string>
@@ -206,7 +219,7 @@
     <string name="abnormal_reporting_success">异常上报成功</string>
     <string name="abnormal_reporting_failure">异常上报失败</string>
     <string name="please_wait">请稍后</string>
-    <string name="disconnected_from_network">似乎断开了网络连接</string>
+    <string name="disconnected_from_network">似乎已断开与互联网的连接</string>
     <string name="this_feature_is_not_yet_open">此功能暂未开放</string>
     <string name="account_has_been_disabled">账户已停用</string>
     <string name="not_set">未设定</string>
@@ -253,7 +266,7 @@
     <string name="login">登录</string>
     <string name="finish">保存</string>
 
-    <string name="deploy_photo">部署图片</string>
+    <string name="deploy_photo">部署照片</string>
     <string name="input_name">输入名称</string>
     <string name="contract_list">合同管理</string>
     <string name="sensor_detail_sn">设备编号</string>
@@ -355,6 +368,9 @@
     <string name="alarm_contact_btn_save">保存</string>
     <string name="alarm_contact_tip_sample">例：某某</string>
     <string name="alarm_contact_tip_phone">预警电话</string>
+    <string name="alarm_contact_tip_msg">预警短信</string>
+
+
     <string name="alarm_contact_tip_phone_sample">例：18600000000</string>
     //预警日志xml
     <string name="alarm_log_alarm_time">报警时间</string>
@@ -501,6 +517,7 @@
     <string name="deploy_device_detail_deploy_photo">部署照片</string>
     <string name="deploy_device_detail_deploy_location">部署位置</string>
     <string name="deploy_device_detail_upload">上传</string>
+    <string name="deploy_device_detail_deploy_title">设备部署</string>
     //部署记录详情
     <string name="deploy_record_name_address">名称/地址</string>
     //巡检
@@ -690,7 +707,7 @@
     <string name="please_select_device_pic">请选择一张设备照片</string>
     <string name="please_select_installation_site">请选择一张现场照片</string>
     <string name="rated_current">额定电流/A</string>
-    <string name="deploy_configuration_enter_tip">请输入安装现场空气开关的额定电流，范围：</string>
+    <string name="deploy_configuration_enter_tip">空开标注额定电流</string>
     <string name="deploy_configuration">开始配置</string>
     <string name="if_it_is_a_store_please_upload">需能看清店面名称</string>
     <string name="check_ble_status">请检查蓝牙状态</string>
@@ -975,7 +992,7 @@
     <string name="delete_this_group">删除本组</string>
     <string name="not_matched_current_transformer">暂无推荐，请联系升哲研发人员确认</string>
     <string name="air_open_arguments">空开参数</string>
-    <string name="air_open_rated_current">空开标注额定电流/A (1&#8211;560)</string>
+    <string name="air_open_rated_current">空开标注额定电流/A (1&#8211;600)</string>
     <string name="diameter_arguments_tip">电线参数  请根据现场实际情况进行选择</string>
     <string name="match_result">匹配结果</string>
     <string name="look_detail">查看详情</string>
@@ -1117,8 +1134,48 @@
     <string name="association_sensort">关联传感器</string>
     <string name="sweep_code_associated">扫码关联</string>
     <string name="sensor_list">传感器列表中关联</string>
+
+    <string name="warning_contact">位预警联系人</string>
+
+    <string name="add_up_to_10_contacts">最多添加10个联系人</string>
+    <string name="duplicate_phone_number">电话号码重复</string>
+
     <string name="network_delay">网络时延</string>
     <string name="temperature_information">温度信息</string>
+    <string name="contacts">个联系人 </string>
+    <string name="etc">等</string>
+    <string name="total">共</string>
+    <string name="person">人</string>
+
+
     <string name="external">外部：</string>
     <string name="internal">内部：</string>
+
+    <string name="fire_warn_title">消防预警</string>
+    <string name="security_warn_title">安防预警</string>
+    <string name="app_name_city_camera">app_name_city_camera</string>
+
+    <string name="recommend_transformer_dialog_top">根据电流，推荐电流互感器型号：</string>
+    <string name="recommend_transformer_dialog_bottom">请选择现场安装的互感器型号（需大于推荐值，否则传感器将无法工作）</string>
+    <string name="recommend">推荐</string>
+    <string name="config_air_rated_current">空开额定电流</string>
+    <string name="config_recommend_trans">推荐互感器型号</string>
+    <string name="config_actual_trans">实际互感器型号</string>
+    <string name="config_input">进线</string>
+    <string name="please_add_config_input">请添加进线</string>
+    <string name="please_add_config_out">请添加出线</string>
+    <string name="config_output">出线</string>
+    <string name="device_detail_config_info">初始配置信息</string>
+    <string name="device_detail_config_trans">安装互感器型号</string>
+    <string name="initial_configuration_details">初始配置详情</string>
+    <string name="please_enter_the_configuration_parameters_correctly">请正确输入配置参数</string>
+    <string name="main_page_camera">摄像头</string>
+    <string name="mobile_network">您现在正在使用移动网络，请注意您的流量使用情况</string>
+    <string name="monitor_point_detail_alarm">报警</string>
+    <string name="monitor_point_detail_operat">操作中</string>
+    <string name="seven_day">7天内</string>
+    <string name="three_day">3天内</string>
+    <string name="one_day">1天内</string>
+
+
 </resources>

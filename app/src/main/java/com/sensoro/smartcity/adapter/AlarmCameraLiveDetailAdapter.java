@@ -18,6 +18,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.common.server.response.AlarmCameraLiveRsp;
 import com.sensoro.smartcity.R;
 import com.sensoro.common.utils.AppUtils;
@@ -101,9 +102,9 @@ public class AlarmCameraLiveDetailAdapter extends RecyclerView.Adapter<AlarmCame
         if (dataBean != null) {
             Glide.with(mContext)
                     .load(dataBean.getLastCover())
-                    .error(R.drawable.camera_placeholder)
+                    .apply(new RequestOptions().error(R.drawable.camera_placeholder)
 //                    .bitmapTransform(new GlideRoundTransform(mContext,dp4))
-                    .placeholder(R.drawable.camera_placeholder)
+                            .placeholder(R.drawable.camera_placeholder))
                     .into(holder.ivPicItemAdapterAlarmCameraLiveDetail);
             AlarmCameraLiveRsp.DataBean.CameraBean camera = dataBean.getCamera();
             if (camera != null) {

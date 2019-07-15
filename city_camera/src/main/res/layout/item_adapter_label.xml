@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/security_camera_details_label"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="8dp"
+    android:layout_gravity="right|center_vertical"
+    android:background="@drawable/security_camera_details_label_bg"
+    android:button="@null"
+    android:clickable="false"
+    android:focusable="false"
+    android:gravity="center"
+    android:paddingLeft="10dp"
+    android:paddingTop="4dp"
+    android:paddingRight="10dp"
+    android:paddingBottom="4dp"
+    android:text="望京 "
+    android:textColor="@color/security_warn_result_color"
+    android:textSize="10sp"
+    android:textStyle="bold" />
+

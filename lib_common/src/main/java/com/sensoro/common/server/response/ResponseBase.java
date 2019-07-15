@@ -8,7 +8,9 @@ package com.sensoro.common.server.response;
 public class ResponseBase {
     public static final int CODE_SUCCESS = 0;
     int errcode;
+    int code;
     String errmsg;
+
     public int getErrcode() {
         return errcode;
     }
@@ -29,7 +31,16 @@ public class ResponseBase {
     public String toString() {
         return "ResponseBase{" +
                 "errcode=" + errcode +
+                "code=" + code +
                 "errmsg=" + errmsg +
                 '}';
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 }

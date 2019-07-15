@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:fitsSystemWindows="true">
+
+    <ImageView
+        android:id="@+id/iv_camera_details_popup_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="end"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="6dp"
+        android:padding="10dp"
+        android:src="@mipmap/ic_close" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroview_camera_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_camera_details_popup_close"
+        android:layout_marginTop="4dp"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/layout_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="15dp">
+
+                <RelativeLayout
+                    android:id="@+id/title_rl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp">
+
+                    <TextView
+                        android:id="@+id/security_camera_details_title_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:singleLine="true"
+                        android:text="费家村56号超市外"
+                        android:textColor="@color/c_000000"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/security_camera_details_type_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/security_camera_details_title_tv"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginTop="8dp"
+                        android:text="抓拍机"
+                        android:textColor="@color/c_252525"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/security_camera_details_status_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/security_camera_details_type_tv"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toRightOf="@+id/security_camera_details_type_tv"
+                        android:text="在线"
+                        android:textColor="@color/c_1dbb99"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/security_camera_details_basicinfo_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/title_rl"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/word_base_info"
+                    android:textColor="@color/c_a6a6a6"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/security_camera_details_sn_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/security_camera_details_basicinfo_title"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/word_device_sn"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/security_camera_details_sn_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/security_camera_details_sn_title"
+                    android:layout_alignParentRight="true"
+                    android:text="11111111"
+                    android:textColor="@color/c_252525"
+                    android:textSize="14sp" />
+
+                <View
+                    android:id="@+id/line1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_below="@id/security_camera_details_sn_title"
+                    android:layout_marginTop="16dp"
+                    android:background="@color/c_dfdfdf" />
+
+                <TextView
+                    android:id="@+id/security_camera_details_brand_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/line1"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/title_camera_brand"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/security_camera_details_brand_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/security_camera_details_brand_title"
+                    android:layout_alignParentRight="true"
+                    android:text="SENSORO"
+                    android:textColor="@color/c_252525"
+                    android:textSize="14sp" />
+
+                <View
+                    android:id="@+id/line2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_below="@id/security_camera_details_brand_title"
+                    android:layout_marginTop="16dp"
+                    android:background="@color/c_dfdfdf" />
+
+                <RelativeLayout
+                    android:id="@+id/layout_labels"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/line2"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="16dp">
+
+                    <TextView
+                        android:id="@+id/security_camera_details_label_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:text="@string/title_label"
+                        android:textColor="@color/c_252525"
+                        android:textSize="16sp" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/label_rv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="right|center_vertical"
+                        android:layout_marginLeft="70dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="right|center_horizontal">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+
+
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/line3"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_below="@id/layout_labels"
+                    android:layout_marginTop="16dp"
+                    android:background="@color/c_dfdfdf" />
+
+                <TextView
+                    android:id="@+id/security_camera_details_verson_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/line3"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/title_camera_version"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/security_camera_details_verson_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/security_camera_details_verson_title"
+                    android:layout_alignParentRight="true"
+                    android:text="V2.0.0"
+                    android:textColor="@color/c_252525"
+                    android:textSize="14sp" />
+
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/view_space"
+                android:layout_width="match_parent"
+                android:layout_height="12dp"
+                android:layout_below="@id/layout_top"
+                android:background="@color/c_f4f4f4" />
+
+            <RelativeLayout
+                android:id="@+id/layout_camera_details_contact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/view_space"
+                android:paddingLeft="20dp"
+                android:paddingTop="16dp"
+                android:paddingRight="20dp">
+
+                <TextView
+                    android:id="@+id/security_camera_details_contact_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="@string/title_warn_contact"
+                    android:textColor="@color/c_a6a6a6"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/security_camera_details_contact_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/security_camera_details_contact_title"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="8dp"
+                    android:text=" 齐哲|18612345678"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/security_camera_details_contact_arrow"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_below="@id/security_camera_details_contact_title"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/arrows_right" />
+
+
+                <TextView
+                    android:id="@+id/security_camera_details_contact_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/security_camera_details_contact_title"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_toLeftOf="@id/security_camera_details_contact_arrow"
+                    android:text="@string/contact_count_tip"
+                    android:textColor="@color/c_a6a6a6"
+                    android:textSize="14sp" />
+
+
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/line4"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_below="@id/layout_camera_details_contact"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/c_dfdfdf" />
+
+            <RelativeLayout
+                android:id="@+id/layout_camera_details_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/line4"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="16dp">
+
+                <TextView
+                    android:id="@+id/security_camera_details_address_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/title_navi"
+                    android:textColor="@color/c_a6a6a6"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/security_camera_details_address_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/security_camera_details_address_title"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_toLeftOf="@+id/security_camera_details_address_arrow"
+                    android:singleLine="true"
+                    android:text=" aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/security_camera_details_address_arrow"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_alignBottom="@id/security_camera_details_address_tv"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/arrows_right" />
+
+            </RelativeLayout>
+        </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
+</RelativeLayout>

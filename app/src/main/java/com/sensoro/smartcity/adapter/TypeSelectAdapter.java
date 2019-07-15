@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,18 +12,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.server.bean.DeviceTypeStyles;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.common.callback.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,20 +106,20 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
             }
             holder.itemPopSelectTvTypeName.setText(name);
             Glide.with(mContext)                             //配置上下文
-                    .load(image)      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .listener(new RequestListener<String, GlideDrawable>() {
+                    .load(image)
+                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL).centerCrop())//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+                    .listener(new RequestListener<Drawable>() {
                         @Override
-                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                             return false;
                         }
 
                         @Override
-                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                             changeIconColor(holder, position != selectPosition, resource);
                             return true;
                         }
-                    }).centerCrop().into(holder.itemPopSelectImvTypeIcon);
+                    }).into(holder.itemPopSelectImvTypeIcon);
 
         }
         holder.itemPopSelectLlRoot.setOnClickListener(new View.OnClickListener() {

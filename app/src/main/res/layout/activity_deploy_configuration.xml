@@ -7,7 +7,7 @@
 
     <include
         android:id="@+id/ac_deploy_configuration_title_root"
-        layout="@layout/item_include_text_title" />
+        layout="@layout/item_include_text_text_title" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,6 +21,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/air_open_arguments"
+                android:textColor="@color/c_b6b6b6" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -32,6 +40,7 @@
                 android:paddingBottom="16dp">
 
                 <TextView
+                    android:id="@+id/tv_config_common_rated_current"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/rated_current"
@@ -60,24 +69,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:background="@null"
-                    android:gravity="end"
                     android:cursorVisible="true"
-                    android:textCursorDrawable="@drawable/my_cursor"
+                    android:gravity="end"
                     android:inputType="number"
                     android:textColor="@color/c_252525"
+                    android:textCursorDrawable="@drawable/my_cursor"
                     android:textSize="14dp" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/ac_deploy_configuration_tv_enter_tip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="20dp"
-                android:text="@string/deploy_configuration_enter_tip"
-                android:textColor="@color/c_a6a6a6"
-                android:textSize="12dp" />
         </LinearLayout>
 
         <TextView
@@ -156,8 +155,8 @@
                     android:id="@+id/ac_deploy_configuration_tv_diameter"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginStart="8dp"
+                    android:layout_weight="1"
                     android:background="@null"
                     android:gravity="end"
                     android:text="16"
@@ -174,7 +173,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:paddingBottom="14dp"
+        android:layout_marginBottom="20dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -190,34 +189,21 @@
             android:id="@+id/iv_current_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@null"
             android:paddingStart="4dp"
             android:paddingEnd="20dp"
-            android:contentDescription="@null"
+            android:visibility="gone"
             android:src="@drawable/elect_device_detail_info" />
+
         <TextView
             android:id="@+id/tv_current_value"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="end"
-            android:layout_height="wrap_content"
+            android:text="-"
             android:textColor="@color/c_252525"
             android:textSize="14dp" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/ac_deploy_configuration_tv_configuration"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/shape_bg_solid_df_corner"
-        android:clickable="false"
-        android:enabled="false"
-        android:gravity="center"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:text="@string/save"
-        android:textColor="@color/white"
-        android:textSize="16dp" />
 </LinearLayout>

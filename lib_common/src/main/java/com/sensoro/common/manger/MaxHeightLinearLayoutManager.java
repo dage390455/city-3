@@ -1,4 +1,4 @@
-package com.sensoro.nameplate.widget;
+package com.sensoro.common.manger;
 
 import android.content.Context;
 import android.graphics.Rect;

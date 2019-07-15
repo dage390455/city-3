@@ -6,6 +6,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.sensoro.common.R;
 import com.sensoro.common.base.ContextUtils;
 
@@ -30,14 +33,11 @@ public class SensoroToast {
     private volatile Toast mToast;
     private volatile TextView textView;
 
-    private void showToast(Context context, CharSequence content, int duration) {
-        context = context.getApplicationContext();
-        if (mToast == null) {
-            mToast = new Toast(context.getApplicationContext());
-            final View v = LayoutInflater.from(context).inflate(R.layout.layout_toast, null);
-            textView = (TextView) v.findViewById(R.id.textView1);
-            mToast.setView(v);//设置自定义的view
-        }
+    private void showToast(@Nullable Context context, @NonNull CharSequence content, int duration) {
+        mToast = new Toast(context);
+        final View v = LayoutInflater.from(context).inflate(R.layout.layout_toast, null);
+        textView = (TextView) v.findViewById(R.id.textView1);
+        mToast.setView(v);//设置自定义的view
         mToast.setDuration(duration);
         textView.setText(content);//设置文本
     }
@@ -54,13 +54,12 @@ public class SensoroToast {
         }
     }
 
-    public SensoroToast makeText(Context context, CharSequence text, int duration) {
-        context = context.getApplicationContext();
+    public SensoroToast makeText(@NonNull Context context, @NonNull CharSequence text, int duration) {
         showToast(context, text, duration);
         return this;
     }
 
-    public SensoroToast makeText(CharSequence text, int duration) {
+    public SensoroToast makeText(@NonNull CharSequence text, int duration) {
         showToast(ContextUtils.getContext(), text, duration);
         return this;
     }

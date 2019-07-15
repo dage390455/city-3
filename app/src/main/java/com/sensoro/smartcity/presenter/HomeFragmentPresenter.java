@@ -12,10 +12,12 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.model.EventData;
+import com.sensoro.common.model.NetWorkStateModel;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.RetryWithDelay;
@@ -35,7 +37,6 @@ import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.activity.SearchMonitorActivity;
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IHomeFragmentView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.HomeTopModel;
@@ -133,7 +134,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         final SoundPool.OnLoadCompleteListener listener = new SoundPool.OnLoadCompleteListener() {
             @Override
             public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                requestInitData(true);
+                requestInitData(true, true);
             }
         };
         mSoundPool.setOnLoadCompleteListener(listener);
@@ -143,7 +144,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
 
-    public void requestInitData(boolean needShowProgressDialog) {
+    public void requestInitData(boolean needShowProgressDialog, boolean needToast) {
         if (!PreferencesHelper.getInstance().getUserData().hasDeviceBrief) {
             needFreshAll = false;
             return;
@@ -230,7 +231,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 if (mHomeTopModels.size() > 0) {
                     updateHeaderTop(mHomeTopModels.get(0));
                 }
-                getView().toastShort(errorMsg);
+                if (needToast) {
+                    getView().toastShort(errorMsg);
+                }
                 getView().dismissAlarmInfoView();
                 getView().recycleViewRefreshComplete();
                 getView().dismissProgressDialog();
@@ -339,7 +342,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             @Override
             public void run() {
                 if (needFreshAll) {
-                    requestInitData(false);
+                    requestInitData(false, false);
                 } else {
                     if (needRefreshContent) {
                         if (homeTopModelCacheFresh[0] || homeTopModelCacheFresh[1] || homeTopModelCacheFresh[2] || homeTopModelCacheFresh[3] || homeTopModelCacheFresh[4]) {
@@ -529,7 +532,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     @Override
                     public void run() {
                         if (isAttachedView()) {
-                            requestInitData(true);
+                            requestInitData(true, true);
                         }
 
                     }
@@ -546,15 +549,21 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     throwable.printStackTrace();
                 }
                 break;
-            case Constants.EVENT_DATA_NET_WORK_CHANGE:
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(NetWorkStateModel netWorkStateModel) {
+        if (netWorkStateModel != null) {
+            if (!netWorkStateModel.ping) {
                 //TODO 暂时不加
 //                needFreshAll = true;
                 try {
-                    LogUtils.loge("CONNECTIVITY_ACTION --->> 网络变化 ");
+                    LogUtils.loge("CONNECTIVITY_ACTION --->> 网络断开 ");
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }
-                break;
+            }
         }
     }
 

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -253,10 +254,10 @@ implements ICameraPersonAvatarHistoryActivityView{
     @Override
     public void loadTitleAvatar(String faceUrl) {
         Glide.with(mActivity).load(Constants.CAMERA_BASE_URL+faceUrl)
-                .bitmapTransform(new GlideCircleTransform(mActivity))
-                .placeholder(R.drawable.person_locus_placeholder)
-                .error(R.drawable.person_locus_placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .apply(new RequestOptions().transform(new GlideCircleTransform(mActivity))
+                        .placeholder(R.drawable.person_locus_placeholder)
+                        .error(R.drawable.person_locus_placeholder)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL))
                 .into(ivTitleAvatarAcCameraPersonAvatarHistory);
     }
 }

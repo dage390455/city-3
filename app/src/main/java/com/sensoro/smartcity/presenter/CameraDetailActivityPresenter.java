@@ -10,10 +10,14 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.EventData;
@@ -148,7 +152,6 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
             getView().backFromWindowFull();
 
 
-
         }
     }
 
@@ -179,11 +182,13 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
 
     private void getLastCoverImage(String lastCover) {
-        Glide.with(mActivity).load(lastCover).asBitmap().into(new SimpleTarget<Bitmap>() {
+        Glide.with(mActivity).asBitmap().load(lastCover).into(new SimpleTarget<Bitmap>() {
             @Override
-            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                BitmapDrawable bitmapDrawable = new BitmapDrawable(resource);
-                getView().setImage(bitmapDrawable);
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                if (isAttachedView()){
+                    BitmapDrawable bitmapDrawable = new BitmapDrawable(resource);
+                    getView().setImage(bitmapDrawable);
+                }
             }
         });
     }
@@ -262,9 +267,9 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     }
 
     private void setLastCover(DeviceCameraFacePic model) {
-        Glide.with(mActivity).load(Constants.CAMERA_BASE_URL + model.getSceneUrl())
-                .asBitmap()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
+        Glide.with(mActivity).asBitmap().load(Constants.CAMERA_BASE_URL + model.getSceneUrl())
+                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
+                //缓存全尺寸
                 .into(getView().getImageView());
 
     }

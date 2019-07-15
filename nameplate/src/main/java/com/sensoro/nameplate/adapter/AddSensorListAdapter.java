@@ -14,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.R2;
@@ -63,8 +64,7 @@ public class AddSensorListAdapter extends RecyclerView.Adapter<AddSensorListAdap
         Glide.with(mContext)
                 .load(model.iconUrl)
                 .thumbnail(0.1f)
-                .error(R.drawable.ic_default_image)
-                .placeholder(R.drawable.ic_default_image)
+                .apply(new RequestOptions().error(R.drawable.ic_default_image).placeholder(R.drawable.ic_default_image))
                 .into(holder.ivIconItemAdapterAddSensorList);
 
         holder.ivIconItemAdapterAddSensorList.setColorFilter(Color.parseColor("#a6a6a6"));
@@ -83,7 +83,7 @@ public class AddSensorListAdapter extends RecyclerView.Adapter<AddSensorListAdap
         notifyDataSetChanged();
     }
 
-    public void setOnSensorListCheckListener(OnSensorListCheckListener listener){
+    public void setOnSensorListCheckListener(OnSensorListCheckListener listener) {
         mListener = listener;
     }
 
@@ -100,14 +100,15 @@ public class AddSensorListAdapter extends RecyclerView.Adapter<AddSensorListAdap
         TextView tvDeviceSnItemAdapterAddSensorList;
         @BindView(R2.id.cl_root_item_adapter_add_sensor_list)
         ConstraintLayout clRootItemAdapterAddSensorList;
+
         public AddSensorListAdapterViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
 
         }
     }
 
-    public interface OnSensorListCheckListener{
+    public interface OnSensorListCheckListener {
         void onChecked(int position);
     }
 }

@@ -2,6 +2,7 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,13 +20,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.bean.ScenesData;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.common.widgets.TouchRecycleView;
+import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MonitorDeployDetailPhotoAdapter;
 import com.sensoro.smartcity.adapter.MonitorDetailOperationAdapter;
@@ -33,17 +37,14 @@ import com.sensoro.smartcity.adapter.MonitoringPointRcContentAdapter;
 import com.sensoro.smartcity.adapter.MonitoringPointRcMalfunctionContentAdapter;
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.imainviews.IMonitorPointElectricDetailActivityView;
 import com.sensoro.smartcity.model.Elect3DetailModel;
 import com.sensoro.smartcity.model.TaskOptionModel;
 import com.sensoro.smartcity.presenter.MonitorPointElectricDetailActivityPresenter;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.widget.dialog.EarlyWarningThresholdDialogUtils;
 import com.sensoro.smartcity.widget.dialog.MonitorPointDemoDialogUtils;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
-import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
 import com.sensoro.smartcity.widget.dialog.TipDeviceUpdateDialogUtils;
 import com.sensoro.smartcity.widget.divider.BottomNoDividerItemDecoration;
 import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
@@ -157,27 +158,6 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     LinearLayout llMonitorDeployTime;
     @BindView(R.id.monitor_detail_tv_deploy_time)
     TextView monitorDetailTvDeployTime;
-    //线材
-    @BindView(R.id.iv_line_diameter_material)
-    ImageView ivLineDiameterMaterial;
-    @BindView(R.id.rl_monitor_diameter_material)
-    RelativeLayout rlMonitorDiameterMaterial;
-    @BindView(R.id.monitor_detail_tv_diameter_material)
-    TextView monitorDetailTvDiameterMaterial;
-    //线径
-    @BindView(R.id.iv_line_diameter)
-    ImageView ivLineDiameter;
-    @BindView(R.id.rl_monitor_diameter)
-    RelativeLayout rlMonitorDiameter;
-    @BindView(R.id.monitor_detail_tv_diameter)
-    TextView monitorDetailTvDiameter;
-    //过流阈值
-    @BindView(R.id.iv_line_over_current)
-    ImageView ivLineOverCurrent;
-    @BindView(R.id.rl_monitor_over_current)
-    RelativeLayout rlMonitorOverCurrent;
-    @BindView(R.id.monitor_detail_tv_over_current)
-    TextView monitorDetailTvOverCurrent;
     //固件版本
     @BindView(R.id.rl_monitor_device_update)
     RelativeLayout rlMonitorDeviceUpdate;
@@ -208,6 +188,18 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     TextView monitorDetailTvDeployCameras;
     @BindView(R.id.line_monitor_deploy_cameras)
     View lineMonitorDeployCameras;
+    @BindView(R.id.iv_line_device_config)
+    ImageView ivLineDeviceConfig;
+    @BindView(R.id.iv_monitor_device_config)
+    ImageView ivMonitorDeviceConfig;
+    @BindView(R.id.tv_device_detail_config_actual)
+    TextView tvDeviceDetailConfigActual;
+    @BindView(R.id.tv_device_detail_config_trans)
+    TextView tvDeviceDetailConfigTrans;
+    @BindView(R.id.monitor_detail_ll_device_config)
+    LinearLayout monitorDetailLlDeviceConfig;
+    @BindView(R.id.rl_monitor_device_config)
+    RelativeLayout rlMonitorDeviceConfig;
     private boolean showDetail = false;
     private MonitoringPointRcContentAdapter mContentAdapter;
     private MonitoringPointRcMalfunctionContentAdapter mContentMalfunctionAdapter;
@@ -698,6 +690,20 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     @Override
+    public void setDeviceDetailConfigInfo(String actual, String trans) {
+        rlMonitorDeviceConfig.setVisibility(View.VISIBLE);
+        ivLineDeviceConfig.setVisibility(View.VISIBLE);
+        tvDeviceDetailConfigActual.setText(actual);
+        if (TextUtils.isEmpty(trans)) {
+            tvDeviceDetailConfigTrans.setVisibility(View.GONE);
+        } else {
+            tvDeviceDetailConfigTrans.setVisibility(View.VISIBLE);
+            tvDeviceDetailConfigTrans.setText(trans);
+        }
+
+    }
+
+    @Override
     public void dismissTipDialog() {
         if (mTipUtils != null) {
             mTipUtils.dismiss();
@@ -870,7 +876,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
 
 
     @OnClick({R.id.include_text_title_tv_subtitle, R.id.ac_monitoring_point_cl_alert_contact, R.id.ac_monitoring_point_imv_location, R.id.ac_monitoring_point_cl_location_navigation,
-            R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left, R.id.ll_elect_more, R.id.ll_all_info, R.id.rl_monitor_device_update, R.id.iv_monitor_device_demo, R.id.rl_monitor_demo_mode_tip, R.id.ll_monitor_deploy_cameras})
+            R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left, R.id.ll_elect_more, R.id.ll_all_info, R.id.rl_monitor_device_update, R.id.iv_monitor_device_demo, R.id.rl_monitor_demo_mode_tip, R.id.ll_monitor_deploy_cameras, R.id.rl_monitor_device_config})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
@@ -909,6 +915,9 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
                 break;
             case R.id.ll_monitor_deploy_cameras:
                 mPresenter.doDeviceGroupCameras();
+                break;
+            case R.id.rl_monitor_device_config:
+                mPresenter.goConfigDetailInfo();
                 break;
         }
     }
@@ -949,27 +958,6 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     public void setMonitorDeployTime(String time) {
         monitorDetailTvDeployTime.setVisibility(View.VISIBLE);
         monitorDetailTvDeployTime.setText(time);
-    }
-
-    @Override
-    public void setMonitorSwitchSpec(String text) {
-        ivLineOverCurrent.setVisibility(View.VISIBLE);
-        rlMonitorOverCurrent.setVisibility(View.VISIBLE);
-        monitorDetailTvOverCurrent.setText(text);
-    }
-
-    @Override
-    public void setMonitorWireMaterial(String text) {
-        ivLineDiameterMaterial.setVisibility(View.VISIBLE);
-        rlMonitorDiameterMaterial.setVisibility(View.VISIBLE);
-        monitorDetailTvDiameterMaterial.setText(text);
-    }
-
-    @Override
-    public void setMonitorWireDiameter(String text) {
-        ivLineDiameter.setVisibility(View.VISIBLE);
-        rlMonitorDiameter.setVisibility(View.VISIBLE);
-        monitorDetailTvDiameter.setText(text);
     }
 
     @Override
@@ -1100,5 +1088,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             tipBleDialogUtils.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+
 }
 

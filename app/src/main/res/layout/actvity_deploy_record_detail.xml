@@ -336,113 +336,79 @@
                     android:layout_marginEnd="20dp"
                     android:background="@color/c_dfdfdf" />
 
-                <LinearLayout
-                    android:id="@+id/ac_deploy_record_detail_ll_material"
+
+                <RelativeLayout
+                    android:id="@+id/rl_deploy_record_config"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="16dp"
-                    android:orientation="horizontal">
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:visibility="visible">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/monitor_material"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="20dp"
+                        android:text="@string/device_detail_config_info"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14dp" />
 
-                    <TextView
-                        android:id="@+id/ac_deploy_record_detail_tv_material"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:text="-"
-                        android:textColor="@color/c_252525" />
-                </LinearLayout>
-
-                <View
-                    android:id="@+id/ac_deploy_device_detail_deploy_record_material_line"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_divider_height"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:background="@color/c_dfdfdf" />
-
-                <LinearLayout
-                    android:id="@+id/ac_deploy_record_detail_ll_diameter"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="16dp"
-                    android:orientation="horizontal">
-
-                    <TextView
+                    <ImageView
+                        android:id="@+id/iv_deploy_record_config"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/diameter"
-                        android:textColor="@color/c_a6a6a6"
-                        android:textSize="14dp" />
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="20dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/arrows_right" />
 
-                    <TextView
-                        android:id="@+id/ac_deploy_record_detail_tv_diameter"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:text="-"
-                        android:textColor="@color/c_252525" />
-                </LinearLayout>
-
-                <View
-                    android:id="@+id/ac_deploy_device_detail_deploy_record_diameter_line"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_divider_height"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:background="@color/c_dfdfdf" />
-
-                <LinearLayout
-                    android:id="@+id/ac_deploy_record_detail_ll_rated_current"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="16dp"
-                    android:orientation="horizontal">
-
-                    <TextView
+                    <LinearLayout
+                        android:id="@+id/ll_deploy_record_config"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/air_rated_current"
-                        android:textColor="@color/c_a6a6a6"
-                        android:textSize="14dp" />
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_toStartOf="@id/iv_deploy_record_config"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/ac_deploy_record_detail_tv_rated_current"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:text="-"
-                        android:textColor="@color/c_252525" />
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/tv_deploy_record_config_actual"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:singleLine="true"
+                            android:text="-"
+                            android:textColor="@color/c_252525"
+                            android:textSize="14dp" />
+
+                        <TextView
+                            android:id="@+id/tv_deploy_record_config_trans"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_marginTop="4dp"
+                            android:singleLine="true"
+                            android:text="-"
+                            android:textColor="@color/c_252525"
+                            android:textSize="14dp"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                </RelativeLayout>
 
                 <View
-                    android:id="@+id/ac_deploy_device_detail_deploy_record_rated_current_line"
+                    android:id="@+id/line_deploy_record_config"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/view_divider_height"
+                    android:layout_height="0.5dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
-                    android:background="@color/c_dfdfdf" />
+                    android:background="@color/c_dfdfdf"
+                    android:contentDescription="@null"
+                    android:visibility="visible" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

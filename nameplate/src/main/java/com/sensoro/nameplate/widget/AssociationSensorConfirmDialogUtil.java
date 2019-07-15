@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.sensoro.common.manger.MaxHeightLinearLayoutManager;
 import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.widgets.CustomCornerDialog;
 import com.sensoro.common.widgets.MaxHeightRecyclerView;
