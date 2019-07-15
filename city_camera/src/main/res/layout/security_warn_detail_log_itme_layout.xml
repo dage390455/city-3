@@ -20,6 +20,7 @@
         android:layout_marginStart="8dp"
         android:textColor="@color/c_a6a6a6"
         android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/icon"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,6 +33,7 @@
         android:textColor="@color/c_252525"
         android:textSize="12sp"
         android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/security_warn_detail_log_item_title_tv"
         app:layout_constraintTop_toBottomOf="@id/security_warn_detail_log_item_title_tv" />
 
@@ -42,6 +44,7 @@
         android:layout_marginTop="6dp"
         android:textColor="@color/c_a6a6a6"
         android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/security_warn_detail_log_item_title_tv"
         app:layout_constraintTop_toBottomOf="@id/security_warn_detail_log_item_remarks_tv" />
 </androidx.constraintlayout.widget.ConstraintLayout>

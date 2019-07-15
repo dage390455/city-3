@@ -99,8 +99,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private final String[] transports = {"websocket"};
 
     private final class ScreenBroadcastReceiver extends BroadcastReceiver {
-        private boolean isFirst = true;
-
         @Override
         public void onReceive(Context context, Intent intent) {
 
@@ -130,25 +128,16 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                             if (activeNetwork != null) {
                                 if (activeNetwork.isConnected()) {
                                     if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                                        //当前WiFi连接可用
                                         netCanUseData.data = ConnectivityManager.TYPE_WIFI;
-
-                                        try {
-                                            LogUtils.loge("CONNECTIVITY_ACTION--->>当前WiFi连接可用 ");
-                                        } catch (Throwable throwable) {
-                                            throwable.printStackTrace();
-                                        }
+                                        reconnect();
                                     } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                                        //当前移动网络连接可用
                                         netCanUseData.data = ConnectivityManager.TYPE_MOBILE;
-
-                                        try {
-                                            LogUtils.loge("CONNECTIVITY_ACTION--->>当前移动网络连接可用 ");
-                                        } catch (Throwable throwable) {
-                                            throwable.printStackTrace();
-                                        }
+                                        reconnect();
                                     }
                                 } else {
                                     netCanUseData.data = -1;
-
                                     try {
                                         LogUtils.loge("CONNECTIVITY_ACTION--->>当前没有网络连接，请确保你已经打开网络 ");
                                         LogUtils.loge("CONNECTIVITY_ACTION--->>info.getTypeName()" + activeNetwork.getTypeName());
@@ -163,24 +152,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                                     }
                                 }
 
-                            } else {   // not connected to the internet
+                            } else {   // 当前没有网络连接，请确保你已经打开网络
                                 netCanUseData.data = -1;
-
-                                try {
-                                    LogUtils.loge("CONNECTIVITY_ACTION--->>当前没有网络连接，请确保你已经打开网络 ");
-                                } catch (Throwable throwable) {
-                                    throwable.printStackTrace();
-                                }
                             }
                             EventBus.getDefault().post(netCanUseData);
                         }
-
-                        if (!isFirst) {
-                            mHandler.removeCallbacks(mNetWorkTaskRunnable);
-                            mHandler.postDelayed(mNetWorkTaskRunnable, 2000);
-                        }
-                        isFirst = false;
-
                         break;
 
                 }

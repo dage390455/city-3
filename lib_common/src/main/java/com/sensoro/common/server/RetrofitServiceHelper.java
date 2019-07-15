@@ -402,9 +402,9 @@ public class RetrofitServiceHelper {
         //
         return builder
                 .addInterceptor(interceptor)
-                .addInterceptor(cacheControlInterceptor)
-                .cookieJar(cookieJar)
-                .cache(cache)
+//                .addInterceptor(cacheControlInterceptor)
+//                .cookieJar(cookieJar)
+//                .cache(cache)
                 .addNetworkInterceptor(logging)
                 .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .build();
