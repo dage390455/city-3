@@ -1028,6 +1028,9 @@
     <string name="person_avatar_history">人脸记录</string>
     <string name="person_avatar_video">人脸视频</string>
     <string name="obtain_video_fail">获取视频失败</string>
+    <string name="one_day">1 天内</string>
+    <string name="three_day">3 天内</string>
+    <string name="seven_day">7 天内</string>
     <string name="camera_name_device_number">摄像机名称/设备号</string>
     <string name="reset_filter">重置</string>
     <string name="camera_info_get_failed">摄像机信息获取失败</string>
