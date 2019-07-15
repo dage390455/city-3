@@ -2,8 +2,8 @@ package com.sensoro.common.model;
 
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.DeployControlSettingData;
+import com.sensoro.common.server.bean.DeployPicInfo;
 import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
-import com.sensoro.common.model.ImageItem;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class DeployAnalyzerModel implements Serializable {
     //
     public final List<DeployContactModel> deployContactModelList = new ArrayList<>();
     //
-    public final ArrayList<ImageItem> images = new ArrayList<>();
+    public final ArrayList<DeployPicInfo> images = new ArrayList<>();
     //旧设备
     public InspectionTaskDeviceDetail mDeviceDetail;
     //

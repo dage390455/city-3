@@ -34,6 +34,7 @@ import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.RetryWithDelay;
 import com.sensoro.common.server.bean.DeployControlSettingData;
+import com.sensoro.common.server.bean.DeployPicInfo;
 import com.sensoro.common.server.bean.DeployStationInfo;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.DeviceTypeStyles;
@@ -552,9 +553,12 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             };
             UpLoadPhotosUtils upLoadPhotosUtils = new UpLoadPhotosUtils(mContext, upLoadPhotoListener);
             ArrayList<ImageItem> list = new ArrayList<>();
-            for (ImageItem image : deployAnalyzerModel.images) {
-                if (image != null) {
-                    list.add(image);
+            for (DeployPicInfo deployPicInfo : deployAnalyzerModel.images) {
+                if (deployPicInfo != null) {
+                    if (deployPicInfo.photoItem != null) {
+                        list.add(deployPicInfo.photoItem);
+                    }
+
                 }
             }
             upLoadPhotosUtils.doUploadPhoto(list);
@@ -768,9 +772,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     public void doSettingPhoto() {
         Bundle bundle = new Bundle();
-        if (getRealImageSize() > 0) {
-            bundle.putSerializable(Constants.EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
-        }
+        bundle.putSerializable(Constants.EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
         bundle.putString(Constants.EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
         startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_PIC, bundle, mContext);
 
@@ -852,7 +854,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 if (data instanceof List) {
                     deployAnalyzerModel.images.clear();
 
-                    deployAnalyzerModel.images.addAll((ArrayList<ImageItem>) data);
+                    deployAnalyzerModel.images.addAll((ArrayList<DeployPicInfo>) data);
 
                     if (getRealImageSize() > 0) {
                         getView().setDeployPhotoText(mContext.getString(R.string.added) + getRealImageSize() + mContext.getString(R.string.images));
@@ -903,9 +905,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     private int getRealImageSize() {
         int count = 0;
-        for (ImageItem image : deployAnalyzerModel.images) {
-            if (image != null) {
-                count++;
+        for (DeployPicInfo deployPicInfo : deployAnalyzerModel.images) {
+            if (deployPicInfo != null) {
+                if (deployPicInfo.photoItem != null) {
+                    count++;
+                }
             }
         }
         return count;

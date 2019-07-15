@@ -29,6 +29,7 @@ import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeployCameraUploadInfo;
+import com.sensoro.common.server.bean.DeployPicInfo;
 import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.CameraFilterRsp;
@@ -353,9 +354,11 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
             };
             UpLoadPhotosUtils upLoadPhotosUtils = new UpLoadPhotosUtils(mContext, upLoadPhotoListener);
             ArrayList<ImageItem> list = new ArrayList<>();
-            for (ImageItem image : deployAnalyzerModel.images) {
-                if (image != null) {
-                    list.add(image);
+            for (DeployPicInfo deployPicInfo : deployAnalyzerModel.images) {
+                if (deployPicInfo != null) {
+                    if (deployPicInfo.photoItem != null) {
+                        list.add(deployPicInfo.photoItem);
+                    }
                 }
             }
             upLoadPhotosUtils.doUploadPhoto(list);
@@ -461,15 +464,13 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
 
     public void doSettingPhoto() {
         Bundle bundle = new Bundle();
-        if (getRealImageSize() > 0) {
-            bundle.putSerializable(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
-        }
+        bundle.putSerializable(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
         bundle.putString(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, "deploy_camera");
         startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_PIC, bundle, mContext);
 
 //        Intent intent = new Intent(mContext, DeployMonitorDeployPicActivity.class);
 //        if (getRealImageSize() > 0) {
-//            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
+//            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO,  );
 //        }
 //        intent.putExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, "deploy_camera");
 //        getView().startAC(intent);
@@ -515,7 +516,7 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
                 if (data instanceof List) {
                     deployAnalyzerModel.images.clear();
 
-                    deployAnalyzerModel.images.addAll((ArrayList<ImageItem>) data);
+                    deployAnalyzerModel.images.addAll((ArrayList<DeployPicInfo>) data);
 
                     if (getRealImageSize() > 0) {
                         getView().setDeployPhotoText(mContext.getString(R.string.added) + getRealImageSize() + mContext.getString(R.string.images));
@@ -540,9 +541,11 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
 
     private int getRealImageSize() {
         int count = 0;
-        for (ImageItem image : deployAnalyzerModel.images) {
-            if (image != null) {
-                count++;
+        for (DeployPicInfo deployPicInfo : deployAnalyzerModel.images) {
+            if (deployPicInfo != null) {
+                if (deployPicInfo.photoItem != null) {
+                    count++;
+                }
             }
         }
         return count;

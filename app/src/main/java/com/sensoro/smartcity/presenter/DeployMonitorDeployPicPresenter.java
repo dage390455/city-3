@@ -54,7 +54,7 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
             if (serializable instanceof ArrayList) {
                 imageList = (ArrayList<ImageItem>) serializable;
             }
-        }else{
+        } else {
             getView().setDeployPicTvInstallationSiteTipVisible(false);
         }
 
@@ -92,14 +92,14 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
                 deployPicInfo2.description = mActivity.getString(R.string.deploy_pic_look_installation_environmental);
                 deployPicInfos.add(deployPicInfo1);
                 deployPicInfos.add(deployPicInfo2);
-            }else if("deploy_nameplate".equals(deviceType)){
+            } else if ("deploy_nameplate".equals(deviceType)) {
                 DeployPicInfo deployPicInfo2 = new DeployPicInfo();
                 deployPicInfo2.isRequired = null;
                 deployPicInfo2.title = mActivity.getString(R.string.deploy_pic_installation_sit);
                 deployPicInfo2.description = mActivity.getString(R.string.deploy_pic_nameplate_look_installation_environmental);
 
                 deployPicInfos.add(deployPicInfo2);
-            } else{
+            } else {
                 DeployPicInfo deployPicInfo1 = new DeployPicInfo();
                 deployPicInfo1.title = mActivity.getString(R.string.deploy_pic_device_pic);
                 deployPicInfo1.isRequired = true;
@@ -130,7 +130,6 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
 
         }
         getView().updateData(deployPicInfos);
-        checkCanSave();
     }
 
     @Override
@@ -192,7 +191,6 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
                     }
 
                 }
-                checkCanSave();
             }
 //        else if (resultCode == ImagePicker.RESULT_CODE_BACK) {
             //预览图片返回
@@ -236,7 +234,6 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
 
         if (isAttachedView()) {
             getView().updateIndexData(null, index);
-            checkCanSave();
         }
 
     }
@@ -250,27 +247,27 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
 //            getView().toastShort(mActivity.getString(R.string.please_select_installation_site));
 //            return;
 //        }
-        if (!checkCanSave()) {
-            getView().toastShort(mActivity.getString(R.string.please_deploy_upload_all_pic));
-            return;
-        }
-        ArrayList<ImageItem> imageItems = new ArrayList<>();
+//        if (!checkCanSave()) {
+//            getView().toastShort(mActivity.getString(R.string.please_deploy_upload_all_pic));
+//            return;
+//        }
+//        ArrayList<ImageItem> imageItems = new ArrayList<>();
 //        imageItems.add(selImages[0]);
 //        imageItems.add(selImages[1]);
 //        if (selImages[2] != null) {
 //            imageItems.add(selImages[2]);
 //        }
         List<DeployPicInfo> deployPicData = getView().getDeployPicData();
-        for (DeployPicInfo deployPicDatum : deployPicData) {
-            if (deployPicDatum.photoItem != null) {
-                imageItems.add(deployPicDatum.photoItem);
-            }
-
-        }
+//        for (DeployPicInfo deployPicDatum : deployPicData) {
+//            if (deployPicDatum.photoItem != null) {
+//                imageItems.add(deployPicDatum.photoItem);
+//            }
+//
+//        }
 
         EventData eventData = new EventData();
         eventData.code = Constants.EVENT_DATA_DEPLOY_SETTING_PHOTO;
-        eventData.data = imageItems;
+        eventData.data = deployPicData;
         EventBus.getDefault().post(eventData);
         getView().finishAc();
     }
