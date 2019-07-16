@@ -83,6 +83,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private final Handler mHandler = new Handler();
     private final MainPresenter.TaskRunnable mRunnable = new MainPresenter.TaskRunnable();
     private final NetWorkTaskRunnable mNetWorkTaskRunnable = new NetWorkTaskRunnable();
+    private final FreshAlarmCountTask mFreshAlarmCountTaskRunnable = new FreshAlarmCountTask();
     //
     private FireSecurityWarnFragment warnFragment;
     private HomeFragment homeFragment;
@@ -91,6 +92,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private ScreenBroadcastReceiver mScreenReceiver;
     //默认应后后端要求，默认只能支持websocket协议
     private final String[] transports = {"websocket"};
+    private boolean needFreshAlarmCount = true;
 
     private final class ScreenBroadcastReceiver extends BroadcastReceiver {
         @Override
@@ -265,7 +267,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                     createSocket();
                 }
             }, 1500);
-            freshAlarmCount();
+            mHandler.post(mFreshAlarmCountTaskRunnable);
         } else {
             openLogin();
         }
@@ -664,15 +666,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
         switch (eventAlarmStatusModel.status) {
             case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
             case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
-                mContext.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isAttachedView()) {
-                            freshAlarmCount();
-                        }
-                    }
-                });
-
+                needFreshAlarmCount = true;
                 break;
             default:
                 break;
@@ -755,23 +749,38 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
 
     private void freshAlarmCount() {
         if (!hasAlarmInfoControl()) {
+            needFreshAlarmCount = false;
             return;
         }
         String[] str = {"0"};
+
         RetrofitServiceHelper.getInstance().getAlarmCount(null, null, str, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>(this) {
             @Override
             public void onCompleted(AlarmCountRsp alarmCountRsp) {
                 int count = alarmCountRsp.getCount();
                 getView().setAlarmWarnCount(count);
+                needFreshAlarmCount = false;
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().setAlarmWarnCount(0);
-                getView().toastShort(errorMsg);
             }
         });
     }
+
+    private final class FreshAlarmCountTask implements Runnable {
+
+        @Override
+        public void run() {
+            if (needFreshAlarmCount) {
+                freshAlarmCount();
+            }
+            mHandler.postDelayed(mFreshAlarmCountTaskRunnable, 3000);
+        }
+
+    }
+
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
