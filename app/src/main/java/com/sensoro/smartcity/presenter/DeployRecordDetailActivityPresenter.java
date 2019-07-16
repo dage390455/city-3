@@ -275,12 +275,16 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
     }
 
     public void showContactDialog() {
-        if (deviceNotificationBeans != null && deviceNotificationBeans.size() > 0) {
-            WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mActivity);
-            dialogUtil.show(deviceNotificationBeans);
-        } else {
-            //暂时先不提示
+        if (deviceNotificationBeans != null) {
+            if (deviceNotificationBeans.size() > 1) {
+                WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mActivity);
+                dialogUtil.setCanCallPhone(false);
+                dialogUtil.show(deviceNotificationBeans);
+            } else {
+                //暂时先不提示
 //            getView().toastShort(mActivity.getString(R.string.no_find_contact_phone_number));
+            }
         }
+
     }
 }
