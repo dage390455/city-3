@@ -26,6 +26,7 @@ import com.sensoro.common.server.response.DeviceAlarmLogRsp;
 import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
 import com.sensoro.common.server.response.ResponseBase;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmDetailLogActivity;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
@@ -34,7 +35,6 @@ import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.smartcity.widget.dialog.WarningContactDialogUtil;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
 

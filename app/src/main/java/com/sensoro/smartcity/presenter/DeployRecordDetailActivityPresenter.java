@@ -22,7 +22,7 @@ import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMapENActivity;
 import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.smartcity.widget.dialog.WarningContactDialogUtil;
+import com.sensoro.smartcity.widget.dialog.DeployRecordContactDialogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
 
@@ -277,9 +277,8 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
     public void showContactDialog() {
         if (deviceNotificationBeans != null) {
             if (deviceNotificationBeans.size() > 1) {
-                WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mActivity);
-                dialogUtil.setCanCallPhone(false);
-                dialogUtil.show(deviceNotificationBeans);
+                DeployRecordContactDialogUtils deployRecordContactDialogUtils =new DeployRecordContactDialogUtils(mActivity);
+                deployRecordContactDialogUtils.show(deviceNotificationBeans);
             } else {
                 //暂时先不提示
 //            getView().toastShort(mActivity.getString(R.string.no_find_contact_phone_number));

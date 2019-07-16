@@ -20,13 +20,13 @@ import com.sensoro.common.server.bean.MalfunctionListInfo;
 import com.sensoro.common.server.response.DeviceInfoListRsp;
 import com.sensoro.common.server.response.MalfunctionCountRsp;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MalfunctionHistoryActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.imainviews.IMalfunctionDetailActivityView;
 import com.sensoro.smartcity.util.CityAppUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.smartcity.widget.dialog.WarningContactDialogUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
