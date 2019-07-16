@@ -20,9 +20,9 @@ import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.AlarmCameraLiveBean;
 import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
-import com.sensoro.common.server.response.AlarmCameraLiveRsp;
-import com.sensoro.common.server.response.DeviceCameraDetailRsp;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IAlarmCameraLiveDetailActivityView;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
@@ -41,7 +41,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarmCameraLiveDetailActivityView> {
     private Activity mActivity;
-    private ArrayList<AlarmCameraLiveRsp.DataBean> mList = new ArrayList<>();
+    private ArrayList<AlarmCameraLiveBean> mList = new ArrayList<>();
     private List<String> cameras;
     private int mItemClickPosition = 0;
 
@@ -148,11 +148,11 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
 
         }
         RetrofitServiceHelper.getInstance().getAlarmCamerasDetail(cameras).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCameraLiveRsp>(this) {
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<AlarmCameraLiveBean>>>(this) {
 
             @Override
-            public void onCompleted(AlarmCameraLiveRsp alarmCameraLiveRsp) {
-                List<AlarmCameraLiveRsp.DataBean> data = alarmCameraLiveRsp.getData();
+            public void onCompleted(ResponseResult<List<AlarmCameraLiveBean>> alarmCameraLiveRsp) {
+                List<AlarmCameraLiveBean> data = alarmCameraLiveRsp.getData();
                 mList.clear();
                 if (data != null && data.size() > 0) {
                     mList.addAll(data);
@@ -194,7 +194,7 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
 
     public void doLive() {
         if (mList.size() > mItemClickPosition) {
-            AlarmCameraLiveRsp.DataBean dataBean = mList.get(mItemClickPosition);
+            AlarmCameraLiveBean dataBean = mList.get(mItemClickPosition);
             if (dataBean == null) {
                 getView().toastShort(mActivity.getString(R.string.unknown_error));
                 return;
@@ -239,9 +239,9 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
 
     public void regainGetCameraState(final String sn) {
         getView().showProgressDialog();
-        RetrofitServiceHelper.getInstance().getDeviceCamera(sn).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraDetailRsp>(this) {
+        RetrofitServiceHelper.getInstance().getDeviceCamera(sn).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceCameraDetailInfo>>(this) {
             @Override
-            public void onCompleted(DeviceCameraDetailRsp deviceCameraDetailRsp) {
+            public void onCompleted(ResponseResult<DeviceCameraDetailInfo> deviceCameraDetailRsp) {
                 DeviceCameraDetailInfo data = deviceCameraDetailRsp.getData();
                 if (data != null) {
                     String hls = data.getHls();

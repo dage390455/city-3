@@ -15,7 +15,7 @@ import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeviceTypeStyles;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.bean.NamePlateInfo;
-import com.sensoro.common.server.response.NameplateBindDeviceRsp;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.nameplate.IMainViews.IDeployNameplateAddSensorActivityView;
 import com.sensoro.nameplate.R;
 
@@ -72,9 +72,9 @@ public class DeployNameplateAddSensorActivityPresenter extends BasePresenter<IDe
         }
 
         RetrofitServiceHelper.getInstance().getNameplateBindDevices(page, 20, mNameplateId)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<NameplateBindDeviceRsp>(this) {
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<NamePlateInfo>>>(this) {
             @Override
-            public void onCompleted(NameplateBindDeviceRsp nameplateBindDeviceRsp) {
+            public void onCompleted(ResponseResult<List<NamePlateInfo>> nameplateBindDeviceRsp) {
                 List<NamePlateInfo> data = nameplateBindDeviceRsp.getData();
                 if (direction == Constants.DIRECTION_DOWN) {
                     mBindList.clear();

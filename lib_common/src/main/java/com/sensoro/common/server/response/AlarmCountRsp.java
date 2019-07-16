@@ -1,6 +1,6 @@
 package com.sensoro.common.server.response;
 
-public class AlarmCountRsp extends ResponseBase {
+public class AlarmCountRsp extends ResponseResult {
     public int getCount() {
         return count;
     }

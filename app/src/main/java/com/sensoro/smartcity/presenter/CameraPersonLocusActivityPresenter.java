@@ -31,12 +31,12 @@ import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeviceCameraHistoryBean;
-import com.sensoro.common.server.response.DeviceCameraHistoryRsp;
-import com.sensoro.common.server.response.DeviceCameraPersonFaceRsp;
+import com.sensoro.common.server.bean.DeviceCameraPersonFaceBean;
+import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.ICameraPersonLocusActivityView;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.widget.GlideCircleTransform;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
@@ -56,13 +56,13 @@ import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAU
 public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPersonLocusActivityView> {
     private Activity mActivity;
     private int index = 0;
-    private List<DeviceCameraPersonFaceRsp.DataBean> data;
+    private List<DeviceCameraPersonFaceBean> data;
     private int index1;
-    private DeviceCameraPersonFaceRsp.DataBean preBean;
+    private DeviceCameraPersonFaceBean preBean;
     private ArrayList<LatLng> displayLinePoints = new ArrayList<>();
     private ArrayList<Integer> hightLightPoints = new ArrayList<>();
     private MarkerOptions avatarMarkerOptions;
-    private DeviceCameraPersonFaceRsp.DataBean playBean;
+    private DeviceCameraPersonFaceBean playBean;
     private ImageView imageView;
     private int dp24;
     private String faceId;
@@ -203,9 +203,9 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
         }
         RetrofitServiceHelper.getInstance().getDeviceCameraPersonFace(faceId, startTime, endTime, 85, 0, 100, null)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<DeviceCameraPersonFaceRsp>(this) {
+                .subscribe(new CityObserver<ResponseResult<List<DeviceCameraPersonFaceBean>>>(this) {
                     @Override
-                    public void onCompleted(DeviceCameraPersonFaceRsp deviceCameraPersonFaceRsp) {
+                    public void onCompleted(ResponseResult<List<DeviceCameraPersonFaceBean>> deviceCameraPersonFaceRsp) {
                         data = deviceCameraPersonFaceRsp.getData();
                         if (isAttachedView()) {
                             getView().removeAllMarker();
@@ -231,7 +231,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                             if (isAttachedView()) {
 
                                 for (int i = 0; i < data.size(); i++) {
-                                    DeviceCameraPersonFaceRsp.DataBean dataFace = data.get(i);
+                                    DeviceCameraPersonFaceBean dataFace = data.get(i);
                                     LatLng latLn = new LatLng(dataFace.getLatitude(), dataFace.getLongitude());
 
                                     linePoints.add(latLn);
@@ -240,7 +240,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                                 }
 
 
-                                DeviceCameraPersonFaceRsp.DataBean dataBean = data.get(0);
+                                DeviceCameraPersonFaceBean dataBean = data.get(0);
                                 preBean = dataBean;
 
                                 setAddressTime(dataBean, true);
@@ -331,7 +331,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
         getView().addMarker(markerOptions, tag);
     }
 
-    private void loadAvatar(final DeviceCameraPersonFaceRsp.DataBean dataBean, final LatLng latLng, final int tag) {
+    private void loadAvatar(final DeviceCameraPersonFaceBean dataBean, final LatLng latLng, final int tag) {
 
         Glide.with(mActivity)
                 .asBitmap()
@@ -403,7 +403,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
     public void doMoveLeft() {
         index--;
         if (index > -1 && data != null && data.size() > index) {
-            DeviceCameraPersonFaceRsp.DataBean bean = data.get(index);
+            DeviceCameraPersonFaceBean bean = data.get(index);
             LatLng latLng = new LatLng(bean.getLatitude(), bean.getLongitude());
             getView().setMapCenter(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, mMapZoom, 0, 30)));
 
@@ -438,7 +438,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
         checkLeftRightStatus();
     }
 
-    private void setAddressTime(DeviceCameraPersonFaceRsp.DataBean bean, boolean isDelayed) {
+    private void setAddressTime(DeviceCameraPersonFaceBean bean, boolean isDelayed) {
 
 
         try {
@@ -469,7 +469,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
     public void doMoveRight() {
         index++;
         if (index > -1 && data != null && data.size() > index) {
-            DeviceCameraPersonFaceRsp.DataBean bean = data.get(index);
+            DeviceCameraPersonFaceBean bean = data.get(index);
             LatLng latLng = new LatLng(bean.getLatitude(), bean.getLongitude());
             getView().setMapCenter(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, mMapZoom, 0, 30)));
 
@@ -515,7 +515,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
             }
         }
         getView().updateSeekBar(index);
-        DeviceCameraPersonFaceRsp.DataBean bean = data.get(mSeekBarProgres);
+        DeviceCameraPersonFaceBean bean = data.get(mSeekBarProgres);
         LatLng latLng = new LatLng(bean.getLatitude(), bean.getLongitude());
         getView().setMapCenter(CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, mMapZoom, 0, 30)));
 
@@ -560,9 +560,9 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
         String beginTime = String.valueOf(l - 15);
         String endTime = String.valueOf(l + 15);
         getView().showProgressDialog();
-        RetrofitServiceHelper.getInstance().getDeviceCameraPlayHistoryAddress(playBean.getCid(), beginTime, endTime, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraHistoryRsp>(null) {
+        RetrofitServiceHelper.getInstance().getDeviceCameraPlayHistoryAddress(playBean.getCid(), beginTime, endTime, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceCameraHistoryBean>>>(null) {
             @Override
-            public void onCompleted(DeviceCameraHistoryRsp deviceCameraHistoryRsp) {
+            public void onCompleted(ResponseResult<List<DeviceCameraHistoryBean>> deviceCameraHistoryRsp) {
                 List<DeviceCameraHistoryBean> data = deviceCameraHistoryRsp.getData();
                 if (data != null && data.size() > 0) {
                     DeviceCameraHistoryBean deviceCameraHistoryBean = data.get(0);

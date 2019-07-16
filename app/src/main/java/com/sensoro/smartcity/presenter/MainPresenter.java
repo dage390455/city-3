@@ -29,14 +29,14 @@ import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.NetWorkUtils;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.AlarmDeviceCountsBean;
+import com.sensoro.common.server.bean.AlarmPopupDataBean;
 import com.sensoro.common.server.bean.DeviceAlarmCount;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.common.server.response.AlarmCountRsp;
-import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
-import com.sensoro.common.server.response.DevicesMergeTypesRsp;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
@@ -213,9 +213,9 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             }
         }, 500);
         //每次初始化静默拉取一次预警弹窗的配置项
-        RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesAlarmPopupConfigRsp>(this) {
+        RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<AlarmPopupDataBean>>(this) {
             @Override
-            public void onCompleted(DevicesAlarmPopupConfigRsp devicesAlarmPopupConfigRsp) {
+            public void onCompleted(ResponseResult<AlarmPopupDataBean> devicesAlarmPopupConfigRsp) {
                 PreferencesHelper.getInstance().saveAlarmPopupDataBeanCache(devicesAlarmPopupConfigRsp.getData());
 
             }
@@ -708,15 +708,15 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                 break;
             case Constants.EVENT_DATA_CHECK_MERGE_TYPE_CONFIG_DATA:
                 //mergeTypeConfig配置参数需要更新
-                RetrofitServiceHelper.getInstance().getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Consumer<DevicesMergeTypesRsp>() {
+                RetrofitServiceHelper.getInstance().getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Consumer<ResponseResult<DeviceMergeTypesInfo>>() {
                     @Override
-                    public void accept(DevicesMergeTypesRsp devicesMergeTypesRsp) throws Exception {
+                    public void accept(ResponseResult<DeviceMergeTypesInfo> devicesMergeTypesRsp) throws Exception {
                         DeviceMergeTypesInfo data = devicesMergeTypesRsp.getData();
                         PreferencesHelper.getInstance().saveLocalDevicesMergeTypes(data);
                     }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesMergeTypesRsp>(MainPresenter.this) {
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceMergeTypesInfo>>(MainPresenter.this) {
                     @Override
-                    public void onCompleted(DevicesMergeTypesRsp devicesMergeTypesRsp) {
+                    public void onCompleted(ResponseResult<DeviceMergeTypesInfo> devicesMergeTypesRsp) {
                         try {
                             LogUtils.loge("更新配置参数成功 .....");
                         } catch (Throwable throwable) {

@@ -16,7 +16,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.constant.Constants;
-import com.sensoro.common.server.response.DeviceCameraPersonFaceRsp;
+import com.sensoro.common.server.bean.DeviceCameraPersonFaceBean;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.widget.GlideCircleTransform;
@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 
 public class PersonAvatarHistoryAdapter extends RecyclerView.Adapter<PersonAvatarHistoryAdapter.PersonAvatarHistoryViewHolder> {
     private final Context mContext;
-    private List<DeviceCameraPersonFaceRsp.DataBean> mList = new ArrayList<>();
+    private List<DeviceCameraPersonFaceBean> mList = new ArrayList<>();
     private RecycleViewItemClickListener mListener;
 
 
@@ -57,7 +57,7 @@ public class PersonAvatarHistoryAdapter extends RecyclerView.Adapter<PersonAvata
     public void onBindViewHolder(@NonNull PersonAvatarHistoryViewHolder holder, int position) {
         holder.llRootItemAdapterPersonAvatarHistory.setTag(position);
 
-        DeviceCameraPersonFaceRsp.DataBean dataBean = mList.get(position);
+        DeviceCameraPersonFaceBean dataBean = mList.get(position);
         Glide.with(mContext)                             //配置上下文
                 .load(Constants.CAMERA_BASE_URL + dataBean.getFaceUrl())
                 .apply(new RequestOptions().transform(new GlideCircleTransform(mContext)).error(R.drawable.person_locus_placeholder).placeholder(R.drawable.person_locus_placeholder).diskCacheStrategy(DiskCacheStrategy.ALL))
@@ -85,13 +85,13 @@ public class PersonAvatarHistoryAdapter extends RecyclerView.Adapter<PersonAvata
         return mList.size();
     }
 
-    public void updateData(List<DeviceCameraPersonFaceRsp.DataBean> data) {
+    public void updateData(List<DeviceCameraPersonFaceBean> data) {
         mList.clear();
         mList.addAll(data);
         notifyDataSetChanged();
     }
 
-    public List<DeviceCameraPersonFaceRsp.DataBean> getData() {
+    public List<DeviceCameraPersonFaceBean> getData() {
         return mList;
     }
 

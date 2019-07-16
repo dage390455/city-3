@@ -17,8 +17,9 @@ import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
-import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
-import com.sensoro.common.server.response.LoginRsp;
+import com.sensoro.common.server.bean.AlarmPopupDataBean;
+import com.sensoro.common.server.bean.UserInfo;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.MyPermissionManager;
@@ -72,9 +73,9 @@ public class LauncherActivityPresenter extends BasePresenter<ILauncherActivityVi
     private void init() {
         initViewPager();
         //每次初始化静默拉取一次预警弹窗的配置项
-        RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesAlarmPopupConfigRsp>(this) {
+        RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<AlarmPopupDataBean>>(this) {
             @Override
-            public void onCompleted(DevicesAlarmPopupConfigRsp devicesAlarmPopupConfigRsp) {
+            public void onCompleted(ResponseResult<AlarmPopupDataBean> devicesAlarmPopupConfigRsp) {
                 PreferencesHelper.getInstance().saveAlarmPopupDataBeanCache(devicesAlarmPopupConfigRsp.getData());
 
             }
@@ -161,9 +162,9 @@ public class LauncherActivityPresenter extends BasePresenter<ILauncherActivityVi
                             //
                             getView().showProgressDialog();
                             RetrofitServiceHelper.getInstance().login("15110041945", "aa1111", "").subscribeOn
-                                    (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<LoginRsp>(null) {
+                                    (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<UserInfo>>(null) {
                                 @Override
-                                public void onCompleted(LoginRsp loginRsp) {
+                                public void onCompleted(ResponseResult<UserInfo> loginRsp) {
                                     String sessionID = loginRsp.getData().getSessionID();
                                     String token = loginRsp.getData().getToken();
                                     RetrofitServiceHelper.getInstance().saveSessionId(sessionID, token);

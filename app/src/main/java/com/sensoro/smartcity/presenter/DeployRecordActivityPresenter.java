@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
@@ -15,12 +16,11 @@ import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeployRecordInfo;
-import com.sensoro.common.server.response.DeployRecordRsp;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployRecordDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployRecordActivityView;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
@@ -88,9 +88,9 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getDeployRecordList(null, searchText, temp_startTime, temp_endTime, null, null, 20, cur_page * 20, null)
                         .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployRecordRsp>(this) {
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeployRecordInfo>>>(this) {
                     @Override
-                    public void onCompleted(DeployRecordRsp recordRsp) {
+                    public void onCompleted(ResponseResult<List<DeployRecordInfo>> recordRsp) {
                         List<DeployRecordInfo> data = recordRsp.getData();
                         if (!TextUtils.isEmpty(tempSearch)) {
 //            getView().setSelectedDateSearchText(searchText);
@@ -120,9 +120,9 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
                 cur_page++;
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getDeployRecordList(null, searchText, temp_startTime, temp_endTime, null, null, 20, 20 * cur_page, null).subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployRecordRsp>(this) {
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeployRecordInfo>>>(this) {
                     @Override
-                    public void onCompleted(DeployRecordRsp recordRsp) {
+                    public void onCompleted(ResponseResult<List<DeployRecordInfo>> recordRsp) {
                         List<DeployRecordInfo> data = recordRsp.getData();
                         if (!TextUtils.isEmpty(tempSearch)) {
 //            getView().setSelectedDateSearchText(searchText);

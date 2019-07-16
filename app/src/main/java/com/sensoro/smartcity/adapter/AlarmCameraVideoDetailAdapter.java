@@ -18,9 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.sensoro.common.server.response.AlarmCloudVideoRsp;
-import com.sensoro.smartcity.R;
+import com.sensoro.common.server.bean.AlarmCloudVideoBean;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.smartcity.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 public class AlarmCameraVideoDetailAdapter extends RecyclerView.Adapter<AlarmCameraVideoDetailAdapter.CameraLiveDetailViewHolder> {
     private final Context mContext;
 
-    List<AlarmCloudVideoRsp.DataBean.MediasBean> mList = new ArrayList();
+    List<AlarmCloudVideoBean.MediasBean> mList = new ArrayList();
     private AlarmCameraVideoClickListener mListener;
     private Integer mClickPosition = 0;
     private final int dp4;
@@ -102,7 +102,7 @@ public class AlarmCameraVideoDetailAdapter extends RecyclerView.Adapter<AlarmCam
             holder.tvWatchStateItemAdapterAlarmCameraVideoDetail.setVisibility(View.GONE);
         }
 
-        AlarmCloudVideoRsp.DataBean.MediasBean dataBean = mList.get(position);
+        AlarmCloudVideoBean.MediasBean dataBean = mList.get(position);
         if (dataBean != null) {
             Glide.with(mContext)
                     .load(dataBean.getCoverUrl())
@@ -117,7 +117,7 @@ public class AlarmCameraVideoDetailAdapter extends RecyclerView.Adapter<AlarmCam
 
     }
 
-    public void updateData(List<AlarmCloudVideoRsp.DataBean.MediasBean> data) {
+    public void updateData(List<AlarmCloudVideoBean.MediasBean> data) {
         mList.clear();
         mList.addAll(data);
         mClickPosition = 0;
@@ -134,9 +134,9 @@ public class AlarmCameraVideoDetailAdapter extends RecyclerView.Adapter<AlarmCam
     }
 
     public interface AlarmCameraVideoClickListener {
-        void OnAlarmCameraVideoItemClick(AlarmCloudVideoRsp.DataBean.MediasBean bean);
+        void OnAlarmCameraVideoItemClick(AlarmCloudVideoBean.MediasBean bean);
 
-        void onAlarmCameraVideoDownloadClick(AlarmCloudVideoRsp.DataBean.MediasBean bean);
+        void onAlarmCameraVideoDownloadClick(AlarmCloudVideoBean.MediasBean bean);
     }
 
     class CameraLiveDetailViewHolder extends RecyclerView.ViewHolder {

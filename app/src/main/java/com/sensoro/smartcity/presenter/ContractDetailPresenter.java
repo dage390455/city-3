@@ -12,7 +12,7 @@ import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.ContractListInfo;
-import com.sensoro.common.server.response.ContractInfoRsp;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractEditorActivity;
@@ -50,9 +50,9 @@ public class ContractDetailPresenter extends BasePresenter<IContractDetailView> 
     private void requestContractInfo(int id) {
         getView().showProgressDialog();
         RetrofitServiceHelper.getInstance().getContractInfo(String.valueOf(id)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<ContractInfoRsp>(this) {
+                .subscribe(new CityObserver<ResponseResult<ContractListInfo>>(this) {
                     @Override
-                    public void onCompleted(ContractInfoRsp responseBase) {
+                    public void onCompleted(ResponseResult<ContractListInfo> responseBase) {
                         mContractInfo = responseBase.getData();
                         if (mContractInfo != null) {
                             getView().setContractNumber(String.format(Locale.ROOT, "%s%s", mActivity.getString(R.string.contract_number), mContractInfo.getContract_number()));

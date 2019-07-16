@@ -20,10 +20,13 @@ import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.ARouterConstants;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.common.model.CameraFilterModel;
+import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeployResultModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
@@ -31,24 +34,19 @@ import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeployCameraUploadInfo;
 import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
 import com.sensoro.common.server.bean.ScenesData;
-import com.sensoro.common.server.response.CameraFilterRsp;
-import com.sensoro.common.server.response.DeployCameraUploadRsp;
-import com.sensoro.common.server.response.DeviceCameraDetailRsp;
+import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.SelectDialog;
+import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployCameraLiveDetailActivity;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMapENActivity;
 import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployCameraDetailActivityView;
-import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.DeployCameraConfigModel;
-import com.sensoro.common.model.DeployResultModel;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -70,9 +68,9 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
         public void run() {
             //TODO 轮询查看摄像头状态？
             RetrofitServiceHelper.getInstance().getDeviceCamera(deployAnalyzerModel.sn.toUpperCase()).subscribeOn
-                    (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraDetailRsp>(DeployCameraDetailActivityPresenter.this) {
+                    (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceCameraDetailInfo>>(DeployCameraDetailActivityPresenter.this) {
                 @Override
-                public void onCompleted(DeviceCameraDetailRsp deviceCameraDetailRsp) {
+                public void onCompleted(ResponseResult<DeviceCameraDetailInfo> deviceCameraDetailRsp) {
                     DeviceCameraDetailInfo data = deviceCameraDetailRsp.getData();
                     if (data != null) {
                         DeviceCameraDetailInfo.CameraBean camera = data.getCamera();
@@ -221,9 +219,9 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
 
     private void requestData() {
         getView().showProgressDialog();
-        RetrofitServiceHelper.getInstance().getCameraFilter().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<CameraFilterRsp>(this) {
+        RetrofitServiceHelper.getInstance().getCameraFilter().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<CameraFilterModel>>>(this) {
             @Override
-            public void onCompleted(CameraFilterRsp cameraFilterRsp) {
+            public void onCompleted(ResponseResult<List<CameraFilterModel>> cameraFilterRsp) {
                 List<CameraFilterModel> data = cameraFilterRsp.getData();
                 if (data != null) {
                     for (CameraFilterModel cameraFilterModel : data) {
@@ -372,9 +370,9 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
                 PreferencesHelper.getInstance().getUserData().phone, String.valueOf(lan), String.valueOf(lon), imgUrls, deployAnalyzerModel.address,
                 mMethodConfig.code, mOrientationConfig.code, deployAnalyzerModel.cameraStatus)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .safeSubscribe(new CityObserver<DeployCameraUploadRsp>(this) {
+                .safeSubscribe(new CityObserver<ResponseResult<DeployCameraUploadInfo>>(this) {
                     @Override
-                    public void onCompleted(DeployCameraUploadRsp deployCameraUploadRsp) {
+                    public void onCompleted(ResponseResult<DeployCameraUploadInfo> deployCameraUploadRsp) {
                         freshSuccess(deployCameraUploadRsp);
                         getView().dismissProgressDialog();
                     }
@@ -410,7 +408,7 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
         getView().startAC(intent);
     }
 
-    private void freshSuccess(DeployCameraUploadRsp deployCameraUploadRsp) {
+    private void freshSuccess(ResponseResult<DeployCameraUploadInfo> deployCameraUploadRsp) {
         DeployResultModel deployResultModel = new DeployResultModel();
         Intent intent = new Intent(mContext, DeployResultActivity.class);
         //
@@ -627,9 +625,9 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
             handleMethod();
         } else {
             getView().showProgressDialog();
-            RetrofitServiceHelper.getInstance().getCameraFilter().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<CameraFilterRsp>(this) {
+            RetrofitServiceHelper.getInstance().getCameraFilter().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<CameraFilterModel>>>(this) {
                 @Override
-                public void onCompleted(CameraFilterRsp cameraFilterRsp) {
+                public void onCompleted(ResponseResult<List<CameraFilterModel>> cameraFilterRsp) {
                     List<CameraFilterModel> data = cameraFilterRsp.getData();
                     if (data != null) {
                         for (CameraFilterModel cameraFilterModel : data) {
@@ -666,9 +664,9 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
             handleOrientation();
         } else {
             getView().showProgressDialog();
-            RetrofitServiceHelper.getInstance().getCameraFilter().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<CameraFilterRsp>(this) {
+            RetrofitServiceHelper.getInstance().getCameraFilter().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<CameraFilterModel>>>(this) {
                 @Override
-                public void onCompleted(CameraFilterRsp cameraFilterRsp) {
+                public void onCompleted(ResponseResult<List<CameraFilterModel>> cameraFilterRsp) {
                     List<CameraFilterModel> data = cameraFilterRsp.getData();
                     if (data != null) {
                         for (CameraFilterModel cameraFilterModel : data) {

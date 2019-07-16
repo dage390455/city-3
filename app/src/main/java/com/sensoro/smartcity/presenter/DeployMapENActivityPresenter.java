@@ -35,9 +35,7 @@ import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeviceInfo;
-import com.sensoro.common.server.response.DeployDeviceDetailRsp;
-import com.sensoro.common.server.response.DeviceDeployRsp;
-import com.sensoro.common.server.response.DeviceInfoListRsp;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.GPSUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IDeployMapENActivityView;
@@ -109,9 +107,9 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
                     if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION) {
                         getView().showProgressDialog();
                         RetrofitServiceHelper.getInstance().getDeployDeviceDetail(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1))
-                                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(this) {
+                                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceInfo>>(this) {
                             @Override
-                            public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
+                            public void onCompleted(ResponseResult<DeviceInfo> deployDeviceDetailRsp) {
                                 deployAnalyzerModel.blePassword = deployDeviceDetailRsp.getData().getBlePassword();
                                 List<Integer> channelMask = deployDeviceDetailRsp.getData().getChannelMask();
                                 if (channelMask != null && channelMask.size() > 0) {
@@ -137,9 +135,9 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
                     break;
                 case Constants.DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
                     getView().showProgressDialog();
-                    RetrofitServiceHelper.getInstance().doDevicePositionCalibration(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
+                    RetrofitServiceHelper.getInstance().doDevicePositionCalibration(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceInfo>>(this) {
                         @Override
-                        public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
+                        public void onCompleted(ResponseResult<DeviceInfo> deviceDeployRsp) {
                             getView().dismissProgressDialog();
                             DeviceInfo data = deviceDeployRsp.getData();
                             EventData eventData = new EventData();
@@ -173,7 +171,7 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
             case Constants.DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETAIL:
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getDeviceDetailInfoList(deployAnalyzerModel.sn, null, 1).subscribeOn(Schedulers.io()).observeOn
-                        (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
+                        (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
 
 
                     @Override
@@ -183,7 +181,7 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
                     }
 
                     @Override
-                    public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+                    public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
                         if (deviceInfoListRsp.getData().size() > 0) {
                             DeviceInfo deviceInfo = deviceInfoListRsp.getData().get(0);
                             String signal = deviceInfo.getSignal();

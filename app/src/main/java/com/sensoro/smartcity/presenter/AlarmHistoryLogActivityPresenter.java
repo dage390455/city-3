@@ -13,12 +13,10 @@ import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.AlarmInfo;
+import com.sensoro.common.server.bean.AlarmPopupDataBean;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.server.bean.ScenesData;
-import com.sensoro.common.server.response.DeviceAlarmItemRsp;
-import com.sensoro.common.server.response.DeviceAlarmLogRsp;
-import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
-import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
@@ -89,9 +87,9 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
         mCurrentDeviceAlarmLogInfo = deviceAlarmLogInfo;
         //
         if (PreferencesHelper.getInstance().getAlarmPopupDataBeanCache() == null) {
-            RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesAlarmPopupConfigRsp>(this) {
+            RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<AlarmPopupDataBean>>(this) {
                 @Override
-                public void onCompleted(DevicesAlarmPopupConfigRsp devicesAlarmPopupConfigRsp) {
+                public void onCompleted(ResponseResult<AlarmPopupDataBean> devicesAlarmPopupConfigRsp) {
                     PreferencesHelper.getInstance().saveAlarmPopupDataBeanCache(devicesAlarmPopupConfigRsp.getData());
                     final AlarmPopupModel alarmPopupModel = new AlarmPopupModel();
                     String deviceName = mCurrentDeviceAlarmLogInfo.getDeviceName();
@@ -220,10 +218,10 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
                 }
                 RetrofitServiceHelper.getInstance().getDeviceAlarmLogList(cur_page, mSn, null, null, null, startTime,
                         endTime,
-                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
+                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceAlarmLogInfo>>>(this) {
 
                     @Override
-                    public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                    public void onCompleted(ResponseResult<List<DeviceAlarmLogInfo>> deviceAlarmLogRsp) {
                         freshUI(direction, deviceAlarmLogRsp);
                         if (isAttachedView()) {
                             getView().onPullRefreshComplete();
@@ -248,7 +246,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
                 }
                 RetrofitServiceHelper.getInstance().getDeviceAlarmLogList(cur_page, mSn, null, null, null, startTime,
                         endTime,
-                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
+                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceAlarmLogInfo>>>(this) {
 
 
                     @Override
@@ -262,7 +260,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
                     }
 
                     @Override
-                    public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                    public void onCompleted(ResponseResult<List<DeviceAlarmLogInfo>> deviceAlarmLogRsp) {
                         if (isAttachedView()) {
                             getView().dismissProgressDialog();
                         }
@@ -288,7 +286,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
 
     }
 
-    private void freshUI(int direction, DeviceAlarmLogRsp deviceAlarmLogRsp) {
+    private void freshUI(int direction, ResponseResult<List<DeviceAlarmLogInfo>> deviceAlarmLogRsp) {
         if (direction == Constants.DIRECTION_DOWN) {
             mDeviceAlarmLogInfoList.clear();
         }
@@ -399,7 +397,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
         Map<String, Integer> alarmPopupServerData = AlarmPopupConfigAnalyzer.createAlarmPopupServerData(alarmPopupModel);
         RetrofitServiceHelper.getInstance().doUpdatePhotosUrl(mCurrentDeviceAlarmLogInfo.get_id(), alarmPopupServerData, alarmPopupModel.securityRisksList,
                 alarmPopupModel.mRemark, false, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<DeviceAlarmItemRsp>(this) {
+                .subscribe(new CityObserver<ResponseResult<DeviceAlarmLogInfo>>(this) {
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
@@ -410,8 +408,8 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
                     }
 
                     @Override
-                    public void onCompleted(DeviceAlarmItemRsp deviceAlarmItemRsp) {
-                        if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
+                    public void onCompleted(ResponseResult<DeviceAlarmLogInfo> deviceAlarmItemRsp) {
+                        if (deviceAlarmItemRsp.getErrcode() == ResponseResult.CODE_SUCCESS) {
                             DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
                             if (isAttachedView()) {
                                 getView().toastShort(mContext.getResources().getString(R.string

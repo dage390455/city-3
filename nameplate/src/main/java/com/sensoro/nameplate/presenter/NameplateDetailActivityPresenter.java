@@ -16,7 +16,6 @@ import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeviceTypeStyles;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.bean.NamePlateInfo;
-import com.sensoro.common.server.response.NameplateBindDeviceRsp;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.nameplate.IMainViews.INameplateDetailActivityView;
 import com.sensoro.nameplate.R;
@@ -165,9 +164,9 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
                     getView().showProgressDialog();
                 }
                 RetrofitServiceHelper.getInstance().getNameplateBindDevices(cur_page, 20, nameplateId).subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<NameplateBindDeviceRsp>(this) {
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<NamePlateInfo>>>(this) {
                     @Override
-                    public void onCompleted(NameplateBindDeviceRsp deviceCameraListRsp) {
+                    public void onCompleted(ResponseResult<List<NamePlateInfo>> deviceCameraListRsp) {
 
                         List<NamePlateInfo> data = deviceCameraListRsp.getData();
                         plateInfos.clear();
@@ -196,9 +195,9 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
                     getView().showProgressDialog();
                 }
                 RetrofitServiceHelper.getInstance().getNameplateBindDevices(cur_page, 20, nameplateId).subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<NameplateBindDeviceRsp>(this) {
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<NamePlateInfo>>>(this) {
                     @Override
-                    public void onCompleted(NameplateBindDeviceRsp deviceCameraListRsp) {
+                    public void onCompleted(ResponseResult<List<NamePlateInfo>> deviceCameraListRsp) {
 
                         List<NamePlateInfo> data = deviceCameraListRsp.getData();
                         if (data != null && data.size() > 0) {

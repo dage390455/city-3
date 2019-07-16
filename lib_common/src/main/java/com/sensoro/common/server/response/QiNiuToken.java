@@ -2,7 +2,7 @@ package com.sensoro.common.server.response;
 
 import java.io.Serializable;
 
-public class QiNiuToken extends ResponseBase implements Serializable {
+public class QiNiuToken extends ResponseResult implements Serializable {
 
     /**
      * errcode : 0
