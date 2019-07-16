@@ -9,6 +9,7 @@ public final class EventLoginData implements Serializable {
     public String phone;
     public String roles;
     public String accountId;
+
     public boolean isSupperAccount;
     public boolean hasStationDeploy;
     public boolean hasContract;

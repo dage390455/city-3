@@ -1195,4 +1195,8 @@
     <string name="please_add_config_out">Please add output config</string>
     <string name="please_enter_the_configuration_parameters_correctly">Please enter the configuration parameters correctly</string>
 
+    <string name="permission_change_desc">Permissions have been modified, please re-login to ensure full functionality</string>
+    <string name="login_later">Login later</string>
+    <string name="re_login">ReLogin</string>
+
 </resources>

@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="24dp"
-            android:text="权限发生变化"
+            android:text="@string/prompt"
             android:textColor="@color/c_252525"
             android:textSize="18dp"
             android:textStyle="bold" />
@@ -30,9 +30,9 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:gravity="center"
             android:layout_marginEnd="10dp"
-            android:text="用户权限已经变化，可能会影响部分功能的使用"
+            android:gravity="center"
+            android:text="@string/permission_change_desc"
             android:textColor="@color/c_a6a6a6"
             android:textSize="14dp" />
 
@@ -56,7 +56,7 @@
                 android:gravity="center"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
-                android:text="稍后登录"
+                android:text="@string/login_later"
                 android:textColor="@color/c_a6a6a6"
                 android:textSize="16dp"
                 android:textStyle="bold" />
@@ -74,7 +74,7 @@
                 android:gravity="center"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
-                android:text="重新登录"
+                android:text="@string/re_login"
                 android:textColor="@color/c_1dbb99"
                 android:textSize="16dp"
                 android:textStyle="bold" />

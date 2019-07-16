@@ -140,4 +140,8 @@
     <string name="do_not_enter_illegal_characters_such_as_english_and_numbers">请勿输入英文，数字等非法字符</string>
     <string name="please_go_to_setting">请到设置-权限管理中开启</string>
 
+    <string name="permission_change_desc">权限已被修改，为确保功能完善请重新登录账号</string>
+    <string name="login_later">稍后登录</string>
+    <string name="re_login">重新登录</string>
+
 </resources>
