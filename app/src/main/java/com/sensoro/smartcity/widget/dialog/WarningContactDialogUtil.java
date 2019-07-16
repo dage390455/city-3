@@ -60,6 +60,12 @@ public class WarningContactDialogUtil {
 
     }
 
+    public void setCanCallPhone(boolean canCallPhone) {
+        if (mAdapter != null) {
+            mAdapter.setCanCallPhone(canCallPhone);
+        }
+    }
+
     public boolean isShowing() {
         if (mDialog != null) {
             return mDialog.isShowing();

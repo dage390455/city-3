@@ -36,6 +36,8 @@ public class WarningContactDialogAdapter extends RecyclerView.Adapter<WarningCon
         return new AssociationSensorDialogViewHolder(inflate);
     }
 
+    private boolean canCallPhone = true;
+
     @Override
     public void onBindViewHolder(@NonNull AssociationSensorDialogViewHolder holder, int position) {
         DeviceNotificationBean deviceNotificationBean = mList.get(position);
@@ -46,14 +48,20 @@ public class WarningContactDialogAdapter extends RecyclerView.Adapter<WarningCon
         holder.llWarningContactoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (TextUtils.isEmpty(content)) {
-                    SensoroToast.getInstance().makeText(mContext, mContext.getString(R.string.no_find_contact_phone_number), Toast.LENGTH_SHORT).show();
-                } else {
-                    AppUtils.diallPhone(content, (Activity) mContext);
+                if (canCallPhone) {
+                    if (TextUtils.isEmpty(content)) {
+                        SensoroToast.getInstance().makeText(mContext, mContext.getString(R.string.no_find_contact_phone_number), Toast.LENGTH_SHORT).show();
+                    } else {
+                        AppUtils.diallPhone(content, (Activity) mContext);
+                    }
                 }
             }
         });
 
+    }
+
+    public void setCanCallPhone(boolean canCallPhone) {
+        this.canCallPhone = canCallPhone;
     }
 
     @Override
