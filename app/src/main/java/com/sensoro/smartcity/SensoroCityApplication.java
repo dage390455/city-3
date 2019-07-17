@@ -157,6 +157,7 @@ public class SensoroCityApplication extends BaseApplication implements Repause
         @Override
         public void run() {
             boolean currentNearby = !mNearByIBeaconMap.isEmpty();
+
             if (isNearby != currentNearby) {
 //                    getView().toastLong("进出状态：" + currentNearby);
                 if (currentNearby) {
@@ -173,7 +174,9 @@ public class SensoroCityApplication extends BaseApplication implements Repause
                             }
                         });
                     }
+                    isNearby = true;
                 } else {
+                    //当前不在范围做缓存处理
                     if (ibeaconSettingData.switchOut) {
                         pushHandler.post(new Runnable() {
                             @Override
@@ -188,8 +191,9 @@ public class SensoroCityApplication extends BaseApplication implements Repause
                         });
                     }
                 }
-                isNearby = currentNearby;
+
             }
+
 //            pushHandler.postDelayed(checkNearbyTask, 300);
         }
     };
