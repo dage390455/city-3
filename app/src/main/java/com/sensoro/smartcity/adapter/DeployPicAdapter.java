@@ -49,9 +49,9 @@ public class DeployPicAdapter extends RecyclerView.Adapter<DeployPicAdapter.Depl
         String title = TextUtils.isEmpty(model.title) ? mContext.getString(R.string.unknown) : model.title;
         if (model.isRequired == null) {
             holder.tvDeployPicTitle.setText(title);
-        }else{
+        } else {
             String require = mContext.getString(model.isRequired ? R.string.deploy_pic_required : R.string.deploy_pic_optional);
-            holder.tvDeployPicTitle.setText(String.format(Locale.ROOT,"%s (%s)",title,require));
+            holder.tvDeployPicTitle.setText(String.format(Locale.ROOT, "%s (%s)", title, require));
         }
 
 
@@ -59,7 +59,7 @@ public class DeployPicAdapter extends RecyclerView.Adapter<DeployPicAdapter.Depl
         if (model.photoItem == null) {
             holder.llAddDeployPic.setVisibility(View.VISIBLE);
             holder.rlDeployPic.setVisibility(View.GONE);
-        }else{
+        } else {
             holder.llAddDeployPic.setVisibility(View.GONE);
             holder.rlDeployPic.setVisibility(View.VISIBLE);
             Glide.with(mContext)                             //配置上下文
@@ -107,7 +107,7 @@ public class DeployPicAdapter extends RecyclerView.Adapter<DeployPicAdapter.Depl
         return list.size();
     }
 
-    public DeployPicInfo getItem(int position){
+    public DeployPicInfo getItem(int position) {
         return list.get(position);
     }
 
@@ -126,7 +126,7 @@ public class DeployPicAdapter extends RecyclerView.Adapter<DeployPicAdapter.Depl
     }
 
     public void updateIndexData(ImageItem imageItem, int position) {
-        if(position < list.size()){
+        if (position < list.size()) {
             list.get(position).photoItem = imageItem;
             notifyDataSetChanged();
         }

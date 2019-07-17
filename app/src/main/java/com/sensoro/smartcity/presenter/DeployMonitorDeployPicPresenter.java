@@ -185,28 +185,6 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
 
     }
 
-    private boolean checkCanSave() {
-        if (isAttachedView()) {
-            List<DeployPicInfo> deployPicData = getView().getDeployPicData();
-            boolean isCanSave = true;
-            for (DeployPicInfo deployPicDatum : deployPicData) {
-                if (deployPicDatum.isRequired != null && deployPicDatum.isRequired && deployPicDatum.photoItem == null) {
-                    isCanSave = false;
-                    break;
-                }
-            }
-            return isCanSave;
-//            getView().updateSaveStatus(isCanSave);
-        }
-
-//        if (selImages[0] != null && selImages[1] != null) {
-//            getView().setSaveBtnStatus(true);
-//        } else {
-//            getView().setSaveBtnStatus(false);
-//        }
-        return false;
-    }
-
     public void deletePic(int index) {
 //        selImages[index] = null;
 
@@ -229,7 +207,7 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
 //            getView().toastShort(mActivity.getString(R.string.please_deploy_upload_all_pic));
 //            return;
 //        }
-//        ArrayList<ImageItem> imageItems = new ArrayList<>();
+        ArrayList<ImageItem> imageItems = new ArrayList<>();
 //        imageItems.add(selImages[0]);
 //        imageItems.add(selImages[1]);
 //        if (selImages[2] != null) {

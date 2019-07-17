@@ -14,6 +14,7 @@ import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.DeployPicInfo;
 import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.DeployNameplateRsp;
@@ -89,9 +90,9 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
                 if (data instanceof List) {
                     deployNameplateModel.deployPics.clear();
 
-                    deployNameplateModel.deployPics.addAll((ArrayList<ImageItem>) data);
+                    deployNameplateModel.deployPics.addAll((ArrayList<DeployPicInfo>) data);
 
-                    getView().setDeployPhotoTextSize(deployNameplateModel.deployPics.size());
+                    getView().setDeployPhotoTextSize(getRealImageSize());
                 }
                 break;
             case Constants.EVENT_DATA_DEPLOY_BIND_LIST:
@@ -159,11 +160,36 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
 
     //必传字段判空
     public void doUpload() {
-        if (deployNameplateModel.deployPics.size() > 0) {
+        if (getRealImageSize() > 0) {
             doUploadPic();
         } else {
             doDeployNameplate(null);
         }
+    }
+
+    private int getRealImageSize() {
+        int count = 0;
+        boolean need = false;
+        for (DeployPicInfo deployPicInfo : deployNameplateModel.deployPics) {
+            if (deployPicInfo != null) {
+                if (deployPicInfo.isRequired!=null&&deployPicInfo.isRequired) {
+                    if (deployPicInfo.photoItem == null) {
+                        need = true;
+                    }
+                }
+                if (deployPicInfo.photoItem != null) {
+                    count++;
+                }
+            }
+        }
+        if (count == 0) {
+            return count;
+        } else {
+            if (need) {
+                return -1;
+            }
+        }
+        return count;
     }
 
     private void doUploadPic() {
@@ -218,9 +244,12 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
         };
         UpLoadPhotosUtils upLoadPhotosUtils = new UpLoadPhotosUtils(mActivity, upLoadPhotoListener);
         ArrayList<ImageItem> list = new ArrayList<>();
-        for (ImageItem image : deployNameplateModel.deployPics) {
-            if (image != null) {
-                list.add(image);
+        for (DeployPicInfo deployPicInfo : deployNameplateModel.deployPics) {
+            if (deployPicInfo != null) {
+                if (deployPicInfo.photoItem != null) {
+                    list.add(deployPicInfo.photoItem);
+                }
+
             }
         }
         upLoadPhotosUtils.doUploadPhoto(list);

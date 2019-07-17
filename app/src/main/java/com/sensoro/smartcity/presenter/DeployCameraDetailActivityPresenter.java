@@ -518,10 +518,17 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
 
                     deployAnalyzerModel.images.addAll((ArrayList<DeployPicInfo>) data);
 
-                    if (getRealImageSize() > 0) {
-                        getView().setDeployPhotoText(mContext.getString(R.string.added) + getRealImageSize() + mContext.getString(R.string.images));
-                    } else {
-                        getView().setDeployPhotoText(mContext.getString(R.string.not_added));
+                    int realImageSize = getRealImageSize();
+                    switch (realImageSize) {
+                        case -1:
+                            getView().setDeployPhotoText(mContext.getString(R.string.missing_required_photo));
+                            break;
+                        case 0:
+                            getView().setDeployPhotoText(null);
+                            break;
+                        default:
+                            getView().setDeployPhotoText(mContext.getString(R.string.added) + realImageSize + mContext.getString(R.string.images));
+                            break;
                     }
                     getView().setUploadBtnStatus(checkCanUpload());
                 }
@@ -539,13 +546,31 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
         }
     }
 
+    /**
+     * -1为缺少必传照片
+     *
+     * @return
+     */
     private int getRealImageSize() {
         int count = 0;
+        boolean need = false;
         for (DeployPicInfo deployPicInfo : deployAnalyzerModel.images) {
             if (deployPicInfo != null) {
+                if (deployPicInfo.isRequired != null &&deployPicInfo.isRequired) {
+                    if (deployPicInfo.photoItem == null) {
+                        need = true;
+                    }
+                }
                 if (deployPicInfo.photoItem != null) {
                     count++;
                 }
+            }
+        }
+        if (count == 0) {
+            return count;
+        } else {
+            if (need) {
+                return -1;
             }
         }
         return count;
@@ -581,7 +606,7 @@ public class DeployCameraDetailActivityPresenter extends BasePresenter<IDeployCa
             }
         }
         //照片校验
-        if (getRealImageSize() == 0) {
+        if (getRealImageSize() <= 0) {
             return false;
         }
         //经纬度校验

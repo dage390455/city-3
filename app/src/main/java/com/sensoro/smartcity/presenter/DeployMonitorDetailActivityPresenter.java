@@ -856,10 +856,17 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
                     deployAnalyzerModel.images.addAll((ArrayList<DeployPicInfo>) data);
 
-                    if (getRealImageSize() > 0) {
-                        getView().setDeployPhotoText(mContext.getString(R.string.added) + getRealImageSize() + mContext.getString(R.string.images));
-                    } else {
-                        getView().setDeployPhotoText(mContext.getString(R.string.not_added));
+                    int realImageSize = getRealImageSize();
+                    switch (realImageSize) {
+                        case -1:
+                            getView().setDeployPhotoText(mContext.getString(R.string.missing_required_photo));
+                            break;
+                        case 0:
+                            getView().setDeployPhotoText(null);
+                            break;
+                        default:
+                            getView().setDeployPhotoText(mContext.getString(R.string.added) + realImageSize + mContext.getString(R.string.images));
+                            break;
                     }
                     getView().setUploadBtnStatus(checkCanUpload());
                 }
@@ -903,13 +910,31 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         }
     }
 
+    /**
+     * -1为缺少必传照片
+     *
+     * @return
+     */
     private int getRealImageSize() {
         int count = 0;
+        boolean need = false;
         for (DeployPicInfo deployPicInfo : deployAnalyzerModel.images) {
             if (deployPicInfo != null) {
+                if (deployPicInfo.isRequired!=null&&deployPicInfo.isRequired) {
+                    if (deployPicInfo.photoItem == null) {
+                        need = true;
+                    }
+                }
                 if (deployPicInfo.photoItem != null) {
                     count++;
                 }
+            }
+        }
+        if (count == 0) {
+            return count;
+        } else {
+            if (need) {
+                return -1;
             }
         }
         return count;
@@ -991,9 +1016,12 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     return false;
                 }
                 //照片校验
-                if (getRealImageSize() == 0 && deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION) {
-                    return false;
+                if (deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION) {
+                    if (getRealImageSize() <= 0) {
+                        return false;
+                    }
                 }
+
                 //经纬度校验
                 if (deployAnalyzerModel.latLng.size() != 2) {
                     return false;
@@ -1057,13 +1085,32 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
      * @return
      */
     private boolean checkHasPhoto() {
-        if (getRealImageSize() == 0 && deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION) {
-            getView().toastShort(mContext.getString(R.string.please_add_at_least_one_image));
-            getView().setUploadBtnStatus(true);
-            return true;
+        if (deployAnalyzerModel.deployType != Constants.TYPE_SCAN_DEPLOY_STATION) {
+
+            int realImageSize = getRealImageSize();
+            switch (realImageSize) {
+                case -1:
+                    getView().toastShort(mContext.getString(R.string.missing_required_photo));
+                    getView().setUploadBtnStatus(true);
+                    return true;
+                case 0:
+                    getView().toastShort(mContext.getString(R.string.please_add_at_least_one_image));
+                    getView().setUploadBtnStatus(true);
+                    return true;
+                default:
+                    break;
+            }
         }
         return false;
+
+
+//        if (selImages[0] != null && selImages[1] != null) {
+//            getView().setSaveBtnStatus(true);
+//        } else {
+//            getView().setSaveBtnStatus(false);
+//        }
     }
+
 
     private void freshSignalInfo() {
         Resources resources = mContext.getResources();

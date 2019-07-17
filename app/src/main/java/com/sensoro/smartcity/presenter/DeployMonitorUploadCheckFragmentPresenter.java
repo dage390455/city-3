@@ -17,6 +17,7 @@ import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeployControlSettingData;
+import com.sensoro.common.server.bean.DeployPicInfo;
 import com.sensoro.common.server.bean.DeployStationInfo;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.ScenesData;
@@ -46,7 +47,6 @@ import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-
 
 
 public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDeployMonitorUploadCheckFragmentView> implements IOnCreate, IOnDestroy {
@@ -215,7 +215,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
                 if (data instanceof List) {
                     deployAnalyzerModel.images.clear();
 
-                    deployAnalyzerModel.images.addAll((ArrayList<ImageItem>) data);
+                    deployAnalyzerModel.images.addAll((ArrayList<DeployPicInfo>) data);
 
                     if (getRealImageSize() > 0) {
                         getView().setDeployPhotoText(mActivity.getString(R.string.added) + getRealImageSize() + mActivity.getString(R.string.images));
@@ -259,7 +259,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
         if (deployAnalyzerModel.tagList.size() > 0) {
             bundle.putStringArrayList(Constants.EXTRA_SETTING_TAG_LIST, (ArrayList<String>) deployAnalyzerModel.tagList);
         }
-        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_TAG,bundle,mActivity);
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_TAG, bundle, mActivity);
     }
 
     public void doSettingPhoto() {
@@ -268,7 +268,7 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
             bundle.putSerializable(Constants.EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
         }
         bundle.putString(Constants.EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
-        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_PIC,bundle,mActivity);
+        startActivity(ARouterConstants.ACTIVITY_DEPLOY_DEVICE_PIC, bundle, mActivity);
 
 //        Intent intent = new Intent(mActivity, DeployMonitorDeployPicActivity.class);
 //        if (getRealImageSize() > 0) {
@@ -280,9 +280,11 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
 
     private int getRealImageSize() {
         int count = 0;
-        for (ImageItem image : deployAnalyzerModel.images) {
-            if (image != null) {
-                count++;
+        for (DeployPicInfo deployPicInfo : deployAnalyzerModel.images) {
+            if (deployPicInfo != null) {
+                if (deployPicInfo.photoItem != null) {
+                    count++;
+                }
             }
         }
         return count;
@@ -454,9 +456,12 @@ public class DeployMonitorUploadCheckFragmentPresenter extends BasePresenter<IDe
             };
             UpLoadPhotosUtils upLoadPhotosUtils = new UpLoadPhotosUtils(mActivity, upLoadPhotoListener);
             ArrayList<ImageItem> list = new ArrayList<>();
-            for (ImageItem image : deployAnalyzerModel.images) {
-                if (image != null) {
-                    list.add(image);
+            for (DeployPicInfo deployPicInfo : deployAnalyzerModel.images) {
+                if (deployPicInfo != null) {
+                    if (deployPicInfo.photoItem != null) {
+                        list.add(deployPicInfo.photoItem);
+                    }
+
                 }
             }
             upLoadPhotosUtils.doUploadPhoto(list);

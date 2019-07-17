@@ -480,7 +480,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     public void setDeployPhotoText(String text) {
         if (TextUtils.isEmpty(text)) {
             acDeployDeviceDetailTvDeployPic.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
-            acDeployDeviceDetailTvDeployPic.setText(mActivity.getString(R.string.not_added));
+            acDeployDeviceDetailTvDeployPic.setText(mActivity.getString(R.string.required));
         } else {
             acDeployDeviceDetailTvDeployPic.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
 
