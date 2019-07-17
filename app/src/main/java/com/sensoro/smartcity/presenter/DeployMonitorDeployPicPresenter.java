@@ -43,16 +43,15 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
     public void initData(Context context) {
         mActivity = (Activity) context;
         Bundle bundle = getBundle(mActivity);
-        ArrayList<ImageItem> imageList = null;
         String deviceType = null;
+        List<DeployPicInfo> deployPicInfos = new ArrayList<>();
         if (bundle != null) {
             deviceType = bundle.getString(Constants.EXTRA_SETTING_DEPLOY_DEVICE_TYPE);
             mergeType = WidgetUtil.handleMergeType(deviceType);
             getView().setDeployPicTvInstallationSiteTipVisible(Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType));
-
             Serializable serializable = bundle.getSerializable(Constants.EXTRA_DEPLOY_TO_PHOTO);
             if (serializable instanceof ArrayList) {
-                imageList = (ArrayList<ImageItem>) serializable;
+                deployPicInfos = (ArrayList<DeployPicInfo>) serializable;
             }
         } else {
             getView().setDeployPicTvInstallationSiteTipVisible(false);
@@ -63,71 +62,50 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
             mergeType = "unknown";
         }
 
-        List<DeployPicInfo> deployPicInfos = new ArrayList<>();
-        List<DeployPicInfo> configDeviceDeployPic = PreferencesHelper.getInstance().getConfigDeviceDeployPic(deviceType);
 
-        if (configDeviceDeployPic != null && configDeviceDeployPic.size() > 0) {
-            for (int i = 0; i < configDeviceDeployPic.size(); i++) {
-                DeployPicInfo copy = configDeviceDeployPic.get(i).copy();
-                try {
-                    if (imageList != null && i < imageList.size()) {
-                        copy.photoItem = imageList.get(i);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                deployPicInfos.add(copy);
-            }
-
-        } else {
-            //这里自定义了一个类型认为是部署摄像机
-            if ("deploy_camera".equals(deviceType)) {
-                DeployPicInfo deployPicInfo1 = new DeployPicInfo();
-                deployPicInfo1.title = mActivity.getString(R.string.deploy_pic_device_pic);
-                deployPicInfo1.isRequired = true;
-                deployPicInfo1.description = mActivity.getString(R.string.deploy_pic_look_device_look_sn);
-                DeployPicInfo deployPicInfo2 = new DeployPicInfo();
-                deployPicInfo2.isRequired = true;
-                deployPicInfo2.title = mActivity.getString(R.string.deploy_pic_installation_site);
-                deployPicInfo2.description = mActivity.getString(R.string.deploy_pic_look_installation_environmental);
-                deployPicInfos.add(deployPicInfo1);
-                deployPicInfos.add(deployPicInfo2);
-            } else if ("deploy_nameplate".equals(deviceType)) {
-                DeployPicInfo deployPicInfo2 = new DeployPicInfo();
-                deployPicInfo2.isRequired = null;
-                deployPicInfo2.title = mActivity.getString(R.string.deploy_pic_installation_sit);
-                deployPicInfo2.description = mActivity.getString(R.string.deploy_pic_nameplate_look_installation_environmental);
-
-                deployPicInfos.add(deployPicInfo2);
+        if (deployPicInfos.isEmpty()) {
+            List<DeployPicInfo> configDeviceDeployPic = PreferencesHelper.getInstance().getConfigDeviceDeployPic(deviceType);
+            if (configDeviceDeployPic != null && configDeviceDeployPic.size() > 0) {
+                deployPicInfos = configDeviceDeployPic;
             } else {
-                DeployPicInfo deployPicInfo1 = new DeployPicInfo();
-                deployPicInfo1.title = mActivity.getString(R.string.deploy_pic_device_pic);
-                deployPicInfo1.isRequired = true;
-                deployPicInfo1.description = mActivity.getString(R.string.deploy_pic_device_pic_tip);
+                //这里自定义了一个类型认为是部署摄像机
+                if ("deploy_camera".equals(deviceType)) {
+                    DeployPicInfo deployPicInfo1 = new DeployPicInfo();
+                    deployPicInfo1.title = mActivity.getString(R.string.deploy_pic_device_pic);
+                    deployPicInfo1.isRequired = true;
+                    deployPicInfo1.description = mActivity.getString(R.string.deploy_pic_look_device_look_sn);
+                    DeployPicInfo deployPicInfo2 = new DeployPicInfo();
+                    deployPicInfo2.isRequired = true;
+                    deployPicInfo2.title = mActivity.getString(R.string.deploy_pic_installation_site);
+                    deployPicInfo2.description = mActivity.getString(R.string.deploy_pic_look_installation_environmental);
+                    deployPicInfos.add(deployPicInfo1);
+                    deployPicInfos.add(deployPicInfo2);
+                } else if ("deploy_nameplate".equals(deviceType)) {
+                    DeployPicInfo deployPicInfo2 = new DeployPicInfo();
+                    deployPicInfo2.isRequired = null;
+                    deployPicInfo2.title = mActivity.getString(R.string.deploy_pic_installation_sit);
+                    deployPicInfo2.description = mActivity.getString(R.string.deploy_pic_nameplate_look_installation_environmental);
 
-                DeployPicInfo deployPicInfo2 = new DeployPicInfo();
-                deployPicInfo2.isRequired = true;
-                deployPicInfo2.title = mActivity.getString(R.string.deploy_pic_installation_site);
+                    deployPicInfos.add(deployPicInfo2);
+                } else {
+                    DeployPicInfo deployPicInfo1 = new DeployPicInfo();
+                    deployPicInfo1.title = mActivity.getString(R.string.deploy_pic_device_pic);
+                    deployPicInfo1.isRequired = true;
+                    deployPicInfo1.description = mActivity.getString(R.string.deploy_pic_device_pic_tip);
 
-                DeployPicInfo deployPicInfo3 = new DeployPicInfo();
-                deployPicInfo3.title = mActivity.getString(R.string.deploy_pic_shop_pic);
-                deployPicInfo3.description = mActivity.getString(R.string.if_it_is_a_store_please_upload);
-                deployPicInfo3.isRequired = false;
-                deployPicInfos.add(deployPicInfo1);
-                deployPicInfos.add(deployPicInfo2);
-                deployPicInfos.add(deployPicInfo3);
-            }
-            if (imageList != null && imageList.size() > 0 && imageList.size() < 4) {
-                for (int i = 0; i < imageList.size(); i++) {
-                    try {
-                        deployPicInfos.get(i).photoItem = imageList.get(i);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    DeployPicInfo deployPicInfo2 = new DeployPicInfo();
+                    deployPicInfo2.isRequired = true;
+                    deployPicInfo2.title = mActivity.getString(R.string.deploy_pic_installation_site);
 
+                    DeployPicInfo deployPicInfo3 = new DeployPicInfo();
+                    deployPicInfo3.title = mActivity.getString(R.string.deploy_pic_shop_pic);
+                    deployPicInfo3.description = mActivity.getString(R.string.if_it_is_a_store_please_upload);
+                    deployPicInfo3.isRequired = false;
+                    deployPicInfos.add(deployPicInfo1);
+                    deployPicInfos.add(deployPicInfo2);
+                    deployPicInfos.add(deployPicInfo3);
                 }
             }
-
         }
         getView().updateData(deployPicInfos);
     }
