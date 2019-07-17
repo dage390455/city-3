@@ -331,16 +331,18 @@ public class MonitorPointModelsFactory {
         closeModel.textColorResId = closeClickable ? R.color.c_252525 : R.color.c_a6a6a6;
         map.put(closeModel.id, closeModel);
         //TODO 定时消音
-        TaskOptionModel muteTimeModel = new TaskOptionModel();
-        muteTimeModel.id = MonitorPointOperationCode.ERASURE_TIME_STR;
-        muteTimeModel.optionType = MonitorPointOperationCode.ERASURE_TIME;
-        boolean muteTimeModelClickable = status == Constants.SENSOR_STATUS_ALARM || status == Constants.SENSOR_STATUS_MALFUNCTION;
+        if (PreferencesHelper.getInstance().getUserData().hasDeviceMuteTime) {
+            TaskOptionModel muteTimeModel = new TaskOptionModel();
+            muteTimeModel.id = MonitorPointOperationCode.ERASURE_TIME_STR;
+            muteTimeModel.optionType = MonitorPointOperationCode.ERASURE_TIME;
+            boolean muteTimeModelClickable = status == Constants.SENSOR_STATUS_ALARM || status == Constants.SENSOR_STATUS_MALFUNCTION;
 //        boolean muteTimeModelClickable = true;
-        muteTimeModel.clickable = muteTimeModelClickable;
-        muteTimeModel.contentResId = R.string.monitor_point_detail_erasure_time;
-        muteTimeModel.drawableResId = muteTimeModelClickable ? R.drawable.erasure_clickable : R.drawable.erasure_not_clickable;
-        muteTimeModel.textColorResId = muteTimeModelClickable ? R.color.c_252525 : R.color.c_a6a6a6;
-        map.put(muteTimeModel.id, muteTimeModel);
+            muteTimeModel.clickable = muteTimeModelClickable;
+            muteTimeModel.contentResId = R.string.monitor_point_detail_erasure_time;
+            muteTimeModel.drawableResId = muteTimeModelClickable ? R.drawable.erasure_clickable : R.drawable.erasure_not_clickable;
+            muteTimeModel.textColorResId = muteTimeModelClickable ? R.color.c_252525 : R.color.c_a6a6a6;
+            map.put(muteTimeModel.id, muteTimeModel);
+        }
         return map;
     }
 }

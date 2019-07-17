@@ -51,6 +51,7 @@ public class UserPermissionFactory {
         eventLoginData.hasDevicePositionCalibration = getHasDevicePositionCalibration(grants);
         eventLoginData.hasDeviceMuteShort = getHasMuteShort(grants);
         eventLoginData.hasDeviceMuteLong = getHasMuteLong(grants);
+        eventLoginData.hasDeviceMuteTime = getHasMuteTime(grants);
         eventLoginData.hasDeviceFirmwareUpdate = getHasDeviceFirmUpdate(grants);
         eventLoginData.hasDeviceDemoMode = getHasDeviceDemoMode(grants);
         eventLoginData.hasDeviceCameraList = getHasDeviceCameraList(grants);
@@ -425,6 +426,22 @@ public class UserPermissionFactory {
             List<String> grantsControl = grants.getControl();
             if (grantsControl != null) {
                 return grantsControl.contains("mute2");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 是否有定时消音权限
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasMuteTime(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsControl = grants.getControl();
+            if (grantsControl != null) {
+                return grantsControl.contains("mute_time");
             }
         }
         return false;
