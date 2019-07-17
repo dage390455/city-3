@@ -93,8 +93,8 @@
     <string name="equipment_warning">设备预警</string>
     <string name="value_is">值为</string>
     <string name="telephone_call">拨打中</string>
-    <string name="telephone_answer_success">接收成功</string>
-    <string name="telephone_answer_failed">接收失败</string>
+    <string name="telephone_answer_success">接听成功</string>
+    <string name="telephone_answer_failed">接听失败</string>
     <string name="telephone_answer_unknow">结果未知</string>
     <string name="sms_sending">发送中</string>
     <string name="sms_received_successfully">接收成功</string>
