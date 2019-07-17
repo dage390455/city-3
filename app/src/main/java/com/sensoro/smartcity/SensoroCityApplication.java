@@ -3,6 +3,7 @@ package com.sensoro.smartcity;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
@@ -17,9 +18,14 @@ import com.github.moduth.blockcanary.BlockCanary;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.sensoro.common.base.BaseApplication;
 import com.sensoro.common.constant.Constants;
+import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.model.EventData;
+import com.sensoro.common.model.IbeaconSettingData;
 import com.sensoro.common.utils.Repause;
+import com.sensoro.libbleserver.ble.entity.BLEDevice;
+import com.sensoro.libbleserver.ble.entity.IBeacon;
+import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceManager;
 import com.sensoro.smartcity.callback.BleObserver;
 import com.sensoro.smartcity.push.AppBlockCanaryContext;
@@ -39,6 +45,9 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
 /**
  * Created by sensoro on 17/7/24.
  */
@@ -55,7 +64,137 @@ public class SensoroCityApplication extends BaseApplication implements Repause
     public static String VIDEO_PATH;
     public AMapLocationClient mLocationClient;
     public BLEDeviceManager bleDeviceManager;
+    private final Runnable iBeaconTask = new Runnable() {
+        @Override
+        public void run() {
+            if (ibeaconSettingData.switchOut || ibeaconSettingData.switchIn) {
+                boolean bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.isBluetoothEnabled();
+                if (bleHasOpen) {
+                    try {
+                        bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.startService();
+//                        if (isAPPBack) {
+//                            SensoroCityApplication.getInstance().bleDeviceManager.stopScan();
+//                        } else {
+//                            SensoroCityApplication.getInstance().bleDeviceManager.startScan();
+//                        }
 
+                        //
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (bleHasOpen) {
+                    //TODO 做检查
+                    if (!BleObserver.getInstance().isRegisterBleObserver(bleDeviceListener)) {
+                        BleObserver.getInstance().registerBleObserver(bleDeviceListener);
+                    }
+                    pushHandler.post(checkNearbyTask);
+                } else {
+                    if (BleObserver.getInstance().isRegisterBleObserver(bleDeviceListener)) {
+                        BleObserver.getInstance().unregisterBleObserver(bleDeviceListener);
+                    }
+
+                }
+            }
+            pushHandler.postDelayed(iBeaconTask, 3000);
+        }
+    };
+    private final BLEDeviceListener<BLEDevice> bleDeviceListener = new BLEDeviceListener<BLEDevice>() {
+        @Override
+        public void onNewDevice(BLEDevice bleDevice) {
+            if (bleDevice != null) {
+                String sn = bleDevice.getSn();
+                if (!TextUtils.isEmpty(sn)) {
+                    IBeacon iBeacon = bleDevice.iBeacon;
+                    if (iBeacon != null) {
+                        String uuid = iBeacon.getUuid();
+                        if (ibeaconSettingData.currentUUID.equals(uuid)) {
+                            mNearByIBeaconMap.put(sn, iBeacon);
+                        }
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onGoneDevice(BLEDevice bleDevice) {
+            if (bleDevice != null) {
+                String sn = bleDevice.getSn();
+                if (!TextUtils.isEmpty(sn)) {
+                    IBeacon iBeacon = bleDevice.iBeacon;
+                    if (iBeacon != null) {
+                        String uuid = iBeacon.getUuid();
+                        if (ibeaconSettingData.currentUUID.equals(uuid)) {
+                            mNearByIBeaconMap.remove(sn);
+                        }
+                    }
+                }
+
+            }
+        }
+
+        @Override
+        public void onUpdateDevices(ArrayList<BLEDevice> deviceList) {
+            for (BLEDevice bleDevice : deviceList) {
+                String sn = bleDevice.getSn();
+                if (!TextUtils.isEmpty(sn)) {
+                    IBeacon iBeacon = bleDevice.iBeacon;
+                    if (iBeacon != null) {
+                        String uuid = iBeacon.getUuid();
+                        if (ibeaconSettingData.currentUUID.equals(uuid)) {
+                            mNearByIBeaconMap.put(sn, iBeacon);
+                        }
+                    }
+                }
+
+            }
+        }
+    };
+    private final LinkedHashMap<String, IBeacon> mNearByIBeaconMap = new LinkedHashMap<>();
+    private volatile boolean isNearby = false;
+    public IbeaconSettingData ibeaconSettingData = new IbeaconSettingData();
+    private final Runnable checkNearbyTask = new Runnable() {
+        @Override
+        public void run() {
+            boolean currentNearby = !mNearByIBeaconMap.isEmpty();
+            if (isNearby != currentNearby) {
+//                    getView().toastLong("进出状态：" + currentNearby);
+                if (currentNearby) {
+                    if (ibeaconSettingData.switchIn) {
+                        pushHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (TextUtils.isEmpty(ibeaconSettingData.switchInMessage)) {
+                                    SensoroCityApplication.getInstance().mNotificationUtils.sendNotification("进入！！");
+                                } else {
+                                    SensoroCityApplication.getInstance().mNotificationUtils.sendNotification(ibeaconSettingData.switchInMessage);
+                                }
+
+                            }
+                        });
+                    }
+                } else {
+                    if (ibeaconSettingData.switchOut) {
+                        pushHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (TextUtils.isEmpty(ibeaconSettingData.switchOutMessage)) {
+                                    SensoroCityApplication.getInstance().mNotificationUtils.sendNotification("出去！！！");
+                                } else {
+                                    SensoroCityApplication.getInstance().mNotificationUtils.sendNotification(ibeaconSettingData.switchOutMessage);
+                                }
+
+                            }
+                        });
+                    }
+                }
+                isNearby = currentNearby;
+            }
+//            pushHandler.postDelayed(checkNearbyTask, 300);
+        }
+    };
+
+    //
     @Override
     public void onCreate() {
         super.onCreate();
@@ -134,6 +273,7 @@ public class SensoroCityApplication extends BaseApplication implements Repause
         super.onTerminate();
         Repause.unregisterListener(this);
         mLocationClient.onDestroy();
+        mNearByIBeaconMap.clear();
         Beta.unInit();
     }
 
@@ -150,8 +290,18 @@ public class SensoroCityApplication extends BaseApplication implements Repause
             }
         }, 1000);
         ThreadPoolManager.getInstance().execute(this);
+        pushHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                SensoroCityApplication.getInstance().ibeaconSettingData.currentUUID = "70DC44C3-E2A8-4B22-A2C6-129B41A4BDBC";
+                IbeaconSettingData ibeaconSettingData = PreferencesHelper.getInstance().getIbeaconSettingData();
+                if (ibeaconSettingData != null) {
+                    SensoroCityApplication.getInstance().ibeaconSettingData = ibeaconSettingData;
+                }
+            }
+        });
+        pushHandler.postDelayed(iBeaconTask, 500);
     }
-
 
     private void initBugLy() {
         try {
@@ -368,6 +518,8 @@ public class SensoroCityApplication extends BaseApplication implements Repause
         initImagePicker();
         locate();
         initBugLy();
+        //
+        //
         BlockCanary.install(this, new AppBlockCanaryContext()).start();
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
@@ -375,6 +527,7 @@ public class SensoroCityApplication extends BaseApplication implements Repause
             return;
         }
         LeakCanary.install(this);
+
     }
 
     /**
