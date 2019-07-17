@@ -101,6 +101,7 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION, eventLoginData.hasDevicePositionCalibration);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_SHORT, eventLoginData.hasDeviceMuteShort);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_LONG, eventLoginData.hasDeviceMuteLong);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_TIME, eventLoginData.hasDeviceMuteTime);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_FIRMWARE_UPDATE, eventLoginData.hasDeviceFirmwareUpdate);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_DEMO_MODE, eventLoginData.hasDeviceDemoMode);
         editor.putBoolean(EXTRA_GRANTS_HAS_CONTROLLER_AID, eventLoginData.hasControllerAid);
@@ -150,6 +151,7 @@ public final class PreferencesHelper implements Constants {
             boolean hasDevicePositionCalibration = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION, false);
             boolean hasDeviceMuteShort = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_SHORT, false);
             boolean hasDeviceMuteLong = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_LONG, false);
+            boolean hasDeviceMuteTime = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_MUTE_TIME, false);
             boolean hasDeviceFirmUpdate = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_FIRMWARE_UPDATE, false);
             boolean hasDeviceDemoMode = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_DEMO_MODE, false);
             boolean hasControllerAid = sp.getBoolean(EXTRA_GRANTS_HAS_CONTROLLER_AID, false);
@@ -189,6 +191,7 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasDevicePositionCalibration = hasDevicePositionCalibration;
             eventLoginData.hasDeviceMuteShort = hasDeviceMuteShort;
             eventLoginData.hasDeviceMuteLong = hasDeviceMuteLong;
+            eventLoginData.hasDeviceMuteTime = hasDeviceMuteTime;
             eventLoginData.hasDeviceFirmwareUpdate = hasDeviceFirmUpdate;
             eventLoginData.hasDeviceDemoMode = hasDeviceDemoMode;
             eventLoginData.hasControllerAid = hasControllerAid;
