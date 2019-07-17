@@ -44,6 +44,7 @@
             android:cursorVisible="true"
             android:gravity="end"
             android:hint="@string/alarm_contact_tip_sample"
+            android:singleLine="true"
             android:imeOptions="actionDone|actionNext"
             android:textColor="@color/c_252525"
             android:textCursorDrawable="@drawable/my_cursor"
@@ -85,7 +86,7 @@
             android:background="@null"
             android:cursorVisible="true"
             android:gravity="end"
-
+            android:singleLine="true"
             android:hint="@string/alarm_contact_tip_phone_sample"
             android:imeOptions="actionDone|actionNext"
             android:textColor="@color/c_252525"

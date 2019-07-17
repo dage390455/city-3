@@ -285,14 +285,23 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 getView().setWeChatTextView((TextUtils.isEmpty(deployResultModel.wxPhone) ?
                         mContext.getString(R.string.not_added) : deployResultModel.wxPhone));
                 getView().refreshSignal(deployResultModel.updateTime, deployResultModel.signal);
-
-                if (deployResultModel.deviceStatus == 0 || deployResultModel.deviceStatus == 4) {
+                //去掉只认为正常的逻辑
+//                if (deployResultModel.deviceStatus == 0 || deployResultModel.deviceStatus == 4) {
+//                    getView().setStatusTextView(mContext.getString(DEVICE_STATUS_ARRAY[deployResultModel.deviceStatus]),
+//                            mContext.getResources().getColor(DEVICE_STATUS_COLOR_ARRAY[deployResultModel.deviceStatus]));
+//                } else {
+//                    getView().setStatusTextView(mContext.getString(R.string.normal),
+//                            mContext.getResources().getColor(R.color.c_1dbb99));
+//                }
+                try {
                     getView().setStatusTextView(mContext.getString(DEVICE_STATUS_ARRAY[deployResultModel.deviceStatus]),
                             mContext.getResources().getColor(DEVICE_STATUS_COLOR_ARRAY[deployResultModel.deviceStatus]));
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                     getView().setStatusTextView(mContext.getString(R.string.normal),
                             mContext.getResources().getColor(R.color.c_1dbb99));
                 }
+
                 if (deployResultModel.deployTime == null) {
                     getView().setUpdateTextView(DateUtil.getStrTimeToday(mContext, System.currentTimeMillis(), 0));
                 } else {
@@ -465,10 +474,18 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
 //                        mContext.getString(R.string.no) : deployResultModel.phone) + ")");
                 getView().setWeChatTextView((TextUtils.isEmpty(deployResultModel.wxPhone) ?
                         mContext.getString(R.string.not_added) : deployResultModel.wxPhone));
-                if (deployResultModel.deviceStatus == 0 || deployResultModel.deviceStatus == 4) {
+//                if (deployResultModel.deviceStatus == 0 || deployResultModel.deviceStatus == 4) {
+//                    getView().setStatusTextView(mContext.getString(DEVICE_STATUS_ARRAY[deployResultModel.deviceStatus]),
+//                            mContext.getResources().getColor(DEVICE_STATUS_COLOR_ARRAY[deployResultModel.deviceStatus]));
+//                } else {
+//                    getView().setStatusTextView(mContext.getString(R.string.normal),
+//                            mContext.getResources().getColor(R.color.c_1dbb99));
+//                }
+                try {
                     getView().setStatusTextView(mContext.getString(DEVICE_STATUS_ARRAY[deployResultModel.deviceStatus]),
                             mContext.getResources().getColor(DEVICE_STATUS_COLOR_ARRAY[deployResultModel.deviceStatus]));
-                } else {
+                } catch (Exception e) {
+                    e.printStackTrace();
                     getView().setStatusTextView(mContext.getString(R.string.normal),
                             mContext.getResources().getColor(R.color.c_1dbb99));
                 }
