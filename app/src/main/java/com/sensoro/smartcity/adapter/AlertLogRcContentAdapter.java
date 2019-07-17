@@ -33,7 +33,7 @@ import com.sensoro.smartcity.widget.HtmlImageSpan;
 import com.sensoro.smartcity.widget.dialog.WarnPhoneMsgDialogUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -48,7 +48,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
     private final List<AlarmInfo.RecordInfo> timeShaftParentBeans = new ArrayList<>();
 
 
-    private HashMap<Integer, List[]> hashMap = new HashMap<>();
+    private LinkedHashMap<Integer, List[]> hashMap = new LinkedHashMap<>();
 
     public AlertLogRcContentAdapter(Context context) {
         mContext = context;
@@ -473,30 +473,34 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
 
         }
 
-
-        for (int i = 0; i < phoneList.length; i++) {
-            AlarmInfo.RecordInfo.Event event = phoneList[i];
-            switch (event.getReciveStatus()) {
-                case 0:
-                    receiveStautus0.add(event);
-                    break;
-                case 1:
-                    receiveStautus1.add(event);
-                    break;
-                case 2:
-                    receiveStautus2.add(event);
-                    break;
-                default:
-                    receiveStautus3.add(event);
-                    break;
+        List<AlarmInfo.RecordInfo.Event> tottalPhoneList = new ArrayList<>();
+        for (AlarmInfo.RecordInfo.Event event : phoneList) {
+            if (event != null) {
+                switch (event.getReciveStatus()) {
+                    case 0:
+                        receiveStautus0.add(event);
+                        break;
+                    case 1:
+                        receiveStautus1.add(event);
+                        break;
+                    case 2:
+                        receiveStautus2.add(event);
+                        break;
+                    default:
+                        receiveStautus3.add(event);
+                        break;
+                }
+                tottalPhoneList.add(event);
             }
 
+
         }
-        List[] receiveStautus = {receiveStautus0, receiveStautus1, receiveStautus2, receiveStautus3};
-        List<AlarmInfo.RecordInfo.Event> tottalPhoneList = new ArrayList<>();
-        for (List stautus : receiveStautus) {
-            tottalPhoneList.addAll(stautus);
-        }
+        //TODO 修改默认设置按原始排序
+//        List[] receiveStautus = {receiveStautus0, receiveStautus1, receiveStautus2, receiveStautus3};
+
+//        for (List stautus : receiveStautus) {
+//            tottalPhoneList.addAll(stautus);
+//        }
 
         for (int i = 0; i < tottalPhoneList.size(); i++) {
             if (i < 2) {
