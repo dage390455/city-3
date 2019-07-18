@@ -104,7 +104,7 @@ public class SensoroCityApplication extends BaseApplication implements Repause
 
         @Override
         public void run() {
-            if (ibeaconSettingData.switchOut || ibeaconSettingData.switchIn) {
+            if (PreferencesHelper.getInstance().getUserData().hasIBeaconSearchDemo && (ibeaconSettingData.switchOut || ibeaconSettingData.switchIn)) {
                 boolean bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.isBluetoothEnabled();
                 if (bleHasOpen) {
                     try {
