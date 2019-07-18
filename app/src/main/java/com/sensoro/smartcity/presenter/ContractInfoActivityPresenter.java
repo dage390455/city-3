@@ -16,12 +16,12 @@ import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.ContractListInfo;
 import com.sensoro.common.server.bean.ContractsTemplateInfo;
-import com.sensoro.common.server.response.ContractInfoRsp;
+import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.utils.RegexUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractResultActivity;
 import com.sensoro.smartcity.activity.ContractServiceActivity;
 import com.sensoro.smartcity.imainviews.IContractInfoActivityView;
-import com.sensoro.common.utils.RegexUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -126,9 +126,9 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
     private void requestData(int contractId) {
         getView().showProgressDialog();
         RetrofitServiceHelper.getInstance().getContractInfo(contractId + "").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<ContractInfoRsp>(this) {
+                .subscribe(new CityObserver<ResponseResult<ContractListInfo>>(this) {
                     @Override
-                    public void onCompleted(ContractInfoRsp responseBase) {
+                    public void onCompleted(ResponseResult<ContractListInfo> responseBase) {
                         mContractInfo = responseBase.getData();
                         if (mContractInfo != null) {
                             getView().setConfirmVisible(mContractInfo.isConfirmed());

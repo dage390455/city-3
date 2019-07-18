@@ -14,9 +14,10 @@ import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.DeployNameplateInfo;
 import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.server.bean.ScenesData;
-import com.sensoro.common.server.response.DeployNameplateRsp;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 import com.sensoro.nameplate.IMainViews.IDeployNameplateActivityView;
@@ -228,10 +229,10 @@ public class DeployNameplateActivityPresenter extends BasePresenter<IDeployNamep
 
     private void doDeployNameplate(ArrayList<String> strings) {
         RetrofitServiceHelper.getInstance().doUploadDeployNameplate(mNameplateId, deployNameplateModel.name, deployNameplateModel.tags, strings, deployNameplateModel.bindList)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployNameplateRsp>(this) {
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeployNameplateInfo>>(this) {
 
             @Override
-            public void onCompleted(DeployNameplateRsp deployNameplateRsp) {
+            public void onCompleted(ResponseResult<DeployNameplateInfo> deployNameplateRsp) {
 
 
                 DeployResultModel deployResultModel = new DeployResultModel();

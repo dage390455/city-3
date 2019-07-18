@@ -5,19 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.common.server.bean.InspectionTaskExceptionDeviceModel;
 import com.sensoro.common.server.bean.ScenesData;
-import com.sensoro.common.server.response.InspectionTaskExceptionDeviceRsp;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionExceptionDetailActivityView;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 
 import java.io.Serializable;
@@ -41,9 +41,9 @@ public class InspectionExceptionDetailActivityPresenter extends BasePresenter<II
     private void requestExceptionDetail() {
         getView().showProgressDialog();
         RetrofitServiceHelper.getInstance().getInspectionDeviceDetail(mDeviceDetail.getId(), null, null, 1)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskExceptionDeviceRsp>(this) {
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<InspectionTaskExceptionDeviceModel>>(this) {
             @Override
-            public void onCompleted(InspectionTaskExceptionDeviceRsp response) {
+            public void onCompleted(ResponseResult<InspectionTaskExceptionDeviceModel> response) {
                 InspectionTaskExceptionDeviceModel taskDevice = response.getData();
                 getView().setTvName(taskDevice.getDevice().getName());
                 String inspectionDeviceName = WidgetUtil.getInspectionDeviceName(taskDevice.getDeviceType());

@@ -1,65 +1,54 @@
 package com.sensoro.common.server;
 
 
+import com.sensoro.common.model.CameraFilterModel;
+import com.sensoro.common.server.bean.AlarmCameraLiveBean;
+import com.sensoro.common.server.bean.AlarmCloudVideoBean;
+import com.sensoro.common.server.bean.AlarmPopupDataBean;
+import com.sensoro.common.server.bean.AlarmTime;
+import com.sensoro.common.server.bean.BaseStationChartDetailModel;
+import com.sensoro.common.server.bean.BaseStationDetailModel;
+import com.sensoro.common.server.bean.BaseStationInfo;
+import com.sensoro.common.server.bean.ChangeInspectionTaskStateInfo;
+import com.sensoro.common.server.bean.ContractAddInfo;
+import com.sensoro.common.server.bean.ContractListInfo;
+import com.sensoro.common.server.bean.ContractsTemplateInfo;
+import com.sensoro.common.server.bean.DeployCameraUploadInfo;
+import com.sensoro.common.server.bean.DeployNameplateInfo;
+import com.sensoro.common.server.bean.DeployRecordInfo;
+import com.sensoro.common.server.bean.DeployStationInfo;
+import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
+import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
+import com.sensoro.common.server.bean.DeviceCameraFacePic;
+import com.sensoro.common.server.bean.DeviceCameraHistoryBean;
+import com.sensoro.common.server.bean.DeviceCameraInfo;
+import com.sensoro.common.server.bean.DeviceCameraPersonFaceBean;
+import com.sensoro.common.server.bean.DeviceHistoryInfo;
+import com.sensoro.common.server.bean.DeviceInfo;
+import com.sensoro.common.server.bean.DeviceMergeTypesInfo;
+import com.sensoro.common.server.bean.DeviceTypeCount;
+import com.sensoro.common.server.bean.DeviceUpdateFirmwareData;
+import com.sensoro.common.server.bean.HandleAlarmData;
+import com.sensoro.common.server.bean.InspectionTaskDeviceDetailModel;
+import com.sensoro.common.server.bean.InspectionTaskExceptionDeviceModel;
+import com.sensoro.common.server.bean.InspectionTaskExecutionModel;
+import com.sensoro.common.server.bean.InspectionTaskInstructionModel;
+import com.sensoro.common.server.bean.InspectionTaskModel;
+import com.sensoro.common.server.bean.MalfunctionListInfo;
 import com.sensoro.common.server.bean.NamePlateInfo;
-import com.sensoro.common.server.response.AlarmCameraLiveRsp;
-import com.sensoro.common.server.response.AlarmCloudVideoRsp;
+import com.sensoro.common.server.bean.SecurityAlarmTimelineData;
+import com.sensoro.common.server.bean.UserInfo;
 import com.sensoro.common.server.response.AlarmCountRsp;
-import com.sensoro.common.server.response.AuthRsp;
-import com.sensoro.common.server.response.BaseStationChartDetailRsp;
-import com.sensoro.common.server.response.BaseStationDetailRsp;
-import com.sensoro.common.server.response.BaseStationListRsp;
-import com.sensoro.common.server.response.CameraFilterRsp;
-import com.sensoro.common.server.security.response.SecurityAlarmDetailRsp;
-import com.sensoro.common.server.security.response.SecurityAlarmListRsp;
-import com.sensoro.common.server.response.ChangeInspectionTaskStateRsp;
-import com.sensoro.common.server.response.ContractAddRsp;
-import com.sensoro.common.server.response.ContractInfoRsp;
-import com.sensoro.common.server.response.ContractsListRsp;
-import com.sensoro.common.server.response.ContractsTemplateRsp;
-import com.sensoro.common.server.response.DeleteNamePlateRsp;
-import com.sensoro.common.server.response.DeployCameraUploadRsp;
-import com.sensoro.common.server.response.DeployDeviceDetailRsp;
-import com.sensoro.common.server.response.DeployNameplateRsp;
-import com.sensoro.common.server.response.DeployRecordRsp;
-import com.sensoro.common.server.response.DeployStationInfoRsp;
-import com.sensoro.common.server.response.DeviceAlarmItemRsp;
-import com.sensoro.common.server.response.DeviceAlarmLogRsp;
-import com.sensoro.common.server.response.DeviceAlarmTimeRsp;
-import com.sensoro.common.server.response.DeviceCameraDetailRsp;
-import com.sensoro.common.server.response.DeviceCameraFacePicListRsp;
-import com.sensoro.common.server.response.DeviceCameraHistoryRsp;
-import com.sensoro.common.server.response.DeviceCameraListRsp;
-import com.sensoro.common.server.response.DeviceCameraPersonFaceRsp;
-import com.sensoro.common.server.response.DeviceDeployRsp;
-import com.sensoro.common.server.response.DeviceHistoryListRsp;
-import com.sensoro.common.server.response.DeviceInfoListRsp;
-import com.sensoro.common.server.response.DeviceRecentRsp;
-import com.sensoro.common.server.response.DeviceTypeCountRsp;
-import com.sensoro.common.server.response.DeviceUpdateFirmwareDataRsp;
-import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
-import com.sensoro.common.server.response.DevicesMergeTypesRsp;
-import com.sensoro.common.server.response.InspectionTaskDeviceDetailRsp;
-import com.sensoro.common.server.response.InspectionTaskExceptionDeviceRsp;
-import com.sensoro.common.server.response.InspectionTaskExecutionRsp;
-import com.sensoro.common.server.response.InspectionTaskInstructionRsp;
-import com.sensoro.common.server.response.InspectionTaskModelRsp;
-import com.sensoro.common.server.response.LoginRsp;
 import com.sensoro.common.server.response.MalfunctionCountRsp;
-import com.sensoro.common.server.response.MalfunctionListRsp;
 import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
-import com.sensoro.common.server.response.NamePlateListRsp;
-import com.sensoro.common.server.response.NameplateBindDeviceRsp;
 import com.sensoro.common.server.response.QiNiuToken;
-import com.sensoro.common.server.response.ResponseBase;
 import com.sensoro.common.server.response.ResponseResult;
-import com.sensoro.common.server.response.UpdateRsp;
-import com.sensoro.common.server.response.UserAccountControlRsp;
-import com.sensoro.common.server.response.UserAccountRsp;
-import com.sensoro.common.server.security.response.HandleAlarmRsp;
-import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
-import com.sensoro.common.server.security.response.SecurityWarnRecordResp;
+import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
+import com.sensoro.common.server.security.bean.SecurityAlarmListData;
+import com.sensoro.common.server.security.bean.SecurityWarnRecord;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -131,14 +120,15 @@ public interface RetrofitService {
 
     @FormUrlEncoded
     @POST(LOGIN)
-    Observable<LoginRsp> login(@Field("phone") String phone, @Field("password") String pwd, @Field("phoneId") String
+    Observable<ResponseResult<UserInfo>> login(@Field("phone") String phone, @Field("password") String pwd, @Field("phoneId") String
             phoneId, @Field("phoneType") String phoneType, @Field("remember") Boolean needRemember);
 
     @GET(DEVICE_HISTORY_LIST)
-    Observable<DeviceHistoryListRsp> getDeviceHistoryList(@Query("sn") String sn, @Query("count") int count);
+    Observable<ResponseResult<List<DeviceHistoryInfo>>> getDeviceHistoryList(@Query("sn") String sn, @Query("count") int count);
 
     /**
      * type 默认给hours
+     * ---！！！！废弃接口
      *
      * @param sn
      * @param beginTime
@@ -147,88 +137,88 @@ public interface RetrofitService {
      * @return
      */
     @GET("details/{sn}/statistics/es")
-    Observable<DeviceRecentRsp> getDeviceHistoryList(@Path("sn") String sn, @Query("beginTime") long beginTime,
+    Observable<ResponseResult> getDeviceHistoryList(@Path("sn") String sn, @Query("beginTime") long beginTime,
                                                      @Query("endTime") long endTime, @Query("type") String type);
 
     @GET(DEVICE_INFO_LIST)
-    Observable<DeviceInfoListRsp> getDeviceDetailInfoList(@Query("sns") String sns, @Query("search") String search,
-                                                          @Query("all") int all);
+    Observable<ResponseResult<List<DeviceInfo>>> getDeviceDetailInfoList(@Query("sns") String sns, @Query("search") String search,
+                                                                         @Query("all") int all);
 
     @GET(DEVICE_BRIEF_LIST)
-    Observable<DeviceInfoListRsp> getDeviceBriefInfoList(@Query("page") int page, @Query("count")
+    Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(@Query("page") int page, @Query("count")
             int count, @Query("all") int all, @Query("showIndoorDevice") int showIndoorDevice,
-                                                         @Query("sensorTypes") String sensorTypes, @Query("mergeTypes") String mergeTypes, @Query("status") Integer status, @Query("search") String search);
+                                                                        @Query("sensorTypes") String sensorTypes, @Query("mergeTypes") String mergeTypes, @Query("status") Integer status, @Query("search") String search);
 
     @GET(DEVICE_TYPE_COUNT)
-    Observable<DeviceTypeCountRsp> getDeviceTypeCount();
+    Observable<ResponseResult<DeviceTypeCount>> getDeviceTypeCount();
 
     @GET(DEVICE_ALARM_TIME)
-    Observable<DeviceAlarmTimeRsp> getDeviceAlarmTime(@Query("sn") String sn);
+    Observable<ResponseResult<AlarmTime>> getDeviceAlarmTime(@Query("sn") String sn);
 
     @GET(DEVICE_ALARM_LOG)
-    Observable<DeviceAlarmLogRsp> getDeviceAlarmLogList(@Query("count") int count, @Query("page") int page, @Query
+    Observable<ResponseResult<List<DeviceAlarmLogInfo>>> getDeviceAlarmLogList(@Query("count") int count, @Query("page") int page, @Query
             ("sn") String sn, @Query("deviceName") String deviceName, @Query("phone")
                                                                 String phone, @Query("search") String search, @Query
                                                                 ("beginTime") Long beginTime,
-                                                        @Query("endTime") Long endTime
+                                                                               @Query("endTime") Long endTime
             , @Query("unionTypes") String unionTypes);
 
     @GET(DEVICE_MALFUNCTION_LOG)
-    Observable<MalfunctionListRsp> getDeviceMalfunctionLogList(@Query("count") int count, @Query("page") int page, @Query
+    Observable<ResponseResult<List<MalfunctionListInfo>>> getDeviceMalfunctionLogList(@Query("count") int count, @Query("page") int page, @Query
             ("sn") String sn, @Query("deviceName") String deviceName, @Query("search") String search, @Query
                                                                        ("beginTime") Long beginTime,
-                                                               @Query("endTime") Long endTime);
+                                                                                      @Query("endTime") Long endTime);
 
     @GET(USER_ACCOUNT_LIST)
-    Observable<UserAccountRsp> getUserAccountList(@Query("search") String search, @Query("page") Integer page, @Query
+    Observable<ResponseResult<List<UserInfo>>> getUserAccountList(@Query("search") String search, @Query("page") Integer page, @Query
             ("count") Integer count, @Query("offset") Integer offset, @Query("limit") Integer limit);
 
     @GET(APP_UPDATE)
-    Observable<UpdateRsp> getUpdateInfo();
+    Observable<ResponseResult> getUpdateInfo();
 
     @PUT("alarmplay/{id}")
-    Observable<DeviceAlarmItemRsp> doAlarmConfirm(@Path("id") String id, @Body RequestBody requestBody);
+    Observable<ResponseResult<DeviceAlarmLogInfo>> doAlarmConfirm(@Path("id") String id, @Body RequestBody requestBody);
 
     @POST("users/{uid}/controlling")
-    Observable<UserAccountControlRsp> doAccountControl(@Path("uid") String uid, @Body RequestBody requestBody);
+    Observable<ResponseResult<UserInfo>> doAccountControl(@Path("uid") String uid, @Body RequestBody requestBody);
 
     @POST("prov2/devices/app/{sn}")
-    Observable<DeviceDeployRsp> doDevicePointDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
+    Observable<ResponseResult<DeviceInfo>> doDevicePointDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
 
     @GET("devices/realStatus/{sn}")
-    Observable<DeviceDeployRsp> getRealStatus(@Path("sn") String sn);
+    Observable<ResponseResult<DeviceInfo>> getRealStatus(@Path("sn") String sn);
 
 
     @GET(DEPLOY_DEVICE_DETAIL)
-    Observable<DeployDeviceDetailRsp> getDeployDeviceDetail(@Query("sn") String sn, @Query("longitude") Double longitude, @Query("latitude") Double latitude);
+    Observable<ResponseResult<DeviceInfo>> getDeployDeviceDetail(@Query("sn") String sn, @Query("longitude") Double longitude, @Query("latitude") Double latitude);
 
     //    @HTTP(method = "DELETE", path = LOGOUT, hasBody = true)
 //    Observable<ResponseBase> logout(@Header("phoneId") String phoneId, @Header("uid")
 //            String uid, @Query("phoneId") String phoneId_q, @Query("uid") String uid_q, @Body RequestBody
 // requestBody);
     @HTTP(method = "DELETE", path = LOGOUT, hasBody = true)
-    Observable<ResponseBase> logout(@Query("phoneId") String phoneId_q, @Query("uid") String uid_q, @Body RequestBody
+    Observable<ResponseResult> logout(@Query("phoneId") String phoneId_q, @Query("uid") String uid_q, @Body RequestBody
             requestBody);
 
     @GET(STATION_INFO + "{sn}")
-    Observable<DeployStationInfoRsp> getStationDetail(@Path("sn") String sn);
+    Observable<ResponseResult<DeployStationInfo>> getStationDetail(@Path("sn") String sn);
 
     //
     @POST(STATION_DEPLOY + "{sn}")
-    Observable<DeployStationInfoRsp> doStationDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
+    Observable<ResponseResult<DeployStationInfo>> doStationDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
 
     @GET(GET_DEPOLY_RECORD_LIST)
-    Observable<DeployRecordRsp> getDeployRecordList(@Query("sn") String sn, @Query("search") String searchText, @Query("beginTime") Long beginTime,
-                                                    @Query("endTime") Long endTime, @Query("owners") String owners, @Query("signalQuality") String signalQuality, @Query("limit") Integer limit, @Query("offset") Integer offset, @Query("group") Boolean group);
+    Observable<ResponseResult<List<DeployRecordInfo>>> getDeployRecordList(@Query("sn") String sn, @Query("search") String searchText, @Query("beginTime") Long beginTime,
+                                                                           @Query("endTime") Long endTime, @Query("owners") String owners, @Query("signalQuality") String signalQuality, @Query("limit") Integer limit, @Query("offset") Integer offset, @Query("group") Boolean group);
 
     @PUT("alarmplay/{id}")
-    Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(@Path("id") String id, @Body RequestBody requestBody);
+    Observable<ResponseResult<DeviceAlarmLogInfo>> doUpdatePhotosUrl(@Path("id") String id, @Body RequestBody requestBody);
 
     @GET("tools/qiniu/token")
     Observable<QiNiuToken> getQiNiuToken();
 
     @GET("contractsTemplate")
-    Observable<ContractsTemplateRsp> getContractsTemplate();
+    Observable<ResponseResult<ArrayList<ContractsTemplateInfo>>> getContractsTemplate();
 
     //    @FormUrlEncoded
 //    @POST("contracts")
@@ -247,32 +237,32 @@ public interface RetrofitService {
 //                                         @Field("payTimes") int payTimes, @Field("confirmed") Boolean confirmed,
 //                                         @Field("serviceTime") int serviceTime);
     @POST("contracts")
-    Observable<ContractAddRsp> newContract(@Body RequestBody requestBody);
+    Observable<ResponseResult<ContractAddInfo>> newContract(@Body RequestBody requestBody);
 
     @PUT("contracts")
-    Observable<ResponseBase> modifyContract(@Body RequestBody requestBody);
+    Observable<ResponseResult> modifyContract(@Body RequestBody requestBody);
 
     @GET("contracts/{id}")
-    Observable<ContractInfoRsp> getContractInfo(@Path("id") String id);
+    Observable<ResponseResult<ContractListInfo>> getContractInfo(@Path("id") String id);
 
     @POST("contracts/_search")
-    Observable<ContractsListRsp> searchContract(@Body RequestBody requestBody);
+    Observable<ResponseResult<List<ContractListInfo>>> searchContract(@Body RequestBody requestBody);
 
     @FormUrlEncoded
     @POST("qrcode/scan")
-    Observable<ResponseBase> getLoginScanResult(@Field("qrcodeId") String qrcodeId);
+    Observable<ResponseResult> getLoginScanResult(@Field("qrcodeId") String qrcodeId);
 
     @FormUrlEncoded
     @POST("qrcode/login")
-    Observable<ResponseBase> scanLoginIn(@Field("qrcodeId") String qrcodeId);
+    Observable<ResponseResult> scanLoginIn(@Field("qrcodeId") String qrcodeId);
 
     @FormUrlEncoded
     @POST("qrcode/cancel")
-    Observable<ResponseBase> scanLoginCancel(@Field("qrcodeId") String qrcodeId);
+    Observable<ResponseResult> scanLoginCancel(@Field("qrcodeId") String qrcodeId);
 
     @FormUrlEncoded
     @POST(DOUBLE_CHECK)
-    Observable<AuthRsp> doubleCheck(@Field("code") String code);
+    Observable<ResponseResult<Boolean>> doubleCheck(@Field("code") String code);
 
     @GET(ALARM_COUNT)
     Observable<AlarmCountRsp> getAlarmCount(@Query("beginTime") Long beginTime, @Query("endTime") Long endTime,
@@ -283,47 +273,47 @@ public interface RetrofitService {
                                                         @Query("malfunctionStatus") String malfunctionStatus, @Query("sn") String sn);
 
     @GET(INSPECT_TASK_LIST)
-    Observable<InspectionTaskModelRsp> getInspectTaskList(@Query("search") String search, @Query("finish") Integer finish, @Query
+    Observable<ResponseResult<InspectionTaskModel>> getInspectTaskList(@Query("search") String search, @Query("finish") Integer finish, @Query
             ("offset") Integer offset, @Query("limit") Integer limit, @Query("startTime") Long startTime, @Query("finishTime") Long finishTime);
 
     @PUT("inspect/device")
-    Observable<ResponseBase> uploadInspectionResult(@Body RequestBody responseBody);
+    Observable<ResponseResult> uploadInspectionResult(@Body RequestBody responseBody);
 
     @GET("inspect/task/device")
-    Observable<InspectionTaskDeviceDetailRsp> getInspectionDeviceList(@Query("taskId") String taskId, @Query("search") String search, @Query("sn") String sn, @Query("finish") Integer finish,
-                                                                      @Query("deviceTypes") String deviceTypes, @Query("offset") Integer offset, @Query("limit") Integer limit);
+    Observable<ResponseResult<InspectionTaskDeviceDetailModel>> getInspectionDeviceList(@Query("taskId") String taskId, @Query("search") String search, @Query("sn") String sn, @Query("finish") Integer finish,
+                                                                                        @Query("deviceTypes") String deviceTypes, @Query("offset") Integer offset, @Query("limit") Integer limit);
 
     @GET(INSPECT_TASK_EXECUTION)
-    Observable<InspectionTaskExecutionRsp> getInspectTaskExecution(@Query("taskId") String taskId);
+    Observable<ResponseResult<InspectionTaskExecutionModel>> getInspectTaskExecution(@Query("taskId") String taskId);
 
     @PUT(INSPECT_TASK_CHANGE_STATE)
-    Observable<ChangeInspectionTaskStateRsp> changeInspectionTaskState(@Body RequestBody requestBody);
+    Observable<ResponseResult<ChangeInspectionTaskStateInfo>> changeInspectionTaskState(@Body RequestBody requestBody);
 
     @POST(INSPECT_TASK_EXCEPTION_DETAIL)
-    Observable<InspectionTaskExceptionDeviceRsp> getInspectionDeviceDetail(@Body RequestBody requestBody);
+    Observable<ResponseResult<InspectionTaskExceptionDeviceModel>> getInspectionDeviceDetail(@Body RequestBody requestBody);
 
     @GET(INSPECTION_TASK_GET_TEMPLATE)
-    Observable<InspectionTaskInstructionRsp> getInspectionTemplate(@Query("deviceType") String deviceType);
+    Observable<ResponseResult<InspectionTaskInstructionModel>> getInspectionTemplate(@Query("deviceType") String deviceType);
 
     @POST("devices/change/{sn}")
-    Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
+    Observable<ResponseResult<DeviceInfo>> doInspectionChangeDeviceDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
 
     @GET(GET_DEVICES_MERGE_TYPES)
 //    Observable<DevicesMergeTypesRsp> getDevicesMergeTypes(@Header("x-session-id") String sessionId);
-    Observable<DevicesMergeTypesRsp> getDevicesMergeTypes();
+    Observable<ResponseResult<DeviceMergeTypesInfo>> getDevicesMergeTypes();
 
     @PUT(MONITOR_POINT_OPERATION)
     Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(@Body RequestBody requestBody);
 
     @PUT("devices/gps/{sn}")
-    Observable<DeviceDeployRsp> doDevicePositionCalibration(@Path("sn") String sn, @Body RequestBody requestBody);
+    Observable<ResponseResult<DeviceInfo>> doDevicePositionCalibration(@Path("sn") String sn, @Body RequestBody requestBody);
 
     @GET("devices/valid")
 //    Observable<DevicesMergeTypesRsp> getDevicesMergeTypes(@Header("x-session-id") String sessionId);
-    Observable<ResponseBase> getDeviceNameValid(@Query("name") String name);
+    Observable<ResponseResult> getDeviceNameValid(@Query("name") String name);
 
     @DELETE("prov1/accounts/controlling")
-    Observable<LoginRsp> backMainControlling();
+    Observable<ResponseResult<UserInfo>> backMainControlling();
 
     /**
      * 获取固件列表
@@ -333,7 +323,7 @@ public interface RetrofitService {
      * @return
      */
     @POST("devices/version/list/{sn}")
-    Observable<DeviceUpdateFirmwareDataRsp> getDeviceUpdateVision(@Path("sn") String sn, @Body RequestBody requestBody);
+    Observable<ResponseResult<List<DeviceUpdateFirmwareData>>> getDeviceUpdateVision(@Path("sn") String sn, @Body RequestBody requestBody);
 
     /**
      * 回写固件版本到iot
@@ -343,7 +333,7 @@ public interface RetrofitService {
      * @return
      */
     @POST("devices/firmwareversion/update/{sn}")
-    Observable<ResponseBase> upLoadDeviceUpdateVision(@Path("sn") String sn, @Body RequestBody requestBody);
+    Observable<ResponseResult> upLoadDeviceUpdateVision(@Path("sn") String sn, @Body RequestBody requestBody);
 
     /**
      * 下载文件
@@ -357,7 +347,7 @@ public interface RetrofitService {
 
     @GET(GET_DEVICES_ALARM_POPUP_CONFIG)
 //    Observable<DevicesMergeTypesRsp> getDevicesMergeTypes(@Header("x-session-id") String sessionId);
-    Observable<DevicesAlarmPopupConfigRsp> getDevicesAlarmPopupConfig();
+    Observable<ResponseResult<AlarmPopupDataBean>> getDevicesAlarmPopupConfig();
 
     /**
      * 通过sn获取摄像头详情
@@ -366,7 +356,7 @@ public interface RetrofitService {
      * @return
      */
     @GET("camera")
-    Observable<DeviceCameraDetailRsp> getDeviceCamera(@Query("sn") String sn);
+    Observable<ResponseResult<DeviceCameraDetailInfo>> getDeviceCamera(@Query("sn") String sn);
 
     /**
      * 获取用户下摄像头列表
@@ -377,7 +367,7 @@ public interface RetrofitService {
      * @return
      */
     @GET("cameras")
-    Observable<DeviceCameraListRsp> getDeviceCameraList(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search);
+    Observable<ResponseResult<List<DeviceCameraInfo>>> getDeviceCameraList(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search);
 
 
     /**
@@ -386,22 +376,22 @@ public interface RetrofitService {
      * @return
      */
     @GET("cameras/map")
-    Observable<ResponseBase> getDeviceCameraMapList();
+    Observable<ResponseResult> getDeviceCameraMapList();
 
     @GET("cameras/detail")
-    Observable<AlarmCameraLiveRsp> getAlarmCamerasDetail(@Query("sn") String sn);
+    Observable<ResponseResult<List<AlarmCameraLiveBean>>> getAlarmCamerasDetail(@Query("sn") String sn);
 
     @POST("picture/faceList")
-    Observable<DeviceCameraFacePicListRsp> getDeviceCameraFaceList(@Body RequestBody requestBody);
+    Observable<ResponseResult<List<DeviceCameraFacePic>>> getDeviceCameraFaceList(@Body RequestBody requestBody);
 
     @POST("video/queryHistoryAddress")
-    Observable<DeviceCameraHistoryRsp> getDeviceCameraPlayHistoryAddress(@Body RequestBody requestBody);
+    Observable<ResponseResult<List<DeviceCameraHistoryBean>>> getDeviceCameraPlayHistoryAddress(@Body RequestBody requestBody);
 
     @GET("cameras/group/bind")
-    Observable<DeviceCameraListRsp> getDeviceGroupCameraList(@Query("_id") String _id, @Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search);
+    Observable<ResponseResult<List<DeviceCameraInfo>>> getDeviceGroupCameraList(@Query("_id") String _id, @Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search);
 
     @POST("picture/getFaceListById")
-    Observable<DeviceCameraPersonFaceRsp> getDeviceCameraPersonFace(@Body RequestBody requestBody);
+    Observable<ResponseResult<List<DeviceCameraPersonFaceBean>>> getDeviceCameraPersonFace(@Body RequestBody requestBody);
 
     /**
      * 100_camera - 100.026 获取安装方式和朝向选择字典
@@ -409,50 +399,50 @@ public interface RetrofitService {
      * @return
      */
     @GET("query-dict")
-    Observable<CameraFilterRsp> getCameraFilter();
+    Observable<ResponseResult<List<CameraFilterModel>>> getCameraFilter();
 
     @GET("group/stations/fields")
-    Observable<CameraFilterRsp> getStationFilter();
+    Observable<ResponseResult<List<CameraFilterModel>>> getStationFilter();
 
     @GET("cameras")
-    Observable<DeviceCameraListRsp> getDeviceCameraListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
+    Observable<ResponseResult<List<DeviceCameraInfo>>> getDeviceCameraListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
 
     @GET("stations")
-    Observable<BaseStationListRsp> getBaseStationListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
+    Observable<ResponseResult<List<BaseStationInfo>>> getBaseStationListByFilter(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @QueryMap Map<String, String> mapFilter);
 
 
     @POST("qiniu/getCloudMediaByEventId")
-    Observable<AlarmCloudVideoRsp> getCloudVideo(@Body RequestBody requestBody);
+    Observable<ResponseResult<List<AlarmCloudVideoBean>>> getCloudVideo(@Body RequestBody requestBody);
 
     @POST("camera/deploy")
-    Observable<DeployCameraUploadRsp> doUploadDeployCamera(@Body RequestBody requestBody);
+    Observable<ResponseResult<DeployCameraUploadInfo>> doUploadDeployCamera(@Body RequestBody requestBody);
 
     @POST("camera/check")
-    Observable<DeviceCameraDetailRsp> getDeployCameraInfo(@Body RequestBody requestBody);
+    Observable<ResponseResult<DeviceCameraDetailInfo>> getDeployCameraInfo(@Body RequestBody requestBody);
 
     @GET("stations/{stationsn}")
-    Observable<BaseStationDetailRsp> getBaseStationDetail(@Path("stationsn") String stationsn);
+    Observable<ResponseResult<BaseStationDetailModel>> getBaseStationDetail(@Path("stationsn") String stationsn);
 
     @GET("stations/{stationsn}/sensor/{type}")
-    Observable<BaseStationChartDetailRsp> getBaseStationChartDetail(@Path("stationsn") String stationsn, @Path("type") String type, @Query("interval") String interval, @Query("from") long from, @Query("to") long to);
+    Observable<ResponseResult<List<BaseStationChartDetailModel>>> getBaseStationChartDetail(@Path("stationsn") String stationsn, @Path("type") String type, @Query("interval") String interval, @Query("from") long from, @Query("to") long to);
 
 
     @PUT("stations/{stationsn}")
-    Observable<BaseStationDetailRsp> updateStationLocation(@Path("stationsn") String stationsn, @Body RequestBody body);
+    Observable<ResponseResult<BaseStationDetailModel>> updateStationLocation(@Path("stationsn") String stationsn, @Body RequestBody body);
 
 
     @GET("nameplates")
-    Observable<NamePlateListRsp> getNameplateList(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @Query("deviceFlag") String deviceFlag);
+    Observable<ResponseResult<List<NamePlateInfo>>> getNameplateList(@Query("pageSize") Integer pageSize, @Query("page") Integer page, @Query("search") String search, @Query("deviceFlag") String deviceFlag);
 
 
     @DELETE("nameplate/{nameplateId}")
-    Observable<DeleteNamePlateRsp> deleteNameplate(@Path("nameplateId") String nameplateId);
+    Observable<ResponseResult<Integer>> deleteNameplate(@Path("nameplateId") String nameplateId);
 
     @GET("nameplate/{nameplateId}")
     Observable<ResponseResult<NamePlateInfo>> getNameplateDetail(@Path("nameplateId") String nameplateId, @Query("isAuthUser") Boolean isAuthUser);
 
     @GET("nameplate/bind/devices")
-    Observable<NameplateBindDeviceRsp> getNameplateBindDevices(@Query("page") Integer page, @Query("count") Integer count, @Query("nameplateId") String nameplateId);
+    Observable<ResponseResult<List<NamePlateInfo>>> getNameplateBindDevices(@Query("page") Integer page, @Query("count") Integer count, @Query("nameplateId") String nameplateId);
 
     @PUT("nameplate/unbind/device")
     Observable<ResponseResult<Integer>> unbindNameplateDevice(@Body RequestBody requestBody);
@@ -461,30 +451,32 @@ public interface RetrofitService {
     Observable<ResponseResult<Integer>> updateNameplate(@Path("nameplateId") String nameplateId, @Body RequestBody body);
 
     @GET("nameplate/unbind/devices")
-    Observable<NameplateBindDeviceRsp> getNameplateUnbindDevices(@Query("page") Integer page, @Query("count") Integer count, @Query("nameplateId") String nameplateId, @Query("search") String searchText);
+    Observable<ResponseResult<List<NamePlateInfo> >> getNameplateUnbindDevices(@Query("page") Integer page, @Query("count") Integer count, @Query("nameplateId") String nameplateId, @Query("search") String searchText);
 
     @PUT("nameplate/deploy/{nameplateId}")
-    Observable<DeployNameplateRsp> doUploadDeployNameplate(@Path("nameplateId") String nameplateId, @Body RequestBody requestBody);
+    Observable<ResponseResult<DeployNameplateInfo>> doUploadDeployNameplate(@Path("nameplateId") String nameplateId, @Body RequestBody requestBody);
 
     @PUT("nameplate/bind/device")
     Observable<ResponseResult<Integer>> doBindDevice(@Body RequestBody requestBody);
 
 
     @PUT("camera-center/alarms/{id}/handle")
-    Observable<HandleAlarmRsp> handleSecurityAlarm(@Path("id") String id, @Body RequestBody requestBody);
+    Observable<ResponseResult<HandleAlarmData>> handleSecurityAlarm(@Path("id") String id, @Body RequestBody requestBody);
 
     @GET("camera-center/alarms/{id}/events")
-    Observable<SecurityAlarmTimelineRsp> getSecurityAlarmTimeLine(@Path("id") String id);
+    Observable<ResponseResult<SecurityAlarmTimelineData>> getSecurityAlarmTimeLine(@Path("id") String id);
 
     @GET("camera-center/alarms")
-    Observable<SecurityAlarmListRsp> getSecurityAlarmList( @QueryMap Map<String, Object> param);
+    Observable<ResponseResult<SecurityAlarmListData>> getSecurityAlarmList(@QueryMap Map<String, Object> param);
+
     @GET("camera-center/alarms/{id}")
-    Observable<SecurityAlarmDetailRsp> getSecurityAlarmDetails(@Path("id") String id);
+    Observable<ResponseResult<SecurityAlarmDetailInfo>> getSecurityAlarmDetails(@Path("id") String id);
+
     @POST("token/devices_history")
-    Observable<SecurityAlarmDetailRsp> getSecurityDeviceVideoHistort(@Path("id") String id, @Body RequestBody requestBody);
+    Observable<ResponseResult<SecurityAlarmDetailInfo>> getSecurityDeviceVideoHistort(@Path("id") String id, @Body RequestBody requestBody);
 
     @GET("camera-center/alarms/{id}/videos")
-    Observable<SecurityWarnRecordResp> getSecurityWarnRecord(@Path("id") String id);
+    Observable<ResponseResult<SecurityWarnRecord>> getSecurityWarnRecord(@Path("id") String id);
 
 
 }

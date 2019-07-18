@@ -32,7 +32,8 @@ import com.sensoro.common.server.bean.MalfunctionDataBean;
 import com.sensoro.common.server.bean.MalfunctionTypeStyles;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.bean.SensorStruct;
-import com.sensoro.common.server.response.DeviceDeployRsp;
+import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
 import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
 import com.sensoro.libbleserver.ble.connection.SensoroDeviceConnection;
@@ -55,7 +56,6 @@ import com.sensoro.smartcity.constant.DeployCheckStateEnum;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IDeployMonitorLocalCheckFragmentView;
 import com.sensoro.smartcity.model.MaterialValueModel;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 
@@ -979,9 +979,9 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         final long requestTime = System.currentTimeMillis();
         RetrofitServiceHelper.getInstance().getDeviceRealStatus(deployAnalyzerModel.sn).subscribeOn(Schedulers.io())
                 .retryWhen(new RetryWithDelay(2, 100))
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceInfo>>(this) {
             @Override
-            public void onCompleted(final DeviceDeployRsp data) {
+            public void onCompleted(final ResponseResult<DeviceInfo> data) {
                 long diff = System.currentTimeMillis() - requestTime;
                 if (diff > 1000) {
                     updateDeviceStatusDialog(data);
@@ -1006,7 +1006,7 @@ public class DeployMonitorLocalCheckFragmentPresenter extends BasePresenter<IDep
         });
     }
 
-    private void updateDeviceStatusDialog(DeviceDeployRsp data) {
+    private void updateDeviceStatusDialog(ResponseResult<DeviceInfo> data) {
         if (data != null && data.getData() != null) {
             //只记录当前的信号和状态
             deployAnalyzerModel.status = data.getData().getStatus();

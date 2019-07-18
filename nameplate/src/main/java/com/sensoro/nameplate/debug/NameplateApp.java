@@ -4,7 +4,8 @@ import com.sensoro.common.base.BaseApplication;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
-import com.sensoro.common.server.response.LoginRsp;
+import com.sensoro.common.server.bean.UserInfo;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.LogUtils;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -24,9 +25,9 @@ public class NameplateApp extends BaseApplication {
         RetrofitServiceHelper.getInstance().saveBaseUrlType(5);
         RetrofitServiceHelper.getInstance().getBaseUrlType();
         RetrofitServiceHelper.getInstance().login("15110041945", "aa1111", "").subscribeOn
-                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<LoginRsp>(null) {
+                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<UserInfo>>(null) {
             @Override
-            public void onCompleted(LoginRsp loginRsp) {
+            public void onCompleted(ResponseResult<UserInfo> loginRsp) {
                 String sessionID = loginRsp.getData().getSessionID();
                 String token = loginRsp.getData().getToken();
                 RetrofitServiceHelper.getInstance().saveSessionId(sessionID,token);

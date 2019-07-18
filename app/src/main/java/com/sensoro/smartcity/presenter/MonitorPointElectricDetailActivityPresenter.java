@@ -51,11 +51,8 @@ import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.bean.SensorStruct;
 import com.sensoro.common.server.bean.SensorTypeStyles;
-import com.sensoro.common.server.response.DeployDeviceDetailRsp;
-import com.sensoro.common.server.response.DeviceCameraListRsp;
-import com.sensoro.common.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
-import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
@@ -616,9 +613,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     private void requestBlePassword() {
         // 获取固件版本和下载固件的地址信息
         RetrofitServiceHelper.getInstance().getDeployDeviceDetail(mDeviceInfo.getSn(), null, null).subscribeOn
-                (Schedulers.io()).flatMap(new Function<DeployDeviceDetailRsp, ObservableSource<DeviceUpdateFirmwareDataRsp>>() {
+                (Schedulers.io()).flatMap(new Function<ResponseResult<DeviceInfo>, ObservableSource<ResponseResult<List<DeviceUpdateFirmwareData>>>>() {
             @Override
-            public ObservableSource<DeviceUpdateFirmwareDataRsp> apply(DeployDeviceDetailRsp deployDeviceDetailRsp) throws Exception {
+            public ObservableSource<ResponseResult<List<DeviceUpdateFirmwareData>>> apply(ResponseResult<DeviceInfo> deployDeviceDetailRsp) throws Exception {
                 DeviceInfo data = deployDeviceDetailRsp.getData();
                 if (data != null) {
                     mDeviceInfo = data;
@@ -634,10 +631,10 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 }
                 return RetrofitServiceHelper.getInstance().getDeviceUpdateVision(bleUpdateModel.sn, bleUpdateModel.deviceType, bleUpdateModel.band, bleUpdateModel.currentFirmVersion, bleUpdateModel.hardwareVersion, 1, 100);
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceUpdateFirmwareDataRsp>(this) {
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceUpdateFirmwareData>>>(this) {
 
             @Override
-            public void onCompleted(DeviceUpdateFirmwareDataRsp deviceUpdateFirmwareDataRsp) {
+            public void onCompleted(ResponseResult<List<DeviceUpdateFirmwareData>> deviceUpdateFirmwareDataRsp) {
                 List<DeviceUpdateFirmwareData> data = deviceUpdateFirmwareDataRsp.getData();
                 if (data != null && data.size() > 0) {
                     DeviceUpdateFirmwareData deviceUpdateFirmwareData = data.get(0);
@@ -661,9 +658,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     String id = mDeviceInfo.getDeviceGroup();
                     if (!TextUtils.isEmpty(id)) {
                         RetrofitServiceHelper.getInstance().getDeviceGroupCameraList(id, 10, 1, null).subscribeOn(Schedulers.io()).observeOn
-                                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(MonitorPointElectricDetailActivityPresenter.this) {
+                                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceCameraInfo>>>(MonitorPointElectricDetailActivityPresenter.this) {
                             @Override
-                            public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
+                            public void onCompleted(ResponseResult<List<DeviceCameraInfo>> deviceCameraListRsp) {
                                 deviceCameras = (ArrayList<DeviceCameraInfo>) deviceCameraListRsp.getData();
                                 if (deviceCameras != null && deviceCameras.size() > 0) {
                                     getView().setDeviceCamerasText(mContext.getString(R.string.device_detail_camera_has_camera) + deviceCameras.size() + mContext.getString(R.string.device_detail_camera_camera_count));
@@ -1969,9 +1966,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                 getView().updateDialogProgress(mContext.getString(R.string.sending_upgrade_version), -1, 2);
                                 RetrofitServiceHelper.getInstance().upLoadDeviceUpdateVision(bleUpdateModel.sn, bleUpdateModel.serverFirmVersion)
                                         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).
-                                        subscribe(new CityObserver<ResponseBase>(MonitorPointElectricDetailActivityPresenter.this) {
+                                        subscribe(new CityObserver<ResponseResult>(MonitorPointElectricDetailActivityPresenter.this) {
                                             @Override
-                                            public void onCompleted(ResponseBase responseBase) {
+                                            public void onCompleted(ResponseResult responseBase) {
                                                 try {
                                                     LogUtils.loge("升级--->> 成功！！次数=" + checkUpdateCount);
                                                 } catch (Throwable throwable) {

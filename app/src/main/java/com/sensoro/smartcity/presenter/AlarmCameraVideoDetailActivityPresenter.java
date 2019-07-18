@@ -27,10 +27,10 @@ import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.AlarmCloudVideoBean;
 import com.sensoro.common.server.download.DownloadListener;
 import com.sensoro.common.server.download.DownloadUtil;
-import com.sensoro.common.server.response.AlarmCloudVideoRsp;
-import com.sensoro.common.server.response.AlarmCloudVideoRsp.DataBean.MediasBean;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.utils.FileUtil;
 import com.sensoro.smartcity.R;
@@ -60,9 +60,9 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
     private DownloadUtil mDownloadUtil;
     private String downLoadFilePath;
     private String currentPlayUrl;
-    private ArrayList<MediasBean> mList = new ArrayList<>();
-    private AlarmCloudVideoRsp.DataBean mVideoData;
-    private MediasBean mDownloadBean;
+    private ArrayList<AlarmCloudVideoBean.MediasBean> mList = new ArrayList<>();
+    private AlarmCloudVideoBean mVideoData;
+    private AlarmCloudVideoBean.MediasBean mDownloadBean;
 
 
     /**
@@ -159,11 +159,11 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
         mActivity = (Activity) context;
         EventBus.getDefault().register(this);
         Serializable extra = mActivity.getIntent().getSerializableExtra(Constants.EXTRA_ALARM_CAMERA_VIDEO);
-        if (extra instanceof AlarmCloudVideoRsp.DataBean) {
-            mVideoData = (AlarmCloudVideoRsp.DataBean) extra;
+        if (extra instanceof AlarmCloudVideoBean) {
+            mVideoData = (AlarmCloudVideoBean) extra;
             mList.clear();
             mList.addAll(mVideoData.getMedias());
-            MediasBean mediasBean = mVideoData.getMedias().get(0);
+            AlarmCloudVideoBean.MediasBean mediasBean = mVideoData.getMedias().get(0);
             currentPlayUrl = mediasBean.getMediaUrl();
             getView().doPlayLive(mediasBean.getMediaUrl());
             getLastCoverImage(mediasBean.getCoverUrl());
@@ -194,16 +194,16 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
         String[] eventIds = {mVideoData.getEventId()};
         RetrofitServiceHelper.getInstance().getCloudVideo(eventIds)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<AlarmCloudVideoRsp>(this) {
+                .subscribe(new CityObserver<ResponseResult<List<AlarmCloudVideoBean>>>(this) {
                     @Override
-                    public void onCompleted(AlarmCloudVideoRsp response) {
-                        List<AlarmCloudVideoRsp.DataBean> data = response.getData();
+                    public void onCompleted(ResponseResult<List<AlarmCloudVideoBean>> response) {
+                        List<AlarmCloudVideoBean> data = response.getData();
                         mList.clear();
                         if (data != null && data.size() > 0) {
-                            List<MediasBean> medias = data.get(0).getMedias();
+                            List<AlarmCloudVideoBean.MediasBean> medias = data.get(0).getMedias();
                             if (medias != null && medias.size() > 0) {
                                 mList.addAll(medias);
-                                MediasBean mediasBean = medias.get(0);
+                                AlarmCloudVideoBean.MediasBean mediasBean = medias.get(0);
                                 String createTime = mediasBean.getCreateTime();
 
                                 setCreateTime(createTime);
@@ -224,7 +224,7 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
                 });
     }
 
-    public void doItemClick(MediasBean bean) {
+    public void doItemClick(AlarmCloudVideoBean.MediasBean bean) {
         currentPlayUrl = bean.getMediaUrl();
 
         getView().doPlayLive(bean.getMediaUrl());
@@ -352,7 +352,7 @@ public class AlarmCameraVideoDetailActivityPresenter extends BasePresenter<IAlar
         });
     }
 
-    public void setDownloadBean(MediasBean bean) {
+    public void setDownloadBean(AlarmCloudVideoBean.MediasBean bean) {
         mDownloadBean = bean;
     }
 

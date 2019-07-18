@@ -2,9 +2,6 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -13,6 +10,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -20,17 +21,17 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.constant.Constants;
+import com.sensoro.common.server.bean.DeviceCameraPersonFaceBean;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.PersonAvatarHistoryAdapter;
-import com.sensoro.common.base.BaseActivity;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraPersonAvatarHistoryActivityView;
 import com.sensoro.smartcity.presenter.CameraPersonAvatarHistoryActivityPresenter;
-import com.sensoro.common.server.response.DeviceCameraPersonFaceRsp;
 import com.sensoro.smartcity.widget.GlideCircleTransform;
-import com.sensoro.common.widgets.ProgressUtils;
-import com.sensoro.common.callback.RecycleViewItemClickListener;
-import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.List;
 
@@ -235,7 +236,7 @@ implements ICameraPersonAvatarHistoryActivityView{
     }
 
     @Override
-    public void updateData(List<DeviceCameraPersonFaceRsp.DataBean> data) {
+    public void updateData(List<DeviceCameraPersonFaceBean> data) {
         if (data!= null) {
             rvContentAdapter.updateData(data);
         }
@@ -247,7 +248,7 @@ implements ICameraPersonAvatarHistoryActivityView{
     }
 
     @Override
-    public List<DeviceCameraPersonFaceRsp.DataBean> getAdapterData() {
+    public List<DeviceCameraPersonFaceBean> getAdapterData() {
         return rvContentAdapter.getData();
     }
 

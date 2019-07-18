@@ -6,29 +6,29 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.ScanActivity;
-import com.sensoro.smartcity.activity.TakeRecordActivity;
-import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
-import com.sensoro.smartcity.imainviews.IInspectionUploadExceptionActivityView;
 import com.sensoro.common.iwidget.IOnCreate;
-import com.sensoro.smartcity.model.AlarmPopModel;
 import com.sensoro.common.model.EventData;
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.common.server.bean.ScenesData;
-import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.widgets.SelectDialog;
+import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.ScanActivity;
+import com.sensoro.smartcity.activity.TakeRecordActivity;
+import com.sensoro.smartcity.activity.VideoPlayActivity;
+import com.sensoro.smartcity.imainviews.IInspectionUploadExceptionActivityView;
+import com.sensoro.smartcity.model.AlarmPopModel;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
-import com.sensoro.common.widgets.SelectDialog;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
-import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -175,9 +175,9 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
         getView().showProgressDialog();
         RetrofitServiceHelper.getInstance().doUploadInspectionResult(mDeviceDetail.getId(), null, null, 2, 0, startTime, finishTime, remarkMessage,
                 scenesDataList, selectTags).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<ResponseBase>(this) {
+                .subscribe(new CityObserver<ResponseResult>(this) {
                     @Override
-                    public void onCompleted(ResponseBase responseBase) {
+                    public void onCompleted(ResponseResult responseBase) {
                         if (responseBase.getErrcode() == 0) {
                             if (needChangeDevice) {
                                 doUploadAndChange();

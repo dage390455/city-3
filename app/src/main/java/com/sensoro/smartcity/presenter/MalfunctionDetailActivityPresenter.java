@@ -17,10 +17,10 @@ import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.common.server.bean.MalfunctionDataBean;
 import com.sensoro.common.server.bean.MalfunctionListInfo;
-import com.sensoro.common.server.response.DeviceInfoListRsp;
 import com.sensoro.common.server.response.MalfunctionCountRsp;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MalfunctionHistoryActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
@@ -106,17 +106,17 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
         long current = System.currentTimeMillis();
         final StringBuffer stringBuffer = new StringBuffer();
         RetrofitServiceHelper.getInstance().getMalfunctionCount(current - 3600 * 24 * 180 * 1000L, current, null, mMalfunctionInfo.getDeviceSN()).subscribeOn(Schedulers.io())
-                .flatMap(new Function<MalfunctionCountRsp, ObservableSource<DeviceInfoListRsp>>() {
+                .flatMap(new Function<MalfunctionCountRsp, ObservableSource<ResponseResult<List<DeviceInfo>>>>() {
                     @Override
-                    public ObservableSource<DeviceInfoListRsp> apply(MalfunctionCountRsp malfunctionCountRsp) throws Exception {
+                    public ObservableSource<ResponseResult<List<DeviceInfo>>> apply(MalfunctionCountRsp malfunctionCountRsp) throws Exception {
                         stringBuffer.append(malfunctionCountRsp.getCount());
                         return RetrofitServiceHelper.getInstance().getDeviceDetailInfoList(mMalfunctionInfo.getDeviceSN(), null, 1);
                     }
 
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
 
             @Override
-            public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+            public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
                 List<DeviceInfo> data1 = deviceInfoListRsp.getData();
                 if (data1 != null && data1.size() > 0) {
                     DeviceInfo deviceInfo = data1.get(0);

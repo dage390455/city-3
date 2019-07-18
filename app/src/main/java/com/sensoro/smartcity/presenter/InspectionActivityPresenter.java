@@ -7,22 +7,22 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
-import com.sensoro.libbleserver.ble.entity.BLEDevice;
-import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.InspectionInstructionActivity;
-import com.sensoro.smartcity.activity.InspectionUploadExceptionActivity;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
-import com.sensoro.smartcity.imainviews.IInspectionActivityView;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
-import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.libbleserver.ble.entity.BLEDevice;
+import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.InspectionInstructionActivity;
+import com.sensoro.smartcity.activity.InspectionUploadExceptionActivity;
 import com.sensoro.smartcity.callback.BleObserver;
+import com.sensoro.smartcity.imainviews.IInspectionActivityView;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -94,9 +94,9 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
         long finishTime = System.currentTimeMillis();
         RetrofitServiceHelper.getInstance().doUploadInspectionResult(mDeviceDetail.getId(), null, null, 1, null, startTime, finishTime, null,
                 null, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<ResponseBase>(this) {
+                .subscribe(new CityObserver<ResponseResult>(this) {
                     @Override
-                    public void onCompleted(ResponseBase responseBase) {
+                    public void onCompleted(ResponseResult responseBase) {
                         if (responseBase.getErrcode() == 0) {
                             getView().toastShort(mContext.getString(R.string.successful_report));
                             EventData eventData = new EventData();

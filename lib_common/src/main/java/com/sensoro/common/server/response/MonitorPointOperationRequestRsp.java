@@ -2,7 +2,7 @@ package com.sensoro.common.server.response;
 
 import java.util.List;
 
-public class MonitorPointOperationRequestRsp extends ResponseBase {
+public class MonitorPointOperationRequestRsp extends ResponseResult {
 
     /**
      * resultOk : 1

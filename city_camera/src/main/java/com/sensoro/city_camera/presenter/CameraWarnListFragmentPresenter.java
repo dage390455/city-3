@@ -25,9 +25,10 @@ import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.EventCameraWarnStatusModel;
+import com.sensoro.common.server.bean.HandleAlarmData;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
-import com.sensoro.common.server.security.response.HandleAlarmRsp;
-import com.sensoro.common.server.security.response.SecurityAlarmListRsp;
+import com.sensoro.common.server.security.bean.SecurityAlarmListData;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.CalendarPopUtils;
 
@@ -144,7 +145,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         getView().updateFilterProcessStatusList(mProcessStatusModelList);
     }
 
-    private void freshUI(final int direction, SecurityAlarmListRsp securityAlarmListRsp) {
+    private void freshUI(final int direction, ResponseResult<SecurityAlarmListData> securityAlarmListRsp) {
         final List<SecurityAlarmInfo> securityAlarmInfoList;
         if (null == securityAlarmListRsp || null == securityAlarmListRsp.getData() || null == securityAlarmListRsp.getData().list) {
             securityAlarmInfoList = new ArrayList<SecurityAlarmInfo>();
@@ -201,7 +202,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                         cur_page * 20,
                         (startTime == 0 ? null : startTime + ""),
                         (endTime == 0 ? null : endTime + ""), (int) handleStatus, tempSearchText, 0
-                ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityAlarmListRsp>(this) {
+                ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<SecurityAlarmListData>>(this) {
 
 
                     @Override
@@ -214,7 +215,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                     }
 
                     @Override
-                    public void onCompleted(SecurityAlarmListRsp securityAlarmListRsp) {
+                    public void onCompleted(ResponseResult<SecurityAlarmListData> securityAlarmListRsp) {
                         getView().dismissProgressDialog();
                         freshUI(direction, securityAlarmListRsp);
                         //根据数据条数判断是否有更多数据
@@ -234,7 +235,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                         cur_page * 20,
                         (startTime == 0 ? null : startTime + ""),
                         (endTime == 0 ? null : endTime + ""), (int) handleStatus, tempSearchText, 0
-                ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<SecurityAlarmListRsp>(this) {
+                ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<SecurityAlarmListData>>(this) {
 
 
                     @Override
@@ -246,7 +247,7 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
                     }
 
                     @Override
-                    public void onCompleted(SecurityAlarmListRsp securityAlarmListRsp) {
+                    public void onCompleted(ResponseResult<SecurityAlarmListData> securityAlarmListRsp) {
                         getView().dismissProgressDialog();
                         //根据数据条数判断是否有更多数据
                         if (mSecurityAlarmInfoList.size() == securityAlarmListRsp.getData().total) {
@@ -530,9 +531,9 @@ public class CameraWarnListFragmentPresenter extends BasePresenter<ICameraWarnLi
         RetrofitServiceHelper.getInstance().handleSecurityAlarm(id, isEffective, operationDetail)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<HandleAlarmRsp>(this) {
+                .subscribe(new CityObserver<ResponseResult<HandleAlarmData>>(this) {
                     @Override
-                    public void onCompleted(HandleAlarmRsp handleAlarmRsp) {
+                    public void onCompleted(ResponseResult<HandleAlarmData> handleAlarmRsp) {
                         requestSearchData(Constants.DIRECTION_DOWN);
                     }
 

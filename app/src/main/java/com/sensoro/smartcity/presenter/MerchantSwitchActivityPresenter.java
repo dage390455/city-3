@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
@@ -15,12 +16,8 @@ import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.common.server.bean.UserInfo;
-import com.sensoro.common.server.response.DevicesMergeTypesRsp;
-import com.sensoro.common.server.response.LoginRsp;
-import com.sensoro.common.server.response.UserAccountControlRsp;
-import com.sensoro.common.server.response.UserAccountRsp;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.smartcity.R;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.factory.UserPermissionFactory;
 import com.sensoro.smartcity.imainviews.IMerchantSwitchActivityView;
 
@@ -79,7 +76,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
             case Constants.DIRECTION_DOWN:
                 cur_page = 0;
                 RetrofitServiceHelper.getInstance().getUserAccountList(tempSearch, null, cur_page * 20, 20).subscribeOn(Schedulers.io()).observeOn
-                        (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>(this) {
+                        (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<UserInfo>>>(this) {
 
 
                     @Override
@@ -90,7 +87,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                     }
 
                     @Override
-                    public void onCompleted(UserAccountRsp userAccountRsp) {
+                    public void onCompleted(ResponseResult<List<UserInfo>> userAccountRsp) {
                         List<UserInfo> list = userAccountRsp.getData();
                         if (list == null) {
                             mUserInfoList.clear();
@@ -107,7 +104,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
             case Constants.DIRECTION_UP:
                 cur_page++;
                 RetrofitServiceHelper.getInstance().getUserAccountList(tempSearch, null, cur_page * 20, 20).subscribeOn(Schedulers.io()).observeOn
-                        (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>(this) {
+                        (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<UserInfo>>>(this) {
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
@@ -118,7 +115,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                     }
 
                     @Override
-                    public void onCompleted(UserAccountRsp userAccountRsp) {
+                    public void onCompleted(ResponseResult<List<UserInfo>> userAccountRsp) {
                         List<UserInfo> list = userAccountRsp.getData();
                         if (list == null || list.size() == 0) {
                             cur_page--;
@@ -141,9 +138,9 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
         getView().showProgressDialog();
         eventLoginData = null;
         final String phoneId = PreferencesHelper.getInstance().getUserData().phoneId;
-        RetrofitServiceHelper.getInstance().doAccountControl(uid, phoneId).subscribeOn(Schedulers.io()).flatMap(new Function<UserAccountControlRsp, ObservableSource<DevicesMergeTypesRsp>>() {
+        RetrofitServiceHelper.getInstance().doAccountControl(uid, phoneId).subscribeOn(Schedulers.io()).flatMap(new Function<ResponseResult<UserInfo>, ObservableSource<ResponseResult<DeviceMergeTypesInfo>>>() {
             @Override
-            public ObservableSource<DevicesMergeTypesRsp> apply(UserAccountControlRsp userAccountControlRsp) throws Exception {
+            public ObservableSource<ResponseResult<DeviceMergeTypesInfo>> apply(ResponseResult<UserInfo> userAccountControlRsp) throws Exception {
                 UserInfo userInfo = userAccountControlRsp.getData();
                 String sessionID = userInfo.getSessionID();
                 String token = userInfo.getToken();
@@ -152,15 +149,15 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                 eventLoginData = UserPermissionFactory.createLoginData(userInfo, phoneId);
                 return RetrofitServiceHelper.getInstance().getDevicesMergeTypes();
             }
-        }).doAfterNext(new Consumer<DevicesMergeTypesRsp>() {
+        }).doAfterNext(new Consumer<ResponseResult<DeviceMergeTypesInfo>>() {
             @Override
-            public void accept(DevicesMergeTypesRsp devicesMergeTypesRsp) throws Exception {
+            public void accept(ResponseResult<DeviceMergeTypesInfo> devicesMergeTypesRsp) throws Exception {
                 DeviceMergeTypesInfo data = devicesMergeTypesRsp.getData();
                 PreferencesHelper.getInstance().saveLocalDevicesMergeTypes(data);
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesMergeTypesRsp>(this) {
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceMergeTypesInfo>>(this) {
             @Override
-            public void onCompleted(DevicesMergeTypesRsp devicesMergeTypesRsp) {
+            public void onCompleted(ResponseResult<DeviceMergeTypesInfo> devicesMergeTypesRsp) {
                 EventData eventData = new EventData();
                 eventData.code = Constants.EVENT_DATA_SEARCH_MERCHANT;
                 eventData.data = eventLoginData;
@@ -294,9 +291,9 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
 //                getView().onPullRefreshComplete();
 //            }
 //        });
-        RetrofitServiceHelper.getInstance().backMainAccount().subscribeOn(Schedulers.io()).flatMap(new Function<LoginRsp, ObservableSource<DevicesMergeTypesRsp>>() {
+        RetrofitServiceHelper.getInstance().backMainAccount().subscribeOn(Schedulers.io()).flatMap(new Function<ResponseResult<UserInfo>, ObservableSource<ResponseResult<DeviceMergeTypesInfo>>>() {
             @Override
-            public ObservableSource<DevicesMergeTypesRsp> apply(LoginRsp loginRsp) throws Exception {
+            public ObservableSource<ResponseResult<DeviceMergeTypesInfo>> apply(ResponseResult<UserInfo> loginRsp) throws Exception {
                 //
                 String sessionID = loginRsp.getData().getSessionID();
                 String token = loginRsp.getData().getToken();
@@ -306,13 +303,13 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                 PreferencesHelper.getInstance().saveUserData(eventLoginData);
                 return RetrofitServiceHelper.getInstance().getDevicesMergeTypes();
             }
-        }).doOnNext(new Consumer<DevicesMergeTypesRsp>() {
+        }).doOnNext(new Consumer<ResponseResult<DeviceMergeTypesInfo>>() {
             @Override
-            public void accept(DevicesMergeTypesRsp devicesMergeTypesRsp) throws Exception {
+            public void accept(ResponseResult<DeviceMergeTypesInfo> devicesMergeTypesRsp) throws Exception {
                 DeviceMergeTypesInfo data = devicesMergeTypesRsp.getData();
                 PreferencesHelper.getInstance().saveLocalDevicesMergeTypes(data);
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesMergeTypesRsp>(this) {
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceMergeTypesInfo>>(this) {
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
@@ -321,7 +318,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
             }
 
             @Override
-            public void onCompleted(DevicesMergeTypesRsp devicesMergeTypesRsp) {
+            public void onCompleted(ResponseResult<DeviceMergeTypesInfo> devicesMergeTypesRsp) {
                 if (eventLoginData != null) {
                     EventData eventData = new EventData();
                     eventData.code = Constants.EVENT_DATA_SEARCH_MERCHANT;

@@ -16,8 +16,7 @@ import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.NamePlateInfo;
-import com.sensoro.common.server.response.DeleteNamePlateRsp;
-import com.sensoro.common.server.response.NamePlateListRsp;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.nameplate.IMainViews.INameplateListActivityView;
 import com.sensoro.nameplate.R;
 import com.sensoro.nameplate.activity.NameplateDetailActivity;
@@ -140,9 +139,9 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
                     getView().showProgressDialog();
                 }
                 RetrofitServiceHelper.getInstance().getNameplateList(20, cur_page, search, deviceFlag, "true").subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<NamePlateListRsp>(this) {
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<NamePlateInfo>>>(this) {
                     @Override
-                    public void onCompleted(NamePlateListRsp deviceCameraListRsp) {
+                    public void onCompleted(ResponseResult<List<NamePlateInfo>> deviceCameraListRsp) {
 
                         List<NamePlateInfo> data = deviceCameraListRsp.getData();
                         plateInfos.clear();
@@ -169,9 +168,9 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
                     getView().showProgressDialog();
                 }
                 RetrofitServiceHelper.getInstance().getNameplateList(20, cur_page, search, deviceFlag, "true").subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<NamePlateListRsp>(this) {
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<NamePlateInfo>>>(this) {
                     @Override
-                    public void onCompleted(NamePlateListRsp deviceCameraListRsp) {
+                    public void onCompleted(ResponseResult<List<NamePlateInfo>> deviceCameraListRsp) {
 
                         List<NamePlateInfo> data = deviceCameraListRsp.getData();
                         if (data != null && data.size() > 0) {
@@ -212,9 +211,9 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
         }
         if (null != plateInfos.get(position)) {
             RetrofitServiceHelper.getInstance().deleteNameplate(plateInfos.get(position).get_id()).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeleteNamePlateRsp>(this) {
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Integer>>(this) {
                 @Override
-                public void onCompleted(DeleteNamePlateRsp deviceCameraListRsp) {
+                public void onCompleted(ResponseResult<Integer> deviceCameraListRsp) {
 
                     Integer data = deviceCameraListRsp.getData();
 
