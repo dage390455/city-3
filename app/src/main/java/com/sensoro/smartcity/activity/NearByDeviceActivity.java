@@ -115,10 +115,9 @@ public class NearByDeviceActivity extends BaseActivity<INearByDeviceActivityView
     @OnClick({R.id.include_text_title_imv_arrows_left, R.id.include_text_title_tv_subtitle})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.ll_select_time_ac_camera_detail:
+            case R.id.include_text_title_imv_arrows_left:
                 finishAc();
                 break;
-
             case R.id.include_text_title_tv_subtitle:
                 mPresenter.goNoSetting();
                 break;
