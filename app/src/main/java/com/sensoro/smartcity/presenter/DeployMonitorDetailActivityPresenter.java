@@ -939,7 +939,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         boolean need = false;
         for (DeployPicInfo deployPicInfo : deployAnalyzerModel.images) {
             if (deployPicInfo != null) {
-                if (deployPicInfo.isRequired!=null&&deployPicInfo.isRequired) {
+                if (deployPicInfo.isRequired != null && deployPicInfo.isRequired) {
                     if (deployPicInfo.photoItem == null) {
                         need = true;
                     }
@@ -1489,7 +1489,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             @Override
             public void onCompleted(final ResponseResult<DeviceInfo> data) {
                 long diff = System.currentTimeMillis() - requestTime;
-                if (diff > 1000) {
+                if (diff >= 1000) {
                     updateDeviceStatusDialog(data);
                 } else {
                     mHandler.postDelayed(new Runnable() {
@@ -1497,7 +1497,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         public void run() {
                             updateDeviceStatusDialog(data);
                         }
-                    }, diff);
+                    }, 1000 - diff);
                 }
             }
 
