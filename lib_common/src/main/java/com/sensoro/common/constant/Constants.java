@@ -82,6 +82,7 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION = "extra_grants_has_device_position_calibration";
     String EXTRA_GRANTS_HAS_DEVICE_MUTE_SHORT = "extra_grants_has_device_mute_short";
     String EXTRA_GRANTS_HAS_DEVICE_MUTE_LONG = "extra_grants_has_device_mute_long";
+    String EXTRA_GRANTS_HAS_DEVICE_MUTE_TIME = "extra_grants_has_device_mute_time";
     String EXTRA_GRANTS_HAS_DEVICE_FIRMWARE_UPDATE = "extra_grants_has_device_firmware_update";
     String EXTRA_GRANTS_HAS_DEVICE_DEMO_MODE = "extra_grants_has_device_demo_mode";
     String EXTRA_GRANTS_HAS_DEVICE_CAMERA_LIST = "extra_grants_has_device_camera_list";

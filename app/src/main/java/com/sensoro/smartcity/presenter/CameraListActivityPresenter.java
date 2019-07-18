@@ -15,9 +15,7 @@ import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
 import com.sensoro.common.server.bean.DeviceCameraInfo;
-import com.sensoro.common.server.response.CameraFilterRsp;
-import com.sensoro.common.server.response.DeviceCameraDetailRsp;
-import com.sensoro.common.server.response.DeviceCameraListRsp;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.CameraDetailActivity;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
@@ -90,9 +88,9 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
         final String sn = deviceCameraInfo.getSn();
         final String cid = deviceCameraInfo.getCid();
         getView().showProgressDialog();
-        RetrofitServiceHelper.getInstance().getDeviceCamera(sn).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraDetailRsp>(this) {
+        RetrofitServiceHelper.getInstance().getDeviceCamera(sn).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceCameraDetailInfo>>(this) {
             @Override
-            public void onCompleted(DeviceCameraDetailRsp deviceCameraDetailRsp) {
+            public void onCompleted(ResponseResult<DeviceCameraDetailInfo> deviceCameraDetailRsp) {
                 DeviceCameraDetailInfo data = deviceCameraDetailRsp.getData();
                 if (data != null) {
                     String hls = data.getHls();
@@ -136,9 +134,9 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                     getView().showProgressDialog();
                 }
                 RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(20, cur_page, search, selectedHashMap).subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(this) {
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceCameraInfo>>>(this) {
                     @Override
-                    public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
+                    public void onCompleted(ResponseResult<List<DeviceCameraInfo>> deviceCameraListRsp) {
 
                         List<DeviceCameraInfo> data = deviceCameraListRsp.getData();
                         deviceCameraInfos.clear();
@@ -165,9 +163,9 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                     getView().showProgressDialog();
                 }
                 RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(20, cur_page, search, selectedHashMap).subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(this) {
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceCameraInfo>>>(this) {
                     @Override
-                    public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
+                    public void onCompleted(ResponseResult<List<DeviceCameraInfo>> deviceCameraListRsp) {
 
                         List<DeviceCameraInfo> data = deviceCameraListRsp.getData();
                         if (data != null && data.size() > 0) {
@@ -208,9 +206,9 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
             //第一次请求数据
             if (cameraFilterModelList.size() == 0) {
                 getView().showProgressDialog();
-                RetrofitServiceHelper.getInstance().getCameraFilter().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<CameraFilterRsp>(this) {
+                RetrofitServiceHelper.getInstance().getCameraFilter().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<CameraFilterModel>>>(this) {
                     @Override
-                    public void onCompleted(CameraFilterRsp cameraFilterRsp) {
+                    public void onCompleted(ResponseResult<List<CameraFilterModel>> cameraFilterRsp) {
                         cameraFilterModelList.clear();
                         List<CameraFilterModel> data = cameraFilterRsp.getData();
                         if (data != null) {
@@ -273,9 +271,9 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
             getView().showProgressDialog();
         }
         RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(20, cur_page, searchText, selectedHashMap).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(this) {
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceCameraInfo>>>(this) {
             @Override
-            public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
+            public void onCompleted(ResponseResult<List<DeviceCameraInfo>> deviceCameraListRsp) {
 
                 List<DeviceCameraInfo> data = deviceCameraListRsp.getData();
                 deviceCameraInfos.clear();
@@ -321,9 +319,9 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
             getView().showProgressDialog();
         }
         RetrofitServiceHelper.getInstance().getDeviceCameraListByFilter(20, cur_page, searchText, selectedHashMap).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(this) {
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceCameraInfo>>>(this) {
             @Override
-            public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
+            public void onCompleted(ResponseResult<List<DeviceCameraInfo>> deviceCameraListRsp) {
 
                 List<DeviceCameraInfo> data = deviceCameraListRsp.getData();
                 deviceCameraInfos.clear();

@@ -23,8 +23,9 @@ import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.download.DownloadListener;
 import com.sensoro.common.server.download.DownloadUtil;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.server.security.bean.SecurityRecord;
-import com.sensoro.common.server.security.response.SecurityWarnRecordResp;
+import com.sensoro.common.server.security.bean.SecurityWarnRecord;
 import com.sensoro.common.utils.DateUtil;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
@@ -180,10 +181,10 @@ public class SecurityRecordDetailActivityPresenter extends BasePresenter<ISecuri
                 .getSecurityWarnRecord(mSecurityWarnId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<SecurityWarnRecordResp>(null) {
+                .subscribe(new CityObserver<ResponseResult<SecurityWarnRecord>>(null) {
                     @Override
-                    public void onCompleted(SecurityWarnRecordResp securityWarnRecordResp) {
-                        List<SecurityRecord> recordList = securityWarnRecordResp.data.list;
+                    public void onCompleted(ResponseResult<SecurityWarnRecord> securityWarnRecordResp) {
+                        List<SecurityRecord> recordList = securityWarnRecordResp.getData().list;
                         if (recordList != null && !recordList.isEmpty()) {
                             SecurityRecord securityRecord = recordList.get(0);
                             if (securityRecord != null) {

@@ -11,7 +11,7 @@ import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.UserInfo;
-import com.sensoro.common.server.response.LoginRsp;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.factory.UserPermissionFactory;
 import com.sensoro.smartcity.imainviews.IPermissionChangeActivityView;
@@ -34,9 +34,9 @@ public class PermissionChangeActivityPresenter extends BasePresenter<IPermission
 
     public void doGetNewPermission() {
         getView().showProgressDialog();
-        RetrofitServiceHelper.getInstance().getPermissionChangeInfo().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<LoginRsp>(this) {
+        RetrofitServiceHelper.getInstance().getPermissionChangeInfo().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<UserInfo>>(this) {
             @Override
-            public void onCompleted(LoginRsp loginRsp) {
+            public void onCompleted(ResponseResult<UserInfo> loginRsp) {
                 EventLoginData userData = PreferencesHelper.getInstance().getUserData();
                 UserInfo userInfo = loginRsp.getData();
                 EventLoginData loginData = UserPermissionFactory.createLoginData(userInfo, userData.phoneId);

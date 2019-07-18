@@ -80,8 +80,10 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     TextView acMonitoringPointTvAlertContactName;
     @BindView(R.id.ac_monitoring_point_tv_alert_contact_phone)
     TextView acMonitoringPointTvAlertContactPhone;
-    @BindView(R.id.ac_monitoring_point_imv_phone)
-    ImageView acMonitoringPointImvPhone;
+    @BindView(R.id.ac_monitoring_point_imv_phone_arrow)
+    ImageView acMonitoringPointImvPhoneArrow;
+    @BindView(R.id.ac_monitoring_point_tv_phonecount)
+    TextView acMonitoringPointTvPhoneCount;
     @BindView(R.id.ac_monitoring_point_tv_location_navigation)
     TextView acMonitoringPointTvLocationNavigation;
     @BindView(R.id.ac_monitoring_point_tv_location)
@@ -106,8 +108,6 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     TextView acMonitoringPointTvStatus;
     @BindView(R.id.ac_monitoring_point_view)
     View acMonitoringPointView;
-    @BindView(R.id.ac_monitoring_point_imv_phone_view)
-    View acMonitoringPointImvPhoneView;
     @BindView(R.id.ac_monitoring_point_tv_device_type)
     TextView acMonitoringPointTvDeviceType;
     @BindView(R.id.ac_monitoring_point_ll_operation)
@@ -447,6 +447,20 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     @Override
+    public void setContractCount(int count) {
+
+        if (count > 1) {
+            acMonitoringPointTvAlertContactPhone.setTextColor(getResources().getColor(R.color.c_252525));
+            setContactPhoneIconVisible(true);
+            acMonitoringPointTvPhoneCount.setText(getResources().getString(R.string.total) + count + getResources().getString(R.string.person));
+        } else {
+            acMonitoringPointTvAlertContactPhone.setTextColor(getResources().getColor(R.color.c_1dbb99));
+            acMonitoringPointTvPhoneCount.setText("");
+            setContactPhoneIconVisible(false);
+        }
+    }
+
+    @Override
     public void setDeviceLocation(String location, boolean isArrowsRight) {
         acMonitoringPointTvLocation.setText(location);
         acMonitoringPointImvLocation.setVisibility(isArrowsRight ? View.VISIBLE : View.GONE);
@@ -576,7 +590,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
 
     @Override
     public void setContactPhoneIconVisible(boolean isVisible) {
-        acMonitoringPointImvPhone.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+        acMonitoringPointImvPhoneArrow.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
@@ -585,8 +599,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         acMonitoringPointTvAlertContactName.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
         acMonitoringPointView.setVisibility(View.GONE);
         acMonitoringPointTvAlertContactPhone.setVisibility(View.GONE);
-        acMonitoringPointImvPhone.setVisibility(View.GONE);
-        acMonitoringPointImvPhoneView.setVisibility(View.GONE);
+        acMonitoringPointImvPhoneArrow.setVisibility(View.GONE);
 
     }
 
@@ -661,6 +674,9 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
                     break;
                 case MonitorPointOperationCode.AIR_SWITCH_POWER_ON:
                     mOperatingUtil.setTipText(mActivity.getString(R.string.configuring));
+                    break;
+                case MonitorPointOperationCode.ERASURE_TIME:
+                    mOperatingUtil.setTipText(mActivity.getString(R.string.erasuring));
                     break;
 
             }
@@ -929,7 +945,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
             mTipUtils.dismiss();
         }
         //控制线径显示
-        mTipUtils.setDiameterVisible(isEdit && Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType));
+        mTipUtils.setDiameterVisible(false);
         mTipUtils.setTipEtRootVisible(isEdit);
         mTipUtils.setTipTitleText(title);
         mTipUtils.setTipMessageText(message, messageColor);
@@ -976,7 +992,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
 
     @Override
     public void onConfirmClick(String content, String diameter) {
-        mPresenter.doOperation(mTipDialogType);
+        mPresenter.doOperation(mTipDialogType, content);
     }
 
     @Override

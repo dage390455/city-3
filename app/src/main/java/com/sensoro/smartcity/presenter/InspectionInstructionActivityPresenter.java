@@ -6,14 +6,14 @@ import android.content.Intent;
 
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
-import com.sensoro.smartcity.imainviews.IInspectionInstructionActivityView;
+import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.InspectionTaskInstructionModel;
 import com.sensoro.common.server.bean.ScenesData;
-import com.sensoro.common.server.response.InspectionTaskInstructionRsp;
+import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.smartcity.imainviews.IInspectionInstructionActivityView;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
-import com.sensoro.common.model.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 
 import java.util.ArrayList;
@@ -40,9 +40,9 @@ public class InspectionInstructionActivityPresenter extends BasePresenter<IInspe
     private void requestContentData(String type) {
         getView().showProgressDialog();
         RetrofitServiceHelper.getInstance().getInspectionTemplate(type).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskInstructionRsp>(this) {
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<InspectionTaskInstructionModel>>(this) {
             @Override
-            public void onCompleted(InspectionTaskInstructionRsp instructionRsp) {
+            public void onCompleted(ResponseResult<InspectionTaskInstructionModel> instructionRsp) {
                 List<InspectionTaskInstructionModel.DataBean> data = instructionRsp.getData().getData();
                 getView().updateRcContentData(data);
                 getView().dismissProgressDialog();

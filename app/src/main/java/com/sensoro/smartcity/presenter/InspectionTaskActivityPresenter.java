@@ -11,6 +11,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
@@ -20,9 +21,10 @@ import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
+import com.sensoro.common.server.bean.InspectionTaskDeviceDetailModel;
 import com.sensoro.common.server.bean.InspectionTaskExecutionModel;
-import com.sensoro.common.server.response.InspectionTaskDeviceDetailRsp;
-import com.sensoro.common.server.response.InspectionTaskExecutionRsp;
+import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.libbleserver.ble.entity.BLEDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
@@ -31,12 +33,10 @@ import com.sensoro.smartcity.activity.InspectionActivity;
 import com.sensoro.smartcity.activity.InspectionExceptionDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.callback.BleObserver;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionTaskActivityView;
 import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
 import com.sensoro.smartcity.temp.TestUpdateActivity;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.CityAppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 
@@ -186,9 +186,9 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
 
     public void doInspectionStatus(final boolean needPop) {
         getView().showProgressDialog();
-        RetrofitServiceHelper.getInstance().getInspectTaskExecution(mTaskInfo.getId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskExecutionRsp>(this) {
+        RetrofitServiceHelper.getInstance().getInspectTaskExecution(mTaskInfo.getId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<InspectionTaskExecutionModel>>(this) {
             @Override
-            public void onCompleted(InspectionTaskExecutionRsp inspectionTaskExecutionRsp) {
+            public void onCompleted(ResponseResult<InspectionTaskExecutionModel> inspectionTaskExecutionRsp) {
                 InspectionTaskExecutionModel data = inspectionTaskExecutionRsp.getData();
                 List<InspectionTaskExecutionModel.DeviceStatusBean> deviceStatus = data.getDeviceStatus();
                 if (deviceStatus != null) {
@@ -254,9 +254,9 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         if (needPop) {
             getView().showProgressDialog();
         }
-        RetrofitServiceHelper.getInstance().getInspectTaskExecution(mTaskInfo.getId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskExecutionRsp>(this) {
+        RetrofitServiceHelper.getInstance().getInspectTaskExecution(mTaskInfo.getId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<InspectionTaskExecutionModel>>(this) {
             @Override
-            public void onCompleted(InspectionTaskExecutionRsp inspectionTaskExecutionRsp) {
+            public void onCompleted(ResponseResult<InspectionTaskExecutionModel> inspectionTaskExecutionRsp) {
                 InspectionTaskExecutionModel data = inspectionTaskExecutionRsp.getData();
                 List<InspectionTaskExecutionModel.DeviceTypesBean> deviceTypes = data.getDeviceTypes();
                 if (deviceTypes != null) {
@@ -301,9 +301,9 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                 cur_page = 0;
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getInspectionDeviceList(mTaskInfo.getId(), tempSearch, null, finish, tempDeviceType, cur_page * maxPageCount, maxPageCount).
-                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskDeviceDetailRsp>(this) {
+                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<InspectionTaskDeviceDetailModel>>(this) {
                     @Override
-                    public void onCompleted(InspectionTaskDeviceDetailRsp inspectionTaskDeviceDetailRsp) {
+                    public void onCompleted(ResponseResult<InspectionTaskDeviceDetailModel> inspectionTaskDeviceDetailRsp) {
                         freshUI(direction, inspectionTaskDeviceDetailRsp);
                         getView().dismissProgressDialog();
                         getView().onPullRefreshComplete();
@@ -324,9 +324,9 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                 cur_page++;
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getInspectionDeviceList(mTaskInfo.getId(), tempSearch, null, finish, tempDeviceType, cur_page * maxPageCount, maxPageCount).
-                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskDeviceDetailRsp>(this) {
+                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<InspectionTaskDeviceDetailModel>>(this) {
                     @Override
-                    public void onCompleted(InspectionTaskDeviceDetailRsp inspectionTaskDeviceDetailRsp) {
+                    public void onCompleted(ResponseResult<InspectionTaskDeviceDetailModel> inspectionTaskDeviceDetailRsp) {
                         if (inspectionTaskDeviceDetailRsp.getData().getDevices().size() == 0) {
                             getView().toastShort(mContext.getString(R.string.no_more_data));
                             getView().onPullRefreshCompleteNoMoreData();
@@ -359,7 +359,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         requestSearchData(Constants.DIRECTION_DOWN, null);
     }
 
-    private void freshUI(int direction, InspectionTaskDeviceDetailRsp inspectionTaskDeviceDetailRsp) {
+    private void freshUI(int direction, ResponseResult<InspectionTaskDeviceDetailModel> inspectionTaskDeviceDetailRsp) {
         if (direction == Constants.DIRECTION_DOWN) {
             mDevices.clear();
         }

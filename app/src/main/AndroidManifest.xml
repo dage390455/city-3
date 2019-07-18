@@ -220,9 +220,7 @@
         <activity android:name=".activity.ScanActivity" />
         <activity android:name=".activity.ContractManagerActivity" />
         <activity android:name=".activity.MerchantSwitchActivity" />
-        <activity
-            android:name=".activity.DeployMonitorAlarmContactActivity"
-            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activity.DeployMonitorAlarmContactActivity" />
         <activity android:name=".activity.DeployMonitorNameAddressActivity" />
         <activity android:name=".activity.DeployResultActivity" />
         <activity android:name=".activity.SearchMonitorActivity" />

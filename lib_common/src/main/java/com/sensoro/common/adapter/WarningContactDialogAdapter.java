@@ -36,23 +36,27 @@ public class WarningContactDialogAdapter extends RecyclerView.Adapter<WarningCon
         return new AssociationSensorDialogViewHolder(inflate);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull AssociationSensorDialogViewHolder holder, int position) {
         DeviceNotificationBean deviceNotificationBean = mList.get(position);
         String content = deviceNotificationBean.getContent();
-        holder.tvPhone.setText(content);
-        holder.tvName.setText(deviceNotificationBean.getContact());
-
-        holder.llWarningContactoot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (TextUtils.isEmpty(content)) {
-                    SensoroToast.getInstance().makeText(mContext, mContext.getString(R.string.no_find_contact_phone_number), Toast.LENGTH_SHORT).show();
-                } else {
-                    AppUtils.diallPhone(content, (Activity) mContext);
+        String contact = deviceNotificationBean.getContact();
+            holder.tvPhone.setVisibility(View.VISIBLE);
+            holder.tvPhone.setText(content);
+            holder.tvName.setText(contact);
+            holder.llWarningContactoot.setPadding(AppUtils.dp2px(mContext, 20), AppUtils.dp2px(mContext, 10), AppUtils.dp2px(mContext, 20), AppUtils.dp2px(mContext, 10));
+            holder.llWarningContactoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (TextUtils.isEmpty(content)) {
+                        SensoroToast.getInstance().makeText(mContext, mContext.getString(R.string.no_find_contact_phone_number), Toast.LENGTH_SHORT).show();
+                    } else {
+                        AppUtils.diallPhone(content, (Activity) mContext);
+                    }
                 }
-            }
-        });
+            });
+
 
     }
 

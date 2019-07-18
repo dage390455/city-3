@@ -17,9 +17,8 @@ import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.ContractAddInfo;
 import com.sensoro.common.server.bean.ContractListInfo;
 import com.sensoro.common.server.bean.ContractsTemplateInfo;
-import com.sensoro.common.server.response.ContractAddRsp;
-import com.sensoro.common.server.response.ContractsTemplateRsp;
-import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.utils.RegexUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.ContractCreationSuccessActivity;
@@ -29,7 +28,6 @@ import com.sensoro.smartcity.model.BusinessLicenseData;
 import com.sensoro.smartcity.push.RecognizeService;
 import com.sensoro.smartcity.util.FileUtil;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.common.utils.RegexUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -110,10 +108,10 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
     private void getContractTemplateInfos() {
         getView().showProgressDialog();
         RetrofitServiceHelper.getInstance().getContractstemplate().subscribeOn(Schedulers.io()).observeOn
-                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsTemplateRsp>(this) {
+                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ArrayList<ContractsTemplateInfo>>>(this) {
 
             @Override
-            public void onCompleted(ContractsTemplateRsp contractsTemplateRsp) {
+            public void onCompleted(ResponseResult<ArrayList<ContractsTemplateInfo>> contractsTemplateRsp) {
                 ArrayList<ContractsTemplateInfo> data = contractsTemplateRsp.getData();
                 if (mContractInfo.getDevices() != null && mContractInfo.getDevices().size() > 0) {
                     refreshContractsTemplate(data, mContractInfo.getDevices());
@@ -252,10 +250,10 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
                 mContractInfo.getEnterprise_card_id(), null, mContractInfo.getCustomer_name(), mContractInfo.getCustomer_enterprise_name(),
                 null, mContractInfo.getCustomer_address(), mContractInfo.getCustomer_phone(), mContractInfo.getPlace_type(),
                 mContractInfo.getDevices(), mContractInfo.getPayTimes(), null, mContractInfo.getServiceTime(),
-                mContractInfo.getFirstPayTimes()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
+                mContractInfo.getFirstPayTimes()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ContractAddInfo>>(this) {
 
             @Override
-            public void onCompleted(ContractAddRsp contractAddRsp) {
+            public void onCompleted(ResponseResult<ContractAddInfo> contractAddRsp) {
                 ContractAddInfo data = contractAddRsp.getData();
                 int id = data.getId();
                 try {
@@ -451,10 +449,10 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
                 mContractInfo.getEnterprise_card_id(), null,
                 mContractInfo.getCustomer_name(), mContractInfo.getCustomer_enterprise_name(), null, mContractInfo.getCustomer_address(),
                 mContractInfo.getCustomer_phone(), mContractInfo.getPlace_type(), mContractInfo.getDevices(), mContractInfo.getPayTimes(), null, mContractInfo.getServiceTime(), mContractInfo.getFirstPayTimes()).subscribeOn
-                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
+                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult>(this) {
 
             @Override
-            public void onCompleted(ResponseBase responseBase) {
+            public void onCompleted(ResponseResult responseBase) {
                 modifyContractSuccess();
                 getView().dismissProgressDialog();
                 getView().showSaveSuccessToast();

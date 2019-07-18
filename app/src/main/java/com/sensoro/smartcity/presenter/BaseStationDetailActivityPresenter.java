@@ -28,8 +28,7 @@ import com.sensoro.common.server.bean.BaseStationChartDetailModel;
 import com.sensoro.common.server.bean.BaseStationDetailModel;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.ScenesData;
-import com.sensoro.common.server.response.BaseStationChartDetailRsp;
-import com.sensoro.common.server.response.BaseStationDetailRsp;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
@@ -73,7 +72,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
     DeviceInfo mDeviceInfo = new DeviceInfo();
     private List<BaseStationChartDetailModel> modelList = new ArrayList<>();
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
         Object dataevent = eventData.data;
@@ -138,9 +137,9 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         getView().showProgressDialog();
 
         RetrofitServiceHelper.getInstance().getBaseStatioDetail(sn).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<BaseStationDetailRsp>(this) {
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<BaseStationDetailModel>>(this) {
             @Override
-            public void onCompleted(BaseStationDetailRsp deviceCameraListRsp) {
+            public void onCompleted(ResponseResult<BaseStationDetailModel> deviceCameraListRsp) {
 
                 data = deviceCameraListRsp.getData();
 
@@ -238,9 +237,9 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
 
 
         RetrofitServiceHelper.getInstance().getBaseStationChartDetail(sn, "temperature", interval, from, System.currentTimeMillis()).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<BaseStationChartDetailRsp>(this) {
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<BaseStationChartDetailModel>>>(this) {
             @Override
-            public void onCompleted(BaseStationChartDetailRsp deviceCameraListRsp) {
+            public void onCompleted(ResponseResult<List<BaseStationChartDetailModel>> deviceCameraListRsp) {
 
                 List<BaseStationChartDetailModel> data = deviceCameraListRsp.getData();
                 if (null != data && data.size() > 0) {

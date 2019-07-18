@@ -26,9 +26,7 @@ import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
 import com.sensoro.common.server.bean.DeviceCameraFacePic;
 import com.sensoro.common.server.bean.DeviceCameraHistoryBean;
-import com.sensoro.common.server.response.DeviceCameraDetailRsp;
-import com.sensoro.common.server.response.DeviceCameraFacePicListRsp;
-import com.sensoro.common.server.response.DeviceCameraHistoryRsp;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.CameraPersonAvatarHistoryActivity;
@@ -215,9 +213,9 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
         }
         //获取图片是根绝minID向后推limit个条目，服务器做的限定
         RetrofitServiceHelper.getInstance().getDeviceCameraFaceList(strings, null, 20, minId, startTime, endTime)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraFacePicListRsp>(this) {
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceCameraFacePic>>>(this) {
             @Override
-            public void onCompleted(final DeviceCameraFacePicListRsp deviceCameraFacePicListRsp) {
+            public void onCompleted(final ResponseResult<List<DeviceCameraFacePic>> deviceCameraFacePicListRsp) {
                 List<DeviceCameraFacePic> data = deviceCameraFacePicListRsp.getData();
                 if (data != null) {
                     if (data.size() > 0) {
@@ -303,9 +301,9 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
             String beginTime = String.valueOf(time - 15);
             String endTime = String.valueOf(time + 15);
             getView().showProgressDialog();
-            RetrofitServiceHelper.getInstance().getDeviceCameraPlayHistoryAddress(cid, beginTime, endTime, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraHistoryRsp>(this) {
+            RetrofitServiceHelper.getInstance().getDeviceCameraPlayHistoryAddress(cid, beginTime, endTime, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceCameraHistoryBean>>>(this) {
                 @Override
-                public void onCompleted(DeviceCameraHistoryRsp deviceCameraHistoryRsp) {
+                public void onCompleted(ResponseResult<List<DeviceCameraHistoryBean>> deviceCameraHistoryRsp) {
                     List<DeviceCameraHistoryBean> data = deviceCameraHistoryRsp.getData();
                     if (data != null && data.size() > 0) {
                         DeviceCameraHistoryBean deviceCameraHistoryBean = data.get(0);
@@ -419,9 +417,9 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
      */
     public void regainGetCameraState() {
         getView().showProgressDialog();
-        RetrofitServiceHelper.getInstance().getDeviceCamera(sn).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraDetailRsp>(this) {
+        RetrofitServiceHelper.getInstance().getDeviceCamera(sn).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceCameraDetailInfo>>(this) {
             @Override
-            public void onCompleted(DeviceCameraDetailRsp deviceCameraDetailRsp) {
+            public void onCompleted(ResponseResult<DeviceCameraDetailInfo> deviceCameraDetailRsp) {
                 DeviceCameraDetailInfo data = deviceCameraDetailRsp.getData();
                 if (data != null) {
                     String hls = data.getHls();

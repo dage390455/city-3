@@ -13,23 +13,23 @@ import com.baidu.ocr.sdk.model.IDCardParams;
 import com.baidu.ocr.sdk.model.IDCardResult;
 import com.baidu.ocr.sdk.model.Word;
 import com.baidu.ocr.ui.camera.CameraActivity;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.activity.ContractInfoActivity;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
-import com.sensoro.smartcity.imainviews.IContractServiceActivityView;
 import com.sensoro.common.iwidget.IOnCreate;
-import com.sensoro.smartcity.model.BusinessLicenseData;
 import com.sensoro.common.model.EventData;
-import com.sensoro.smartcity.push.RecognizeService;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.ContractsTemplateInfo;
-import com.sensoro.common.server.response.ContractsTemplateRsp;
+import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.utils.RegexUtils;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.activity.ContractInfoActivity;
+import com.sensoro.smartcity.imainviews.IContractServiceActivityView;
+import com.sensoro.smartcity.model.BusinessLicenseData;
+import com.sensoro.smartcity.push.RecognizeService;
 import com.sensoro.smartcity.util.FileUtil;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.common.utils.RegexUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -125,10 +125,10 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
     private void getContractTemplateInfos() {
         getView().showProgressDialog();
         RetrofitServiceHelper.getInstance().getContractstemplate().subscribeOn(Schedulers.io()).observeOn
-                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsTemplateRsp>(this) {
+                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ArrayList<ContractsTemplateInfo>>>(this) {
 
             @Override
-            public void onCompleted(ContractsTemplateRsp contractsTemplateRsp) {
+            public void onCompleted(ResponseResult<ArrayList<ContractsTemplateInfo>> contractsTemplateRsp) {
                 ArrayList<ContractsTemplateInfo> data = contractsTemplateRsp.getData();
                 Parcelable[] contract_devices = mContext.getIntent().getParcelableArrayExtra("contract_devices");
                 if (contract_devices != null && contract_devices.length > 0) {

@@ -3,27 +3,34 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.common.model.EventData;
+import com.sensoro.common.utils.RegexUtils;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IAlarmContactActivityView;
-import com.sensoro.common.model.DeployContactModel;
-import com.sensoro.common.utils.RegexUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactActivityView>  {
+public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactActivityView> {
     private Activity mContext;
     private final List<DeployContactModel> deployContactModelList = new ArrayList<>();
+    private final List<Integer> repeatList = new ArrayList<>();
+
+    private final HashMap<String, List<Integer>> hashMap = new HashMap<>();
     private ArrayList<String> mNameKeywords = new ArrayList<>();
     private ArrayList<String> mPhoneKeywords = new ArrayList<>();
     private int mStatus = -1;
@@ -54,6 +61,7 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
 
     public void doFinish(List<DeployContactModel> mList) {
         deployContactModelList.clear();
+        hashMap.clear();
         //检查规则
         for (DeployContactModel model : mList) {
             String name = model.name;
@@ -77,7 +85,32 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
                 }
                 return;
             }
+
+
+            if (!hashMap.containsKey(model.phone)) {
+                List<Integer> list = new ArrayList<>();
+                list.add(mList.indexOf(model));
+                hashMap.put(phone, list);
+            } else {
+                hashMap.get(model.phone).add(mList.indexOf(model));
+            }
+
         }
+
+        //map--value--list相同的值2个
+        ArrayList<Integer> arrayList = new ArrayList();
+        for (Map.Entry<String, List<Integer>> entry : hashMap.entrySet()) {
+            if (entry.getValue().size() >= 2) {
+                arrayList.addAll(entry.getValue());
+            }
+        }
+        if (arrayList.size() > 1) {
+            SensoroToast.getInstance().makeText(mContext, mContext.getResources().getString(R.string.duplicate_phone_number), Toast.LENGTH_SHORT).show();
+            getView().updateRepeatAdapter(arrayList);
+            return;
+        }
+
+
         deployContactModelList.addAll(mList);
         //保存数据
         for (DeployContactModel deployContactModel : deployContactModelList) {

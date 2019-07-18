@@ -31,6 +31,7 @@ import com.sensoro.common.iwidget.IOnResume;
 import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.model.DeviceNotificationBean;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
@@ -50,13 +51,11 @@ import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.bean.SensorStruct;
 import com.sensoro.common.server.bean.SensorTypeStyles;
-import com.sensoro.common.server.response.DeployDeviceDetailRsp;
-import com.sensoro.common.server.response.DeviceCameraListRsp;
-import com.sensoro.common.server.response.DeviceUpdateFirmwareDataRsp;
 import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
-import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
 import com.sensoro.libbleserver.ble.callback.OnDeviceUpdateObserver;
 import com.sensoro.libbleserver.ble.callback.SensoroConnectionCallback;
 import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
@@ -101,7 +100,6 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import io.reactivex.ObservableSource;
@@ -114,8 +112,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         , TipDeviceUpdateDialogUtils.TipDialogUpdateClickListener, IOnStart {
     private Activity mContext;
     private volatile DeviceInfo mDeviceInfo;
-    private String content;
-    private boolean hasPhoneNumber;
     private String mScheduleNo;
     private GeocodeSearch geocoderSearch;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
@@ -260,36 +256,47 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         String name = mDeviceInfo.getName();
         getView().setStatusInfo(statusText, textColor);
         getView().setTitleNameTextView(TextUtils.isEmpty(name) ? sn : name);
-        //
-        String contact = null;
-        String phone = null;
-        try {
-            contact = mDeviceInfo.getAlarms().getNotification().getContact();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            phone = mDeviceInfo.getAlarms().getNotification().getContent();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (TextUtils.isEmpty(contact) && TextUtils.isEmpty(phone)) {
-            getView().setNoContact();
-            hasPhoneNumber = false;
-        } else {
-            if (TextUtils.isEmpty(contact)) {
-                contact = mContext.getString(R.string.not_set);
-            }
-            hasPhoneNumber = !TextUtils.isEmpty(phone);
-            getView().setContactPhoneIconVisible(hasPhoneNumber);
-            if (hasPhoneNumber) {
-                this.content = phone;
+
+
+        AlarmInfo alarms = mDeviceInfo.getAlarms();
+        if (alarms != null) {
+            //设置共x人
+            List<DeviceNotificationBean> notifications = WidgetUtil.handleDeviceNotifications(alarms.getNotifications());
+            if (notifications.size() > 0) {
+                DeviceNotificationBean deviceNotificationBean = notifications.get(0);
+                String contact = deviceNotificationBean.getContact();
+                if (!TextUtils.isEmpty(contact)) {
+                    getView().setContractName(contact);
+                }
+                String content = deviceNotificationBean.getContent();
+                if (!TextUtils.isEmpty(content)) {
+                    getView().setContractPhone(content);
+                }
+                getView().setContractCount(notifications.size());
             } else {
-                this.content = mContext.getString(R.string.not_set);
+                DeviceNotificationBean notification = alarms.getNotification();
+                if (notification != null) {
+                    String contact = notification.getContact();
+                    if (!TextUtils.isEmpty(contact)) {
+                        getView().setContractName(contact);
+                    }
+                    String content = notification.getContent();
+                    if (!TextUtils.isEmpty(content)) {
+                        getView().setContractPhone(content);
+                        getView().setContractCount(1);
+                    } else {
+                        getView().setNoContact();
+                    }
+
+                } else {
+                    getView().setNoContact();
+                }
             }
-            getView().setContractName(contact);
-            getView().setContractPhone(content);
+        } else {
+            getView().setNoContact();
         }
+
+
         long updatedTime = mDeviceInfo.getUpdatedTime();
         if (updatedTime == 0) {
             getView().setUpdateTime("-");
@@ -457,10 +464,36 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     private void handleDeviceModeInfo() {
         if (mDeviceInfo != null) {
-            if (Objects.requireNonNull(PreferencesHelper.getInstance().getConfigDeviceType(mDeviceInfo.getDeviceType())).isDemoSupported()) {
-                if ("fhsj_smoke".equals(mDeviceInfo.getDeviceType())) {
-                    if (WidgetUtil.isContainVersion("2.1.1", bleUpdateModel.currentFirmVersion)) {
-                        //只针对泛海三江烟感并且在2.1.1版本及以上
+            DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(mDeviceInfo.getDeviceType());
+            if (configDeviceType != null) {
+                if (configDeviceType.isDemoSupported()) {
+                    if ("fhsj_smoke".equals(mDeviceInfo.getDeviceType())) {
+                        if (WidgetUtil.isContainVersion("2.1.1", bleUpdateModel.currentFirmVersion)) {
+                            //只针对泛海三江烟感并且在2.1.1版本及以上
+                            if (PreferencesHelper.getInstance().getUserData().hasDeviceDemoMode) {
+                                Integer demoMode = mDeviceInfo.getDemoMode();
+                                if (demoMode != null) {
+                                    switch (demoMode) {
+                                        case 0:
+                                            //正常模式
+                                            deviceDemoMode = Constants.DEVICE_DEMO_MODE_CLOSE;
+                                            break;
+                                        case 1:
+                                            //演示模式
+                                            deviceDemoMode = Constants.DEVICE_DEMO_MODE_OPEN;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                            } else {
+                                deviceDemoMode = Constants.DEVICE_DEMO_MODE_NO_PERMISSION;
+                            }
+                        } else {
+                            deviceDemoMode = Constants.DEVICE_DEMO_MODE_NOT_SUPPORT;
+                        }
+
+                    } else {
                         if (PreferencesHelper.getInstance().getUserData().hasDeviceDemoMode) {
                             Integer demoMode = mDeviceInfo.getDemoMode();
                             if (demoMode != null) {
@@ -480,33 +513,10 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         } else {
                             deviceDemoMode = Constants.DEVICE_DEMO_MODE_NO_PERMISSION;
                         }
-                    } else {
-                        deviceDemoMode = Constants.DEVICE_DEMO_MODE_NOT_SUPPORT;
                     }
-
                 } else {
-                    if (PreferencesHelper.getInstance().getUserData().hasDeviceDemoMode) {
-                        Integer demoMode = mDeviceInfo.getDemoMode();
-                        if (demoMode != null) {
-                            switch (demoMode) {
-                                case 0:
-                                    //正常模式
-                                    deviceDemoMode = Constants.DEVICE_DEMO_MODE_CLOSE;
-                                    break;
-                                case 1:
-                                    //演示模式
-                                    deviceDemoMode = Constants.DEVICE_DEMO_MODE_OPEN;
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                    } else {
-                        deviceDemoMode = Constants.DEVICE_DEMO_MODE_NO_PERMISSION;
-                    }
+                    deviceDemoMode = Constants.DEVICE_DEMO_MODE_NOT_SUPPORT;
                 }
-            } else {
-                deviceDemoMode = Constants.DEVICE_DEMO_MODE_NOT_SUPPORT;
             }
             //TODO delete
 //            deviceDemoMode = DEVICE_DEMO_MODE_OPEN;
@@ -603,9 +613,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     private void requestBlePassword() {
         // 获取固件版本和下载固件的地址信息
         RetrofitServiceHelper.getInstance().getDeployDeviceDetail(mDeviceInfo.getSn(), null, null).subscribeOn
-                (Schedulers.io()).flatMap(new Function<DeployDeviceDetailRsp, ObservableSource<DeviceUpdateFirmwareDataRsp>>() {
+                (Schedulers.io()).flatMap(new Function<ResponseResult<DeviceInfo>, ObservableSource<ResponseResult<List<DeviceUpdateFirmwareData>>>>() {
             @Override
-            public ObservableSource<DeviceUpdateFirmwareDataRsp> apply(DeployDeviceDetailRsp deployDeviceDetailRsp) throws Exception {
+            public ObservableSource<ResponseResult<List<DeviceUpdateFirmwareData>>> apply(ResponseResult<DeviceInfo> deployDeviceDetailRsp) throws Exception {
                 DeviceInfo data = deployDeviceDetailRsp.getData();
                 if (data != null) {
                     mDeviceInfo = data;
@@ -621,10 +631,10 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 }
                 return RetrofitServiceHelper.getInstance().getDeviceUpdateVision(bleUpdateModel.sn, bleUpdateModel.deviceType, bleUpdateModel.band, bleUpdateModel.currentFirmVersion, bleUpdateModel.hardwareVersion, 1, 100);
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceUpdateFirmwareDataRsp>(this) {
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceUpdateFirmwareData>>>(this) {
 
             @Override
-            public void onCompleted(DeviceUpdateFirmwareDataRsp deviceUpdateFirmwareDataRsp) {
+            public void onCompleted(ResponseResult<List<DeviceUpdateFirmwareData>> deviceUpdateFirmwareDataRsp) {
                 List<DeviceUpdateFirmwareData> data = deviceUpdateFirmwareDataRsp.getData();
                 if (data != null && data.size() > 0) {
                     DeviceUpdateFirmwareData deviceUpdateFirmwareData = data.get(0);
@@ -648,9 +658,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     String id = mDeviceInfo.getDeviceGroup();
                     if (!TextUtils.isEmpty(id)) {
                         RetrofitServiceHelper.getInstance().getDeviceGroupCameraList(id, 10, 1, null).subscribeOn(Schedulers.io()).observeOn
-                                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraListRsp>(MonitorPointElectricDetailActivityPresenter.this) {
+                                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceCameraInfo>>>(MonitorPointElectricDetailActivityPresenter.this) {
                             @Override
-                            public void onCompleted(DeviceCameraListRsp deviceCameraListRsp) {
+                            public void onCompleted(ResponseResult<List<DeviceCameraInfo>> deviceCameraListRsp) {
                                 deviceCameras = (ArrayList<DeviceCameraInfo>) deviceCameraListRsp.getData();
                                 if (deviceCameras != null && deviceCameras.size() > 0) {
                                     getView().setDeviceCamerasText(mContext.getString(R.string.device_detail_camera_has_camera) + deviceCameras.size() + mContext.getString(R.string.device_detail_camera_camera_count));
@@ -1056,7 +1066,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 final HashMap<String, AlarmInfo.RuleInfo> ruleInfoHashMap = new HashMap<>();
                 //先填充数据
                 if (alarms != null) {
-                    AlarmInfo.RuleInfo rules[] = alarms.getRules();
+                    AlarmInfo.RuleInfo[] rules = alarms.getRules();
                     if (rules != null && rules.length > 0) {
                         for (AlarmInfo.RuleInfo ruleInfo : rules) {
                             String sensorTypeStr = ruleInfo.getSensorTypes();
@@ -1428,12 +1438,30 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     }
 
     public void doContact() {
-        if (hasPhoneNumber) {
-            if (TextUtils.isEmpty(content) || mContext.getString(R.string.not_set).equals(content)) {
-                getView().toastShort(mContext.getString(R.string.phone_contact_not_set));
-                return;
+
+        AlarmInfo alarms = mDeviceInfo.getAlarms();
+        if (alarms != null) {
+            List<DeviceNotificationBean> notifications = WidgetUtil.handleDeviceNotifications(alarms.getNotifications());
+            if (notifications.size() > 1) {
+                WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
+                dialogUtil.show(notifications);
+            } else if (notifications.size() == 1) {
+                DeviceNotificationBean notificationBean = notifications.get(0);
+                if (TextUtils.isEmpty(notificationBean.getContent()) || mContext.getString(R.string.not_set).equals(notificationBean.getContent())) {
+                    getView().toastShort(mContext.getString(R.string.phone_contact_not_set));
+                    return;
+                }
+                AppUtils.diallPhone(notificationBean.getContent(), mContext);
+            } else {
+                DeviceNotificationBean notification = alarms.getNotification();
+                if (notification != null && !TextUtils.isEmpty(notification.getContent())) {
+                    AppUtils.diallPhone(notification.getContent(), mContext);
+                } else {
+                    getView().toastShort(mContext.getString(R.string.phone_contact_not_set));
+                }
             }
-            AppUtils.diallPhone(content, mContext);
+        } else {
+            getView().toastShort(mContext.getString(R.string.phone_contact_not_set));
         }
 
     }
@@ -1445,41 +1473,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         getView().startAC(intent);
     }
 
-    private final OnConfigInfoObserver onConfigInfoObserver = new OnConfigInfoObserver() {
-        @Override
-        public void onStart(String msg) {
-            if (isAttachedView()) {
-                getView().dismissTipDialog();
-                getView().showOperationTipLoadingDialog();
-            }
-        }
 
-        @Override
-        public void onSuccess(Object o) {
-            if (isAttachedView()) {
-                getView().dismissOperatingLoadingDialog();
-                getView().showOperationSuccessToast();
-            }
-        }
-
-        @Override
-        public void onFailed(String errorMsg) {
-            if (isAttachedView()) {
-                bleRequestCmd();
-            }
-        }
-
-        @Override
-        public void onOverTime(String overTimeMsg) {
-            if (isAttachedView()) {
-                bleRequestCmd();
-            }
-        }
-    };
-
-    public void doOperation(int type) {
-
-
+    public void doOperation(int type, String beepMuteTime) {
+        Integer beepMuteTimeInt = null;
         switch (type) {
             case MonitorPointOperationCode.ERASURE:
                 mOperationType = MonitorPointOperationCode.ERASURE_STR;
@@ -1509,26 +1505,75 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 mOperationType = MonitorPointOperationCode.AIR_SWITCH_POWER_ON_STR;
                 //上电
                 break;
+            case MonitorPointOperationCode.ERASURE_TIME:
+                if (TextUtils.isEmpty(beepMuteTime)) {
+                    getView().toastShort(mContext.getString(com.sensoro.common.R.string.input_not_null));
+                    return;
+                }
+                try {
+                    beepMuteTimeInt = Integer.parseInt(beepMuteTime);
+                } catch (Exception e) {
+                    getView().toastShort(mContext.getString(com.sensoro.common.R.string.enter_the_correct_number_format));
+                    return;
+                }
+                if (beepMuteTimeInt < 1 || beepMuteTimeInt > 30) {
+                    getView().toastShort(mContext.getString(com.sensoro.common.R.string.monitor_point_operation_error_value_range) + "1~30");
+                    return;
+                }
+                mOperationType = MonitorPointOperationCode.ERASURE_TIME_STR;
+                break;
             default:
                 break;
         }
+        Integer finalBeepMuteTimeInt = beepMuteTimeInt;
+        final OnConfigInfoObserver onConfigInfoObserver = new OnConfigInfoObserver() {
+            @Override
+            public void onStart(String msg) {
+                if (isAttachedView()) {
+                    getView().dismissTipDialog();
+                    getView().showOperationTipLoadingDialog();
+                }
+            }
+
+            @Override
+            public void onSuccess(Object o) {
+                if (isAttachedView()) {
+                    getView().dismissOperatingLoadingDialog();
+                    getView().showOperationSuccessToast();
+                }
+            }
+
+            @Override
+            public void onFailed(String errorMsg) {
+                if (isAttachedView()) {
+                    bleRequestCmd(finalBeepMuteTimeInt);
+                }
+            }
+
+            @Override
+            public void onOverTime(String overTimeMsg) {
+                if (isAttachedView()) {
+                    bleRequestCmd(finalBeepMuteTimeInt);
+                }
+            }
+        };
         //断电、上电不走蓝牙操作
         if (MonitorPointOperationCode.AIR_SWITCH_POWER_OFF == type || MonitorPointOperationCode.AIR_SWITCH_POWER_ON == type) {
-            requestServerCmd();
+            requestServerCmd(null);
         } else {
             //其他先进行本地蓝牙，失败则进行下行
-            if (doBleMuteOperation(onConfigInfoObserver)) {
+            if (doBleMuteOperation(onConfigInfoObserver, finalBeepMuteTimeInt)) {
                 //
                 return;
             } else {
-                requestServerCmd();
+                requestServerCmd(finalBeepMuteTimeInt);
             }
         }
 
 
     }
 
-    private boolean doBleMuteOperation(final OnConfigInfoObserver onConfigInfoObserver) {
+    private boolean doBleMuteOperation(final OnConfigInfoObserver onConfigInfoObserver, Integer beepMuteTime) {
         String sn = mDeviceInfo.getSn();
         if (bleDeviceMap.containsKey(sn) && !TextUtils.isEmpty(bleUpdateModel.blePassword)) {
             BLEDevice bleDevice = bleDeviceMap.get(sn);
@@ -1583,7 +1628,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             @Override
                             public void onConnectedSuccess(BLEDevice bleDevice, int cmd) {
                                 if (isAttachedView()) {
-                                    OperationCmdAnalyzer.doOperation(mDeviceInfo.getDeviceType(), mOperationType, sensoroDeviceConnection, bleMuteOperationWriteCallback);
+                                    OperationCmdAnalyzer.doOperation(mDeviceInfo.getDeviceType(), mOperationType, beepMuteTime, sensoroDeviceConnection, bleMuteOperationWriteCallback);
                                 }
 
                             }
@@ -1608,7 +1653,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     } catch (Throwable e) {
                         e.printStackTrace();
                         mHandler.removeCallbacks(configOvertime);
-                        bleRequestCmd();
+                        bleRequestCmd(beepMuteTime);
                     }
                     return true;
                 }
@@ -1618,7 +1663,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         return false;
     }
 
-    private void bleRequestCmd() {
+    private void bleRequestCmd(Integer beepMuteTime) {
         if (sensoroDeviceConnection != null) {
             sensoroDeviceConnection.disconnect();
         }
@@ -1626,17 +1671,17 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             getView().dismissTipDialog();
             getView().toastShort(mContext.getString(R.string.unknown_error));
         } else {
-            requestServerCmd();
+            requestServerCmd(beepMuteTime);
         }
     }
 
-    private void requestServerCmd() {
+    private void requestServerCmd(Integer beepMuteTime) {
         ArrayList<String> sns = new ArrayList<>();
         sns.add(mDeviceInfo.getSn());
         getView().dismissTipDialog();
         getView().showOperationTipLoadingDialog();
         mScheduleNo = null;
-        RetrofitServiceHelper.getInstance().doMonitorPointOperation(sns, mOperationType, null, null, null, null, null, null)
+        RetrofitServiceHelper.getInstance().doMonitorPointOperation(sns, mOperationType, null, null, null, null, null, null, beepMuteTime)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>(this) {
             @Override
             public void onCompleted(MonitorPointOperationRequestRsp response) {
@@ -1665,7 +1710,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 getView().showErrorTipDialog(errorMsg);
             }
         });
-
     }
 
     private void clearOperationType() {
@@ -1712,7 +1756,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     @Override
     public void onClickOperation(View view, int position, TaskOptionModel taskOptionModel) {
-
         switch (taskOptionModel.optionType) {
             case MonitorPointOperationCode.ERASURE:
                 getView().showTipDialog(false, null, mContext.getString(R.string.is_device_erasure), mContext.getString(R.string.device_erasure_tip_message), R.color.c_a6a6a6, mContext.getString(R.string.erasure), R.color.c_f34a4a, MonitorPointOperationCode.ERASURE);
@@ -1751,7 +1794,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     bundle.putInt(Constants.EXTRA_DEPLOY_CONFIGURATION_ORIGIN_TYPE, Constants.DEPLOY_CONFIGURATION_SOURCE_TYPE_DEVICE_DETAIL);
                     bundle.putSerializable(Constants.EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
                     DeployControlSettingData settingData = mDeviceInfo.getConfig();
-                    if (settingData!=null){
+                    if (settingData != null) {
                         bundle.putSerializable(Constants.EXTRA_DEPLOY_CONFIGURATION_SETTING_DATA, settingData);
                     }
                     startActivity(ARouterConstants.ACTIVITY_THREE_PHASE_ELECT_CONFIG_ACTIVITY, bundle, mContext);
@@ -1771,6 +1814,10 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 getView().showTipDialog(false, mDeviceInfo.getDeviceType(), mContext.getString(R.string.command_elec_connect_title), mContext.getString(R.string.command_elec_connect_desc), R.color.c_f34a4a, mContext.getString(R.string.command_elec_connect_btn_title), R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_POWER_ON);
                 //上电
                 break;
+            case MonitorPointOperationCode.ERASURE_TIME:
+                getView().showTipDialog(true, mDeviceInfo.getDeviceType(), mContext.getString(R.string.command_smoke_mute_time_title), mContext.getString(R.string.command_smoke_mute_time_desc), R.color.c_a6a6a6, mContext.getString(R.string.erasure), R.color.c_f34a4a, MonitorPointOperationCode.ERASURE_TIME);
+                break;
+
         }
     }
 
@@ -1919,9 +1966,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                 getView().updateDialogProgress(mContext.getString(R.string.sending_upgrade_version), -1, 2);
                                 RetrofitServiceHelper.getInstance().upLoadDeviceUpdateVision(bleUpdateModel.sn, bleUpdateModel.serverFirmVersion)
                                         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).
-                                        subscribe(new CityObserver<ResponseBase>(MonitorPointElectricDetailActivityPresenter.this) {
+                                        subscribe(new CityObserver<ResponseResult>(MonitorPointElectricDetailActivityPresenter.this) {
                                             @Override
-                                            public void onCompleted(ResponseBase responseBase) {
+                                            public void onCompleted(ResponseResult responseBase) {
                                                 try {
                                                     LogUtils.loge("升级--->> 成功！！次数=" + checkUpdateCount);
                                                 } catch (Throwable throwable) {

@@ -33,7 +33,6 @@ import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseFragment;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.constant.ARouterConstants;
-import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.utils.AppUtils;
