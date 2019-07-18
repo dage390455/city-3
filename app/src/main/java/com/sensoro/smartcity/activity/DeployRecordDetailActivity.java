@@ -17,14 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
-import com.sensoro.common.server.bean.DeployRecordInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TouchRecycleView;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.ContactAdapter;
 import com.sensoro.smartcity.adapter.MonitorDeployDetailPhotoAdapter;
 import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
 import com.sensoro.smartcity.presenter.DeployRecordDetailActivityPresenter;
@@ -52,8 +50,14 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     RecyclerView acDeployRecordDetailRcTag;
     @BindView(R.id.ac_deploy_record_detail_tv_time)
     TextView acDeployRecordDetailTvTime;
-    @BindView(R.id.ac_deploy_record_detail_rc_contact)
-    RecyclerView acDeployRecordDetailRcContact;
+    @BindView(R.id.ll_contacts)
+    LinearLayout llContacts;
+    @BindView(R.id.tv_first_contact)
+    TextView tvFirstContact;
+    @BindView(R.id.tv_total_contact)
+    TextView tvTotalContact;
+    @BindView(R.id.iv_contact_arrow)
+    ImageView ivContactArrow;
     @BindView(R.id.ac_deploy_record_detail_tv_we_chat)
     TextView acDeployRecordDetailTvWeChat;
     @BindView(R.id.ac_deploy_record_detail_tv_fixed_point_state)
@@ -93,7 +97,6 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     @BindView(R.id.line_deploy_record_config)
     View lineDeployRecordConfig;
     private TagAdapter mTagAdapter;
-    private ContactAdapter mContactAdapter;
     private MonitorDeployDetailPhotoAdapter mDeployPicAdapter;
 
 
@@ -136,11 +139,6 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     }
 
     private void initRcContact() {
-        mContactAdapter = new ContactAdapter(mActivity);
-        LinearLayoutManager manager = new LinearLayoutManager(mActivity);
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
-        acDeployRecordDetailRcContact.setLayoutManager(manager);
-        acDeployRecordDetailRcContact.setAdapter(mContactAdapter);
     }
 
     private void initRcTag() {
@@ -205,7 +203,7 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     }
 
 
-    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_deploy_record_detail_ll_fixed_point, R.id.include_text_title_tv_subtitle, R.id.rl_deploy_record_config})
+    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_deploy_record_detail_ll_fixed_point, R.id.include_text_title_tv_subtitle, R.id.rl_deploy_record_config, R.id.ll_contacts})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
@@ -219,6 +217,10 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
                 break;
             case R.id.include_text_title_tv_subtitle:
                 finishAc();
+                break;
+            case R.id.ll_contacts:
+                //
+                mPresenter.showContactDialog();
                 break;
         }
     }
@@ -251,11 +253,6 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     @Override
     public void updateDeployPic(ArrayList<ScenesData> data) {
         mDeployPicAdapter.updateImages(data);
-    }
-
-    @Override
-    public void updateContactList(List<DeployRecordInfo.NotificationBean> notifications) {
-        mContactAdapter.updateContact(notifications);
     }
 
     @Override
@@ -338,6 +335,25 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
         } else {
             tvDeployRecordConfigTrans.setVisibility(View.VISIBLE);
             tvDeployRecordConfigTrans.setText(trans);
+        }
+    }
+
+    @Override
+    public void setFirstContact(String contact) {
+        if (!TextUtils.isEmpty(contact)) {
+            tvFirstContact.setText(contact);
+        }
+    }
+
+    @Override
+    public void setTotalContact(int total) {
+        if (total > 1) {
+            tvTotalContact.setText(getString(R.string.total) + total + getString(R.string.person));
+            tvTotalContact.setVisibility(View.VISIBLE);
+            ivContactArrow.setVisibility(View.VISIBLE);
+        } else {
+            tvTotalContact.setVisibility(View.GONE);
+            ivContactArrow.setVisibility(View.GONE);
         }
     }
 

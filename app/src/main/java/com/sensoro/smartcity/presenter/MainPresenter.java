@@ -29,14 +29,14 @@ import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.NetWorkUtils;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.AlarmDeviceCountsBean;
+import com.sensoro.common.server.bean.AlarmPopupDataBean;
 import com.sensoro.common.server.bean.DeviceAlarmCount;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.common.server.response.AlarmCountRsp;
-import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
-import com.sensoro.common.server.response.DevicesMergeTypesRsp;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
@@ -83,6 +83,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private final Handler mHandler = new Handler();
     private final MainPresenter.TaskRunnable mRunnable = new MainPresenter.TaskRunnable();
     private final NetWorkTaskRunnable mNetWorkTaskRunnable = new NetWorkTaskRunnable();
+    private final FreshAlarmCountTask mFreshAlarmCountTaskRunnable = new FreshAlarmCountTask();
     //
     private FireSecurityWarnFragment warnFragment;
     private HomeFragment homeFragment;
@@ -91,6 +92,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private ScreenBroadcastReceiver mScreenReceiver;
     //默认应后后端要求，默认只能支持websocket协议
     private final String[] transports = {"websocket"};
+    private boolean needFreshAlarmCount = true;
 
     private final class ScreenBroadcastReceiver extends BroadcastReceiver {
         @Override
@@ -213,9 +215,9 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             }
         }, 500);
         //每次初始化静默拉取一次预警弹窗的配置项
-        RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesAlarmPopupConfigRsp>(this) {
+        RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<AlarmPopupDataBean>>(this) {
             @Override
-            public void onCompleted(DevicesAlarmPopupConfigRsp devicesAlarmPopupConfigRsp) {
+            public void onCompleted(ResponseResult<AlarmPopupDataBean> devicesAlarmPopupConfigRsp) {
                 PreferencesHelper.getInstance().saveAlarmPopupDataBeanCache(devicesAlarmPopupConfigRsp.getData());
 
             }
@@ -265,7 +267,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                     createSocket();
                 }
             }, 1500);
-            freshAlarmCount();
+            mHandler.post(mFreshAlarmCountTaskRunnable);
         } else {
             openLogin();
         }
@@ -664,15 +666,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
         switch (eventAlarmStatusModel.status) {
             case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
             case Constants.MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
-                mContext.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isAttachedView()) {
-                            freshAlarmCount();
-                        }
-                    }
-                });
-
+                needFreshAlarmCount = true;
                 break;
             default:
                 break;
@@ -708,15 +702,15 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                 break;
             case Constants.EVENT_DATA_CHECK_MERGE_TYPE_CONFIG_DATA:
                 //mergeTypeConfig配置参数需要更新
-                RetrofitServiceHelper.getInstance().getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Consumer<DevicesMergeTypesRsp>() {
+                RetrofitServiceHelper.getInstance().getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Consumer<ResponseResult<DeviceMergeTypesInfo>>() {
                     @Override
-                    public void accept(DevicesMergeTypesRsp devicesMergeTypesRsp) throws Exception {
+                    public void accept(ResponseResult<DeviceMergeTypesInfo> devicesMergeTypesRsp) throws Exception {
                         DeviceMergeTypesInfo data = devicesMergeTypesRsp.getData();
                         PreferencesHelper.getInstance().saveLocalDevicesMergeTypes(data);
                     }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesMergeTypesRsp>(MainPresenter.this) {
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceMergeTypesInfo>>(MainPresenter.this) {
                     @Override
-                    public void onCompleted(DevicesMergeTypesRsp devicesMergeTypesRsp) {
+                    public void onCompleted(ResponseResult<DeviceMergeTypesInfo> devicesMergeTypesRsp) {
                         try {
                             LogUtils.loge("更新配置参数成功 .....");
                         } catch (Throwable throwable) {
@@ -755,23 +749,38 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
 
     private void freshAlarmCount() {
         if (!hasAlarmInfoControl()) {
+            needFreshAlarmCount = false;
             return;
         }
         String[] str = {"0"};
+
         RetrofitServiceHelper.getInstance().getAlarmCount(null, null, str, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>(this) {
             @Override
             public void onCompleted(AlarmCountRsp alarmCountRsp) {
                 int count = alarmCountRsp.getCount();
                 getView().setAlarmWarnCount(count);
+                needFreshAlarmCount = false;
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().setAlarmWarnCount(0);
-                getView().toastShort(errorMsg);
             }
         });
     }
+
+    private final class FreshAlarmCountTask implements Runnable {
+
+        @Override
+        public void run() {
+            if (needFreshAlarmCount) {
+                freshAlarmCount();
+            }
+            mHandler.postDelayed(mFreshAlarmCountTaskRunnable, 3000);
+        }
+
+    }
+
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

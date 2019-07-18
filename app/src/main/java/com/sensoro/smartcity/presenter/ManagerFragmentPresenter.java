@@ -15,7 +15,7 @@ import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
-import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractManagerActivity;
@@ -80,7 +80,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         if (PreferencesHelper.getInstance().getUserData() != null) {
             getView().showProgressDialog();
             RetrofitServiceHelper.getInstance().logout(PreferencesHelper.getInstance().getUserData().phoneId, PreferencesHelper.getInstance().getUserData().userId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
-                    .mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
+                    .mainThread()).subscribe(new CityObserver<ResponseResult>(this) {
                 @Override
                 public void onErrorMsg(int errorCode, String errorMsg) {
                     getView().dismissProgressDialog();
@@ -97,8 +97,8 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
                 }
 
                 @Override
-                public void onCompleted(ResponseBase responseBase) {
-                    if (responseBase.getErrcode() == ResponseBase.CODE_SUCCESS) {
+                public void onCompleted(ResponseResult responseBase) {
+                    if (responseBase.getErrcode() == ResponseResult.CODE_SUCCESS) {
                         RetrofitServiceHelper.getInstance().clearLoginDataSessionId();
                         Intent intent = new Intent(mContext, LoginActivity.class);
                         getView().startAC(intent);

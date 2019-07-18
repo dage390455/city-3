@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rc_root_add_alarm_contact"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,17 +10,20 @@
         android:id="@+id/ac_alarm_contact_title"
         layout="@layout/item_include_text_text_title" />
 
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/c_f4f4f4"
         android:layout_above="@+id/item_adapter_alarm_contact_add_ll"
-        android:layout_below="@+id/ac_alarm_contact_title"
+        android:layout_below="@+id/ac_alarm_contact_title">
 
-        android:background="@color/c_f4f4f4">
 
         <LinearLayout
+            android:id="@+id/root_ll_rc"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/c_f4f4f4"
             android:orientation="vertical">
 
 
@@ -63,7 +67,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rc_ac_deploy_alarm_contact_history"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="20dp"
                 android:paddingBottom="30dp" />
@@ -72,15 +76,19 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+
     <LinearLayout
         android:id="@+id/item_adapter_alarm_contact_add_ll"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="45dp"
         android:layout_alignParentBottom="true"
         android:background="@color/white"
-        android:visibility="gone"
-        android:gravity="center">
+        android:orientation="vertical">
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/c_f4f4f4" />
 
         <TextView
             android:id="@+id/alarm_contact_tv_add"
@@ -93,7 +101,7 @@
             android:padding="10dp"
             android:text="@string/new_contact"
             android:textColor="@color/c_252525"
-            android:textSize="40px" />
+            android:textSize="16dp" />
     </LinearLayout>
 
 </RelativeLayout>

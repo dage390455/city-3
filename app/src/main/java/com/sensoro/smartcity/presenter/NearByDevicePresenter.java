@@ -15,11 +15,10 @@ import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.model.IbeaconSettingData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.AlarmPopupDataBean;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.server.bean.DeviceInfo;
-import com.sensoro.common.server.response.DeviceAlarmLogRsp;
-import com.sensoro.common.server.response.DeviceInfoListRsp;
-import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.libbleserver.ble.entity.BLEDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
@@ -161,9 +160,9 @@ public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityVi
         getView().showProgressDialog();
         deviceInfos.clear();
         RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(mNearByIDevice, 1, null, null, null, null).subscribeOn
-                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(NearByDevicePresenter.this) {
+                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(NearByDevicePresenter.this) {
             @Override
-            public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+            public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
 
                 if (deviceInfoListRsp.getData() != null && deviceInfoListRsp.getData().size() > 0) {
                     deviceInfos.addAll(deviceInfoListRsp.getData());
@@ -194,10 +193,10 @@ public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityVi
         //
         getView().showProgressDialog();
         RetrofitServiceHelper.getInstance().getDeviceAlarmLogList(1, deviceInfo.getSn(), null, null, null, null, null, null)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceAlarmLogInfo>>>(this) {
 
             @Override
-            public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+            public void onCompleted(ResponseResult<List<DeviceAlarmLogInfo>> deviceAlarmLogRsp) {
                 getView().dismissProgressDialog();
                 if (deviceAlarmLogRsp.getData().size() == 0) {
                     getView().toastShort(mActivity.getString(R.string.no_alert_log_information_was_obtained));
@@ -219,9 +218,9 @@ public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityVi
         final AlarmLogPopUtils mAlarmLogPop = new AlarmLogPopUtils(mActivity);
         mAlarmLogPop.refreshData(deviceAlarmLogInfo);
         if (PreferencesHelper.getInstance().getAlarmPopupDataBeanCache() == null) {
-            RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesAlarmPopupConfigRsp>(this) {
+            RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<AlarmPopupDataBean>>(this) {
                 @Override
-                public void onCompleted(DevicesAlarmPopupConfigRsp devicesAlarmPopupConfigRsp) {
+                public void onCompleted(ResponseResult<AlarmPopupDataBean> devicesAlarmPopupConfigRsp) {
                     PreferencesHelper.getInstance().saveAlarmPopupDataBeanCache(devicesAlarmPopupConfigRsp.getData());
                     final AlarmPopupModel alarmPopupModel = new AlarmPopupModel();
                     String deviceName = deviceAlarmLogInfo.getDeviceName();

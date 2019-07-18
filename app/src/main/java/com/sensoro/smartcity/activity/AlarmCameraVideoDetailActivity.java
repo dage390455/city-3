@@ -22,7 +22,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.common.server.response.AlarmCloudVideoRsp;
+import com.sensoro.common.server.bean.AlarmCloudVideoBean;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
@@ -250,12 +250,12 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
         mListAdapter.setOnAlarmCameraVideoItemClickListener(new AlarmCameraVideoDetailAdapter.AlarmCameraVideoClickListener() {
 
             @Override
-            public void OnAlarmCameraVideoItemClick(AlarmCloudVideoRsp.DataBean.MediasBean bean) {
+            public void OnAlarmCameraVideoItemClick(AlarmCloudVideoBean.MediasBean bean) {
                 mPresenter.doItemClick(bean);
             }
 
             @Override
-            public void onAlarmCameraVideoDownloadClick(AlarmCloudVideoRsp.DataBean.MediasBean bean) {
+            public void onAlarmCameraVideoDownloadClick(AlarmCloudVideoBean.MediasBean bean) {
                 if (mDownloadUtils != null) {
                     mPresenter.setDownloadBean(bean);
                     mDownloadUtils.show(bean.getVideoSize());
@@ -425,7 +425,7 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     }
 
     @Override
-    public void updateData(ArrayList<AlarmCloudVideoRsp.DataBean.MediasBean> mList) {
+    public void updateData(ArrayList<AlarmCloudVideoBean.MediasBean> mList) {
         mListAdapter.updateData(mList);
         setNoContentVisible(mList == null || mList.size() < 1);
     }

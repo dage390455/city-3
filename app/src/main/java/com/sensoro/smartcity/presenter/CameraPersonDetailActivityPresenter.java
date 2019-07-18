@@ -14,8 +14,8 @@ import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeviceCameraHistoryBean;
-import com.sensoro.common.server.response.DeviceCameraHistoryRsp;
-import com.sensoro.common.server.response.DeviceCameraPersonFaceRsp;
+import com.sensoro.common.server.bean.DeviceCameraPersonFaceBean;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.ICameraPersonDetailActivityView;
@@ -35,16 +35,16 @@ import static com.shuyu.gsyvideoplayer.video.base.GSYVideoView.CURRENT_STATE_PAU
 
 public class CameraPersonDetailActivityPresenter extends BasePresenter<ICameraPersonDetailActivityView> {
     private Activity mActivity;
-    private DeviceCameraPersonFaceRsp.DataBean dataBean;
+    private DeviceCameraPersonFaceBean dataBean;
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
         EventBus.getDefault().register(this);
         Serializable extra = mActivity.getIntent().getSerializableExtra(Constants.EXTRA_CAMERA_PERSON_DETAIL);
-        if (extra instanceof DeviceCameraPersonFaceRsp.DataBean) {
+        if (extra instanceof DeviceCameraPersonFaceBean) {
 //            getView().initVideoOption(extra.get);
-            dataBean = (DeviceCameraPersonFaceRsp.DataBean) extra;
+            dataBean = (DeviceCameraPersonFaceBean) extra;
 
             setTitle();
 
@@ -169,7 +169,7 @@ public class CameraPersonDetailActivityPresenter extends BasePresenter<ICameraPe
         }
     }
 
-    private void requestVideo(DeviceCameraPersonFaceRsp.DataBean dataBean) {
+    private void requestVideo(DeviceCameraPersonFaceBean dataBean) {
         getView().showProgressDialog();
         long time;
         try {
@@ -184,9 +184,9 @@ public class CameraPersonDetailActivityPresenter extends BasePresenter<ICameraPe
         String beginTime = String.valueOf(time - 15);
         String endTime = String.valueOf(time + 15);
 
-        RetrofitServiceHelper.getInstance().getDeviceCameraPlayHistoryAddress(dataBean.getCid(), beginTime, endTime, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraHistoryRsp>(null) {
+        RetrofitServiceHelper.getInstance().getDeviceCameraPlayHistoryAddress(dataBean.getCid(), beginTime, endTime, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceCameraHistoryBean>>>(null) {
             @Override
-            public void onCompleted(DeviceCameraHistoryRsp deviceCameraHistoryRsp) {
+            public void onCompleted(ResponseResult<List<DeviceCameraHistoryBean>> deviceCameraHistoryRsp) {
                 List<DeviceCameraHistoryBean> data = deviceCameraHistoryRsp.getData();
                 if (data != null && data.size() > 0) {
                     DeviceCameraHistoryBean deviceCameraHistoryBean = data.get(0);

@@ -1,15 +1,14 @@
 package com.sensoro.common.server.response;
 
-/**
- * Created by tangrisheng on 2016/5/5.
- * ResponseResult Base Class
- */
+import java.io.Serializable;
 
-public class ResponseResult<T> {
+public class ResponseResult<T> implements Serializable {
     public static final int CODE_SUCCESS = 0;
-    int errcode;
-    String errmsg;
+    private int errcode;
+    private String errmsg;
     private T data;
+    private int code;
+    private String message;
 
     public int getErrcode() {
         return errcode;
@@ -40,8 +39,25 @@ public class ResponseResult<T> {
         return "ResponseBase{" +
                 "errcode=" + errcode +
                 "errmsg=" + errmsg +
+                "code=" + code +
+                "message=" + message +
                 '}';
     }
 
 
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

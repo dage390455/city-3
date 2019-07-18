@@ -7,20 +7,19 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.AlarmPopupDataBean;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.server.bean.DeviceInfo;
-import com.sensoro.common.server.response.DeviceAlarmLogRsp;
-import com.sensoro.common.server.response.DeviceInfoListRsp;
-import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
 import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.util.WidgetUtil;
@@ -257,9 +256,9 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         if (direction == Constants.DIRECTION_DOWN) {
             page = 1;
             RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, null, null, searchText).subscribeOn
-                    (Schedulers.io()).doOnNext(new Consumer<DeviceInfoListRsp>() {
+                    (Schedulers.io()).doOnNext(new Consumer<ResponseResult<List<DeviceInfo>>>() {
                 @Override
-                public void accept(DeviceInfoListRsp deviceInfoListRsp) throws Exception {
+                public void accept(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
                     if (deviceInfoListRsp.getData().size() == 0) {
                         mDataList.clear();
                     } else {
@@ -269,11 +268,11 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
                     }
                 }
 
-            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
 
 
                 @Override
-                public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+                public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
                     getView().dismissProgressDialog();
                     try {
                         getView().refreshData(mDataList);
@@ -293,9 +292,9 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         } else {
             page++;
             RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, null, null, searchText).subscribeOn
-                    (Schedulers.io()).doOnNext(new Consumer<DeviceInfoListRsp>() {
+                    (Schedulers.io()).doOnNext(new Consumer<ResponseResult<List<DeviceInfo>>>() {
                 @Override
-                public void accept(DeviceInfoListRsp deviceInfoListRsp) throws Exception {
+                public void accept(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
                     try {
                         if (deviceInfoListRsp.getData().size() == 0) {
                             page--;
@@ -309,11 +308,11 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
                     }
                 }
 
-            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
 
 
                 @Override
-                public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+                public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
                     if (deviceInfoListRsp.getData().size() == 0) {
                         getView().toastShort(mContext.getString(R.string.no_more_data));
                     } else {
@@ -369,10 +368,10 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         //
         getView().showProgressDialog();
         RetrofitServiceHelper.getInstance().getDeviceAlarmLogList(1, deviceInfo.getSn(), null, null, null, null, null, null)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceAlarmLogInfo>>>(this) {
 
             @Override
-            public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+            public void onCompleted(ResponseResult<List<DeviceAlarmLogInfo>> deviceAlarmLogRsp) {
                 getView().dismissProgressDialog();
                 if (deviceAlarmLogRsp.getData().size() == 0) {
                     getView().toastShort(mContext.getString(R.string.no_alert_log_information_was_obtained));
@@ -394,9 +393,9 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         final AlarmLogPopUtils mAlarmLogPop = new AlarmLogPopUtils(mContext);
         mAlarmLogPop.refreshData(deviceAlarmLogInfo);
         if (PreferencesHelper.getInstance().getAlarmPopupDataBeanCache() == null) {
-            RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesAlarmPopupConfigRsp>(this) {
+            RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<AlarmPopupDataBean>>(this) {
                 @Override
-                public void onCompleted(DevicesAlarmPopupConfigRsp devicesAlarmPopupConfigRsp) {
+                public void onCompleted(ResponseResult<AlarmPopupDataBean> devicesAlarmPopupConfigRsp) {
                     PreferencesHelper.getInstance().saveAlarmPopupDataBeanCache(devicesAlarmPopupConfigRsp.getData());
                     final AlarmPopupModel alarmPopupModel = new AlarmPopupModel();
                     String deviceName = deviceAlarmLogInfo.getDeviceName();

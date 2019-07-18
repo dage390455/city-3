@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
@@ -15,11 +16,10 @@ import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.ContractListInfo;
-import com.sensoro.common.server.response.ContractsListRsp;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.activity.ContractDetailActivity;
 import com.sensoro.smartcity.activity.ContractEditorActivity;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractManagerActivityView;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
@@ -138,10 +138,10 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().searchContract(requestDataType, tempSearch, requestDataConfirmed, temp_startTime, temp_endTime, null, null).subscribeOn
                         (Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsListRsp>(this) {
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<ContractListInfo>>>(this) {
 
                     @Override
-                    public void onCompleted(ContractsListRsp contractsListRsp) {
+                    public void onCompleted(ResponseResult<List<ContractListInfo>> contractsListRsp) {
                         getView().dismissProgressDialog();
                         dataList.clear();
                         List<ContractListInfo> data = contractsListRsp.getData();
@@ -174,10 +174,10 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
                 RetrofitServiceHelper.getInstance().searchContract(requestDataType, tempSearch, requestDataConfirmed, temp_startTime, temp_endTime, null, offset).subscribeOn
                         (Schedulers
                                 .io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsListRsp>(this) {
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<ContractListInfo>>>(this) {
 
                     @Override
-                    public void onCompleted(ContractsListRsp contractsListRsp) {
+                    public void onCompleted(ResponseResult<List<ContractListInfo>> contractsListRsp) {
                         getView().dismissProgressDialog();
                         List<ContractListInfo> data = contractsListRsp.getData();
                         if (data.size() == 0) {

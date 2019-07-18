@@ -8,7 +8,7 @@ import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.MalfunctionListInfo;
-import com.sensoro.common.server.response.MalfunctionListRsp;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IMalfunctionHistoryActivityView;
@@ -57,10 +57,10 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
                 cur_page = 1;
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getDeviceMalfunctionLogList(cur_page, mSn, null, null, startTime,
-                        endTime).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MalfunctionListRsp>(this) {
+                        endTime).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<MalfunctionListInfo>>>(this) {
 
                     @Override
-                    public void onCompleted(MalfunctionListRsp malfunctionListRsp) {
+                    public void onCompleted(ResponseResult<List<MalfunctionListInfo>> malfunctionListRsp) {
                         freshUI(direction, malfunctionListRsp);
                         getView().onPullRefreshComplete();
                         getView().dismissProgressDialog();
@@ -78,7 +78,7 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
                 cur_page++;
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getDeviceMalfunctionLogList(cur_page, mSn, null, null, startTime,
-                        endTime).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MalfunctionListRsp>(this) {
+                        endTime).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<MalfunctionListInfo>>>(this) {
 
 
                     @Override
@@ -90,7 +90,7 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
                     }
 
                     @Override
-                    public void onCompleted(MalfunctionListRsp malfunctionListRsp) {
+                    public void onCompleted(ResponseResult<List<MalfunctionListInfo>> malfunctionListRsp) {
                         getView().dismissProgressDialog();
                         if (malfunctionListRsp.getData().size() == 0) {
                             cur_page--;
@@ -108,7 +108,7 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
         }
     }
 
-    private void freshUI(int direction, MalfunctionListRsp malfunctionListRsp) {
+    private void freshUI(int direction, ResponseResult<List<MalfunctionListInfo>> malfunctionListRsp) {
         if (direction == Constants.DIRECTION_DOWN) {
             mMalfunctionInfoList.clear();
         }

@@ -20,13 +20,12 @@ import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.AlarmCloudVideoBean;
 import com.sensoro.common.server.bean.AlarmInfo;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.server.bean.ScenesData;
-import com.sensoro.common.server.response.AlarmCloudVideoRsp;
 import com.sensoro.common.server.response.AlarmCountRsp;
-import com.sensoro.common.server.response.DeviceAlarmItemRsp;
-import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.ProgressUtils;
@@ -103,7 +102,7 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
     private LatLng destPosition;
     private boolean isReConfirm = false;
     private ProgressUtils mProgressUtils;
-    private AlarmCloudVideoRsp.DataBean mVideoBean;
+    private AlarmCloudVideoBean mVideoBean;
     private AlarmPopupModel mAlarmPopupModel;
 
     public AlarmLogPopUtils(Activity activity) {
@@ -258,13 +257,13 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         String[] eventIds = {mDeviceAlarmLogInfo.get_id()};
         RetrofitServiceHelper.getInstance().getCloudVideo(eventIds)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<AlarmCloudVideoRsp>(null) {
+                .subscribe(new CityObserver<ResponseResult<List<AlarmCloudVideoBean>>>(null) {
                     @Override
-                    public void onCompleted(AlarmCloudVideoRsp response) {
-                        List<AlarmCloudVideoRsp.DataBean> data = response.getData();
+                    public void onCompleted(ResponseResult<List<AlarmCloudVideoBean>> response) {
+                        List<AlarmCloudVideoBean> data = response.getData();
                         if (data != null && data.size() > 0) {
                             mVideoBean = data.get(0);
-                            List<AlarmCloudVideoRsp.DataBean.MediasBean> mMedias = mVideoBean.getMedias();
+                            List<AlarmCloudVideoBean.MediasBean> mMedias = mVideoBean.getMedias();
                             if (mMedias != null && mMedias.size() > 0) {
                                 tvVideoCameraCountAcAlert.setText(String.format(Locale.ROOT, "%s%d%s",
                                         mActivity.getString(R.string.alarm_camera_video),
@@ -439,7 +438,7 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         Map<String, Integer> alarmPopupServerData = AlarmPopupConfigAnalyzer.createAlarmPopupServerData(alarmPopupModel);
         RetrofitServiceHelper.getInstance().doUpdatePhotosUrl(mDeviceAlarmLogInfo.get_id(), alarmPopupServerData, alarmPopupModel.securityRisksList,
                 alarmPopupModel.mRemark, false, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<DeviceAlarmItemRsp>(null) {
+                .subscribe(new CityObserver<ResponseResult<DeviceAlarmLogInfo>>(null) {
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
@@ -451,9 +450,9 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
                     }
 
                     @Override
-                    public void onCompleted(DeviceAlarmItemRsp deviceAlarmItemRsp) {
+                    public void onCompleted(ResponseResult<DeviceAlarmLogInfo> deviceAlarmItemRsp) {
                         if (mProgressUtils != null && mAlarmLogDialog != null) {
-                            if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
+                            if (deviceAlarmItemRsp.getErrcode() == ResponseResult.CODE_SUCCESS) {
 
                                 SensoroToast.getInstance().makeText(mActivity.getResources().
                                         getString(R.string.tips_commit_success), Toast.LENGTH_SHORT).show();

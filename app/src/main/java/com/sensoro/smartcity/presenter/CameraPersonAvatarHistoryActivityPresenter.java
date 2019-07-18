@@ -8,7 +8,8 @@ import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
-import com.sensoro.common.server.response.DeviceCameraPersonFaceRsp;
+import com.sensoro.common.server.bean.DeviceCameraPersonFaceBean;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.CameraPersonDetailActivity;
 import com.sensoro.smartcity.activity.CameraPersonLocusActivity;
@@ -24,7 +25,7 @@ public class CameraPersonAvatarHistoryActivityPresenter extends BasePresenter<IC
     private Activity mActivity;
     private int curPage = -1;
     private String faceId;
-    private List<DeviceCameraPersonFaceRsp.DataBean> mData = new ArrayList<>();
+    private List<DeviceCameraPersonFaceBean> mData = new ArrayList<>();
 
 
     @Override
@@ -63,10 +64,10 @@ public class CameraPersonAvatarHistoryActivityPresenter extends BasePresenter<IC
         }
         RetrofitServiceHelper.getInstance().getDeviceCameraPersonFace(faceId, startTime, endTime, 85, curPage*20, 20, null)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<DeviceCameraPersonFaceRsp>(this) {
+                .subscribe(new CityObserver<ResponseResult<List<DeviceCameraPersonFaceBean>>>(this) {
                     @Override
-                    public void onCompleted(DeviceCameraPersonFaceRsp deviceCameraPersonFaceRsp) {
-                        List<DeviceCameraPersonFaceRsp.DataBean> data = deviceCameraPersonFaceRsp.getData();
+                    public void onCompleted(ResponseResult<List<DeviceCameraPersonFaceBean>> deviceCameraPersonFaceRsp) {
+                        List<DeviceCameraPersonFaceBean> data = deviceCameraPersonFaceRsp.getData();
 
                         if (data != null && data.size() > 0) {
                             if(direction == Constants.DIRECTION_DOWN){
@@ -125,7 +126,7 @@ public class CameraPersonAvatarHistoryActivityPresenter extends BasePresenter<IC
         requestData(faceId,Constants.DIRECTION_UP);
     }
 
-    public void doItemClick(DeviceCameraPersonFaceRsp.DataBean dataBean) {
+    public void doItemClick(DeviceCameraPersonFaceBean dataBean) {
         Intent intent = new Intent(mActivity, CameraPersonDetailActivity.class);
         intent.putExtra(Constants.EXTRA_CAMERA_PERSON_DETAIL,dataBean);
         getView().startAC(intent);

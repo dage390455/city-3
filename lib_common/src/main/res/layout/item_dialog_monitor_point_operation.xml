@@ -40,13 +40,13 @@
         android:background="@drawable/shape_corner_b6_bg_stroke"
         android:orientation="horizontal"
         android:padding="1dp"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="12dp"
-            android:text="@string/electric_current"
+            android:text="@string/duration"
             android:textColor="@color/c_a6a6a6"
             android:textSize="14dp" />
 
@@ -70,7 +70,7 @@
             android:paddingTop="12dp"
             android:paddingEnd="16dp"
             android:paddingBottom="12dp"
-            android:text="A"
+            android:text="@string/minute"
             android:textColor="@color/c_a6a6a6"
             android:textSize="14dp" />
 

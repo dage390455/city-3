@@ -4,14 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.sensoro.smartcity.R;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
-import com.sensoro.smartcity.imainviews.IScanLoginResultActivityView;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
-import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.imainviews.IScanLoginResultActivityView;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -32,9 +32,9 @@ public class ScanLoginResultActivityPresenter extends BasePresenter<IScanLoginRe
         if (!TextUtils.isEmpty(qrcodeId)) {
             getView().showProgressDialog();
             RetrofitServiceHelper.getInstance().scanLoginIn(qrcodeId).subscribeOn(Schedulers.io()).observeOn
-                    (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
+                    (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult>(this) {
                 @Override
-                public void onCompleted(ResponseBase responseBase) {
+                public void onCompleted(ResponseResult responseBase) {
                     if (responseBase.getErrcode() == 0) {
                         EventData eventData = new EventData();
                         eventData.code = Constants.EVENT_DATA_SCAN_LOGIN_SUCCESS;
@@ -60,10 +60,10 @@ public class ScanLoginResultActivityPresenter extends BasePresenter<IScanLoginRe
         if (!TextUtils.isEmpty(qrcodeId)) {
             getView().showProgressDialog();
             RetrofitServiceHelper.getInstance().scanLoginCancel(qrcodeId).subscribeOn(Schedulers.io()).observeOn
-                    (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
+                    (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult>(this) {
 
                 @Override
-                public void onCompleted(ResponseBase responseBase) {
+                public void onCompleted(ResponseResult responseBase) {
                     //                    if (responseBase.getErrcode() == 0) {
 //                        getView().toastShort("登录成功");
 //                    } else {

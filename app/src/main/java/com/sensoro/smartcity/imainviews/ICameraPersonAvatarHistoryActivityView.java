@@ -3,7 +3,7 @@ package com.sensoro.smartcity.imainviews;
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
-import com.sensoro.common.server.response.DeviceCameraPersonFaceRsp;
+import com.sensoro.common.server.bean.DeviceCameraPersonFaceBean;
 
 import java.util.List;
 
@@ -12,9 +12,9 @@ public interface ICameraPersonAvatarHistoryActivityView extends IActivityIntent,
 
     void onPullRefreshCompleteNoMoreData();
 
-    void updateData(List<DeviceCameraPersonFaceRsp.DataBean> data);
+    void updateData(List<DeviceCameraPersonFaceBean> data);
 
-    List<DeviceCameraPersonFaceRsp.DataBean> getAdapterData();
+    List<DeviceCameraPersonFaceBean> getAdapterData();
 
     void loadTitleAvatar(String faceUrl);
 }

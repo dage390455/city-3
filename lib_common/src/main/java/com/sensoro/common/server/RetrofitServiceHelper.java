@@ -15,69 +15,55 @@ import com.google.gson.JsonObject;
 import com.sensoro.common.base.ContextUtils;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.RxApiManager;
+import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.common.model.SecurityRisksAdapterModel;
+import com.sensoro.common.server.bean.AlarmCameraLiveBean;
+import com.sensoro.common.server.bean.AlarmCloudVideoBean;
+import com.sensoro.common.server.bean.AlarmPopupDataBean;
+import com.sensoro.common.server.bean.AlarmTime;
+import com.sensoro.common.server.bean.BaseStationChartDetailModel;
+import com.sensoro.common.server.bean.BaseStationDetailModel;
+import com.sensoro.common.server.bean.BaseStationInfo;
+import com.sensoro.common.server.bean.ChangeInspectionTaskStateInfo;
+import com.sensoro.common.server.bean.ContractAddInfo;
+import com.sensoro.common.server.bean.ContractListInfo;
 import com.sensoro.common.server.bean.ContractsTemplateInfo;
+import com.sensoro.common.server.bean.DeployCameraUploadInfo;
 import com.sensoro.common.server.bean.DeployControlSettingData;
+import com.sensoro.common.server.bean.DeployNameplateInfo;
+import com.sensoro.common.server.bean.DeployRecordInfo;
+import com.sensoro.common.server.bean.DeployStationInfo;
+import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
+import com.sensoro.common.server.bean.DeviceCameraDetailInfo;
+import com.sensoro.common.server.bean.DeviceCameraFacePic;
+import com.sensoro.common.server.bean.DeviceCameraHistoryBean;
+import com.sensoro.common.server.bean.DeviceCameraInfo;
+import com.sensoro.common.server.bean.DeviceCameraPersonFaceBean;
+import com.sensoro.common.server.bean.DeviceHistoryInfo;
+import com.sensoro.common.server.bean.DeviceInfo;
+import com.sensoro.common.server.bean.DeviceMergeTypesInfo;
+import com.sensoro.common.server.bean.DeviceTypeCount;
+import com.sensoro.common.server.bean.DeviceUpdateFirmwareData;
+import com.sensoro.common.server.bean.HandleAlarmData;
+import com.sensoro.common.server.bean.InspectionTaskDeviceDetailModel;
+import com.sensoro.common.server.bean.InspectionTaskExceptionDeviceModel;
+import com.sensoro.common.server.bean.InspectionTaskExecutionModel;
+import com.sensoro.common.server.bean.InspectionTaskInstructionModel;
+import com.sensoro.common.server.bean.InspectionTaskModel;
+import com.sensoro.common.server.bean.MalfunctionListInfo;
 import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.server.bean.ScenesData;
-import com.sensoro.common.server.response.AlarmCameraLiveRsp;
-import com.sensoro.common.server.response.AlarmCloudVideoRsp;
+import com.sensoro.common.server.bean.SecurityAlarmTimelineData;
+import com.sensoro.common.server.bean.UserInfo;
 import com.sensoro.common.server.response.AlarmCountRsp;
-import com.sensoro.common.server.response.AuthRsp;
-import com.sensoro.common.server.response.BaseStationChartDetailRsp;
-import com.sensoro.common.server.response.BaseStationDetailRsp;
-import com.sensoro.common.server.response.BaseStationListRsp;
-import com.sensoro.common.server.response.CameraFilterRsp;
-import com.sensoro.common.server.security.response.SecurityAlarmDetailRsp;
-import com.sensoro.common.server.security.response.SecurityAlarmListRsp;
-import com.sensoro.common.server.response.ChangeInspectionTaskStateRsp;
-import com.sensoro.common.server.response.ContractAddRsp;
-import com.sensoro.common.server.response.ContractInfoRsp;
-import com.sensoro.common.server.response.ContractsListRsp;
-import com.sensoro.common.server.response.ContractsTemplateRsp;
-import com.sensoro.common.server.response.DeleteNamePlateRsp;
-import com.sensoro.common.server.response.DeployCameraUploadRsp;
-import com.sensoro.common.server.response.DeployDeviceDetailRsp;
-import com.sensoro.common.server.response.DeployNameplateRsp;
-import com.sensoro.common.server.response.DeployRecordRsp;
-import com.sensoro.common.server.response.DeployStationInfoRsp;
-import com.sensoro.common.server.response.DeviceAlarmItemRsp;
-import com.sensoro.common.server.response.DeviceAlarmLogRsp;
-import com.sensoro.common.server.response.DeviceAlarmTimeRsp;
-import com.sensoro.common.server.response.DeviceCameraDetailRsp;
-import com.sensoro.common.server.response.DeviceCameraFacePicListRsp;
-import com.sensoro.common.server.response.DeviceCameraHistoryRsp;
-import com.sensoro.common.server.response.DeviceCameraListRsp;
-import com.sensoro.common.server.response.DeviceCameraPersonFaceRsp;
-import com.sensoro.common.server.response.DeviceDeployRsp;
-import com.sensoro.common.server.response.DeviceHistoryListRsp;
-import com.sensoro.common.server.response.DeviceInfoListRsp;
-import com.sensoro.common.server.response.DeviceRecentRsp;
-import com.sensoro.common.server.response.DeviceTypeCountRsp;
-import com.sensoro.common.server.response.DeviceUpdateFirmwareDataRsp;
-import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
-import com.sensoro.common.server.response.DevicesMergeTypesRsp;
-import com.sensoro.common.server.response.InspectionTaskDeviceDetailRsp;
-import com.sensoro.common.server.response.InspectionTaskExceptionDeviceRsp;
-import com.sensoro.common.server.response.InspectionTaskExecutionRsp;
-import com.sensoro.common.server.response.InspectionTaskInstructionRsp;
-import com.sensoro.common.server.response.InspectionTaskModelRsp;
-import com.sensoro.common.server.response.LoginRsp;
 import com.sensoro.common.server.response.MalfunctionCountRsp;
-import com.sensoro.common.server.response.MalfunctionListRsp;
 import com.sensoro.common.server.response.MonitorPointOperationRequestRsp;
-import com.sensoro.common.server.response.NamePlateListRsp;
-import com.sensoro.common.server.response.NameplateBindDeviceRsp;
 import com.sensoro.common.server.response.QiNiuToken;
-import com.sensoro.common.server.response.ResponseBase;
 import com.sensoro.common.server.response.ResponseResult;
-import com.sensoro.common.server.response.UpdateRsp;
-import com.sensoro.common.server.response.UserAccountControlRsp;
-import com.sensoro.common.server.response.UserAccountRsp;
-import com.sensoro.common.server.security.response.HandleAlarmRsp;
-import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
-import com.sensoro.common.server.security.response.SecurityWarnRecordResp;
+import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
+import com.sensoro.common.server.security.bean.SecurityAlarmListData;
+import com.sensoro.common.server.security.bean.SecurityWarnRecord;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.LogUtils;
 
@@ -420,7 +406,7 @@ public class RetrofitServiceHelper {
      * @param phoneId
      * @return
      */
-    public Observable<LoginRsp> login(String account, String pwd, String phoneId) {
+    public Observable<ResponseResult<UserInfo>> login(String account, String pwd, String phoneId) {
         return retrofitService.login(account, pwd, phoneId, "android", true);
     }
 
@@ -432,7 +418,7 @@ public class RetrofitServiceHelper {
      * @param uid
      * @return
      */
-    public Observable<ResponseBase> logout(String phoneId, String uid) {
+    public Observable<ResponseResult> logout(String phoneId, String uid) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("phoneId", phoneId);
@@ -457,7 +443,7 @@ public class RetrofitServiceHelper {
      * @param unionTypes
      * @return
      */
-    public Observable<DeviceAlarmLogRsp> getDeviceAlarmLogList(int page, String sn, String deviceName, String phone
+    public Observable<ResponseResult<List<DeviceAlarmLogInfo>>> getDeviceAlarmLogList(int page, String sn, String deviceName, String phone
             , String search, Long beginTime, Long endTime, String unionTypes) {
         return retrofitService.getDeviceAlarmLogList(10, page, sn, deviceName, phone, search, beginTime, endTime, unionTypes);
     }
@@ -473,7 +459,7 @@ public class RetrofitServiceHelper {
      * @param endTime
      * @return
      */
-    public Observable<MalfunctionListRsp> getDeviceMalfunctionLogList(int page, String sn, String deviceName, String search, Long beginTime, Long endTime) {
+    public Observable<ResponseResult<List<MalfunctionListInfo>>> getDeviceMalfunctionLogList(int page, String sn, String deviceName, String search, Long beginTime, Long endTime) {
         return retrofitService.getDeviceMalfunctionLogList(20, page, sn, deviceName, search, beginTime, endTime);
     }
 
@@ -482,7 +468,7 @@ public class RetrofitServiceHelper {
      *
      * @return
      */
-    public Observable<UpdateRsp> getUpdateInfo() {
+    public Observable<ResponseResult> getUpdateInfo() {
         return retrofitService.getUpdateInfo();
     }
 
@@ -495,13 +481,13 @@ public class RetrofitServiceHelper {
      * @param search
      * @return
      */
-    public Observable<DeviceInfoListRsp> getDeviceBriefInfoList(int page, String sensorTypes, String mergeTypes, Integer status, String
+    public Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(int page, String sensorTypes, String mergeTypes, Integer status, String
             search) {
         return retrofitService.getDeviceBriefInfoList(null, page, 20, 1, 1,
                 sensorTypes, mergeTypes, status, search);
     }
 
-    public Observable<DeviceInfoListRsp> getDeviceBriefInfoList(List<String> sns, int page, String sensorTypes, String mergeTypes, Integer status, String
+    public Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(List<String> sns, int page, String sensorTypes, String mergeTypes, Integer status, String
             search) {
         return retrofitService.getDeviceBriefInfoList(sns, page, 20, 1, 1,
                 sensorTypes, mergeTypes, status, search);
@@ -512,7 +498,7 @@ public class RetrofitServiceHelper {
      *
      * @return
      */
-    public Observable<DeviceTypeCountRsp> getDeviceTypeCount() {
+    public Observable<ResponseResult<DeviceTypeCount>> getDeviceTypeCount() {
         return retrofitService.getDeviceTypeCount();
     }
 
@@ -522,7 +508,7 @@ public class RetrofitServiceHelper {
      * @param search
      * @return
      */
-    public Observable<UserAccountRsp> getUserAccountList(String search, Integer page, Integer offset, Integer limit) {
+    public Observable<ResponseResult<List<UserInfo>>> getUserAccountList(String search, Integer page, Integer offset, Integer limit) {
         return retrofitService.getUserAccountList(search, page, 20, offset, limit);
     }
 
@@ -533,7 +519,7 @@ public class RetrofitServiceHelper {
      * @param phoneId
      * @return
      */
-    public Observable<UserAccountControlRsp> doAccountControl(String uid, String phoneId) {
+    public Observable<ResponseResult<UserInfo>> doAccountControl(String uid, String phoneId) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("phoneId", phoneId);
@@ -553,11 +539,11 @@ public class RetrofitServiceHelper {
      * @param endTime
      * @return
      */
-    public Observable<DeployRecordRsp> getDeployRecordList(String sn, String searchText, Long beginTime, Long endTime, String owners, String signalQuality, Integer limit, Integer offset, Boolean group) {
+    public Observable<ResponseResult<List<DeployRecordInfo>>> getDeployRecordList(String sn, String searchText, Long beginTime, Long endTime, String owners, String signalQuality, Integer limit, Integer offset, Boolean group) {
         return retrofitService.getDeployRecordList(sn, searchText, beginTime, endTime, owners, signalQuality, limit, offset, group);
     }
 
-    public Observable<DeviceDeployRsp> getDeviceRealStatus(String sn) {
+    public Observable<ResponseResult<DeviceInfo>> getDeviceRealStatus(String sn) {
         return retrofitService.getRealStatus(sn);
     }
 
@@ -578,7 +564,7 @@ public class RetrofitServiceHelper {
      * @param signalQuality
      * @return
      */
-    public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, List<String> tags, String
+    public Observable<ResponseResult<DeviceInfo>> doDevicePointDeploy(String sn, double lon, double lat, List<String> tags, String
             name, List<DeployContactModel> contacts, String wxPhone, List<String> imgUrls, DeployControlSettingData deployControlSettingData, String forceReason, Integer status, String signalQuality) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -731,7 +717,7 @@ public class RetrofitServiceHelper {
         return retrofitService.doDevicePointDeploy(sn, body);
     }
 
-    public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, List<String> tags, String
+    public Observable<ResponseResult<DeviceInfo>> doDevicePointDeploy(String sn, double lon, double lat, List<String> tags, String
             name, String contact, String content, String wxPhone, List<String> imgUrls, DeployControlSettingData deployControlSettingData, String forceReason, Integer status, String signalQuality) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -881,11 +867,11 @@ public class RetrofitServiceHelper {
      * @param latitude
      * @return
      */
-    public Observable<DeployDeviceDetailRsp> getDeployDeviceDetail(String sn, Double longitude, Double latitude) {
+    public Observable<ResponseResult<DeviceInfo>> getDeployDeviceDetail(String sn, Double longitude, Double latitude) {
         return retrofitService.getDeployDeviceDetail(sn, longitude, latitude);
     }
 
-    public Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(String oldSn, String newSn, String taskId, Integer reason, double lon, double lat, List<String> tags, String
+    public Observable<ResponseResult<DeviceInfo>> doInspectionChangeDeviceDeploy(String oldSn, String newSn, String taskId, Integer reason, double lon, double lat, List<String> tags, String
             name, String contact, String content, List<String> imgUrls, String wxPhone, String forceReason, Integer status, String signalQuality) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -942,6 +928,77 @@ public class RetrofitServiceHelper {
         return retrofitService.doInspectionChangeDeviceDeploy(oldSn, body);
     }
 
+    public Observable<ResponseResult<DeviceInfo>> doInspectionChangeDeviceDeploy(String oldSn, String newSn, String taskId, Integer reason, double lon, double lat, List<String> tags, String
+            name, List<DeployContactModel> contacts, List<String> imgUrls, String wxPhone, String forceReason, Integer status, String signalQuality) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(newSn)) {
+                jsonObject.put("newSn", newSn);
+            }
+            if (!TextUtils.isEmpty(taskId)) {
+                jsonObject.put("taskId", taskId);
+            }
+            if (reason != null) {
+                jsonObject.put("reason", reason);
+            }
+            jsonObject.put("lon", lon);
+            jsonObject.put("lat", lat);
+            JSONArray jsonArray = new JSONArray();
+            if (tags != null && tags.size() > 0) {
+                for (String temp : tags) {
+                    jsonArray.put(temp);
+                }
+            }
+            jsonObject.put("tags", jsonArray);
+            if (!TextUtils.isEmpty(name)) {
+                jsonObject.put("name", name);
+            }
+
+
+            if (contacts != null && contacts.size() > 0) {
+                JSONArray jsonArrayContact = new JSONArray();
+                for (DeployContactModel contactModel : contacts) {
+                    JSONObject object = new JSONObject();
+                    if (!TextUtils.isEmpty(contactModel.name)) {
+                        object.put("contact", contactModel.name);
+                    }
+                    if (!TextUtils.isEmpty(contactModel.phone)) {
+                        object.put("content", contactModel.phone);
+                    }
+                    object.put("types", "phone");
+                    jsonArrayContact.put(object);
+                }
+                jsonObject.put("notifications", jsonArrayContact);
+            }
+
+
+            if (imgUrls != null && imgUrls.size() > 0) {
+                JSONArray jsonArrayImg = new JSONArray();
+                for (String url : imgUrls) {
+                    jsonArrayImg.put(url);
+                }
+                jsonObject.put("imgUrls", jsonArrayImg);
+            }
+            if (!TextUtils.isEmpty(wxPhone)) {
+                jsonObject.put("wxPhone", wxPhone);
+            }
+            if (!TextUtils.isEmpty(forceReason)) {
+                jsonObject.put("forceReason", forceReason);
+                if (status != null) {
+                    jsonObject.put("status", status);
+                }
+                if (!TextUtils.isEmpty(signalQuality)) {
+                    jsonObject.put("signalQuality", signalQuality);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.doInspectionChangeDeviceDeploy(oldSn, body);
+    }
+
+
     /**
      * 基站部署
      *
@@ -952,7 +1009,7 @@ public class RetrofitServiceHelper {
      * @param name
      * @return
      */
-    public Observable<DeployStationInfoRsp> doStationDeploy(String sn, double lon, double lat, List<String> tags, String
+    public Observable<ResponseResult<DeployStationInfo>> doStationDeploy(String sn, double lon, double lat, List<String> tags, String
             name) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -984,7 +1041,7 @@ public class RetrofitServiceHelper {
      * @param remark
      * @return
      */
-    public Observable<DeviceAlarmItemRsp> doAlarmConfirm(String id, int status, String remark, boolean isReconfirm) {
+    public Observable<ResponseResult<DeviceAlarmLogInfo>> doAlarmConfirm(String id, int status, String remark, boolean isReconfirm) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("displayStatus", status);
@@ -1008,11 +1065,11 @@ public class RetrofitServiceHelper {
      * @param sn
      * @return
      */
-    public Observable<DeviceAlarmTimeRsp> getDeviceAlarmTime(String sn) {
+    public Observable<ResponseResult<AlarmTime>> getDeviceAlarmTime(String sn) {
         return retrofitService.getDeviceAlarmTime(sn);
     }
 
-    public Observable<DeviceHistoryListRsp> getDeviceHistoryList(String sn, int count) {
+    public Observable<ResponseResult<List<DeviceHistoryInfo>>> getDeviceHistoryList(String sn, int count) {
         return retrofitService.getDeviceHistoryList(sn, count);
     }
 
@@ -1024,7 +1081,7 @@ public class RetrofitServiceHelper {
      * @param endTime
      * @return
      */
-    public Observable<DeviceRecentRsp> getDeviceHistoryList(String sn, long startTime, long endTime) {
+    public Observable<ResponseResult> getDeviceHistoryList(String sn, long startTime, long endTime) {
         return retrofitService.getDeviceHistoryList(sn, startTime, endTime, "hours");
     }
 
@@ -1036,7 +1093,7 @@ public class RetrofitServiceHelper {
      * @param all
      * @return
      */
-    public Observable<DeviceInfoListRsp> getDeviceDetailInfoList(String sns, String search, int all) {
+    public Observable<ResponseResult<List<DeviceInfo>>> getDeviceDetailInfoList(String sns, String search, int all) {
         return retrofitService.getDeviceDetailInfoList(sns, search, all);
     }
 
@@ -1046,7 +1103,7 @@ public class RetrofitServiceHelper {
      * @param sn
      * @return
      */
-    public Observable<DeployStationInfoRsp> getStationDetail(String sn) {
+    public Observable<ResponseResult<DeployStationInfo>> getStationDetail(String sn) {
         return retrofitService.getStationDetail(sn);
     }
 
@@ -1058,7 +1115,7 @@ public class RetrofitServiceHelper {
      * @param remark
      * @return
      */
-    public Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(String id, Integer displayStatus, Integer reason, Integer
+    public Observable<ResponseResult<DeviceAlarmLogInfo>> doUpdatePhotosUrl(String id, Integer displayStatus, Integer reason, Integer
             place, String remark, boolean isReconfirm, List<ScenesData> scenesDataList) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -1108,7 +1165,7 @@ public class RetrofitServiceHelper {
      * @param remark
      * @return
      */
-    public Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(String id, Map<String, Integer> map, List<SecurityRisksAdapterModel> alarmPopupDangerDataList, String remark, boolean isReconfirm, List<ScenesData> scenesDataList) {
+    public Observable<ResponseResult<DeviceAlarmLogInfo>> doUpdatePhotosUrl(String id, Map<String, Integer> map, List<SecurityRisksAdapterModel> alarmPopupDangerDataList, String remark, boolean isReconfirm, List<ScenesData> scenesDataList) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (map != null) {
@@ -1179,25 +1236,25 @@ public class RetrofitServiceHelper {
      *
      * @return
      */
-    public Observable<ContractsTemplateRsp> getContractstemplate() {
+    public Observable<ResponseResult<ArrayList<ContractsTemplateInfo>>> getContractstemplate() {
         return retrofitService.getContractsTemplate();
     }
 
-    public Observable<ContractAddRsp> getNewContract(Integer contractType, String cardId,
-                                                     Integer sex, String enterpriseCardId,
-                                                     String enterpriseRegisterId,
-                                                     String customerName,
-                                                     String customerEnterpriseName,
-                                                     String customerEnterpriseValidity,
-                                                     //必选
-                                                     String customerAddress,
-                                                     String customerPhone,
-                                                     String placeType,
-                                                     List<ContractsTemplateInfo> devicesList,
-                                                     int payTimes,
-                                                     //可选
-                                                     Boolean confirmed,
-                                                     int serviceTime, int firstPayTimes) {
+    public Observable<ResponseResult<ContractAddInfo>> getNewContract(Integer contractType, String cardId,
+                                                                      Integer sex, String enterpriseCardId,
+                                                                      String enterpriseRegisterId,
+                                                                      String customerName,
+                                                                      String customerEnterpriseName,
+                                                                      String customerEnterpriseValidity,
+                                                                      //必选
+                                                                      String customerAddress,
+                                                                      String customerPhone,
+                                                                      String placeType,
+                                                                      List<ContractsTemplateInfo> devicesList,
+                                                                      int payTimes,
+                                                                      //可选
+                                                                      Boolean confirmed,
+                                                                      int serviceTime, int firstPayTimes) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (contractType != null) {
@@ -1256,7 +1313,7 @@ public class RetrofitServiceHelper {
         return retrofitService.newContract(body);
     }
 
-    public Observable<ContractInfoRsp> getContractInfo(String id) {
+    public Observable<ResponseResult<ContractListInfo>> getContractInfo(String id) {
         return retrofitService.getContractInfo(id);
     }
 
@@ -1270,7 +1327,7 @@ public class RetrofitServiceHelper {
      * @param offset
      * @return
      */
-    public Observable<ContractsListRsp> searchContract(Integer contractType, String customerName, Integer confirmed, Long beginTime, Long endTime, Integer
+    public Observable<ResponseResult<List<ContractListInfo>>> searchContract(Integer contractType, String customerName, Integer confirmed, Long beginTime, Long endTime, Integer
             limit, Integer offset) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -1315,7 +1372,7 @@ public class RetrofitServiceHelper {
      * @param qrcodeId
      * @return
      */
-    public Observable<ResponseBase> getLoginScanResult(String qrcodeId) {
+    public Observable<ResponseResult> getLoginScanResult(String qrcodeId) {
         return retrofitService.getLoginScanResult(qrcodeId);
     }
 
@@ -1325,7 +1382,7 @@ public class RetrofitServiceHelper {
      * @param qrcodeId
      * @return
      */
-    public Observable<ResponseBase> scanLoginIn(String qrcodeId) {
+    public Observable<ResponseResult> scanLoginIn(String qrcodeId) {
         return retrofitService.scanLoginIn(qrcodeId);
     }
 
@@ -1335,7 +1392,7 @@ public class RetrofitServiceHelper {
      * @param qrcodeId
      * @return
      */
-    public Observable<ResponseBase> scanLoginCancel(String qrcodeId) {
+    public Observable<ResponseResult> scanLoginCancel(String qrcodeId) {
         return retrofitService.scanLoginCancel(qrcodeId);
     }
 
@@ -1345,7 +1402,7 @@ public class RetrofitServiceHelper {
      * @param code
      * @return
      */
-    public Observable<AuthRsp> doubleCheck(String code) {
+    public Observable<ResponseResult<Boolean>> doubleCheck(String code) {
         return retrofitService.doubleCheck(code);
     }
 
@@ -1402,9 +1459,9 @@ public class RetrofitServiceHelper {
         }
     }
 
-    public Observable<ResponseBase> doUploadInspectionResult(String id, String sn, String taskId, Integer status,
-                                                             Integer malfunctionHandle,
-                                                             Long startTime, Long finishTime, String remark, List<ScenesData> scenesDataList, List<Integer> tags) {
+    public Observable<ResponseResult> doUploadInspectionResult(String id, String sn, String taskId, Integer status,
+                                                               Integer malfunctionHandle,
+                                                               Long startTime, Long finishTime, String remark, List<ScenesData> scenesDataList, List<Integer> tags) {
         JSONObject jsonObject = new JSONObject();
         try {
             JSONObject jsonObject1 = new JSONObject();
@@ -1468,11 +1525,11 @@ public class RetrofitServiceHelper {
         return retrofitService.uploadInspectionResult(body);
     }
 
-    public Observable<InspectionTaskExecutionRsp> getInspectTaskExecution(String taskId) {
+    public Observable<ResponseResult<InspectionTaskExecutionModel>> getInspectTaskExecution(String taskId) {
         return retrofitService.getInspectTaskExecution(taskId);
     }
 
-    public Observable<InspectionTaskDeviceDetailRsp> getInspectionDeviceList(String taskId, String search, String sn, Integer finish, String deviceTypes, Integer offset, Integer limit) {
+    public Observable<ResponseResult<InspectionTaskDeviceDetailModel>> getInspectionDeviceList(String taskId, String search, String sn, Integer finish, String deviceTypes, Integer offset, Integer limit) {
 //        StringBuilder stringBuilder = new StringBuilder();
 //        if (deviceTypes!=null&&deviceTypes.size()>0){
 //            for (String deviceType:deviceTypes){
@@ -1493,7 +1550,7 @@ public class RetrofitServiceHelper {
      * @param finishTime
      * @return
      */
-    public Observable<InspectionTaskModelRsp> getInspectTaskList(String search, Integer finish, Integer offset, Integer
+    public Observable<ResponseResult<InspectionTaskModel>> getInspectTaskList(String search, Integer finish, Integer offset, Integer
             limit, Long startTime, Long finishTime) {
         return retrofitService.getInspectTaskList(search, finish, offset, limit,
                 startTime, finishTime);
@@ -1507,7 +1564,7 @@ public class RetrofitServiceHelper {
      * @param status
      * @return
      */
-    public Observable<ChangeInspectionTaskStateRsp> doChangeInspectionTaskState(String id, String identifier, Integer status) {
+    public Observable<ResponseResult<ChangeInspectionTaskStateInfo>> doChangeInspectionTaskState(String id, String identifier, Integer status) {
         JSONObject jsonObject = new JSONObject();
 
         try {
@@ -1543,7 +1600,7 @@ public class RetrofitServiceHelper {
      * @param device
      * @return
      */
-    public Observable<InspectionTaskExceptionDeviceRsp> getInspectionDeviceDetail(String id, String sn, String taskId, Integer device) {
+    public Observable<ResponseResult<InspectionTaskExceptionDeviceModel>> getInspectionDeviceDetail(String id, String sn, String taskId, Integer device) {
         JSONObject jsonObject = new JSONObject();
 
         try {
@@ -1578,7 +1635,7 @@ public class RetrofitServiceHelper {
      * @param deviceType
      * @return
      */
-    public Observable<InspectionTaskInstructionRsp> getInspectionTemplate(String deviceType) {
+    public Observable<ResponseResult<InspectionTaskInstructionModel>> getInspectionTemplate(String deviceType) {
         return retrofitService.getInspectionTemplate(deviceType);
     }
 
@@ -1587,11 +1644,11 @@ public class RetrofitServiceHelper {
      *
      * @return
      */
-    public Observable<DevicesMergeTypesRsp> getDevicesMergeTypes() {
+    public Observable<ResponseResult<DeviceMergeTypesInfo>> getDevicesMergeTypes() {
         return retrofitService.getDevicesMergeTypes();
     }
 
-    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer inputValue, Integer switchSpec, Integer wireMaterial, Double diameter) {
+    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer inputValue, Integer switchSpec, Integer wireMaterial, Double diameter, Integer beepMuteTime) {
         JSONObject jsonObject = new JSONObject();
 
         try {
@@ -1628,6 +1685,11 @@ public class RetrofitServiceHelper {
             if (switchSpec != null || wireMaterial != null || diameter != null) {
                 jsonObject.put("config", jsonObjectConfig);
             }
+            if (beepMuteTime != null) {
+                JSONObject jsonParameters = new JSONObject();
+                jsonParameters.put("beepMuteTime", beepMuteTime);
+                jsonObject.put("parameters", jsonParameters);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -1636,6 +1698,14 @@ public class RetrofitServiceHelper {
         return retrofitService.doMonitorPointOperation(body);
     }
 
+    /**
+     * 针对三相电的
+     *
+     * @param snList
+     * @param type
+     * @param deployControlSettingData
+     * @return
+     */
     public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, DeployControlSettingData deployControlSettingData) {
         JSONObject jsonObject = new JSONObject();
 
@@ -1726,7 +1796,7 @@ public class RetrofitServiceHelper {
         return retrofitService.doMonitorPointOperation(body);
     }
 
-    public Observable<DeviceDeployRsp> doDevicePositionCalibration(String sn, Double lon, Double lat) {
+    public Observable<ResponseResult<DeviceInfo>> doDevicePositionCalibration(String sn, Double lon, Double lat) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("lon", lon);
@@ -1739,20 +1809,20 @@ public class RetrofitServiceHelper {
         return retrofitService.doDevicePositionCalibration(sn, body);
     }
 
-    public Observable<ResponseBase> modifyContract(String uid, Integer contractID, Integer contractType, String cardId, Integer sex, String enterpriseCardId,
-                                                   String enterpriseRegisterId,
-                                                   String customerName,
-                                                   String customerEnterpriseName,
-                                                   String customerEnterpriseValidity,
-                                                   //必选
-                                                   String customerAddress,
-                                                   String customerPhone,
-                                                   String placeType,
-                                                   List<ContractsTemplateInfo> devicesList,
-                                                   int payTimes,
-                                                   //可选
-                                                   Boolean confirmed,
-                                                   int serviceTime, int firstPayTimes) {
+    public Observable<ResponseResult> modifyContract(String uid, Integer contractID, Integer contractType, String cardId, Integer sex, String enterpriseCardId,
+                                                     String enterpriseRegisterId,
+                                                     String customerName,
+                                                     String customerEnterpriseName,
+                                                     String customerEnterpriseValidity,
+                                                     //必选
+                                                     String customerAddress,
+                                                     String customerPhone,
+                                                     String placeType,
+                                                     List<ContractsTemplateInfo> devicesList,
+                                                     int payTimes,
+                                                     //可选
+                                                     Boolean confirmed,
+                                                     int serviceTime, int firstPayTimes) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(uid)) {
@@ -1823,7 +1893,7 @@ public class RetrofitServiceHelper {
      * @param name
      * @return
      */
-    public Observable<ResponseBase> getDeviceNameValid(String name) {
+    public Observable<ResponseResult> getDeviceNameValid(String name) {
         return retrofitService.getDeviceNameValid(name);
     }
 
@@ -1832,7 +1902,7 @@ public class RetrofitServiceHelper {
      *
      * @return
      */
-    public Observable<LoginRsp> backMainAccount() {
+    public Observable<ResponseResult<UserInfo>> backMainAccount() {
         return retrofitService.backMainControlling();
     }
 
@@ -1847,7 +1917,7 @@ public class RetrofitServiceHelper {
      * @param count
      * @return
      */
-    public Observable<DeviceUpdateFirmwareDataRsp> getDeviceUpdateVision(String sn, String deviceType, String band, String fromVersion, String hardwareVersion, Integer page, Integer count) {
+    public Observable<ResponseResult<List<DeviceUpdateFirmwareData>>> getDeviceUpdateVision(String sn, String deviceType, String band, String fromVersion, String hardwareVersion, Integer page, Integer count) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(deviceType)) {
@@ -1882,7 +1952,7 @@ public class RetrofitServiceHelper {
      * @param firmwareVersion
      * @return
      */
-    public Observable<ResponseBase> upLoadDeviceUpdateVision(String sn, String firmwareVersion) {
+    public Observable<ResponseResult> upLoadDeviceUpdateVision(String sn, String firmwareVersion) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(firmwareVersion)) {
@@ -1959,7 +2029,7 @@ public class RetrofitServiceHelper {
      *
      * @return
      */
-    public Observable<DevicesAlarmPopupConfigRsp> getDevicesAlarmPopupConfig() {
+    public Observable<ResponseResult<AlarmPopupDataBean>> getDevicesAlarmPopupConfig() {
         return retrofitService.getDevicesAlarmPopupConfig();
     }
 
@@ -1969,7 +2039,7 @@ public class RetrofitServiceHelper {
      * @param sn
      * @return
      */
-    public Observable<DeviceCameraDetailRsp> getDeviceCamera(String sn) {
+    public Observable<ResponseResult<DeviceCameraDetailInfo>> getDeviceCamera(String sn) {
         return retrofitService.getDeviceCamera(sn);
     }
 
@@ -1981,7 +2051,7 @@ public class RetrofitServiceHelper {
      * @param search
      * @return
      */
-    public Observable<DeviceCameraListRsp> getDeviceCameraList(Integer pageSize, Integer page, String search) {
+    public Observable<ResponseResult<List<DeviceCameraInfo>>> getDeviceCameraList(Integer pageSize, Integer page, String search) {
         return retrofitService.getDeviceCameraList(pageSize, page, search);
     }
 
@@ -1990,7 +2060,7 @@ public class RetrofitServiceHelper {
      *
      * @return
      */
-    public Observable<ResponseBase> getDeviceCameraMapList() {
+    public Observable<ResponseResult> getDeviceCameraMapList() {
         return retrofitService.getDeviceCameraMapList();
     }
 
@@ -2002,7 +2072,7 @@ public class RetrofitServiceHelper {
      * @param endTime
      * @return
      */
-    public Observable<DeviceCameraFacePicListRsp> getDeviceCameraFaceList(List<String> cids, Integer pageSize, Integer limit, String minID, String startTime, String endTime) {
+    public Observable<ResponseResult<List<DeviceCameraFacePic>>> getDeviceCameraFaceList(List<String> cids, Integer pageSize, Integer limit, String minID, String startTime, String endTime) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (cids != null && cids.size() > 0) {
@@ -2035,7 +2105,7 @@ public class RetrofitServiceHelper {
         return retrofitService.getDeviceCameraFaceList(body);
     }
 
-    public Observable<AlarmCameraLiveRsp> getAlarmCamerasDetail(List<String> cameraIds) {
+    public Observable<ResponseResult<List<AlarmCameraLiveBean>>> getAlarmCamerasDetail(List<String> cameraIds) {
         StringBuilder sb = new StringBuilder();
         if (cameraIds != null && cameraIds.size() > 0) {
             for (String cameraId : cameraIds) {
@@ -2048,7 +2118,7 @@ public class RetrofitServiceHelper {
 
     }
 
-    public Observable<DeviceCameraHistoryRsp> getDeviceCameraPlayHistoryAddress(String cid, String beginTime, String endTime, String mediaType) {
+    public Observable<ResponseResult<List<DeviceCameraHistoryBean>>> getDeviceCameraPlayHistoryAddress(String cid, String beginTime, String endTime, String mediaType) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(cid)) {
@@ -2071,13 +2141,13 @@ public class RetrofitServiceHelper {
         return retrofitService.getDeviceCameraPlayHistoryAddress(body);
     }
 
-    public Observable<DeviceCameraListRsp> getDeviceGroupCameraList(String _id, Integer pageSize, Integer page, String search) {
+    public Observable<ResponseResult<List<DeviceCameraInfo>>> getDeviceGroupCameraList(String _id, Integer pageSize, Integer page, String search) {
         return retrofitService.getDeviceGroupCameraList(_id, pageSize, page, search);
     }
 
-    public Observable<DeviceCameraPersonFaceRsp> getDeviceCameraPersonFace(String id,
-                                                                           Long startTime, Long endTime,
-                                                                           Integer score, Integer offset, Integer limit, List<String> cameraIds) {
+    public Observable<ResponseResult<List<DeviceCameraPersonFaceBean>>> getDeviceCameraPersonFace(String id,
+                                                                                                  Long startTime, Long endTime,
+                                                                                                  Integer score, Integer offset, Integer limit, List<String> cameraIds) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(id)) {
@@ -2124,36 +2194,36 @@ public class RetrofitServiceHelper {
      *
      * @return
      */
-    public Observable<CameraFilterRsp> getCameraFilter() {
+    public Observable<ResponseResult<List<CameraFilterModel>>> getCameraFilter() {
         return retrofitService.getCameraFilter();
     }
 
-    public Observable<CameraFilterRsp> getStationFilter() {
+    public Observable<ResponseResult<List<CameraFilterModel>>> getStationFilter() {
         return retrofitService.getStationFilter();
     }
 
-    public Observable<DeviceCameraListRsp> getDeviceCameraListByFilter(Integer pageSize, Integer page, String search, Map<String, String> mapFilter) {
+    public Observable<ResponseResult<List<DeviceCameraInfo>>> getDeviceCameraListByFilter(Integer pageSize, Integer page, String search, Map<String, String> mapFilter) {
         return retrofitService.getDeviceCameraListByFilter(pageSize, page, search, mapFilter);
     }
 
 
-    public Observable<BaseStationListRsp> getBaseStationListByFilter(Integer pageSize, Integer page, String search, Map<String, String> mapFilter) {
+    public Observable<ResponseResult<List<BaseStationInfo>>> getBaseStationListByFilter(Integer pageSize, Integer page, String search, Map<String, String> mapFilter) {
         return retrofitService.getBaseStationListByFilter(pageSize, page, search, mapFilter);
     }
 
-    public Observable<BaseStationDetailRsp> getBaseStatioDetail(String stationsn) {
+    public Observable<ResponseResult<BaseStationDetailModel>> getBaseStatioDetail(String stationsn) {
         return retrofitService.getBaseStationDetail(stationsn);
     }
 
-    public Observable<BaseStationChartDetailRsp> getBaseStationChartDetail(String stationsn, String type, String interval, long from, long to) {
+    public Observable<ResponseResult<List<BaseStationChartDetailModel>>> getBaseStationChartDetail(String stationsn, String type, String interval, long from, long to) {
         return retrofitService.getBaseStationChartDetail(stationsn, type, interval, from, to);
     }
 
-    public Observable<NamePlateListRsp> getNameplateList(Integer pageSize, Integer page, String search, String deviceFlag, String deployFlag) {
+    public Observable<ResponseResult<List<NamePlateInfo>>> getNameplateList(Integer pageSize, Integer page, String search, String deviceFlag, String deployFlag) {
         return retrofitService.getNameplateList(pageSize, page, search, deviceFlag);
     }
 
-    public Observable<DeleteNamePlateRsp> deleteNameplate(String nameplateId) {
+    public Observable<ResponseResult<Integer>> deleteNameplate(String nameplateId) {
         return retrofitService.deleteNameplate(nameplateId);
     }
 
@@ -2161,12 +2231,12 @@ public class RetrofitServiceHelper {
         return retrofitService.getNameplateDetail(nameplateId, isAuthUser);
     }
 
-    public Observable<NameplateBindDeviceRsp> getNameplateBindDevices(Integer page, Integer count, String nameplateId) {
+    public Observable<ResponseResult<List<NamePlateInfo>>> getNameplateBindDevices(Integer page, Integer count, String nameplateId) {
 //        return retrofitService.getNameplateBindDevices(nameplateId);
         return retrofitService.getNameplateBindDevices(page, count, nameplateId);
     }
 
-    public Observable<NameplateBindDeviceRsp> getNameplateUnbindDevices(Integer page, Integer count, String nameplateId, String searchText) {
+    public Observable<ResponseResult<List<NamePlateInfo>>> getNameplateUnbindDevices(Integer page, Integer count, String nameplateId, String searchText) {
         return retrofitService.getNameplateUnbindDevices(page, count, nameplateId, searchText);
     }
 
@@ -2230,7 +2300,7 @@ public class RetrofitServiceHelper {
 //    }
 
 
-    public Observable<BaseStationDetailRsp> updateStationLocation(String sn, Double lon, Double lat) {
+    public Observable<ResponseResult<BaseStationDetailModel>> updateStationLocation(String sn, Double lon, Double lat) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("lon", lon);
@@ -2243,7 +2313,7 @@ public class RetrofitServiceHelper {
         return retrofitService.updateStationLocation(sn, body);
     }
 
-    public Observable<AlarmCloudVideoRsp> getCloudVideo(String[] eventIds) {
+    public Observable<ResponseResult<List<AlarmCloudVideoBean>>> getCloudVideo(String[] eventIds) {
         JSONObject jsonObject = new JSONObject();
         if (eventIds != null && eventIds.length > 0) {
             try {
@@ -2276,8 +2346,8 @@ public class RetrofitServiceHelper {
      * @param orientation
      * @return
      */
-    public Observable<DeployCameraUploadRsp> doUploadDeployCamera(String sn, String name, List<String> label, String mobilePhone, String latitude, String longitude,
-                                                                  List<String> imgUrls, String location, String installationMode, String orientation, String createStatus) {
+    public Observable<ResponseResult<DeployCameraUploadInfo>> doUploadDeployCamera(String sn, String name, List<String> label, String mobilePhone, String latitude, String longitude,
+                                                                                   List<String> imgUrls, String location, String installationMode, String orientation, String createStatus) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(sn)) {
@@ -2334,7 +2404,7 @@ public class RetrofitServiceHelper {
      * @param sn
      * @return
      */
-    public Observable<DeviceCameraDetailRsp> getDeployCameraInfo(String sn) {
+    public Observable<ResponseResult<DeviceCameraDetailInfo>> getDeployCameraInfo(String sn) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(sn)) {
@@ -2347,7 +2417,7 @@ public class RetrofitServiceHelper {
         return retrofitService.getDeployCameraInfo(requestBody);
     }
 
-    public Observable<DeployNameplateRsp> doUploadDeployNameplate(@NonNull String nameplateId, String name, List<String> tags, ArrayList<String> imgUrls, ArrayList<NamePlateInfo> bindList) {
+    public Observable<ResponseResult<DeployNameplateInfo>> doUploadDeployNameplate(@NonNull String nameplateId, String name, List<String> tags, ArrayList<String> imgUrls, ArrayList<NamePlateInfo> bindList) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(name)) {
@@ -2412,7 +2482,7 @@ public class RetrofitServiceHelper {
      * @param operationDetail 处理备注信息
      * @return
      */
-    public Observable<HandleAlarmRsp> handleSecurityAlarm(@NonNull String id, int isEffective, String operationDetail) {
+    public Observable<ResponseResult<HandleAlarmData>> handleSecurityAlarm(@NonNull String id, int isEffective, String operationDetail) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("id", id);
@@ -2434,7 +2504,7 @@ public class RetrofitServiceHelper {
      * @param id 安防预警ID
      * @return
      */
-    public Observable<SecurityAlarmTimelineRsp> getSecurityAlarmTimeLine(@NonNull String id) {
+    public Observable<ResponseResult<SecurityAlarmTimelineData>> getSecurityAlarmTimeLine(@NonNull String id) {
         return retrofitService.getSecurityAlarmTimeLine(id);
     }
 
@@ -2450,8 +2520,8 @@ public class RetrofitServiceHelper {
      * @param offset             查询起始位置，默认0
      * @return
      */
-    public Observable<SecurityAlarmListRsp> getSecurityAlarmList(int offset, String startTime, String endTime, int alarmOperationType,
-                                                                 String searchText, int alarmType) {
+    public Observable<ResponseResult<SecurityAlarmListData>> getSecurityAlarmList(int offset, String startTime, String endTime, int alarmOperationType,
+                                                                                  String searchText, int alarmType) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("limit", SECURITY_ALARMLIST_PAGE_COUNT);
         paramMap.put("offset", offset);
@@ -2478,7 +2548,7 @@ public class RetrofitServiceHelper {
      * @param id 预警id.
      * @return
      */
-    public Observable<SecurityAlarmDetailRsp> getSecurityAlarmDetails(@NonNull String id) {
+    public Observable<ResponseResult<SecurityAlarmDetailInfo>> getSecurityAlarmDetails(@NonNull String id) {
         return retrofitService.getSecurityAlarmDetails(id);
     }
 
@@ -2488,7 +2558,7 @@ public class RetrofitServiceHelper {
      * @param id
      * @return
      */
-    public Observable<SecurityWarnRecordResp> getSecurityWarnRecord(@NonNull String id) {
+    public Observable<ResponseResult<SecurityWarnRecord>> getSecurityWarnRecord(@NonNull String id) {
         return retrofitService.getSecurityWarnRecord(id);
     }
 }

@@ -3,17 +3,18 @@ package com.sensoro.smartcity.presenter;
 import android.content.Context;
 import android.content.Intent;
 
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.InspectionTaskDetailActivity;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
-import com.sensoro.smartcity.imainviews.IInspectionTaskListActivityView;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.InspectionIndexTaskInfo;
-import com.sensoro.common.server.response.InspectionTaskModelRsp;
+import com.sensoro.common.server.bean.InspectionTaskModel;
+import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.InspectionTaskDetailActivity;
+import com.sensoro.smartcity.imainviews.IInspectionTaskListActivityView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -46,9 +47,9 @@ public class InspectionTaskListActivityPresenter extends BasePresenter<IInspecti
         if (direction == Constants.DIRECTION_DOWN) {
             cur_page = 0;
             RetrofitServiceHelper.getInstance().getInspectTaskList(null, tempFinish, 0, 20, tempStartTime, tempFinishTime).subscribeOn(Schedulers
-                    .io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskModelRsp>(this) {
+                    .io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<InspectionTaskModel>>(this) {
                 @Override
-                public void onCompleted(InspectionTaskModelRsp inspectionTaskModel) {
+                public void onCompleted(ResponseResult<InspectionTaskModel> inspectionTaskModel) {
                     tempTasks.clear();
                     List<InspectionIndexTaskInfo> tasks = inspectionTaskModel.getData().getTasks();
                     tempTasks.addAll(tasks);
@@ -71,9 +72,9 @@ public class InspectionTaskListActivityPresenter extends BasePresenter<IInspecti
         } else {
             cur_page++;
             RetrofitServiceHelper.getInstance().getInspectTaskList(null, tempFinish, cur_page * 20, 20, tempStartTime, tempFinishTime).subscribeOn(Schedulers
-                    .io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskModelRsp>(this) {
+                    .io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<InspectionTaskModel>>(this) {
                 @Override
-                public void onCompleted(InspectionTaskModelRsp inspectionTaskModel) {
+                public void onCompleted(ResponseResult<InspectionTaskModel> inspectionTaskModel) {
                     List<InspectionIndexTaskInfo> tasks = inspectionTaskModel.getData().getTasks();
                     if (tasks.size() > 0) {
                         tempTasks.addAll(tasks);

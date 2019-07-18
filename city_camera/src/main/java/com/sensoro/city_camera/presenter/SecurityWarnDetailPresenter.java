@@ -17,15 +17,15 @@ import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.model.DeviceNotificationBean;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.HandleAlarmData;
+import com.sensoro.common.server.bean.SecurityAlarmTimelineData;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.server.security.bean.SecurityAlarmDetailInfo;
 import com.sensoro.common.server.security.bean.SecurityAlarmInfo;
 import com.sensoro.common.server.security.bean.SecurityCameraInfo;
 import com.sensoro.common.server.security.bean.SecurityContactsInfo;
 import com.sensoro.common.server.security.bean.SecurityRecord;
-import com.sensoro.common.server.security.response.HandleAlarmRsp;
-import com.sensoro.common.server.security.response.SecurityAlarmDetailRsp;
-import com.sensoro.common.server.security.response.SecurityAlarmTimelineRsp;
-import com.sensoro.common.server.security.response.SecurityWarnRecordResp;
+import com.sensoro.common.server.security.bean.SecurityWarnRecord;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
 
@@ -72,9 +72,9 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
                 .getSecurityAlarmDetails(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<SecurityAlarmDetailRsp>(this) {
+                .subscribe(new CityObserver<ResponseResult<SecurityAlarmDetailInfo>>(this) {
                     @Override
-                    public void onCompleted(SecurityAlarmDetailRsp securityAlarmDetailRsp) {
+                    public void onCompleted(ResponseResult<SecurityAlarmDetailInfo> securityAlarmDetailRsp) {
                         if (securityAlarmDetailRsp != null) {
                             mSecurityAlarmDetailInfo = securityAlarmDetailRsp.getData();
                             getView().updateSecurityWarnDetail(mSecurityAlarmDetailInfo);
@@ -99,10 +99,10 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
                 .getSecurityAlarmTimeLine(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<SecurityAlarmTimelineRsp>(this) {
+                .subscribe(new CityObserver<ResponseResult<SecurityAlarmTimelineData>>(this) {
                     @Override
-                    public void onCompleted(SecurityAlarmTimelineRsp securityAlarmTimelineRsp) {
-                        SecurityAlarmTimelineRsp.SecurityAlarmTimelineData securityAlarmTimelineRspData = securityAlarmTimelineRsp.getData();
+                    public void onCompleted(ResponseResult<SecurityAlarmTimelineData> securityAlarmTimelineRsp) {
+                        SecurityAlarmTimelineData securityAlarmTimelineRspData = securityAlarmTimelineRsp.getData();
                         if (securityAlarmTimelineRspData != null) {
                             getView().updateSecurityWarnTimeLine(securityAlarmTimelineRspData.list);
                         }
@@ -212,12 +212,12 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
         RetrofitServiceHelper.getInstance().handleSecurityAlarm(id, isEffective, operationDetail)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<HandleAlarmRsp>(this) {
+                .subscribe(new CityObserver<ResponseResult<HandleAlarmData>>(this) {
                     @Override
-                    public void onCompleted(HandleAlarmRsp handleAlarmRsp) {
+                    public void onCompleted(ResponseResult<HandleAlarmData> handleAlarmRsp) {
                         mSecurityAlarmDetailInfo.setIsEffective(isEffective);
-                        if (handleAlarmRsp.data != null && handleAlarmRsp.data.status > 0) {
-                            mSecurityAlarmDetailInfo.setIsHandle(handleAlarmRsp.data.status);
+                        if (handleAlarmRsp.getData() != null && handleAlarmRsp.getData().status > 0) {
+                            mSecurityAlarmDetailInfo.setIsHandle(handleAlarmRsp.getData().status);
                         } else {
                             mSecurityAlarmDetailInfo.setIsHandle(1);//消息是否处理过返回后台没有确认，只是说大于0，而且后台返回数据结构为{"data":{"status":1}}
                         }
@@ -303,10 +303,10 @@ public class SecurityWarnDetailPresenter extends BasePresenter<ISecurityWarnDeta
                 .getSecurityWarnRecord(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<SecurityWarnRecordResp>(null) {
+                .subscribe(new CityObserver<ResponseResult<SecurityWarnRecord>>(null) {
                     @Override
-                    public void onCompleted(SecurityWarnRecordResp securityWarnRecordResp) {
-                        List<SecurityRecord> recordList = securityWarnRecordResp.data.list;
+                    public void onCompleted(ResponseResult<SecurityWarnRecord> securityWarnRecordResp) {
+                        List<SecurityRecord> recordList = securityWarnRecordResp.getData().list;
                         if (recordList != null && !recordList.isEmpty()) {
                             SecurityRecord securityRecord = recordList.get(0);
                             if (securityRecord != null) {

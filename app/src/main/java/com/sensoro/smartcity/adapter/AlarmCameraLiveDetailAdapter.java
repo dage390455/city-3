@@ -19,9 +19,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.sensoro.common.server.response.AlarmCameraLiveRsp;
-import com.sensoro.smartcity.R;
+import com.sensoro.common.server.bean.AlarmCameraLiveBean;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.smartcity.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 public class AlarmCameraLiveDetailAdapter extends RecyclerView.Adapter<AlarmCameraLiveDetailAdapter.CameraLiveDetailViewHolder> {
     private final Context mContext;
 
-    List<AlarmCameraLiveRsp.DataBean> mList = new ArrayList();
+    List<AlarmCameraLiveBean> mList = new ArrayList();
     private AlarmCameraLiveItemClickListener mListener;
     private Integer mClickPosition = 0;
     private final Drawable onLineDrawable;
@@ -98,7 +98,7 @@ public class AlarmCameraLiveDetailAdapter extends RecyclerView.Adapter<AlarmCame
             holder.tvWatchStateItemAdapterAlarmCameraLiveDetail.setVisibility(View.GONE);
         }
 
-        AlarmCameraLiveRsp.DataBean dataBean = mList.get(position);
+        AlarmCameraLiveBean dataBean = mList.get(position);
         if (dataBean != null) {
             Glide.with(mContext)
                     .load(dataBean.getLastCover())
@@ -106,7 +106,7 @@ public class AlarmCameraLiveDetailAdapter extends RecyclerView.Adapter<AlarmCame
 //                    .bitmapTransform(new GlideRoundTransform(mContext,dp4))
                             .placeholder(R.drawable.camera_placeholder))
                     .into(holder.ivPicItemAdapterAlarmCameraLiveDetail);
-            AlarmCameraLiveRsp.DataBean.CameraBean camera = dataBean.getCamera();
+            AlarmCameraLiveBean.CameraBean camera = dataBean.getCamera();
             if (camera != null) {
                 String name = camera.getName();
                 if (TextUtils.isEmpty(name)) {
@@ -114,7 +114,7 @@ public class AlarmCameraLiveDetailAdapter extends RecyclerView.Adapter<AlarmCame
                 }
                 holder.tvNameItemAdapterAlarmCameraLiveDetail.setText(name);
 
-                AlarmCameraLiveRsp.DataBean.CameraBean.InfoBean info = camera.getInfo();
+                AlarmCameraLiveBean.CameraBean.InfoBean info = camera.getInfo();
                 if (info != null) {
                     String deviceStatus = info.getDeviceStatus();
                     setDeviceCameraStatus(holder, !TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus));
@@ -144,7 +144,7 @@ public class AlarmCameraLiveDetailAdapter extends RecyclerView.Adapter<AlarmCame
         }
     }
 
-    public void updateData(List<AlarmCameraLiveRsp.DataBean> data) {
+    public void updateData(List<AlarmCameraLiveBean> data) {
         mList.clear();
         mList.addAll(data);
         mClickPosition = 0;

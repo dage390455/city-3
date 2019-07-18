@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.model.EventData;
@@ -14,14 +15,12 @@ import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.ChangeInspectionTaskStateInfo;
 import com.sensoro.common.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.common.server.bean.InspectionTaskExecutionModel;
-import com.sensoro.common.server.response.ChangeInspectionTaskStateRsp;
-import com.sensoro.common.server.response.InspectionTaskExecutionRsp;
+import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.InspectionInstructionActivity;
 import com.sensoro.smartcity.activity.InspectionTaskActivity;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionTaskDetailActivityView;
-import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -146,9 +145,9 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
     private void changeTaskState() {
         getView().showProgressDialog();
         RetrofitServiceHelper.getInstance().doChangeInspectionTaskState(mTaskInfo.getId(), null, 1).
-                subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ChangeInspectionTaskStateRsp>(this) {
+                subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<ChangeInspectionTaskStateInfo>>(this) {
             @Override
-            public void onCompleted(ChangeInspectionTaskStateRsp changeInspectionTaskStateRsp) {
+            public void onCompleted(ResponseResult<ChangeInspectionTaskStateInfo> changeInspectionTaskStateRsp) {
                 ChangeInspectionTaskStateInfo data = changeInspectionTaskStateRsp.getData();
                 int status = data.getStatus();
                 Intent intent = new Intent(mContext, InspectionTaskActivity.class);
@@ -171,9 +170,9 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
     }
 
     private void refreshTaskState() {
-        RetrofitServiceHelper.getInstance().getInspectTaskExecution(mTaskInfo.getId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskExecutionRsp>(this) {
+        RetrofitServiceHelper.getInstance().getInspectTaskExecution(mTaskInfo.getId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<InspectionTaskExecutionModel>>(this) {
             @Override
-            public void onCompleted(InspectionTaskExecutionRsp inspectionTaskExecutionRsp) {
+            public void onCompleted(ResponseResult<InspectionTaskExecutionModel> inspectionTaskExecutionRsp) {
                 InspectionTaskExecutionModel data = inspectionTaskExecutionRsp.getData();
                 InspectionTaskExecutionModel.BaseInfoBean baseInfo = data.getBaseInfo();
                 if (baseInfo != null) {
