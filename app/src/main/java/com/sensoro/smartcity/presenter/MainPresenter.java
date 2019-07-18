@@ -25,6 +25,7 @@ import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.model.NetWorkStateModel;
+import com.sensoro.common.model.PermissionChangeSocketModel;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.NetWorkUtils;
 import com.sensoro.common.server.RetrofitServiceHelper;
@@ -41,6 +42,7 @@ import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
+import com.sensoro.smartcity.activity.PermissionChangeActivity;
 import com.sensoro.smartcity.fragment.HomeFragment;
 import com.sensoro.smartcity.fragment.MalfunctionFragment;
 import com.sensoro.smartcity.fragment.ManagerFragment;
@@ -76,6 +78,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private long exitTime = 0;
     private volatile Socket mSocket = null;
     private final MainPresenter.DeviceInfoListener mInfoListener = new MainPresenter.DeviceInfoListener();
+    private final MainPresenter.PermissionListener mPermissionListener = new MainPresenter.PermissionListener();
     private final MainPresenter.DeviceAlarmCountListener mAlarmCountListener = new MainPresenter.DeviceAlarmCountListener();
     private final DeviceAlarmDisplayStatusListener mAlarmDisplayStatusListener = new DeviceAlarmDisplayStatusListener();
     private final DeviceFlushListener mDeviceFlushListener = new DeviceFlushListener();
@@ -176,9 +179,18 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                 // 清除activity
                 ActivityTaskManager.getInstance().finishAllActivity();
             }
-            mContext.startActivity(intent);
+            getView().startAC(intent);
         }
     }
+
+    private void openPermissionChange() {
+        if (isAttachedView()) {
+            Intent intent = new Intent(mContext, PermissionChangeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getView().startAC(intent);
+        }
+    }
+
 
     @Override
     public void initData(Context context) {
@@ -314,6 +326,52 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                             }
 
                         }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private final class PermissionListener implements Emitter.Listener {
+
+        @Override
+        public void call(Object... args) {
+            try {
+                synchronized (MainPresenter.PermissionListener.class) {
+                    for (Object arg : args) {
+                        if (arg instanceof JSONObject) {
+                            final JSONObject jsonObject = (JSONObject) arg;
+                            String json = jsonObject.toString();
+                            try {
+                                //暂时只在这里处理逻辑 后面可以发消息来完成
+                                PermissionChangeSocketModel permissionChangeSocketModel = RetrofitServiceHelper.getInstance().getGson().fromJson(json, PermissionChangeSocketModel.class);
+                                if (permissionChangeSocketModel != null) {
+                                    List<String> accountIds = permissionChangeSocketModel.getAccountIds();
+                                    if (accountIds != null && accountIds.size() > 0) {
+                                        if (PreferencesHelper.getInstance().getUserData().accountId == null) {
+//                                            checkPermissionChangeState();
+                                            //TODO 直接通知弹窗
+                                            openPermissionChange();
+
+                                        } else {
+                                            if (accountIds.contains(PreferencesHelper.getInstance().getUserData().accountId)) {
+//                                                checkPermissionChangeState();
+                                                openPermissionChange();
+                                            }
+                                        }
+                                    }
+                                }
+                                LogUtils.loge(this, "socket-->>> PermissionListener jsonArray = " + json);
+                                //5c6a500306b3eb2db3d5bd14
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+
+                        }
+
                     }
                 }
             } catch (Exception e) {
@@ -515,6 +573,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             options.path = "/city";
             options.transports = transports;
             mSocket = IO.socket(RetrofitServiceHelper.getInstance().BASE_URL + "app", options);
+            mSocket.on(Constants.SOCKET_EVENT_PERMISSION_CHANGE, mPermissionListener);
             if (hasDeviceBriefControl()) {
                 mSocket.on(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.on(Constants.SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
@@ -592,6 +651,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
         try {
             if (mSocket != null) {
                 mSocket.disconnect();
+                mSocket.off(Constants.SOCKET_EVENT_PERMISSION_CHANGE, mPermissionListener);
                 if (hasDeviceBriefControl()) {
                     mSocket.off(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                     mSocket.off(Constants.SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
@@ -612,6 +672,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             options.path = "/city";
             options.transports = transports;
             mSocket = IO.socket(RetrofitServiceHelper.getInstance().BASE_URL + "app", options);
+            mSocket.on(Constants.SOCKET_EVENT_PERMISSION_CHANGE, mPermissionListener);
             if (hasDeviceBriefControl()) {
                 mSocket.on(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.on(Constants.SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
@@ -642,6 +703,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
         }
         if (mSocket != null) {
             mSocket.disconnect();
+            mSocket.off(Constants.SOCKET_EVENT_PERMISSION_CHANGE, mPermissionListener);
             if (hasDeviceBriefControl()) {
                 mSocket.off(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.off(Constants.SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);

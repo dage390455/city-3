@@ -50,15 +50,15 @@ android {
 //                GETUI_APP_KEY   : "zrfWS690Dh7r9bPUUfh1o2",
 //                GETUI_APP_SECRET: "fN5extdlmHA5NDbdKPkP6A",
 
-              GETUI_APP_ID    : "g5ikHO2m7DAZ0oY4BrXNE",
-              GETUI_APP_KEY   : "BkwqeevSYj8fQTO47FsXGA",
-              GETUI_APP_SECRET: "Z41MlQj5AC8JwUzxEm2081",
-                //TODO 测试版/正式版 使用其中一个
-//                APP_ICON        : "@mipmap/ic_launcher_beta",
-//                APP_ROUND_ICON  : "@mipmap/ic_launcher_beta_round"
-                //
-                APP_ICON        : "@mipmap/ic_launcher",
-                APP_ROUND_ICON  : "@mipmap/ic_launcher_round"
+GETUI_APP_ID    : "g5ikHO2m7DAZ0oY4BrXNE",
+GETUI_APP_KEY   : "BkwqeevSYj8fQTO47FsXGA",
+GETUI_APP_SECRET: "Z41MlQj5AC8JwUzxEm2081",
+//TODO 测试版/正式版 使用其中一个
+APP_ICON        : "@mipmap/ic_launcher_beta",
+APP_ROUND_ICON  : "@mipmap/ic_launcher_beta_round"
+//
+//                APP_ICON        : "@mipmap/ic_launcher",
+//                APP_ROUND_ICON  : "@mipmap/ic_launcher_round"
 
         ]
 
@@ -216,6 +216,8 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     androidTestImplementation(deps.support.test_espresso, {
         exclude group: 'com.android.support', module: 'support-annotations'
     })

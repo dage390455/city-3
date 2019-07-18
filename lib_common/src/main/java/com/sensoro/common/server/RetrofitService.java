@@ -478,6 +478,7 @@ public interface RetrofitService {
     @GET("camera-center/alarms/{id}/videos")
     Observable<ResponseResult<SecurityWarnRecord>> getSecurityWarnRecord(@Path("id") String id);
 
-
+    @GET("users/me")
+    Observable<ResponseResult<UserInfo>> getPermissionChangeInfo();
 }
 

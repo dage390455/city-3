@@ -8,22 +8,27 @@ import android.text.TextUtils;
 
 import com.igexin.sdk.PushManager;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnStart;
 import com.sensoro.common.model.EventLoginData;
+import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.RetryWithDelay;
+import com.sensoro.common.server.bean.UserInfo;
+import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.MyPermissionManager;
 import com.sensoro.common.widgets.PermissionDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.MainActivity;
-import com.sensoro.common.constant.Constants;
+import com.sensoro.smartcity.factory.UserPermissionFactory;
 import com.sensoro.smartcity.imainviews.ISplashActivityView;
 import com.sensoro.smartcity.push.SensoroPushIntentService;
 import com.sensoro.smartcity.push.SensoroPushService;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.common.utils.MyPermissionManager;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Rationale;
@@ -31,6 +36,9 @@ import com.yanzhenjie.permission.RequestExecutor;
 import com.yanzhenjie.permission.runtime.Permission;
 
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> implements IOnStart {
     private Activity mContext;
@@ -113,16 +121,66 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
     private void openMain(final EventLoginData eventLoginData) {
         // 提前加载数据
         PreferencesHelper.getInstance().getLocalDevicesMergeTypes();
-        handler.postDelayed(new Runnable() {
+        //
+        final long requestTime = System.currentTimeMillis();
+        RetrofitServiceHelper.getInstance().getPermissionChangeInfo().retryWhen(new RetryWithDelay(2, 100)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<UserInfo>>(this) {
             @Override
-            public void run() {
-                Intent mainIntent = new Intent();
-                mainIntent.setClass(mContext, MainActivity.class);
-                mainIntent.putExtra(Constants.EXTRA_EVENT_LOGIN_DATA, eventLoginData);
-                getView().startAC(mainIntent);
-                getView().finishAc();
+            public void onCompleted(ResponseResult<UserInfo> loginRsp) {
+                UserInfo userInfo = loginRsp.getData();
+                EventLoginData loginData = UserPermissionFactory.createLoginData(userInfo, eventLoginData.phoneId);
+
+                //
+                long diff = System.currentTimeMillis() - requestTime;
+                try {
+                    LogUtils.loge("diff = " + diff);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+                if (diff >= 500) {
+                    Intent mainIntent = new Intent();
+                    mainIntent.setClass(mContext, MainActivity.class);
+                    mainIntent.putExtra(Constants.EXTRA_EVENT_LOGIN_DATA, loginData);
+                    getView().startAC(mainIntent);
+                    getView().finishAc();
+                } else {
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent mainIntent = new Intent();
+                            mainIntent.setClass(mContext, MainActivity.class);
+                            mainIntent.putExtra(Constants.EXTRA_EVENT_LOGIN_DATA, loginData);
+                            getView().startAC(mainIntent);
+                            getView().finishAc();
+                        }
+                    }, 500 - diff);
+                }
+
             }
-        }, 500);
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                //网络出错直接跳到登录界面并吐丝
+                //
+                getView().toastShort(errorMsg);
+                long diff = System.currentTimeMillis() - requestTime;
+                if (diff >= 500) {
+                    Intent loginIntent = new Intent();
+                    loginIntent.setClass(mContext, LoginActivity.class);
+                    getView().startAC(loginIntent);
+                    getView().finishAc();
+                } else {
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent loginIntent = new Intent();
+                            loginIntent.setClass(mContext, LoginActivity.class);
+                            getView().startAC(loginIntent);
+                            getView().finishAc();
+                        }
+                    }, 500 - diff);
+                }
+            }
+        });
 
 
     }

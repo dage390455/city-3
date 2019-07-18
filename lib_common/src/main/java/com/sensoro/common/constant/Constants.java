@@ -11,6 +11,7 @@ public interface Constants {
             , R.string.july, R.string.august, R.string.september, R.string.october, R.string.november, R.string.december};
     //
     String SOCKET_EVENT_DEVICE_INFO = "city-device-update-series";
+    String SOCKET_EVENT_PERMISSION_CHANGE = "city.token.refresh";
     String SOCKET_EVENT_DEVICE_ALARM_COUNT = "city.device.stat";
     String SOCKET_EVENT_DEVICE_ALARM_DISPLAY = "city.alarm.display";
     String SOCKET_EVENT_DEVICE_TASK_RESULT = "city.task.result";
@@ -53,6 +54,7 @@ public interface Constants {
     String EXTRA_SAVE_PWD = "extra_save_pwd";
     String EXTRA_USER_NAME = "extra_user_name";
     String EXTRA_USER_ROLES = "extra_user_roles";
+    String EXTRA_USER_ACCOUNT_ID = "extra_user_account_id";
     String EXTRA_PHONE = "extra_phone";
     String EXTRA_CHARACTER = "extra_character";
     String EXTRA_PHONE_ID = "extra_phone_id";

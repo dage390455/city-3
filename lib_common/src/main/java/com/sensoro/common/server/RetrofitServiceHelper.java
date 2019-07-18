@@ -350,6 +350,11 @@ public class RetrofitServiceHelper {
             public Response intercept(Chain chain) throws IOException {
                 Request request = chain.request();
                 if (!NetWorkUtils.isNetworkConnected(ContextUtils.getContext())) {
+                    //
+//                    NetWorkStateModel netWorkStateModel = new NetWorkStateModel();
+//                    netWorkStateModel.ping = false;
+//                    EventBus.getDefault().post(netWorkStateModel);
+                    //
                     request = request.newBuilder().cacheControl(cacheControl).build();
                 }
                 Response originalResponse = chain.proceed(request);
@@ -2554,5 +2559,9 @@ public class RetrofitServiceHelper {
      */
     public Observable<ResponseResult<SecurityWarnRecord>> getSecurityWarnRecord(@NonNull String id) {
         return retrofitService.getSecurityWarnRecord(id);
+    }
+
+    public Observable<ResponseResult<UserInfo>> getPermissionChangeInfo() {
+        return retrofitService.getPermissionChangeInfo();
     }
 }

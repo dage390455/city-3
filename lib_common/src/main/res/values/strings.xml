@@ -1201,5 +1201,9 @@
 
     <string name="missing_required_photo">Missing required photo</string>
 
+    <string name="permission_change_desc">Permissions have been modified, please re-login to ensure full functionality</string>
+    <string name="login_later">Login later</string>
+    <string name="re_login">ReLogin</string>
+
 
 </resources>

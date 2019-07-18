@@ -8,8 +8,10 @@ import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gyf.immersionbar.ImmersionBar;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ISplashActivityView;
@@ -119,5 +121,15 @@ public class SplashActivity extends BaseActivity<ISplashActivityView, SplashActi
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void toastShort(String msg) {
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void toastLong(String msg) {
+        SensoroToast.getInstance().makeText(msg, Toast.LENGTH_LONG).show();
     }
 }
