@@ -44,22 +44,29 @@ public class UuidSettingActivityPresenter extends BasePresenter<IUuidSettingActi
         Serializable current_uuid = mContext.getIntent().getSerializableExtra("current_uuid");
         if (current_uuid instanceof UuidSettingModel) {
             currentUUID = (UuidSettingModel) current_uuid;
-            currentUUID.isCheck = true;
-            getView().setCurrentUUID(currentUUID.uuid);
         }
+        //
         for (int i = 0; i < mData.size(); i++) {
-            if (mData.get(i).equals(currentUUID)) {
+            UuidSettingModel uuidSettingModel = mData.get(i);
+            if (uuidSettingModel.equals(currentUUID)) {
+                currentUUID = uuidSettingModel;
+                currentUUID.isCheck = true;
                 mData.set(i, currentUUID);
             }
         }
         getView().updateNormalAdapter(mData);
+        //
         List<String> saveMyUUID = PreferencesHelper.getInstance().getSaveMyUUID();
         handleMyUUIDData(saveMyUUID);
         for (int i = 0; i < mMyData.size(); i++) {
-            if (mMyData.get(i).equals(currentUUID)) {
+            UuidSettingModel uuidSettingModel = mMyData.get(i);
+            if (uuidSettingModel.equals(currentUUID)) {
+                currentUUID = uuidSettingModel;
+                currentUUID.isCheck = true;
                 mMyData.set(i, currentUUID);
             }
         }
+        getView().setCurrentUUID(currentUUID.uuid);
         getView().updateMyAdapter(mMyData);
     }
 

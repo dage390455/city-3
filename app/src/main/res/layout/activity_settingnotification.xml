@@ -27,7 +27,7 @@
 
                 android:layout_marginStart="20dp"
                 android:layout_weight="1"
-                android:text="设备进入区域通知提示开关"
+                android:text="进场提示"
                 android:textColor="@color/c_252525"
                 android:textSize="16dp" />
 
@@ -61,7 +61,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="设备进入通知提示"
+                android:text="进场提示消息"
                 android:textColor="@color/c_a6a6a6"
                 android:textSize="14dp" />
 
@@ -75,6 +75,7 @@
                 android:enabled="true"
                 android:gravity="top"
                 android:hint="请输入"
+                android:text="检测到附近传感器，点击查看详情"
                 android:inputType="textMultiLine"
                 android:maxLength="100"
                 android:padding="10dp"
@@ -105,10 +106,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:layout_marginStart="20dp"
                 android:layout_weight="1"
-                android:text="设备离开区域通知提示开关"
+                android:text="离场提示"
                 android:textColor="@color/c_252525"
                 android:textSize="16dp" />
 
@@ -134,7 +134,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="设备离开通知提示"
+                android:text="离场提示信息"
                 android:textColor="@color/c_a6a6a6"
                 android:textSize="14dp" />
 
@@ -148,6 +148,7 @@
                 android:enabled="true"
                 android:gravity="top"
                 android:hint="请输入"
+                android:text="已离开传感器检测区域"
                 android:inputType="textMultiLine"
                 android:maxLength="100"
                 android:padding="10dp"
@@ -170,7 +171,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="uuid"
+                android:text="UUID"
                 android:textColor="@color/c_a6a6a6"
                 android:textSize="14dp" />
 
@@ -218,7 +219,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="major"
+                android:text="Major"
                 android:textColor="@color/c_a6a6a6"
                 android:textSize="14dp" />
 
@@ -254,7 +255,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="mirror"
+                android:text="Mirror"
                 android:textColor="@color/c_a6a6a6"
                 android:textSize="14dp" />
 
