@@ -8,7 +8,7 @@ def keystoreProperties = new Properties()
 // Load your keystore.properties file into the keystoreProperties object.
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 android {
-    def verName = "3.3.6"
+    def verName = "3.3.7"
     def verCode = 1
     def buildCode = 1
     def connector = '_v'
