@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.igexin.sdk.PushManager;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.model.EventData;
@@ -18,17 +19,15 @@ import com.sensoro.common.server.bean.DeviceTypeStyles;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.bean.SensorTypeStyles;
 import com.sensoro.common.server.bean.UserInfo;
-import com.sensoro.common.server.response.DevicesMergeTypesRsp;
-import com.sensoro.common.server.response.LoginRsp;
+import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.BuildConfig;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.AuthActivity;
 import com.sensoro.smartcity.activity.MainActivity;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.factory.UserPermissionFactory;
 import com.sensoro.smartcity.imainviews.ILoginView;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.tencent.bugly.beta.Beta;
 
@@ -132,9 +131,9 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements IOnCrea
             getView().showProgressDialog();
             //
             RetrofitServiceHelper.getInstance().login(account, pwd, phoneId).subscribeOn
-                    (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<LoginRsp>(this) {
+                    (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<UserInfo>>(this) {
                 @Override
-                public void onCompleted(LoginRsp loginRsp) {
+                public void onCompleted(ResponseResult<UserInfo> loginRsp) {
                     String sessionID = loginRsp.getData().getSessionID();
                     String token = loginRsp.getData().getToken();
                     RetrofitServiceHelper.getInstance().saveSessionId(sessionID,token);
@@ -160,9 +159,9 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements IOnCrea
     }
 
     private void getMergeType(final EventLoginData eventLoginData) {
-        RetrofitServiceHelper.getInstance().getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Consumer<DevicesMergeTypesRsp>() {
+        RetrofitServiceHelper.getInstance().getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Consumer<ResponseResult<DeviceMergeTypesInfo>>() {
             @Override
-            public void accept(DevicesMergeTypesRsp devicesMergeTypesRsp) throws Exception {
+            public void accept(ResponseResult<DeviceMergeTypesInfo> devicesMergeTypesRsp) throws Exception {
                 DeviceMergeTypesInfo data = devicesMergeTypesRsp.getData();
                 PreferencesHelper.getInstance().saveLocalDevicesMergeTypes(data);
                 //测试信息
@@ -206,12 +205,12 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements IOnCrea
                 }
             }
 
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesMergeTypesRsp>(LoginPresenter.this) {
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceMergeTypesInfo>>(LoginPresenter.this) {
             @Override
-            public void onCompleted(DevicesMergeTypesRsp devicesMergeTypesRsp) {
+            public void onCompleted(ResponseResult<DeviceMergeTypesInfo> devicesMergeTypesRsp) {
                 openNextActivity(eventLoginData);
                 try {
-                    LogUtils.loge("DevicesMergeTypesRsp ....." + eventLoginData.toString());
+                    LogUtils.loge("ResponseResult<DeviceMergeTypesInfo> ....." + eventLoginData.toString());
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }

@@ -44,8 +44,7 @@ import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.bean.SensorStruct;
 import com.sensoro.common.server.bean.SensorTypeStyles;
-import com.sensoro.common.server.response.DeployStationInfoRsp;
-import com.sensoro.common.server.response.DeviceDeployRsp;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.RegexUtils;
 import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
@@ -286,7 +285,14 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
             getView().setNameAddressText(deployAnalyzerModel.nameAndAddress);
         }
-        getView().updateContactData(deployAnalyzerModel.deployContactModelList);
+        if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+            String contact = deployContactModel.name;
+            String content = deployContactModel.phone;
+            getView().setFirstContact(contact + "(" + content + ")");
+        }
+        getView().setTotalContact(deployAnalyzerModel.deployContactModelList.size());
+//        getView().updateContactData(deployAnalyzerModel.deployContactModelList);
         getView().updateTagsData(deployAnalyzerModel.tagList);
         tempSignal = deployAnalyzerModel.signal;
         freshSignalInfo();
@@ -337,7 +343,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().doStationDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new CityObserver<DeployStationInfoRsp>(this) {
+                        .subscribe(new CityObserver<ResponseResult<DeployStationInfo>>(this) {
 
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
@@ -353,7 +359,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             }
 
                             @Override
-                            public void onCompleted(DeployStationInfoRsp deployStationInfoRsp) {
+                            public void onCompleted(ResponseResult<DeployStationInfo> deployStationInfoRsp) {
                                 freshStation(deployStationInfoRsp);
                                 getView().dismissProgressDialog();
                                 getView().finishAc();
@@ -569,7 +575,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     //TODO 添加设备状态字段
     private void doDeployResult(double lon, double lan, List<String> imgUrls) {
-        DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+//        DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
         switch (deployAnalyzerModel.deployType) {
             case Constants.TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
@@ -581,8 +587,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     settingData = deployAnalyzerModel.settingData;
                 }
                 RetrofitServiceHelper.getInstance().doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, settingData, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new CityObserver<DeviceDeployRsp>(this) {
+                        deployAnalyzerModel.deployContactModelList, deployAnalyzerModel.weChatAccount, imgUrls, settingData, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new CityObserver<ResponseResult<DeviceInfo>>(this) {
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
                                 getView().dismissProgressDialog();
@@ -597,7 +603,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             }
 
                             @Override
-                            public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
+                            public void onCompleted(ResponseResult<DeviceInfo> deviceDeployRsp) {
                                 freshPoint(deviceDeployRsp);
                                 getView().dismissProgressDialog();
                                 getView().finishAc();
@@ -608,10 +614,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
                         deployAnalyzerModel.mDeviceDetail.getTaskId(), 1, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                        deployContactModel.name, deployContactModel.phone, imgUrls, null, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).
-                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
+                        deployAnalyzerModel.deployContactModelList, imgUrls, null, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).
+                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceInfo>>(this) {
                     @Override
-                    public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
+                    public void onCompleted(ResponseResult<DeviceInfo> deviceDeployRsp) {
                         freshPoint(deviceDeployRsp);
                         getView().dismissProgressDialog();
                         getView().finishAc();
@@ -634,11 +640,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             case Constants.TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
-                        null, 2, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress, deployContactModel.name,
-                        deployContactModel.phone, imgUrls, null, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).
-                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
+                        null, 2, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress, deployAnalyzerModel.deployContactModelList, imgUrls, null, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).
+                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceInfo>>(this) {
                     @Override
-                    public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
+                    public void onCompleted(ResponseResult<DeviceInfo> deviceDeployRsp) {
                         //
                         freshPoint(deviceDeployRsp);
                         getView().dismissProgressDialog();
@@ -689,7 +694,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         getView().startAC(intent);
     }
 
-    private void freshPoint(DeviceDeployRsp deviceDeployRsp) {
+    private void freshPoint(ResponseResult<DeviceInfo> deviceDeployRsp) {
         DeployResultModel deployResultModel = new DeployResultModel();
         DeviceInfo deviceInfo = deviceDeployRsp.getData();
         deployResultModel.deviceInfo = deviceInfo;
@@ -715,7 +720,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         getView().startAC(intent);
     }
 
-    private void freshStation(DeployStationInfoRsp deployStationInfoRsp) {
+    private void freshStation(ResponseResult<DeployStationInfo> deployStationInfoRsp) {
         DeployResultModel deployResultModel = new DeployResultModel();
         //
         Intent intent = new Intent(mContext, DeployResultActivity.class);
@@ -796,14 +801,21 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         getView().startAC(intent);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(DeviceInfo deviceInfo) {
         String sn = deviceInfo.getSn();
         try {
             if (deployAnalyzerModel.sn.equalsIgnoreCase(sn)) {
-                deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
-                tempSignal = deviceInfo.getSignal();
-                freshSignalInfo();
+                mContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isAttachedView()) {
+                            deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
+                            tempSignal = deviceInfo.getSignal();
+                            freshSignalInfo();
+                        }
+                    }
+                });
 //                            getView().toastLong("信号-->>time = " + deployAnalyzerModel.updatedTime + ",signal = " + deployAnalyzerModel.signal);
                 try {
                     LogUtils.loge(this, "部署页刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + deployAnalyzerModel.signal);
@@ -846,7 +858,14 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     //TODO 联系人
                     deployAnalyzerModel.deployContactModelList.clear();
                     deployAnalyzerModel.deployContactModelList.addAll((List<DeployContactModel>) data);
-                    getView().updateContactData(deployAnalyzerModel.deployContactModelList);
+                    if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+                        DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+                        String contact = deployContactModel.name;
+                        String content = deployContactModel.phone;
+                        getView().setFirstContact(contact + "(" + content + ")");
+                    }
+                    getView().setTotalContact(deployAnalyzerModel.deployContactModelList.size());
+//                    getView().updateContactData(deployAnalyzerModel.deployContactModelList);
                 }
                 getView().setUploadBtnStatus(checkCanUpload());
                 break;
@@ -1466,9 +1485,9 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         final long requestTime = System.currentTimeMillis();
         RetrofitServiceHelper.getInstance().getDeviceRealStatus(deployAnalyzerModel.sn).subscribeOn(Schedulers.io())
                 .retryWhen(new RetryWithDelay(2, 100))
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceInfo>>(this) {
             @Override
-            public void onCompleted(final DeviceDeployRsp data) {
+            public void onCompleted(final ResponseResult<DeviceInfo> data) {
                 long diff = System.currentTimeMillis() - requestTime;
                 if (diff > 1000) {
                     updateDeviceStatusDialog(data);
@@ -1492,7 +1511,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         });
     }
 
-    private void updateDeviceStatusDialog(DeviceDeployRsp data) {
+    private void updateDeviceStatusDialog(ResponseResult<DeviceInfo> data) {
         if (data != null && data.getData() != null) {
             //只记录当前的信号和状态
             deployAnalyzerModel.status = data.getData().getStatus();

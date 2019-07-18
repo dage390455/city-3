@@ -148,20 +148,42 @@
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14dp" />
 
-                    <RelativeLayout
+                    <LinearLayout
+                        android:id="@+id/ll_contacts"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:orientation="horizontal">
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/ac_deploy_record_detail_rc_contact"
+                        <TextView
+                            android:id="@+id/tv_first_contact"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true">
+                            android:textColor="@color/c_252525"
+                            android:textSize="14dp" />
 
-                        </androidx.recyclerview.widget.RecyclerView>
-                    </RelativeLayout>
+                        <TextView
+                            android:id="@+id/tv_total_contact"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:visibility="gone"
+                            android:textColor="@color/c_a6a6a6"
+                            android:textSize="14dp" />
+
+                        <ImageView
+                            android:id="@+id/iv_contact_arrow"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="8dp"
+                            android:visibility="gone"
+                            android:contentDescription="@null"
+                            android:src="@drawable/arrows_right" />
+
+                    </LinearLayout>
                 </LinearLayout>
 
                 <View

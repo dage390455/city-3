@@ -10,19 +10,21 @@ import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
+import com.sensoro.common.model.DeviceNotificationBean;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
+import com.sensoro.common.server.bean.AlarmCloudVideoBean;
 import com.sensoro.common.server.bean.AlarmInfo;
+import com.sensoro.common.server.bean.AlarmPopupDataBean;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.server.bean.ScenesData;
-import com.sensoro.common.server.response.AlarmCloudVideoRsp;
 import com.sensoro.common.server.response.AlarmCountRsp;
-import com.sensoro.common.server.response.DeviceAlarmItemRsp;
-import com.sensoro.common.server.response.DevicesAlarmPopupConfigRsp;
-import com.sensoro.common.server.response.ResponseBase;
+import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmCameraLiveDetailActivity;
 import com.sensoro.smartcity.activity.AlarmCameraVideoDetailActivity;
@@ -32,7 +34,6 @@ import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.imainviews.IAlarmDetailLogActivityView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.CityAppUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
@@ -57,7 +58,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     private boolean isReConfirm = false;
     private Activity mContext;
     private LatLng destPosition = null;
-    private AlarmCloudVideoRsp.DataBean mVideoBean;
+    private AlarmCloudVideoBean mVideoBean;
 
     @Override
     public void initData(Context context) {
@@ -83,13 +84,13 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         String[] eventIds = {deviceAlarmLogInfo.get_id()};
         RetrofitServiceHelper.getInstance().getCloudVideo(eventIds)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<AlarmCloudVideoRsp>(this) {
+                .subscribe(new CityObserver<ResponseResult<List<AlarmCloudVideoBean>>>(this) {
                     @Override
-                    public void onCompleted(AlarmCloudVideoRsp response) {
-                        List<AlarmCloudVideoRsp.DataBean> data = response.getData();
+                    public void onCompleted(ResponseResult<List<AlarmCloudVideoBean>> response) {
+                        List<AlarmCloudVideoBean> data = response.getData();
                         if (data != null && data.size() > 0) {
                             mVideoBean = data.get(0);
-                            List<AlarmCloudVideoRsp.DataBean.MediasBean> mMedias = mVideoBean.getMedias();
+                            List<AlarmCloudVideoBean.MediasBean> mMedias = mVideoBean.getMedias();
                             if (mMedias != null && mMedias.size() > 0) {
                                 getView().setLlVideoSize(mMedias.size());
                             } else {
@@ -131,7 +132,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                     mContext.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (isAttachedView()){
+                            if (isAttachedView()) {
                                 refreshData(false);
                             }
 
@@ -314,14 +315,13 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     }
 
     public void doContactOwner() {
-        String tempNumber = deviceAlarmLogInfo.getDeviceNotification().getContent();
 
-        if (TextUtils.isEmpty(tempNumber)) {
-            if (isAttachedView()) {
-                getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
-            }
+        List<DeviceNotificationBean> deviceNotifications = WidgetUtil.handleDeviceNotifications(deviceAlarmLogInfo.getDeviceNotifications());
+        if (deviceNotifications.isEmpty()) {
+            getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
         } else {
-            AppUtils.diallPhone(tempNumber, mContext);
+            WarningContactDialogUtil dialogUtil = new WarningContactDialogUtil(mContext);
+            dialogUtil.show(deviceNotifications);
         }
     }
 
@@ -367,7 +367,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         Map<String, Integer> alarmPopupServerData = AlarmPopupConfigAnalyzer.createAlarmPopupServerData(alarmPopupModel);
         RetrofitServiceHelper.getInstance().doUpdatePhotosUrl(deviceAlarmLogInfo.get_id(), alarmPopupServerData, alarmPopupModel.securityRisksList,
                 alarmPopupModel.mRemark, isReConfirm, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<DeviceAlarmItemRsp>(this) {
+                .subscribe(new CityObserver<ResponseResult<DeviceAlarmLogInfo>>(this) {
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
@@ -379,8 +379,8 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                     }
 
                     @Override
-                    public void onCompleted(DeviceAlarmItemRsp deviceAlarmItemRsp) {
-                        if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
+                    public void onCompleted(ResponseResult<DeviceAlarmLogInfo> deviceAlarmItemRsp) {
+                        if (deviceAlarmItemRsp.getErrcode() == ResponseResult.CODE_SUCCESS) {
                             if (isAttachedView()) {
                                 getView().toastShort(mContext.getResources().getString(R.string
                                         .tips_commit_success));
@@ -403,9 +403,9 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
 
     public void showAlarmPopupView() {
         if (PreferencesHelper.getInstance().getAlarmPopupDataBeanCache() == null) {
-            RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesAlarmPopupConfigRsp>(this) {
+            RetrofitServiceHelper.getInstance().getDevicesAlarmPopupConfig().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<AlarmPopupDataBean>>(this) {
                 @Override
-                public void onCompleted(DevicesAlarmPopupConfigRsp devicesAlarmPopupConfigRsp) {
+                public void onCompleted(ResponseResult<AlarmPopupDataBean> devicesAlarmPopupConfigRsp) {
                     PreferencesHelper.getInstance().saveAlarmPopupDataBeanCache(devicesAlarmPopupConfigRsp.getData());
                     final AlarmPopupModel alarmPopupModel = new AlarmPopupModel();
                     String deviceName = deviceAlarmLogInfo.getDeviceName();

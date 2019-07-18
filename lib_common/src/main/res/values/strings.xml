@@ -674,6 +674,7 @@
     <string name="upload_photo_dialog_append_title3"></string>
     <string name="monitor_point_detail_erasure">Mute</string>
     <string name="monitor_point_detail_erasure_long">Mute-Long</string>
+    <string name="monitor_point_detail_erasure_time">Timing Mute</string>
     <string name="monitor_point_detail_operation">Operate</string>
     <string name="text_fire_alarm_empty"></string>
     <string name="main_home_menu_scan_login">Scan</string>
@@ -806,7 +807,9 @@
     <string name="diameter">Diameter</string>
     <string name="device_number">SN:&#160;</string>
     <string name="command_elec_disconnect_title">Do you want power off</string>
+    <string name="command_smoke_mute_time_title">Whether to silence the alarm device regularly</string>
     <string name="command_elec_disconnect_desc">Please ensure this operator does not impact the product before you power off this device</string>
+    <string name="command_smoke_mute_time_desc">Value range: 1~30; timed silence, the device will silence in the set time</string>
     <string name="command_elec_disconnect_btn_title">Power off</string>
     <string name="command_elec_connect_title">Do you want power on</string>
     <string name="command_elec_connect_desc">Please ensure the safety of staff around before you power on this device</string>
@@ -1194,7 +1197,9 @@
     <string name="please_add_config_input">Please add input config</string>
     <string name="please_add_config_out">Please add output config</string>
     <string name="please_enter_the_configuration_parameters_correctly">Please enter the configuration parameters correctly</string>
+    <string name="duration">Duration</string>
 
     <string name="missing_required_photo">Missing required photo</string>
+
 
 </resources>

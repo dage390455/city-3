@@ -23,11 +23,6 @@ import com.sensoro.common.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.common.server.bean.InspectionTaskDeviceDetailModel;
 import com.sensoro.common.server.bean.NamePlateInfo;
-import com.sensoro.common.server.response.DeployDeviceDetailRsp;
-import com.sensoro.common.server.response.DeployStationInfoRsp;
-import com.sensoro.common.server.response.DeviceCameraDetailRsp;
-import com.sensoro.common.server.response.InspectionTaskDeviceDetailRsp;
-import com.sensoro.common.server.response.ResponseBase;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.R;
@@ -39,6 +34,7 @@ import com.sensoro.smartcity.activity.InspectionExceptionDetailActivity;
 import com.sensoro.smartcity.activity.ScanLoginResultActivity;
 import com.sensoro.smartcity.activity.SignalCheckActivity;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +81,7 @@ public class DeployAnalyzerUtils {
                     //转换大写
                     String finalScanSerialNumber = scanSerialNumber.toUpperCase();
                     RetrofitServiceHelper.getInstance().getDeployDeviceDetail(finalScanSerialNumber, null, null).subscribeOn
-                            (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(presenter) {
+                            (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceInfo>>(presenter) {
                         @Override
                         public void onErrorMsg(int errorCode, String errorMsg) {
                             if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
@@ -116,7 +112,7 @@ public class DeployAnalyzerUtils {
                         }
 
                         @Override
-                        public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
+                        public void onCompleted(ResponseResult<DeviceInfo> deployDeviceDetailRsp) {
                             DeviceInfo data = deployDeviceDetailRsp.getData();
                             if (data == null) {
                                 //不在账户下
@@ -443,7 +439,7 @@ public class DeployAnalyzerUtils {
 
     private void handleScanSignalCheck(BasePresenter presenter, final String signalCheckNum, final Activity activity, final OnDeployAnalyzerListener listener) {
         RetrofitServiceHelper.getInstance().getDeployDeviceDetail(signalCheckNum, null, null).subscribeOn
-                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(presenter) {
+                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceInfo>>(presenter) {
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
@@ -474,7 +470,7 @@ public class DeployAnalyzerUtils {
 
 
             @Override
-            public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
+            public void onCompleted(ResponseResult<DeviceInfo> deployDeviceDetailRsp) {
                 DeviceInfo data = deployDeviceDetailRsp.getData();
                 if (data == null) {
                     //查找新设备
@@ -527,9 +523,9 @@ public class DeployAnalyzerUtils {
 
     private void handleScanInspectionDevice(BasePresenter presenter, String scanInspectionDevice, String inspectionId, final Activity activity, final OnDeployAnalyzerListener listener) {
         RetrofitServiceHelper.getInstance().getInspectionDeviceList(inspectionId, null, scanInspectionDevice.toUpperCase(), null, null, null, null).
-                subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskDeviceDetailRsp>(presenter) {
+                subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<InspectionTaskDeviceDetailModel>>(presenter) {
             @Override
-            public void onCompleted(InspectionTaskDeviceDetailRsp inspectionTaskDeviceDetailRsp) {
+            public void onCompleted(ResponseResult<InspectionTaskDeviceDetailModel> inspectionTaskDeviceDetailRsp) {
                 InspectionTaskDeviceDetailModel data = inspectionTaskDeviceDetailRsp.getData();
                 List<InspectionTaskDeviceDetail> devices = data.getDevices();
                 if (devices != null && devices.size() > 0) {
@@ -569,7 +565,7 @@ public class DeployAnalyzerUtils {
 
     private void handleDeployDeviceStation(final BasePresenter presenter, final String scanSerialNumber, final Activity activity, final OnDeployAnalyzerListener listener) {
         RetrofitServiceHelper.getInstance().getDeployDeviceDetail(scanSerialNumber, null, null).subscribeOn
-                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(presenter) {
+                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceInfo>>(presenter) {
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
@@ -593,7 +589,7 @@ public class DeployAnalyzerUtils {
 
             private void doStation() {
                 RetrofitServiceHelper.getInstance().getStationDetail(scanSerialNumber.toUpperCase()).subscribeOn
-                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployStationInfoRsp>(presenter) {
+                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeployStationInfo>>(presenter) {
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
                         if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
@@ -626,7 +622,7 @@ public class DeployAnalyzerUtils {
                     }
 
                     @Override
-                    public void onCompleted(DeployStationInfoRsp deployStationInfoRsp) {
+                    public void onCompleted(ResponseResult<DeployStationInfo> deployStationInfoRsp) {
                         DeployStationInfo deployStationInfo = deployStationInfoRsp.getData();
                         try {
                             //todo 包装类
@@ -677,9 +673,9 @@ public class DeployAnalyzerUtils {
 
                     private void doCamera() {
                         RetrofitServiceHelper.getInstance().getDeployCameraInfo(scanSerialNumber.toUpperCase()).subscribeOn
-                                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceCameraDetailRsp>(presenter) {
+                                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceCameraDetailInfo>>(presenter) {
                             @Override
-                            public void onCompleted(DeviceCameraDetailRsp deviceCameraDetailRsp) {
+                            public void onCompleted(ResponseResult<DeviceCameraDetailInfo> deviceCameraDetailRsp) {
                                 DeviceCameraDetailInfo data = deviceCameraDetailRsp.getData();
                                 try {
                                     //todo 包装类
@@ -776,7 +772,7 @@ public class DeployAnalyzerUtils {
             }
 
             @Override
-            public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
+            public void onCompleted(ResponseResult<DeviceInfo> deployDeviceDetailRsp) {
                 DeviceInfo data = deployDeviceDetailRsp.getData();
                 if (data == null) {
                     doStation();
@@ -812,20 +808,31 @@ public class DeployAnalyzerUtils {
                             deployAnalyzerModel.updatedTime = data.getUpdatedTime();
                             AlarmInfo alarmInfo = data.getAlarms();
                             if (alarmInfo != null) {
-                                DeviceNotificationBean notification = alarmInfo.getNotification();
-                                if (notification != null) {
-                                    String contact = notification.getContact();
-                                    String content = notification.getContent();
-                                    if (TextUtils.isEmpty(contact) || TextUtils.isEmpty(content)) {
-//                        getView().setContactEditText(mContext.getResources().getString(R.string.tips_hint_contact));
-                                    } else {
-                                        deployAnalyzerModel.deployContactModelList.clear();
-                                        DeployContactModel deployContactModel = new DeployContactModel();
-                                        deployContactModel.name = contact;
-                                        deployContactModel.phone = content;
-                                        deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                                deployAnalyzerModel.deployContactModelList.clear();
+                                List<DeviceNotificationBean> notifications = WidgetUtil.handleDeviceNotifications(alarmInfo.getNotifications());
+                                if (notifications != null && notifications.size() > 0) {
+                                    for (DeviceNotificationBean notification : notifications) {
+                                        if (!TextUtils.isEmpty(notification.getContent())) {
+                                            DeployContactModel deployContactModel = new DeployContactModel();
+                                            deployContactModel.phone = notification.getContent();
+                                            if (!TextUtils.isEmpty(notification.getContact())) {
+                                                deployContactModel.name = notification.getContact();
+                                            }
+                                            deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                                        }
                                     }
-
+                                } else {
+                                    DeviceNotificationBean notification = alarmInfo.getNotification();
+                                    if (notification != null) {
+                                        if (!TextUtils.isEmpty(notification.getContent())) {
+                                            DeployContactModel deployContactModel = new DeployContactModel();
+                                            deployContactModel.phone = notification.getContent();
+                                            if (!TextUtils.isEmpty(notification.getContact())) {
+                                                deployContactModel.name = notification.getContact();
+                                            }
+                                            deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                                        }
+                                    }
                                 }
                             }
                             Intent intent = new Intent();
@@ -841,9 +848,9 @@ public class DeployAnalyzerUtils {
 
             private void getAllDeviceInfo(final DeployAnalyzerModel deployAnalyzerModel) {
                 RetrofitServiceHelper.getInstance().getDeployDeviceDetail(scanSerialNumber, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1)).subscribeOn
-                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(presenter) {
+                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceInfo>>(presenter) {
                     @Override
-                    public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
+                    public void onCompleted(ResponseResult<DeviceInfo> deployDeviceDetailRsp) {
                         DeviceInfo data = deployDeviceDetailRsp.getData();
                         deployAnalyzerModel.deployType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
                         deployAnalyzerModel.sn = data.getSn();
@@ -869,18 +876,31 @@ public class DeployAnalyzerUtils {
                         }
                         AlarmInfo alarmInfo = data.getAlarms();
                         if (alarmInfo != null) {
-                            DeviceNotificationBean notification = alarmInfo.getNotification();
-                            if (notification != null) {
-                                String contact = notification.getContact();
-                                String content = notification.getContent();
-                                if (!TextUtils.isEmpty(contact) && !TextUtils.isEmpty(content)) {
-                                    deployAnalyzerModel.deployContactModelList.clear();
-                                    DeployContactModel deployContactModel = new DeployContactModel();
-                                    deployContactModel.name = contact;
-                                    deployContactModel.phone = content;
-                                    deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                            deployAnalyzerModel.deployContactModelList.clear();
+                            List<DeviceNotificationBean> notifications = WidgetUtil.handleDeviceNotifications(alarmInfo.getNotifications());
+                            if (notifications.size() > 0) {
+                                for (DeviceNotificationBean notification : notifications) {
+                                    if (!TextUtils.isEmpty(notification.getContent())) {
+                                        DeployContactModel deployContactModel = new DeployContactModel();
+                                        deployContactModel.phone = notification.getContent();
+                                        if (!TextUtils.isEmpty(notification.getContact())) {
+                                            deployContactModel.name = notification.getContact();
+                                        }
+                                        deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                                    }
                                 }
-
+                            } else {
+                                DeviceNotificationBean notification = alarmInfo.getNotification();
+                                if (notification != null) {
+                                    if (!TextUtils.isEmpty(notification.getContent())) {
+                                        DeployContactModel deployContactModel = new DeployContactModel();
+                                        deployContactModel.phone = notification.getContent();
+                                        if (!TextUtils.isEmpty(notification.getContact())) {
+                                            deployContactModel.name = notification.getContact();
+                                        }
+                                        deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                                    }
+                                }
                             }
                         }
                         Intent intent = new Intent();
@@ -920,14 +940,14 @@ public class DeployAnalyzerUtils {
     private void handleScanLogin(BasePresenter presenter, final String result,
                                  final Activity activity, final OnDeployAnalyzerListener listener) {
         RetrofitServiceHelper.getInstance().getLoginScanResult(result).subscribeOn
-                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(presenter) {
+                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult>(presenter) {
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 listener.onError(errorCode, null, errorMsg);
             }
 
             @Override
-            public void onCompleted(ResponseBase responseBase) {
+            public void onCompleted(ResponseResult responseBase) {
                 if (responseBase.getErrcode() == 0) {
                     try {
                         try {
@@ -955,7 +975,7 @@ public class DeployAnalyzerUtils {
         //todo 信息替换
         final DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
         RetrofitServiceHelper.getInstance().getDeployDeviceDetail(oldDeviceDetail.getSn(), null, null).subscribeOn
-                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(presenter) {
+                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceInfo>>(presenter) {
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
@@ -977,7 +997,7 @@ public class DeployAnalyzerUtils {
                     lat = deployAnalyzerModel.latLng.get(1);
                 }
                 RetrofitServiceHelper.getInstance().getDeployDeviceDetail(scanSerialNumber, lon, lat).subscribeOn
-                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(presenter) {
+                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceInfo>>(presenter) {
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
                         if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
@@ -1008,7 +1028,7 @@ public class DeployAnalyzerUtils {
 
 
                     @Override
-                    public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
+                    public void onCompleted(ResponseResult<DeviceInfo> deployDeviceDetailRsp) {
                         DeviceInfo data = deployDeviceDetailRsp.getData();
                         if (data == null) {
                             Intent intent = new Intent();
@@ -1060,7 +1080,7 @@ public class DeployAnalyzerUtils {
             }
 
             @Override
-            public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
+            public void onCompleted(ResponseResult<DeviceInfo> deployDeviceDetailRsp) {
                 DeviceInfo data = deployDeviceDetailRsp.getData();
                 if (data == null) {
                     Intent intent = new Intent();
@@ -1104,16 +1124,30 @@ public class DeployAnalyzerUtils {
                         deployAnalyzerModel.updatedTime = data.getUpdatedTime();
                         AlarmInfo alarmInfo = data.getAlarms();
                         if (alarmInfo != null) {
-                            DeviceNotificationBean notification = alarmInfo.getNotification();
-                            if (notification != null) {
-                                String contact = notification.getContact();
-                                String content = notification.getContent();
-                                if (!TextUtils.isEmpty(contact) && !TextUtils.isEmpty(content)) {
-                                    deployAnalyzerModel.deployContactModelList.clear();
-                                    DeployContactModel deployContactModel = new DeployContactModel();
-                                    deployContactModel.name = contact;
-                                    deployContactModel.phone = content;
-                                    deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                            deployAnalyzerModel.deployContactModelList.clear();
+                            List<DeviceNotificationBean> notifications = WidgetUtil.handleDeviceNotifications(alarmInfo.getNotifications());
+                            if (notifications != null && notifications.size() > 0) {
+                                for (DeviceNotificationBean notification : notifications) {
+                                    if (!TextUtils.isEmpty(notification.getContent())) {
+                                        DeployContactModel deployContactModel = new DeployContactModel();
+                                        deployContactModel.phone = notification.getContent();
+                                        if (!TextUtils.isEmpty(notification.getContact())) {
+                                            deployContactModel.name = notification.getContact();
+                                        }
+                                        deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                                    }
+                                }
+                            } else {
+                                DeviceNotificationBean notification = alarmInfo.getNotification();
+                                if (notification != null) {
+                                    if (!TextUtils.isEmpty(notification.getContent())) {
+                                        DeployContactModel deployContactModel = new DeployContactModel();
+                                        deployContactModel.phone = notification.getContent();
+                                        if (!TextUtils.isEmpty(notification.getContact())) {
+                                            deployContactModel.name = notification.getContact();
+                                        }
+                                        deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                                    }
                                 }
                             }
                         }

@@ -1,6 +1,6 @@
 package com.sensoro.common.server.response;
 
-public class MalfunctionCountRsp extends ResponseBase {
+public class MalfunctionCountRsp extends ResponseResult {
     public int getCount() {
         return count;
     }

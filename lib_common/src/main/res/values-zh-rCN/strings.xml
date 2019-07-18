@@ -93,8 +93,8 @@
     <string name="equipment_warning">设备预警</string>
     <string name="value_is">值为</string>
     <string name="telephone_call">拨打中</string>
-    <string name="telephone_answer_success">接收成功</string>
-    <string name="telephone_answer_failed">接收失败</string>
+    <string name="telephone_answer_success">接听成功</string>
+    <string name="telephone_answer_failed">接听失败</string>
     <string name="telephone_answer_unknow">结果未知</string>
     <string name="sms_sending">发送中</string>
     <string name="sms_received_successfully">接收成功</string>
@@ -488,6 +488,7 @@
     <string name="monitor_point_detail_monitor_parameter">监控参数</string>
     <string name="monitor_point_detail_operation">操作</string>
     <string name="monitor_point_detail_erasure">消音</string>
+    <string name="monitor_point_detail_erasure_time">定时消音</string>
     <string name="monitor_point_detail_erasure_long">长消音</string>
     <string name="monitor_point_firmware_upgrade">固件升级</string>
     <string name="monitor_point_information">基本信息</string>
@@ -665,7 +666,7 @@
     <string name="air_switch_config">配置</string>
     <string name="is_device_air_switch_config">是否进行初始配置</string>
     <string name="configuring">配置中</string>
-    <string name="monitor_point_operation_error_value_range">输入错误，数值范围:</string>
+    <string name="monitor_point_operation_error_value_range">时长输入错误，数值范围:</string>
     <string name="enter_the_correct_number_format">请输入正确的数字</string>
     <string name="input_not_null">输入不能为空</string>
     <string name="main_home_menu_scan_login">扫码登录</string>
@@ -800,8 +801,10 @@
     <string name="device_number">设备编号：</string>
     <string name="command_elec_disconnect_title">是否设备断电</string>
     <string name="command_elec_disconnect_desc">操作后设备将变为断电状态，请先确认是否会对生产生活造成影响</string>
+    <string name="command_smoke_mute_time_desc">取值范围：1~30；定时消音，设备将在设定时长内消音</string>
     <string name="command_elec_disconnect_btn_title">断电</string>
     <string name="command_elec_connect_title">是否设备上电</string>
+    <string name="command_smoke_mute_time_title">是否将报警设备定时消音</string>
     <string name="command_elec_connect_desc">操作后设备将变为通电状态，请先务必确认周边人员安全</string>
     <string name="command_elec_connect_btn_title">上电</string>
     <string name="deploy_detail">部署详情</string>
@@ -1176,6 +1179,9 @@
     <string name="mobile_network">您现在正在使用移动网络，请注意您的流量使用情况</string>
     <string name="monitor_point_detail_alarm">报警</string>
     <string name="monitor_point_detail_operat">操作中</string>
+    <string name="duration">时长</string>
+
+
 
     <string name="missing_required_photo">缺少必选照片</string>
 

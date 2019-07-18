@@ -410,6 +410,10 @@ public class DeviceInfo implements Serializable, Comparable {
                     if (notification != null) {
                         this.alarms.setNotification(notification);
                     }
+                    List<DeviceNotificationBean> notifications = alarms.getNotifications();
+                    if (notifications != null && notifications.size() > 0) {
+                        this.alarms.setNotifications(notifications);
+                    }
                     AlarmInfo.RuleInfo[] rules = alarms.getRules();
                     if (rules != null) {
                         this.alarms.setRules(rules);

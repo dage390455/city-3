@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 
 import com.sensoro.common.analyzer.PreferencesSaveAnalyzer;
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
@@ -15,10 +16,9 @@ import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.MalfunctionListInfo;
-import com.sensoro.common.server.response.MalfunctionListRsp;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.activity.MalfunctionDetailActivity;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMalfunctionFragmentView;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
@@ -79,7 +79,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
                 cur_page = 1;
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getDeviceMalfunctionLogList(cur_page, null, null, tempSearch, temp_startTime,
-                        temp_endTime).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MalfunctionListRsp>(this) {
+                        temp_endTime).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<MalfunctionListInfo>>>(this) {
 
 
                     @Override
@@ -90,7 +90,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
                     }
 
                     @Override
-                    public void onCompleted(MalfunctionListRsp malfunctionListRsp) {
+                    public void onCompleted(ResponseResult<List<MalfunctionListInfo>> malfunctionListRsp) {
                         getView().dismissProgressDialog();
                         refreshUI(direction, malfunctionListRsp);
                         getView().onPullRefreshComplete();
@@ -102,7 +102,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
                 cur_page++;
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().getDeviceMalfunctionLogList(cur_page, null, null, tempSearch, temp_startTime,
-                        temp_endTime).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MalfunctionListRsp>(this) {
+                        temp_endTime).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<MalfunctionListInfo>>>(this) {
 
 
                     @Override
@@ -114,7 +114,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
                     }
 
                     @Override
-                    public void onCompleted(MalfunctionListRsp malfunctionListRsp) {
+                    public void onCompleted(ResponseResult<List<MalfunctionListInfo>> malfunctionListRsp) {
                         getView().dismissProgressDialog();
                         if (malfunctionListRsp.getData().size() == 0) {
                             getView().toastShort("没有更多数据了");
@@ -178,11 +178,11 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
         endTime += 1000 * 60 * 60 * 24;
         getView().showProgressDialog();
         RetrofitServiceHelper.getInstance().getDeviceMalfunctionLogList(1, null, null, tempSearch, startTime, endTime
-        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MalfunctionListRsp>(this) {
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<MalfunctionListInfo>>>(this) {
 
 
             @Override
-            public void onCompleted(MalfunctionListRsp malfunctionListRsp) {
+            public void onCompleted(ResponseResult<List<MalfunctionListInfo>> malfunctionListRsp) {
                 getView().dismissProgressDialog();
                 if (malfunctionListRsp.getData().size() == 0) {
                     getView().toastShort("没有更多数据了");
@@ -200,7 +200,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
         });
     }
 
-    private void refreshUI(int directionDown, MalfunctionListRsp malfunctionListRsp) {
+    private void refreshUI(int directionDown, ResponseResult<List<MalfunctionListInfo>> malfunctionListRsp) {
         if (directionDown == Constants.DIRECTION_DOWN) {
             mMalfunctionInfoList.clear();
         }
@@ -214,7 +214,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
         getView().updateAlarmListAdapter(mMalfunctionInfoList);
     }
 
-    private void handleMalfunctionLists(MalfunctionListRsp malfunctionListRsp) {
+    private void handleMalfunctionLists(ResponseResult<List<MalfunctionListInfo>> malfunctionListRsp) {
         List<MalfunctionListInfo> malfunctionListInfoList = malfunctionListRsp.getData();
         mMalfunctionInfoList.addAll(malfunctionListInfoList);
         //            Collections.sort(mDeviceAlarmLogInfoList);

@@ -21,12 +21,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
-import com.sensoro.common.model.DeployContactModel;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DpUtils;
 import com.sensoro.common.widgets.CustomCornerDialog;
@@ -36,7 +34,6 @@ import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TouchRecycleView;
 import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.DeployDeviceDetailAlarmContactAdapter;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
 import com.sensoro.smartcity.presenter.DeployMonitorDetailActivityPresenter;
 
@@ -65,8 +62,6 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     TouchRecycleView acDeployDeviceDetailRcTag;
     @BindView(R.id.ac_deploy_device_detail_rl_tag)
     RelativeLayout acDeployDeviceDetailRlTag;
-    @BindView(R.id.ac_deploy_device_detail_rc_alarm_contact)
-    TouchRecycleView acDeployDeviceDetailRcAlarmContact;
     @BindView(R.id.ac_deploy_device_detail_ll_alarm_contact)
     LinearLayout acDeployDeviceDetailLlAlarmContact;
     @BindView(R.id.deploy_detail_ll_we_chat)
@@ -113,7 +108,6 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     View lineDeployDetailWeChat;
     @BindView(R.id.ac_deploy_device_detail_tv_upload_tip)
     TextView acDeployDeviceDetailTvUploadTip;
-    private DeployDeviceDetailAlarmContactAdapter mAlarmContactAdapter;
     private TagAdapter mTagAdapter;
     private TextView mDialogTvConfirm;
     private TextView mDialogTvCancel;
@@ -126,6 +120,12 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     private ProgressUtils mLoadBleConfigDialog;
     private ProgressUtils.Builder mLoadBleConfigDialogBuilder;
     private View line1;
+    @BindView(R.id.ll_contacts)
+    LinearLayout llContacts;
+    @BindView(R.id.tv_first_contact)
+    TextView tvFirstContact;
+    @BindView(R.id.tv_total_contact)
+    TextView tvTotalContact;
 //    @Autowired()
 //    Intent intent;
 
@@ -176,12 +176,6 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     }
 
     private void initRcAlarmContact() {
-        acDeployDeviceDetailRcAlarmContact.setIntercept(true);
-        mAlarmContactAdapter = new DeployDeviceDetailAlarmContactAdapter(mActivity);
-        LinearLayoutManager manager = new LinearLayoutManager(mActivity);
-        manager.setOrientation(RecyclerView.VERTICAL);
-        acDeployDeviceDetailRcAlarmContact.setLayoutManager(manager);
-        acDeployDeviceDetailRcAlarmContact.setAdapter(mAlarmContactAdapter);
     }
 
     @Override
@@ -382,18 +376,18 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
         }
     }
 
-    @Override
-    public void updateContactData(List<DeployContactModel> contacts) {
-        if (contacts.size() > 0) {
-            acDeployDeviceDetailTvAlarmContactRequired.setVisibility(View.GONE);
-            acDeployDeviceDetailRcAlarmContact.setVisibility(View.VISIBLE);
-            mAlarmContactAdapter.updateDeployContactModels(contacts);
-        } else {
-            acDeployDeviceDetailTvAlarmContactRequired.setVisibility(View.VISIBLE);
-            acDeployDeviceDetailRcAlarmContact.setVisibility(View.GONE);
-        }
-
-    }
+//    @Override
+//    public void updateContactData(List<DeployContactModel> contacts) {
+//        if (contacts.size() > 0) {
+//            acDeployDeviceDetailTvAlarmContactRequired.setVisibility(View.GONE);
+////            acDeployDeviceDetailRcAlarmContact.setVisibility(View.VISIBLE);
+////            mAlarmContactAdapter.updateDeployContactModels(contacts);
+//        } else {
+//            acDeployDeviceDetailTvAlarmContactRequired.setVisibility(View.VISIBLE);
+////            acDeployDeviceDetailRcAlarmContact.setVisibility(View.GONE);
+//        }
+//
+//    }
 
     @Override
     public void updateTagsData(List<String> tagList) {
@@ -593,6 +587,30 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     @Override
     public void setDeployLocalCheckTipText(String tipText) {
         acDeployDeviceDetailTvUploadTip.setText(tipText);
+    }
+
+    @Override
+    public void setFirstContact(String contact) {
+        if (!TextUtils.isEmpty(contact)) {
+            tvFirstContact.setText(contact);
+        }
+    }
+
+    @Override
+    public void setTotalContact(int total) {
+        if (total > 0) {
+            acDeployDeviceDetailTvAlarmContactRequired.setVisibility(View.GONE);
+            llContacts.setVisibility(View.VISIBLE);
+        } else {
+            acDeployDeviceDetailTvAlarmContactRequired.setVisibility(View.VISIBLE);
+            llContacts.setVisibility(View.GONE);
+        }
+        if (total > 1) {
+            tvTotalContact.setText(getString(R.string.total) + total + getString(R.string.person));
+            tvTotalContact.setVisibility(View.VISIBLE);
+        } else {
+            tvTotalContact.setVisibility(View.GONE);
+        }
     }
 
     @Override

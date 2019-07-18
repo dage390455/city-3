@@ -17,13 +17,12 @@ import com.sensoro.common.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.common.server.bean.DeviceTypeStyles;
 import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.bean.SensorTypeStyles;
-import com.sensoro.common.server.response.AuthRsp;
-import com.sensoro.common.server.response.DevicesMergeTypesRsp;
+import com.sensoro.common.server.response.ResponseResult;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.BuildConfig;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.imainviews.IAuthActivityView;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -36,7 +35,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> implements  IOnStart {
+public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> implements IOnStart {
     private Activity mContext;
     private EventLoginData mEventLoginData;
 
@@ -55,11 +54,12 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
         if (isAttachedView()) {
             getView().showProgressDialog();
         }
-        RetrofitServiceHelper.getInstance().doubleCheck(code).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AuthRsp>(this) {
+        RetrofitServiceHelper.getInstance().doubleCheck(code).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<Boolean>>(this) {
 
             @Override
-            public void onCompleted(AuthRsp authRsp) {
-                if (authRsp.isData()) {
+            public void onCompleted(ResponseResult<Boolean> authRsp) {
+                Boolean data = authRsp.getData();
+                if (data != null && data) {
                     //请求mergetypes字段
                     getMergeType();
                 } else {
@@ -73,7 +73,7 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                if (isAttachedView()){
+                if (isAttachedView()) {
                     getView().toastShort(errorMsg);
                     getView().dismissProgressDialog();
                 }
@@ -82,9 +82,9 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
     }
 
     private void getMergeType() {
-        RetrofitServiceHelper.getInstance().getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Consumer<DevicesMergeTypesRsp>() {
+        RetrofitServiceHelper.getInstance().getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Consumer<ResponseResult<DeviceMergeTypesInfo>>() {
             @Override
-            public void accept(DevicesMergeTypesRsp devicesMergeTypesRsp) throws Exception {
+            public void accept(ResponseResult<DeviceMergeTypesInfo> devicesMergeTypesRsp) throws Exception {
                 DeviceMergeTypesInfo data = devicesMergeTypesRsp.getData();
                 PreferencesHelper.getInstance().saveLocalDevicesMergeTypes(data);
                 //测试信息
@@ -128,9 +128,9 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
                 }
             }
 
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesMergeTypesRsp>(AuthActivityPresenter.this) {
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceMergeTypesInfo>>(AuthActivityPresenter.this) {
             @Override
-            public void onCompleted(DevicesMergeTypesRsp devicesMergeTypesRsp) {
+            public void onCompleted(ResponseResult<DeviceMergeTypesInfo> devicesMergeTypesRsp) {
                 saveLoginDataOpenMain(mEventLoginData);
                 try {
                     LogUtils.loge("DevicesMergeTypesRsp ....." + mEventLoginData.toString());
@@ -142,7 +142,7 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                if (isAttachedView()){
+                if (isAttachedView()) {
                     getView().dismissProgressDialog();
                     getView().toastShort(errorMsg);
                 }
@@ -158,7 +158,7 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
         Intent mainIntent = new Intent();
         mainIntent.setClass(mContext, MainActivity.class);
         mainIntent.putExtra(Constants.EXTRA_EVENT_LOGIN_DATA, eventLoginData);
-        if (isAttachedView()){
+        if (isAttachedView()) {
             getView().startAC(mainIntent);
             getView().finishAc();
         }
@@ -168,7 +168,7 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
         EventData eventData = new EventData();
         eventData.code = Constants.EVENT_DATA_CANCEL_AUTH;
         EventBus.getDefault().post(eventData);
-        if (isAttachedView()){
+        if (isAttachedView()) {
             getView().finishAc();
         }
     }
@@ -188,7 +188,7 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
                 }
                 cacheCode.add(intStr);
             }
-            if (isAttachedView()){
+            if (isAttachedView()) {
                 getView().autoFillCode(cacheCode);
             }
             doAuthCheck(textFromClip);

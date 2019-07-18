@@ -3,7 +3,6 @@ package com.sensoro.smartcity.imainviews;
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
-import com.sensoro.common.server.bean.DeployRecordInfo;
 import com.sensoro.common.server.bean.ScenesData;
 
 import java.util.ArrayList;
@@ -22,8 +21,6 @@ public interface IDeployRecordDetailActivityView extends IToast, IActivityIntent
 
     void updateDeployPic(ArrayList<ScenesData> data);
 
-    void updateContactList(List<DeployRecordInfo.NotificationBean> notifications);
-
     void setPositionStatus(int status);
 
     void refreshSingle(String signalQuality);
@@ -37,4 +34,8 @@ public interface IDeployRecordDetailActivityView extends IToast, IActivityIntent
     void setDeployRecordDetailDeployStaff(String text);
 
     void setDeployDetailConfigInfo(String actual, String trans);
+
+    void setFirstContact(String contact);
+
+    void setTotalContact(int total);
 }

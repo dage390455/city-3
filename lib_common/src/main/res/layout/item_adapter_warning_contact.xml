@@ -2,28 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ll_warning_contact"
     android:layout_width="match_parent"
-    android:layout_height="64dp"
+    android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:paddingLeft="20dp"
-    android:paddingRight="20dp">
+    android:paddingTop="10dp"
+    android:paddingRight="20dp"
+    android:paddingBottom="10dp">
 
     <TextView
         android:id="@+id/tv_warning_contact_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/c_252525"
-        android:textSize="14dp"/>
+        android:textSize="14dp" />
 
     <TextView
         android:id="@+id/tv_warning_contact_phone"
-
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:layout_marginTop="4dp"
         android:textColor="@color/c_1dbb99"
-        android:textSize="14dp">
+        android:textSize="14dp"
+        android:visibility="visible">
 
     </TextView>
 </LinearLayout>

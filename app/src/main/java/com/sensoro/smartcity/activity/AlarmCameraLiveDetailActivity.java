@@ -21,7 +21,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.common.server.response.AlarmCameraLiveRsp;
+import com.sensoro.common.server.bean.AlarmCameraLiveBean;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
@@ -417,7 +417,7 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
     }
 
     @Override
-    public void updateData(ArrayList<AlarmCameraLiveRsp.DataBean> mList) {
+    public void updateData(ArrayList<AlarmCameraLiveBean> mList) {
         mListAdapter.updateData(mList);
         setNoContentVisible(mList == null || mList.size() < 1);
     }

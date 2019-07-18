@@ -1,5 +1,7 @@
 package com.sensoro.common.server.bean;
 
+import com.sensoro.common.model.DeviceNotificationBean;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -13,8 +15,8 @@ public class DeployRecordInfo implements Serializable {
     private String deviceName;
     private long createdTime;
     private String deployStaff;
-    private NotificationBean notification;
-    private List<NotificationBean> notifications;
+    private DeviceNotificationBean notification;
+    private List<DeviceNotificationBean> notifications;
     private String signalQuality;
     private String deviceType;
     private String deviceOwners;
@@ -117,11 +119,11 @@ public class DeployRecordInfo implements Serializable {
         this.deployStaff = deployStaff;
     }
 
-    public NotificationBean getNotification() {
+    public DeviceNotificationBean getNotification() {
         return notification;
     }
 
-    public void setNotification(NotificationBean notification) {
+    public void setNotification(DeviceNotificationBean notification) {
         this.notification = notification;
     }
 
@@ -197,37 +199,11 @@ public class DeployRecordInfo implements Serializable {
         this.deployPics = deployPics;
     }
 
-    public List<NotificationBean> getNotifications() {
+    public List<DeviceNotificationBean> getNotifications() {
         return notifications;
     }
 
-    public void setNotifications(List<NotificationBean> notifications) {
+    public void setNotifications(List<DeviceNotificationBean> notifications) {
         this.notifications = notifications;
-    }
-
-    public static class NotificationBean implements Serializable {
-        /**
-         * contact : 刘为强
-         * content : 17876856915
-         */
-
-        private String contact;
-        private String content;
-
-        public String getContact() {
-            return contact;
-        }
-
-        public void setContact(String contact) {
-            this.contact = contact;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
     }
 }
