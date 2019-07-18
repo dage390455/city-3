@@ -86,6 +86,9 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:theme">
         <!-- 适配华为（huawei）刘海屏 -->
+        <activity android:name=".activity.UUIDAddMySettingActivity"></activity>
+
+        <activity android:name=".activity.UuidSettingActivity" /> <!-- 适配华为（huawei）刘海屏 -->
         <meta-data
             android:name="android.notch_support"
             android:value="true" /> <!-- 适配小米（xiaomi）刘海屏 -->
@@ -386,6 +389,14 @@
         <activity android:name=".activity.NetWorkInfoActivity" />
         <activity
             android:name=".activity.DeployCameraLiveDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.NearByDeviceActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SettingNotificationActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
         <activity android:name=".activity.ThreePhaseElectConfigActivity" />

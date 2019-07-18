@@ -89,6 +89,7 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_DEVICE_CAMERA_DEPLOY = "extra_grants_has_device_camera_deploy";
     String EXTRA_GRANTS_HAS_NAMEPLATE_LIST = "extra_grants_has_nameplate_list";
     String EXTRA_GRANTS_HAS_NAMEPLATE_DEPLOY = "extra_grants_has_nameplate_deploy";
+    String EXTRA_GRANTS_HAS_IBEACON_SEARCH_DEMO = "extra_grants_has_ibeacon_search_demo";
     String EXTRA_GRANTS_HAS_MONITOR_TASK_LIST = "extra_grants_has_monitor_task_list";
     String EXTRA_GRANTS_HAS_MONITOR_TASK_CONFIRM = "extra_grants_has_monitor_task_confirm";
     String EXTRA_DEVICE_INFO = "extra_device_info";
@@ -373,6 +374,9 @@ public interface Constants {
 
     //安全隐患，标签
     String PREFERENCE_SECURITY_RISK_TAG = "preference_security_risk_tag";
+    String PREFERENCE_UUID_SETTING_TAG = "preference_uuid_setting_tag";
+    String PREFERENCE_UUID_SETTING_MY_UUID_TAG = "preference_uuid_setting_my_uuid_tag";
+    String PREFERENCE_UUID_SETTING_CURRENT_UUID_NO_SETTING_TAG = "preference_uuid_setting_current_uuid_no_setting_tag";
     String PREFERENCE_KEY_SECURITY_RISK_LOCATION = "preference_key_security_risk_location";
     String PREFERENCE_KEY_SECURITY_RISK_BEHAVIOR = "preference_key_security_risk_behavior";
     //铭牌部署 关联传感器的来源
@@ -403,6 +407,7 @@ public interface Constants {
     String[] INDEX_STATUS_ARRAY = {"全部状态", "预警", "正常", "失联", "未激活"};
     int EVENT_DATA_UPDATE_BASE_STATION = 0x64;
     int TYPE_SCAN_DEPLOY_CAMERA = 0x65;
+    int EVENT_DATA_ADD_NEW_UUID_CONTENT = 0x66;
 
 
     //

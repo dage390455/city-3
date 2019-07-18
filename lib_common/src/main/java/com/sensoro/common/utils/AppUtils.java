@@ -26,6 +26,8 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
+
 import com.sensoro.common.R;
 import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.server.bean.AlarmInfo;
@@ -612,6 +614,50 @@ public class AppUtils {
             dialog.show();
         }
         return dialog;
+    }
+
+    /**
+     * 判断是否是主进程
+     *
+     * @return
+     */
+    public static boolean isAppMainProcess(@NonNull Context context, @NonNull String appName) {
+        try {
+            int pid = android.os.Process.myPid();
+            String process = getProcessNameByPID(context, pid);
+//            try {
+//                LogUtils.loge("currentNearby---->> process = " + process);
+//            } catch (Throwable throwable) {
+//                throwable.printStackTrace();
+//            }
+            return TextUtils.isEmpty(process) || appName.equalsIgnoreCase(process);
+//            return false;
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
+    /**
+     * 根据 pid 获取进程名
+     *
+     * @param context
+     * @param pid
+     * @return
+     */
+    private static String getProcessNameByPID(Context context, int pid) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        if (manager == null) {
+            return "";
+        }
+        for (android.app.ActivityManager.RunningAppProcessInfo processInfo : manager.getRunningAppProcesses()) {
+            if (processInfo == null) {
+                continue;
+            }
+            if (processInfo.pid == pid) {
+                return processInfo.processName;
+            }
+        }
+        return "";
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -29,6 +29,8 @@ public interface IManagerFragmentView extends IToast, IActivityIntent, IProgress
 
     void setNameplateVisible(boolean hasNameplate);
 
+    void setIBeaconVisible(boolean hasIBeacon);
+
     void showBleTips();
 
     void hideBleTips();

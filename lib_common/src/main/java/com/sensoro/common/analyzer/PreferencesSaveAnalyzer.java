@@ -85,8 +85,12 @@ public class PreferencesSaveAnalyzer {
         return new ArrayList<String>();
     }
 
-    private static void savePreferences(int status, String content) {
+    public static void savePreferences(int status, String content) {
         switch (status) {
+            case SearchHistoryTypeConstants.TYPE_SETTINGNOTIFICATION:
+                ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_SETTINGNOTIFICATION_NAME, Context
+                        .MODE_PRIVATE).edit().putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, content).apply();
+                break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_NAMEPLATE_LIST:
                 ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_NAMEPLATELIST_NAME, Context
                         .MODE_PRIVATE).edit().putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, content).apply();
@@ -152,6 +156,10 @@ public class PreferencesSaveAnalyzer {
     private static String obtainOldText(int status) {
         String oldText = null;
         switch (status) {
+            case SearchHistoryTypeConstants.TYPE_SETTINGNOTIFICATION:
+                oldText = ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_SETTINGNOTIFICATION_NAME, Context
+                        .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
+                break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_NAMEPLATE_LIST:
                 oldText = ContextUtils.getContext().getSharedPreferences(SearchHistoryTypeConstants.SP_FILE_NAMEPLATELIST_NAME, Context
                         .MODE_PRIVATE).getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");

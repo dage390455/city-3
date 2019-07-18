@@ -34,6 +34,10 @@ public class BleObserver implements BLEDeviceListener<BLEDevice> {
         hashSet.clear();
     }
 
+    public boolean isRegisterBleObserver(BLEDeviceListener<BLEDevice> listener) {
+        return hashSet.contains(listener);
+    }
+
     @Override
     public void onNewDevice(BLEDevice bleDevice) {
         if (bleDevice != null) {

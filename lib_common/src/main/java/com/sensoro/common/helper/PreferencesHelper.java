@@ -10,6 +10,7 @@ import com.sensoro.common.base.ContextUtils;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.model.EventLoginData;
+import com.sensoro.common.model.IbeaconSettingData;
 import com.sensoro.common.model.SecurityRisksTagModel;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.AlarmPopupDataBean;
@@ -112,6 +113,7 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_CAMERA_DEPLOY, eventLoginData.hasDeviceCameraDeploy);
         editor.putBoolean(EXTRA_GRANTS_HAS_NAMEPLATE_LIST, eventLoginData.hasNameplateList);
         editor.putBoolean(EXTRA_GRANTS_HAS_NAMEPLATE_DEPLOY, eventLoginData.hasNameplateDeploy);
+        editor.putBoolean(EXTRA_GRANTS_HAS_IBEACON_SEARCH_DEMO, eventLoginData.hasIBeaconSearchDemo);
         editor.putBoolean(EXTRA_GRANTS_HAS_MONITOR_TASK_LIST, eventLoginData.hasMonitorTaskList);
         editor.putBoolean(EXTRA_GRANTS_HAS_MONITOR_TASK_CONFIRM, eventLoginData.hasMonitorTaskConfirm);
         //
@@ -163,6 +165,7 @@ public final class PreferencesHelper implements Constants {
             boolean hasDeviceCameraDeploy = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_CAMERA_DEPLOY, false);
             boolean hasNameplateList = sp.getBoolean(EXTRA_GRANTS_HAS_NAMEPLATE_LIST, false);
             boolean hasNameplateDeploy = sp.getBoolean(EXTRA_GRANTS_HAS_NAMEPLATE_DEPLOY, false);
+            boolean hasIBeaconSearchDemo = sp.getBoolean(EXTRA_GRANTS_HAS_IBEACON_SEARCH_DEMO, false);
             boolean hasMonitorTaskList = sp.getBoolean(EXTRA_GRANTS_HAS_MONITOR_TASK_LIST, false);
             boolean hasMonitorTaskConfirm = sp.getBoolean(EXTRA_GRANTS_HAS_MONITOR_TASK_CONFIRM, false);
             final EventLoginData eventLoginData = new EventLoginData();
@@ -204,6 +207,7 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasDeviceCameraDeploy = hasDeviceCameraDeploy;
             eventLoginData.hasNameplateList = hasNameplateList;
             eventLoginData.hasNameplateDeploy = hasNameplateDeploy;
+            eventLoginData.hasIBeaconSearchDemo = hasIBeaconSearchDemo;
             eventLoginData.hasMonitorTaskList = hasMonitorTaskList;
             eventLoginData.hasMonitorTaskConfirm = hasMonitorTaskConfirm;
             mEventLoginData = eventLoginData;
@@ -899,4 +903,49 @@ public final class PreferencesHelper implements Constants {
         ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_SECURITY_RISK_TAG, Context.MODE_PRIVATE)
                 .edit().putString(Constants.PREFERENCE_KEY_SECURITY_RISK_BEHAVIOR, sb.toString()).apply();
     }
+
+    public void saveMyUUID(List<String> uuids) {
+        if (uuids != null && !uuids.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < uuids.size(); i++) {
+                sb.append(uuids.get(i));
+                if (i != uuids.size() - 1) {
+                    sb.append("#");
+                }
+            }
+            ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_UUID_SETTING_TAG, Context.MODE_PRIVATE)
+                    .edit().putString(Constants.PREFERENCE_UUID_SETTING_MY_UUID_TAG, sb.toString()).apply();
+        }
+    }
+
+    public List<String> getSaveMyUUID() {
+        String data = ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_UUID_SETTING_TAG, Context.MODE_PRIVATE)
+                .getString(Constants.PREFERENCE_UUID_SETTING_MY_UUID_TAG, null);
+        if (!TextUtils.isEmpty(data)) {
+            String[] split = data.split("#");
+            return Arrays.asList(split);
+        }
+        return null;
+    }
+
+    public boolean setIbeaconSettingData(IbeaconSettingData ibeaconSettingData) {
+        if (ibeaconSettingData != null) {
+            String json = RetrofitServiceHelper.getInstance().getGson().toJson(ibeaconSettingData);
+            ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_UUID_SETTING_TAG, Context.MODE_PRIVATE)
+                    .edit().putString(Constants.PREFERENCE_UUID_SETTING_CURRENT_UUID_NO_SETTING_TAG, json).apply();
+            return true;
+        }
+        return false;
+    }
+
+    public IbeaconSettingData getIbeaconSettingData() {
+        String data = ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_UUID_SETTING_TAG, Context.MODE_PRIVATE)
+                .getString(Constants.PREFERENCE_UUID_SETTING_CURRENT_UUID_NO_SETTING_TAG, null);
+        if (!TextUtils.isEmpty(data)) {
+            return RetrofitServiceHelper.getInstance().getGson().fromJson(data, IbeaconSettingData.class);
+        }
+        return null;
+    }
+
+
 }

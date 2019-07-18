@@ -138,14 +138,14 @@ public interface RetrofitService {
      */
     @GET("details/{sn}/statistics/es")
     Observable<ResponseResult> getDeviceHistoryList(@Path("sn") String sn, @Query("beginTime") long beginTime,
-                                                     @Query("endTime") long endTime, @Query("type") String type);
+                                                    @Query("endTime") long endTime, @Query("type") String type);
 
     @GET(DEVICE_INFO_LIST)
     Observable<ResponseResult<List<DeviceInfo>>> getDeviceDetailInfoList(@Query("sns") String sns, @Query("search") String search,
                                                                          @Query("all") int all);
 
     @GET(DEVICE_BRIEF_LIST)
-    Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(@Query("page") int page, @Query("count")
+    Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(@Query("sns") List<String> sns, @Query("page") int page, @Query("count")
             int count, @Query("all") int all, @Query("showIndoorDevice") int showIndoorDevice,
                                                                         @Query("sensorTypes") String sensorTypes, @Query("mergeTypes") String mergeTypes, @Query("status") Integer status, @Query("search") String search);
 
@@ -158,15 +158,15 @@ public interface RetrofitService {
     @GET(DEVICE_ALARM_LOG)
     Observable<ResponseResult<List<DeviceAlarmLogInfo>>> getDeviceAlarmLogList(@Query("count") int count, @Query("page") int page, @Query
             ("sn") String sn, @Query("deviceName") String deviceName, @Query("phone")
-                                                                String phone, @Query("search") String search, @Query
-                                                                ("beginTime") Long beginTime,
+                                                                                       String phone, @Query("search") String search, @Query
+                                                                                       ("beginTime") Long beginTime,
                                                                                @Query("endTime") Long endTime
             , @Query("unionTypes") String unionTypes);
 
     @GET(DEVICE_MALFUNCTION_LOG)
     Observable<ResponseResult<List<MalfunctionListInfo>>> getDeviceMalfunctionLogList(@Query("count") int count, @Query("page") int page, @Query
             ("sn") String sn, @Query("deviceName") String deviceName, @Query("search") String search, @Query
-                                                                       ("beginTime") Long beginTime,
+                                                                                              ("beginTime") Long beginTime,
                                                                                       @Query("endTime") Long endTime);
 
     @GET(USER_ACCOUNT_LIST)
@@ -451,7 +451,7 @@ public interface RetrofitService {
     Observable<ResponseResult<Integer>> updateNameplate(@Path("nameplateId") String nameplateId, @Body RequestBody body);
 
     @GET("nameplate/unbind/devices")
-    Observable<ResponseResult<List<NamePlateInfo> >> getNameplateUnbindDevices(@Query("page") Integer page, @Query("count") Integer count, @Query("nameplateId") String nameplateId, @Query("search") String searchText);
+    Observable<ResponseResult<List<NamePlateInfo>>> getNameplateUnbindDevices(@Query("page") Integer page, @Query("count") Integer count, @Query("nameplateId") String nameplateId, @Query("search") String searchText);
 
     @PUT("nameplate/deploy/{nameplateId}")
     Observable<ResponseResult<DeployNameplateInfo>> doUploadDeployNameplate(@Path("nameplateId") String nameplateId, @Body RequestBody requestBody);

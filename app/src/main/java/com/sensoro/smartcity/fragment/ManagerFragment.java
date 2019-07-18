@@ -19,6 +19,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.BaseStationListActivity;
 import com.sensoro.smartcity.activity.CameraListActivity;
+import com.sensoro.smartcity.activity.NearByDeviceActivity;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
 import com.sensoro.smartcity.presenter.ManagerFragmentPresenter;
 import com.sensoro.common.utils.AppUtils;
@@ -93,6 +94,10 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     LinearLayout fgMainManageLlBasestation;
     @BindView(R.id.line10)
     FrameLayout line10;
+    @BindView(R.id.fg_main_manage_ll_nearby)
+    LinearLayout fgMainManageLlNearby;
+    @BindView(R.id.line11)
+    FrameLayout line11;
     private ProgressUtils mProgressUtils;
     private TipDialogUtils mExitDialog;
     private VersionDialogUtils mVersionDialog;
@@ -230,7 +235,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
             R.id.fg_main_manage_ll_maintenance_mission, R.id.fg_main_manage_ll_scan_login,
             R.id.fg_main_manage_ll_about_us, R.id.fg_main_manage_ll_version_info,
             R.id.fg_main_manage_ll_nameplate, R.id.fg_main_manage_ll_exit, R.id.fg_main_manage_ll_signal_check,
-            R.id.fg_main_manage_ll_wire_material_diameter, R.id.fg_main_manage_ll_camera, R.id.fg_main_manage_ll_basestation})
+            R.id.fg_main_manage_ll_wire_material_diameter, R.id.fg_main_manage_ll_camera, R.id.fg_main_manage_ll_basestation, R.id.fg_main_manage_ll_nearby})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fg_main_manage_ll_change_merchants:
@@ -280,6 +285,9 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 break;
             case R.id.fg_main_manage_ll_basestation:
                 startAC(new Intent(mRootFragment.getActivity(), BaseStationListActivity.class));
+                break;
+            case R.id.fg_main_manage_ll_nearby:
+                startAC(new Intent(mRootFragment.getActivity(), NearByDeviceActivity.class));
                 break;
         }
     }
@@ -352,6 +360,12 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     public void setNameplateVisible(boolean hasNameplate) {
         line10.setVisibility(hasNameplate ? View.VISIBLE : View.GONE);
         fgMainManageLlNameplate.setVisibility(hasNameplate ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setIBeaconVisible(boolean hasIBeacon) {
+        line11.setVisibility(hasIBeacon ? View.VISIBLE : View.GONE);
+        fgMainManageLlNearby.setVisibility(hasIBeacon ? View.VISIBLE : View.GONE);
     }
 
     @Override

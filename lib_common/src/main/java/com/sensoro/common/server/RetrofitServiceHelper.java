@@ -488,7 +488,13 @@ public class RetrofitServiceHelper {
      */
     public Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(int page, String sensorTypes, String mergeTypes, Integer status, String
             search) {
-        return retrofitService.getDeviceBriefInfoList(page, 20, 1, 1,
+        return retrofitService.getDeviceBriefInfoList(null, page, 20, 1, 1,
+                sensorTypes, mergeTypes, status, search);
+    }
+
+    public Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(List<String> sns, int page, String sensorTypes, String mergeTypes, Integer status, String
+            search) {
+        return retrofitService.getDeviceBriefInfoList(sns, page, 20, 1, 1,
                 sensorTypes, mergeTypes, status, search);
     }
 
