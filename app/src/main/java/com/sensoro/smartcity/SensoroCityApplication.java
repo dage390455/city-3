@@ -1,7 +1,10 @@
 package com.sensoro.smartcity;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
@@ -59,12 +62,46 @@ public class SensoroCityApplication extends BaseApplication implements Repause
     public NotificationUtils mNotificationUtils;
     public boolean isAPPBack = true;
     private static PushHandler pushHandler;
-
+    private final Handler taskHandler = new Handler(Looper.getMainLooper());
     public volatile boolean hasGotToken = false;
     public static String VIDEO_PATH;
     public AMapLocationClient mLocationClient;
     public BLEDeviceManager bleDeviceManager;
     private final Runnable iBeaconTask = new Runnable() {
+        private boolean noStateOut = true;
+        private boolean noStateIn = true;
+        private final Runnable inTask = new Runnable() {
+            @Override
+            public void run() {
+                if (noStateIn) {
+                    if (TextUtils.isEmpty(ibeaconSettingData.switchInMessage)) {
+                        SensoroCityApplication.getInstance().mNotificationUtils.sendNotification("进入！！");
+                    } else {
+                        SensoroCityApplication.getInstance().mNotificationUtils.sendNotification(ibeaconSettingData.switchInMessage);
+                    }
+                }
+                noStateIn = false;
+                noStateOut = true;
+            }
+        };
+        private final Runnable outTask = new Runnable() {
+            @Override
+            public void run() {
+                if (noStateOut) {
+                    if (TextUtils.isEmpty(ibeaconSettingData.switchOutMessage)) {
+                        SensoroCityApplication.getInstance().mNotificationUtils.sendNotification("出去！！！");
+                    } else {
+                        SensoroCityApplication.getInstance().mNotificationUtils.sendNotification(ibeaconSettingData.switchOutMessage);
+                    }
+                }
+                noStateOut = false;
+                noStateIn = true;
+
+            }
+        };
+        private volatile int outCount = 0;
+        //
+
         @Override
         public void run() {
             if (ibeaconSettingData.switchOut || ibeaconSettingData.switchIn) {
@@ -85,20 +122,113 @@ public class SensoroCityApplication extends BaseApplication implements Repause
                 }
                 if (bleHasOpen) {
                     //TODO 做检查
-                    if (!BleObserver.getInstance().isRegisterBleObserver(bleDeviceListener)) {
-                        BleObserver.getInstance().registerBleObserver(bleDeviceListener);
-                    }
-                    pushHandler.post(checkNearbyTask);
-                } else {
-                    if (BleObserver.getInstance().isRegisterBleObserver(bleDeviceListener)) {
-                        BleObserver.getInstance().unregisterBleObserver(bleDeviceListener);
-                    }
+                    boolean currentNearby = !mNearByIBeaconMap.isEmpty();
+                    if (currentNearby) {
+                        //当前在附近
+                        if (isNearby) {
+                            //上次记录在附近，本地记录也在附近
+                            try {
+                                LogUtils.loge("currentNearby---->> 上次记录在附近，本地记录也在附近 outCount = " + outCount + ",isNearby = " + isNearby + ",currentNearby = " + currentNearby);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+                        } else {
+                            //上次记录不在附近，本次记录在附近
+                            try {
+                                LogUtils.loge("currentNearby---->> 上次记录不在附近，本次记录在附近 outCount = " + outCount + ",isNearby = " + isNearby + ",currentNearby = " + currentNearby);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+                            if (ibeaconSettingData.switchIn) {
+                                taskHandler.removeCallbacks(inTask);
+                                taskHandler.removeCallbacks(outTask);
+                                taskHandler.post(inTask);
+                            }
+                        }
+                        outCount = 0;
+                    } else {
+                        //当前不在附近
+                        if (isNearby) {
+                            //上次记录在附近，本次记录不在附近
+                            outCount = 1;
+                            try {
+                                LogUtils.loge("currentNearby---->> 上次记录在附近，本次记录不在附近 outCount = " + outCount + ",isNearby = " + isNearby + ",currentNearby = " + currentNearby);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+                        } else {
+                            //上次记录不在附近本地记录也不在附近
+                            int i = 20 - outCount * 3;
+                            if (i > 0) {
+                                outCount++;
+                            } else {
+                                //TODO 处理是否每次都弹起
+                                if (ibeaconSettingData.switchOut) {
+                                    taskHandler.removeCallbacks(outTask);
+                                    taskHandler.removeCallbacks(inTask);
+                                    taskHandler.post(outTask);
+                                }
+                                outCount = 0;
+                            }
+                            try {
+                                LogUtils.loge("currentNearby---->> 上次记录不在附近，本次记录不在附近 outCount = " + outCount + ",isNearby = " + isNearby + ",currentNearby = " + currentNearby + ",i = " + i);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+                        }
 
+                    }
+                    isNearby = currentNearby;
                 }
             }
-            pushHandler.postDelayed(iBeaconTask, 3000);
+            taskHandler.postDelayed(iBeaconTask, 3000);
         }
     };
+
+    /**
+     * 判断是否是主进程
+     *
+     * @return
+     */
+    public boolean isAppMainProcess() {
+        try {
+            int pid = android.os.Process.myPid();
+            String process = getProcessNameByPID(getApplicationContext(), pid);
+//            try {
+//                LogUtils.loge("currentNearby---->> process = " + process);
+//            } catch (Throwable throwable) {
+//                throwable.printStackTrace();
+//            }
+            return TextUtils.isEmpty(process) || "com.sensoro.smartcity".equalsIgnoreCase(process);
+//            return false;
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
+    /**
+     * 根据 pid 获取进程名
+     *
+     * @param context
+     * @param pid
+     * @return
+     */
+    public String getProcessNameByPID(Context context, int pid) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        if (manager == null) {
+            return "";
+        }
+        for (android.app.ActivityManager.RunningAppProcessInfo processInfo : manager.getRunningAppProcesses()) {
+            if (processInfo == null) {
+                continue;
+            }
+            if (processInfo.pid == pid) {
+                return processInfo.processName;
+            }
+        }
+        return "";
+    }
+
     private final BLEDeviceListener<BLEDevice> bleDeviceListener = new BLEDeviceListener<BLEDevice>() {
         @Override
         public void onNewDevice(BLEDevice bleDevice) {
@@ -153,50 +283,6 @@ public class SensoroCityApplication extends BaseApplication implements Repause
     private final LinkedHashMap<String, IBeacon> mNearByIBeaconMap = new LinkedHashMap<>();
     private volatile boolean isNearby = false;
     public IbeaconSettingData ibeaconSettingData = new IbeaconSettingData();
-    private final Runnable checkNearbyTask = new Runnable() {
-        @Override
-        public void run() {
-            boolean currentNearby = !mNearByIBeaconMap.isEmpty();
-
-            if (isNearby != currentNearby) {
-//                    getView().toastLong("进出状态：" + currentNearby);
-                if (currentNearby) {
-                    if (ibeaconSettingData.switchIn) {
-                        pushHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (TextUtils.isEmpty(ibeaconSettingData.switchInMessage)) {
-                                    SensoroCityApplication.getInstance().mNotificationUtils.sendNotification("进入！！");
-                                } else {
-                                    SensoroCityApplication.getInstance().mNotificationUtils.sendNotification(ibeaconSettingData.switchInMessage);
-                                }
-
-                            }
-                        });
-                    }
-                    isNearby = true;
-                } else {
-                    //当前不在范围做缓存处理
-                    if (ibeaconSettingData.switchOut) {
-                        pushHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (TextUtils.isEmpty(ibeaconSettingData.switchOutMessage)) {
-                                    SensoroCityApplication.getInstance().mNotificationUtils.sendNotification("出去！！！");
-                                } else {
-                                    SensoroCityApplication.getInstance().mNotificationUtils.sendNotification(ibeaconSettingData.switchOutMessage);
-                                }
-
-                            }
-                        });
-                    }
-                }
-
-            }
-
-//            pushHandler.postDelayed(checkNearbyTask, 300);
-        }
-    };
 
     //
     @Override
@@ -275,6 +361,9 @@ public class SensoroCityApplication extends BaseApplication implements Repause
     @Override
     public void onTerminate() {
         super.onTerminate();
+        if (BleObserver.getInstance().isRegisterBleObserver(bleDeviceListener)) {
+            BleObserver.getInstance().unregisterBleObserver(bleDeviceListener);
+        }
         Repause.unregisterListener(this);
         mLocationClient.onDestroy();
         mNearByIBeaconMap.clear();
@@ -287,24 +376,30 @@ public class SensoroCityApplication extends BaseApplication implements Repause
         if (pushHandler == null) {
             pushHandler = new PushHandler();
         }
-        pushHandler.postDelayed(new Runnable() {
+        taskHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 Mapbox.getInstance(instance.getApplicationContext(), instance.getString(R.string.mapbox_access_token));
             }
         }, 1000);
         ThreadPoolManager.getInstance().execute(this);
-        pushHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                SensoroCityApplication.getInstance().ibeaconSettingData.currentUUID = "70DC44C3-E2A8-4B22-A2C6-129B41A4BDBC";
-                IbeaconSettingData ibeaconSettingData = PreferencesHelper.getInstance().getIbeaconSettingData();
-                if (ibeaconSettingData != null) {
-                    SensoroCityApplication.getInstance().ibeaconSettingData = ibeaconSettingData;
+        if (isAppMainProcess()) {
+            taskHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    SensoroCityApplication.getInstance().ibeaconSettingData.currentUUID = "70DC44C3-E2A8-4B22-A2C6-129B41A4BDBC";
+                    IbeaconSettingData ibeaconSettingData = PreferencesHelper.getInstance().getIbeaconSettingData();
+                    if (ibeaconSettingData != null) {
+                        SensoroCityApplication.getInstance().ibeaconSettingData = ibeaconSettingData;
+                    }
+                    if (!BleObserver.getInstance().isRegisterBleObserver(bleDeviceListener)) {
+                        BleObserver.getInstance().registerBleObserver(bleDeviceListener);
+                    }
                 }
-            }
-        });
-        pushHandler.postDelayed(iBeaconTask, 500);
+            });
+            taskHandler.postDelayed(iBeaconTask, 500);
+        }
+
     }
 
     private void initBugLy() {
