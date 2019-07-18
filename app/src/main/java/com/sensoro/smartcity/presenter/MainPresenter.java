@@ -36,7 +36,6 @@ import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
-import com.sensoro.common.server.bean.UserInfo;
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
@@ -44,7 +43,6 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.PermissionChangeActivity;
-import com.sensoro.smartcity.factory.UserPermissionFactory;
 import com.sensoro.smartcity.fragment.HomeFragment;
 import com.sensoro.smartcity.fragment.MalfunctionFragment;
 import com.sensoro.smartcity.fragment.ManagerFragment;
@@ -240,37 +238,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             public void onErrorMsg(int errorCode, String errorMsg) {
             }
         });
-        //获取一下最新的权限信息
-        checkPermissionChangeState();
-    }
-
-    /**
-     * 检查权限是否发生变化
-     */
-    private void checkPermissionChangeState() {
-        RetrofitServiceHelper.getInstance().getPermissionChangeInfo().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<UserInfo>>(this) {
-            @Override
-            public void onCompleted(ResponseResult<UserInfo> loginRsp) {
-                EventLoginData userData = PreferencesHelper.getInstance().getUserData();
-                UserInfo userInfo = loginRsp.getData();
-                EventLoginData loginData = UserPermissionFactory.createLoginData(userInfo, userData.phoneId);
-                boolean isSame = userData.equals(loginData);
-                try {
-                    LogUtils.loge("socket-->>> isSame = " + isSame);
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
-                }
-                if (!isSame) {
-                    //权限发生变化需要弹窗
-                    openPermissionChange();
-                }
-            }
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().toastShort(errorMsg);
-            }
-        });
     }
 
     private void initViewPager() {
@@ -385,10 +352,14 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                                     List<String> accountIds = permissionChangeSocketModel.getAccountIds();
                                     if (accountIds != null && accountIds.size() > 0) {
                                         if (PreferencesHelper.getInstance().getUserData().accountId == null) {
-                                            checkPermissionChangeState();
+//                                            checkPermissionChangeState();
+                                            //TODO 直接通知弹窗
+                                            openPermissionChange();
+
                                         } else {
                                             if (accountIds.contains(PreferencesHelper.getInstance().getUserData().accountId)) {
-                                                checkPermissionChangeState();
+//                                                checkPermissionChangeState();
+                                                openPermissionChange();
                                             }
                                         }
                                     }
@@ -789,7 +760,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                 if (data instanceof EventLoginData) {
                     EventLoginData eventLoginData = (EventLoginData) data;
                     changeAccount(eventLoginData);
-                    checkPermissionChangeState();
                 }
                 break;
             case Constants.EVENT_DATA_CHECK_MERGE_TYPE_CONFIG_DATA:
