@@ -94,6 +94,10 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     LinearLayout fgMainManageLlBasestation;
     @BindView(R.id.line10)
     FrameLayout line10;
+    @BindView(R.id.fg_main_manage_ll_nearby)
+    LinearLayout fgMainManageLlNearby;
+    @BindView(R.id.line11)
+    FrameLayout line11;
     private ProgressUtils mProgressUtils;
     private TipDialogUtils mExitDialog;
     private VersionDialogUtils mVersionDialog;
@@ -356,6 +360,12 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     public void setNameplateVisible(boolean hasNameplate) {
         line10.setVisibility(hasNameplate ? View.VISIBLE : View.GONE);
         fgMainManageLlNameplate.setVisibility(hasNameplate ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setIBeaconVisible(boolean hasIBeacon) {
+        line11.setVisibility(hasIBeacon ? View.VISIBLE : View.GONE);
+        fgMainManageLlNearby.setVisibility(hasIBeacon ? View.VISIBLE : View.GONE);
     }
 
     @Override

@@ -1,7 +1,5 @@
 package com.sensoro.smartcity;
 
-import android.app.ActivityManager;
-import android.content.Context;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
@@ -25,6 +23,7 @@ import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.IbeaconSettingData;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.Repause;
 import com.sensoro.libbleserver.ble.entity.BLEDevice;
 import com.sensoro.libbleserver.ble.entity.IBeacon;
@@ -70,6 +69,7 @@ public class SensoroCityApplication extends BaseApplication implements Repause
     private final Runnable iBeaconTask = new Runnable() {
         private boolean noStateOut = true;
         private boolean noStateIn = true;
+        private volatile boolean isNearby = false;
         private final Runnable inTask = new Runnable() {
             @Override
             public void run() {
@@ -109,19 +109,11 @@ public class SensoroCityApplication extends BaseApplication implements Repause
                 if (bleHasOpen) {
                     try {
                         bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.startService();
-//                        if (isAPPBack) {
-//                            SensoroCityApplication.getInstance().bleDeviceManager.stopScan();
-//                        } else {
-//                            SensoroCityApplication.getInstance().bleDeviceManager.startScan();
-//                        }
-
-                        //
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
                 if (bleHasOpen) {
-                    //TODO 做检查
                     boolean currentNearby = !mNearByIBeaconMap.isEmpty();
                     if (currentNearby) {
                         //当前在附近
@@ -162,7 +154,6 @@ public class SensoroCityApplication extends BaseApplication implements Repause
                             if (i > 0) {
                                 outCount++;
                             } else {
-                                //TODO 处理是否每次都弹起
                                 if (ibeaconSettingData.switchOut) {
                                     taskHandler.removeCallbacks(outTask);
                                     taskHandler.removeCallbacks(inTask);
@@ -185,50 +176,6 @@ public class SensoroCityApplication extends BaseApplication implements Repause
         }
     };
 
-    /**
-     * 判断是否是主进程
-     *
-     * @return
-     */
-    public boolean isAppMainProcess() {
-        try {
-            int pid = android.os.Process.myPid();
-            String process = getProcessNameByPID(getApplicationContext(), pid);
-//            try {
-//                LogUtils.loge("currentNearby---->> process = " + process);
-//            } catch (Throwable throwable) {
-//                throwable.printStackTrace();
-//            }
-            return TextUtils.isEmpty(process) || "com.sensoro.smartcity".equalsIgnoreCase(process);
-//            return false;
-        } catch (Exception e) {
-            return true;
-        }
-    }
-
-    /**
-     * 根据 pid 获取进程名
-     *
-     * @param context
-     * @param pid
-     * @return
-     */
-    public String getProcessNameByPID(Context context, int pid) {
-        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        if (manager == null) {
-            return "";
-        }
-        for (android.app.ActivityManager.RunningAppProcessInfo processInfo : manager.getRunningAppProcesses()) {
-            if (processInfo == null) {
-                continue;
-            }
-            if (processInfo.pid == pid) {
-                return processInfo.processName;
-            }
-        }
-        return "";
-    }
-
     private final BLEDeviceListener<BLEDevice> bleDeviceListener = new BLEDeviceListener<BLEDevice>() {
         @Override
         public void onNewDevice(BLEDevice bleDevice) {
@@ -236,11 +183,9 @@ public class SensoroCityApplication extends BaseApplication implements Repause
                 String sn = bleDevice.getSn();
                 if (!TextUtils.isEmpty(sn)) {
                     IBeacon iBeacon = bleDevice.iBeacon;
-                    if (iBeacon != null) {
-                        String uuid = iBeacon.getUuid();
-                        if (ibeaconSettingData.currentUUID.equals(uuid)) {
-                            mNearByIBeaconMap.put(sn, iBeacon);
-                        }
+                    int iBeaconData = handleIBeaconData(iBeacon);
+                    if (iBeaconData > 0) {
+                        mNearByIBeaconMap.put(sn + iBeaconData, iBeacon);
                     }
                 }
             }
@@ -252,11 +197,9 @@ public class SensoroCityApplication extends BaseApplication implements Repause
                 String sn = bleDevice.getSn();
                 if (!TextUtils.isEmpty(sn)) {
                     IBeacon iBeacon = bleDevice.iBeacon;
-                    if (iBeacon != null) {
-                        String uuid = iBeacon.getUuid();
-                        if (ibeaconSettingData.currentUUID.equals(uuid)) {
-                            mNearByIBeaconMap.remove(sn);
-                        }
+                    int iBeaconData = handleIBeaconData(iBeacon);
+                    if (iBeaconData > 0) {
+                        mNearByIBeaconMap.remove(sn + iBeaconData);
                     }
                 }
 
@@ -269,19 +212,43 @@ public class SensoroCityApplication extends BaseApplication implements Repause
                 String sn = bleDevice.getSn();
                 if (!TextUtils.isEmpty(sn)) {
                     IBeacon iBeacon = bleDevice.iBeacon;
-                    if (iBeacon != null) {
-                        String uuid = iBeacon.getUuid();
-                        if (ibeaconSettingData.currentUUID.equals(uuid)) {
-                            mNearByIBeaconMap.put(sn, iBeacon);
-                        }
+                    int iBeaconData = handleIBeaconData(iBeacon);
+                    if (iBeaconData > 0) {
+                        mNearByIBeaconMap.put(sn + iBeaconData, iBeacon);
                     }
                 }
 
             }
         }
     };
+
+    private int handleIBeaconData(IBeacon iBeacon) {
+        int state = 0;
+        if (iBeacon != null) {
+            String uuid = iBeacon.getUuid();
+            int major = iBeacon.getMajor();
+            int minor = iBeacon.getMinor();
+
+            if (ibeaconSettingData.currentUUID != null) {
+                if (ibeaconSettingData.currentUUID.equals(uuid)) {
+                    state = 1;
+                    if (ibeaconSettingData.currentMajor != null) {
+                        if (ibeaconSettingData.currentMajor.equals(major)) {
+                            state = 2;
+                            if (ibeaconSettingData.currentMirror != null) {
+                                if (ibeaconSettingData.currentMirror.equals(minor)) {
+                                    state = 3;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return state;
+    }
+
     private final LinkedHashMap<String, IBeacon> mNearByIBeaconMap = new LinkedHashMap<>();
-    private volatile boolean isNearby = false;
     public IbeaconSettingData ibeaconSettingData = new IbeaconSettingData();
 
     //
@@ -361,6 +328,7 @@ public class SensoroCityApplication extends BaseApplication implements Repause
     @Override
     public void onTerminate() {
         super.onTerminate();
+        taskHandler.removeCallbacksAndMessages(null);
         if (BleObserver.getInstance().isRegisterBleObserver(bleDeviceListener)) {
             BleObserver.getInstance().unregisterBleObserver(bleDeviceListener);
         }
@@ -383,7 +351,7 @@ public class SensoroCityApplication extends BaseApplication implements Repause
             }
         }, 1000);
         ThreadPoolManager.getInstance().execute(this);
-        if (isAppMainProcess()) {
+        if (AppUtils.isAppMainProcess(this, "com.sensoro.smartcity")) {
             taskHandler.post(new Runnable() {
                 @Override
                 public void run() {
