@@ -66,7 +66,7 @@ public class NearByDeviceActivity extends BaseActivity<INearByDeviceActivityView
         ButterKnife.bind(this);
         includeTextTitleTvTitle.setText("附近设备");
 //        includeTextTitleTvSubtitle.setText("");
-        includeTextTitleTvSubtitle.setText("通知设置");
+        includeTextTitleTvSubtitle.setText(getString(R.string.setting));
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 
 
