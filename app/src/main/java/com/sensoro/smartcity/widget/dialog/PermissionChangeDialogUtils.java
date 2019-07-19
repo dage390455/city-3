@@ -63,7 +63,8 @@ public class PermissionChangeDialogUtils {
                         UserInfo userInfo = loginRsp.getData();
                         EventLoginData loginData = UserPermissionFactory.createLoginData(userInfo, userData.phoneId);
                         PreferencesHelper.getInstance().saveUserData(loginData);
-                        dismiss();
+                        mDialog.dismiss();
+                        dismissProgressDialog();
 
                     }
 

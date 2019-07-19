@@ -184,14 +184,19 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     }
 
     private void openPermissionChange() {
+
         if (isAttachedView()) {
-            Activity topActivity = ActivityTaskManager.getInstance().getTopActivity();
-            PermissionChangeDialogUtils permissionChangeDialogUtils = new PermissionChangeDialogUtils(topActivity);
-            permissionChangeDialogUtils.show();
-//            Intent intent = new Intent(mContext, PermissionChangeActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            getView().startAC(intent);
+            mContext.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Activity topActivity = ActivityTaskManager.getInstance().getTopActivity();
+                    PermissionChangeDialogUtils permissionChangeDialogUtils = new PermissionChangeDialogUtils(topActivity);
+                    permissionChangeDialogUtils.show();
+                }
+            });
         }
+
+
     }
 
 
@@ -362,11 +367,10 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                                             if (accountIds.contains(PreferencesHelper.getInstance().getUserData().accountId)) {
 //                                                checkPermissionChangeState();
                                                 openPermissionChange();
+
                                             }
                                         }
                                     }
-                                    Activity topActivity = ActivityTaskManager.getInstance().getTopActivity();
-                                    LogUtils.loge(this, "socket-->>> PermissionListener topac = " + topActivity);
 
                                 }
                                 LogUtils.loge(this, "socket-->>> PermissionListener jsonArray = " + json);
