@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.widget.dialog;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
@@ -28,6 +29,12 @@ public class PermissionChangeDialogUtils {
     //    private AlertDialog mDialog;
     private final TextView dialogTipTvCancel;
     private final TextView dialogTipTvConfirm;
+    private OnPopupDismissListener dismissListener;
+
+    public Activity getmActivity() {
+        return mActivity;
+    }
+
     private final Activity mActivity;
     //    private final TextView mTvConfirm;
     private CustomCornerDialog mDialog;
@@ -63,8 +70,8 @@ public class PermissionChangeDialogUtils {
                         UserInfo userInfo = loginRsp.getData();
                         EventLoginData loginData = UserPermissionFactory.createLoginData(userInfo, userData.phoneId);
                         PreferencesHelper.getInstance().saveUserData(loginData);
-                        mDialog.dismiss();
                         dismissProgressDialog();
+                        dismiss();
 
                     }
 
@@ -91,11 +98,20 @@ public class PermissionChangeDialogUtils {
             }
         });
 
+        mDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if (dismissListener != null) {
+                    dismissListener.onDismiss();
+                }
+            }
+        });
+
     }
 
 
     public void show() {
-        if (mDialog != null) {
+        if (mDialog != null && !mDialog.isShowing()) {
             mDialog.show();
         }
     }
@@ -122,6 +138,19 @@ public class PermissionChangeDialogUtils {
         if (mProgressUtils != null) {
             mProgressUtils.destroyProgress();
         }
+    }
+
+
+    public void setDismissListener(OnPopupDismissListener listener) {
+
+        dismissListener = listener;
+    }
+
+    public interface OnPopupDismissListener {
+
+
+        void onDismiss();
+
     }
 
     public void toastShort(String msg) {

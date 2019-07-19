@@ -48,7 +48,6 @@ import com.sensoro.smartcity.fragment.ManagerFragment;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.widget.dialog.PermissionChangeDialogUtils;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -186,14 +185,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private void openPermissionChange() {
 
         if (isAttachedView()) {
-            mContext.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Activity topActivity = ActivityTaskManager.getInstance().getTopActivity();
-                    PermissionChangeDialogUtils permissionChangeDialogUtils = new PermissionChangeDialogUtils(topActivity);
-                    permissionChangeDialogUtils.show();
-                }
-            });
+            getView().showPermissionChangeDialog();
         }
 
 
@@ -347,6 +339,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
 
         @Override
         public void call(Object... args) {
+
             try {
                 synchronized (MainPresenter.PermissionListener.class) {
                     for (Object arg : args) {

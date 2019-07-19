@@ -93,6 +93,9 @@ public abstract class CityObserver<T> implements Observer<T> {
                             return;
                         }
                         String errinfo = jsonObject.getString("errinfo");
+                        if (errcode == 4000003) {
+                            errinfo = "无此权限，请联系管理员并重新登录";
+                        }
                         if (viewAttachedAlive()) {
                             onErrorMsg(errcode, errinfo);
                         }
@@ -117,6 +120,9 @@ public abstract class CityObserver<T> implements Observer<T> {
                                     return;
                                 }
                                 String errmsg = jsonObject.getString("message");
+                                if (errcode == 4000003) {
+                                    errmsg = "无此权限，请联系管理员并重新登录";
+                                }
                                 if (viewAttachedAlive()) {
                                     onErrorMsg(errcode, errmsg);
                                 }
@@ -131,6 +137,7 @@ public abstract class CityObserver<T> implements Observer<T> {
                 } else {
                     try {
                         int errcode = jsonObject.getInt("errcode");
+
                         if (errcode == 4000002) {
                             EventData eventData = new EventData();
                             eventData.code = EVENT_DATA_SESSION_ID_OVERTIME;
@@ -140,6 +147,9 @@ public abstract class CityObserver<T> implements Observer<T> {
                             return;
                         }
                         String errmsg = jsonObject.getString("errmsg");
+                        if (errcode == 4000003) {
+                            errmsg = "No permission, please contact administrators and relogin";
+                        }
                         if (viewAttachedAlive()) {
                             onErrorMsg(errcode, errmsg);
                         }
@@ -163,6 +173,9 @@ public abstract class CityObserver<T> implements Observer<T> {
                                     return;
                                 }
                                 String errmsg = jsonObject.getString("message");
+                                if (errcode == 4000003) {
+                                    errmsg = "No permission, please contact administrators and relogin";
+                                }
                                 if (viewAttachedAlive()) {
                                     onErrorMsg(errcode, errmsg);
                                 }

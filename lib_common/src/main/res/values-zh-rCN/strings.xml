@@ -1180,6 +1180,7 @@
     <string name="monitor_point_detail_alarm">报警</string>
     <string name="monitor_point_detail_operat">操作中</string>
     <string name="duration">时长</string>
+    <string name="no_permission">无此权限，请联系管理员并重新登录</string>
 
 
 
