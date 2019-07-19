@@ -24,4 +24,6 @@ public interface IMainView extends IProgressDialog, IToast, IActivityIntent {
     void setBottomBarSelected(int i);
 
     boolean isHomeFragmentChecked();
+
+    void showPermissionChangeDialog();
 }

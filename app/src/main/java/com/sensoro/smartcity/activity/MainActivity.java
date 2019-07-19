@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -14,6 +15,7 @@ import com.sensoro.bottomnavigation.BottomNavigationItem;
 import com.sensoro.bottomnavigation.TextBadgeItem;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.manger.ActivityTaskManager;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
@@ -21,6 +23,7 @@ import com.sensoro.smartcity.adapter.MainFragmentPageAdapter;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.presenter.MainPresenter;
 import com.sensoro.smartcity.widget.HomeViewPager;
+import com.sensoro.smartcity.widget.dialog.PermissionChangeDialogUtils;
 
 import java.util.List;
 
@@ -37,6 +40,8 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     private MainFragmentPageAdapter mPageAdapter;
     private BottomNavigationItem warnItem;
     public ProgressUtils mProgressUtils;
+
+    private PermissionChangeDialogUtils permissionChangeDialogUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -202,6 +207,36 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     @Override
     public boolean isHomeFragmentChecked() {
         return acMainHvpContent.getCurrentItem() == 0;
+    }
+
+    @Override
+    public void showPermissionChangeDialog() {
+
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Activity topActivity = ActivityTaskManager.getInstance().getTopActivity();
+                if (null == permissionChangeDialogUtils) {
+                    permissionChangeDialogUtils = new PermissionChangeDialogUtils(topActivity);
+//                } else {
+//                    //显示和创建的activity不一致
+//                    if (permissionChangeDialogUtils.getmActivity() != topActivity) {
+//                        permissionChangeDialogUtils = new PermissionChangeDialogUtils(topActivity);
+//                    }
+                    permissionChangeDialogUtils.setDismissListener(new PermissionChangeDialogUtils.OnPopupDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            permissionChangeDialogUtils = null;
+                        }
+                    });
+                }
+
+
+                permissionChangeDialogUtils.show();
+
+            }
+        });
+
     }
 
 
