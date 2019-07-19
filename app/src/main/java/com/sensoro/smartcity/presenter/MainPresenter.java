@@ -42,13 +42,13 @@ import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
-import com.sensoro.smartcity.activity.PermissionChangeActivity;
 import com.sensoro.smartcity.fragment.HomeFragment;
 import com.sensoro.smartcity.fragment.MalfunctionFragment;
 import com.sensoro.smartcity.fragment.ManagerFragment;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.widget.dialog.PermissionChangeDialogUtils;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -184,11 +184,19 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     }
 
     private void openPermissionChange() {
+
         if (isAttachedView()) {
-            Intent intent = new Intent(mContext, PermissionChangeActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            getView().startAC(intent);
+            mContext.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Activity topActivity = ActivityTaskManager.getInstance().getTopActivity();
+                    PermissionChangeDialogUtils permissionChangeDialogUtils = new PermissionChangeDialogUtils(topActivity);
+                    permissionChangeDialogUtils.show();
+                }
+            });
         }
+
+
     }
 
 
@@ -353,16 +361,17 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                                     if (accountIds != null && accountIds.size() > 0) {
                                         if (PreferencesHelper.getInstance().getUserData().accountId == null) {
 //                                            checkPermissionChangeState();
-                                            //TODO 直接通知弹窗
+                                            //TODO 直接通知弹窗,,目前应该是这个dialog有问题 走了抛异常
                                             openPermissionChange();
-
                                         } else {
                                             if (accountIds.contains(PreferencesHelper.getInstance().getUserData().accountId)) {
 //                                                checkPermissionChangeState();
                                                 openPermissionChange();
+
                                             }
                                         }
                                     }
+
                                 }
                                 LogUtils.loge(this, "socket-->>> PermissionListener jsonArray = " + json);
                                 //5c6a500306b3eb2db3d5bd14
