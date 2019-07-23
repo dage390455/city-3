@@ -476,8 +476,12 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
             acDeployDeviceDetailTvDeployPic.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
             acDeployDeviceDetailTvDeployPic.setText(mActivity.getString(R.string.required));
         } else {
-            acDeployDeviceDetailTvDeployPic.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
-
+            //缺少必选照⽚改为红⾊
+            if (text.equals(mActivity.getResources().getString(R.string.missing_required_photo))) {
+                acDeployDeviceDetailTvDeployPic.setTextColor(mActivity.getResources().getColor(R.color.c_f34a4a));
+            } else {
+                acDeployDeviceDetailTvDeployPic.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+            }
             acDeployDeviceDetailTvDeployPic.setText(text);
         }
     }

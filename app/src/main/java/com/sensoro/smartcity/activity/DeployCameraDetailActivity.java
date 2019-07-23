@@ -313,7 +313,12 @@ public class DeployCameraDetailActivity extends BaseActivity<IDeployCameraDetail
             tvAcDeployDeviceCameraDeployPic.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
             tvAcDeployDeviceCameraDeployPic.setText(mActivity.getString(R.string.not_added));
         } else {
-            tvAcDeployDeviceCameraDeployPic.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+            //缺少必选照⽚改为红⾊
+            if (text.equals(mActivity.getResources().getString(R.string.missing_required_photo))) {
+                tvAcDeployDeviceCameraDeployPic.setTextColor(mActivity.getResources().getColor(R.color.c_f34a4a));
+            } else {
+                tvAcDeployDeviceCameraDeployPic.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+            }
             tvAcDeployDeviceCameraDeployPic.setText(text);
         }
     }
