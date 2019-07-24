@@ -53,9 +53,6 @@
             android:layout_marginTop="12dp"
             android:background="@color/white">
 
-            <include
-                layout="@layout/item_no_content"
-                />
             <com.scwang.smartrefresh.layout.SmartRefreshLayout
                 android:id="@+id/refreshLayout"
                 android:layout_width="match_parent"
@@ -66,8 +63,8 @@
                     android:id="@+id/fg_history_log_rc_content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginStart="20dp" />
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp" />
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
         </RelativeLayout>
 

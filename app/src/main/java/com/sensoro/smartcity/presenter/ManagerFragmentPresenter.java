@@ -157,7 +157,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
                 return;
             }
         }
-        getView().toastShort(mContext.getString(R.string.no_such_permission));
+        getView().toastShort(mContext.getString(R.string.no_permission));
 
     }
 
@@ -195,7 +195,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
                 return;
             }
         }
-        getView().toastShort(mContext.getString(R.string.no_such_permission));
+        getView().toastShort(mContext.getString(R.string.no_permission));
 
     }
 
@@ -207,7 +207,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
                 return;
             }
         }
-        getView().toastShort(mContext.getString(R.string.no_such_permission));
+        getView().toastShort(mContext.getString(R.string.no_permission));
     }
 
     public void doMaintenanceMission() {
@@ -244,6 +244,10 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
                 if (data instanceof EventLoginData) {
                     checkPermission((EventLoginData) data);
                 }
+                break;
+            case Constants.EVENT_DATA_PERMISSIONCHANGE:
+                EventLoginData userData = PreferencesHelper.getInstance().getUserData();
+                checkPermission(userData);
                 break;
         }
     }

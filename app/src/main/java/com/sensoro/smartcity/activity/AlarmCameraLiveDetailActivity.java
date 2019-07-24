@@ -1,14 +1,15 @@
 package com.sensoro.smartcity.activity;
 
+import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,12 +57,7 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
     ImageView includeImvTitleImvSubtitle;
     @BindView(R.id.gsy_player_ac_alarm_camera_live_detail)
     CityStandardGSYVideoPlayer gsyPlayerAcAlarmCameraLiveDetail;
-    @BindView(R.id.no_content)
-    ImageView noContent;
-    @BindView(R.id.no_content_tip)
-    TextView noContentTip;
-    @BindView(R.id.ic_no_content)
-    LinearLayout icNoContent;
+    View icNoContent;
     @BindView(R.id.rv_list_include)
     RecyclerView rvListInclude;
     @BindView(R.id.refreshLayout_include)
@@ -89,9 +85,8 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
 
     private void initView() {
 
-
+        icNoContent = LayoutInflater.from(this).inflate(R.layout.no_content, null);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-
         includeImvTitleTvTitle.setText(mActivity.getString(R.string.deploy_camera_watch_live));
         includeImvTitleImvSubtitle.setVisibility(GONE);
 
@@ -422,9 +417,15 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
         setNoContentVisible(mList == null || mList.size() < 1);
     }
 
+    @SuppressLint("RestrictedApi")
     private void setNoContentVisible(boolean isVisible) {
-        icNoContent.setVisibility(isVisible ? VISIBLE : GONE);
-        rvListInclude.setVisibility(isVisible ? GONE : VISIBLE);
+        if (isVisible) {
+            refreshLayoutInclude.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
+            refreshLayoutInclude.setRefreshContent(icNoContent);
+        } else {
+            refreshLayoutInclude.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+            refreshLayoutInclude.setRefreshContent(rvListInclude);
+        }
     }
 ////
 //

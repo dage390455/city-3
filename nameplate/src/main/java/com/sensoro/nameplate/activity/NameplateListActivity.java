@@ -1,11 +1,13 @@
 package com.sensoro.nameplate.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -65,9 +67,7 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
     ImageView ivNameplateListFilter;
     ImageView ivNameplateListScan;
     LinearLayout llNameplateListTopSearch;
-    ImageView noContent;
-    TextView noContentTip;
-    LinearLayout icNoContent;
+    View icNoContent;
     RecyclerView rvNameplateContent;
     SmartRefreshLayout refreshLayout;
     TextView tvSearchClear;
@@ -111,9 +111,7 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
         ivNameplateListFilter = findViewById(R.id.iv_nameplate_list_filter);
         ivNameplateListScan = findViewById(R.id.iv_nameplate_list_scan);
         llNameplateListTopSearch = findViewById(R.id.ll_nameplate_list_top_search);
-        noContent = findViewById(R.id.no_content);
-        noContentTip = findViewById(R.id.no_content_tip);
-        icNoContent = findViewById(R.id.ic_no_content);
+        icNoContent = LayoutInflater.from(this).inflate(R.layout.no_content, null);
         rvNameplateContent = findViewById(R.id.rv_nameplate_content);
         refreshLayout = findViewById(R.id.refreshLayout);
         tvSearchClear = findViewById(R.id.tv_search_clear);
@@ -478,10 +476,18 @@ public class NameplateListActivity extends BaseActivity<INameplateListActivityVi
     }
 
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void setNoContentVisible(boolean isVisible) {
-        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        rvNameplateContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+
+        if (isVisible) {
+            refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
+            refreshLayout.setRefreshContent(icNoContent);
+        } else {
+            refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+            refreshLayout.setRefreshContent(rvNameplateContent);
+        }
+
     }
 
     @Override

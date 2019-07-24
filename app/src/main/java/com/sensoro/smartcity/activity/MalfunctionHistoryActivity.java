@@ -1,12 +1,13 @@
 package com.sensoro.smartcity.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,10 +60,7 @@ public class MalfunctionHistoryActivity extends BaseActivity<IMalfunctionHistory
     ImageView ivMalfunctionHistoryDateClose;
     @BindView(R.id.alarm_return_top)
     ImageView mReturnTopImageView;
-    @BindView(R.id.no_content)
-    ImageView imv_content;
-    @BindView(R.id.ic_no_content)
-    LinearLayout icNoContent;
+    View icNoContent;
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
     private CalendarPopUtils mCalendarPopUtils;
@@ -80,6 +78,7 @@ public class MalfunctionHistoryActivity extends BaseActivity<IMalfunctionHistory
 
 
     private void initView() {
+        icNoContent = LayoutInflater.from(this).inflate(R.layout.no_content, null);
         includeImvTitleTvTitle.setText(mActivity.getString(R.string.malfunction_history_log));
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mMalfunctionHistoryRcContentAdapter = new MalfunctionHistoryRcContentAdapter(mActivity);
@@ -123,7 +122,7 @@ public class MalfunctionHistoryActivity extends BaseActivity<IMalfunctionHistory
                 if (linearLayoutManager.findFirstVisibleItemPosition() > 4) {
                     if (newState == 0) {
                         mReturnTopImageView.setVisibility(View.VISIBLE);
-                        if (returnTopAnimation!=null&&returnTopAnimation.hasEnded()) {
+                        if (returnTopAnimation != null && returnTopAnimation.hasEnded()) {
                             mReturnTopImageView.startAnimation(returnTopAnimation);
                         }
                     } else {
@@ -223,10 +222,16 @@ public class MalfunctionHistoryActivity extends BaseActivity<IMalfunctionHistory
     }
 
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void setNoContentVisible(boolean isVisible) {
-        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        acHistoryLogRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+
+        refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+        if (isVisible) {
+            refreshLayout.setRefreshContent(icNoContent);
+        } else {
+            refreshLayout.setRefreshContent(acHistoryLogRcContent);
+        }
     }
 
     @Override

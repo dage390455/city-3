@@ -1,7 +1,9 @@
 package com.sensoro.nameplate.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -22,7 +24,6 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.constant.ARouterConstants;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.NamePlateInfo;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -65,12 +66,7 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
     TextView tvAddedCountAcDeployNameplateAddSensor;
     @BindView(R2.id.rv_list_include)
     RecyclerView rvAddedListAcDeployNameplateAddSensor;
-    @BindView(R2.id.no_content)
-    ImageView noContent;
-    @BindView(R2.id.no_content_tip)
-    TextView noContentTip;
-    @BindView(R2.id.ic_no_content)
-    LinearLayout icNoContent;
+    View icNoContent;
     @BindView(R2.id.refreshLayout_include)
     SmartRefreshLayout refreshLayoutInclude;
     @BindView(R2.id.return_top_include)
@@ -88,6 +84,8 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
     }
 
     private void initView() {
+        icNoContent = LayoutInflater.from(this).inflate(R.layout.no_content, null);
+
         includeTextTitleTvTitle.setText(R.string.add_sensor);
         includeTextTitleTvSubtitle.setText(R.string.save);
         includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_1dbb99));
@@ -166,7 +164,7 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
                 super.onScrolled(recyclerView, dx, dy);
                 if (manager.findFirstVisibleItemPosition() == 0 && rvAddedListAcDeployNameplateAddSensor.getChildAt(0).getTop() == 0) {
                     viewDividerAcDeployNameplateAddSensor.setVisibility(GONE);
-                }else{
+                } else {
                     viewDividerAcDeployNameplateAddSensor.setVisibility(VISIBLE);
                 }
             }
@@ -182,7 +180,7 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
 
     @OnClick({R2.id.include_text_title_tv_cancel, R2.id.include_text_title_tv_subtitle,
             R2.id.ll_from_List_ac_deploy_nameplate_add_sensor, R2.id.ll_from_scan_ac_deploy_nameplate_add_sensor,
-    R2.id.return_top_include})
+            R2.id.return_top_include})
     public void onViewClicked(View view) {
         int id = view.getId();
         if (id == R.id.include_text_title_tv_cancel) {
@@ -193,7 +191,7 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
             mPresenter.doAddFromList();
         } else if (id == R.id.ll_from_scan_ac_deploy_nameplate_add_sensor) {
             mPresenter.doAddFromScan();
-        }else if (id == R.id.return_top_include) {
+        } else if (id == R.id.return_top_include) {
             rvAddedListAcDeployNameplateAddSensor.smoothScrollToPosition(0);
             returnTopInclude.setVisibility(GONE);
             refreshLayoutInclude.closeHeaderOrFooter();
@@ -209,7 +207,7 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
     @Override
     public void updateBindData(List<NamePlateInfo> mBindList) {
         mAddedSensorAdapter.updateData(mBindList);
-//        setNoContentVisible(mBindList == null || mBindList.size() < 1);
+        setNoContentVisible(mBindList == null || mBindList.size() < 1);
         if (mBindList != null) {
             setBindDeviceSize(mBindList.size());
         }
@@ -217,12 +215,18 @@ public class DeployNameplateAddSensorActivity extends BaseActivity<IDeployNamepl
 
     @Override
     public void setBindDeviceSize(int size) {
-        tvAddedCountAcDeployNameplateAddSensor.setText(getString(R.string.selected_device_size)+size);
+        tvAddedCountAcDeployNameplateAddSensor.setText(getString(R.string.selected_device_size) + size);
     }
 
+    @SuppressLint("RestrictedApi")
     private void setNoContentVisible(boolean isVisible) {
-        icNoContent.setVisibility(isVisible ? VISIBLE : GONE);
-        rvAddedListAcDeployNameplateAddSensor.setVisibility(isVisible ? GONE : VISIBLE);
+        if (isVisible) {
+            refreshLayoutInclude.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
+            refreshLayoutInclude.setRefreshContent(icNoContent);
+        } else {
+            refreshLayoutInclude.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+            refreshLayoutInclude.setRefreshContent(rvAddedListAcDeployNameplateAddSensor);
+        }
     }
 
     @Override

@@ -1,17 +1,15 @@
 package com.sensoro.smartcity.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -23,26 +21,31 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.ContractListAdapter;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.smartcity.imainviews.IContractManagerActivityView;
-import com.sensoro.smartcity.model.InspectionStatusCountModel;
-import com.sensoro.smartcity.presenter.ContractManagerActivityPresenter;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.bean.ContractListInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
-import com.sensoro.common.callback.RecycleViewItemClickListener;
-import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.ContractListAdapter;
+import com.sensoro.smartcity.imainviews.IContractManagerActivityView;
+import com.sensoro.smartcity.model.InspectionStatusCountModel;
+import com.sensoro.smartcity.presenter.ContractManagerActivityPresenter;
 import com.sensoro.smartcity.widget.popup.InspectionTaskStatePopUtils;
-import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.List;
 
@@ -65,10 +68,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     ImageView contractReturnTop;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
-    @BindView(R.id.no_content)
-    ImageView imvNoContent;
-    @BindView(R.id.ic_no_content)
-    LinearLayout icNoContent;
+    View icNoContent;
     @BindView(R.id.contract_tv_select_type)
     TextView tvSelectType;
     @BindView(R.id.contract_tv_select_status)
@@ -120,6 +120,9 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     }
 
     private void initView() {
+
+        icNoContent = LayoutInflater.from(this).inflate(R.layout.no_content, null);
+
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 
         fgMainWarnEtSearch.setHint(R.string.legal_representative_name);
@@ -392,10 +395,18 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
         setNoContentVisible(data == null || data.size() < 1);
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void setNoContentVisible(boolean isVisible) {
-        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        contractPtrList.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        if (isVisible) {
+            refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
+            refreshLayout.setRefreshContent(icNoContent);
+        } else {
+            refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+            refreshLayout.setRefreshContent(contractPtrList);
+        }
+
+
     }
 
     @Override

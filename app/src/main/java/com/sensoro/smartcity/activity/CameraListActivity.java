@@ -1,11 +1,15 @@
 package com.sensoro.smartcity.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -60,10 +64,7 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
     RecyclerView acHistoryLogRcContent;
     @BindView(R.id.alarm_return_top)
     ImageView mReturnTopImageView;
-    @BindView(R.id.no_content)
-    ImageView imv_content;
-    @BindView(R.id.ic_no_content)
-    LinearLayout icNoContent;
+    View icNoContent;
     @BindView(R.id.camera_list_ll_top_search)
     LinearLayout cameraListLlTopSearch;
     @BindView(R.id.camera_list_iv_top_back)
@@ -76,8 +77,6 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
     TextView cameraListTvSearchCancel;
     @BindView(R.id.camera_list_iv_filter)
     ImageView cameraListIvFilter;
-    @BindView(R.id.no_content_tip)
-    TextView noContentTip;
     @BindView(R.id.rv_search_history)
     RecyclerView rvSearchHistory;
     @BindView(R.id.camera_list_ll_root)
@@ -106,6 +105,7 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
         ButterKnife.bind(mActivity);
         initView();
         mPresenter.initData(mActivity);
+
     }
 
     @Override
@@ -114,6 +114,7 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
     }
 
     private void initView() {
+        icNoContent = LayoutInflater.from(this).inflate(R.layout.no_content, null);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mDeviceCameraContentAdapter = new DeviceCameraContentAdapter(mActivity);
         mDeviceCameraContentAdapter.setOnAlarmHistoryLogConfirmListener(this);
@@ -399,10 +400,16 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
     }
 
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void setNoContentVisible(boolean isVisible) {
-        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        acHistoryLogRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        if (isVisible) {
+            refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
+            refreshLayout.setRefreshContent(icNoContent);
+        } else {
+            refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+            refreshLayout.setRefreshContent(acHistoryLogRcContent);
+        }
     }
 
     @Override

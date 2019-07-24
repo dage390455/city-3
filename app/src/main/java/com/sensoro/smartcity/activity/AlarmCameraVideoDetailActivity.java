@@ -1,15 +1,16 @@
 package com.sensoro.smartcity.activity;
 
+import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,12 +67,7 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     TextView tvTimeAcAlarmCameraVideoDetail;
     @BindView(R.id.view_divider_ac_alarm_camera_video_detail)
     View viewDividerAcAlarmCameraVideoDetail;
-    @BindView(R.id.no_content)
-    ImageView noContent;
-    @BindView(R.id.no_content_tip)
-    TextView noContentTip;
-    @BindView(R.id.ic_no_content)
-    LinearLayout icNoContent;
+    View icNoContent;
     @BindView(R.id.rv_list_include)
     RecyclerView rvListInclude;
     @BindView(R.id.refreshLayout_include)
@@ -97,6 +93,8 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     }
 
     private void initView() {
+        icNoContent = LayoutInflater.from(this).inflate(R.layout.no_content, null);
+
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 
         mDownloadUtils = new VideoDownloadDialogUtils(mActivity);
@@ -403,7 +401,6 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
     }
 
 
-
     @Override
     public void setVerOrientationUtil(boolean enable) {
 
@@ -430,9 +427,15 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
         setNoContentVisible(mList == null || mList.size() < 1);
     }
 
+    @SuppressLint("RestrictedApi")
     private void setNoContentVisible(boolean isVisible) {
-        icNoContent.setVisibility(isVisible ? VISIBLE : GONE);
-        rvListInclude.setVisibility(isVisible ? GONE : VISIBLE);
+        if (isVisible) {
+            refreshLayoutInclude.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
+            refreshLayoutInclude.setRefreshContent(icNoContent);
+        } else {
+            refreshLayoutInclude.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+            refreshLayoutInclude.setRefreshContent(rvListInclude);
+        }
     }
 
     @Override
@@ -458,6 +461,7 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
             return;
         }
     }
+
     @Override
     public void onBackPressed() {
         if (orientationUtils != null) {

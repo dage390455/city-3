@@ -161,7 +161,6 @@
         android:layout_above="@id/ac_deploy_record_deploy_rl_new_device"
         android:layout_below="@id/ac_deploy_record_title_root">
 
-        <include layout="@layout/item_no_content" />
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
             android:id="@+id/refreshLayout"

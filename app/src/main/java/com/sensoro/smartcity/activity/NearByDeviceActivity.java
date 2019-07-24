@@ -1,10 +1,11 @@
 package com.sensoro.smartcity.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,12 +46,7 @@ public class NearByDeviceActivity extends BaseActivity<INearByDeviceActivityView
     View includeTextTitleDivider;
     @BindView(R.id.include_text_title_cl_root)
     ConstraintLayout includeTextTitleClRoot;
-    @BindView(R.id.no_content)
-    ImageView noContent;
-    @BindView(R.id.no_content_tip)
-    TextView noContentTip;
-    @BindView(R.id.ic_no_content)
-    LinearLayout icNoContent;
+    View icNoContent;
     @BindView(R.id.rc_content)
     RecyclerView rcContent;
     @BindView(R.id.refreshLayout)
@@ -64,6 +60,8 @@ public class NearByDeviceActivity extends BaseActivity<INearByDeviceActivityView
         setContentView(R.layout.activity_nearbydevice_list);
 
         ButterKnife.bind(this);
+        icNoContent = LayoutInflater.from(this).inflate(R.layout.no_content, null);
+
         includeTextTitleTvTitle.setText("附近设备");
 //        includeTextTitleTvSubtitle.setText("");
         includeTextTitleTvSubtitle.setText(getString(R.string.setting));
@@ -186,7 +184,20 @@ public class NearByDeviceActivity extends BaseActivity<INearByDeviceActivityView
 
             adapter.updateData(deviceInfos);
         }
+        setNoContentVisible(deviceInfos == null || deviceInfos.size() < 1);
+
     }
+
+    @SuppressLint("RestrictedApi")
+    public void setNoContentVisible(boolean isVisible) {
+        refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+        if (isVisible) {
+            refreshLayout.setRefreshContent(icNoContent);
+        } else {
+            refreshLayout.setRefreshContent(rcContent);
+        }
+    }
+
 
     @Override
     public void onPullRefreshComplete() {

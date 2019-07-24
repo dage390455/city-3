@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -83,10 +84,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     RelativeLayout fgMainWarnRlDateEdit;
     @BindView(R.id.alarm_return_top)
     ImageView mReturnTopImageView;
-    @BindView(R.id.no_content)
-    ImageView imvNoContent;
-    @BindView(R.id.ic_no_content)
-    LinearLayout icNoContent;
+    View icNoContent;
     @BindView(R.id.fg_main_top_search_imv_clear)
     ImageView fgMainWarnFragmentImvClear;
     @BindView(R.id.rv_search_history)
@@ -109,7 +107,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         mPresenter.initData(activity);
 //        if (PreferencesHelper.getInstance().getUserData().hasMonitorTaskList) {
 //            //如果有布控权限，去除顶部的padding
-            fgMainWarnTitleRoot.setPadding(0, 0, 0, 0);
+        fgMainWarnTitleRoot.setPadding(0, 0, 0, 0);
 //        } else {
 //            fgMainWarnTitleRoot.setPadding(0, AppUtils.dp2px(mRootFragment.getActivity(), 20), 0, 0);
 //        }
@@ -118,6 +116,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
 
     @SuppressLint("ClickableViewAccessibility")
     private void initView() {
+        icNoContent = LayoutInflater.from(getActivity()).inflate(R.layout.no_content, null);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
         mAlarmPopUtils = new AlarmPopUtils(mRootFragment.getActivity());
         mAlarmPopUtils.setOnPopupCallbackListener(mPresenter);
@@ -571,10 +570,16 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         return tvWarnAlarmSearchCancel.getVisibility() == View.VISIBLE;
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void setNoContentVisible(boolean isVisible) {
-        fgMainWarnRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
-        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        if (isVisible) {
+            refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
+            refreshLayout.setRefreshContent(icNoContent);
+        } else {
+            refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+            refreshLayout.setRefreshContent(fgMainWarnRcContent);
+        }
     }
 
     @Override

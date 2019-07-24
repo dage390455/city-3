@@ -8,6 +8,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -81,12 +82,7 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
     TextView tvAddAcDeployNameplateSensorList;
     @BindView(R2.id.ll_status_ac_deploy_nameplate_sensor_list)
     LinearLayout llStatusAcDeployNameplateSensorList;
-    @BindView(R2.id.no_content)
-    ImageView noContent;
-    @BindView(R2.id.no_content_tip)
-    TextView noContentTip;
-    @BindView(R2.id.ic_no_content)
-    LinearLayout icNoContent;
+    View icNoContent;
     @BindView(R2.id.rv_list_include)
     RecyclerView rvListInclude;
     @BindView(R2.id.refreshLayout_include)
@@ -122,6 +118,8 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
     }
 
     private void initView() {
+        icNoContent = LayoutInflater.from(this).inflate(R.layout.no_content, null);
+
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mConfirmDialog = new AssociationSensorConfirmDialogUtil(mActivity);
         mConfirmDialog.setOnListener(new AssociationSensorConfirmDialogUtil.OnListener() {
@@ -354,13 +352,22 @@ public class DeployNameplateAddSensorFromListActivity extends BaseActivity<IDepl
 
     @Override
     public void updateData(ArrayList<NamePlateInfo> mList) {
-        if (mList == null || mList.size() > 0) {
-            icNoContent.setVisibility(View.GONE);
+        if (mList != null && mList.size() > 0) {
             refreshLayoutInclude.setVisibility(View.VISIBLE);
             mAddSensorListAdapter.updateData(mList);
+        }
+        setNoContentVisible(mList != null && mList.size() > 0);
+
+    }
+
+    @SuppressLint("RestrictedApi")
+    public void setNoContentVisible(boolean isVisible) {
+        if (isVisible) {
+            refreshLayoutInclude.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
+            refreshLayoutInclude.setRefreshContent(icNoContent);
         } else {
-            icNoContent.setVisibility(View.VISIBLE);
-            refreshLayoutInclude.setVisibility(View.GONE);
+            refreshLayoutInclude.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+            refreshLayoutInclude.setRefreshContent(rvListInclude);
         }
     }
 

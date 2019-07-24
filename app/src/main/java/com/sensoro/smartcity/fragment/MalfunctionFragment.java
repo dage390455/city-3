@@ -1,14 +1,13 @@
 package com.sensoro.smartcity.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -21,25 +20,29 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.MainMalfunctionFragRcContentAdapter;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseFragment;
-import com.sensoro.smartcity.imainviews.IMalfunctionFragmentView;
-import com.sensoro.smartcity.presenter.MalfunctionFragmentPresenter;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.bean.MalfunctionListInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
-import com.sensoro.common.callback.RecycleViewItemClickListener;
-import com.sensoro.common.manger.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
-import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.MainMalfunctionFragRcContentAdapter;
+import com.sensoro.smartcity.imainviews.IMalfunctionFragmentView;
+import com.sensoro.smartcity.presenter.MalfunctionFragmentPresenter;
+import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 
 import java.util.List;
 import java.util.Objects;
@@ -51,7 +54,7 @@ import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.common.constant.Constants.DIRECTION_UP;
 
 public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, MalfunctionFragmentPresenter>
-        implements IMalfunctionFragmentView,TipOperationDialogUtils.TipDialogUtilsClickListener {
+        implements IMalfunctionFragmentView, TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.fg_main_top_search_et_search)
     EditText fgMainTopSearchEtSearch;
     @BindView(R.id.fg_main_top_search_frame_search)
@@ -68,12 +71,7 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
     RelativeLayout fgMainTopSearchRlDateEdit;
     @BindView(R.id.fg_main_top_search_title_root)
     LinearLayout fgMainTopSearchTitleRoot;
-    @BindView(R.id.no_content)
-    ImageView noContent;
-    @BindView(R.id.no_content_tip)
-    TextView noContentTip;
-    @BindView(R.id.ic_no_content)
-    LinearLayout icNoContent;
+    View icNoContent;
     @BindView(R.id.fg_main_malfunction_rc_content)
     RecyclerView fgMainMalfunctionRcContent;
     @BindView(R.id.refreshLayout)
@@ -107,6 +105,8 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
     }
 
     private void initView() {
+        icNoContent = LayoutInflater.from(getActivity()).inflate(R.layout.no_content, null);
+
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
         returnTopAnimation = AnimationUtils.loadAnimation(mRootFragment.getContext(), R.anim.return_top_in_anim);
         alarmReturnTop.setAnimation(returnTopAnimation);
@@ -169,9 +169,9 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
     private void initClearHistoryDialog() {
         historyClearDialog = new TipOperationDialogUtils(mRootFragment.getActivity(), true);
         historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
-        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
-        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_1dbb99));
-        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record), R.color.c_a6a6a6);
+        historyClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_1dbb99));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear), getResources().getColor(R.color.c_a6a6a6));
         historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
@@ -504,9 +504,16 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
         setSearchButtonTextVisible(isVisible);
     }
 
-    private void setNoContentVisible(boolean b) {
-        fgMainMalfunctionRcContent.setVisibility(b ? View.GONE : View.VISIBLE);
-        icNoContent.setVisibility(b ? View.VISIBLE : View.GONE);
+    @SuppressLint("RestrictedApi")
+    private void setNoContentVisible(boolean isVisible) {
+
+        if (isVisible) {
+            refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
+            refreshLayout.setRefreshContent(icNoContent);
+        } else {
+            refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+            refreshLayout.setRefreshContent(fgMainMalfunctionRcContent);
+        }
     }
 
     @Override

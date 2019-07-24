@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/c_f4f4f4">
 
-    <include layout="@layout/item_no_content" />
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout_include"

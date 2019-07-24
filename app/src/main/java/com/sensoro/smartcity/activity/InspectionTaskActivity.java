@@ -1,17 +1,16 @@
 package com.sensoro.smartcity.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -22,30 +21,34 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.InspectionTaskRcContentAdapter;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.constant.Constants;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
+import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.widgets.ProgressUtils;
+import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.common.widgets.SpacesItemDecoration;
+import com.sensoro.common.widgets.TipOperationDialogUtils;
+import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.InspectionTaskRcContentAdapter;
 import com.sensoro.smartcity.imainviews.IInspectionTaskActivityView;
 import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
 import com.sensoro.smartcity.presenter.InspectionTaskActivityPresenter;
-import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
-import com.sensoro.common.utils.AppUtils;
-import com.sensoro.common.widgets.ProgressUtils;
-import com.sensoro.common.callback.RecycleViewItemClickListener;
-import com.sensoro.common.manger.SensoroLinearLayoutManager;
-import com.sensoro.common.widgets.SpacesItemDecoration;
-import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
-import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.popup.InspectionTaskStatePopUtils;
 import com.sensoro.smartcity.widget.popup.SelectDeviceTypePopUtils;
-import com.sensoro.common.widgets.SensoroToast;
 
 import java.util.List;
 
@@ -54,7 +57,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivityView, InspectionTaskActivityPresenter>
-        implements IInspectionTaskActivityView, Constants,TipOperationDialogUtils.TipDialogUtilsClickListener {
+        implements IInspectionTaskActivityView, Constants, TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.ac_inspection_task_imv_arrows_left)
     ImageView acInspectionTaskImvArrowsLeft;
     @BindView(R.id.ac_inspection_task_ll_search)
@@ -83,10 +86,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     TextView acInspectionTaskTvType;
     @BindView(R.id.ac_inspection_task_rl_select)
     RelativeLayout acInspectionTaskLlSelect;
-    @BindView(R.id.no_content)
-    ImageView imvNoContent;
-    @BindView(R.id.ic_no_content)
-    LinearLayout icNoContent;
+    View icNoContent;
     @BindView(R.id.ac_inspection_task_rl_root)
     RelativeLayout acInspectionTaskRlRoot;
     @BindView(R.id.rv_search_history)
@@ -116,6 +116,8 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     }
 
     private void initView() {
+        icNoContent = LayoutInflater.from(this).inflate(R.layout.no_content, null);
+
         tipBleDialogUtils = new TipBleDialogUtils(mActivity);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 //地图模式切换，图片 map_list_mode map_mode,已经准备好了
@@ -183,9 +185,9 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     private void initClearHistoryDialog() {
         historyClearDialog = new TipOperationDialogUtils(mActivity, true);
         historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
-        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
-        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_1dbb99));
-        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record), R.color.c_a6a6a6);
+        historyClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_1dbb99));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear), getResources().getColor(R.color.c_a6a6a6));
         historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
@@ -443,7 +445,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
 
     @Override
     protected void onPause() {
-        AppUtils.dismissInputMethodManager(mActivity,acInspectionTaskEtSearch);
+        AppUtils.dismissInputMethodManager(mActivity, acInspectionTaskEtSearch);
         super.onPause();
     }
 
@@ -519,7 +521,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
 
                 break;
             case R.id.btn_search_clear:
-               showHistoryClearDialog();
+                showHistoryClearDialog();
                 break;
             case R.id.fg_main_top_search_imv_clear:
                 acInspectionTaskEtSearch.getText().clear();
@@ -598,10 +600,16 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
         setNoContentVisible(data == null || data.size() < 1);
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void setNoContentVisible(boolean isVisible) {
-        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        acInspectionTaskRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        if (isVisible) {
+            refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
+            refreshLayout.setRefreshContent(icNoContent);
+        } else {
+            refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+            refreshLayout.setRefreshContent(acInspectionTaskRcContent);
+        }
     }
 
     @Override

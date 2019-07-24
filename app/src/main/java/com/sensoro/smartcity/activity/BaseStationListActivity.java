@@ -1,11 +1,13 @@
 package com.sensoro.smartcity.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -29,10 +31,12 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.server.bean.BaseStationInfo;
 import com.sensoro.common.server.bean.DeviceCameraInfo;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.CustomDivider;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -40,10 +44,8 @@ import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.BaseStationListAdapter;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
 import com.sensoro.smartcity.presenter.BaseStationListActivityPresenter;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.widget.popup.BaseStationPopupWindow;
 
 import java.util.List;
@@ -60,10 +62,7 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
     RecyclerView acHistoryLogRcContent;
     @BindView(R.id.alarm_return_top)
     ImageView mReturnTopImageView;
-    @BindView(R.id.no_content)
-    ImageView imv_content;
-    @BindView(R.id.ic_no_content)
-    LinearLayout icNoContent;
+    View icNoContent;
     @BindView(R.id.camera_list_ll_top_search)
     LinearLayout cameraListLlTopSearch;
     @BindView(R.id.camera_list_iv_top_back)
@@ -78,8 +77,6 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
     TextView cameraListTvSearchCancel;
     @BindView(R.id.camera_list_iv_filter)
     ImageView cameraListIvFilter;
-    @BindView(R.id.no_content_tip)
-    TextView noContentTip;
     @BindView(R.id.rv_search_history)
     RecyclerView rvSearchHistory;
     @BindView(R.id.camera_list_ll_root)
@@ -114,6 +111,8 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
     }
 
     private void initView() {
+        icNoContent = LayoutInflater.from(this).inflate(R.layout.no_content, null);
+
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mDeviceCameraContentAdapter = new BaseStationListAdapter(mActivity);
         mDeviceCameraContentAdapter.setOnAlarmHistoryLogConfirmListener(this);
@@ -405,10 +404,17 @@ public class BaseStationListActivity extends BaseActivity<ICameraListActivityVie
     }
 
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void setNoContentVisible(boolean isVisible) {
-        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        acHistoryLogRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        if (isVisible) {
+            refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+            refreshLayout.setRefreshContent(icNoContent);
+        } else {
+            refreshLayout.setRefreshContent(acHistoryLogRcContent);
+        }
+
+
     }
 
     @Override

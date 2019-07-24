@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/c_f4f4f4"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/c_f4f4f4">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,10 +20,10 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:gravity="center_vertical"
-            android:paddingBottom="5dp"
-            android:paddingEnd="20dp"
             android:paddingStart="20dp"
             android:paddingTop="5dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="5dp"
             android:visibility="gone">
 
             <TextView
@@ -32,18 +32,17 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:textColor="@color/c_252525"
-                android:textSize="14dp"
-                />
+                android:textSize="14dp" />
 
             <ImageView
                 android:id="@+id/iv_malfunction_history_date_close"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:layout_alignTop="@+id/tv_malfunction_history_date_edit"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
                 android:contentDescription="@null"
                 android:padding="8dp"
-                android:layout_centerVertical="true"
                 android:scaleType="centerInside"
                 android:src="@mipmap/ic_close" />
         </RelativeLayout>
@@ -54,9 +53,6 @@
             android:layout_marginTop="12dp"
             android:background="@color/white">
 
-            <include
-                layout="@layout/item_no_content"
-                />
             <com.scwang.smartrefresh.layout.SmartRefreshLayout
                 android:id="@+id/refreshLayout"
                 android:layout_width="match_parent"
@@ -67,12 +63,10 @@
                     android:id="@+id/fg_history_log_rc_content"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginStart="20dp" />
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp" />
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
         </RelativeLayout>
-
-
 
 
     </LinearLayout>
@@ -81,10 +75,10 @@
         android:id="@+id/alarm_return_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="14.5dp"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="14.5dp"
         android:contentDescription="@null"
         android:src="@mipmap/ic_return_to_top"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 </RelativeLayout>

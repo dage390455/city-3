@@ -1,9 +1,11 @@
 package com.sensoro.smartcity.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -77,10 +79,7 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.alarm_return_top)
     ImageView mReturnTopImageView;
-    @BindView(R.id.no_content)
-    ImageView imv_content;
-    @BindView(R.id.ic_no_content)
-    LinearLayout icNoContent;
+    View icNoContent;
     @BindView(R.id.activity_detail_player)
     LinearLayout activityDetailPlayer;
     private boolean isPlay;
@@ -103,6 +102,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     private void initView() {
+        icNoContent = LayoutInflater.from(this).inflate(R.layout.no_content, null);
+
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
 
         //外部辅助的旋转，帮助全屏
@@ -258,9 +259,15 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         setNoContentVisible(data == null || data.size() < 1);
     }
 
+    @SuppressLint("RestrictedApi")
     public void setNoContentVisible(boolean isVisible) {
-        icNoContent.setVisibility(isVisible ? VISIBLE : GONE);
-        rvDeviceCameraAcCameraDetail.setVisibility(isVisible ? GONE : VISIBLE);
+
+        refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+        if (isVisible) {
+            refreshLayout.setRefreshContent(icNoContent);
+        } else {
+            refreshLayout.setRefreshContent(rvDeviceCameraAcCameraDetail);
+        }
     }
 
     @Override

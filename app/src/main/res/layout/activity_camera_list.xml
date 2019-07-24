@@ -162,7 +162,6 @@
             android:layout_marginTop="12dp"
             android:background="@color/c_f4f4f4">
 
-            <include layout="@layout/item_no_content" />
 
             <com.scwang.smartrefresh.layout.SmartRefreshLayout
                 android:id="@+id/refreshLayout"

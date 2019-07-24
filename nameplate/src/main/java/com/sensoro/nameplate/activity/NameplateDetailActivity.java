@@ -8,7 +8,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -84,12 +83,6 @@ public class NameplateDetailActivity extends BaseActivity<INameplateDetailActivi
 
     @BindView(R2.id.refreshLayout_include)
     SmartRefreshLayout refreshLayout;
-    @BindView(R2.id.no_content)
-    ImageView noContent;
-    @BindView(R2.id.no_content_tip)
-    TextView noContentTip;
-    @BindView(R2.id.ic_no_content)
-    LinearLayout icNoContent;
     @BindView(R2.id.return_top_include)
     ImageView returnTopInclude;
     @BindView(R2.id.view_divider_ac_nameplate_associated_sensor)

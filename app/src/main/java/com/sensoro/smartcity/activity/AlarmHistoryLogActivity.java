@@ -1,7 +1,9 @@
 package com.sensoro.smartcity.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -58,10 +60,7 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
     ImageView ivAlarmLogDateClose;
     @BindView(R.id.alarm_return_top)
     ImageView mReturnTopImageView;
-    @BindView(R.id.no_content)
-    ImageView imv_content;
-    @BindView(R.id.ic_no_content)
-    LinearLayout icNoContent;
+    View icNoContent;
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
     private CalendarPopUtils mCalendarPopUtils;
@@ -84,6 +83,8 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
     }
 
     private void initView() {
+        icNoContent = LayoutInflater.from(this).inflate(R.layout.no_content, null);
+
         includeImvTitleTvTitle.setText(mActivity.getString(R.string.historical_log));
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mAlarmHistoryLogRcContentAdapter = new AlarmHistoryLogRcContentAdapter(mActivity);
@@ -240,10 +241,17 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
         setNoContentVisible(data == null || data.size() < 1);
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void setNoContentVisible(boolean isVisible) {
-        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        acHistoryLogRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+        if (isVisible) {
+            refreshLayout.setRefreshContent(icNoContent);
+        } else {
+            refreshLayout.setRefreshContent(acHistoryLogRcContent);
+        }
+
+
     }
 
     @Override

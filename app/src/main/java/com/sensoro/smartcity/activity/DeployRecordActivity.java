@@ -1,11 +1,13 @@
 package com.sensoro.smartcity.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -31,6 +33,7 @@ import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.bean.DeployRecordInfo;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.CustomDivider;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -40,7 +43,6 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeployRecordContentAdapter;
 import com.sensoro.smartcity.imainviews.IDeployRecordActivityView;
 import com.sensoro.smartcity.presenter.DeployRecordActivityPresenter;
-import com.sensoro.common.utils.AppUtils;
 
 import java.util.List;
 
@@ -77,12 +79,7 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
     RelativeLayout acDeployRecordDeployRlNewDevice;
     @BindView(R.id.ac_deploy_record_rc_content)
     RecyclerView acDeployRecordRcContent;
-    @BindView(R.id.no_content)
-    ImageView noContent;
-    @BindView(R.id.no_content_tip)
-    TextView noContentTip;
-    @BindView(R.id.ic_no_content)
-    LinearLayout icNoContent;
+    View icNoContent;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.alarm_return_top)
@@ -112,6 +109,7 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
     }
 
     private void initView() {
+        icNoContent = LayoutInflater.from(this).inflate(R.layout.no_content, null);
         mProgressDialog = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         acDeployRecordEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -465,9 +463,15 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
         return acDeployRecordEtSearch.getText().toString();
     }
 
+    @SuppressLint("RestrictedApi")
     private void setNoContentVisible(boolean isVisible) {
-        acDeployRecordRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
-        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        if (isVisible) {
+            refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
+            refreshLayout.setRefreshContent(icNoContent);
+        } else {
+            refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+            refreshLayout.setRefreshContent(acDeployRecordRcContent);
+        }
     }
 
     @Override

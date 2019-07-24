@@ -7,8 +7,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.manger.ActivityTaskManager;
+import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
@@ -20,6 +22,8 @@ import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.factory.UserPermissionFactory;
+
+import org.greenrobot.eventbus.EventBus;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -72,6 +76,9 @@ public class PermissionChangeDialogUtils {
                         PreferencesHelper.getInstance().saveUserData(loginData);
                         dismissProgressDialog();
                         dismiss();
+                        EventData eventData = new EventData();
+                        eventData.code = Constants.EVENT_DATA_PERMISSIONCHANGE;
+                        EventBus.getDefault().post(eventData);
 
                     }
 

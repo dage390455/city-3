@@ -1,7 +1,9 @@
 package com.sensoro.smartcity.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -40,7 +42,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class CameraPersonAvatarHistoryActivity extends BaseActivity<ICameraPersonAvatarHistoryActivityView, CameraPersonAvatarHistoryActivityPresenter>
-implements ICameraPersonAvatarHistoryActivityView{
+        implements ICameraPersonAvatarHistoryActivityView {
     @BindView(R.id.include_imv_title_imv_arrows_left)
     ImageView includeImvTitleImvArrowsLeft;
     @BindView(R.id.iv_title_avatar_ac_camera_person_avatar_history)
@@ -55,10 +57,7 @@ implements ICameraPersonAvatarHistoryActivityView{
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.alarm_return_top)
     ImageView mReturnTopImageView;
-    @BindView(R.id.no_content)
-    ImageView imv_content;
-    @BindView(R.id.ic_no_content)
-    LinearLayout icNoContent;
+    View icNoContent;
     @BindView(R.id.ll_move_locus_ac_camera_person_avatar_history)
     LinearLayout llMoveLocusAcCameraPersonAvatarHistory;
     private PersonAvatarHistoryAdapter rvContentAdapter;
@@ -75,6 +74,8 @@ implements ICameraPersonAvatarHistoryActivityView{
     }
 
     private void initView() {
+        icNoContent = LayoutInflater.from(this).inflate(R.layout.no_content, null);
+
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 
         includeImvTitleTvTitle.setText(mActivity.getString(R.string.person_avatar_history));
@@ -158,7 +159,7 @@ implements ICameraPersonAvatarHistoryActivityView{
     }
 
 
-    @OnClick({R.id.include_imv_title_imv_arrows_left, R.id.ll_move_locus_ac_camera_person_avatar_history,R.id.alarm_return_top})
+    @OnClick({R.id.include_imv_title_imv_arrows_left, R.id.ll_move_locus_ac_camera_person_avatar_history, R.id.alarm_return_top})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_imv_title_imv_arrows_left:
@@ -237,14 +238,22 @@ implements ICameraPersonAvatarHistoryActivityView{
 
     @Override
     public void updateData(List<DeviceCameraPersonFaceBean> data) {
-        if (data!= null) {
+        if (data != null) {
             rvContentAdapter.updateData(data);
         }
         setNoContentVisible(data == null || data.size() < 1);
     }
+
+    @SuppressLint("RestrictedApi")
     public void setNoContentVisible(boolean isVisible) {
-        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        rvContentAcCameraPersonAvatarHistory.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+
+        if (isVisible) {
+            refreshLayout.setRefreshContent(icNoContent);
+        } else {
+            refreshLayout.setRefreshContent(rvContentAcCameraPersonAvatarHistory);
+        }
+
     }
 
     @Override
@@ -254,7 +263,7 @@ implements ICameraPersonAvatarHistoryActivityView{
 
     @Override
     public void loadTitleAvatar(String faceUrl) {
-        Glide.with(mActivity).load(Constants.CAMERA_BASE_URL+faceUrl)
+        Glide.with(mActivity).load(Constants.CAMERA_BASE_URL + faceUrl)
                 .apply(new RequestOptions().transform(new GlideCircleTransform(mActivity))
                         .placeholder(R.drawable.person_locus_placeholder)
                         .error(R.drawable.person_locus_placeholder)

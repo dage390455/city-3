@@ -10,6 +10,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -105,8 +106,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     RecyclerView rvSearchHistory;
     @BindView(R2.id.alarm_return_top)
     ImageView mReturnTopImageView;
-    @BindView(R2.id.ic_no_content)
-    LinearLayout icNoContent;
+    View icNoContent;
 
     private CameraWarnFragRcContentAdapter mRcContentAdapter;
     private boolean isShowDialog = true;
@@ -136,6 +136,8 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
 
     @SuppressLint("ClickableViewAccessibility")
     private void initView() {
+        icNoContent = LayoutInflater.from(getActivity()).inflate(R.layout.no_content, null);
+
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
         mCaptureTimeFilterPopUtils = new FilterPopUtils(getActivity());
         mProcessStatusFilterPopUtils = new FilterPopUtils(getActivity());
@@ -441,11 +443,17 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
 
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void setNoContentVisible(boolean isVisible) {
-        rvCameraWarnsContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
-        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
 
+        if (isVisible) {
+            refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
+            refreshLayout.setRefreshContent(icNoContent);
+        } else {
+            refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+            refreshLayout.setRefreshContent(rvCameraWarnsContent);
+        }
     }
 
     @Override

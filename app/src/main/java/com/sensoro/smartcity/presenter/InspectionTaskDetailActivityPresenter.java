@@ -122,24 +122,26 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
         getView().startAC(intent);
     }
 
+    //与ios逻辑一致
     public void doBtnStart() {
         if (PreferencesHelper.getInstance().getUserData().hasInspectionDeviceList) {
-            if (PreferencesHelper.getInstance().getUserData().hasInspectionDeviceModify) {
-                if (mTaskInfo.getStatus() == 0) {
-                    changeTaskState();
-                } else {
-                    Intent intent = new Intent(mContext, InspectionTaskActivity.class);
-                    intent.putExtra(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
-                    getView().startAC(intent);
-                }
+//            if (PreferencesHelper.getInstance().getUserData().hasInspectionDeviceModify) {
+            if (mTaskInfo.getStatus() == 0 || mTaskInfo.getStatus() == 2) {
+                changeTaskState();
             } else {
                 Intent intent = new Intent(mContext, InspectionTaskActivity.class);
                 intent.putExtra(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
                 getView().startAC(intent);
             }
+//            } else {
+//                Intent intent = new Intent(mContext, InspectionTaskActivity.class);
+//                intent.putExtra(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
+//                getView().startAC(intent);
+//        }
         } else {
             getView().toastShort(mContext.getString(R.string.account_does_not_have_permission_to_view_the_inspection_device_list));
         }
+
     }
 
     private void changeTaskState() {
