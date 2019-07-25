@@ -61,7 +61,8 @@ public class PermissionChangeDialogUtils {
 //        }
 
         mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view);
-
+        mDialog.setCancelable(false);
+        mDialog.setCanceledOnTouchOutside(false);
         dialogTipTvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

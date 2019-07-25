@@ -649,8 +649,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
 
     private boolean reconnect() {
         try {
+            mHandler.removeCallbacks(mSocketTask);
             if (mSocket != null) {
-                mHandler.removeCallbacks(mSocketTask);
                 mSocket.disconnect();
                 mSocket.off(Constants.SOCKET_EVENT_PERMISSION_CHANGE, mPermissionListener);
                 if (hasDeviceBriefControl()) {
