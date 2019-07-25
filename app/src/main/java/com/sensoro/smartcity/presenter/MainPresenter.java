@@ -83,7 +83,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private final DeviceFlushListener mDeviceFlushListener = new DeviceFlushListener();
     private final DeviceTaskResultListener mTaskResultListener = new DeviceTaskResultListener();
     private final Handler mHandler = new Handler();
-    private final MainPresenter.TaskRunnable mRunnable = new MainPresenter.TaskRunnable();
+    private final MainPresenter.TaskRunnable mSocketTask = new MainPresenter.TaskRunnable();
     private final NetWorkTaskRunnable mNetWorkTaskRunnable = new NetWorkTaskRunnable();
     private final FreshAlarmCountTask mFreshAlarmCountTaskRunnable = new FreshAlarmCountTask();
     //
@@ -268,7 +268,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             if (!PushManager.getInstance().isPushTurnedOn(ContextUtils.getContext())) {
                 PushManager.getInstance().turnOnPush(ContextUtils.getContext());
             }
-            mHandler.postDelayed(mRunnable, 3000L);
             mHandler.postDelayed(mNetWorkTaskRunnable, 10 * 1000L);
             mHandler.postDelayed(new Runnable() {
                 @Override
@@ -530,7 +529,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                     throwable.printStackTrace();
                 }
             }
-            mHandler.postDelayed(mRunnable, 10 * 1000);
+            mHandler.postDelayed(mSocketTask, 10 * 1000);
         }
     }
 
@@ -585,6 +584,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             if (hasAlarmInfoControl() || hasDeviceBriefControl()) {
                 mSocket.connect();
             }
+            mHandler.removeCallbacks(mSocketTask);
+            mHandler.postDelayed(mSocketTask, 3000);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -649,6 +650,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private boolean reconnect() {
         try {
             if (mSocket != null) {
+                mHandler.removeCallbacks(mSocketTask);
                 mSocket.disconnect();
                 mSocket.off(Constants.SOCKET_EVENT_PERMISSION_CHANGE, mPermissionListener);
                 if (hasDeviceBriefControl()) {
@@ -684,6 +686,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             if (hasAlarmInfoControl() || hasDeviceBriefControl()) {
                 return mSocket.connect().connected();
             }
+            mHandler.postDelayed(mSocketTask, 3000);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

@@ -11,6 +11,7 @@ import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.sensoro.common.base.ContextUtils;
 import com.sensoro.common.helper.PreferencesHelper;
@@ -130,15 +131,29 @@ public class RetrofitServiceHelper {
 
     private RetrofitServiceHelper() {
         final GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(double.class, new NumberDeserializer())
-                .registerTypeAdapter(int.class, new NumberDeserializer())
-                .registerTypeAdapter(float.class, new NumberDeserializer())
-                .registerTypeAdapter(long.class, new NumberDeserializer())
-                .registerTypeAdapter(short.class, new NumberDeserializer())
-                .registerTypeAdapter(Number.class, new NumberDeserializer())
+        gsonBuilder
+                //序列化null
+//                .serializeNulls()
+                // 设置日期时间格式，另有2个重载方法。在序列化和反序化时均生效
+                .setDateFormat("yyyy-MM-dd")
+                //格式化输出。设置后，gson序列号后的字符串为一个格式化的字符串
+                .setPrettyPrinting();
+        gsonBuilder.registerTypeAdapter(short.class, new ShortDeserializer())
+                .registerTypeAdapter(int.class, new IntDeserializer())
+                .registerTypeAdapter(long.class, new LongDeserializer())
+                .registerTypeAdapter(float.class, new FloatDeserializer())
+                .registerTypeAdapter(double.class, new DoubleDeserializer())
+                .registerTypeAdapter(Short.class, new ShortDeserializer())
+                .registerTypeAdapter(Integer.class, new IntDeserializer())
+                .registerTypeAdapter(Long.class, new LongDeserializer())
+                .registerTypeAdapter(Float.class, new FloatDeserializer())
+                .registerTypeAdapter(Double.class, new DoubleDeserializer())
+                .registerTypeAdapter(String.class, new StringDeserializer())
                 .registerTypeAdapter(JsonObject.class, new JsonObjectDeserializer())
-                .registerTypeAdapter(String.class, new JsonStringDeserializer())
-                .registerTypeAdapter(String.class, new StringDeserializer());
+                .registerTypeAdapter(JsonArray.class, new JsonArrayDeserializer());
+        //
+//        gsonBuilder.registerTypeHierarchyAdapter(List.class, new ListDeserializer());
+
         gson = gsonBuilder.create();
         //支持RxJava
 

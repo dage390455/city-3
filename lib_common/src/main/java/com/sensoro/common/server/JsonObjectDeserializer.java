@@ -17,7 +17,7 @@ public class JsonObjectDeserializer implements JsonDeserializer<JsonObject> {
     public JsonObject deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 
         try {
-            if (typeOfT.equals(String.class)) {
+            if (typeOfT.equals(JsonObject.class)) {
                 return json.getAsJsonObject();
             } else {
                 return null;
