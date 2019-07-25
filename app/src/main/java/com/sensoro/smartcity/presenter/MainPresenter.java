@@ -75,7 +75,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private Activity mContext;
     //
     private long exitTime = 0;
-    private volatile Socket mSocket = null;
+    private Socket mSocket = null;
     private final MainPresenter.DeviceInfoListener mInfoListener = new MainPresenter.DeviceInfoListener();
     private final MainPresenter.PermissionListener mPermissionListener = new MainPresenter.PermissionListener();
     private final MainPresenter.DeviceAlarmCountListener mAlarmCountListener = new MainPresenter.DeviceAlarmCountListener();
@@ -183,12 +183,9 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     }
 
     private void openPermissionChange() {
-
         if (isAttachedView()) {
             getView().showPermissionChangeDialog();
         }
-
-
     }
 
 

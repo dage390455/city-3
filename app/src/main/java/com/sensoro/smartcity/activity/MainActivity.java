@@ -218,11 +218,6 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
                 Activity topActivity = ActivityTaskManager.getInstance().getTopActivity();
                 if (null == permissionChangeDialogUtils) {
                     permissionChangeDialogUtils = new PermissionChangeDialogUtils(topActivity);
-//                } else {
-//                    //显示和创建的activity不一致
-//                    if (permissionChangeDialogUtils.getmActivity() != topActivity) {
-//                        permissionChangeDialogUtils = new PermissionChangeDialogUtils(topActivity);
-//                    }
                     permissionChangeDialogUtils.setDismissListener(new PermissionChangeDialogUtils.OnPopupDismissListener() {
                         @Override
                         public void onDismiss() {

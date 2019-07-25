@@ -92,10 +92,13 @@ public abstract class CityObserver<T> implements Observer<T> {
                             SensoroToast.getInstance().makeText(errinfo, Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        String errinfo = jsonObject.getString("errinfo");
                         if (errcode == 4000003) {
-                            errinfo = "无此权限，请联系管理员并重新登录";
+                            if (viewAttachedAlive()) {
+                                onErrorMsg(errcode, "无此权限，请联系管理员并重新登录");
+                                return;
+                            }
                         }
+                        String errinfo = jsonObject.getString("errinfo");
                         if (viewAttachedAlive()) {
                             onErrorMsg(errcode, errinfo);
                         }
@@ -103,6 +106,12 @@ public abstract class CityObserver<T> implements Observer<T> {
                         try {
                             jsonObject = new JSONObject(errorBody);
                             int errcode = jsonObject.getInt("errcode");
+                            if (errcode == 4000003) {
+                                if (viewAttachedAlive()) {
+                                    onErrorMsg(errcode, "无此权限，请联系管理员并重新登录");
+                                    return;
+                                }
+                            }
                             String errmsg = jsonObject.getString("errmsg");
                             if (viewAttachedAlive()) {
                                 onErrorMsg(errcode, errmsg);
@@ -119,10 +128,13 @@ public abstract class CityObserver<T> implements Observer<T> {
                                     SensoroToast.getInstance().makeText(errinfo, Toast.LENGTH_SHORT).show();
                                     return;
                                 }
-                                String errmsg = jsonObject.getString("message");
                                 if (errcode == 4000003) {
-                                    errmsg = "无此权限，请联系管理员并重新登录";
+                                    if (viewAttachedAlive()) {
+                                        onErrorMsg(errcode, "无此权限，请联系管理员并重新登录");
+                                        return;
+                                    }
                                 }
+                                String errmsg = jsonObject.getString("message");
                                 if (viewAttachedAlive()) {
                                     onErrorMsg(errcode, errmsg);
                                 }
@@ -146,16 +158,25 @@ public abstract class CityObserver<T> implements Observer<T> {
                             SensoroToast.getInstance().makeText(errmsg, Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        String errmsg = jsonObject.getString("errmsg");
                         if (errcode == 4000003) {
-                            errmsg = "No permission, please contact administrators and relogin";
+                            if (viewAttachedAlive()) {
+                                onErrorMsg(errcode, "No permission, please contact administrators and relogin");
+                                return;
+                            }
                         }
+                        String errmsg = jsonObject.getString("errmsg");
                         if (viewAttachedAlive()) {
                             onErrorMsg(errcode, errmsg);
                         }
                     } catch (JSONException e1) {
                         try {
                             int errcode = jsonObject.getInt("errcode");
+                            if (errcode == 4000003) {
+                                if (viewAttachedAlive()) {
+                                    onErrorMsg(errcode, "No permission, please contact administrators and relogin");
+                                    return;
+                                }
+                            }
                             String errinfo = jsonObject.getString("errinfo");
                             if (viewAttachedAlive()) {
                                 onErrorMsg(errcode, errinfo);
@@ -172,10 +193,13 @@ public abstract class CityObserver<T> implements Observer<T> {
                                     SensoroToast.getInstance().makeText(errinfo, Toast.LENGTH_SHORT).show();
                                     return;
                                 }
-                                String errmsg = jsonObject.getString("message");
                                 if (errcode == 4000003) {
-                                    errmsg = "No permission, please contact administrators and relogin";
+                                    if (viewAttachedAlive()) {
+                                        onErrorMsg(errcode, "No permission, please contact administrators and relogin");
+                                        return;
+                                    }
                                 }
+                                String errmsg = jsonObject.getString("message");
                                 if (viewAttachedAlive()) {
                                     onErrorMsg(errcode, errmsg);
                                 }

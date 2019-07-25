@@ -112,9 +112,9 @@ public class RetrofitServiceHelper {
     private final String HEADER_CONTENT_TYPE = "Content-Type";
     private final String HEADER_ACCEPT = "Accept";
     private volatile int mUrlType = -1;
-    private volatile String sessionId = null;
-    private volatile String token = null;
-    public volatile String BASE_URL = RetrofitService.SCOPE_MASTER;//http://mocha-iot-api.mocha.server.sensoro.com-----http://iot-api
+    private String sessionId = null;
+    private String token = null;
+    public String BASE_URL = RetrofitService.SCOPE_MASTER;//http://mocha-iot-api.mocha.server.sensoro.com-----http://iot-api
     private RetrofitService retrofitService;
     private final Retrofit.Builder builder;
     private final Gson gson;

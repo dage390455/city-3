@@ -36,10 +36,10 @@ import java.util.Map;
 
 public final class PreferencesHelper implements Constants {
 
-    private volatile EventLoginData mEventLoginData;
-    private volatile DeviceMergeTypesInfo mDeviceMergeTypesInfo;
-    private volatile AlarmPopupDataBean mAlarmPopupDataBean;
-    private volatile String myBaseUrl;
+    private EventLoginData mEventLoginData;
+    private DeviceMergeTypesInfo mDeviceMergeTypesInfo;
+    private AlarmPopupDataBean mAlarmPopupDataBean;
+    private String myBaseUrl;
 
     private PreferencesHelper() {
     }
