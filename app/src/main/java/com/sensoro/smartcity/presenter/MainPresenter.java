@@ -522,9 +522,9 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
         @Override
         public void run() {
             if (mSocket != null && !mSocket.connected()) {
-                boolean reconnect = reconnect();
+                reconnect();
                 try {
-                    LogUtils.loge("mSocket  断开---->>> reconnect = " + reconnect);
+                    LogUtils.loge("mSocket  断开---->>> ");
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }
@@ -564,6 +564,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
 
     private void createSocket() {
         try {
+            mHandler.removeCallbacks(mSocketTask);
             String sessionId = RetrofitServiceHelper.getInstance().getSessionId();
             IO.Options options = new IO.Options();
             options.query = "session=" + sessionId;
@@ -582,12 +583,12 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                 mSocket.on(Constants.SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
             }
             if (hasAlarmInfoControl() || hasDeviceBriefControl()) {
-                mSocket.connect();
+                mSocket = mSocket.connect();
             }
-            mHandler.removeCallbacks(mSocketTask);
-            mHandler.postDelayed(mSocketTask, 3000);
         } catch (URISyntaxException e) {
             e.printStackTrace();
+        }finally {
+            mHandler.postDelayed(mSocketTask, 3000);
         }
 
     }
@@ -647,50 +648,59 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
         reconnect();
     }
 
-    private boolean reconnect() {
-        try {
-            mHandler.removeCallbacks(mSocketTask);
-            if (mSocket != null) {
-                mSocket.disconnect();
-                mSocket.off(Constants.SOCKET_EVENT_PERMISSION_CHANGE, mPermissionListener);
-                if (hasDeviceBriefControl()) {
-                    mSocket.off(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);
-                    mSocket.off(Constants.SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
-                    mSocket.off(Constants.SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
-                    mSocket.off(Constants.SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
-                }
-                if (hasAlarmInfoControl()) {
-                    mSocket.off(Constants.SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
-                }
-
-                mSocket = null;
-            }
-            String sessionId = RetrofitServiceHelper.getInstance().getSessionId();
-            IO.Options options = new IO.Options();
-            //
-            options.query = "session=" + sessionId;
-            options.forceNew = true;
-            options.path = "/city";
-            options.transports = transports;
-            mSocket = IO.socket(RetrofitServiceHelper.getInstance().BASE_URL + "app", options);
-            mSocket.on(Constants.SOCKET_EVENT_PERMISSION_CHANGE, mPermissionListener);
+    private void reconnect() {
+        mHandler.removeCallbacks(mSocketTask);
+        if (mSocket != null) {
+            mSocket = mSocket.disconnect();
+            mSocket.off(Constants.SOCKET_EVENT_PERMISSION_CHANGE, mPermissionListener);
             if (hasDeviceBriefControl()) {
-                mSocket.on(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);
-                mSocket.on(Constants.SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
-                mSocket.on(Constants.SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
-                mSocket.on(Constants.SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
+                mSocket.off(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);
+                mSocket.off(Constants.SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+                mSocket.off(Constants.SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
+                mSocket.off(Constants.SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
             }
             if (hasAlarmInfoControl()) {
-                mSocket.on(Constants.SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
+                mSocket.off(Constants.SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
             }
-            if (hasAlarmInfoControl() || hasDeviceBriefControl()) {
-                return mSocket.connect().connected();
-            }
-            mHandler.postDelayed(mSocketTask, 3000);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
+
+            mSocket = null;
         }
-        return false;
+        //考虑延时
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                String sessionId = RetrofitServiceHelper.getInstance().getSessionId();
+                IO.Options options = new IO.Options();
+                //
+                options.query = "session=" + sessionId;
+                options.forceNew = true;
+                options.path = "/city";
+                options.transports = transports;
+                try {
+                    mSocket = IO.socket(RetrofitServiceHelper.getInstance().BASE_URL + "app", options);
+                    mSocket.on(Constants.SOCKET_EVENT_PERMISSION_CHANGE, mPermissionListener);
+                    if (hasDeviceBriefControl()) {
+                        mSocket.on(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);
+                        mSocket.on(Constants.SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+                        mSocket.on(Constants.SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
+                        mSocket.on(Constants.SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
+                    }
+                    if (hasAlarmInfoControl()) {
+                        mSocket.on(Constants.SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
+                    }
+                    if (hasAlarmInfoControl() || hasDeviceBriefControl()) {
+                        mSocket = mSocket.connect();
+                    }
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                } finally {
+                    mHandler.postDelayed(mSocketTask, 3000);
+                }
+
+
+            }
+        }, 2000);
+
     }
 
     @Override
@@ -704,7 +714,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             EventBus.getDefault().unregister(this);
         }
         if (mSocket != null) {
-            mSocket.disconnect();
+            mSocket = mSocket.disconnect();
             mSocket.off(Constants.SOCKET_EVENT_PERMISSION_CHANGE, mPermissionListener);
             if (hasDeviceBriefControl()) {
                 mSocket.off(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);

@@ -40,7 +40,7 @@ import java.lang.reflect.Method;
 public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCompatActivity {
     //    private static final String CHECK_OP_NO_THROW = "checkOpNoThrow";
 //    private static final String OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION";
-    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
     private final Runnable notificationsTask = new Runnable() {
         @Override
         public void run() {
@@ -110,7 +110,6 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
             }
             mActivity = this;
         }
-        permissionDialogUtils = new PermissionDialogUtils(mActivity);
         if (!setMyCurrentActivityTheme()) {
             setTheme(R.style.MyTheme);
         }
@@ -161,9 +160,12 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
      */
     protected abstract void onCreateInit(Bundle savedInstanceState);
 
+    private boolean isDestroyed = false;
 
-    @Override
-    protected void onDestroy() {
+    private void destroy() {
+        if (isDestroyed) {
+            return;
+        }
         if (permissionDialogUtils != null) {
             permissionDialogUtils.destroy();
         }
@@ -174,8 +176,15 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
 //            immersionBar.destroy();
 //        }
         mHandler.removeCallbacksAndMessages(null);
-        super.onDestroy();
+
         ActivityTaskManager.getInstance().popActivity(this);
+        isDestroyed = true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        destroy();
     }
 
     @Override
@@ -190,6 +199,9 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         super.onPause();
         mHandler.removeCallbacks(notificationsTask);
         StatService.onPause(mActivity);
+        if (isFinishing()) {
+            destroy();
+        }
     }
 
     /**
@@ -246,32 +258,37 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
      * @param executor
      */
     private void showRationaleDialog(RequestExecutor executor) {
-        if (permissionDialogUtils != null) {
-            permissionDialogUtils.setTipMessageText(mActivity.getString(R.string.notification_prompt)).setTipCacnleText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_a6a6a6)).setTipConfirmText(mActivity.getString(R.string.go_setting), mActivity.getResources().getColor(R.color.colorAccent)).show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
-                @Override
-                public void onCancelClick() {
-                    permissionDialogUtils.dismiss();
-                    if (executor != null) {
-                        executor.cancel();
-                    }
-
-                }
-
-                @Override
-                public void onConfirmClick() {
-                    Intent intent = new Intent();
-                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    Uri uri = Uri.fromParts("package", ContextUtils.getContext()
-                            .getPackageName(), null);
-                    intent.setData(uri);
-                    startActivity(intent);
-                    permissionDialogUtils.dismiss();
-                    if (executor != null) {
-                        executor.execute();
-                    }
-                }
-            });
+        if (permissionDialogUtils == null) {
+            permissionDialogUtils = new PermissionDialogUtils(mActivity);
         }
+        permissionDialogUtils.setTipMessageText(mActivity.getString(R.string.notification_prompt)).setTipCacnleText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_a6a6a6)).setTipConfirmText(mActivity.getString(R.string.go_setting), mActivity.getResources().getColor(R.color.colorAccent)).show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
+            @Override
+            public void onCancelClick() {
+                if (permissionDialogUtils!=null){
+                    permissionDialogUtils.dismiss();
+                }
+                if (executor != null) {
+                    executor.cancel();
+                }
+
+            }
+
+            @Override
+            public void onConfirmClick() {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", ContextUtils.getContext()
+                        .getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+                if (permissionDialogUtils!=null){
+                    permissionDialogUtils.dismiss();
+                }
+                if (executor != null) {
+                    executor.execute();
+                }
+            }
+        });
     }
 
     public boolean checkDeviceHasNavigationBar() {
