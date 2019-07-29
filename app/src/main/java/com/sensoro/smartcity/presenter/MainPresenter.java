@@ -651,8 +651,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private void reconnect() {
         mHandler.removeCallbacks(mSocketTask);
         if (mSocket != null) {
-            mSocket = mSocket.disconnect();
             mSocket.off();
+            mSocket = mSocket.disconnect();
             mSocket = null;
         }
         //考虑延时
@@ -704,8 +704,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             EventBus.getDefault().unregister(this);
         }
         if (mSocket != null) {
-            mSocket = mSocket.disconnect();
             mSocket.off();
+            mSocket = mSocket.disconnect();
             mSocket = null;
         }
         mFragmentList.clear();
