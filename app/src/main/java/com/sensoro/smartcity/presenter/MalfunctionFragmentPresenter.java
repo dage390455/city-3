@@ -12,20 +12,16 @@ import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.iwidget.IOnCreate;
-import com.sensoro.common.model.EventData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.MalfunctionListInfo;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MalfunctionDetailActivity;
 import com.sensoro.smartcity.imainviews.IMalfunctionFragmentView;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,6 +80,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
+                        freshEmptyData();
                         getView().onPullRefreshComplete();
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
@@ -116,8 +113,9 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
                     @Override
                     public void onCompleted(ResponseResult<List<MalfunctionListInfo>> malfunctionListRsp) {
                         getView().dismissProgressDialog();
-                        if (malfunctionListRsp.getData().size() == 0) {
-                            getView().toastShort("没有更多数据了");
+                        List<MalfunctionListInfo> data = malfunctionListRsp.getData();
+                        if (data == null || data.size() == 0) {
+                            getView().toastShort(mContext.getString(R.string.no_more_data));
                             getView().onPullRefreshCompleteNoMoreData();
                             cur_page--;
                         } else {
@@ -184,8 +182,9 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
             @Override
             public void onCompleted(ResponseResult<List<MalfunctionListInfo>> malfunctionListRsp) {
                 getView().dismissProgressDialog();
-                if (malfunctionListRsp.getData().size() == 0) {
-                    getView().toastShort("没有更多数据了");
+                List<MalfunctionListInfo> data = malfunctionListRsp.getData();
+                if (data == null || data.size() == 0) {
+                    getView().toastShort(mContext.getString(R.string.no_more_data));
                 }
                 refreshUI(Constants.DIRECTION_DOWN, malfunctionListRsp);
                 getView().onPullRefreshComplete();
@@ -198,6 +197,11 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
                 getView().toastShort(errorMsg);
             }
         });
+    }
+
+    private void freshEmptyData() {
+        mMalfunctionInfoList.clear();
+        getView().updateAlarmListAdapter(mMalfunctionInfoList);
     }
 
     private void refreshUI(int directionDown, ResponseResult<List<MalfunctionListInfo>> malfunctionListRsp) {
@@ -216,7 +220,9 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
 
     private void handleMalfunctionLists(ResponseResult<List<MalfunctionListInfo>> malfunctionListRsp) {
         List<MalfunctionListInfo> malfunctionListInfoList = malfunctionListRsp.getData();
-        mMalfunctionInfoList.addAll(malfunctionListInfoList);
+        if (malfunctionListInfoList != null) {
+            mMalfunctionInfoList.addAll(malfunctionListInfoList);
+        }
         //            Collections.sort(mDeviceAlarmLogInfoList);
     }
 
@@ -229,27 +235,27 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
 
     @Override
     public void onCreate() {
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onDestroy() {
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
         mMalfunctionInfoList.clear();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(EventData eventData) {
-        int code = eventData.code;
-        Object data = eventData.data;
-        switch (code) {
-            case Constants.EVENT_DATA_SEARCH_MERCHANT:
-                if (isAttachedView()) {
-                    getView().cancelSearchState();
-                }
-                break;
-        }
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onMessageEvent(EventData eventData) {
+//        int code = eventData.code;
+//        Object data = eventData.data;
+//        switch (code) {
+//            case Constants.EVENT_DATA_SEARCH_MERCHANT:
+//                if (isAttachedView()) {
+//                    getView().cancelSearchState();
+//                }
+//                break;
+//        }
+//    }
 
     public void clearSearchHistory() {
         PreferencesSaveAnalyzer.clearAllData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION);

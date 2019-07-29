@@ -2,6 +2,7 @@ package com.sensoro.common.presenter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
 
 import androidx.fragment.app.Fragment;
 
@@ -33,6 +34,7 @@ public class FireSecurityWarnPresenter extends BasePresenter<IFireSecurityWarnVi
     private final ArrayList<String> mFragmentTitleList = new ArrayList<>(2);
     //控制model
     private final boolean isModel = BuildConfig.IS_MODULE;
+    private Handler handler;
 
     @Override
     public void initData(Context context) {
@@ -85,6 +87,9 @@ public class FireSecurityWarnPresenter extends BasePresenter<IFireSecurityWarnVi
 
     @Override
     public void onDestroy() {
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+        }
         EventBus.getDefault().unregister(this);
     }
 
@@ -93,9 +98,17 @@ public class FireSecurityWarnPresenter extends BasePresenter<IFireSecurityWarnVi
         int code = eventData.code;
         switch (code) {
             case Constants.EVENT_DATA_SEARCH_MERCHANT:
-                if (isAttachedView()) {
-                    initViewPager(mActivity);
+                if (handler == null) {
+                    handler = new Handler();
                 }
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isAttachedView()) {
+                            initViewPager(mActivity);
+                        }
+                    }
+                }, 1000);
                 break;
         }
     }

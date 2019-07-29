@@ -261,11 +261,12 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
                     (Schedulers.io()).doOnNext(new Consumer<ResponseResult<List<DeviceInfo>>>() {
                 @Override
                 public void accept(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
-                    if (deviceInfoListRsp.getData().size() == 0) {
+                    List<DeviceInfo> data = deviceInfoListRsp.getData();
+                    if (data == null || data.size() == 0) {
                         mDataList.clear();
                     } else {
                         currentList.clear();
-                        currentList.addAll(deviceInfoListRsp.getData());
+                        currentList.addAll(data);
                         refreshCacheData();
                     }
                 }
@@ -286,6 +287,11 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
 
                 @Override
                 public void onErrorMsg(int errorCode, String errorMsg) {
+                    try {
+                        getView().refreshData(mDataList);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     getView().dismissProgressDialog();
                     getView().recycleViewRefreshComplete();
                     getView().toastShort(errorMsg);
@@ -298,10 +304,11 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
                 @Override
                 public void accept(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
                     try {
-                        if (deviceInfoListRsp.getData().size() == 0) {
+                        List<DeviceInfo> data = deviceInfoListRsp.getData();
+                        if (data == null || data.size() == 0) {
                             page--;
                         } else {
-                            currentList.addAll(deviceInfoListRsp.getData());
+                            currentList.addAll(data);
                             refreshCacheData();
                         }
                     } catch (Exception e) {
@@ -375,10 +382,11 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
             @Override
             public void onCompleted(ResponseResult<List<DeviceAlarmLogInfo>> deviceAlarmLogRsp) {
                 getView().dismissProgressDialog();
-                if (deviceAlarmLogRsp.getData().size() == 0) {
+                List<DeviceAlarmLogInfo> data = deviceAlarmLogRsp.getData();
+                if (data == null || data.size() == 0) {
                     getView().toastShort(mContext.getString(R.string.no_alert_log_information_was_obtained));
                 } else {
-                    DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogRsp.getData().get(0);
+                    DeviceAlarmLogInfo deviceAlarmLogInfo = data.get(0);
                     enterAlarmLogPop(deviceAlarmLogInfo);
                 }
             }

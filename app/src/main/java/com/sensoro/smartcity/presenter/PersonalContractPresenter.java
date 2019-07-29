@@ -105,8 +105,9 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
             @Override
             public void onCompleted(ResponseResult<ArrayList<ContractsTemplateInfo>> contractsTemplateRsp) {
                 ArrayList<ContractsTemplateInfo> data = contractsTemplateRsp.getData();
-                if (mContractInfo.getDevices() != null && mContractInfo.getDevices().size() > 0) {
-                    refreshContractsTemplate(data, mContractInfo.getDevices());
+                List<ContractsTemplateInfo> devices = mContractInfo.getDevices();
+                if (devices != null && devices.size() > 0) {
+                    refreshContractsTemplate(data, devices);
                 } else {
                     getView().updateContractTemplateAdapterInfo(data);
                 }

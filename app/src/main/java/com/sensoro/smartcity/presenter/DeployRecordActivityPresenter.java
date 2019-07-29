@@ -110,6 +110,8 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
+                        dataList.clear();
+                        getView().updateRcContentData(dataList);
                         getView().onPullRefreshComplete();
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);

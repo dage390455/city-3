@@ -145,7 +145,9 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
                         getView().dismissProgressDialog();
                         dataList.clear();
                         List<ContractListInfo> data = contractsListRsp.getData();
-                        dataList.addAll(data);
+                        if (data != null && data.size() > 0) {
+                            dataList.addAll(data);
+                        }
                         if (dataList.size() > 0) {
                             getView().smoothScrollToPosition(0);
                             getView().closeRefreshHeaderOrFooter();
@@ -180,7 +182,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
                     public void onCompleted(ResponseResult<List<ContractListInfo>> contractsListRsp) {
                         getView().dismissProgressDialog();
                         List<ContractListInfo> data = contractsListRsp.getData();
-                        if (data.size() == 0) {
+                        if (data == null || data.size() == 0) {
                             getView().toastShort("没有更多数据了");
 //                            getView().showSmartRefreshNoMoreData();
                             cur_page--;

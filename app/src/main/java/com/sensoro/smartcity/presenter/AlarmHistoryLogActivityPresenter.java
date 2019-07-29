@@ -223,19 +223,16 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
                     @Override
                     public void onCompleted(ResponseResult<List<DeviceAlarmLogInfo>> deviceAlarmLogRsp) {
                         freshUI(direction, deviceAlarmLogRsp);
-                        if (isAttachedView()) {
-                            getView().onPullRefreshComplete();
-                            getView().dismissProgressDialog();
-                        }
+                        getView().onPullRefreshComplete();
+                        getView().dismissProgressDialog();
                     }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
-                        if (isAttachedView()) {
-                            getView().onPullRefreshComplete();
-                            getView().dismissProgressDialog();
-                            getView().toastShort(errorMsg);
-                        }
+                        freshEmptyData();
+                        getView().onPullRefreshComplete();
+                        getView().dismissProgressDialog();
+                        getView().toastShort(errorMsg);
                     }
                 });
                 break;
@@ -252,29 +249,22 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
                         cur_page--;
-                        if (isAttachedView()) {
-                            getView().onPullRefreshComplete();
-                            getView().dismissProgressDialog();
-                            getView().toastShort(errorMsg);
-                        }
+                        getView().onPullRefreshComplete();
+                        getView().dismissProgressDialog();
+                        getView().toastShort(errorMsg);
                     }
 
                     @Override
                     public void onCompleted(ResponseResult<List<DeviceAlarmLogInfo>> deviceAlarmLogRsp) {
-                        if (isAttachedView()) {
-                            getView().dismissProgressDialog();
-                        }
-                        if (deviceAlarmLogRsp.getData().size() == 0) {
+                        getView().dismissProgressDialog();
+                        List<DeviceAlarmLogInfo> data = deviceAlarmLogRsp.getData();
+                        if (data == null || data.size() == 0) {
                             cur_page--;
-                            if (isAttachedView()) {
-                                getView().toastShort(mContext.getString(R.string.no_more_data));
-                                getView().onPullRefreshCompleteNoMoreData();
-                            }
+                            getView().toastShort(mContext.getString(R.string.no_more_data));
+                            getView().onPullRefreshCompleteNoMoreData();
                         } else {
                             freshUI(direction, deviceAlarmLogRsp);
-                            if (isAttachedView()) {
-                                getView().onPullRefreshComplete();
-                            }
+                            getView().onPullRefreshComplete();
                         }
                     }
                 });
@@ -286,6 +276,13 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
 
     }
 
+    private void freshEmptyData() {
+        if (isAttachedView()) {
+            mDeviceAlarmLogInfoList.clear();
+            getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+        }
+    }
+
     private void freshUI(int direction, ResponseResult<List<DeviceAlarmLogInfo>> deviceAlarmLogRsp) {
         if (direction == Constants.DIRECTION_DOWN) {
             mDeviceAlarmLogInfoList.clear();
@@ -295,18 +292,20 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
             @Override
             public void run() {
                 synchronized (mDeviceAlarmLogInfoList) {
-                    out:
-                    for (int i = 0; i < deviceAlarmLogInfoList.size(); i++) {
-                        DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogInfoList.get(i);
-                        for (int j = 0; j < mDeviceAlarmLogInfoList.size(); j++) {
-                            if (mDeviceAlarmLogInfoList.get(j).get_id().equals(deviceAlarmLogInfo.get_id())) {
-                                mDeviceAlarmLogInfoList.set(i, deviceAlarmLogInfo);
-                                break out;
+                    if (deviceAlarmLogInfoList != null && deviceAlarmLogInfoList.size() > 0) {
+                        out:
+                        for (int i = 0; i < deviceAlarmLogInfoList.size(); i++) {
+                            DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogInfoList.get(i);
+                            for (int j = 0; j < mDeviceAlarmLogInfoList.size(); j++) {
+                                if (mDeviceAlarmLogInfoList.get(j).get_id().equals(deviceAlarmLogInfo.get_id())) {
+                                    mDeviceAlarmLogInfoList.set(i, deviceAlarmLogInfo);
+                                    break out;
+                                }
                             }
+                            mDeviceAlarmLogInfoList.add(deviceAlarmLogInfo);
                         }
-                        mDeviceAlarmLogInfoList.add(deviceAlarmLogInfo);
+                        Collections.sort(mDeviceAlarmLogInfoList, deviceAlarmLogInfoComparator);
                     }
-                    Collections.sort(mDeviceAlarmLogInfoList, deviceAlarmLogInfoComparator);
                     mContext.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
