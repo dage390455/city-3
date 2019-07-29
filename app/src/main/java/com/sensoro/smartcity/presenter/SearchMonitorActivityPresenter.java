@@ -81,7 +81,9 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
     @Override
     public void onStop() {
 //        EventBus.getDefault().unregister(this);
-        getView().hideSoftInput();
+        if (isAttachedView()) {
+            getView().hideSoftInput();
+        }
     }
 
 //    private void hideSoftInput() {
