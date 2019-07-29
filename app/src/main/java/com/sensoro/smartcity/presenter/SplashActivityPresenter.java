@@ -10,7 +10,9 @@ import com.igexin.sdk.PushManager;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.iwidget.IOnCreate;
 import com.sensoro.common.iwidget.IOnStart;
+import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
@@ -35,12 +37,16 @@ import com.yanzhenjie.permission.Rationale;
 import com.yanzhenjie.permission.RequestExecutor;
 import com.yanzhenjie.permission.runtime.Permission;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> implements IOnStart {
+public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> implements IOnStart, IOnCreate {
     private Activity mContext;
     private final Handler handler = new Handler();
 
@@ -58,6 +64,8 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
         permissionDialogUtils = new PermissionDialogUtils(mContext);
 //        getView().startAC(new Intent(mContext, SecurityRisksActivity.class));
 //        getView().finishAc();
+        onCreate();
+
     }
 
     private void checkLoginState() {
@@ -161,8 +169,8 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
             public void onErrorMsg(int errorCode, String errorMsg) {
                 //网络出错直接跳到登录界面并吐丝
                 //
-                getView().toastShort(errorMsg);
                 long diff = System.currentTimeMillis() - requestTime;
+                getView().toastShort(errorMsg);
                 if (diff >= 500) {
                     Intent loginIntent = new Intent();
                     loginIntent.setClass(mContext, LoginActivity.class);
@@ -201,12 +209,26 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
 
     @Override
     public void onDestroy() {
+        EventBus.getDefault().unregister(this);
         try {
             LogUtils.loge("SplashActivityPresenter onDestroy ");
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
         handler.removeCallbacksAndMessages(null);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        int code = eventData.code;
+        switch (code) {
+            case Constants.EVENT_DATA_SESSION_ID_OVERTIME:
+                Intent loginIntent = new Intent();
+                loginIntent.setClass(mContext, LoginActivity.class);
+                getView().startAC(loginIntent);
+                getView().finishAc();
+                break;
+        }
     }
 
     private void requestPermissions(final String[] permissions) {
@@ -307,5 +329,10 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
     @Override
     public void onStop() {
 
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
     }
 }

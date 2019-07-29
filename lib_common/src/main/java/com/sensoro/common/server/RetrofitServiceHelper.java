@@ -407,7 +407,8 @@ public class RetrofitServiceHelper {
 //                .cookieJar(cookieJar)
 //                .cache(cache)
                 .addNetworkInterceptor(logging)
-                .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+                .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)//设置连接超时时间
+                .readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)//设置读取超时时间
                 .build();
 //        Set-Cookie: koa:sess=neIm_GoFaHWc-WcwIfv2Sw-8ClbnPKsk; path=/; expires=Fri, 07 Sep 2018 09:25:15 GMT; httponly
     }

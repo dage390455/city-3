@@ -587,7 +587,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             }
         } catch (URISyntaxException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             mHandler.postDelayed(mSocketTask, 3000);
         }
 
@@ -652,17 +652,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
         mHandler.removeCallbacks(mSocketTask);
         if (mSocket != null) {
             mSocket = mSocket.disconnect();
-            mSocket.off(Constants.SOCKET_EVENT_PERMISSION_CHANGE, mPermissionListener);
-            if (hasDeviceBriefControl()) {
-                mSocket.off(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);
-                mSocket.off(Constants.SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
-                mSocket.off(Constants.SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
-                mSocket.off(Constants.SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
-            }
-            if (hasAlarmInfoControl()) {
-                mSocket.off(Constants.SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
-            }
-
+            mSocket.off();
             mSocket = null;
         }
         //考虑延时
@@ -715,16 +705,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
         }
         if (mSocket != null) {
             mSocket = mSocket.disconnect();
-            mSocket.off(Constants.SOCKET_EVENT_PERMISSION_CHANGE, mPermissionListener);
-            if (hasDeviceBriefControl()) {
-                mSocket.off(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);
-                mSocket.off(Constants.SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
-                mSocket.off(Constants.SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
-                mSocket.off(Constants.SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
-            }
-            if (hasAlarmInfoControl()) {
-                mSocket.off(Constants.SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
-            }
+            mSocket.off();
             mSocket = null;
         }
         mFragmentList.clear();
