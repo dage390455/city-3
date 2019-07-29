@@ -252,6 +252,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                 if (isAttachedView()) {
                     getView().toastShort(errorMsg);
                     getView().dismissProgressDialog();
+                    getView().onPullRefreshComplete();
                 }
 
             }
