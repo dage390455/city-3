@@ -210,7 +210,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
                 }
             }
         });
-
         acSearchDeviceRefreshLayout.setEnableAutoLoadMore(true);//开启自动加载功能（非必须）
         acSearchDeviceRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
