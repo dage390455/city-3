@@ -3,9 +3,6 @@ package com.sensoro.smartcity.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -24,26 +21,31 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
-import com.sensoro.smartcity.adapter.RelationAdapter;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.constant.Constants;
-import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
-import com.sensoro.smartcity.presenter.SearchMonitorActivityPresenter;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
-import com.sensoro.common.callback.RecycleViewItemClickListener;
-import com.sensoro.common.manger.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
-import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
+import com.sensoro.smartcity.adapter.RelationAdapter;
+import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
+import com.sensoro.smartcity.presenter.SearchMonitorActivityPresenter;
+import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import java.util.Collections;
@@ -82,7 +84,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     @BindView(R.id.index_return_top)
     ImageView mReturnTopImageView;
     @BindView(R.id.ac_search_device_refreshLayout)
-    RefreshLayout acSearchDeviceRefreshLayout;
+    SmartRefreshLayout acSearchDeviceRefreshLayout;
     @BindView(R.id.ac_search_device_rc_content)
     RecyclerView acSearchDeviceRcContent;
     @BindView(R.id.index_layout_list)

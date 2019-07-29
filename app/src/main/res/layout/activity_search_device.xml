@@ -16,9 +16,9 @@
             android:id="@+id/search_device_top_rl"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginStart="20dp"
             android:layout_weight="1"
-            android:layout_gravity="center_vertical"
             android:background="@drawable/shape_bg_solid_f7_full_corner"
             android:gravity="center_vertical">
 
@@ -54,15 +54,15 @@
                 android:layout_toStartOf="@id/search_device_clear_iv"
                 android:layout_toEndOf="@id/search_device_icon"
                 android:background="@null"
+                android:cursorVisible="true"
                 android:drawablePadding="@dimen/x30"
                 android:gravity="left|center_vertical"
                 android:hint="@string/search_tips"
                 android:imeOptions="actionNone|actionSearch"
                 android:paddingLeft="@dimen/x20"
                 android:paddingRight="@dimen/x30"
-                android:cursorVisible="true"
-                android:textCursorDrawable="@drawable/my_cursor"
                 android:singleLine="true"
+                android:textCursorDrawable="@drawable/my_cursor"
                 android:textSize="14dp" />
 
 
@@ -110,21 +110,23 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+                <ImageView
+                    android:id="@+id/index_return_top"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="14.5dp"
+                    android:src="@mipmap/ic_return_to_top" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/ac_search_device_rc_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white" />
+
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
-            <ImageView
-                android:id="@+id/index_return_top"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginEnd="14.5dp"
-                android:src="@mipmap/ic_return_to_top" />
         </RelativeLayout>
         <!--历史搜索-->
         <LinearLayout
