@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 
 import com.sensoro.common.R;
 import com.sensoro.common.base.ContextUtils;
+import com.sensoro.common.utils.Repause;
 
 
 /**
@@ -60,7 +61,10 @@ public class SensoroToast {
     }
 
     public SensoroToast makeText(@NonNull CharSequence text, int duration) {
-        showToast(ContextUtils.getContext(), text, duration);
+        //处理application的只在前台时提示
+        if (Repause.isApplicationResumed()) {
+            showToast(ContextUtils.getContext(), text, duration);
+        }
         return this;
     }
 

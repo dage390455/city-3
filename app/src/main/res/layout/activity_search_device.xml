@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/search_device_ll_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,182 +8,177 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="horizontal">
 
-        <RelativeLayout
-            android:id="@+id/search_device_top_rl"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="20dp"
-            android:layout_weight="1"
-            android:background="@drawable/shape_bg_solid_f7_full_corner"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:id="@+id/search_device_icon"
-                android:layout_width="@dimen/x60"
-                android:layout_height="@dimen/y60"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="12dp"
-                android:adjustViewBounds="true"
-                android:cropToPadding="true"
-                android:src="@drawable/header_title_search_black" />
-
-            <ImageView
-                android:id="@+id/search_device_clear_iv"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="6dp"
-                android:contentDescription="@null"
-                android:padding="7dp"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/search_monitor_clear_search"
-                android:visibility="gone" />
-
-            <EditText
-                android:id="@+id/search_device_et"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/y130"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/x10"
-                android:layout_toStartOf="@id/search_device_clear_iv"
-                android:layout_toEndOf="@id/search_device_icon"
-                android:background="@null"
-                android:cursorVisible="true"
-                android:drawablePadding="@dimen/x30"
-                android:gravity="left|center_vertical"
-                android:hint="@string/search_tips"
-                android:imeOptions="actionNone|actionSearch"
-                android:paddingLeft="@dimen/x20"
-                android:paddingRight="@dimen/x30"
-                android:singleLine="true"
-                android:textCursorDrawable="@drawable/my_cursor"
-                android:textSize="14dp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
 
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/search_device_cancel_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="10dp"
-            android:background="@android:color/transparent"
-            android:padding="4dp"
-            android:text="@string/cancel"
-            android:textColor="@color/c_a6a6a6"
-            android:textSize="14dp" />
-    </LinearLayout>
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/y1"
-        android:background="@color/search_color" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <include layout="@layout/item_no_content" />
-
-        <RelativeLayout
-            android:id="@+id/index_layout_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="12dp"
-            android:background="@color/c_f4f4f4">
-
-
-            <com.scwang.smartrefresh.layout.SmartRefreshLayout
-                android:id="@+id/ac_search_device_refreshLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/index_return_top"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginEnd="14.5dp"
-                    android:src="@mipmap/ic_return_to_top" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/ac_search_device_rc_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white" />
-
-            </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-
-        </RelativeLayout>
-        <!--历史搜索-->
         <LinearLayout
-            android:id="@+id/search_device_history_ll"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/c_f4f4f4"
-            android:orientation="vertical"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:visibility="visible">
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal">
 
             <RelativeLayout
-                android:layout_width="match_parent"
+                android:id="@+id/search_device_top_rl"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
-
-                <TextView
-                    android:id="@+id/search_device_clear_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/recent"
-                    android:textColor="@color/c_252525"
-                    android:textSize="14dp" />
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="20dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_bg_solid_f7_full_corner"
+                android:gravity="center_vertical">
 
                 <ImageView
-                    android:id="@+id/search_device_clear_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/search_device_icon"
+                    android:layout_width="@dimen/x60"
+                    android:layout_height="@dimen/y60"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:adjustViewBounds="true"
+                    android:cropToPadding="true"
+                    android:src="@drawable/header_title_search_black" />
+
+                <ImageView
+                    android:id="@+id/search_device_clear_iv"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:layout_marginEnd="6dp"
                     android:contentDescription="@null"
-                    android:src="@mipmap/tag_delete"
+                    android:padding="7dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/search_monitor_clear_search"
                     android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/search_device_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/y130"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/x10"
+                    android:layout_toStartOf="@id/search_device_clear_iv"
+                    android:layout_toEndOf="@id/search_device_icon"
+                    android:background="@null"
+                    android:cursorVisible="true"
+                    android:drawablePadding="@dimen/x30"
+                    android:gravity="left|center_vertical"
+                    android:hint="@string/search_tips"
+                    android:imeOptions="actionNone|actionSearch"
+                    android:paddingLeft="@dimen/x20"
+                    android:paddingRight="@dimen/x30"
+                    android:singleLine="true"
+                    android:textCursorDrawable="@drawable/my_cursor"
+                    android:textSize="14dp" />
+
+
             </RelativeLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/search_device_history_rv"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/search_device_cancel_tv"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" />
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="10dp"
+                android:background="@android:color/transparent"
+                android:padding="4dp"
+                android:text="@string/cancel"
+                android:textColor="@color/c_a6a6a6"
+                android:textSize="14dp" />
         </LinearLayout>
-    </RelativeLayout>
 
 
-    <LinearLayout
-        android:id="@+id/search_device_relation_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/search_device_relation_rv"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="@dimen/y1"
+            android:background="@color/search_color" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <RelativeLayout
+                android:id="@+id/index_layout_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="12dp"
+                android:background="@color/c_f4f4f4">
+
+
+                <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                    android:id="@+id/ac_search_device_refreshLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/ac_search_device_rc_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white" />
+
+                </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+            </RelativeLayout>
+            <!--历史搜索-->
+            <LinearLayout
+                android:id="@+id/search_device_history_ll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/c_f4f4f4"
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:visibility="visible">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp">
+
+                    <TextView
+                        android:id="@+id/search_device_clear_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/recent"
+                        android:textColor="@color/c_252525"
+                        android:textSize="14dp" />
+
+                    <ImageView
+                        android:id="@+id/search_device_clear_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:contentDescription="@null"
+                        android:src="@mipmap/tag_delete"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/search_device_history_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
+            </LinearLayout>
+        </RelativeLayout>
+
     </LinearLayout>
 
-
-</LinearLayout>
+    <ImageView
+        android:id="@+id/index_return_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="14.5dp"
+        android:src="@mipmap/ic_return_to_top"
+        android:visibility="gone" />
+</RelativeLayout>

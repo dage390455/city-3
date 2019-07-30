@@ -24,6 +24,7 @@ import com.sensoro.common.R;
 import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.utils.DynamicTimeFormat;
 import com.sensoro.common.utils.LogUtils;
+import com.sensoro.common.utils.Repause;
 
 import java.util.List;
 import java.util.Locale;
@@ -39,7 +40,7 @@ import me.jessyan.autosize.onAdaptListener;
  *
  * @name BaseApplication
  */
-public class BaseApplication extends MultiDexApplication {
+public abstract class BaseApplication extends MultiDexApplication implements Repause.Listener {
 
     public static final String ROOT_PACKAGE = "com.sensoro.common";
 
@@ -56,6 +57,8 @@ public class BaseApplication extends MultiDexApplication {
     private final Runnable initTask = new Runnable() {
         @Override
         public void run() {
+            Repause.init(BaseApplication.this);
+            Repause.registerListener(BaseApplication.this);
             initAutoSize();
             initUploadManager();
             initSmartRefresh();
@@ -125,6 +128,7 @@ public class BaseApplication extends MultiDexApplication {
         for (IApplicationDelegate delegate : mAppDelegateList) {
             delegate.onTerminate();
         }
+        Repause.unregisterListener(this);
     }
 
 
@@ -229,4 +233,18 @@ public class BaseApplication extends MultiDexApplication {
 //                //经过测试 DefaultErrorActivity 的设计图宽度在 380dp - 400dp 显示效果都是比较舒服的
 //                .addExternalAdaptInfoOfActivity(CameraActivity.class, new ExternalAdaptInfo(true, 375));
     }
+
+    @Override
+    public void onApplicationResumed() {
+        onMyApplicationResumed();
+    }
+
+    @Override
+    public void onApplicationPaused() {
+        onMyApplicationPaused();
+    }
+
+    protected abstract void onMyApplicationResumed();
+
+    protected abstract void onMyApplicationPaused();
 }
