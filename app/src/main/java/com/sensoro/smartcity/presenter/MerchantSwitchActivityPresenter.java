@@ -9,6 +9,7 @@ import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
 import com.sensoro.common.helper.PreferencesHelper;
+import com.sensoro.common.manger.RxApiManager;
 import com.sensoro.common.model.EventData;
 import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.server.CityObserver;
@@ -161,6 +162,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
             @Override
             public void onCompleted(ResponseResult<DeviceMergeTypesInfo> devicesMergeTypesRsp) {
                 PreferencesHelper.getInstance().saveUserData(eventLoginData);
+                RxApiManager.getInstance().cancelAll();
                 EventData eventData = new EventData();
                 eventData.code = Constants.EVENT_DATA_SEARCH_MERCHANT;
                 eventData.data = eventLoginData;
@@ -258,6 +260,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                 if (eventLoginData != null) {
                     PreferencesHelper.getInstance().saveUserData(eventLoginData);
                 }
+                RxApiManager.getInstance().cancelAll();
                 EventData eventData = new EventData();
                 eventData.code = Constants.EVENT_DATA_SEARCH_MERCHANT;
                 eventData.data = eventLoginData;
