@@ -275,6 +275,9 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
 
     @Override
     public void onDestroy() {
+        if (isAttachedView()) {
+            getView().hideSoftInput();
+        }
         mDataList.clear();
         mHistoryKeywords.clear();
         searchStrList.clear();
