@@ -29,7 +29,11 @@ public class DeployRetryUtil {
     private static volatile LinkedTreeMap<String, DeployAnalyzerModel> deployTasks = new LinkedTreeMap<>();
 
     private DeployRetryUtil() {
-        deployTasks = PreferencesHelper.getInstance().getofflineDeployData();
+
+        LinkedTreeMap<String, DeployAnalyzerModel> alltask = PreferencesHelper.getInstance().getofflineDeployData();
+        if (null != alltask) {
+            deployTasks = alltask;
+        }
     }
 
     public static DeployRetryUtil getInstance() {

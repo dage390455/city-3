@@ -24,7 +24,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.sensoro.common.adapter.TagAdapter;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.model.EventData;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DpUtils;
 import com.sensoro.common.widgets.CustomCornerDialog;
@@ -33,10 +35,12 @@ import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TouchRecycleView;
 import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
-import com.sensoro.common.widgets.dialog.TipDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
 import com.sensoro.smartcity.presenter.DeployMonitorDetailActivityPresenter;
+import com.sensoro.smartcity.widget.dialog.DeployRetryDialogUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -127,7 +131,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     TextView tvFirstContact;
     @BindView(R.id.tv_total_contact)
     TextView tvTotalContact;
-    private TipDialogUtils retryDialog;
+    private DeployRetryDialogUtils retryDialog;
     //    @Autowired()
 //    Intent intent;
 
@@ -300,15 +304,21 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     }
 
     private void initRetryDialog() {
-        retryDialog = new TipDialogUtils(mActivity);
-        retryDialog.setTipMessageText("网络失败，是否重试");
-        retryDialog.setTipCacnleText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_a6a6a6));
-        retryDialog.setTipConfirmText("重试", mActivity.getResources().getColor(R.color.c_f34a4a));
-        retryDialog.setTipDialogUtilsClickListener(new TipDialogUtils.TipDialogUtilsClickListener() {
+        retryDialog = new DeployRetryDialogUtils(mActivity);
+        retryDialog.setonRetrylickListener(new DeployRetryDialogUtils.onRetrylickListener() {
 
             @Override
             public void onCancelClick() {
                 retryDialog.dismiss();
+                EventData eventData = new EventData();
+                eventData.code = Constants.EVENT_DATA_DEPLOY_RESULT_FINISH;
+                EventBus.getDefault().post(eventData);
+                finishAc();
+            }
+
+            @Override
+            public void onDismiss() {
+
             }
 
             @Override
@@ -549,7 +559,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     @Override
     public void showRetryDialog() {
         if (null != retryDialog) {
-            retryDialog.show();
+            retryDialog.show("网络异常是否重试", "离线上传", "立即重试");
         }
 
     }
