@@ -8,6 +8,7 @@ import com.sensoro.common.server.bean.InspectionTaskDeviceDetail;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DeployAnalyzerModel implements Serializable {
     public String sn;
@@ -48,4 +49,20 @@ public class DeployAnalyzerModel implements Serializable {
     public int whiteListDeployType = Constants.TYPE_SCAN_DEPLOY_DEVICE;
     //铭牌部署 标识该铭牌是否被部署过，被部署过 跳转铭牌详情页
     public Boolean deployNameplateFlag;
+
+    public List<ImageItem> imageItems;
+    public List<String> imgUrls;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DeployAnalyzerModel that = (DeployAnalyzerModel) o;
+        return sn.equals(that.sn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sn);
+    }
 }

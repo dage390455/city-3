@@ -71,6 +71,8 @@ import com.sensoro.smartcity.callback.OnConfigInfoObserver;
 import com.sensoro.smartcity.constant.DeoloyCheckPointConstants;
 import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
+import com.sensoro.smartcity.model.DeployTask;
+import com.sensoro.smartcity.util.DeployRetryUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 
@@ -90,6 +92,9 @@ import java.util.Set;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.sensoro.common.server.CityObserver.ERR_CODE_NET_CONNECT_EX;
+import static com.sensoro.common.server.CityObserver.ERR_CODE_UNKNOWN_EX;
+
 public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployMonitorDetailActivityView> implements IOnCreate, IOnStart
         , BLEDeviceListener<BLEDevice>, Runnable {
     private Activity mContext;
@@ -97,6 +102,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     private Handler mHandler;
     private final HashMap<String, BLEDevice> BLE_DEVICE_SET = new HashMap<>();
     private DeployAnalyzerModel deployAnalyzerModel;
+    private DeployRetryUtil deployRetryUtil;
     private final Runnable signalTask = new Runnable() {
         @Override
         public void run() {
@@ -113,6 +119,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        deployRetryUtil = DeployRetryUtil.getInstance();
         mHandler = new Handler(Looper.getMainLooper());
         onCreate();
         Intent intent = mContext.getIntent();
@@ -335,11 +342,15 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     //
     private void requestUpload() {
+
+
+        DeployTask deployTask = new DeployTask();
+        deployTask.deployType = deployAnalyzerModel.deployType;
         final double lon = deployAnalyzerModel.latLng.get(0);
         final double lan = deployAnalyzerModel.latLng.get(1);
         switch (deployAnalyzerModel.deployType) {
             case Constants.TYPE_SCAN_DEPLOY_STATION:
-                //基站部署
+                //基站部署失败，单独处理
                 getView().showProgressDialog();
                 RetrofitServiceHelper.getInstance().doStationDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -347,9 +358,13 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
+
+
                                 getView().dismissProgressDialog();
                                 getView().setUploadBtnStatus(true);
                                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                                    deployRetryUtil.addTask(deployAnalyzerModel);
+                                    getView().showRetryDialog();
                                     getView().toastShort(errorMsg);
                                 } else if (errorCode == 4013101 || errorCode == 4000013) {
                                     freshError(deployAnalyzerModel.sn, null, Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
@@ -360,6 +375,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
                             @Override
                             public void onCompleted(ResponseResult<DeployStationInfo> deployStationInfoRsp) {
+
                                 freshStation(deployStationInfoRsp);
                                 getView().dismissProgressDialog();
                                 getView().finishAc();
@@ -373,7 +389,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 //巡检设备更换
                 //TODO 加入白名单处理
                 if (Constants.TYPE_SCAN_DEPLOY_WHITE_LIST == deployAnalyzerModel.whiteListDeployType) {
-                    doUploadImages(lon, lan);
+                    doUploadImages();
                 } else {
                     handleDeviceSignalStatusAndBleSetting();
                 }
@@ -504,7 +520,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     }
 
 
-    private void doUploadImages(final double lon, final double lan) {
+    private void doUploadImages() {
         if (getRealImageSize() > 0) {
             //TODO 图片提交
             final UpLoadPhotosUtils.UpLoadPhotoListener upLoadPhotoListener = new UpLoadPhotosUtils
@@ -533,7 +549,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     if (isAttachedView()) {
                         getView().dismissUploadProgressDialog();
                         // 上传结果
-                        doDeployResult(lon, lan, strings);
+                        doDeployResult(strings);
+                        deployAnalyzerModel.imgUrls = strings;
+                        deployAnalyzerModel.imageItems = null;
+
                     }
 
 
@@ -545,6 +564,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         getView().setUploadBtnStatus(true);
                         getView().dismissUploadProgressDialog();
                         getView().toastShort(errMsg);
+                        //失败，本地照片存储,重试
+                        getView().showRetryDialog();
+
+
                     }
 
                 }
@@ -567,15 +590,21 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
                 }
             }
+            deployAnalyzerModel.imageItems = list;
+
+
+            //本地照片
             upLoadPhotosUtils.doUploadPhoto(list);
         } else {
-            doDeployResult(lon, lan, null);
+            doDeployResult(null);
         }
     }
 
     //TODO 添加设备状态字段
-    private void doDeployResult(double lon, double lan, List<String> imgUrls) {
+    private void doDeployResult(List<String> imgUrls) {
 //        DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+        double lon = deployAnalyzerModel.latLng.get(0);
+        double lan = deployAnalyzerModel.latLng.get(1);
         switch (deployAnalyzerModel.deployType) {
             case Constants.TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
@@ -586,6 +615,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 if (isFire) {
                     settingData = deployAnalyzerModel.settingData;
                 }
+
+
                 RetrofitServiceHelper.getInstance().doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
                         deployAnalyzerModel.deployContactModelList, deployAnalyzerModel.weChatAccount, imgUrls, settingData, deployAnalyzerModel.forceReason, deployAnalyzerModel.status, deployAnalyzerModel.currentSignalQuality).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new CityObserver<ResponseResult<DeviceInfo>>(this) {
@@ -595,6 +626,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                                 getView().setUploadBtnStatus(true);
                                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                                     getView().toastShort(errorMsg);
+                                    deployRetryUtil.addTask(deployAnalyzerModel);
+                                    getView().showRetryDialog();
+
+
                                 } else if (errorCode == 4013101 || errorCode == 4000013) {
                                     freshError(deployAnalyzerModel.sn, null, Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
                                 } else {
@@ -607,6 +642,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                                 freshPoint(deviceDeployRsp);
                                 getView().dismissProgressDialog();
                                 getView().finishAc();
+
+
                             }
                         });
                 break;
@@ -618,9 +655,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceInfo>>(this) {
                     @Override
                     public void onCompleted(ResponseResult<DeviceInfo> deviceDeployRsp) {
+
                         freshPoint(deviceDeployRsp);
                         getView().dismissProgressDialog();
                         getView().finishAc();
+
                     }
 
                     @Override
@@ -629,6 +668,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         getView().setUploadBtnStatus(true);
                         if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                             getView().toastShort(errorMsg);
+                            deployRetryUtil.addTask(deployAnalyzerModel);
+                            getView().showRetryDialog();
+
+
                         } else if (errorCode == 4013101 || errorCode == 4000013) {
                             freshError(deployAnalyzerModel.sn, null, Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
                         } else {
@@ -656,6 +699,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         getView().setUploadBtnStatus(true);
                         if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                             getView().toastShort(errorMsg);
+                            deployRetryUtil.addTask(deployAnalyzerModel);
+                            getView().showRetryDialog();
                         } else if (errorCode == 4013101 || errorCode == 4000013) {
                             freshError(deployAnalyzerModel.sn, null, Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
                         } else {
@@ -668,6 +713,85 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 break;
         }
 
+    }
+
+
+    /**
+     * 重试
+     */
+    public void doRetry() {
+        getView().showProgressDialog();
+
+//        LinkedHashMap<String, DeployAnalyzerModel> allTask = deployRetryUtil.getAllTask();
+        deployRetryUtil.retryTry(mContext, deployAnalyzerModel, new DeployRetryUtil.OnRetryListener() {
+
+
+            @Override
+            public void onStart() {
+
+                if (isAttachedView()) {
+                    getView().showStartUploadProgressDialog();
+                }
+
+            }
+
+            @Override
+            public void onComplete(List<ScenesData> scenesDataList) {
+
+            }
+
+            @Override
+            public void onError(String errMsg) {
+                if (isAttachedView()) {
+                    getView().setUploadBtnStatus(true);
+                    getView().dismissUploadProgressDialog();
+                    getView().toastShort(errMsg);
+                    //失败，本地照片存储,重试
+                    getView().showRetryDialog();
+
+
+                }
+            }
+
+            @Override
+            public void onProgress(String content, double percent) {
+                if (isAttachedView()) {
+                    getView().showUploadProgressDialog(content, percent);
+                }
+            }
+
+
+            @Override
+            public void onCompleted(DeployResultModel deployResultModel) {
+                getView().dismissProgressDialog();
+                Intent intent = new Intent();
+                intent.setClass(mContext, DeployResultActivity.class);
+                intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                getView().startAC(intent);
+                getView().finishAc();
+
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+
+                getView().dismissProgressDialog();
+                getView().setUploadBtnStatus(true);
+                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                    getView().toastShort(errorMsg);
+                    deployRetryUtil.addTask(deployAnalyzerModel);
+                    getView().showRetryDialog();
+
+
+                } else if (errorCode == 4013101 || errorCode == 4000013) {
+                    freshError(deployAnalyzerModel.sn, null, Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
+                } else {
+                    freshError(deployAnalyzerModel.sn, errorMsg, Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
+                }
+
+
+            }
+        });
     }
 
     private void freshError(String scanSN, String errorInfo, int resultCode) {
@@ -1535,7 +1659,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     tempForceReason = null;
                     //TODO 成功
                     getView().dismissBleConfigDialog();
-                    doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
+                    doUploadImages();
                     break;
             }
         } else {
@@ -1634,7 +1758,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deployAnalyzerModel.forceReason = tempForceReason;
         deployAnalyzerModel.currentSignalQuality = tempSignalQuality;
         deployAnalyzerModel.currentStatus = tempStatus;
-        doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
+        doUploadImages();
 
     }
 

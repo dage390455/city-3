@@ -33,6 +33,7 @@ import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TouchRecycleView;
 import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
+import com.sensoro.common.widgets.dialog.TipDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
 import com.sensoro.smartcity.presenter.DeployMonitorDetailActivityPresenter;
@@ -126,7 +127,8 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     TextView tvFirstContact;
     @BindView(R.id.tv_total_contact)
     TextView tvTotalContact;
-//    @Autowired()
+    private TipDialogUtils retryDialog;
+    //    @Autowired()
 //    Intent intent;
 
     @Override
@@ -149,6 +151,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
 //        updateUploadState(true);
         initUploadDialog();
+        initRetryDialog();
         initRcAlarmContact();
         initRcDeployDeviceTag();
         if (!AppUtils.isChineseLanguage()) {
@@ -295,6 +298,28 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
         }
         super.onDestroy();
     }
+
+    private void initRetryDialog() {
+        retryDialog = new TipDialogUtils(mActivity);
+        retryDialog.setTipMessageText("网络失败，是否重试");
+        retryDialog.setTipCacnleText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_a6a6a6));
+        retryDialog.setTipConfirmText("重试", mActivity.getResources().getColor(R.color.c_f34a4a));
+        retryDialog.setTipDialogUtilsClickListener(new TipDialogUtils.TipDialogUtilsClickListener() {
+
+            @Override
+            public void onCancelClick() {
+                retryDialog.dismiss();
+            }
+
+            @Override
+            public void onConfirmClick() {
+                mPresenter.doRetry();
+                retryDialog.dismiss();
+
+            }
+        });
+    }
+
 
     private void initUploadDialog() {
         progressDialog = new ProgressDialog(mActivity);
@@ -519,6 +544,14 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     @Override
     public void showBleConfigDialog() {
         mLoadBleConfigDialog.showProgress();
+    }
+
+    @Override
+    public void showRetryDialog() {
+        if (null != retryDialog) {
+            retryDialog.show();
+        }
+
     }
 
     @Override
