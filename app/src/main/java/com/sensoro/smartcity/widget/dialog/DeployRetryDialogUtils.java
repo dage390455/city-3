@@ -51,7 +51,7 @@ public class DeployRetryDialogUtils {
             @Override
             public void onClick(View v) {
                 if (null != listener) {
-                    listener.onCancelClick();
+                    listener.onConfirmClick();
                 }
             }
         });

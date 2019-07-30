@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.DeployAnalyzerModel;
+import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +65,7 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View inflate = LayoutInflater.from(mContext).inflate(R.layout.item_adapter_offline_deploy, parent, false);
+        View inflate = LayoutInflater.from(mContext).inflate(R.layout.item_adapter_offline_deploy2, parent, false);
         return new MyViewHolder(inflate);
     }
 
@@ -71,16 +73,30 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         DeployAnalyzerModel deviceInfo = mList.get(position);
         //
-        String sn = deviceInfo.sn;
+        String type = "";
+        switch (deviceInfo.deployType) {
+            case Constants.TYPE_SCAN_DEPLOY_STATION:
+                type = "基站部署";
+                break;
+            case Constants.TYPE_SCAN_DEPLOY_DEVICE:
+                type = "设备部署";
+                break;
+            default:
+                type = "设备更换";
+                break;
+        }
 
-        holder.itemOfflineDeployAdapterSnTv.setText(sn);
+        holder.typeTv.setText(type);
+        String deviceType = deviceInfo.deviceType;
+        String deviceTypeStr = WidgetUtil.getDeviceMainTypeName(deviceType);
+        StringBuilder stringBuilder = new StringBuilder();
+        holder.itemOfflineDeployAdapterSnTv.setText(stringBuilder.append(deviceTypeStr).append(" ").append(deviceInfo.sn).toString());
+        holder.timeTv.setText(DateUtil.getStrTimeToday(mContext, deviceInfo.updatedTime, 0));
         holder.itemOfflineDeployAdapterClearTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onContentItemClickListener != null) {
-
                     onContentItemClickListener.onClearClick(v, position);
-
                 }
             }
         });
@@ -89,16 +105,13 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
             @Override
             public void onClick(View v) {
                 if (onContentItemClickListener != null) {
-
                     onContentItemClickListener.onItemClick(v, position);
-
                 }
             }
         });
         if (position == currentTaskIndex) {
             holder.progressBar.setVisibility(View.VISIBLE);
         } else {
-
             holder.progressBar.setVisibility(View.INVISIBLE);
         }
     }
@@ -110,10 +123,14 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_offline_deploy_adapter_sn_tv)
+        @BindView(R.id.item_offline_deploy_adapter_content_tv)
         TextView itemOfflineDeployAdapterSnTv;
         @BindView(R.id.item_offline_deploy_adapter_clear_tv)
         TextView itemOfflineDeployAdapterClearTv;
+        @BindView(R.id.item_offline_deploy_adapter_tv_time)
+        TextView timeTv;
+        @BindView(R.id.item_offline_deploy_adapter_tv_type)
+        TextView typeTv;
         @BindView(R.id.oading_prgbar)
         ProgressBar progressBar;
         @BindView(R.id.item_offline_deploy_root)

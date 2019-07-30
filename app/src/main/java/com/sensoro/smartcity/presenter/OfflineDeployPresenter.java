@@ -56,8 +56,16 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
      */
     public void dobatch() {
 
+        if (deviceInfos.size() > 0) {
+            getView().showProgressDialog();
 
-//        uploadTask();
+            DeployAnalyzerModel deployAnalyzerModel = deviceInfos.get(0);
+            uploadTask(deployAnalyzerModel, true);
+        } else {
+            getView().toastLong("暂无任务");
+
+
+        }
 
     }
 
@@ -67,7 +75,7 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
      * @param model
      */
 
-    public void uploadTask(DeployAnalyzerModel model) {
+    public void uploadTask(DeployAnalyzerModel model, boolean isbatch) {
 
 
         getView().setCurrentTaskIndex(deviceInfos.indexOf(model));
@@ -79,12 +87,25 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                 deviceInfos.remove(model);
 //                deployRetryUtil.removeTask(model);
                 getView().updateAdapter(deviceInfos);
+                if (isbatch) {
+                    if (deviceInfos.size() > 0) {
+                        uploadTask(deviceInfos.get(0), isbatch);
+                    } else {
+                        getView().dismissProgressDialog();
+                    }
+                } else {
+                    getView().dismissProgressDialog();
+
+                }
 
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().setCurrentTaskIndex(-1);
+                getView().dismissProgressDialog();
+
+                getView().toastLong(errorMsg);
 
             }
 
@@ -101,6 +122,9 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
             @Override
             public void onError(String errMsg) {
                 getView().setCurrentTaskIndex(-1);
+                getView().toastLong(errMsg);
+                getView().dismissProgressDialog();
+
 
             }
 

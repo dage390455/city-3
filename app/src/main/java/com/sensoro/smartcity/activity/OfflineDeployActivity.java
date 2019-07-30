@@ -88,7 +88,7 @@ public class OfflineDeployActivity extends BaseActivity<IOfflineDeployActivityVi
             public void onItemClick(View v, int position) {
                 DeployAnalyzerModel deployAnalyzerModel = adapter.getData().get(position);
 
-                mPresenter.uploadTask(deployAnalyzerModel);
+                mPresenter.uploadTask(deployAnalyzerModel, false);
 
             }
 
@@ -212,6 +212,11 @@ public class OfflineDeployActivity extends BaseActivity<IOfflineDeployActivityVi
 
 
         adapter.setCurrentTaskIndex(index);
+    }
+
+    @Override
+    public void setbatchClickable(boolean canClick) {
+
     }
 
 }
