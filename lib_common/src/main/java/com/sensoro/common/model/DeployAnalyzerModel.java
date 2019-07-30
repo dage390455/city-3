@@ -53,6 +53,7 @@ public class DeployAnalyzerModel implements Serializable {
     public List<ImageItem> imageItems;
     public List<String> imgUrls;
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -3,6 +3,7 @@ package com.sensoro.smartcity.util;
 import android.content.Context;
 
 import com.sensoro.common.constant.Constants;
+import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.DeployResultModel;
 import com.sensoro.common.model.ImageItem;
@@ -27,7 +28,7 @@ public class DeployRetryUtil {
 
 
     public static DeployRetryUtil getInstance() {
-        return DeployRetryUtil.DeployRetryHolder.instance;
+        return DeployRetryHolder.instance;
     }
 
 
@@ -35,24 +36,26 @@ public class DeployRetryUtil {
         private static final DeployRetryUtil instance = new DeployRetryUtil();
     }
 
-    private static LinkedHashMap<String, DeployAnalyzerModel> deployTasks = new LinkedHashMap<>();
+    private static volatile LinkedHashMap<String, DeployAnalyzerModel> deployTasks = new LinkedHashMap<>();
 
     public void addTask(DeployAnalyzerModel task) {
+
         deployTasks.put(task.sn, task);
+        PreferencesHelper.getInstance().setofflineDeployData(deployTasks);
+
 
     }
 
     public void removeTask(DeployAnalyzerModel task) {
 
-        if (deployTasks.containsKey(task.sn)) {
-            deployTasks.remove(task);
-        }
+        deployTasks.remove(task);
+        PreferencesHelper.getInstance().setofflineDeployData(deployTasks);
 
     }
 
-    public LinkedHashMap<String, DeployAnalyzerModel> getAllTask() {
-        return deployTasks;
-    }
+//    public LinkedHashMap<String, DeployAnalyzerModel> getAllTask() {
+//        return deployTasks;
+//    }
 
 
     /**

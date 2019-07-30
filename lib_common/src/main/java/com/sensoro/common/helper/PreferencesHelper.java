@@ -5,10 +5,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.google.gson.internal.LinkedTreeMap;
+import com.google.gson.reflect.TypeToken;
 import com.sensoro.common.R;
 import com.sensoro.common.base.ContextUtils;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.constant.SearchHistoryTypeConstants;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.EventLoginData;
 import com.sensoro.common.model.IbeaconSettingData;
 import com.sensoro.common.model.SecurityRisksTagModel;
@@ -27,6 +30,7 @@ import com.sensoro.common.utils.LogUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -943,6 +947,26 @@ public final class PreferencesHelper implements Constants {
                 .getString(Constants.PREFERENCE_UUID_SETTING_CURRENT_UUID_NO_SETTING_TAG, null);
         if (!TextUtils.isEmpty(data)) {
             return RetrofitServiceHelper.getInstance().getGson().fromJson(data, IbeaconSettingData.class);
+        }
+        return null;
+    }
+
+    public boolean setofflineDeployData(LinkedHashMap<String, DeployAnalyzerModel> linkedHashMap) {
+        if (linkedHashMap != null) {
+            String json = RetrofitServiceHelper.getInstance().getGson().toJson(linkedHashMap);
+            ContextUtils.getContext().getSharedPreferences(Constants.OFFLINE_DEPLOYANALYZERMODEL_SP, Context.MODE_PRIVATE)
+                    .edit().putString(Constants.OFFLINE_DEPLOYANALYZERMODEL_KEY, json).apply();
+            return true;
+        }
+        return false;
+    }
+
+    public LinkedTreeMap<String, DeployAnalyzerModel> getofflineDeployData() {
+        String data = ContextUtils.getContext().getSharedPreferences(Constants.OFFLINE_DEPLOYANALYZERMODEL_SP, Context.MODE_PRIVATE)
+                .getString(Constants.OFFLINE_DEPLOYANALYZERMODEL_KEY, null);
+        if (!TextUtils.isEmpty(data)) {
+            return RetrofitServiceHelper.getInstance().getGson().fromJson(data, new TypeToken<Map<String, DeployAnalyzerModel>>() {
+            }.getType());
         }
         return null;
     }

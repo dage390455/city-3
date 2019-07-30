@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.common.base.BaseFragment;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.dialog.TipBleDialogUtils;
@@ -20,9 +21,9 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.BaseStationListActivity;
 import com.sensoro.smartcity.activity.CameraListActivity;
 import com.sensoro.smartcity.activity.NearByDeviceActivity;
+import com.sensoro.smartcity.activity.OfflineDeployActivity;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
 import com.sensoro.smartcity.presenter.ManagerFragmentPresenter;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.widget.dialog.VersionDialogUtils;
 
 import java.util.Objects;
@@ -96,8 +97,12 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     FrameLayout line10;
     @BindView(R.id.fg_main_manage_ll_nearby)
     LinearLayout fgMainManageLlNearby;
+    @BindView(R.id.fg_main_manage_ll_deploy_retry)
+    LinearLayout fgMainManageLlDeployRetry;
     @BindView(R.id.line11)
     FrameLayout line11;
+    @BindView(R.id.line12)
+    FrameLayout line12;
     private ProgressUtils mProgressUtils;
     private TipDialogUtils mExitDialog;
     private VersionDialogUtils mVersionDialog;
@@ -235,7 +240,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
             R.id.fg_main_manage_ll_maintenance_mission, R.id.fg_main_manage_ll_scan_login,
             R.id.fg_main_manage_ll_about_us, R.id.fg_main_manage_ll_version_info,
             R.id.fg_main_manage_ll_nameplate, R.id.fg_main_manage_ll_exit, R.id.fg_main_manage_ll_signal_check,
-            R.id.fg_main_manage_ll_wire_material_diameter, R.id.fg_main_manage_ll_camera, R.id.fg_main_manage_ll_basestation, R.id.fg_main_manage_ll_nearby})
+            R.id.fg_main_manage_ll_wire_material_diameter, R.id.fg_main_manage_ll_camera, R.id.fg_main_manage_ll_basestation, R.id.fg_main_manage_ll_nearby, R.id.fg_main_manage_ll_deploy_retry})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fg_main_manage_ll_change_merchants:
@@ -288,6 +293,9 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 break;
             case R.id.fg_main_manage_ll_nearby:
                 startAC(new Intent(mRootFragment.getActivity(), NearByDeviceActivity.class));
+                break;
+            case R.id.fg_main_manage_ll_deploy_retry:
+                startAC(new Intent(mRootFragment.getActivity(), OfflineDeployActivity.class));
                 break;
         }
     }

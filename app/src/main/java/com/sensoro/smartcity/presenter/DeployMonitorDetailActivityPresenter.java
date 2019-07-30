@@ -566,6 +566,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         getView().toastShort(errMsg);
                         //失败，本地照片存储,重试
                         getView().showRetryDialog();
+                        deployRetryUtil.addTask(deployAnalyzerModel);
 
 
                     }

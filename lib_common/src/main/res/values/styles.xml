@@ -221,4 +221,12 @@
         <item name="android:windowIsFloating">true</item>
     </style>
 
+    <style name="CustomProgressBar_Small">
+        <item name="android:indeterminateDrawable">@drawable/progress_small_holo</item>
+        <item name="android:minWidth">27dip</item>
+        <item name="android:maxWidth">27dip</item>
+        <item name="android:minHeight">27dip</item>
+        <item name="android:maxHeight">27dip</item>
+    </style>
+
 </resources>
