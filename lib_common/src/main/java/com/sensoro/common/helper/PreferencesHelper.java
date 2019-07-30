@@ -951,7 +951,7 @@ public final class PreferencesHelper implements Constants {
         return null;
     }
 
-    public boolean setofflineDeployData(LinkedHashMap<String, DeployAnalyzerModel> linkedHashMap) {
+    public boolean setofflineDeployData(LinkedTreeMap<String, DeployAnalyzerModel> linkedHashMap) {
         if (linkedHashMap != null) {
             String json = RetrofitServiceHelper.getInstance().getGson().toJson(linkedHashMap);
             ContextUtils.getContext().getSharedPreferences(Constants.OFFLINE_DEPLOYANALYZERMODEL_SP, Context.MODE_PRIVATE)

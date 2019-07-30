@@ -48,7 +48,7 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
 
     public void removeTask(DeployAnalyzerModel model) {
 
-        deployRetryUtil.removeTask(model);
+//        deployRetryUtil.removeTask(model);
     }
 
     /**

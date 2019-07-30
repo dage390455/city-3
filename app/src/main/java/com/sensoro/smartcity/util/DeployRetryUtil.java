@@ -2,6 +2,7 @@ package com.sensoro.smartcity.util;
 
 import android.content.Context;
 
+import com.google.gson.internal.LinkedTreeMap;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.DeployAnalyzerModel;
@@ -18,7 +19,6 @@ import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.widgets.uploadPhotoUtil.UpLoadPhotosUtils;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -26,6 +26,11 @@ import io.reactivex.schedulers.Schedulers;
 
 public class DeployRetryUtil {
 
+    private static volatile LinkedTreeMap<String, DeployAnalyzerModel> deployTasks = new LinkedTreeMap<>();
+
+    private DeployRetryUtil() {
+        deployTasks = PreferencesHelper.getInstance().getofflineDeployData();
+    }
 
     public static DeployRetryUtil getInstance() {
         return DeployRetryHolder.instance;
@@ -34,9 +39,9 @@ public class DeployRetryUtil {
 
     private static class DeployRetryHolder {
         private static final DeployRetryUtil instance = new DeployRetryUtil();
-    }
 
-    private static volatile LinkedHashMap<String, DeployAnalyzerModel> deployTasks = new LinkedHashMap<>();
+
+    }
 
     public void addTask(DeployAnalyzerModel task) {
 
