@@ -70,20 +70,21 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
     public void uploadTask(DeployAnalyzerModel model) {
 
 
-        deviceInfos.indexOf(model);
+        getView().setCurrentTaskIndex(deviceInfos.indexOf(model));
 
 
         deployRetryUtil.retryTry(mActivity, model, new DeployRetryUtil.OnRetryListener() {
             @Override
             public void onCompleted(DeployResultModel deployResultModel) {
                 deviceInfos.remove(model);
-                deployRetryUtil.removeTask(model);
+//                deployRetryUtil.removeTask(model);
                 getView().updateAdapter(deviceInfos);
 
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().setCurrentTaskIndex(-1);
 
             }
 
@@ -99,6 +100,7 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
 
             @Override
             public void onError(String errMsg) {
+                getView().setCurrentTaskIndex(-1);
 
             }
 

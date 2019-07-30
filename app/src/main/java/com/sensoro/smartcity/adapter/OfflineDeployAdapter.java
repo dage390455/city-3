@@ -85,7 +85,7 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
             }
         });
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onContentItemClickListener != null) {
@@ -116,6 +116,8 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
         TextView itemOfflineDeployAdapterClearTv;
         @BindView(R.id.oading_prgbar)
         ProgressBar progressBar;
+        @BindView(R.id.item_offline_deploy_root)
+        View root;
 
         MyViewHolder(View itemView) {
             super(itemView);
