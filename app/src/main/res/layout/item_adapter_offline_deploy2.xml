@@ -12,9 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-
         android:layout_marginTop="16dp"
-
         android:textColor="@color/colorAccent"
         android:textSize="16dp"
         android:textStyle="bold" />
@@ -26,8 +24,6 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="16dp"
         android:layout_toRightOf="@+id/item_offline_deploy_adapter_tv_type"
-
-
         android:textColor="@color/c_a6a6a6"
         android:textSize="14dp" />
 
@@ -36,8 +32,8 @@
         style="@style/CustomProgressBar_Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignBottom="@id/item_offline_deploy_adapter_content_tv"
+        android:layout_alignParentRight="true"
         android:layout_marginEnd="8dp"
         android:visibility="invisible" />
 

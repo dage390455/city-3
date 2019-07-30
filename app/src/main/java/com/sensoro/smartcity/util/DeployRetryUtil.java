@@ -7,11 +7,9 @@ import com.sensoro.common.constant.Constants;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.DeployResultModel;
-import com.sensoro.common.model.ImageItem;
 import com.sensoro.common.server.CityObserver;
 import com.sensoro.common.server.RetrofitServiceHelper;
 import com.sensoro.common.server.bean.DeployControlSettingData;
-import com.sensoro.common.server.bean.DeployPicInfo;
 import com.sensoro.common.server.bean.DeployStationInfo;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.ScenesData;
@@ -118,18 +116,8 @@ public class DeployRetryUtil {
                     }
                 };
                 UpLoadPhotosUtils upLoadPhotosUtils = new UpLoadPhotosUtils(context, upLoadPhotoListener);
-                ArrayList<ImageItem> list = new ArrayList<>();
-                for (DeployPicInfo deployPicInfo : deployAnalyzerModel.images) {
-                    if (deployPicInfo != null) {
-                        if (deployPicInfo.photoItem != null) {
-                            list.add(deployPicInfo.photoItem);
-                        }
-
-                    }
-                }
-                deployAnalyzerModel.imageItems = list;
                 //本地照片
-                upLoadPhotosUtils.doUploadPhoto(list);
+                upLoadPhotosUtils.doUploadPhoto(deployAnalyzerModel.imageItems);
             } else {
                 //没有照片
                 retryPostResult(deployAnalyzerModel, retryListener);

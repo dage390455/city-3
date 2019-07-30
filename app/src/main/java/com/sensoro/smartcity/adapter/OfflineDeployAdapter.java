@@ -26,6 +26,7 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
     private final List<DeployAnalyzerModel> mList = new ArrayList<>();
 
     private int currentTaskIndex = -1;
+    private boolean canClick = true;//批量上传不能点击单个
     private OnContentItemClickListener onContentItemClickListener;
 
     public interface OnContentItemClickListener {
@@ -35,7 +36,7 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
         void onClearClick(View view, int position);
     }
 
-    public void setOnContentItemClickListener(OnContentItemClickListener onContentItemClickListener) {
+    public void setOnContentClickListener(OnContentItemClickListener onContentItemClickListener) {
         this.onContentItemClickListener = onContentItemClickListener;
     }
 
@@ -50,8 +51,12 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
     }
 
     public void setCurrentTaskIndex(int index) {
-
         this.currentTaskIndex = index;
+        notifyDataSetChanged();
+    }
+
+    public void setUploadClickable(boolean canClick) {
+        this.canClick = canClick;
         notifyDataSetChanged();
     }
 
@@ -104,7 +109,7 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
         holder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onContentItemClickListener != null) {
+                if (onContentItemClickListener != null && canClick) {
                     onContentItemClickListener.onItemClick(v, position);
                 }
             }

@@ -38,6 +38,10 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
 //                Object key = entry.getKey();
                 DeployAnalyzerModel val = (DeployAnalyzerModel) entry.getValue();
                 deviceInfos.add(val);
+//                deviceInfos.add(val);
+//                deviceInfos.add(val);
+//                deviceInfos.add(val);
+//                deviceInfos.add(val);
                 getView().updateAdapter(deviceInfos);
 
             }
@@ -57,13 +61,10 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
     public void dobatch() {
 
         if (deviceInfos.size() > 0) {
-            getView().showProgressDialog();
-
             DeployAnalyzerModel deployAnalyzerModel = deviceInfos.get(0);
             uploadTask(deployAnalyzerModel, true);
         } else {
-            getView().toastLong("暂无任务");
-
+//            getView().toastLong("暂无任务");
 
         }
 
@@ -78,9 +79,11 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
     public void uploadTask(DeployAnalyzerModel model, boolean isbatch) {
 
 
+        if (isbatch) {
+            getView().showProgressDialog();
+            getView().setUploadClickable(false);
+        }
         getView().setCurrentTaskIndex(deviceInfos.indexOf(model));
-
-
         deployRetryUtil.retryTry(mActivity, model, new DeployRetryUtil.OnRetryListener() {
             @Override
             public void onCompleted(DeployResultModel deployResultModel) {
@@ -91,12 +94,19 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                     if (deviceInfos.size() > 0) {
                         uploadTask(deviceInfos.get(0), isbatch);
                     } else {
+                        getView().setUploadClickable(true);
                         getView().dismissProgressDialog();
+                        getView().toastLong("部署成功");
+
                     }
                 } else {
                     getView().dismissProgressDialog();
+                    getView().setCurrentTaskIndex(-1);
+                    getView().toastLong("部署成功");
+
 
                 }
+
 
             }
 
@@ -104,8 +114,9 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().setCurrentTaskIndex(-1);
                 getView().dismissProgressDialog();
-
                 getView().toastLong(errorMsg);
+                getView().setUploadClickable(true);
+
 
             }
 
@@ -124,6 +135,7 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                 getView().setCurrentTaskIndex(-1);
                 getView().toastLong(errMsg);
                 getView().dismissProgressDialog();
+                getView().setUploadClickable(true);
 
 
             }

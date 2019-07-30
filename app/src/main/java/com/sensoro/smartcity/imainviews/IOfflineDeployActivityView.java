@@ -15,6 +15,6 @@ public interface IOfflineDeployActivityView extends IToast, IProgressDialog, IAc
 
     void setCurrentTaskIndex(int index);
 
-    void setbatchClickable(boolean canClick);
+    void setUploadClickable(boolean canClick);
 
 }

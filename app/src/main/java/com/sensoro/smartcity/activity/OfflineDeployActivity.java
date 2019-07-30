@@ -82,7 +82,7 @@ public class OfflineDeployActivity extends BaseActivity<IOfflineDeployActivityVi
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
             }
         });
-        adapter.setOnContentItemClickListener(new OfflineDeployAdapter.OnContentItemClickListener() {
+        adapter.setOnContentClickListener(new OfflineDeployAdapter.OnContentItemClickListener() {
 
             @Override
             public void onItemClick(View v, int position) {
@@ -215,7 +215,9 @@ public class OfflineDeployActivity extends BaseActivity<IOfflineDeployActivityVi
     }
 
     @Override
-    public void setbatchClickable(boolean canClick) {
+    public void setUploadClickable(boolean canClick) {
+
+        adapter.setUploadClickable(canClick);
 
     }
 
