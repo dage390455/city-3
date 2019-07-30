@@ -155,6 +155,8 @@ public class NameplateListActivityPresenter extends BasePresenter<INameplateList
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
+                        plateInfos.clear();
+                        getView().updateNameplateAdapter(plateInfos);
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
                         getView().onPullRefreshComplete();

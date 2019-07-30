@@ -195,7 +195,12 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 //
                 totalMonitorPoint = alarmCount + normal + lostCount + inactiveCount + malfunctionCount;
                 page = 1;
-                return getAllDeviceInfoListRspObservable(true);
+                try {
+                    com.sensoro.common.utils.LogUtils.loge("切换登录---->>>"+totalMonitorPoint);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+                return getAllDeviceInfoListRspObservable();
             }
 
         }).retryWhen(new RetryWithDelay(2, 100)).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
@@ -255,16 +260,13 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     @NonNull
-    private Observable<ResponseResult<List<DeviceInfo>>> getAllDeviceInfoListRspObservable(final boolean needClear) {
+    private Observable<ResponseResult<List<DeviceInfo>>> getAllDeviceInfoListRspObservable() {
         return RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, 0, null).subscribeOn(Schedulers.io()).flatMap(new Function<ResponseResult<List<DeviceInfo>>, ObservableSource<ResponseResult<List<DeviceInfo>>>>() {
             @Override
             public ObservableSource<ResponseResult<List<DeviceInfo>>> apply(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
                 List<DeviceInfo> data = deviceInfoListRsp.getData();
-                if (needClear) {
-                    alarmModel.mDeviceList.clear();
-                }
+                alarmModel.mDeviceList.clear();
                 if (data != null && data.size() > 0) {
-                    alarmModel.mDeviceList.clear();
                     alarmModel.mDeviceList.addAll(data);
                 }
                 return RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, 4, null);
@@ -274,11 +276,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             @Override
             public ObservableSource<ResponseResult<List<DeviceInfo>>> apply(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
                 List<DeviceInfo> data = deviceInfoListRsp.getData();
-                if (needClear) {
-                    malfunctionModel.mDeviceList.clear();
-                }
+                malfunctionModel.mDeviceList.clear();
                 if (data != null && data.size() > 0) {
-                    malfunctionModel.mDeviceList.clear();
                     malfunctionModel.mDeviceList.addAll(data);
                 }
                 return RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, 1, null);
@@ -288,11 +287,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             @Override
             public ObservableSource<ResponseResult<List<DeviceInfo>>> apply(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
                 List<DeviceInfo> data = deviceInfoListRsp.getData();
-                if (needClear) {
-                    normalModel.mDeviceList.clear();
-                }
+                normalModel.mDeviceList.clear();
                 if (data != null && data.size() > 0) {
-                    normalModel.mDeviceList.clear();
                     normalModel.mDeviceList.addAll(data);
                 }
                 return RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, 2, null);
@@ -302,11 +298,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             @Override
             public ObservableSource<ResponseResult<List<DeviceInfo>>> apply(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
                 List<DeviceInfo> data = deviceInfoListRsp.getData();
-                if (needClear) {
-                    lostModel.mDeviceList.clear();
-                }
+                lostModel.mDeviceList.clear();
                 if (data != null && data.size() > 0) {
-                    lostModel.mDeviceList.clear();
                     lostModel.mDeviceList.addAll(data);
                 }
                 return RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, 3, null);
@@ -316,11 +309,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             @Override
             public void accept(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
                 List<DeviceInfo> data = deviceInfoListRsp.getData();
-                if (needClear) {
-                    inactiveModel.mDeviceList.clear();
-                }
+                inactiveModel.mDeviceList.clear();
                 if (data != null && data.size() > 0) {
-                    inactiveModel.mDeviceList.clear();
                     inactiveModel.mDeviceList.addAll(data);
                 }
             }
@@ -527,16 +517,14 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             case Constants.EVENT_DATA_DEPLOY_RESULT_FINISH:
                 break;
             case Constants.EVENT_DATA_SEARCH_MERCHANT:
-                requestInitData(true, true);
-                mContext.runOnUiThread(new Runnable() {
+                mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         if (isAttachedView()) {
                             requestInitData(true, true);
                         }
-
                     }
-                });
+                },1000);
                 break;
             case Constants.EVENT_DATA_LOCK_SCREEN_ON:
                 //TODO 暂时不加
@@ -607,9 +595,11 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                             .io()).doOnNext(new Consumer<ResponseResult<List<DeviceInfo>>>() {
                         @Override
                         public void accept(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
-                            List<DeviceInfo> data = deviceInfoListRsp.getData();
                             homeTopModel.mDeviceList.clear();
-                            homeTopModel.mDeviceList.addAll(data);
+                            List<DeviceInfo> data = deviceInfoListRsp.getData();
+                            if (data != null && data.size() > 0) {
+                                homeTopModel.mDeviceList.addAll(data);
+                            }
                         }
 
                     }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
@@ -621,6 +611,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
                         @Override
                         public void onErrorMsg(int errorCode, String errorMsg) {
+                            freshDataList(homeTopModel);
                             getView().toastShort(errorMsg);
                             getView().recycleViewRefreshComplete();
                             getView().dismissProgressDialog();
@@ -635,7 +626,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                         public void accept(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
                             try {
                                 List<DeviceInfo> data = deviceInfoListRsp.getData();
-                                if (data.size() == 0) {
+                                if (data == null || data.size() == 0) {
                                     page--;
                                 } else {
                                     homeTopModel.mDeviceList.addAll(data);
@@ -841,7 +832,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         }
         page = 1;
         getView().showProgressDialog();
-        getAllDeviceInfoListRspObservable(true).retryWhen(new RetryWithDelay(2, 100)).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
+        getAllDeviceInfoListRspObservable().retryWhen(new RetryWithDelay(2, 100)).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
             @Override
             public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
 
@@ -896,11 +887,12 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             @Override
             public void onCompleted(ResponseResult<List<DeviceAlarmLogInfo>> deviceAlarmLogRsp) {
 //                getView().dismissProgressDialog();
-                if (deviceAlarmLogRsp.getData().size() == 0) {
+                List<DeviceAlarmLogInfo> data = deviceAlarmLogRsp.getData();
+                if (data == null || data.size() == 0) {
                     getView().toastShort(mContext.getString(R.string.no_alert_log_information_was_obtained));
                     getView().dismissProgressDialog();
                 } else {
-                    DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogRsp.getData().get(0);
+                    DeviceAlarmLogInfo deviceAlarmLogInfo = data.get(0);
                     enterAlarmLogPop(deviceAlarmLogInfo);
                 }
             }

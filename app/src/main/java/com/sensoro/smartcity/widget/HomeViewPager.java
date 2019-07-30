@@ -35,10 +35,10 @@ public class HomeViewPager extends ViewPager {
      * 1.dispatchTouchEvent一般情况不做处理
      * ,如果修改了默认的返回值,子孩子都无法收到事件
      */
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        return super.dispatchTouchEvent(ev); // return true;不行
-    }
+//    @Override
+////    public boolean dispatchTouchEvent(MotionEvent ev) {
+////        return super.dispatchTouchEvent(ev); // return true;不行
+////    }
 
     /**
      * 是否拦截

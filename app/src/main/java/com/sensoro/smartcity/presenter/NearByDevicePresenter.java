@@ -163,18 +163,20 @@ public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityVi
                 (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(NearByDevicePresenter.this) {
             @Override
             public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
-
-                if (deviceInfoListRsp.getData() != null && deviceInfoListRsp.getData().size() > 0) {
-                    deviceInfos.addAll(deviceInfoListRsp.getData());
-                    getView().dismissProgressDialog();
-                    getView().onPullRefreshComplete();
-
+                deviceInfos.clear();
+                List<DeviceInfo> data = deviceInfoListRsp.getData();
+                if (data != null && data.size() > 0) {
+                    deviceInfos.addAll(data);
                 }
                 getView().updateAdapter(deviceInfos);
+                getView().dismissProgressDialog();
+                getView().onPullRefreshComplete();
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
+                deviceInfos.clear();
+                getView().updateAdapter(deviceInfos);
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
                 getView().onPullRefreshComplete();
@@ -198,10 +200,11 @@ public class NearByDevicePresenter extends BasePresenter<INearByDeviceActivityVi
             @Override
             public void onCompleted(ResponseResult<List<DeviceAlarmLogInfo>> deviceAlarmLogRsp) {
                 getView().dismissProgressDialog();
-                if (deviceAlarmLogRsp.getData().size() == 0) {
+                List<DeviceAlarmLogInfo> data = deviceAlarmLogRsp.getData();
+                if (data == null || data.size() == 0) {
                     getView().toastShort(mActivity.getString(R.string.no_alert_log_information_was_obtained));
                 } else {
-                    DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogRsp.getData().get(0);
+                    DeviceAlarmLogInfo deviceAlarmLogInfo = data.get(0);
                     enterAlarmLogPop(deviceAlarmLogInfo);
                 }
             }

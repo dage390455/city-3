@@ -68,6 +68,7 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
+                        freshEmpyData();
                         getView().onPullRefreshComplete();
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
@@ -92,7 +93,8 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
                     @Override
                     public void onCompleted(ResponseResult<List<MalfunctionListInfo>> malfunctionListRsp) {
                         getView().dismissProgressDialog();
-                        if (malfunctionListRsp.getData().size() == 0) {
+                        List<MalfunctionListInfo> data = malfunctionListRsp.getData();
+                        if (data == null || data.size() == 0) {
                             cur_page--;
                             getView().toastShort(mActivity.getString(R.string.no_more_data));
                             getView().onPullRefreshCompleteNoMoreData();
@@ -108,12 +110,19 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
         }
     }
 
+    private void freshEmpyData() {
+        mMalfunctionInfoList.clear();
+        getView().updateMalfunctionListAdapter(mMalfunctionInfoList);
+    }
+
     private void freshUI(int direction, ResponseResult<List<MalfunctionListInfo>> malfunctionListRsp) {
         if (direction == Constants.DIRECTION_DOWN) {
             mMalfunctionInfoList.clear();
         }
         List<MalfunctionListInfo> malfunctionListInfoList = malfunctionListRsp.getData();
-        mMalfunctionInfoList.addAll(malfunctionListInfoList);
+        if (malfunctionListInfoList != null) {
+            mMalfunctionInfoList.addAll(malfunctionListInfoList);
+        }
         Collections.sort(mMalfunctionInfoList, deviceMalfunctionInfoComparator);
         getView().updateMalfunctionListAdapter(mMalfunctionInfoList);
     }

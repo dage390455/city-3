@@ -23,7 +23,6 @@ import com.sensoro.common.server.bean.AlarmPopupDataBean;
 import com.sensoro.common.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.ResponseResult;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.common.widgets.dialog.WarningContactDialogUtil;
 import com.sensoro.smartcity.R;
@@ -105,6 +104,13 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
             dialogUtil.show(deviceNotifications);
         }
 
+    }
+
+    private void freshEmptyData() {
+        if (isAttachedView()) {
+            mDeviceAlarmLogInfoList.clear();
+            getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+        }
     }
 
     private void freshUI(final int direction, ResponseResult<List<DeviceAlarmLogInfo>> deviceAlarmLogRsp) {
@@ -208,6 +214,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
+                        freshEmptyData();
                         getView().onPullRefreshComplete();
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
@@ -240,7 +247,8 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                     @Override
                     public void onCompleted(ResponseResult<List<DeviceAlarmLogInfo>> deviceAlarmLogRsp) {
                         getView().dismissProgressDialog();
-                        if (deviceAlarmLogRsp.getData().size() == 0) {
+                        List<DeviceAlarmLogInfo> data = deviceAlarmLogRsp.getData();
+                        if (data == null || data.size() == 0) {
                             getView().toastShort(mContext.getString(R.string.no_more_data));
                             getView().onPullRefreshCompleteNoMoreData();
                             cur_page--;
@@ -278,7 +286,8 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
             @Override
             public void onCompleted(ResponseResult<List<DeviceAlarmLogInfo>> deviceAlarmLogRsp) {
                 getView().dismissProgressDialog();
-                if (deviceAlarmLogRsp.getData().size() == 0) {
+                List<DeviceAlarmLogInfo> data = deviceAlarmLogRsp.getData();
+                if (data == null || data.size() == 0) {
                     getView().toastShort(mContext.getString(R.string.no_more_data));
                 }
                 freshUI(Constants.DIRECTION_DOWN, deviceAlarmLogRsp);
