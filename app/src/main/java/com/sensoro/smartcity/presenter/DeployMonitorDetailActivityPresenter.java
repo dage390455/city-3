@@ -1629,7 +1629,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     private void getDeviceRealStatus() {
         final long requestTime = System.currentTimeMillis();
-        deployAnalyzerModel.lastOperateTime = requestTime;
         RetrofitServiceHelper.getInstance().getDeviceRealStatus(deployAnalyzerModel.sn).subscribeOn(Schedulers.io())
                 .retryWhen(new RetryWithDelay(2, 100))
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceInfo>>(this) {

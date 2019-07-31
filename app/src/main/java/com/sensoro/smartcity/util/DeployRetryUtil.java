@@ -48,6 +48,7 @@ public class DeployRetryUtil {
 
     public void addTask(DeployAnalyzerModel task) {
 
+        task.lastOperateTime = System.currentTimeMillis();
         deployTasks.put(task.sn, task);
         PreferencesHelper.getInstance().setofflineDeployData(deployTasks);
 
@@ -74,7 +75,7 @@ public class DeployRetryUtil {
 
         //根据任务类型判断是否调用信号📶接口
 //        if (deployAnalyzerModel.isGetDeviceRealStatusFailure) {
-            getDeviceRealStatus(context, deployAnalyzerModel, retryListener);
+        getDeviceRealStatus(context, deployAnalyzerModel, retryListener);
 //        } else {
 //            if (null != deployAnalyzerModel.imgUrls && deployAnalyzerModel.imgUrls.size() > 0) {
 //                postResult(deployAnalyzerModel, retryListener);

@@ -91,7 +91,6 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
         if (null != deployAnalyzerModel) {
             tempdeployAnalyzerModel = deployAnalyzerModel;
             getView().setCurrentTaskIndex(deviceInfos.indexOf(deployAnalyzerModel));
-
             deployRetryUtil.doUploadImages(mContext, deployAnalyzerModel, retryListener);
         }
     }
