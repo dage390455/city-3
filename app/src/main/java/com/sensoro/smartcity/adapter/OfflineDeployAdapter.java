@@ -135,6 +135,8 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
         if (PreferencesHelper.getInstance().getUserData().hasForceUpload) {
             if (deviceInfo.status == Constants.SENSOR_STATUS_ALARM || deviceInfo.status == Constants.SENSOR_STATUS_MALFUNCTION) {
                 holder.tvForceLoad.setVisibility(View.VISIBLE);
+            } else {
+                holder.tvForceLoad.setVisibility(View.GONE);
             }
         } else {
             holder.tvForceLoad.setVisibility(View.GONE);
