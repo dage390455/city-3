@@ -85,11 +85,15 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
      * 强制
      */
 
-    public void doForceUpload() {
+    public void doForceUpload(int pos) {
+        isbatch = false;
+        DeployAnalyzerModel deployAnalyzerModel = deviceInfos.get(pos);
+        if (null != deployAnalyzerModel) {
+            tempdeployAnalyzerModel = deployAnalyzerModel;
+            getView().setCurrentTaskIndex(deviceInfos.indexOf(deployAnalyzerModel));
 
-
-        deployRetryUtil.doUploadImages(mContext, tempdeployAnalyzerModel, retryListener);
-
+            deployRetryUtil.doUploadImages(mContext, deployAnalyzerModel, retryListener);
+        }
     }
 
     /**
