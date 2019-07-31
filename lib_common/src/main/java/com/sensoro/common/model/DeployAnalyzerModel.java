@@ -52,6 +52,7 @@ public class DeployAnalyzerModel implements Serializable {
 
     public List<ImageItem> imageItems;
     public List<String> imgUrls;
+    public boolean isGetDeviceRealStatus = false;
 
 
     @Override

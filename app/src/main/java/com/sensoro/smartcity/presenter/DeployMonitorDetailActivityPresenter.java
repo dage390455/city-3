@@ -776,14 +776,12 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-
                 getView().dismissProgressDialog();
                 getView().setUploadBtnStatus(true);
                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                     getView().toastShort(errorMsg);
                     deployRetryUtil.addTask(deployAnalyzerModel);
                     getView().showRetryDialog();
-
 
                 } else if (errorCode == 4013101 || errorCode == 4000013) {
                     freshError(deployAnalyzerModel.sn, null, Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
@@ -792,6 +790,23 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 }
 
 
+            }
+
+            @Override
+            public void onUpdateDeviceStatus(ResponseResult<DeviceInfo> data) {
+                updateDeviceStatusDialog(data);
+            }
+
+            @Override
+            public void onGetDeviceRealStatusErrorMsg(int errorCode, String errorMsg) {
+                tempForceReason = null;
+                // 获取不到当前状态是否强制上传
+                getView().toastShort(errorMsg);
+                getView().dismissBleConfigDialog();
+                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                    deployRetryUtil.addTask(deployAnalyzerModel);
+                    getView().showRetryDialog();
+                }
             }
         });
     }
@@ -1633,6 +1648,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 // 获取不到当前状态是否强制上传
                 getView().toastShort(errorMsg);
                 getView().dismissBleConfigDialog();
+                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                    deployAnalyzerModel.isGetDeviceRealStatus = true;
+                    deployRetryUtil.addTask(deployAnalyzerModel);
+                    getView().showRetryDialog();
+                }
             }
         });
     }

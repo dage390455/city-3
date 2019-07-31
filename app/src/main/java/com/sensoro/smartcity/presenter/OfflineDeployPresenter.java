@@ -8,7 +8,9 @@ import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.DeployResultModel;
+import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.server.bean.ScenesData;
+import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.smartcity.imainviews.IOfflineDeployActivityView;
 import com.sensoro.smartcity.util.DeployRetryUtil;
 
@@ -117,6 +119,16 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                 getView().toastLong(errorMsg);
                 getView().setUploadClickable(true);
 
+
+            }
+
+            @Override
+            public void onUpdateDeviceStatus(ResponseResult<DeviceInfo> data) {
+
+            }
+
+            @Override
+            public void onGetDeviceRealStatusErrorMsg(int errorCode, String errorMsg) {
 
             }
 

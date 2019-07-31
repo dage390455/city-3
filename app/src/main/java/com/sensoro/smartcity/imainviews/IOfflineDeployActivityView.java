@@ -15,6 +15,8 @@ public interface IOfflineDeployActivityView extends IToast, IProgressDialog, IAc
 
     void setCurrentTaskIndex(int index);
 
+
+    //上传过程不能点击
     void setUploadClickable(boolean canClick);
 
 }
