@@ -27,6 +27,18 @@
         android:textColor="@color/c_a6a6a6"
         android:textSize="14dp" />
 
+    <TextView
+        android:id="@+id/item_offline_deploy_adapter_tv_errormsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
+        android:paddingRight="20dp"
+        android:textColor="@color/c_f34a4a"
+        android:textSize="14dp" />
+
     <ProgressBar
         android:id="@+id/oading_prgbar"
         style="@style/CustomProgressBar_Small"
@@ -61,6 +73,7 @@
         android:layout_marginEnd="20dp"
         android:background="@color/c_dfdfdf" />
 
+
     <TextView
         android:id="@+id/item_offline_deploy_adapter_clear_tv"
         android:layout_width="wrap_content"
@@ -69,7 +82,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="8dp"
-        android:layout_toLeftOf="@+id/tv_upload"
+        android:layout_toLeftOf="@id/item_offline_deploy_tv_upload"
         android:background="@drawable/shape_bg_solid_fa_stroke_df_corner_2dp"
         android:paddingStart="8dp"
         android:paddingTop="6dp"
@@ -83,19 +96,38 @@
         />
 
     <TextView
-        android:id="@+id/tv_upload"
+        android:id="@+id/item_offline_deploy_tv_upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/item_offline_deploy_adapter_clear_tv"
+        android:layout_marginEnd="20dp"
+        android:layout_toLeftOf="@id/item_offline_deploy_adapter_tv_force_upload"
+        android:background="@drawable/shape_bg_solid_fa_stroke_df_corner_2dp"
+
+        android:paddingStart="8dp"
+        android:paddingTop="6dp"
+
+        android:paddingEnd="8dp"
+        android:paddingBottom="6dp"
+
+        android:text="上传"
+        android:textColor="@color/c_252525"
+        android:textSize="12dp" />
+
+    <TextView
+        android:id="@+id/item_offline_deploy_adapter_tv_force_upload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/item_offline_deploy_adapter_clear_tv"
         android:layout_alignParentRight="true"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="20dp"
         android:background="@drawable/shape_bg_solid_fa_stroke_df_corner_2dp"
         android:paddingStart="8dp"
         android:paddingTop="6dp"
 
         android:paddingEnd="8dp"
         android:paddingBottom="6dp"
-        android:text="上传"
+        android:text="强制上传"
         android:textColor="@color/c_252525"
         android:textSize="12dp" />
 

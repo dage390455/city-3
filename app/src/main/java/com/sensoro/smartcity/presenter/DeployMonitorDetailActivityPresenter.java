@@ -799,6 +799,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
             @Override
             public void onGetDeviceRealStatusErrorMsg(int errorCode, String errorMsg) {
+//                if (errorCode != -1) {
                 tempForceReason = null;
                 // 获取不到当前状态是否强制上传
                 getView().toastShort(errorMsg);
@@ -807,6 +808,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     deployRetryUtil.addTask(deployAnalyzerModel);
                     getView().showRetryDialog();
                 }
+//                } else {
+//
+//
+//                }
             }
         });
     }
@@ -1624,6 +1629,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     private void getDeviceRealStatus() {
         final long requestTime = System.currentTimeMillis();
+        deployAnalyzerModel.lastOperateTime = requestTime;
         RetrofitServiceHelper.getInstance().getDeviceRealStatus(deployAnalyzerModel.sn).subscribeOn(Schedulers.io())
                 .retryWhen(new RetryWithDelay(2, 100))
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceInfo>>(this) {
@@ -1649,7 +1655,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 getView().toastShort(errorMsg);
                 getView().dismissBleConfigDialog();
                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
-                    deployAnalyzerModel.isGetDeviceRealStatus = true;
+                    deployAnalyzerModel.isGetDeviceRealStatusFailure = true;
                     deployRetryUtil.addTask(deployAnalyzerModel);
                     getView().showRetryDialog();
                 }

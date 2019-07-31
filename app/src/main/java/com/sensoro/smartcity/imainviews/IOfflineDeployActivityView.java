@@ -11,6 +11,8 @@ public interface IOfflineDeployActivityView extends IToast, IProgressDialog, IAc
 
     void updateAdapter(ArrayList<DeployAnalyzerModel> deviceInfos);
 
+    void notifyDataSetChanged();
+
     void onPullRefreshComplete();
 
     void setCurrentTaskIndex(int index);
@@ -18,5 +20,10 @@ public interface IOfflineDeployActivityView extends IToast, IProgressDialog, IAc
 
     //上传过程不能点击
     void setUploadClickable(boolean canClick);
+
+//    void setFailureemsg(String msg);
+
+//    void showWarnDialog(boolean canForceUpload, String tipText, String instruction);
+
 
 }

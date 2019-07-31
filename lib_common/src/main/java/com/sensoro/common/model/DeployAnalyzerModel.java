@@ -52,8 +52,9 @@ public class DeployAnalyzerModel implements Serializable {
 
     public List<ImageItem> imageItems;
     public List<String> imgUrls;
-    public boolean isGetDeviceRealStatus = false;
-
+    public boolean isGetDeviceRealStatusFailure = false;//getstatus接口失败
+    public long lastOperateTime;
+    public String getStateErrorMsg;
 
     @Override
     public boolean equals(Object o) {

@@ -73,7 +73,7 @@ public class DeployRetryUtil {
     public void retryTry(Context context, DeployAnalyzerModel deployAnalyzerModel, OnRetryListener retryListener) {
 
         //根据任务类型判断是否调用信号📶接口
-        if (deployAnalyzerModel.isGetDeviceRealStatus) {
+        if (deployAnalyzerModel.isGetDeviceRealStatusFailure) {
             getDeviceRealStatus(context, deployAnalyzerModel, retryListener);
         } else {
             if (null != deployAnalyzerModel.imgUrls && deployAnalyzerModel.imgUrls.size() > 0) {
@@ -92,7 +92,7 @@ public class DeployRetryUtil {
      * @param deployAnalyzerModel
      * @param retryListener
      */
-    private void doUploadImages(Context context, DeployAnalyzerModel deployAnalyzerModel, OnRetryListener retryListener) {
+    public void doUploadImages(Context context, DeployAnalyzerModel deployAnalyzerModel, OnRetryListener retryListener) {
         //本地照片
         if (null != deployAnalyzerModel.imageItems && deployAnalyzerModel.imageItems.size() > 0) {
             final UpLoadPhotosUtils.UpLoadPhotoListener upLoadPhotoListener = new UpLoadPhotosUtils
@@ -161,7 +161,14 @@ public class DeployRetryUtil {
                 if (data != null && data.getData() != null) {
                     int status = data.getData().getStatus();
                     if (status != Constants.SENSOR_STATUS_ALARM && status != Constants.SENSOR_STATUS_MALFUNCTION) {
-                        doUploadImages(context, deployAnalyzerModel, retryListener);
+                        long updatedTime = data.getData().getUpdatedTime();
+                        //最后更新时间是否在此之前
+                        if (deployAnalyzerModel.lastOperateTime > updatedTime) {
+                            //获取最新信号失败
+                            retryListener.onGetDeviceRealStatusErrorMsg(-1, "信号失败");
+                        } else {
+                            doUploadImages(context, deployAnalyzerModel, retryListener);
+                        }
 
                     } else {
                         retryListener.onUpdateDeviceStatus(data);
@@ -338,6 +345,12 @@ public class DeployRetryUtil {
 
         void onErrorMsg(int errorCode, String errorMsg);
 
+
+        /**
+         * getstatus
+         *
+         * @param data
+         */
         void onUpdateDeviceStatus(ResponseResult<DeviceInfo> data);
 
         void onGetDeviceRealStatusErrorMsg(int errorCode, String errorMsg);

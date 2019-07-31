@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.adapter;
 
 import android.app.Activity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.constant.Constants;
+import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
@@ -31,7 +33,9 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
 
     public interface OnContentItemClickListener {
 
-        void onItemClick(View view, int position);
+        void onUploadClick(View view, int position);
+
+        void onForceUploadClick(View view, int position);
 
         void onClearClick(View view, int position);
     }
@@ -106,11 +110,19 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
             }
         });
 
-        holder.root.setOnClickListener(new View.OnClickListener() {
+        holder.tvUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onContentItemClickListener != null && canClick) {
-                    onContentItemClickListener.onItemClick(v, position);
+                    onContentItemClickListener.onUploadClick(v, position);
+                }
+            }
+        });
+        holder.tvForceLoad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onContentItemClickListener != null && canClick) {
+                    onContentItemClickListener.onForceUploadClick(v, position);
                 }
             }
         });
@@ -119,6 +131,24 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
         } else {
             holder.progressBar.setVisibility(View.INVISIBLE);
         }
+
+        if (PreferencesHelper.getInstance().getUserData().hasForceUpload) {
+            if (deviceInfo.status == Constants.SENSOR_STATUS_ALARM || deviceInfo.status == Constants.SENSOR_STATUS_MALFUNCTION) {
+                holder.tvForceLoad.setVisibility(View.VISIBLE);
+            }
+        } else {
+            holder.tvForceLoad.setVisibility(View.GONE);
+        }
+
+        if (TextUtils.isEmpty(deviceInfo.getStateErrorMsg)) {
+            holder.itemOfflineDeployAdapterErrorMsgTv.setText(deviceInfo.getStateErrorMsg);
+        } else {
+            holder.itemOfflineDeployAdapterErrorMsgTv.setText("");
+
+
+        }
+
+
     }
 
 
@@ -128,6 +158,8 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.item_offline_deploy_adapter_tv_errormsg)
+        TextView itemOfflineDeployAdapterErrorMsgTv;
         @BindView(R.id.item_offline_deploy_adapter_content_tv)
         TextView itemOfflineDeployAdapterSnTv;
         @BindView(R.id.item_offline_deploy_adapter_clear_tv)
@@ -136,6 +168,10 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
         TextView timeTv;
         @BindView(R.id.item_offline_deploy_adapter_tv_type)
         TextView typeTv;
+        @BindView(R.id.item_offline_deploy_adapter_tv_force_upload)
+        TextView tvForceLoad;
+        @BindView(R.id.item_offline_deploy_tv_upload)
+        TextView tvUpload;
         @BindView(R.id.oading_prgbar)
         ProgressBar progressBar;
         @BindView(R.id.item_offline_deploy_root)
