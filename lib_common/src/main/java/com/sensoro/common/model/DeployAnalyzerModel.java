@@ -61,7 +61,7 @@ public class DeployAnalyzerModel implements Serializable {
     /**
      * 离线最最新调用status接口
      */
-    public int realStatus;
+    public int realStatus = -1;
 
     @Override
     public boolean equals(Object o) {

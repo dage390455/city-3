@@ -104,85 +104,106 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
     private DeployRetryUtil.OnRetryListener retryListener = new DeployRetryUtil.OnRetryListener() {
         @Override
         public void onCompleted(DeployResultModel deployResultModel) {
-            deviceInfos.remove(tempdeployAnalyzerModel);
+            if (isAttachedView()) {
+                deviceInfos.remove(tempdeployAnalyzerModel);
 //                deployRetryUtil.removeTask(model);
-            getView().updateAdapter(deviceInfos);
-            if (isbatch) {
-                if (deviceInfos.size() > 0) {
-                    uploadTask(deviceInfos.get(0), isbatch);
+
+
+                getView().updateAdapter(deviceInfos);
+                if (isbatch) {
+                    if (deviceInfos.size() > 0) {
+
+                        //下一个
+                        doNext();
+                    } else {
+                        getView().setUploadClickable(true);
+                        getView().dismissProgressDialog();
+                        getView().toastLong("部署成功");
+
+                    }
                 } else {
-                    getView().setUploadClickable(true);
                     getView().dismissProgressDialog();
+                    getView().setCurrentTaskIndex(-1);
                     getView().toastLong("部署成功");
 
+
                 }
-            } else {
-                getView().dismissProgressDialog();
-                getView().setCurrentTaskIndex(-1);
-                getView().toastLong("部署成功");
-
-
             }
-
 
         }
 
         @Override
         public void onErrorMsg(int errorCode, String errorMsg) {
-            getView().setCurrentTaskIndex(-1);
-            getView().dismissProgressDialog();
-            getView().toastLong(errorMsg);
-            getView().setUploadClickable(true);
+            if (isAttachedView()) {
+
+                getView().setCurrentTaskIndex(-1);
+                getView().dismissProgressDialog();
+                getView().toastLong(errorMsg);
+                getView().setUploadClickable(true);
+            }
 
 
         }
 
         @Override
         public void onUpdateDeviceStatus(ResponseResult<DeviceInfo> data) {
-            if (data != null && data.getData() != null) {
-                int status = data.getData().getStatus();
-                tempdeployAnalyzerModel.realStatus = status;
-                if (status != Constants.SENSOR_STATUS_ALARM && status != Constants.SENSOR_STATUS_MALFUNCTION) {
-                    long updatedTime = data.getData().getUpdatedTime();
-                    //最后更新时间是否在此操作之前
-                    if (tempdeployAnalyzerModel.lastOperateTime > updatedTime) {
-                        //获取最新信号失败
-                        onGetDeviceRealStatusErrorMsg(-1, "信号失败");
+            if (isAttachedView()) {
+
+                if (data != null && data.getData() != null) {
+                    int status = data.getData().getStatus();
+                    tempdeployAnalyzerModel.realStatus = status;
+                    if (status != Constants.SENSOR_STATUS_ALARM && status != Constants.SENSOR_STATUS_MALFUNCTION) {
+                        long updatedTime = data.getData().getUpdatedTime();
+                        //最后更新时间是否在此操作之前
+                        if (tempdeployAnalyzerModel.lastOperateTime > updatedTime) {
+                            //获取最新信号失败
+                            onGetDeviceRealStatusErrorMsg(-1, "信号失败");
+                            doNext();
+
+                        } else {
+                            deployRetryUtil.doUploadImages(mContext, tempdeployAnalyzerModel, retryListener);
+                        }
+
                     } else {
-                        getView().setCurrentTaskIndex(deviceInfos.indexOf(tempdeployAnalyzerModel));
-                        deployRetryUtil.doUploadImages(mContext, tempdeployAnalyzerModel, retryListener);
+                        //判断是否有权限，有自动上传。
+                        if (PreferencesHelper.getInstance().getUserData().hasForceUpload) {
+                            deployRetryUtil.doUploadImages(mContext, tempdeployAnalyzerModel, retryListener);
+                        } else {
+
+                            // TODO: 2019-08-01  没有权限---？？？？
+                            getView().notifyDataSetChanged();
+                            doNext();
+
+
+                        }
+
+
                     }
+                }
 
-                } else {
-                    //判断是否有权限，有自动上传。
-                    if (PreferencesHelper.getInstance().getUserData().hasForceUpload) {
-                        getView().setCurrentTaskIndex(deviceInfos.indexOf(tempdeployAnalyzerModel));
-                        deployRetryUtil.doUploadImages(mContext, tempdeployAnalyzerModel, retryListener);
-                    } else {
-
-                        // TODO: 2019-08-01  没有权限---？？？？
-                        getView().notifyDataSetChanged();
-                    }
-
-
+                if (!isbatch) {
+                    getView().setCurrentTaskIndex(-1);
+                    getView().dismissProgressDialog();
+                    getView().setUploadClickable(true);
                 }
             }
-            getView().setCurrentTaskIndex(-1);
-            getView().dismissProgressDialog();
-            getView().setUploadClickable(true);
         }
 
         @Override
         public void onGetDeviceRealStatusErrorMsg(int errorCode, String errorMsg) {
-            if (errorCode == -1) {
-                tempdeployAnalyzerModel.getStateErrorMsg = errorMsg;
-                getView().notifyDataSetChanged();
-            } else {
-                getView().toastShort(errorMsg);
+
+            if (isAttachedView()) {
+
+                if (errorCode == -1) {
+                    tempdeployAnalyzerModel.getStateErrorMsg = errorMsg;
+                    getView().notifyDataSetChanged();
+                } else {
+                    getView().toastShort(errorMsg);
+                }
+                getView().setCurrentTaskIndex(-1);
+                getView().dismissProgressDialog();
+                getView().setUploadClickable(true);
             }
-            getView().setCurrentTaskIndex(-1);
-            getView().dismissProgressDialog();
-            getView().setUploadClickable(true);
 
         }
 
@@ -198,10 +219,13 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
 
         @Override
         public void onError(String errMsg) {
-            getView().setCurrentTaskIndex(-1);
-            getView().toastLong(errMsg);
-            getView().dismissProgressDialog();
-            getView().setUploadClickable(true);
+            if (isAttachedView()) {
+
+                getView().setCurrentTaskIndex(-1);
+                getView().toastLong(errMsg);
+                getView().dismissProgressDialog();
+                getView().setUploadClickable(true);
+            }
 
 
         }
@@ -211,6 +235,24 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
 
         }
     };
+
+    /**
+     * 上传下一个
+     */
+    private void doNext() {
+
+        if (null != deviceInfos) {
+            int indexOf = deviceInfos.indexOf(tempdeployAnalyzerModel);
+            if (deviceInfos.size() > indexOf + 1) {
+                DeployAnalyzerModel nextModel = deviceInfos.get(indexOf + 1);
+                if (null != nextModel) {
+                    uploadTask(nextModel, isbatch);
+                }
+            }
+
+
+        }
+    }
 
     @Override
 
