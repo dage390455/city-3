@@ -344,6 +344,7 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
         }
         if (AppUtils.isAppMainProcess(this, "com.sensoro.smartcity")) {
             VIDEO_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/camera/";
+            //Mapbox必须在主线程初始化
             taskHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -352,20 +353,6 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
             }, 1000);
             initSensoroSDK();
             ThreadPoolManager.getInstance().execute(this);
-            taskHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    SensoroCityApplication.getInstance().ibeaconSettingData.currentUUID = "70DC44C3-E2A8-4B22-A2C6-129B41A4BDBC";
-                    IbeaconSettingData ibeaconSettingData = PreferencesHelper.getInstance().getIbeaconSettingData();
-                    if (ibeaconSettingData != null) {
-                        SensoroCityApplication.getInstance().ibeaconSettingData = ibeaconSettingData;
-                    }
-                    if (!BleObserver.getInstance().isRegisterBleObserver(bleDeviceListener)) {
-                        BleObserver.getInstance().registerBleObserver(bleDeviceListener);
-                    }
-                }
-            });
-            taskHandler.postDelayed(iBeaconTask, 500);
         }
 
     }
@@ -581,7 +568,16 @@ public class SensoroCityApplication extends BaseApplication implements SensoroPu
         initImagePicker();
         locate();
         initBugLy();
-        //
+        //IBeacon相关
+        SensoroCityApplication.getInstance().ibeaconSettingData.currentUUID = "70DC44C3-E2A8-4B22-A2C6-129B41A4BDBC";
+        IbeaconSettingData ibeaconSettingData = PreferencesHelper.getInstance().getIbeaconSettingData();
+        if (ibeaconSettingData != null) {
+            SensoroCityApplication.getInstance().ibeaconSettingData = ibeaconSettingData;
+        }
+        if (!BleObserver.getInstance().isRegisterBleObserver(bleDeviceListener)) {
+            BleObserver.getInstance().registerBleObserver(bleDeviceListener);
+        }
+        taskHandler.postDelayed(iBeaconTask, 500);
         //
         BlockCanary.install(this, new AppBlockCanaryContext()).start();
         if (LeakCanary.isInAnalyzerProcess(this)) {

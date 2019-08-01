@@ -26,7 +26,6 @@ import com.sensoro.common.utils.DynamicTimeFormat;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.utils.Repause;
 
-import java.util.List;
 import java.util.Locale;
 
 import me.jessyan.autosize.AutoSizeConfig;
@@ -45,8 +44,8 @@ public abstract class BaseApplication extends MultiDexApplication implements Rep
     public static final String ROOT_PACKAGE = "com.sensoro.common";
 
     private static BaseApplication sInstance;
-
-    private List<IApplicationDelegate> mAppDelegateList;
+    //暂时去掉
+//    private List<IApplicationDelegate> mAppDelegateList;
 
     public UploadManager uploadManager;
 
@@ -109,10 +108,10 @@ public abstract class BaseApplication extends MultiDexApplication implements Rep
         super.onCreate();
         sInstance = this;
         ContextUtils.init(this);
-        mAppDelegateList = ClassUtils.getObjectsWithInterface(this, IApplicationDelegate.class, ROOT_PACKAGE);
-        for (IApplicationDelegate delegate : mAppDelegateList) {
-            delegate.onCreate();
-        }
+//        mAppDelegateList = ClassUtils.getObjectsWithInterface(this, IApplicationDelegate.class, ROOT_PACKAGE);
+//        for (IApplicationDelegate delegate : mAppDelegateList) {
+//            delegate.onCreate();
+//        }
         ThreadPoolManager.getInstance().execute(initTask);
         if (ContextUtils.isAppDebug()) {
             //开启InstantRun之后，一定要在ARouter.init之前调用openDebug
@@ -125,9 +124,9 @@ public abstract class BaseApplication extends MultiDexApplication implements Rep
     @Override
     public void onTerminate() {
         super.onTerminate();
-        for (IApplicationDelegate delegate : mAppDelegateList) {
-            delegate.onTerminate();
-        }
+//        for (IApplicationDelegate delegate : mAppDelegateList) {
+//            delegate.onTerminate();
+//        }
         Repause.unregisterListener(this);
     }
 
@@ -135,17 +134,17 @@ public abstract class BaseApplication extends MultiDexApplication implements Rep
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        for (IApplicationDelegate delegate : mAppDelegateList) {
-            delegate.onLowMemory();
-        }
+//        for (IApplicationDelegate delegate : mAppDelegateList) {
+//            delegate.onLowMemory();
+//        }
     }
 
     @Override
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
-        for (IApplicationDelegate delegate : mAppDelegateList) {
-            delegate.onTrimMemory(level);
-        }
+//        for (IApplicationDelegate delegate : mAppDelegateList) {
+//            delegate.onTrimMemory(level);
+//        }
     }
 
     private void initUploadManager() {
