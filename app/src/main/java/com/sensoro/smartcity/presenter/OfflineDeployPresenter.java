@@ -145,42 +145,44 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                 if (data != null && data.getData() != null) {
                     int status = data.getData().getStatus();
                     tempdeployAnalyzerModel.realStatus = status;
-                    if (status != Constants.SENSOR_STATUS_ALARM && status != Constants.SENSOR_STATUS_MALFUNCTION) {
-                        long updatedTime = data.getData().getUpdatedTime();
-                        //最后更新时间是否在此操作之前
-                        if (tempdeployAnalyzerModel.lastOperateTime > updatedTime) {
-                            //获取最新信号失败
-                            onGetDeviceRealStatusErrorMsg(-1, "无信号");
-                            if (isbatch) {
-                                //下一个
-                                doNext(false);
-                            }
-
-                        } else {
-                            deployRetryUtil.doUploadImages(mContext, tempdeployAnalyzerModel, retryListener);
-                        }
-
+                    long updatedTime = data.getData().getUpdatedTime();
+                    //最后更新时间是否在此操作之前
+                    if (tempdeployAnalyzerModel.lastOperateTime > updatedTime) {
+                        //获取最新信号失败
+                        showState();
                     } else {
-                        if (!PreferencesHelper.getInstance().getUserData().hasForceUpload) {
-                            // TODO: 2019-08-01  没有权限---？？？？
-                            onGetDeviceRealStatusErrorMsg(-1, "无信号");
-                            getView().notifyDataSetChanged();
-                            if (isbatch) {
-                                //下一个
-                                doNext(false);
-                            }
-
+                        if (status != Constants.SENSOR_STATUS_ALARM && status != Constants.SENSOR_STATUS_MALFUNCTION) {
+                            deployRetryUtil.doUploadImages(mContext, tempdeployAnalyzerModel, retryListener);
+                        } else {
+                            showState();
                         }
-                        getView().notifyDataSetChanged();
-
                     }
+                    if (isbatch) {
+                        //下一个
+                        doNext(false);
+                    } else {
+                        getView().setCurrentTaskIndex(-1);
+                        getView().dismissProgressDialog();
+                        getView().setUploadClickable(true);
+                    }
+                    getView().notifyDataSetChanged();
+
                 }
 
-                if (!isbatch) {
-                    getView().dismissProgressDialog();
-                    getView().setUploadClickable(true);
-                }
             }
+        }
+
+        /**
+         * 没有权限显示无信号否则显示强制上传
+         */
+        private void showState() {
+            if (PreferencesHelper.getInstance().getUserData().hasForceUpload) {
+                //显示强制上传
+                tempdeployAnalyzerModel.isShowForce = true;
+
+            }
+            onGetDeviceRealStatusErrorMsg(-1, "无信号");
+
         }
 
         @Override
@@ -249,11 +251,13 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
             if (isdelete) {
                 deviceInfos.remove(tempdeployAnalyzerModel);
                 getView().updateAdapter(deviceInfos);
+                getView().setUploadClickable(true);
+                getView().dismissProgressDialog();
+                getView().setCurrentTaskIndex(-1);
+                getView().toastLong("部署成功");
             }
-            getView().setUploadClickable(true);
-            getView().dismissProgressDialog();
-            getView().setCurrentTaskIndex(-1);
-            getView().toastLong("部署成功");
+
+
         }
     }
 
