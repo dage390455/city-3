@@ -25,6 +25,7 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
     private Activity mContext;
     private DeployRetryUtil deployRetryUtil;
     private ArrayList<DeployAnalyzerModel> deviceInfos = new ArrayList<>();
+    //    private ArrayList<DeployAnalyzerModel> tempdeviceInfos = new ArrayList<>();
     private DeployAnalyzerModel tempdeployAnalyzerModel;
     private boolean isbatch;
 
@@ -43,6 +44,7 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
             }
             Collections.reverse(deviceInfos);
             getView().updateAdapter(deviceInfos);
+//            tempdeviceInfos = deviceInfos;
 
         }
 
@@ -107,10 +109,11 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
             if (isAttachedView()) {
 
                 if (isbatch) {
-                    if (deviceInfos.size() > 0) {
-                        //下一个
-                        doNext();
-                    }
+                    //下一个
+                    // TODO: 2019-08-01   边删除，查找下一个 
+                    doNext(true);
+
+
                 } else {
                     getView().dismissProgressDialog();
                     getView().setCurrentTaskIndex(-1);
@@ -119,12 +122,11 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
 
                 }
 
-                deviceInfos.remove(tempdeployAnalyzerModel);
-//                deployRetryUtil.removeTask(model);
-                getView().updateAdapter(deviceInfos);
+
             }
 
         }
+
 
         @Override
         public void onErrorMsg(int errorCode, String errorMsg) {
@@ -152,7 +154,7 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                         if (tempdeployAnalyzerModel.lastOperateTime > updatedTime) {
                             //获取最新信号失败
                             onGetDeviceRealStatusErrorMsg(-1, "信号失败");
-                            doNext();
+                            doNext(false);
 
                         } else {
                             deployRetryUtil.doUploadImages(mContext, tempdeployAnalyzerModel, retryListener);
@@ -166,7 +168,7 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
 
                             // TODO: 2019-08-01  没有权限---？？？？
                             getView().notifyDataSetChanged();
-                            doNext();
+                            doNext(false);
 
 
                         }
@@ -233,22 +235,26 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
     /**
      * 上传下一个
      */
-    private void doNext() {
+    private void doNext(boolean isdelete) {
+        int indexOf = deviceInfos.indexOf(tempdeployAnalyzerModel);
+        if (indexOf >= 0 && deviceInfos.size() > indexOf + 1) {
+            DeployAnalyzerModel nextModel = deviceInfos.get(indexOf + 1);
 
-        if (null != deviceInfos) {
-            int indexOf = deviceInfos.indexOf(tempdeployAnalyzerModel);
-            if (indexOf >= 0 && deviceInfos.size() > indexOf + 1) {
-                DeployAnalyzerModel nextModel = deviceInfos.get(indexOf + 1);
-                uploadTask(nextModel, isbatch);
-            } else {
-                getView().setUploadClickable(true);
-                getView().dismissProgressDialog();
-                getView().setCurrentTaskIndex(-1);
-                getView().toastLong("部署成功");
-
+            if (isdelete) {
+                deviceInfos.remove(tempdeployAnalyzerModel);
+                getView().updateAdapter(deviceInfos);
             }
-
-
+            uploadTask(nextModel, isbatch);
+        } else {
+            if (isdelete) {
+                deviceInfos.remove(tempdeployAnalyzerModel);
+                getView().updateAdapter(deviceInfos);
+            }
+            getView().setUploadClickable(true);
+            getView().dismissProgressDialog();
+            getView().setCurrentTaskIndex(-1);
+            getView().toastLong("部署成功");
+//
         }
     }
 
