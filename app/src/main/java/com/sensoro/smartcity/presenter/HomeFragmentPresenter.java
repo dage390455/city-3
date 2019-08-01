@@ -106,12 +106,11 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     public void run() {
                         Log.d("scheduleRefresh", "run: 刷新数据！");
                         scheduleRefresh();
-                        mHandler.postDelayed(mTask, 3000);
+
                     }
                 });
             }
-
-
+            mHandler.postDelayed(mTask, 3000);
         }
     };
 
