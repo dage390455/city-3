@@ -150,7 +150,7 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                         //最后更新时间是否在此操作之前
                         if (tempdeployAnalyzerModel.lastOperateTime > updatedTime) {
                             //获取最新信号失败
-                            onGetDeviceRealStatusErrorMsg(-1, "信号失败");
+                            onGetDeviceRealStatusErrorMsg(-1, "无信号");
                             if (isbatch) {
                                 //下一个
                                 doNext(false);
@@ -163,10 +163,11 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                     } else {
                         //判断是否有权限，有自动上传。
                         if (PreferencesHelper.getInstance().getUserData().hasForceUpload) {
-                            deployRetryUtil.doUploadImages(mContext, tempdeployAnalyzerModel, retryListener);
+                            getView().notifyDataSetChanged();
+//                            deployRetryUtil.doUploadImages(mContext, tempdeployAnalyzerModel, retryListener);
                         } else {
-
                             // TODO: 2019-08-01  没有权限---？？？？
+                            onGetDeviceRealStatusErrorMsg(-1, "无信号");
                             getView().notifyDataSetChanged();
                             if (isbatch) {
                                 //下一个
