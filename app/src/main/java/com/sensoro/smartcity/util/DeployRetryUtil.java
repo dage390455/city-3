@@ -76,7 +76,7 @@ public class DeployRetryUtil {
 
         //根据任务类型判断是否调用信号📶接口
 //        if (deployAnalyzerModel.isGetDeviceRealStatusFailure) {
-        getDeviceRealStatus(context, deployAnalyzerModel, retryListener);
+        getDeviceRealStatus(deployAnalyzerModel, retryListener);
 //        } else {
 //            if (null != deployAnalyzerModel.imgUrls && deployAnalyzerModel.imgUrls.size() > 0) {
 //                postResult(deployAnalyzerModel, retryListener);
@@ -94,7 +94,8 @@ public class DeployRetryUtil {
      * @param deployAnalyzerModel
      * @param retryListener
      */
-    public void doUploadImages(Context context, DeployAnalyzerModel deployAnalyzerModel, OnRetryListener retryListener) {
+    public void doUploadImages(Context context, DeployAnalyzerModel
+            deployAnalyzerModel, OnRetryListener retryListener) {
         //本地照片
         if (null != deployAnalyzerModel.imageItems && deployAnalyzerModel.imageItems.size() > 0) {
             final UpLoadPhotosUtils.UpLoadPhotoListener upLoadPhotoListener = new UpLoadPhotosUtils
@@ -150,11 +151,11 @@ public class DeployRetryUtil {
     /**
      * 获取信号📶质量状态
      *
-     * @param context
      * @param deployAnalyzerModel
      * @param retryListener
      */
-    private void getDeviceRealStatus(Context context, DeployAnalyzerModel deployAnalyzerModel, OnRetryListener retryListener) {
+    private void getDeviceRealStatus(DeployAnalyzerModel deployAnalyzerModel, OnRetryListener
+            retryListener) {
         RetrofitServiceHelper.getInstance().getDeviceRealStatus(deployAnalyzerModel.sn).subscribeOn(Schedulers.io())
                 .retryWhen(new RetryWithDelay(2, 100))
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<DeviceInfo>>(null) {
@@ -180,7 +181,8 @@ public class DeployRetryUtil {
      * @param deployAnalyzerModel
      * @param retryListener
      */
-    private void postResult(DeployAnalyzerModel deployAnalyzerModel, OnRetryListener retryListener) {
+    private void postResult(DeployAnalyzerModel deployAnalyzerModel, OnRetryListener
+            retryListener) {
 
 
         //TODO 添加设备状态字段
@@ -286,7 +288,8 @@ public class DeployRetryUtil {
     }
 
 
-    private DeployResultModel freshPoint(DeployAnalyzerModel deployAnalyzerModel, ResponseResult<DeviceInfo> deviceDeployRsp) {
+    private DeployResultModel freshPoint(DeployAnalyzerModel
+                                                 deployAnalyzerModel, ResponseResult<DeviceInfo> deviceDeployRsp) {
         DeployResultModel deployResultModel = new DeployResultModel();
         DeviceInfo deviceInfo = deviceDeployRsp.getData();
         deployResultModel.deviceInfo = deviceInfo;
@@ -311,7 +314,8 @@ public class DeployRetryUtil {
         return deployResultModel;
     }
 
-    private DeployResultModel freshStation(DeployAnalyzerModel deployAnalyzerModel, ResponseResult<DeployStationInfo> deployStationInfoRsp) {
+    private DeployResultModel freshStation(DeployAnalyzerModel
+                                                   deployAnalyzerModel, ResponseResult<DeployStationInfo> deployStationInfoRsp) {
         DeployResultModel deployResultModel = new DeployResultModel();
         //
         DeployStationInfo deployStationInfo = deployStationInfoRsp.getData();
