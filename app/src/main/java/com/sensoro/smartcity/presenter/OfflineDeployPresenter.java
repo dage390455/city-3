@@ -161,11 +161,7 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                         }
 
                     } else {
-                        //判断是否有权限，有自动上传。
-                        if (PreferencesHelper.getInstance().getUserData().hasForceUpload) {
-                            getView().notifyDataSetChanged();
-//                            deployRetryUtil.doUploadImages(mContext, tempdeployAnalyzerModel, retryListener);
-                        } else {
+                        if (!PreferencesHelper.getInstance().getUserData().hasForceUpload) {
                             // TODO: 2019-08-01  没有权限---？？？？
                             onGetDeviceRealStatusErrorMsg(-1, "无信号");
                             getView().notifyDataSetChanged();
@@ -175,7 +171,7 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                             }
 
                         }
-
+                        getView().notifyDataSetChanged();
 
                     }
                 }
