@@ -16,7 +16,6 @@ import com.sensoro.smartcity.imainviews.IOfflineDeployActivityView;
 import com.sensoro.smartcity.util.DeployRetryUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +40,7 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                 deviceInfos.add(val);
 
             }
-            Collections.reverse(deviceInfos);
+//            Collections.reverse(deviceInfos);
             getView().updateAdapter(deviceInfos);
 
         }
@@ -157,14 +156,6 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                             showState();
                         }
                     }
-                    if (isbatch) {
-                        //下一个
-                        doNext(false);
-                    } else {
-                        getView().setCurrentTaskIndex(-1);
-                        getView().dismissProgressDialog();
-                        getView().setUploadClickable(true);
-                    }
                     getView().notifyDataSetChanged();
 
                 }
@@ -182,7 +173,13 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
 
             }
             onGetDeviceRealStatusErrorMsg(-1, "无信号");
+            getView().setCurrentTaskIndex(-1);
+            getView().setUploadClickable(true);
 
+            if (isbatch) {
+                getView().dismissProgressDialog();
+                doNext(false);
+            }
         }
 
         @Override
