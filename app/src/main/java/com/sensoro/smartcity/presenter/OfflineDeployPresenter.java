@@ -25,9 +25,8 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
     private Activity mContext;
     private DeployRetryUtil deployRetryUtil;
     private ArrayList<DeployAnalyzerModel> deviceInfos = new ArrayList<>();
-    //    private ArrayList<DeployAnalyzerModel> tempdeviceInfos = new ArrayList<>();
     private DeployAnalyzerModel tempdeployAnalyzerModel;
-    private boolean isbatch;
+    private boolean isbatch = false;
 
     @Override
     public void initData(Context context) {
@@ -44,7 +43,6 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
             }
             Collections.reverse(deviceInfos);
             getView().updateAdapter(deviceInfos);
-//            tempdeviceInfos = deviceInfos;
 
         }
 
@@ -110,11 +108,10 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
 
                 if (isbatch) {
                     //下一个
-                    // TODO: 2019-08-01   边删除，查找下一个 
                     doNext(true);
-
-
                 } else {
+                    deviceInfos.remove(tempdeployAnalyzerModel);
+                    getView().updateAdapter(deviceInfos);
                     getView().dismissProgressDialog();
                     getView().setCurrentTaskIndex(-1);
                     getView().toastLong("部署成功");
@@ -154,7 +151,10 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                         if (tempdeployAnalyzerModel.lastOperateTime > updatedTime) {
                             //获取最新信号失败
                             onGetDeviceRealStatusErrorMsg(-1, "信号失败");
-                            doNext(false);
+                            if (isbatch) {
+                                //下一个
+                                doNext(false);
+                            }
 
                         } else {
                             deployRetryUtil.doUploadImages(mContext, tempdeployAnalyzerModel, retryListener);
@@ -168,8 +168,10 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
 
                             // TODO: 2019-08-01  没有权限---？？？？
                             getView().notifyDataSetChanged();
-                            doNext(false);
-
+                            if (isbatch) {
+                                //下一个
+                                doNext(false);
+                            }
 
                         }
 
@@ -178,7 +180,6 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                 }
 
                 if (!isbatch) {
-                    getView().setCurrentTaskIndex(-1);
                     getView().dismissProgressDialog();
                     getView().setUploadClickable(true);
                 }
@@ -234,6 +235,8 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
 
     /**
      * 上传下一个
+     *
+     * @param isdelete 成功删除
      */
     private void doNext(boolean isdelete) {
         int indexOf = deviceInfos.indexOf(tempdeployAnalyzerModel);
@@ -254,7 +257,6 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
             getView().dismissProgressDialog();
             getView().setCurrentTaskIndex(-1);
             getView().toastLong("部署成功");
-//
         }
     }
 
