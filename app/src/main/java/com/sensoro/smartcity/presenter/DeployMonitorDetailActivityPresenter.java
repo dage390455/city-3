@@ -1642,7 +1642,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 getView().toastShort(errorMsg);
                 getView().dismissBleConfigDialog();
                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
-                    deployAnalyzerModel.isGetDeviceRealStatusFailure = true;
+//                    deployAnalyzerModel.isGetDeviceRealStatusFailure = true;
                     deployRetryUtil.addTask(deployAnalyzerModel);
                     getView().showRetryDialog();
                 }

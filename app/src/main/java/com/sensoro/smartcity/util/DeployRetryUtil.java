@@ -75,15 +75,15 @@ public class DeployRetryUtil {
     public void retryTry(Context context, DeployAnalyzerModel deployAnalyzerModel, OnRetryListener retryListener) {
 
         //根据任务类型判断是否调用信号📶接口
-        if (deployAnalyzerModel.isGetDeviceRealStatusFailure) {
-            getDeviceRealStatus(deployAnalyzerModel, retryListener);
-        } else {
-            if (null != deployAnalyzerModel.imgUrls && deployAnalyzerModel.imgUrls.size() > 0) {
-                postResult(deployAnalyzerModel, retryListener);
-            } else {
-                doUploadImages(context, deployAnalyzerModel, retryListener);
-            }
-        }
+//        if (deployAnalyzerModel.isGetDeviceRealStatusFailure) {
+        getDeviceRealStatus(deployAnalyzerModel, retryListener);
+//        } else {
+//            if (null != deployAnalyzerModel.imgUrls && deployAnalyzerModel.imgUrls.size() > 0) {
+//                postResult(deployAnalyzerModel, retryListener);
+//            } else {
+//                doUploadImages(context, deployAnalyzerModel, retryListener);
+//            }
+//        }
 
     }
 

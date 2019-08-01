@@ -55,7 +55,7 @@ public class DeployAnalyzerModel implements Serializable {
     /**
      * getstatus接口失败
      */
-    public boolean isGetDeviceRealStatusFailure = false;
+//    public boolean isGetDeviceRealStatusFailure = false;
     public long lastOperateTime;
     public String getStateErrorMsg;
     /**
