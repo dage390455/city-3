@@ -177,7 +177,6 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
 //            immersionBar.destroy();
 //        }
         mHandler.removeCallbacksAndMessages(null);
-
         ActivityTaskManager.getInstance().popActivity(this);
         isDestroyed = true;
     }
@@ -262,34 +261,37 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         if (permissionDialogUtils == null) {
             permissionDialogUtils = new PermissionDialogUtils(mActivity);
         }
-        permissionDialogUtils.setTipMessageText(mActivity.getString(R.string.notification_prompt)).setTipCacnleText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_a6a6a6)).setTipConfirmText(mActivity.getString(R.string.go_setting), mActivity.getResources().getColor(R.color.colorAccent)).show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
-            @Override
-            public void onCancelClick() {
-                if (permissionDialogUtils!=null){
-                    permissionDialogUtils.dismiss();
-                }
-                if (executor != null) {
-                    executor.cancel();
-                }
+        permissionDialogUtils.setTipMessageText(mActivity.getString(R.string.notification_prompt))
+                .setTipCacnleText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_a6a6a6))
+                .setTipConfirmText(mActivity.getString(R.string.go_setting), mActivity.getResources().getColor(R.color.colorAccent))
+                .show(new PermissionDialogUtils.TipDialogUtilsClickListener() {
+                    @Override
+                    public void onCancelClick() {
+                        if (permissionDialogUtils != null) {
+                            permissionDialogUtils.dismiss();
+                        }
+                        if (executor != null) {
+                            executor.cancel();
+                        }
 
-            }
+                    }
 
-            @Override
-            public void onConfirmClick() {
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                Uri uri = Uri.fromParts("package", ContextUtils.getContext()
-                        .getPackageName(), null);
-                intent.setData(uri);
-                startActivity(intent);
-                if (permissionDialogUtils!=null){
-                    permissionDialogUtils.dismiss();
-                }
-                if (executor != null) {
-                    executor.execute();
-                }
-            }
-        });
+                    @Override
+                    public void onConfirmClick() {
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", ContextUtils.getContext()
+                                .getPackageName(), null);
+                        intent.setData(uri);
+                        startActivity(intent);
+                        if (permissionDialogUtils != null) {
+                            permissionDialogUtils.dismiss();
+                        }
+                        if (executor != null) {
+                            executor.execute();
+                        }
+                    }
+                });
     }
 
     public boolean checkDeviceHasNavigationBar() {
