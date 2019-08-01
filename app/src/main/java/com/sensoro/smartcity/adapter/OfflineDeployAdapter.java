@@ -133,7 +133,7 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
         }
 
         if (PreferencesHelper.getInstance().getUserData().hasForceUpload) {
-            if (deviceInfo.status == Constants.SENSOR_STATUS_ALARM || deviceInfo.status == Constants.SENSOR_STATUS_MALFUNCTION) {
+            if (deviceInfo.realStatus == Constants.SENSOR_STATUS_ALARM || deviceInfo.realStatus == Constants.SENSOR_STATUS_MALFUNCTION) {
                 holder.tvForceLoad.setVisibility(View.VISIBLE);
             } else {
                 holder.tvForceLoad.setVisibility(View.GONE);
@@ -142,7 +142,7 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
             holder.tvForceLoad.setVisibility(View.GONE);
         }
 
-        if (TextUtils.isEmpty(deviceInfo.getStateErrorMsg)) {
+        if (!TextUtils.isEmpty(deviceInfo.getStateErrorMsg)) {
             holder.itemOfflineDeployAdapterErrorMsgTv.setText(deviceInfo.getStateErrorMsg);
         } else {
             holder.itemOfflineDeployAdapterErrorMsgTv.setText("");

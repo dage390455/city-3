@@ -38,20 +38,14 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
         mContext = (Activity) context;
 
         deployRetryUtil = DeployRetryUtil.getInstance();
-//        LinkedHashMap<String, DeployAnalyzerModel> allTask = deployRetryUtil.getAllTask();
         LinkedTreeMap<String, DeployAnalyzerModel> allTask = PreferencesHelper.getInstance().getofflineDeployData();
 
         if (null != allTask && allTask.size() > 0) {
             Iterator iter = allTask.entrySet().iterator();
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
-//                Object key = entry.getKey();
                 DeployAnalyzerModel val = (DeployAnalyzerModel) entry.getValue();
                 deviceInfos.add(val);
-//                deviceInfos.add(val);
-//                deviceInfos.add(val);
-//                deviceInfos.add(val);
-//                deviceInfos.add(val);
                 getView().updateAdapter(deviceInfos);
 
             }
@@ -69,15 +63,10 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
      * 批量
      */
     public void dobatch() {
-
         if (deviceInfos.size() > 0) {
             DeployAnalyzerModel deployAnalyzerModel = deviceInfos.get(0);
             uploadTask(deployAnalyzerModel, true);
-        } else {
-//            getView().toastLong("暂无任务");
-
         }
-
     }
 
 
@@ -86,7 +75,7 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
      */
 
     public void doForceUpload(int pos) {
-        isbatch = false;
+        this.isbatch = false;
         DeployAnalyzerModel deployAnalyzerModel = deviceInfos.get(pos);
         if (null != deployAnalyzerModel) {
             tempdeployAnalyzerModel = deployAnalyzerModel;
@@ -153,22 +142,32 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
         @Override
         public void onUpdateDeviceStatus(ResponseResult<DeviceInfo> data) {
             if (data != null && data.getData() != null) {
-                //只记录当前的信号和状态
-                tempdeployAnalyzerModel.status = data.getData().getStatus();
-                getView().notifyDataSetChanged();
-//                switch (data.getData().getStatus()) {
-//                    case Constants.SENSOR_STATUS_ALARM:
-//
-//
-//                        String alarmReason = handleAlarmReason(data.getData());
-//                        getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, alarmReason, mContext.getString(R.string.deploy_check_suggest_repair_instruction));
-//                        break;
-//                    case Constants.SENSOR_STATUS_MALFUNCTION:
-//                        String reason = handleMalfunctionReason(data.getData());
-//                        getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, reason, mContext.getString(R.string.deploy_check_suggest_repair_instruction));
-//                        break;
-//                }
+                int status = data.getData().getStatus();
+                tempdeployAnalyzerModel.realStatus = status;
+                if (status != Constants.SENSOR_STATUS_ALARM && status != Constants.SENSOR_STATUS_MALFUNCTION) {
+                    long updatedTime = data.getData().getUpdatedTime();
+                    //最后更新时间是否在此之前
+                    if (tempdeployAnalyzerModel.lastOperateTime > updatedTime) {
+                        //获取最新信号失败
+                        onGetDeviceRealStatusErrorMsg(-1, "信号失败");
+                    } else {
+                        doForceUpload(deviceInfos.indexOf(tempdeployAnalyzerModel));
+                    }
+
+                } else {
+                    //判断是否有权限，有自动上传。
+                    if (PreferencesHelper.getInstance().getUserData().hasForceUpload) {
+                        doForceUpload(deviceInfos.indexOf(tempdeployAnalyzerModel));
+                    } else {
+                        getView().notifyDataSetChanged();
+                    }
+
+
+                }
             }
+            getView().setCurrentTaskIndex(-1);
+            getView().dismissProgressDialog();
+            getView().setUploadClickable(true);
         }
 
         @Override
@@ -179,13 +178,12 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
             if (errorCode == -1) {
                 tempdeployAnalyzerModel.getStateErrorMsg = errorMsg;
                 getView().notifyDataSetChanged();
-
-
             } else {
                 getView().toastShort(errorMsg);
-
-
             }
+            getView().setCurrentTaskIndex(-1);
+            getView().dismissProgressDialog();
+            getView().setUploadClickable(true);
 
         }
 

@@ -160,20 +160,7 @@ public class DeployRetryUtil {
             @Override
             public void onCompleted(final ResponseResult<DeviceInfo> data) {
                 if (data != null && data.getData() != null) {
-                    int status = data.getData().getStatus();
-                    if (status != Constants.SENSOR_STATUS_ALARM && status != Constants.SENSOR_STATUS_MALFUNCTION) {
-                        long updatedTime = data.getData().getUpdatedTime();
-                        //最后更新时间是否在此之前
-                        if (deployAnalyzerModel.lastOperateTime > updatedTime) {
-                            //获取最新信号失败
-                            retryListener.onGetDeviceRealStatusErrorMsg(-1, "信号失败");
-                        } else {
-                            doUploadImages(context, deployAnalyzerModel, retryListener);
-                        }
-
-                    } else {
-                        retryListener.onUpdateDeviceStatus(data);
-                    }
+                    retryListener.onUpdateDeviceStatus(data);
                 }
 
 
@@ -346,12 +333,6 @@ public class DeployRetryUtil {
 
         void onErrorMsg(int errorCode, String errorMsg);
 
-
-        /**
-         * getstatus
-         *
-         * @param data
-         */
         void onUpdateDeviceStatus(ResponseResult<DeviceInfo> data);
 
         void onGetDeviceRealStatusErrorMsg(int errorCode, String errorMsg);
