@@ -722,18 +722,12 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
      */
     public void doRetry() {
         getView().showProgressDialog();
-
-//        LinkedHashMap<String, DeployAnalyzerModel> allTask = deployRetryUtil.getAllTask();
         deployRetryUtil.retryTry(mContext, deployAnalyzerModel, new DeployRetryUtil.OnRetryListener() {
-
-
             @Override
             public void onStart() {
-
                 if (isAttachedView()) {
                     getView().showStartUploadProgressDialog();
                 }
-
             }
 
             @Override
@@ -799,19 +793,13 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
             @Override
             public void onGetDeviceRealStatusErrorMsg(int errorCode, String errorMsg) {
-//                if (errorCode != -1) {
                 tempForceReason = null;
-                // 获取不到当前状态是否强制上传
                 getView().toastShort(errorMsg);
                 getView().dismissBleConfigDialog();
                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                     deployRetryUtil.addTask(deployAnalyzerModel);
                     getView().showRetryDialog();
                 }
-//                } else {
-//
-//
-//                }
             }
         });
     }

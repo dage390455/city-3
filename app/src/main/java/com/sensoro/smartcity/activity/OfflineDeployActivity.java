@@ -3,11 +3,6 @@ package com.sensoro.smartcity.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextPaint;
-import android.text.TextUtils;
-import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -211,7 +206,6 @@ public class OfflineDeployActivity extends BaseActivity<IOfflineDeployActivityVi
 
     @SuppressLint("RestrictedApi")
     public void setNoContentVisible(boolean isVisible) {
-//        refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
         if (isVisible) {
             refreshLayout.setRefreshContent(icNoContent);
         } else {
@@ -241,31 +235,4 @@ public class OfflineDeployActivity extends BaseActivity<IOfflineDeployActivityVi
     }
 
 
-    @NonNull
-    private CharSequence getClickableSpannable(String suggest, String instruction) {
-        if (TextUtils.isEmpty(instruction)) {
-            return suggest;
-        }
-        final String repairInstructionUrl = mPresenter.getRepairInstructionUrl();
-        if (TextUtils.isEmpty(repairInstructionUrl)) {
-            return suggest;
-        }
-        StringBuilder stringBuilder = new StringBuilder(suggest);
-        stringBuilder.append(instruction);
-        SpannableString sb = new SpannableString(stringBuilder);
-        ClickableSpan clickableSpan = new ClickableSpan() {
-            @Override
-            public void updateDrawState(@NonNull TextPaint ds) {
-                ds.setColor(ds.linkColor);
-                ds.setUnderlineText(false);
-            }
-
-            @Override
-            public void onClick(@NonNull View widget) {
-                mPresenter.doInstruction(repairInstructionUrl);
-            }
-        };
-        sb.setSpan(clickableSpan, stringBuilder.length() - instruction.length(), stringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-        return sb;
-    }
 }

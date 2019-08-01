@@ -2,8 +2,6 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.text.TextUtils;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.sensoro.common.base.BasePresenter;
@@ -12,15 +10,13 @@ import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.DeployResultModel;
 import com.sensoro.common.server.bean.DeviceInfo;
-import com.sensoro.common.server.bean.MergeTypeStyles;
 import com.sensoro.common.server.bean.ScenesData;
 import com.sensoro.common.server.response.ResponseResult;
-import com.sensoro.smartcity.activity.DeployRepairInstructionActivity;
 import com.sensoro.smartcity.imainviews.IOfflineDeployActivityView;
 import com.sensoro.smartcity.util.DeployRetryUtil;
-import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +24,6 @@ import java.util.Map;
 public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivityView> {
     private Activity mContext;
     private DeployRetryUtil deployRetryUtil;
-
     private ArrayList<DeployAnalyzerModel> deviceInfos = new ArrayList<>();
     private DeployAnalyzerModel tempdeployAnalyzerModel;
     private boolean isbatch;
@@ -36,19 +31,18 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-
         deployRetryUtil = DeployRetryUtil.getInstance();
         LinkedTreeMap<String, DeployAnalyzerModel> allTask = PreferencesHelper.getInstance().getofflineDeployData();
-
         if (null != allTask && allTask.size() > 0) {
             Iterator iter = allTask.entrySet().iterator();
             while (iter.hasNext()) {
                 Map.Entry entry = (Map.Entry) iter.next();
                 DeployAnalyzerModel val = (DeployAnalyzerModel) entry.getValue();
                 deviceInfos.add(val);
-                getView().updateAdapter(deviceInfos);
 
             }
+            Collections.reverse(deviceInfos);
+            getView().updateAdapter(deviceInfos);
 
         }
 
@@ -85,9 +79,10 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
     }
 
     /**
-     * 单个
+     * 上传任务
      *
      * @param model
+     * @param isbatch
      */
 
     public void uploadTask(DeployAnalyzerModel model, boolean isbatch) {
@@ -103,6 +98,9 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
     }
 
 
+    /**
+     * 任务回调
+     */
     private DeployRetryUtil.OnRetryListener retryListener = new DeployRetryUtil.OnRetryListener() {
         @Override
         public void onCompleted(DeployResultModel deployResultModel) {
@@ -146,19 +144,23 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                 tempdeployAnalyzerModel.realStatus = status;
                 if (status != Constants.SENSOR_STATUS_ALARM && status != Constants.SENSOR_STATUS_MALFUNCTION) {
                     long updatedTime = data.getData().getUpdatedTime();
-                    //最后更新时间是否在此之前
+                    //最后更新时间是否在此操作之前
                     if (tempdeployAnalyzerModel.lastOperateTime > updatedTime) {
                         //获取最新信号失败
                         onGetDeviceRealStatusErrorMsg(-1, "信号失败");
                     } else {
-                        doForceUpload(deviceInfos.indexOf(tempdeployAnalyzerModel));
+                        getView().setCurrentTaskIndex(deviceInfos.indexOf(tempdeployAnalyzerModel));
+                        deployRetryUtil.doUploadImages(mContext, tempdeployAnalyzerModel, retryListener);
                     }
 
                 } else {
                     //判断是否有权限，有自动上传。
                     if (PreferencesHelper.getInstance().getUserData().hasForceUpload) {
-                        doForceUpload(deviceInfos.indexOf(tempdeployAnalyzerModel));
+                        getView().setCurrentTaskIndex(deviceInfos.indexOf(tempdeployAnalyzerModel));
+                        deployRetryUtil.doUploadImages(mContext, tempdeployAnalyzerModel, retryListener);
                     } else {
+
+                        // TODO: 2019-08-01  没有权限---？？？？
                         getView().notifyDataSetChanged();
                     }
 
@@ -172,9 +174,6 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
 
         @Override
         public void onGetDeviceRealStatusErrorMsg(int errorCode, String errorMsg) {
-
-
-            //获取信号失败，显示失败原因，根据权限是否显示强制上传
             if (errorCode == -1) {
                 tempdeployAnalyzerModel.getStateErrorMsg = errorMsg;
                 getView().notifyDataSetChanged();
@@ -213,112 +212,11 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
         }
     };
 
-//    private String handleMalfunctionReason(DeviceInfo deviceInfo) {
-//        ArrayList<String> malfunctionBeanData = new ArrayList<>();
-//        Map<String, MalfunctionDataBean> malfunctionData = deviceInfo.getMalfunctionData();
-//        //TODO 添加故障字段数组
-//        if (malfunctionData != null) {
-//            LinkedHashSet<String> linkedHashSet = new LinkedHashSet<>();
-//            Set<Map.Entry<String, MalfunctionDataBean>> entrySet = malfunctionData.entrySet();
-//            for (Map.Entry<String, MalfunctionDataBean> entry : entrySet) {
-//                MalfunctionDataBean entryValue = entry.getValue();
-//                if (entryValue != null) {
-//                    Map<String, MalfunctionDataBean> details = entryValue.getDetails();
-//                    if (details != null) {
-//                        Set<String> keySet = details.keySet();
-//                        linkedHashSet.addAll(keySet);
-//                    }
-//                }
-//            }
-//            ArrayList<String> keyList = new ArrayList<>(linkedHashSet);
-//            Collections.sort(keyList);
-//            for (String key : keyList) {
-//                MalfunctionTypeStyles configMalfunctionSubTypes = PreferencesHelper.getInstance().getConfigMalfunctionSubTypes(key);
-//                if (configMalfunctionSubTypes != null) {
-//                    malfunctionBeanData.add(configMalfunctionSubTypes.getName());
-//                }
-//
-//            }
-//        }
-//        StringBuilder sb = new StringBuilder(mContext.getString(R.string.device_is_malfunction));
-//        if (malfunctionBeanData.size() > 0) {
-//            sb.append(mContext.getString(R.string.reason)).append("：");
-//            for (int i = 0; i < malfunctionBeanData.size(); i++) {
-//                if (i == malfunctionBeanData.size() - 1) {
-//                    sb.append(malfunctionBeanData.get(i)).append("，");
-//                } else {
-//                    sb.append(malfunctionBeanData.get(i)).append("、");
-//                }
-//            }
-//        }
-//        return sb.toString();
-//    }
-
-//    private String handleAlarmReason(DeviceInfo deviceInfo) {
-//        StringBuilder sb = new StringBuilder(mContext.getString(R.string.device_is_alarm));
-//        DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deviceInfo.getDeviceType());
-//        if (configDeviceType == null) {
-//            return sb.toString();
-//        }
-//        Map<String, SensorStruct> sensoroDetails = deviceInfo.getSensoroDetails();
-//        if (sensoroDetails != null && sensoroDetails.size() > 0) {
-//            ArrayList<String> sensoroTypes = new ArrayList<>(sensoroDetails.keySet());
-//            Collections.sort(sensoroTypes);
-//            sb.append(mContext.getString(R.string.reason)).append("：");
-//            for (String sensoroType : sensoroTypes) {
-//                MonitoringPointRcContentAdapterModel model = MonitorPointModelsFactory.createMonitoringPointRcContentAdapterModel(mContext, deviceInfo, sensoroDetails, sensoroType);
-//                if (model != null && model.hasAlarmStatus()) {
-//                    SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensoroType);
-//                    if (sensorTypeStyles != null && sensorTypeStyles.isBool()) {
-//                        sb.append(model.content);
-//                    } else {
-//                        sb.append(model.name).append(" ").append(model.content);
-//                    }
-//                    if (!TextUtils.isEmpty(model.unit)) {
-//                        sb.append(model.unit);
-//                    }
-//                    sb.append("、");
-//                }
-//            }
-//            String s = sb.toString();
-//            if (s.endsWith("、")) {
-//                s = s.substring(0, s.lastIndexOf("、"));
-//            }
-//            s += "，";
-//            return s;
-//        } else {
-//            return sb.toString();
-//        }
-//    }
-
-
-    public String getRepairInstructionUrl() {
-        String mergeType = WidgetUtil.handleMergeType(tempdeployAnalyzerModel.deviceType);
-        if (TextUtils.isEmpty(mergeType)) {
-            return null;
-        }
-        MergeTypeStyles configMergeType = PreferencesHelper.getInstance().getConfigMergeType(mergeType);
-        if (configMergeType == null) {
-            return null;
-        }
-        return configMergeType.getFixSpecificationUrl();
-    }
-
-    /**
-     * 跳转配置说明界面
-     *
-     * @param repairInstructionUrl
-     */
-    public void doInstruction(String repairInstructionUrl) {
-        Intent intent = new Intent(mContext, DeployRepairInstructionActivity.class);
-        intent.putExtra(Constants.EXTRA_DEPLOY_CHECK_REPAIR_INSTRUCTION_URL, repairInstructionUrl);
-        getView().startAC(intent);
-    }
-
     @Override
 
     public void onDestroy() {
 
+        deviceInfos.clear();
 
     }
 }

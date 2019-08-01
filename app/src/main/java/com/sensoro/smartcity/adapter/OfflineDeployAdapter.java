@@ -132,6 +132,7 @@ public class OfflineDeployAdapter extends RecyclerView.Adapter<OfflineDeployAdap
             holder.progressBar.setVisibility(View.INVISIBLE);
         }
 
+        //  获取信号失败，显示失败原因，根据权限是否显示强制上传
         if (PreferencesHelper.getInstance().getUserData().hasForceUpload) {
             if (deviceInfo.realStatus == Constants.SENSOR_STATUS_ALARM || deviceInfo.realStatus == Constants.SENSOR_STATUS_MALFUNCTION) {
                 holder.tvForceLoad.setVisibility(View.VISIBLE);
