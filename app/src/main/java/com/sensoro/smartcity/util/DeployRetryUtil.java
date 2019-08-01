@@ -46,7 +46,6 @@ public class DeployRetryUtil {
 
     }
 
-    // TODO: 2019-08-01 失败就加入，还是点弹窗按钮加入 
 
     public void addTask(DeployAnalyzerModel task) {
 
