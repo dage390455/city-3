@@ -105,21 +105,11 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
         @Override
         public void onCompleted(DeployResultModel deployResultModel) {
             if (isAttachedView()) {
-                deviceInfos.remove(tempdeployAnalyzerModel);
-//                deployRetryUtil.removeTask(model);
 
-
-                getView().updateAdapter(deviceInfos);
                 if (isbatch) {
                     if (deviceInfos.size() > 0) {
-
                         //下一个
                         doNext();
-                    } else {
-                        getView().setUploadClickable(true);
-                        getView().dismissProgressDialog();
-                        getView().toastLong("部署成功");
-
                     }
                 } else {
                     getView().dismissProgressDialog();
@@ -128,6 +118,10 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
 
 
                 }
+
+                deviceInfos.remove(tempdeployAnalyzerModel);
+//                deployRetryUtil.removeTask(model);
+                getView().updateAdapter(deviceInfos);
             }
 
         }
@@ -243,11 +237,15 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
 
         if (null != deviceInfos) {
             int indexOf = deviceInfos.indexOf(tempdeployAnalyzerModel);
-            if (deviceInfos.size() > indexOf + 1) {
+            if (indexOf >= 0 && deviceInfos.size() > indexOf + 1) {
                 DeployAnalyzerModel nextModel = deviceInfos.get(indexOf + 1);
-                if (null != nextModel) {
-                    uploadTask(nextModel, isbatch);
-                }
+                uploadTask(nextModel, isbatch);
+            } else {
+                getView().setUploadClickable(true);
+                getView().dismissProgressDialog();
+                getView().setCurrentTaskIndex(-1);
+                getView().toastLong("部署成功");
+
             }
 
 
