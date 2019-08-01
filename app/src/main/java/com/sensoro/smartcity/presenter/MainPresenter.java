@@ -86,6 +86,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private final MainPresenter.TaskRunnable mSocketTask = new MainPresenter.TaskRunnable();
     private final NetWorkTaskRunnable mNetWorkTaskRunnable = new NetWorkTaskRunnable();
     private final FreshAlarmCountTask mFreshAlarmCountTaskRunnable = new FreshAlarmCountTask();
+    private static final long SOCKET_CHECK_TIME = 10 * 1000;
     //
     private FireSecurityWarnFragment warnFragment;
     private HomeFragment homeFragment;
@@ -128,11 +129,9 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                                     if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
                                         //当前WiFi连接可用
                                         netCanUseData.data = ConnectivityManager.TYPE_WIFI;
-                                        reconnect();
                                     } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
                                         //当前移动网络连接可用
                                         netCanUseData.data = ConnectivityManager.TYPE_MOBILE;
-                                        reconnect();
                                     }
                                 } else {
                                     netCanUseData.data = -1;
@@ -521,6 +520,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
 
         @Override
         public void run() {
+            try {
+                com.sensoro.common.utils.LogUtils.loge("切换登录---->>> mSocket  状态检查");
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             if (mSocket != null && !mSocket.connected()) {
                 reconnect();
                 try {
@@ -529,7 +533,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                     throwable.printStackTrace();
                 }
             }
-            mHandler.postDelayed(mSocketTask, 10 * 1000);
+            mHandler.postDelayed(mSocketTask, SOCKET_CHECK_TIME);
         }
     }
 
@@ -588,7 +592,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
         } catch (URISyntaxException e) {
             e.printStackTrace();
         } finally {
-            mHandler.postDelayed(mSocketTask, 3000);
+            mHandler.postDelayed(mSocketTask, SOCKET_CHECK_TIME);
         }
 
     }
@@ -651,14 +655,15 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     private void reconnect() {
         mHandler.removeCallbacks(mSocketTask);
         if (mSocket != null) {
-            mSocket = mSocket.disconnect();
             mSocket.off();
+            mSocket = mSocket.disconnect();
             mSocket = null;
         }
         //考虑延时
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                mHandler.removeCallbacks(mSocketTask);
                 String sessionId = RetrofitServiceHelper.getInstance().getSessionId();
                 IO.Options options = new IO.Options();
                 //
@@ -667,6 +672,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                 options.path = "/city";
                 options.transports = transports;
                 try {
+                    try {
+                        com.sensoro.common.utils.LogUtils.loge("切换登录---->>> mSocket  重连");
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                     mSocket = IO.socket(RetrofitServiceHelper.getInstance().BASE_URL + "app", options);
                     mSocket.on(Constants.SOCKET_EVENT_PERMISSION_CHANGE, mPermissionListener);
                     if (hasDeviceBriefControl()) {
@@ -684,12 +694,12 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 } finally {
-                    mHandler.postDelayed(mSocketTask, 3000);
+                    mHandler.postDelayed(mSocketTask, SOCKET_CHECK_TIME);
                 }
 
 
-            }
-        }, 2000);
+            }//多久重连
+        }, 8 * 1000);
 
     }
 
@@ -704,8 +714,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             EventBus.getDefault().unregister(this);
         }
         if (mSocket != null) {
-            mSocket = mSocket.disconnect();
             mSocket.off();
+            mSocket = mSocket.disconnect();
             mSocket = null;
         }
         mFragmentList.clear();

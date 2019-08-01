@@ -182,6 +182,8 @@ public class NameplateDetailActivityPresenter extends BasePresenter<INameplateDe
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
+                        plateInfos.clear();
+                        getView().updateBindDeviceAdapter(plateInfos);
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
                         getView().onPullRefreshComplete();

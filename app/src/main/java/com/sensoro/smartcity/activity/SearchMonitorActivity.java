@@ -1,16 +1,15 @@
 package com.sensoro.smartcity.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -24,26 +23,30 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
-import com.sensoro.smartcity.adapter.RelationAdapter;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseActivity;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.constant.Constants;
-import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
-import com.sensoro.smartcity.presenter.SearchMonitorActivityPresenter;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
-import com.sensoro.common.callback.RecycleViewItemClickListener;
-import com.sensoro.common.manger.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
-import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
+import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
+import com.sensoro.smartcity.presenter.SearchMonitorActivityPresenter;
+import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import java.util.Collections;
@@ -75,32 +78,20 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     ImageView mClearBtn;
     @BindView(R.id.search_device_history_rv)
     RecyclerView mSearchHistoryRv;
-    @BindView(R.id.search_device_relation_rv)
-    RecyclerView mRelationRecyclerView;
-    @BindView(R.id.search_device_relation_layout)
-    LinearLayout mRelationLayout;
     @BindView(R.id.index_return_top)
     ImageView mReturnTopImageView;
     @BindView(R.id.ac_search_device_refreshLayout)
-    RefreshLayout acSearchDeviceRefreshLayout;
+    SmartRefreshLayout acSearchDeviceRefreshLayout;
     @BindView(R.id.ac_search_device_rc_content)
     RecyclerView acSearchDeviceRcContent;
-    @BindView(R.id.index_layout_list)
-    RelativeLayout indexLayoutList;
-    @BindView(R.id.no_content)
-    ImageView imvNoContent;
-    @BindView(R.id.no_content_tip)
-    TextView tvNoContentTip;
-    @BindView(R.id.ic_no_content)
-    LinearLayout icNoContent;
+    View icNoContent;
     @BindView(R.id.search_device_ll_root)
-    LinearLayout searchDeviceLlRoot;
+    RelativeLayout searchDeviceLlRoot;
 
 
     private Animation returnTopAnimation;
     private ProgressUtils mProgressUtils;
     private SearchHistoryAdapter mSearchHistoryAdapter;
-    private RelationAdapter mRelationAdapter;
 
     private boolean isShowDialog = true;
     private MainHomeFragRcContentAdapter mSearchRcContentAdapter;
@@ -117,6 +108,8 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     }
 
     private void initView() {
+        icNoContent = LayoutInflater.from(this).inflate(R.layout.no_content, null);
+
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mClearKeywordIv.setOnClickListener(this);
         mKeywordEt.setOnEditorActionListener(this);
@@ -139,11 +132,10 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
         });
 
         initSearchHistory();
-        initRelation();
         initIndex();
         initClearHistoryDialog();
 
-        tvNoContentTip.setText(R.string.cant_find_related_content);
+//        tvNoContentTip.setText(R.string.cant_find_related_content);
     }
 
     private void initClearHistoryDialog() {
@@ -210,7 +202,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
                 }
             }
         });
-
         acSearchDeviceRefreshLayout.setEnableAutoLoadMore(true);//开启自动加载功能（非必须）
         acSearchDeviceRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -246,9 +237,25 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     }
 
     @Override
+    public void updateRelationData(List<String> strList) {
+
+    }
+
+    @SuppressLint("RestrictedApi")
+    @Override
     public void setNoContentVisible(boolean isVisible) {
-        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        indexLayoutList.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+//        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+//        indexLayoutList.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+
+
+        if (isVisible) {
+            acSearchDeviceRefreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
+            acSearchDeviceRefreshLayout.setRefreshContent(icNoContent);
+        } else {
+            acSearchDeviceRefreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+            acSearchDeviceRefreshLayout.setRefreshContent(acSearchDeviceRcContent);
+        }
+
     }
 
     @Override
@@ -272,14 +279,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     }
 
     @Override
-    public void updateRelationData(List<String> strList) {
-        if (strList != null) {
-            mRelationAdapter.setData(strList);
-        }
-        mRelationAdapter.notifyDataSetChanged();
-    }
-
-    @Override
     public void updateSearchHistoryData(List<String> strHistory) {
         setHistoryClearBtnVisible(strHistory != null && strHistory.size() > 0);
         mSearchHistoryAdapter.updateSearchHistoryAdapter(strHistory);
@@ -300,21 +299,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     }
 
 
-    private void initRelation() {
-        mRelationAdapter = new RelationAdapter(mActivity, new RecycleViewItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                mClearKeywordIv.setVisibility(View.VISIBLE);
-                mKeywordEt.clearFocus();
-                dismissInputMethodManager(view);
-                mPresenter.clickRelationItem(position);
-            }
-        });
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRelationRecyclerView.setLayoutManager(linearLayoutManager);
-        mRelationRecyclerView.setAdapter(mRelationAdapter);
-    }
 
     private void initSearchHistory() {
         SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity);
@@ -340,25 +324,25 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
 
     @Override
     public void showListLayout() {
-        Animation inAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.layout_in_anim);
-        inAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                indexLayoutList.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        indexLayoutList.setAnimation(inAnimation);
-        indexLayoutList.startAnimation(inAnimation);
+//        Animation inAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.layout_in_anim);
+//        inAnimation.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//                indexLayoutList.setVisibility(View.VISIBLE);
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//
+//            }
+//        });
+//        indexLayoutList.setAnimation(inAnimation);
+//        indexLayoutList.startAnimation(inAnimation);
     }
 
 
@@ -377,12 +361,13 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
 
     @Override
     public void setRelationLayoutVisible(boolean isVisible) {
-        mRelationLayout.setVisibility(isVisible ? VISIBLE : View.GONE);
+
     }
+
 
     @Override
     public void setIndexListLayoutVisible(boolean isVisible) {
-        indexLayoutList.setVisibility(isVisible ? VISIBLE : View.GONE);
+//        indexLayoutList.setVisibility(isVisible ? VISIBLE : View.GONE);
     }
 
 
@@ -566,7 +551,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        AlarmPopUtils.handlePhotoIntent(requestCode,resultCode,data);
+        AlarmPopUtils.handlePhotoIntent(requestCode, resultCode, data);
     }
 
     @Override

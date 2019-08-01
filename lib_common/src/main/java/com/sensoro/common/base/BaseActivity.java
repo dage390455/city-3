@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.baidu.mobstat.StatService;
 import com.gyf.immersionbar.ImmersionBar;
+import com.sensoro.common.BuildConfig;
 import com.sensoro.common.R;
 import com.sensoro.common.manger.ActivityTaskManager;
 import com.sensoro.common.utils.LogUtils;
@@ -131,7 +132,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
                     .init();
         }
         onCreateInit(savedInstanceState);
-        StatService.setDebugOn(true);
+        StatService.setDebugOn(BuildConfig.DEBUG);
         ARouter.getInstance().inject(this);
         ActivityTaskManager.getInstance().pushActivity(this);
     }

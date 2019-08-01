@@ -52,6 +52,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -195,7 +196,12 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 //
                 totalMonitorPoint = alarmCount + normal + lostCount + inactiveCount + malfunctionCount;
                 page = 1;
-                return getAllDeviceInfoListRspObservable(true);
+                try {
+                    com.sensoro.common.utils.LogUtils.loge("切换登录---->>>" + totalMonitorPoint);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+                return getAllDeviceInfoListRspObservable();
             }
 
         }).retryWhen(new RetryWithDelay(2, 100)).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
@@ -255,16 +261,13 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     @NonNull
-    private Observable<ResponseResult<List<DeviceInfo>>> getAllDeviceInfoListRspObservable(final boolean needClear) {
+    private Observable<ResponseResult<List<DeviceInfo>>> getAllDeviceInfoListRspObservable() {
         return RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, 0, null).subscribeOn(Schedulers.io()).flatMap(new Function<ResponseResult<List<DeviceInfo>>, ObservableSource<ResponseResult<List<DeviceInfo>>>>() {
             @Override
             public ObservableSource<ResponseResult<List<DeviceInfo>>> apply(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
                 List<DeviceInfo> data = deviceInfoListRsp.getData();
-                if (needClear) {
-                    alarmModel.mDeviceList.clear();
-                }
+                alarmModel.mDeviceList.clear();
                 if (data != null && data.size() > 0) {
-                    alarmModel.mDeviceList.clear();
                     alarmModel.mDeviceList.addAll(data);
                 }
                 return RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, 4, null);
@@ -274,11 +277,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             @Override
             public ObservableSource<ResponseResult<List<DeviceInfo>>> apply(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
                 List<DeviceInfo> data = deviceInfoListRsp.getData();
-                if (needClear) {
-                    malfunctionModel.mDeviceList.clear();
-                }
+                malfunctionModel.mDeviceList.clear();
                 if (data != null && data.size() > 0) {
-                    malfunctionModel.mDeviceList.clear();
                     malfunctionModel.mDeviceList.addAll(data);
                 }
                 return RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, 1, null);
@@ -288,11 +288,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             @Override
             public ObservableSource<ResponseResult<List<DeviceInfo>>> apply(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
                 List<DeviceInfo> data = deviceInfoListRsp.getData();
-                if (needClear) {
-                    normalModel.mDeviceList.clear();
-                }
+                normalModel.mDeviceList.clear();
                 if (data != null && data.size() > 0) {
-                    normalModel.mDeviceList.clear();
                     normalModel.mDeviceList.addAll(data);
                 }
                 return RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, 2, null);
@@ -302,11 +299,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             @Override
             public ObservableSource<ResponseResult<List<DeviceInfo>>> apply(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
                 List<DeviceInfo> data = deviceInfoListRsp.getData();
-                if (needClear) {
-                    lostModel.mDeviceList.clear();
-                }
+                lostModel.mDeviceList.clear();
                 if (data != null && data.size() > 0) {
-                    lostModel.mDeviceList.clear();
                     lostModel.mDeviceList.addAll(data);
                 }
                 return RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, 3, null);
@@ -316,11 +310,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             @Override
             public void accept(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
                 List<DeviceInfo> data = deviceInfoListRsp.getData();
-                if (needClear) {
-                    inactiveModel.mDeviceList.clear();
-                }
+                inactiveModel.mDeviceList.clear();
                 if (data != null && data.size() > 0) {
-                    inactiveModel.mDeviceList.clear();
                     inactiveModel.mDeviceList.addAll(data);
                 }
             }
@@ -527,16 +518,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             case Constants.EVENT_DATA_DEPLOY_RESULT_FINISH:
                 break;
             case Constants.EVENT_DATA_SEARCH_MERCHANT:
-                requestInitData(true, true);
-                mContext.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isAttachedView()) {
-                            requestInitData(true, true);
-                        }
-
-                    }
-                });
+                if (isAttachedView()) {
+                    requestInitData(true, true);
+                }
                 break;
             case Constants.EVENT_DATA_LOCK_SCREEN_ON:
                 //TODO 暂时不加
@@ -607,9 +591,11 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                             .io()).doOnNext(new Consumer<ResponseResult<List<DeviceInfo>>>() {
                         @Override
                         public void accept(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
-                            List<DeviceInfo> data = deviceInfoListRsp.getData();
                             homeTopModel.mDeviceList.clear();
-                            homeTopModel.mDeviceList.addAll(data);
+                            List<DeviceInfo> data = deviceInfoListRsp.getData();
+                            if (data != null && data.size() > 0) {
+                                homeTopModel.mDeviceList.addAll(data);
+                            }
                         }
 
                     }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
@@ -621,6 +607,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
                         @Override
                         public void onErrorMsg(int errorCode, String errorMsg) {
+                            freshDataList(homeTopModel);
                             getView().toastShort(errorMsg);
                             getView().recycleViewRefreshComplete();
                             getView().dismissProgressDialog();
@@ -635,7 +622,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                         public void accept(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
                             try {
                                 List<DeviceInfo> data = deviceInfoListRsp.getData();
-                                if (data.size() == 0) {
+                                if (data == null || data.size() == 0) {
                                     page--;
                                 } else {
                                     homeTopModel.mDeviceList.addAll(data);
@@ -650,7 +637,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                         public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
                             try {
                                 List<DeviceInfo> data = deviceInfoListRsp.getData();
-                                if (data.size() == 0) {
+                                if (data == null || data.size() == 0) {
                                     getView().toastShort(mContext.getString(R.string.no_more_data));
                                 }
                                 freshDataList(homeTopModel);
@@ -683,74 +670,147 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         int status = newDeviceInfo.getStatus();
         String sn = newDeviceInfo.getSn();
         synchronized (alarmModel.mDeviceList) {
-            for (int i = 0; i < alarmModel.mDeviceList.size(); i++) {
-                DeviceInfo currentDeviceInfo = alarmModel.mDeviceList.get(i);
+            Iterator<DeviceInfo> iterator = alarmModel.mDeviceList.iterator();
+            while (iterator.hasNext()) {
+                DeviceInfo currentDeviceInfo = iterator.next();
                 if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
                     if (status == Constants.SENSOR_STATUS_ALARM) {
                         currentDeviceInfo.cloneSocketData(newDeviceInfo);
                     } else {
-                        alarmModel.mDeviceList.remove(i);
+                        iterator.remove();
                     }
                     homeTopModelCacheFresh[0] = true;
                     return;
                 }
             }
+//            for (int i = 0; i < alarmModel.mDeviceList.size(); i++) {
+//                DeviceInfo currentDeviceInfo = alarmModel.mDeviceList.get(i);
+//                if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
+//                    if (status == Constants.SENSOR_STATUS_ALARM) {
+//                        currentDeviceInfo.cloneSocketData(newDeviceInfo);
+//                    } else {
+//                        alarmModel.mDeviceList.remove(i);
+//                    }
+//                    homeTopModelCacheFresh[0] = true;
+//                    return;
+//                }
+//            }
         }
         synchronized (malfunctionModel.mDeviceList) {
-            for (int i = 0; i < malfunctionModel.mDeviceList.size(); i++) {
-                DeviceInfo currentDeviceInfo = malfunctionModel.mDeviceList.get(i);
+            //
+            Iterator<DeviceInfo> iterator = malfunctionModel.mDeviceList.iterator();
+            while (iterator.hasNext()) {
+                DeviceInfo currentDeviceInfo = iterator.next();
                 if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
                     if (status == Constants.SENSOR_STATUS_MALFUNCTION) {
                         currentDeviceInfo.cloneSocketData(newDeviceInfo);
                     } else {
-                        malfunctionModel.mDeviceList.remove(i);
+                        iterator.remove();
                     }
                     homeTopModelCacheFresh[4] = true;
                     return;
                 }
             }
+            //
+//            for (int i = 0; i < malfunctionModel.mDeviceList.size(); i++) {
+//                DeviceInfo currentDeviceInfo = malfunctionModel.mDeviceList.get(i);
+//                if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
+//                    if (status == Constants.SENSOR_STATUS_MALFUNCTION) {
+//                        currentDeviceInfo.cloneSocketData(newDeviceInfo);
+//                    } else {
+//                        malfunctionModel.mDeviceList.remove(i);
+//                    }
+//                    homeTopModelCacheFresh[4] = true;
+//                    return;
+//                }
+//            }
         }
         synchronized (normalModel.mDeviceList) {
-            for (int i = 0; i < normalModel.mDeviceList.size(); i++) {
-                DeviceInfo currentDeviceInfo = normalModel.mDeviceList.get(i);
+            //
+            Iterator<DeviceInfo> iterator = normalModel.mDeviceList.iterator();
+            while (iterator.hasNext()) {
+                DeviceInfo currentDeviceInfo = iterator.next();
                 if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
                     if (status == Constants.SENSOR_STATUS_NORMAL) {
                         currentDeviceInfo.cloneSocketData(newDeviceInfo);
                     } else {
-                        normalModel.mDeviceList.remove(i);
+                        iterator.remove();
                     }
                     homeTopModelCacheFresh[1] = true;
                     return;
                 }
             }
+            //
+//            for (int i = 0; i < normalModel.mDeviceList.size(); i++) {
+//                DeviceInfo currentDeviceInfo = normalModel.mDeviceList.get(i);
+//                if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
+//                    if (status == Constants.SENSOR_STATUS_NORMAL) {
+//                        currentDeviceInfo.cloneSocketData(newDeviceInfo);
+//                    } else {
+//                        normalModel.mDeviceList.remove(i);
+//                    }
+//                    homeTopModelCacheFresh[1] = true;
+//                    return;
+//                }
+//            }
         }
         synchronized (lostModel.mDeviceList) {
-            for (int i = 0; i < lostModel.mDeviceList.size(); i++) {
-                DeviceInfo currentDeviceInfo = lostModel.mDeviceList.get(i);
+            //
+            Iterator<DeviceInfo> iterator = lostModel.mDeviceList.iterator();
+            while (iterator.hasNext()) {
+                DeviceInfo currentDeviceInfo = iterator.next();
                 if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
                     if (status == Constants.SENSOR_STATUS_LOST) {
                         currentDeviceInfo.cloneSocketData(newDeviceInfo);
                     } else {
-                        lostModel.mDeviceList.remove(i);
+                        iterator.remove();
                     }
                     homeTopModelCacheFresh[2] = true;
                     return;
                 }
             }
+            //
+//            for (int i = 0; i < lostModel.mDeviceList.size(); i++) {
+//                DeviceInfo currentDeviceInfo = lostModel.mDeviceList.get(i);
+//                if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
+//                    if (status == Constants.SENSOR_STATUS_LOST) {
+//                        currentDeviceInfo.cloneSocketData(newDeviceInfo);
+//                    } else {
+//                        lostModel.mDeviceList.remove(i);
+//                    }
+//                    homeTopModelCacheFresh[2] = true;
+//                    return;
+//                }
+//            }
         }
         synchronized (inactiveModel.mDeviceList) {
-            for (int i = 0; i < inactiveModel.mDeviceList.size(); i++) {
-                DeviceInfo currentDeviceInfo = inactiveModel.mDeviceList.get(i);
+            //
+            Iterator<DeviceInfo> iterator = inactiveModel.mDeviceList.iterator();
+            while (iterator.hasNext()) {
+                DeviceInfo currentDeviceInfo = iterator.next();
                 if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
                     if (status == Constants.SENSOR_STATUS_INACTIVE) {
                         currentDeviceInfo.cloneSocketData(newDeviceInfo);
                     } else {
-                        inactiveModel.mDeviceList.remove(i);
+                        iterator.remove();
                     }
                     homeTopModelCacheFresh[3] = true;
                     return;
                 }
             }
+            //
+//            for (int i = 0; i < inactiveModel.mDeviceList.size(); i++) {
+//                DeviceInfo currentDeviceInfo = inactiveModel.mDeviceList.get(i);
+//                if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
+//                    if (status == Constants.SENSOR_STATUS_INACTIVE) {
+//                        currentDeviceInfo.cloneSocketData(newDeviceInfo);
+//                    } else {
+//                        inactiveModel.mDeviceList.remove(i);
+//                    }
+//                    homeTopModelCacheFresh[3] = true;
+//                    return;
+//                }
+//            }
         }
     }
 
@@ -841,7 +901,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         }
         page = 1;
         getView().showProgressDialog();
-        getAllDeviceInfoListRspObservable(true).retryWhen(new RetryWithDelay(2, 100)).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
+        getAllDeviceInfoListRspObservable().retryWhen(new RetryWithDelay(2, 100)).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
             @Override
             public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
 
@@ -896,11 +956,12 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             @Override
             public void onCompleted(ResponseResult<List<DeviceAlarmLogInfo>> deviceAlarmLogRsp) {
 //                getView().dismissProgressDialog();
-                if (deviceAlarmLogRsp.getData().size() == 0) {
+                List<DeviceAlarmLogInfo> data = deviceAlarmLogRsp.getData();
+                if (data == null || data.size() == 0) {
                     getView().toastShort(mContext.getString(R.string.no_alert_log_information_was_obtained));
                     getView().dismissProgressDialog();
                 } else {
-                    DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogRsp.getData().get(0);
+                    DeviceAlarmLogInfo deviceAlarmLogInfo = data.get(0);
                     enterAlarmLogPop(deviceAlarmLogInfo);
                 }
             }

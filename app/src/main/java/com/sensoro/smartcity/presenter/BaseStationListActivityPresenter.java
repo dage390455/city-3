@@ -143,6 +143,8 @@ public class BaseStationListActivityPresenter extends BasePresenter<ICameraListA
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
+                        deviceCameraInfos.clear();
+                        getView().updateBaseStationAdapter(deviceCameraInfos);
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
                         getView().onPullRefreshComplete();
