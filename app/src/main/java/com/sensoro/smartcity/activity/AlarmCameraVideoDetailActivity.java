@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.gyf.immersionbar.ImmersionBar;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.base.BaseActivity;
@@ -429,11 +430,17 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
 
     @SuppressLint("RestrictedApi")
     private void setNoContentVisible(boolean isVisible) {
+        RefreshHeader refreshHeader = refreshLayoutInclude.getRefreshHeader();
+        if (refreshHeader != null) {
+            if (isVisible) {
+                refreshHeader.setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
+            } else {
+                refreshHeader.setPrimaryColors(getResources().getColor(R.color.white));
+            }
+        }
         if (isVisible) {
-            refreshLayoutInclude.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
             refreshLayoutInclude.setRefreshContent(icNoContent);
         } else {
-            refreshLayoutInclude.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
             refreshLayoutInclude.setRefreshContent(rvListInclude);
         }
     }
