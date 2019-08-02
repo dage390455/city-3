@@ -179,6 +179,7 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
                 InspectionTaskExecutionModel.BaseInfoBean baseInfo = data.getBaseInfo();
                 if (baseInfo != null) {
                     int status = baseInfo.getStatus();
+                    mTaskInfo.setStatus(status);
                     freshTvState(status);
                 }
             }
