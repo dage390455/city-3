@@ -246,4 +246,5 @@ public abstract class BaseApplication extends MultiDexApplication implements Rep
     protected abstract void onMyApplicationResumed();
 
     protected abstract void onMyApplicationPaused();
+
 }

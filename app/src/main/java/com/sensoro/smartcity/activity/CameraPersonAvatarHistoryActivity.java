@@ -3,6 +3,7 @@ package com.sensoro.smartcity.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -263,7 +264,10 @@ public class CameraPersonAvatarHistoryActivity extends BaseActivity<ICameraPerso
 
     @Override
     public void loadTitleAvatar(String faceUrl) {
-        Glide.with(mActivity).load(Constants.CAMERA_BASE_URL + faceUrl)
+        if (!TextUtils.isEmpty(faceUrl) && !(faceUrl.startsWith("https://") || faceUrl.startsWith("http://"))) {
+            faceUrl = Constants.CAMERA_BASE_URL + faceUrl;
+        }
+        Glide.with(mActivity).load(faceUrl)
                 .apply(new RequestOptions().transform(new GlideCircleTransform(mActivity))
                         .placeholder(R.drawable.person_locus_placeholder)
                         .error(R.drawable.person_locus_placeholder)

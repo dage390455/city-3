@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,8 +59,12 @@ public class PersonAvatarHistoryAdapter extends RecyclerView.Adapter<PersonAvata
         holder.llRootItemAdapterPersonAvatarHistory.setTag(position);
 
         DeviceCameraPersonFaceBean dataBean = mList.get(position);
+        String url = dataBean.getFaceUrl();
+        if (!TextUtils.isEmpty(url) && !(url.startsWith("https://") || url.startsWith("http://"))) {
+            url = Constants.CAMERA_BASE_URL + dataBean.getFaceUrl();
+        }
         Glide.with(mContext)                             //配置上下文
-                .load(Constants.CAMERA_BASE_URL + dataBean.getFaceUrl())
+                .load(url)
                 .apply(new RequestOptions().transform(new GlideCircleTransform(mContext)).error(R.drawable.person_locus_placeholder).placeholder(R.drawable.person_locus_placeholder).diskCacheStrategy(DiskCacheStrategy.ALL))
 
 //                    .thumbnail(0.01f)//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
