@@ -194,9 +194,14 @@ public class OfflineDeployPresenter extends BasePresenter<IOfflineDeployActivity
                     getView().toastShort(errorMsg);
                 }
                 getView().setCurrentTaskIndex(-1);
-                getView().dismissProgressDialog();
                 getView().setUploadClickable(true);
+                if (isbatch) {
+                    doNext(false);
+                    getView().dismissProgressDialog();
+
+                }
             }
+
 
         }
 
