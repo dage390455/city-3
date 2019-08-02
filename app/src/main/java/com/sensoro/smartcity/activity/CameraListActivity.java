@@ -2,9 +2,7 @@ package com.sensoro.smartcity.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -27,16 +25,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseActivity;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.model.CameraFilterModel;
 import com.sensoro.common.server.bean.BaseStationInfo;
 import com.sensoro.common.server.bean.DeviceCameraInfo;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.CustomDivider;
 import com.sensoro.common.widgets.ProgressUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -44,10 +45,8 @@ import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeviceCameraContentAdapter;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICameraListActivityView;
 import com.sensoro.smartcity.presenter.CameraListActivityPresenter;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.smartcity.widget.popup.CameraListFilterPopupWindowTest;
 
 import java.util.List;
@@ -403,11 +402,18 @@ public class CameraListActivity extends BaseActivity<ICameraListActivityView, Ca
     @SuppressLint("RestrictedApi")
     @Override
     public void setNoContentVisible(boolean isVisible) {
+
+        RefreshHeader refreshHeader = refreshLayout.getRefreshHeader();
+        if (refreshHeader != null) {
+            if (isVisible) {
+                refreshHeader.setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
+            } else {
+                refreshHeader.setPrimaryColors(getResources().getColor(R.color.white));
+            }
+        }
         if (isVisible) {
-            refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
             refreshLayout.setRefreshContent(icNoContent);
         } else {
-            refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
             refreshLayout.setRefreshContent(acHistoryLogRcContent);
         }
     }

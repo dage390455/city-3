@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -44,7 +45,6 @@ import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
-import com.sensoro.smartcity.adapter.RelationAdapter;
 import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
 import com.sensoro.smartcity.presenter.SearchMonitorActivityPresenter;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
@@ -249,11 +249,17 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
 //        indexLayoutList.setVisibility(isVisible ? View.GONE : View.VISIBLE);
 
 
+        RefreshHeader refreshHeader = acSearchDeviceRefreshLayout.getRefreshHeader();
+        if (refreshHeader != null) {
+            if (isVisible) {
+                refreshHeader.setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
+            } else {
+                refreshHeader.setPrimaryColors(getResources().getColor(R.color.white));
+            }
+        }
         if (isVisible) {
-            acSearchDeviceRefreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.c_f4f4f4));
             acSearchDeviceRefreshLayout.setRefreshContent(icNoContent);
         } else {
-            acSearchDeviceRefreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
             acSearchDeviceRefreshLayout.setRefreshContent(acSearchDeviceRcContent);
         }
 

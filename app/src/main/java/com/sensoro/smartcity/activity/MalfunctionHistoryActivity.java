@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -225,8 +226,10 @@ public class MalfunctionHistoryActivity extends BaseActivity<IMalfunctionHistory
     @SuppressLint("RestrictedApi")
     @Override
     public void setNoContentVisible(boolean isVisible) {
-
-        refreshLayout.getRefreshHeader().setPrimaryColors(getResources().getColor(R.color.white));
+        RefreshHeader refreshHeader = refreshLayout.getRefreshHeader();
+        if (refreshHeader != null) {
+            refreshHeader.setPrimaryColors(getResources().getColor(R.color.white));
+        }
         if (isVisible) {
             refreshLayout.setRefreshContent(icNoContent);
         } else {
