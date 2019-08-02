@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.baidu.mobstat.StatService;
-import com.gyf.immersionbar.ImmersionBar;
 import com.sensoro.common.iwidget.IOnFragmentStart;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.common.widgets.SensoroToast;
@@ -27,7 +26,6 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
     protected View mRootView;
     protected Unbinder unbinder;
     protected BaseFragment mRootFragment;
-    private ImmersionBar immersionBar;
 
     @Nullable
     @Override
@@ -141,7 +139,7 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
             throwable.printStackTrace();
         }
 
-        if(mRootFragment != null){
+        if (mRootFragment != null) {
             initData(mRootFragment.getActivity());
         }
 

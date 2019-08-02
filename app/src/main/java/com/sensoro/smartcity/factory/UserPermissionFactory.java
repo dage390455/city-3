@@ -311,11 +311,16 @@ public class UserPermissionFactory {
         return false;
     }
 
+    /**
+     * 权限 briefList statusStatistics list 权限
+     * @param grants
+     * @return
+     */
     private static boolean getHasDeviceBriefList(GrantsInfo grants) {
         if (grants != null) {
             List<String> grantsDevice = grants.getDevice();
             if (grantsDevice != null) {
-                return grantsDevice.contains("briefList") && grantsDevice.contains("statusStatistics");
+                return grantsDevice.contains("briefList") && grantsDevice.contains("statusStatistics") && grantsDevice.contains("list");
             }
         }
         return false;

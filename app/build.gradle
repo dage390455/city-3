@@ -294,6 +294,8 @@ dependencies {
     //搜索功能
     implementation deps.amap_search
 
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     //    compile 'com.hjq:toast:5.2'

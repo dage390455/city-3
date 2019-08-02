@@ -5,16 +5,17 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.sensoro.smartcity.R;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.sensoro.common.manger.ActivityTaskManager;
 import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.view.SystemBarTintManager;
 
@@ -68,7 +69,7 @@ public class ImageBaseActivity extends AppCompatActivity {
     }
 
     public void showToast(String toastText) {
-        SensoroToast.getInstance().makeText(getApplicationContext(), toastText, Toast.LENGTH_SHORT).show();
+        SensoroToast.getInstance().makeText(toastText, Toast.LENGTH_SHORT).show();
     }
 
     @Override

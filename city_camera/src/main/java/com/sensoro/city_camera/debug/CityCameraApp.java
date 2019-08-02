@@ -18,6 +18,16 @@ public class CityCameraApp extends BaseApplication {
         login();
     }
 
+    @Override
+    protected void onMyApplicationResumed() {
+
+    }
+
+    @Override
+    protected void onMyApplicationPaused() {
+
+    }
+
     private void login() {
         PreferencesHelper.getInstance().getSessionId();
         PreferencesHelper.getInstance().getSessionToken();
@@ -30,7 +40,7 @@ public class CityCameraApp extends BaseApplication {
             public void onCompleted(ResponseResult<UserInfo> loginRsp) {
                 String sessionID = loginRsp.getData().getSessionID();
                 String token = loginRsp.getData().getToken();
-                RetrofitServiceHelper.getInstance().saveSessionId(sessionID,token);
+                RetrofitServiceHelper.getInstance().saveSessionId(sessionID, token);
                 //
 //                UserInfo userInfo = loginRsp.getData();
 //                EventLoginData loginData = UserPermissionFactory.createLoginData(userInfo, phoneId);

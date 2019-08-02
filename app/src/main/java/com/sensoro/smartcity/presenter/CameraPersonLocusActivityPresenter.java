@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -73,7 +74,9 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            getView().setSeekBarTimeVisible(false);
+            if (isAttachedView()) {
+                getView().setSeekBarTimeVisible(false);
+            }
         }
     };
 
@@ -332,10 +335,13 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
     }
 
     private void loadAvatar(final DeviceCameraPersonFaceBean dataBean, final LatLng latLng, final int tag) {
-
+        String url = dataBean.getFaceUrl();
+        if (!TextUtils.isEmpty(url) && !(url.startsWith("https://") || url.startsWith("http://"))) {
+            url = Constants.CAMERA_BASE_URL + dataBean.getFaceUrl();
+        }
         Glide.with(mActivity)
                 .asBitmap()
-                .load(Constants.CAMERA_BASE_URL + dataBean.getFaceUrl())
+                .load(url)
                 .thumbnail(0.1f)
                 .apply(new RequestOptions().transform(new GlideCircleTransform(mActivity, dp24)).error(R.drawable.deploy_pic_placeholder)           //设置错误图片
                         .placeholder(R.drawable.ic_default_cround_image)
@@ -344,7 +350,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                        if (isAttachedView()){
+                        if (isAttachedView()) {
                             imageView.setImageBitmap(resource);
                             Bitmap viewBitmap = getViewBitmap(imageView);
                             if (avatarMarkerOptions == null) {
@@ -370,6 +376,16 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
 //                            avatarMarkerOptions.position(latLng).icon(BitmapDescriptorFactory.fromBitmap(resource));
 //                    avatarMarkerOptions.icon(BitmapDescriptorFactory.fromBitmap(resource));
                                 getView().updateAvatarMarker(latLng, viewBitmap);
+                                if (isAttachedView()) {
+                                    mActivity.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (isAttachedView()) {
+                                                getView().updateAvatarMarker(latLng, viewBitmap);
+                                            }
+                                        }
+                                    });
+                                }
                             }
                             playBean = dataBean;
                         }
@@ -593,7 +609,7 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
         Glide.with(mActivity).asBitmap().load(Constants.CAMERA_BASE_URL + playBean.getSceneUrl()).into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                if (isAttachedView()){
+                if (isAttachedView()) {
                     BitmapDrawable bitmapDrawable = new BitmapDrawable(resource);
                     getView().setLastCover(bitmapDrawable);
                 }

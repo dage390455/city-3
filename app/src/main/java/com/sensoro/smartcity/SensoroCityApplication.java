@@ -54,12 +54,10 @@ import java.util.LinkedHashMap;
  * Created by sensoro on 17/7/24.
  */
 
-public class SensoroCityApplication extends BaseApplication implements Repause
-        .Listener, SensoroPushListener, OnResultListener<AccessToken>, AMapLocationListener, Runnable {
+public class SensoroCityApplication extends BaseApplication implements SensoroPushListener, OnResultListener<AccessToken>, AMapLocationListener, Runnable {
     public IWXAPI api;
     private static volatile SensoroCityApplication instance;
-    public NotificationUtils mNotificationUtils;
-    public boolean isAPPBack = true;
+    public static NotificationUtils mNotificationUtils;
     private static PushHandler pushHandler;
     private final Handler taskHandler = new Handler(Looper.getMainLooper());
     public volatile boolean hasGotToken = false;
@@ -75,9 +73,9 @@ public class SensoroCityApplication extends BaseApplication implements Repause
             public void run() {
                 if (noStateIn) {
                     if (TextUtils.isEmpty(ibeaconSettingData.switchInMessage)) {
-                        SensoroCityApplication.getInstance().mNotificationUtils.sendNotification("进入！！");
+                        mNotificationUtils.sendNotification("进入！！");
                     } else {
-                        SensoroCityApplication.getInstance().mNotificationUtils.sendNotification(ibeaconSettingData.switchInMessage);
+                        mNotificationUtils.sendNotification(ibeaconSettingData.switchInMessage);
                     }
                 }
                 noStateIn = false;
@@ -89,9 +87,9 @@ public class SensoroCityApplication extends BaseApplication implements Repause
             public void run() {
                 if (noStateOut) {
                     if (TextUtils.isEmpty(ibeaconSettingData.switchOutMessage)) {
-                        SensoroCityApplication.getInstance().mNotificationUtils.sendNotification("出去！！！");
+                        mNotificationUtils.sendNotification("出去！！！");
                     } else {
-                        SensoroCityApplication.getInstance().mNotificationUtils.sendNotification(ibeaconSettingData.switchOutMessage);
+                        mNotificationUtils.sendNotification(ibeaconSettingData.switchOutMessage);
                     }
                 }
                 noStateOut = false;
@@ -332,40 +330,29 @@ public class SensoroCityApplication extends BaseApplication implements Repause
         if (BleObserver.getInstance().isRegisterBleObserver(bleDeviceListener)) {
             BleObserver.getInstance().unregisterBleObserver(bleDeviceListener);
         }
-        Repause.unregisterListener(this);
         mLocationClient.onDestroy();
         mNearByIBeaconMap.clear();
         Beta.unInit();
     }
 
     public void init() {
-        initSensoroSDK();
-        VIDEO_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/camera/";
         if (pushHandler == null) {
             pushHandler = new PushHandler();
         }
-        taskHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Mapbox.getInstance(instance.getApplicationContext(), instance.getString(R.string.mapbox_access_token));
-            }
-        }, 1000);
-        ThreadPoolManager.getInstance().execute(this);
+        if (mNotificationUtils == null) {
+            mNotificationUtils = new NotificationUtils(this);
+        }
         if (AppUtils.isAppMainProcess(this, "com.sensoro.smartcity")) {
-            taskHandler.post(new Runnable() {
+            VIDEO_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/camera/";
+            //Mapbox必须在主线程初始化
+            taskHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    SensoroCityApplication.getInstance().ibeaconSettingData.currentUUID = "70DC44C3-E2A8-4B22-A2C6-129B41A4BDBC";
-                    IbeaconSettingData ibeaconSettingData = PreferencesHelper.getInstance().getIbeaconSettingData();
-                    if (ibeaconSettingData != null) {
-                        SensoroCityApplication.getInstance().ibeaconSettingData = ibeaconSettingData;
-                    }
-                    if (!BleObserver.getInstance().isRegisterBleObserver(bleDeviceListener)) {
-                        BleObserver.getInstance().registerBleObserver(bleDeviceListener);
-                    }
+                    Mapbox.getInstance(instance.getApplicationContext(), instance.getString(R.string.mapbox_access_token));
                 }
-            });
-            taskHandler.postDelayed(iBeaconTask, 500);
+            }, 1000);
+            initSensoroSDK();
+            ThreadPoolManager.getInstance().execute(this);
         }
 
     }
@@ -494,16 +481,14 @@ public class SensoroCityApplication extends BaseApplication implements Repause
     }
 
     @Override
-    public void onApplicationResumed() {
-        isAPPBack = false;
+    protected void onMyApplicationResumed() {
         if (mLocationClient != null) {
             mLocationClient.startLocation();
         }
     }
 
     @Override
-    public void onApplicationPaused() {
-        isAPPBack = true;
+    protected void onMyApplicationPaused() {
         if (mLocationClient != null) {
             mLocationClient.stopLocation();
         }
@@ -516,6 +501,7 @@ public class SensoroCityApplication extends BaseApplication implements Repause
 
     @Override
     public void onPushCallBack(String message) {
+        boolean isAPPBack = Repause.isApplicationPaused();
         try {
             LogUtils.loge("hcs", "pushNotification---isAPPBack = " + isAPPBack);
         } catch (Throwable throwable) {
@@ -576,16 +562,22 @@ public class SensoroCityApplication extends BaseApplication implements Repause
     public void run() {
         initORC();
         SensoroPushManager.getInstance().registerSensoroPushListener(this);
-        Repause.init(this);
-        Repause.registerListener(this);
-        mNotificationUtils = new NotificationUtils(this);
         api = WXAPIFactory.createWXAPI(this, Constants.APP_ID, false);
         api.registerApp(Constants.APP_ID);
 //        FMMapSDK.init(this);
         initImagePicker();
         locate();
         initBugLy();
-        //
+        //IBeacon相关
+        SensoroCityApplication.getInstance().ibeaconSettingData.currentUUID = "70DC44C3-E2A8-4B22-A2C6-129B41A4BDBC";
+        IbeaconSettingData ibeaconSettingData = PreferencesHelper.getInstance().getIbeaconSettingData();
+        if (ibeaconSettingData != null) {
+            SensoroCityApplication.getInstance().ibeaconSettingData = ibeaconSettingData;
+        }
+        if (!BleObserver.getInstance().isRegisterBleObserver(bleDeviceListener)) {
+            BleObserver.getInstance().registerBleObserver(bleDeviceListener);
+        }
+        taskHandler.postDelayed(iBeaconTask, 500);
         //
         BlockCanary.install(this, new AppBlockCanaryContext()).start();
         if (LeakCanary.isInAnalyzerProcess(this)) {

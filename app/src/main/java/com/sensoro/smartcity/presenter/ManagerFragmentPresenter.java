@@ -91,6 +91,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
                         getView().toastShort(errorMsg);
                     } else {
                         RetrofitServiceHelper.getInstance().clearLoginDataSessionId();
+                        RetrofitServiceHelper.getInstance().cancelAllRsp();
                         Intent intent = new Intent(mContext, LoginActivity.class);
                         getView().startAC(intent);
                         getView().finishAc();
@@ -102,6 +103,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
                 public void onCompleted(ResponseResult responseBase) {
                     if (responseBase.getErrcode() == ResponseResult.CODE_SUCCESS) {
                         RetrofitServiceHelper.getInstance().clearLoginDataSessionId();
+                        RetrofitServiceHelper.getInstance().cancelAllRsp();
                         Intent intent = new Intent(mContext, LoginActivity.class);
                         getView().startAC(intent);
                     }

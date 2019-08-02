@@ -24,8 +24,8 @@ import com.sensoro.common.R;
 import com.sensoro.common.manger.ThreadPoolManager;
 import com.sensoro.common.utils.DynamicTimeFormat;
 import com.sensoro.common.utils.LogUtils;
+import com.sensoro.common.utils.Repause;
 
-import java.util.List;
 import java.util.Locale;
 
 import me.jessyan.autosize.AutoSizeConfig;
@@ -39,13 +39,13 @@ import me.jessyan.autosize.onAdaptListener;
  *
  * @name BaseApplication
  */
-public class BaseApplication extends MultiDexApplication {
+public abstract class BaseApplication extends MultiDexApplication implements Repause.Listener {
 
     public static final String ROOT_PACKAGE = "com.sensoro.common";
 
     private static BaseApplication sInstance;
-
-    private List<IApplicationDelegate> mAppDelegateList;
+    //暂时去掉
+//    private List<IApplicationDelegate> mAppDelegateList;
 
     public UploadManager uploadManager;
 
@@ -56,6 +56,8 @@ public class BaseApplication extends MultiDexApplication {
     private final Runnable initTask = new Runnable() {
         @Override
         public void run() {
+            Repause.init(BaseApplication.this);
+            Repause.registerListener(BaseApplication.this);
             initAutoSize();
             initUploadManager();
             initSmartRefresh();
@@ -106,10 +108,10 @@ public class BaseApplication extends MultiDexApplication {
         super.onCreate();
         sInstance = this;
         ContextUtils.init(this);
-        mAppDelegateList = ClassUtils.getObjectsWithInterface(this, IApplicationDelegate.class, ROOT_PACKAGE);
-        for (IApplicationDelegate delegate : mAppDelegateList) {
-            delegate.onCreate();
-        }
+//        mAppDelegateList = ClassUtils.getObjectsWithInterface(this, IApplicationDelegate.class, ROOT_PACKAGE);
+//        for (IApplicationDelegate delegate : mAppDelegateList) {
+//            delegate.onCreate();
+//        }
         ThreadPoolManager.getInstance().execute(initTask);
         if (ContextUtils.isAppDebug()) {
             //开启InstantRun之后，一定要在ARouter.init之前调用openDebug
@@ -122,26 +124,27 @@ public class BaseApplication extends MultiDexApplication {
     @Override
     public void onTerminate() {
         super.onTerminate();
-        for (IApplicationDelegate delegate : mAppDelegateList) {
-            delegate.onTerminate();
-        }
+//        for (IApplicationDelegate delegate : mAppDelegateList) {
+//            delegate.onTerminate();
+//        }
+        Repause.unregisterListener(this);
     }
 
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        for (IApplicationDelegate delegate : mAppDelegateList) {
-            delegate.onLowMemory();
-        }
+//        for (IApplicationDelegate delegate : mAppDelegateList) {
+//            delegate.onLowMemory();
+//        }
     }
 
     @Override
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
-        for (IApplicationDelegate delegate : mAppDelegateList) {
-            delegate.onTrimMemory(level);
-        }
+//        for (IApplicationDelegate delegate : mAppDelegateList) {
+//            delegate.onTrimMemory(level);
+//        }
     }
 
     private void initUploadManager() {
@@ -229,4 +232,19 @@ public class BaseApplication extends MultiDexApplication {
 //                //经过测试 DefaultErrorActivity 的设计图宽度在 380dp - 400dp 显示效果都是比较舒服的
 //                .addExternalAdaptInfoOfActivity(CameraActivity.class, new ExternalAdaptInfo(true, 375));
     }
+
+    @Override
+    public void onApplicationResumed() {
+        onMyApplicationResumed();
+    }
+
+    @Override
+    public void onApplicationPaused() {
+        onMyApplicationPaused();
+    }
+
+    protected abstract void onMyApplicationResumed();
+
+    protected abstract void onMyApplicationPaused();
+
 }

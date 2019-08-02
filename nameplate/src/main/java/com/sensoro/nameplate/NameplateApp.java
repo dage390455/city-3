@@ -8,4 +8,14 @@ public class NameplateApp extends BaseApplication {
         super.onCreate();
 
     }
+
+    @Override
+    protected void onMyApplicationResumed() {
+
+    }
+
+    @Override
+    protected void onMyApplicationPaused() {
+
+    }
 }

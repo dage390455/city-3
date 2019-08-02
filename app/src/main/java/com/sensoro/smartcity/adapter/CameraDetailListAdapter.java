@@ -1,6 +1,9 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,16 +12,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
+import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.DeviceCameraFacePic;
 import com.sensoro.common.utils.DateUtil;
+import com.sensoro.common.utils.LogUtils;
 import com.sensoro.smartcity.R;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.widget.GlideCircleTransform;
 
 import java.util.ArrayList;
@@ -80,8 +89,32 @@ public class CameraDetailListAdapter extends RecyclerView.Adapter<CameraDetailLi
         holder.clRootItemAdapterCameraDetailList.setBackgroundResource(mClickPosition == position ? R.drawable.shape_bg_solid_ee_full_corner_4 : R.drawable.shape_bg_solid_white_bottom_left_right_corner);
 
         DeviceCameraFacePic model = mList.get(position);
+        String url = model.getFaceUrl();
+        if (!TextUtils.isEmpty(url)) {
+            if (!(url.startsWith("https://") || url.startsWith("http://"))) {
+                url = Constants.CAMERA_BASE_URL + model.getFaceUrl();
+            }
+            url = url.trim();
+        }
+        Uri parse = Uri.parse(url);
         Glide.with(mContext)                             //配置上下文
-                .load(Constants.CAMERA_BASE_URL + model.getFaceUrl())
+                .load(parse)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        try {
+                            LogUtils.loge("onLoadFailed");
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                })
                 .apply(new RequestOptions().transform(new GlideCircleTransform(mContext)).error(R.drawable.person_locus_placeholder).placeholder(R.drawable.person_locus_placeholder).diskCacheStrategy(DiskCacheStrategy.ALL))
 
 //                    .thumbnail(0.01f)//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)

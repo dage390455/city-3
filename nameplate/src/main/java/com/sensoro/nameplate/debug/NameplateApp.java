@@ -18,6 +18,16 @@ public class NameplateApp extends BaseApplication {
         login();
     }
 
+    @Override
+    protected void onMyApplicationResumed() {
+
+    }
+
+    @Override
+    protected void onMyApplicationPaused() {
+
+    }
+
     private void login() {
         PreferencesHelper.getInstance().getSessionId();
         PreferencesHelper.getInstance().getSessionToken();

@@ -39,8 +39,8 @@ import com.sensoro.common.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.common.server.response.AlarmCountRsp;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.AppUtils;
+import com.sensoro.common.utils.Repause;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.fragment.HomeFragment;
 import com.sensoro.smartcity.fragment.MalfunctionFragment;
@@ -699,7 +699,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
 
 
             }//多久重连
-        }, 8 * 1000);
+        }, 2 * 1000);
 
     }
 
@@ -800,7 +800,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
     public void onMessageEvent(NetWorkStateModel netWorkStateModel) {
         if (netWorkStateModel != null) {
             if (!netWorkStateModel.ping) {
-                if (!SensoroCityApplication.getInstance().isAPPBack) {
+                if (Repause.isApplicationResumed()) {
                     getView().toastShort(mContext.getString(R.string.disconnected_from_network));
                     try {
                         com.sensoro.common.utils.LogUtils.loge("CONNECTIVITY_ACTION msg");
