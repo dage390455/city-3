@@ -300,7 +300,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
      */
     @NonNull
     private Observable<ResponseResult<List<DeviceInfo>>> getDeviceInfoListByStateRspObservable(int status,boolean isPageChanged) {
-//        getView().showProgressDialog();
+        getView().showProgressDialog();
         Observable<ResponseResult<List<DeviceInfo>>>   listObservable=   RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, status, null).subscribeOn(Schedulers
                 .io()).doOnNext(new Consumer<ResponseResult<List<DeviceInfo>>>() {
             @Override
