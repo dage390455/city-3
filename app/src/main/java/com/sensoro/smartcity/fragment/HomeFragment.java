@@ -890,8 +890,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     @Override
     public void onAlarmInfoClick(View v, int position) {
         try {
-            HomeTopModel homeTopModel = mPresenter.getCurrentHomeModel();
-            mPresenter.clickAlarmInfo(position, homeTopModel);
+            mPresenter.clickAlarmInfo(position, mPresenter.getCurrentHomeModel());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -901,8 +900,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     public void onItemClick(View view, int position) {
         try {
 //            HomeTopModel homeTopModel = mMainHomeFragRcContentAdapter.getData().get(currentPosition);
-            HomeTopModel homeTopModel = mPresenter.getCurrentHomeModel();
-            mPresenter.clickItem(position, homeTopModel);
+            mPresenter.clickItem(position, mPresenter.getCurrentHomeModel());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -967,13 +965,11 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         try {
 
-            HomeTopModel homeTopModel = mPresenter.getCurrentHomeModel();
-//            HomeTopModel homeTopModel = mMainHomeFragRcContentAdapter.getData().get(currentPosition);
-            if (homeTopModel == null) {
+            if (mPresenter.getCurrentHomeModel() == null) {
                 mPresenter.requestInitData(false, true);
                 return;
             }
-            mPresenter.requestWithDirection(DIRECTION_DOWN, false, homeTopModel);
+            mPresenter.requestWithDirection(DIRECTION_DOWN, false, mPresenter.getCurrentHomeModel());
         } catch (Exception e) {
             e.printStackTrace();
             mPresenter.requestInitData(false, true);
@@ -983,13 +979,11 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         try {
-            HomeTopModel homeTopModel = ((HomeFragmentPresenter) mPresenter).getCurrentHomeModel();
-//            HomeTopModel homeTopModel = mMainHomeFragRcContentAdapter.getData().get(currentPosition);
-            if (homeTopModel == null) {
+            if (mPresenter.getCurrentHomeModel() == null) {
                 recycleViewRefreshComplete();
                 return;
             }
-            mPresenter.requestWithDirection(DIRECTION_UP, false, homeTopModel);
+            mPresenter.requestWithDirection(DIRECTION_UP, false, mPresenter.getCurrentHomeModel());
         } catch (Exception e) {
             e.printStackTrace();
             recycleViewRefreshComplete();
