@@ -124,6 +124,16 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
 //        StatusBarCompat.translucentStatusBar(thi®s);
 //        StatusBarCompat.setStatusBarIconDark(this,true);
 //        boolean darkmode = true;
+        onCreateInit(savedInstanceState);
+        StatService.setDebugOn(BuildConfig.DEBUG);
+        ARouter.getInstance().inject(this);
+        ActivityTaskManager.getInstance().pushActivity(this);
+    }
+
+    /**
+     * 处理顶部的StatusBar
+     */
+    private void handleStatusBar() {
         if (!isActivityOverrideStatusBar()) {
             immersionBar = ImmersionBar.with(this);
             immersionBar.fitsSystemWindows(true, R.color.white)
@@ -131,10 +141,6 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
                     .statusBarDarkFont(true)
                     .init();
         }
-        onCreateInit(savedInstanceState);
-        StatService.setDebugOn(BuildConfig.DEBUG);
-        ARouter.getInstance().inject(this);
-        ActivityTaskManager.getInstance().pushActivity(this);
     }
 
     /**
@@ -190,6 +196,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
     @Override
     protected void onResume() {
         super.onResume();
+        handleStatusBar();
         mHandler.postDelayed(notificationsTask, 1000);
         StatService.onResume(mActivity);
     }

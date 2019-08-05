@@ -275,4 +275,5 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         }
         super.onDestroy();
     }
+
 }
