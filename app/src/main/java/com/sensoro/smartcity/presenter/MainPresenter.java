@@ -479,8 +479,21 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
         public void call(Object... args) {
             try {
                 synchronized (MainPresenter.DeviceFlushListener.class) {
+                    for (Object arg : args) {
+                        if (arg instanceof JSONObject) {
+                            JSONObject jsonObject = (JSONObject) arg;
+                            String json = jsonObject.toString();
+                            try {
+                                LogUtils.loge(this, "socket-->>> DeviceFlushListener json = " + json);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+                        }
+                    }
                     //TODO 设备删除做的操作
                     EventBus.getDefault().post(Constants.EVENT_DATA_DEVICE_SOCKET_FLUSH);
+
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();

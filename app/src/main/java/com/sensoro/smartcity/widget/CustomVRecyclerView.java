@@ -4,6 +4,10 @@ import android.content.Context;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.LayoutAnimationController;
 
 import com.baidu.ocr.sdk.utils.LogUtil;
 
@@ -139,4 +143,19 @@ public class CustomVRecyclerView extends RecyclerView {
         }
     }
 
+
+//    @Override
+//    protected void attachLayoutAnimationParameters(View child, ViewGroup.LayoutParams params, int index, int count) {
+//        if(getAdapter()!=null&&getLayoutManager() instanceof  LinearLayoutManager) {
+//            LayoutAnimationController.AnimationParameters animationParameters = params.layoutAnimationParameters;
+//            if (animationParameters == null) {
+//                animationParameters = new LayoutAnimationController.AnimationParameters();
+//                animationParameters.count = count;
+//                animationParameters.index = index;
+//            }
+//            params.layoutAnimationParameters=animationParameters;
+//        }else{
+//            super.attachLayoutAnimationParameters(child, params, index, count);
+//        }
+//    }
 }

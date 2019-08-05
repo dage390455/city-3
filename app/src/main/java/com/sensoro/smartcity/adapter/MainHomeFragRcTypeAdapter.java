@@ -146,7 +146,7 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         HomeTopModel homeTopModel = mData.get(position);
-        int type = homeTopModel.type;
+        int type = homeTopModel.status;
         freshType(holder, type, position);
         int value = homeTopModel.value;
         freshValue(holder, value);

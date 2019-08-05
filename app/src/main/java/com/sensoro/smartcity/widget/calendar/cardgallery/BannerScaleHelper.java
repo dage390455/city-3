@@ -157,7 +157,8 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
         //mRecyclerView.smoothScrollToPosition 方法会回调  RecyclerView.OnScrollListener 的onScrollStateChanged方法 并且是自动居中，有滚动过程的滑动到指定位置
         ((LinearLayoutManager) mRecyclerView.getLayoutManager()).
                 scrollToPositionWithOffset(pos,
-                        AppUtils.dp2px(mContext, mPagePadding + mShowLeftCardWidth));
+                        AppUtils.dp2px(mContext, mPagePadding+mShowLeftCardWidth ));
+
         mCurrentItemOffset = 0;
         mLastPos = pos;
         //认为是一次滑动停止 这里可以写滑动停止回调
@@ -170,6 +171,7 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
             }
         });
     }
+
 
     public void setFirstItemPos(int firstItemPos) {
         this.mFirstItemPos = firstItemPos;
@@ -242,6 +244,7 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
         mCardWidth = mCardGalleryWidth - AppUtils.dp2px(mContext, 2 * (mPagePadding + mShowLeftCardWidth));
         mOnePageWidth = mCardWidth;
         scrollToPosition(mFirstItemPos);
+
     }
 
     /**

@@ -49,11 +49,18 @@
             android:orientation="vertical">
 
 
-            <com.sensoro.smartcity.widget.calendar.cardgallery.BannerRecyclerView
+            <!--<com.sensoro.smartcity.widget.calendar.cardgallery.BannerRecyclerView-->
+                <!--android:id="@+id/fg_main_home_rc_content"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:overScrollMode="never"/>-->
+
+
+            <com.sensoro.smartcity.widget.CustomVRecyclerView
                 android:id="@+id/fg_main_home_rc_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:overScrollMode="never" />
+                android:overScrollMode="never"/>
             <!--<androidx.core.widget.NestedScrollView-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="match_parent"-->

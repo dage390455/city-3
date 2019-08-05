@@ -69,19 +69,19 @@ public class MainHomeFragRcContentAdapterHorizontal extends RecyclerView.Adapter
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final HomeTopModel item = mList.get(position);
-        if (item.innerAdapter == null) {
-            item.innerAdapter = new MainHomeFragRcContentAdapter(mContext);
-        }
-        if (item.mDeviceList.size() > 0) {
-            setNoContentVisible(holder, false);
-        } else {
-            setNoContentVisible(holder, true);
-            return;
-        }
+//        if (item.innerAdapter == null) {
+//            item.innerAdapter = new MainHomeFragRcContentAdapter(mContext);
+//        }
+//        if (item.mDeviceList.size() > 0) {
+//            setNoContentVisible(holder, false);
+//        } else {
+//            setNoContentVisible(holder, true);
+//            return;
+//        }
 //        final LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
 //        layoutManager.setOrientation(OrientationHelper.VERTICAL);
 //        holder.rvHorizontalItem.setLayoutManager(layoutManager);
-        holder.rvHorizontalItem.setAdapter(item.innerAdapter);
+//        holder.rvHorizontalItem.setAdapter(item.innerAdapter);
 //        holder.rvHorizontalItem.setNestedScrollingEnabled(true);
 //        if (item.scrollOffset > 0) {
 //            layoutManager.scrollToPositionWithOffset(item.scrollPosition, item.scrollOffset);
@@ -89,31 +89,31 @@ public class MainHomeFragRcContentAdapterHorizontal extends RecyclerView.Adapter
 //        MyOnScrollListener listener = new MyOnScrollListener(item, layoutManager);
 //        holder.rvHorizontalItem.addOnScrollListener(listener);
 
-        item.innerAdapter.setOnContentItemClickListener(new MainHomeFragRcContentAdapter.OnContentItemClickListener() {
-            @Override
-            public void onAlarmInfoClick(View v, int position) {
-                if (MainHomeFragRcContentAdapterHorizontal.this.listener != null) {
-                    MainHomeFragRcContentAdapterHorizontal.this.listener.onAlarmInfoClick(v, position);
-                }
-            }
-
-            @Override
-            public void onItemClick(View view, int position) {
-                if (MainHomeFragRcContentAdapterHorizontal.this.listener != null) {
-                    MainHomeFragRcContentAdapterHorizontal.this.listener.onItemClick(view, position);
-                }
-            }
-        });
-        if (holder.rvHorizontalItem.isComputingLayout()) {
-            holder.rvHorizontalItem.post(new Runnable() {
-                @Override
-                public void run() {
-                    item.innerAdapter.updateData(item.mDeviceList);
-                }
-            });
-            return;
-        }
-        item.innerAdapter.updateData(item.mDeviceList);
+//        item.innerAdapter.setOnContentItemClickListener(new MainHomeFragRcContentAdapter.OnContentItemClickListener() {
+//            @Override
+//            public void onAlarmInfoClick(View v, int position) {
+//                if (MainHomeFragRcContentAdapterHorizontal.this.listener != null) {
+//                    MainHomeFragRcContentAdapterHorizontal.this.listener.onAlarmInfoClick(v, position);
+//                }
+//            }
+//
+//            @Override
+//            public void onItemClick(View view, int position) {
+//                if (MainHomeFragRcContentAdapterHorizontal.this.listener != null) {
+//                    MainHomeFragRcContentAdapterHorizontal.this.listener.onItemClick(view, position);
+//                }
+//            }
+//        });
+//        if (holder.rvHorizontalItem.isComputingLayout()) {
+//            holder.rvHorizontalItem.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    item.innerAdapter.updateData(item.mDeviceList);
+//                }
+//            });
+//            return;
+//        }
+//        item.innerAdapter.updateData(item.mDeviceList);
 //        runEnterAnimation(holder.itemView, position);
 //        if (position == 0) {
 //            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(holder.homeContentRoot.getLayoutParams());
@@ -157,7 +157,7 @@ public class MainHomeFragRcContentAdapterHorizontal extends RecyclerView.Adapter
             super(itemView);
             ButterKnife.bind(this, itemView);
             final LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-            layoutManager.setOrientation(OrientationHelper.VERTICAL);
+//            layoutManager.setOrientation(OrientationHelper.VERTICAL);
             rvHorizontalItem.setLayoutManager(layoutManager);
             rvHorizontalItem.setNestedScrollingEnabled(true);
 //        if (item.scrollOffset > 0) {
@@ -202,22 +202,22 @@ public class MainHomeFragRcContentAdapterHorizontal extends RecyclerView.Adapter
             switch (newState) {
                 case RecyclerView.SCROLL_STATE_IDLE:
 
-                    int offset = recyclerView.computeHorizontalScrollOffset();
-                    mEntity.scrollPosition = mLayoutManager.findFirstVisibleItemPosition() < 0 ? mEntity.scrollPosition : mLayoutManager.findFirstVisibleItemPosition() + 1;
-                    if (mItemWidth <= 0) {
-                        View item = mLayoutManager.findViewByPosition(mEntity.scrollPosition);
-                        if (item != null) {
-                            RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) item.getLayoutParams();
-                            mItemWidth = item.getWidth();
-                            mItemMargin = layoutParams.rightMargin;
-                        }
-                    }
-                    if (offset > 0 && mItemWidth > 0) {
-                        //offset % mItemWidth：得到当前position的滑动距离
-                        //mEntity.scrollPosition * mItemMargin：得到（0至position）的所有item的margin
-                        //用当前item的宽度-所有margin-当前position的滑动距离，就得到offset。
-                        mEntity.scrollOffset = mItemWidth - offset % mItemWidth + mEntity.scrollPosition * mItemMargin;
-                    }
+//                    int offset = recyclerView.computeHorizontalScrollOffset();
+//                    mEntity.scrollPosition = mLayoutManager.findFirstVisibleItemPosition() < 0 ? mEntity.scrollPosition : mLayoutManager.findFirstVisibleItemPosition() + 1;
+//                    if (mItemWidth <= 0) {
+//                        View item = mLayoutManager.findViewByPosition(mEntity.scrollPosition);
+//                        if (item != null) {
+//                            RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) item.getLayoutParams();
+//                            mItemWidth = item.getWidth();
+//                            mItemMargin = layoutParams.rightMargin;
+//                        }
+//                    }
+//                    if (offset > 0 && mItemWidth > 0) {
+//                        //offset % mItemWidth：得到当前position的滑动距离
+//                        //mEntity.scrollPosition * mItemMargin：得到（0至position）的所有item的margin
+//                        //用当前item的宽度-所有margin-当前position的滑动距离，就得到offset。
+//                        mEntity.scrollOffset = mItemWidth - offset % mItemWidth + mEntity.scrollPosition * mItemMargin;
+//                    }
                     break;
             }
         }

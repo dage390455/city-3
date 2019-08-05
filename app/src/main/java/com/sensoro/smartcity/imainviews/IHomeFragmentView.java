@@ -3,6 +3,7 @@ package com.sensoro.smartcity.imainviews;
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
+import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.smartcity.model.HomeTopModel;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface IHomeFragmentView extends IToast, IProgressDialog, IActivityInt
 
     void returnTop();
 
-    void refreshContentData(boolean isFirstInit, List<HomeTopModel> dataList);
+    void refreshContentData(boolean isFirstInit, boolean isPageChanged, List<DeviceInfo>  deviceInfoList);
 
 //    void recycleViewRefreshComplete();
 
