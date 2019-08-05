@@ -107,8 +107,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     private final HandlerDeployCheck checkHandler = new HandlerDeployCheck(Looper.getMainLooper());
     private String tempForceReason;
     private Integer tempStatus;
-    private String tempSignalQuality;
-    private String tempSignal = "none";
 
     @Override
     public void initData(Context context) {
@@ -294,7 +292,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         getView().setTotalContact(deployAnalyzerModel.deployContactModelList.size());
 //        getView().updateContactData(deployAnalyzerModel.deployContactModelList);
         getView().updateTagsData(deployAnalyzerModel.tagList);
-        tempSignal = deployAnalyzerModel.signal;
         freshSignalInfo();
         getView().setUploadBtnStatus(checkCanUpload());
         getView().setDeployWeChatText(deployAnalyzerModel.weChatAccount);
@@ -469,7 +466,12 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 int signalState = checkNeedSignal();
                 switch (signalState) {
                     case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD:
+                        checkHandler.removeAllMessage();
+                        deployAnalyzerModel.currentSignalQuality = "good";
+                        getDeviceRealStatus();
+                        break;
                     case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NORMAL:
+                        deployAnalyzerModel.currentSignalQuality = "normal";
                         checkHandler.removeAllMessage();
                         getDeviceRealStatus();
                         break;
@@ -482,19 +484,19 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 switch (state) {
                     case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_NONE:
                         tempForceReason = "signalQuality";
-                        tempSignalQuality = "none";
+                        deployAnalyzerModel.currentSignalQuality = "none";
                         getView().dismissBleConfigDialog();
                         getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, mContext.getString(R.string.deploy_check_dialog_quality_bad_signal) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
                         return;
                     case DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_BAD:
                         tempForceReason = "signalQuality";
-                        tempSignalQuality = "bad";
+                        deployAnalyzerModel.currentSignalQuality = "bad";
                         getView().dismissBleConfigDialog();
                         getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, mContext.getString(R.string.deploy_check_dialog_quality_bad_signal) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
                         return;
                 }
                 tempForceReason = "signalQuality";
-                tempSignalQuality = "none";
+                deployAnalyzerModel.currentSignalQuality = "none";
                 getView().dismissBleConfigDialog();
                 getView().showWarnDialog(PreferencesHelper.getInstance().getUserData().hasForceUpload, mContext.getString(R.string.deploy_check_dialog_quality_bad_signal) + "，", mContext.getString(R.string.deploy_check_suggest_repair_instruction));
             }
@@ -688,7 +690,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deployResultModel.address = deployAnalyzerModel.address;
         deployResultModel.updateTime = deployAnalyzerModel.updatedTime;
         deployResultModel.deviceStatus = deployAnalyzerModel.status;
-        deployResultModel.signal = deployAnalyzerModel.signal;
+        if (TextUtils.isEmpty(deployAnalyzerModel.currentSignalQuality)) {
+            deployResultModel.signal = deployAnalyzerModel.signal;
+        } else {
+            deployResultModel.signal = deployAnalyzerModel.currentSignalQuality;
+        }
         deployResultModel.name = deployAnalyzerModel.nameAndAddress;
         intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
         getView().startAC(intent);
@@ -714,7 +720,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deployResultModel.updateTime = deviceInfo.getUpdatedTime();
         deployResultModel.deployTime = deviceInfo.getDeployTime();
         deployResultModel.deviceStatus = deployAnalyzerModel.status;
-        deployResultModel.signal = deviceInfo.getSignal();
+        if (TextUtils.isEmpty(deployAnalyzerModel.currentSignalQuality)) {
+            deployResultModel.signal = deviceInfo.getSignal();
+        } else {
+            deployResultModel.signal = deployAnalyzerModel.currentSignalQuality;
+        }
         deployResultModel.name = deployAnalyzerModel.nameAndAddress;
         intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
         getView().startAC(intent);
@@ -811,7 +821,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     public void run() {
                         if (isAttachedView()) {
                             deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
-                            tempSignal = deviceInfo.getSignal();
+                            String signal = deviceInfo.getSignal();
+                            if (TextUtils.isEmpty(signal)) {
+                                signal = "none";
+                            }
+                            deployAnalyzerModel.signal = String.copyValueOf(signal.toCharArray());
                             freshSignalInfo();
                         }
                     }
@@ -1137,8 +1151,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         long time_diff = System.currentTimeMillis() - deployAnalyzerModel.updatedTime;
         //
         Drawable drawable = resources.getDrawable(R.drawable.signal_none);
-        if (tempSignal != null && (time_diff < 3 * 60 * 1000)) {
-            switch (tempSignal) {
+        if (deployAnalyzerModel.signal != null && (time_diff < 3 * 60 * 1000)) {
+            switch (deployAnalyzerModel.signal) {
                 case "good":
                     signal_text = mContext.getString(R.string.s_good);
                     drawable = resources.getDrawable(R.drawable.signal_good);
@@ -1157,7 +1171,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     break;
             }
         } else {
-            tempSignal = "none";
+            deployAnalyzerModel.signal = "none";
         }
         //
         switch (deployAnalyzerModel.deployType) {
@@ -1194,8 +1208,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
      */
     private int checkNeedSignal() {
         long time_diff = System.currentTimeMillis() - deployAnalyzerModel.updatedTime;
-        if (tempSignal != null && (time_diff < 3 * 60 * 1000)) {
-            switch (tempSignal) {
+        if (deployAnalyzerModel.signal != null && (time_diff < 3 * 60 * 1000)) {
+            switch (deployAnalyzerModel.signal) {
                 case "good":
                     return DeoloyCheckPointConstants.DEPLOY_CHECK_DIALOG_SIGNAL_GOOD;
                 case "normal":
@@ -1504,6 +1518,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 tempForceReason = null;
+                deployAnalyzerModel.currentSignalQuality = null;
                 // 获取不到当前状态是否强制上传
                 getView().toastShort(errorMsg);
                 getView().dismissBleConfigDialog();
@@ -1515,7 +1530,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         if (data != null && data.getData() != null) {
             //只记录当前的信号和状态
             deployAnalyzerModel.status = data.getData().getStatus();
-            deployAnalyzerModel.signal = String.copyValueOf(tempSignal.toCharArray());
             switch (data.getData().getStatus()) {
                 case Constants.SENSOR_STATUS_ALARM:
                     tempForceReason = "status";
@@ -1541,6 +1555,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         } else {
             //状态错误
             tempForceReason = null;
+            deployAnalyzerModel.currentSignalQuality = null;
             String errMsg;
             if (AppUtils.isChineseLanguage()) {
                 errMsg = "似乎已断开与互联网的连接。";
@@ -1632,7 +1647,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     public void doForceUpload() {
         deployAnalyzerModel.forceReason = tempForceReason;
-        deployAnalyzerModel.currentSignalQuality = tempSignalQuality;
         deployAnalyzerModel.currentStatus = tempStatus;
         doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
 
