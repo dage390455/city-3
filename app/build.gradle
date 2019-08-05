@@ -8,7 +8,7 @@ def keystoreProperties = new Properties()
 // Load your keystore.properties file into the keystoreProperties object.
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 android {
-    def verName = "3.3.7"
+    def verName = "3.3.8"
     def verCode = 1
     def buildCode = 1
     def connector = '_v'
@@ -54,11 +54,11 @@ GETUI_APP_ID    : "g5ikHO2m7DAZ0oY4BrXNE",
 GETUI_APP_KEY   : "BkwqeevSYj8fQTO47FsXGA",
 GETUI_APP_SECRET: "Z41MlQj5AC8JwUzxEm2081",
 //TODO 测试版/正式版 使用其中一个
-//APP_ICON        : "@mipmap/ic_launcher_beta",
-//APP_ROUND_ICON  : "@mipmap/ic_launcher_beta_round"
+APP_ICON        : "@mipmap/ic_launcher_beta",
+APP_ROUND_ICON  : "@mipmap/ic_launcher_beta_round"
 //
-                APP_ICON        : "@mipmap/ic_launcher",
-                APP_ROUND_ICON  : "@mipmap/ic_launcher_round"
+//                APP_ICON        : "@mipmap/ic_launcher",
+//                APP_ROUND_ICON  : "@mipmap/ic_launcher_round"
 
         ]
 
