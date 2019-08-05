@@ -343,9 +343,13 @@ public class CameraPersonLocusActivityPresenter extends BasePresenter<ICameraPer
                 .asBitmap()
                 .load(url)
                 .thumbnail(0.1f)
-                .apply(new RequestOptions().transform(new GlideCircleTransform(mActivity, dp24)).error(R.drawable.deploy_pic_placeholder)           //设置错误图片
+                .apply(new RequestOptions()
+                        .transform(new GlideCircleTransform(mActivity, dp24))
+                        .error(R.drawable.deploy_pic_placeholder)           //设置错误图片
                         .placeholder(R.drawable.ic_default_cround_image)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .dontAnimate()
+                        .skipMemoryCache(false))
 //                .override(size,size)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override

@@ -35,7 +35,6 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.PersonAvatarHistoryAdapter;
 import com.sensoro.smartcity.imainviews.ICameraPersonAvatarHistoryActivityView;
 import com.sensoro.smartcity.presenter.CameraPersonAvatarHistoryActivityPresenter;
-import com.sensoro.smartcity.widget.GlideCircleTransform;
 
 import java.util.List;
 
@@ -273,10 +272,14 @@ public class CameraPersonAvatarHistoryActivity extends BaseActivity<ICameraPerso
             faceUrl = Constants.CAMERA_BASE_URL + faceUrl;
         }
         Glide.with(mActivity).load(faceUrl)
-                .apply(new RequestOptions().transform(new GlideCircleTransform(mActivity))
+                .apply(new RequestOptions()
+//                        .transform(new GlideCircleTransform(mActivity))
+                        .circleCrop()
                         .placeholder(R.drawable.person_locus_placeholder)
                         .error(R.drawable.person_locus_placeholder)
                         .diskCacheStrategy(DiskCacheStrategy.ALL))
+                        .skipMemoryCache(false)
+                        .dontAnimate()
                 .into(ivTitleAvatarAcCameraPersonAvatarHistory);
     }
 }

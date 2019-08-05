@@ -20,7 +20,6 @@ import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.DeviceCameraPersonFaceBean;
 import com.sensoro.common.utils.DateUtil;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.widget.GlideCircleTransform;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,10 +64,17 @@ public class PersonAvatarHistoryAdapter extends RecyclerView.Adapter<PersonAvata
         }
         Glide.with(mContext)                             //配置上下文
                 .load(url)
-                .apply(new RequestOptions().transform(new GlideCircleTransform(mContext)).error(R.drawable.person_locus_placeholder).placeholder(R.drawable.person_locus_placeholder).diskCacheStrategy(DiskCacheStrategy.ALL))
+                .apply(new RequestOptions()
+//                        .transform(new GlideCircleTransform(mContext))
+                        .circleCrop()
+                        .error(R.drawable.person_locus_placeholder)
+                        .placeholder(R.drawable.person_locus_placeholder)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .skipMemoryCache(false)
+                        .dontAnimate())
 
 //                    .thumbnail(0.01f)//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-                           //设置错误图片
+                //设置错误图片
                 //设置占位图片
                 //缓存全尺寸
                 .into(holder.ivAvatarItemAdapterPersonAvatarHistory);
@@ -82,7 +88,7 @@ public class PersonAvatarHistoryAdapter extends RecyclerView.Adapter<PersonAvata
         }
 
 
-        holder.viewDividerItemAdapterPersonAvatarHistory.setVisibility(position == getItemCount()-1 ? View.GONE : View.VISIBLE);
+        holder.viewDividerItemAdapterPersonAvatarHistory.setVisibility(position == getItemCount() - 1 ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -100,7 +106,7 @@ public class PersonAvatarHistoryAdapter extends RecyclerView.Adapter<PersonAvata
         return mList;
     }
 
-    public void setOnRecycleViewItemClickListener(RecycleViewItemClickListener listener){
+    public void setOnRecycleViewItemClickListener(RecycleViewItemClickListener listener) {
         mListener = listener;
     }
 
@@ -113,9 +119,10 @@ public class PersonAvatarHistoryAdapter extends RecyclerView.Adapter<PersonAvata
         View viewDividerItemAdapterPersonAvatarHistory;
         @BindView(R.id.ll_root_item_adapter_person_avatar_history)
         LinearLayout llRootItemAdapterPersonAvatarHistory;
+
         public PersonAvatarHistoryViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

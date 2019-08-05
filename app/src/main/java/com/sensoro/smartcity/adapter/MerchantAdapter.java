@@ -1,16 +1,16 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sensoro.smartcity.R;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.UserInfo;
+import com.sensoro.smartcity.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,21 +49,24 @@ public class MerchantAdapter extends BaseAdapter implements Constants {
             holder = new MerchantViewHolder();
             convertView = mInflater.inflate(R.layout.item_merchant, null);
             holder.item_name = (TextView) convertView.findViewById(R.id.item_merchant_name);
-            holder.item_phone = (TextView) convertView.findViewById(R.id.item_merchant_phone);
-            holder.item_icon = (ImageView) convertView.findViewById(R.id.item_merchant_icon);
             holder.itemBottomS = convertView.findViewById(R.id.item_bottom_s);
             convertView.setTag(holder);
         } else {
             holder = (MerchantViewHolder) convertView.getTag();
         }
+        //
+
         UserInfo userInfo = mList.get(position);
         if (userInfo.isStop()) {
             holder.item_name.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
         } else {
             holder.item_name.setTextColor(mContext.getResources().getColor(R.color.c_252525));
         }
-        holder.item_name.setText(userInfo.getNickname());
-        holder.item_phone.setText(userInfo.getContacts());
+        String nickname = userInfo.getNickname();
+        if (TextUtils.isEmpty(nickname)) {
+            nickname = mContext.getString(R.string.unknown);
+        }
+        holder.item_name.setText(nickname);
 
         if (mList.size() == 0 || position == mList.size() - 1) {
             holder.itemBottomS.setVisibility(View.GONE);
@@ -85,8 +88,6 @@ public class MerchantAdapter extends BaseAdapter implements Constants {
     static class MerchantViewHolder {
 
         TextView item_name;
-        TextView item_phone;
-        ImageView item_icon;
         View itemBottomS;
 
         MerchantViewHolder() {

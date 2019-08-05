@@ -94,15 +94,53 @@ public class PermissionChangeDialogUtils {
         dialogTipTvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //重新登录
-                showProgressDialog();
-                RetrofitServiceHelper.getInstance().cancelAllRsp();
-                RetrofitServiceHelper.getInstance().clearLoginDataSessionId();
-                Intent loginIntent = new Intent();
-                loginIntent.setClass(mActivity, LoginActivity.class);
-                mActivity.overridePendingTransition(com.sensoro.common.R.anim.slide_left, com.sensoro.common.R.anim.slide_out);
-                mActivity.startActivity(loginIntent);
-                ActivityTaskManager.getInstance().finishAllActivity();
+                //
+                if (PreferencesHelper.getInstance().getUserData() != null) {
+                    showProgressDialog();
+                    RetrofitServiceHelper.getInstance().logout(PreferencesHelper.getInstance().getUserData().phoneId, PreferencesHelper.getInstance().getUserData().userId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
+                            .mainThread()).subscribe(new CityObserver<ResponseResult>(null) {
+                        @Override
+                        public void onErrorMsg(int errorCode, String errorMsg) {
+                            dismissProgressDialog();
+                            //不是网络位置错误直接退出
+                            if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                                toastShort(errorMsg);
+                            } else {
+                                RetrofitServiceHelper.getInstance().clearLoginDataSessionId();
+                                RetrofitServiceHelper.getInstance().cancelAllRsp();
+                                Intent loginIntent = new Intent();
+                                loginIntent.setClass(mActivity, LoginActivity.class);
+                                mActivity.overridePendingTransition(com.sensoro.common.R.anim.slide_left, com.sensoro.common.R.anim.slide_out);
+                                mActivity.startActivity(loginIntent);
+                                ActivityTaskManager.getInstance().finishAllActivity();
+                            }
+
+                        }
+
+                        @Override
+                        public void onCompleted(ResponseResult responseBase) {
+                            dismissProgressDialog();
+                            if (responseBase.getErrcode() == ResponseResult.CODE_SUCCESS) {
+                                RetrofitServiceHelper.getInstance().clearLoginDataSessionId();
+                                RetrofitServiceHelper.getInstance().cancelAllRsp();
+                                Intent loginIntent = new Intent();
+                                loginIntent.setClass(mActivity, LoginActivity.class);
+                                mActivity.overridePendingTransition(com.sensoro.common.R.anim.slide_left, com.sensoro.common.R.anim.slide_out);
+                                mActivity.startActivity(loginIntent);
+
+                            }
+                            ActivityTaskManager.getInstance().finishAllActivity();
+                        }
+                    });
+                } else {
+                    RetrofitServiceHelper.getInstance().clearLoginDataSessionId();
+                    RetrofitServiceHelper.getInstance().cancelAllRsp();
+                    Intent loginIntent = new Intent();
+                    loginIntent.setClass(mActivity, LoginActivity.class);
+                    mActivity.overridePendingTransition(com.sensoro.common.R.anim.slide_left, com.sensoro.common.R.anim.slide_out);
+                    mActivity.startActivity(loginIntent);
+                    ActivityTaskManager.getInstance().finishAllActivity();
+                }
             }
         });
 
