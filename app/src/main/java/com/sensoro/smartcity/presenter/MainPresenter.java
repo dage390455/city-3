@@ -310,6 +310,12 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                                     throwable.printStackTrace();
                                 }
 
+
+                                try {
+                                    LogUtils.loge("AlarmDeviceCountsBean", "DeviceInfoListener:"+json);
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
                                 try {
                                     DeviceInfo data = RetrofitServiceHelper.getInstance().getGson().fromJson(json,
                                             DeviceInfo.class);
@@ -395,6 +401,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                                     throwable.printStackTrace();
                                 }
                                 try {
+                                    LogUtils.loge("AlarmDeviceCountsBean", "DeviceAlarmCountListener:"+json);
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
+                                try {
                                     DeviceAlarmCount deviceAlarmCount = RetrofitServiceHelper.getInstance().getGson().fromJson(json, DeviceAlarmCount.class);
                                     List<DeviceAlarmCount.AllBean> all = deviceAlarmCount.getAll();
                                     DeviceAlarmCount.AllBean allBean = all.get(0);
@@ -428,6 +439,12 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                                 String json = jsonObject.toString();
                                 try {
                                     LogUtils.loge(this, "socket-->>> DeviceAlarmDisplayStatusListener json = " + json);
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
+
+                                try {
+                                    LogUtils.loge("AlarmDeviceCountsBean", "DeviceAlarmDisplayStatusListener:"+json);
                                 } catch (Throwable throwable) {
                                     throwable.printStackTrace();
                                 }
@@ -485,6 +502,12 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
                             String json = jsonObject.toString();
                             try {
                                 LogUtils.loge(this, "socket-->>> DeviceFlushListener json = " + json);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+
+                            try {
+                                LogUtils.loge("AlarmDeviceCountsBean", "DeviceFlushListener:"+json);
                             } catch (Throwable throwable) {
                                 throwable.printStackTrace();
                             }

@@ -49,6 +49,7 @@ import com.sensoro.smartcity.widget.calendar.cardgallery.BannerAlphaHelper;
 import com.sensoro.smartcity.widget.calendar.cardgallery.BannerRecyclerView;
 import com.sensoro.smartcity.widget.calendar.cardgallery.BannerScaleHelper;
 import com.sensoro.smartcity.widget.popup.SelectDeviceTypePopUtils;
+import com.sensoro.smartcity.widget.popup.SelectSortConditionPopUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -112,7 +113,9 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
     private SelectDeviceTypePopUtils mSelectDeviceTypePop;
-    //
+    //排序条件选择弹框工具类
+    private SelectSortConditionPopUtils mSelectSortConditionPopUtils;
+
     private BannerScaleHelper mBannerScaleHeaderHelper;
     private BannerAlphaHelper mBannerScaleContentHelper;
     private int toolbarDirection = DIRECTION_DOWN;
@@ -133,6 +136,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         initRcTypeHeader();
         initRcContent();
         initPop();
+        initSortConditionPop();
     }
 
     private void initPop() {
@@ -166,6 +170,19 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                     fgMainHomeTvSelectType.setCompoundDrawables(null, null, drawable, null);
                 }
                 mSelectDeviceTypePop.dismiss();
+            }
+        });
+
+
+    }
+
+    private void  initSortConditionPop(){
+
+        mSelectSortConditionPopUtils=new SelectSortConditionPopUtils(mRootFragment.getActivity());
+        mSelectSortConditionPopUtils.setmSelectFilterConditionItemClickListener(new SelectSortConditionPopUtils.SelectSortConditionItemClickListener() {
+            @Override
+            public void onSelectSortConditionItemClick(View view, int position, String sortCondition) {
+
             }
         });
 
@@ -252,6 +269,8 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         view.setAnimation(animation);
         animation.start();
     }
+
+
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -542,7 +561,8 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
 
     @Override
-    public void refreshContentData(final boolean isFirstInit,final boolean isPageChanged,List<DeviceInfo>  deviceInfoList) {
+    public synchronized void refreshContentData(final boolean isFirstInit,final boolean isPageChanged,List<DeviceInfo>  deviceInfoList) {
+        synchronized (this){
             if (deviceInfoList.size() > 0) {
                 fgMainHomeRcContent.setVisibility(View.VISIBLE);
                 noContent.setVisibility(View.GONE);
@@ -572,15 +592,13 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 //            freshContent(isFirstInit, dataList);
             } else {
                 fgMainHomeRcContent.setVisibility(View.GONE);
-//                if (isFirstInit) {
-//                    noContent.setVisibility(View.GONE);
-//                } else {
-//                    noContent.setVisibility(View.VISIBLE);
-//                }
-                noContent.setVisibility(View.VISIBLE);
-
+                if (isFirstInit) {
+                    noContent.setVisibility(View.GONE);
+                } else {
+                    noContent.setVisibility(View.VISIBLE);
+                }
             }
-
+        }
     }
 
 
@@ -601,6 +619,14 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     public void updateSelectDeviceTypePopAndShow(List<String> devicesTypes) {
         mSelectDeviceTypePop.updateSelectDeviceTypeList(devicesTypes);
         mSelectDeviceTypePop.showAtLocation(fgMainHomeLlRoot, Gravity.TOP);
+    }
+
+
+    @Override
+    public void updateSelectFilterConditionPopAndShow() {
+
+
+
     }
 
     @Override
@@ -633,6 +659,10 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             case R.id.fg_main_home_tv_select_type:
                 mPresenter.updateSelectDeviceTypePopAndShow();
                 break;
+//            case R.id.fg_main_home_tv_select_type:
+//                mPresenter.updateSelectSortConditionPopAndShow();
+//                break;
+
             case R.id.fl_main_home_select_type:
                 boolean expand = toolbarDirection == DIRECTION_UP;
                 appBarLayout.setExpanded(expand, true);

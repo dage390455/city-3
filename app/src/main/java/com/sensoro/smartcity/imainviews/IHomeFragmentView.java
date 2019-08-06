@@ -52,7 +52,17 @@ public interface IHomeFragmentView extends IToast, IProgressDialog, IActivityInt
 
     int getFirstVisibleItemPosition();
 
+
+
+    /**
+     *  状态变化数据更新过度动画设置
+     */
     void  startAnimation(View view,int animResID);
+
+    /**
+     *  过滤条件查看窗口
+     */
+    void updateSelectFilterConditionPopAndShow();
 
 
 }
