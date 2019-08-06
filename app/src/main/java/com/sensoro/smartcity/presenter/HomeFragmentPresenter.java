@@ -740,10 +740,21 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
                         @Override
                         public void onErrorMsg(int errorCode, String errorMsg) {
-                            freshDataList(homeTopModel);
+//                            freshDataList(homeTopModel);
+//                            getView().toastShort(errorMsg);
+//                            getView().recycleViewRefreshComplete();
+//                            getView().dismissProgressDialog();
+
+                            if (errorCode == ERR_CODE_NET_CONNECT_EX) {//网络连接异常需要清空数据集合，显示空数据页面
+                                mDeviceInfoList.clear();
+                            }
+                            getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
+                            getView().refreshContentData(true, false, mDeviceInfoList);
+
                             getView().toastShort(errorMsg);
                             getView().recycleViewRefreshComplete();
                             getView().dismissProgressDialog();
+
                         }
                     });
                     break;

@@ -592,11 +592,12 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 //            freshContent(isFirstInit, dataList);
             } else {
                 fgMainHomeRcContent.setVisibility(View.GONE);
-                if (isFirstInit) {
-                    noContent.setVisibility(View.GONE);
-                } else {
-                    noContent.setVisibility(View.VISIBLE);
-                }
+                noContent.setVisibility(View.VISIBLE);
+//                if (isFirstInit) {
+//                    noContent.setVisibility(View.GONE);
+//                } else {
+//                    noContent.setVisibility(View.VISIBLE);
+//                }
             }
         }
     }
