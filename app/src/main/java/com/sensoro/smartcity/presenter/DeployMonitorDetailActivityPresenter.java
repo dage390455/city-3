@@ -691,7 +691,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deployResultModel.updateTime = deployAnalyzerModel.updatedTime;
         deployResultModel.deviceStatus = deployAnalyzerModel.status;
         if (TextUtils.isEmpty(deployAnalyzerModel.currentSignalQuality)) {
-            deployResultModel.signal = deployAnalyzerModel.signal;
+            if (TextUtils.isEmpty(deployAnalyzerModel.signal)) {
+                deployAnalyzerModel.signal = "none";
+            }
+            deployResultModel.signal = String.copyValueOf(deployAnalyzerModel.signal.toCharArray());
         } else {
             deployResultModel.signal = deployAnalyzerModel.currentSignalQuality;
         }
@@ -743,7 +746,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deployResultModel.resultCode = Constants.DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
         deployResultModel.scanType = deployAnalyzerModel.deployType;
         deployResultModel.address = deployAnalyzerModel.address;
-        deployResultModel.signal = deployAnalyzerModel.signal;
+        if (TextUtils.isEmpty(deployAnalyzerModel.signal)) {
+            deployAnalyzerModel.signal = "none";
+        }
+        deployResultModel.signal = String.copyValueOf(deployAnalyzerModel.signal.toCharArray());
         intent.putExtra(Constants.EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
         getView().startAC(intent);
     }
