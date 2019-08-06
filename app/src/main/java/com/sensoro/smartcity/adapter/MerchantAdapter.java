@@ -6,7 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.UserInfo;
@@ -49,6 +52,8 @@ public class MerchantAdapter extends BaseAdapter implements Constants {
             holder = new MerchantViewHolder();
             convertView = mInflater.inflate(R.layout.item_merchant, null);
             holder.item_name = (TextView) convertView.findViewById(R.id.item_merchant_name);
+            holder.itemIvMerchantArrow = convertView.findViewById(R.id.iv_merchant_arrow);
+            holder.itemRvMerchantSub = convertView.findViewById(R.id.rv_merchant_sub);
             holder.itemBottomS = convertView.findViewById(R.id.item_bottom_s);
             convertView.setTag(holder);
         } else {
@@ -73,6 +78,9 @@ public class MerchantAdapter extends BaseAdapter implements Constants {
         } else {
             holder.itemBottomS.setVisibility(View.VISIBLE);
         }
+        //
+//        holder.itemRvMerchantSub.setAdapter();
+
         return convertView;
     }
 
@@ -88,6 +96,8 @@ public class MerchantAdapter extends BaseAdapter implements Constants {
     static class MerchantViewHolder {
 
         TextView item_name;
+        ImageView itemIvMerchantArrow;
+        RecyclerView itemRvMerchantSub;
         View itemBottomS;
 
         MerchantViewHolder() {
