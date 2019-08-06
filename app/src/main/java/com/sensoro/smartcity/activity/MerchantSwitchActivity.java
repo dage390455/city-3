@@ -2,9 +2,6 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -12,7 +9,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,24 +17,29 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.MerchantAdapter;
 import com.sensoro.common.adapter.SearchHistoryAdapter;
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.smartcity.imainviews.IMerchantSwitchActivityView;
-import com.sensoro.smartcity.presenter.MerchantSwitchActivityPresenter;
+import com.sensoro.common.callback.RecycleViewItemClickListener;
+import com.sensoro.common.manger.SensoroLinearLayoutManager;
 import com.sensoro.common.server.bean.UserInfo;
 import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.ProgressUtils;
-import com.sensoro.common.callback.RecycleViewItemClickListener;
-import com.sensoro.common.manger.SensoroLinearLayoutManager;
+import com.sensoro.common.widgets.SensoroToast;
 import com.sensoro.common.widgets.SpacesItemDecoration;
 import com.sensoro.common.widgets.TipOperationDialogUtils;
-import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.MerchantAdapter;
+import com.sensoro.smartcity.adapter.MerchantSubAdapter;
+import com.sensoro.smartcity.imainviews.IMerchantSwitchActivityView;
+import com.sensoro.smartcity.presenter.MerchantSwitchActivityPresenter;
 
 import java.util.List;
 
@@ -50,7 +51,7 @@ import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.common.constant.Constants.DIRECTION_UP;
 
 public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivityView, MerchantSwitchActivityPresenter> implements IMerchantSwitchActivityView
-        , View.OnClickListener, AbsListView.OnScrollListener, AdapterView.OnItemClickListener,TipOperationDialogUtils.TipDialogUtilsClickListener {
+        , View.OnClickListener, AbsListView.OnScrollListener, TipOperationDialogUtils.TipDialogUtilsClickListener, MerchantSubAdapter.OnMerchantClickListener {
     @BindView(R.id.ll_main_merchant)
     LinearLayout llMainMerchant;
     @BindView(R.id.tv_back_to_main_merchant)
@@ -167,7 +168,8 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
         mPullListView.setOnScrollListener(this);
         mMerchantAdapter = new MerchantAdapter(mActivity);
         mPullListView.setAdapter(mMerchantAdapter);
-        mPullListView.setOnItemClickListener(this);
+        mMerchantAdapter.setOnMerchantClickListener(this);
+//        mPullListView.setOnItemClickListener(this);
 
         initRcHistorySearch();
 
@@ -217,9 +219,9 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     private void initClearHistoryDialog() {
         historyClearDialog = new TipOperationDialogUtils(mActivity, true);
         historyClearDialog.setTipTitleText(getString(R.string.history_clear_all));
-        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record),R.color.c_a6a6a6);
-        historyClearDialog.setTipCancelText(getString(R.string.cancel),getResources().getColor(R.color.c_1dbb99));
-        historyClearDialog.setTipConfirmText(getString(R.string.clear),getResources().getColor(R.color.c_a6a6a6));
+        historyClearDialog.setTipMessageText(getString(R.string.confirm_clear_history_record), R.color.c_a6a6a6);
+        historyClearDialog.setTipCancelText(getString(R.string.cancel), getResources().getColor(R.color.c_1dbb99));
+        historyClearDialog.setTipConfirmText(getString(R.string.clear), getResources().getColor(R.color.c_a6a6a6));
         historyClearDialog.setTipDialogUtilsClickListener(this);
     }
 
@@ -276,12 +278,6 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
         merchantLlListRoot.setVisibility(isVisible ? View.GONE : View.VISIBLE);
     }
 
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        UserInfo userInfo = mMerchantAdapter.getData().get(position);
-        mPresenter.clickItem(userInfo);
-    }
 
     @OnClick({R.id.merchant_frame_search, R.id.merchant_et_search, R.id.btn_search_clear, R.id.merchant_imv_clear, R.id.merchant_tv_cancel, R.id.tv_back_to_main_merchant})
     public void onViewClicked(View view) {
@@ -425,7 +421,7 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 
     @Override
     protected void onPause() {
-        AppUtils.dismissInputMethodManager(mActivity,mMerchantEtSearch);
+        AppUtils.dismissInputMethodManager(mActivity, mMerchantEtSearch);
         super.onPause();
     }
 
@@ -487,5 +483,10 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
             historyClearDialog.dismiss();
         }
 
+    }
+
+    @Override
+    public void onClickMerchant(UserInfo userInfo) {
+        mPresenter.clickItem(userInfo);
     }
 }

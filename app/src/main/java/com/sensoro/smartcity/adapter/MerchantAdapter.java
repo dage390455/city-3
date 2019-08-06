@@ -9,11 +9,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.server.bean.UserInfo;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.factory.MerchantSubFactory;
+import com.sensoro.smartcity.model.MerchantSubModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,16 +75,76 @@ public class MerchantAdapter extends BaseAdapter implements Constants {
             nickname = mContext.getString(R.string.unknown);
         }
         holder.item_name.setText(nickname);
-
-        if (mList.size() == 0 || position == mList.size() - 1) {
-            holder.itemBottomS.setVisibility(View.GONE);
-        } else {
-            holder.itemBottomS.setVisibility(View.VISIBLE);
-        }
+        holder.item_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onClickMerchant(userInfo);
+                }
+            }
+        });
         //
-//        holder.itemRvMerchantSub.setAdapter();
+        List<MerchantSubModel> merchantSubList = MerchantSubFactory.createMerchantSubList(userInfo);
+        if (merchantSubList != null && merchantSubList.size() > 0) {
+            if (holder.itemRvMerchantSub.getTag() instanceof MerchantSubAdapter) {
+                holder.itemRvMerchantSub.removeAllViews();
+            }
+            holder.itemRvMerchantSub.setLayoutManager(new LinearLayoutManager(mContext));
+            holder.itemRvMerchantSub.setHasFixedSize(true);
 
+            MerchantSubAdapter adapter = new MerchantSubAdapter(mContext);
+            holder.itemRvMerchantSub.setAdapter(adapter);
+            adapter.setOnMerchantClickListener(new MerchantSubAdapter.OnMerchantClickListener() {
+                @Override
+                public void onClickMerchant(UserInfo userInfo) {
+                    if (listener != null) {
+                        listener.onClickMerchant(userInfo);
+                    }
+                }
+            });
+            //设置包裹不允许滑动，套一层父布局解决最后一项可能不显示的问题
+            holder.itemRvMerchantSub.setNestedScrollingEnabled(false);
+            holder.itemRvMerchantSub.setTag(adapter);
+            adapter.updateData(merchantSubList);
+            holder.itemIvMerchantArrow.setVisibility(View.VISIBLE);
+            //TODO 处理下拉和上拉逻辑
+            holder.itemIvMerchantArrow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (holder.itemRvMerchantSub.getVisibility() == View.VISIBLE) {
+                        holder.itemRvMerchantSub.setVisibility(View.GONE);
+                        holder.itemBottomS.setVisibility(View.VISIBLE);
+                        holder.itemIvMerchantArrow.setImageResource(R.drawable.arrow_down_elect);
+                    } else {
+                        holder.itemRvMerchantSub.setVisibility(View.VISIBLE);
+                        holder.itemBottomS.setVisibility(View.GONE);
+                        holder.itemIvMerchantArrow.setImageResource(R.drawable.arrow_up_elect);
+                    }
+                }
+            });
+            if (holder.itemRvMerchantSub.getVisibility() == View.VISIBLE) {
+                holder.itemBottomS.setVisibility(View.GONE);
+            } else {
+                holder.itemBottomS.setVisibility(View.VISIBLE);
+            }
+
+
+        } else {
+            if (mList.size() == 0 || position == mList.size() - 1) {
+                holder.itemBottomS.setVisibility(View.GONE);
+            } else {
+                holder.itemBottomS.setVisibility(View.VISIBLE);
+            }
+            holder.itemRvMerchantSub.setVisibility(View.GONE);
+            holder.itemIvMerchantArrow.setVisibility(View.INVISIBLE);
+        }
         return convertView;
+    }
+
+    private MerchantSubAdapter.OnMerchantClickListener listener;
+
+    public void setOnMerchantClickListener(MerchantSubAdapter.OnMerchantClickListener listener) {
+        this.listener = listener;
     }
 
     public void setDataList(List<UserInfo> data) {

@@ -22,7 +22,7 @@ public class UserInfo implements Serializable {
     private String isSpecific;
     private String roles;
     private String sessionID;
-    private UserInfo chirldren[];
+    private UserInfo children[];
     private Character character;
     private long createdTime;
     private long updatedTime;
@@ -31,6 +31,16 @@ public class UserInfo implements Serializable {
     private boolean addUserEnable = true;
     private String controllerAid;
     private String token;
+
+    public int getDepth() {
+        return depth;
+    }
+
+    public void setDepth(int depth) {
+        this.depth = depth;
+    }
+
+    private int depth;
 
     public String getControllerAid() {
         return controllerAid;
@@ -177,12 +187,12 @@ public class UserInfo implements Serializable {
         this.id = id;
     }
 
-    public UserInfo[] getChirldren() {
-        return chirldren;
+    public UserInfo[] getChildren() {
+        return children;
     }
 
-    public void setChirldren(UserInfo[] chirldren) {
-        this.chirldren = chirldren;
+    public void setChildren(UserInfo[] children) {
+        this.children = children;
     }
 
     public boolean isStop() {
@@ -217,7 +227,7 @@ public class UserInfo implements Serializable {
                 ", roles='" + roles + '\'' +
                 ", sessionID='" + sessionID + '\'' +
                 ", controllerAid='" + controllerAid + '\'' +
-                ", chirldren=" + Arrays.toString(chirldren) +
+                ", children=" + Arrays.toString(children) +
                 ", character=" + character +
                 ", createdTime=" + createdTime +
                 ", updatedTime=" + updatedTime +
