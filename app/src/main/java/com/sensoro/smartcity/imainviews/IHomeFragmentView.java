@@ -1,5 +1,7 @@
 package com.sensoro.smartcity.imainviews;
 
+import android.view.View;
+
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
@@ -49,4 +51,8 @@ public interface IHomeFragmentView extends IToast, IProgressDialog, IActivityInt
     void dismissAlarmInfoView();
 
     int getFirstVisibleItemPosition();
+
+    void  startAnimation(View view,int animResID);
+
+
 }

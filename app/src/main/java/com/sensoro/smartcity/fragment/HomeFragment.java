@@ -247,6 +247,13 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     }
 
     @Override
+    public void startAnimation(View view, int animResID) {
+        Animation animation= AnimationUtils.loadAnimation(getActivity(),animResID);
+        view.setAnimation(animation);
+        animation.start();
+    }
+
+    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         recycleViewState = fgMainHomeRcTypeHeader.getLayoutManager().onSaveInstanceState();
@@ -386,17 +393,6 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 //            }
 //        });
 
-
-    }
-
-
-    /**
-     * 列表刷新时调用发方法实现动画透明度渐变切换
-     */
-    private void startAnimation() {
-       Animation animation= AnimationUtils.loadAnimation(getActivity(),R.anim.anim_recycleview_item);
-       fgMainHomeRcContent.setAnimation(animation);
-       animation.start();
 
     }
 
@@ -558,7 +554,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                             if (currentPosition >= 0) {
                                 freshContent(isFirstInit, deviceInfoList);
                                 if(isPageChanged){
-                                    startAnimation();
+                                    startAnimation(fgMainHomeRcContent,R.anim.anim_recycleview_item);
                                 }
 
                             }
@@ -570,7 +566,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 if (currentPosition >= 0) {
                     freshContent(isFirstInit, deviceInfoList);
                     if(isPageChanged){
-                        startAnimation();
+                        startAnimation(fgMainHomeRcContent,R.anim.anim_recycleview_item);
                     }
                 }
 //            freshContent(isFirstInit, dataList);
