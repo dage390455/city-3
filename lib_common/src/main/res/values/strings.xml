@@ -123,11 +123,12 @@
     <string name="malfunction_monitoring_point">Malfunction Monitoring Points</string>
     <string name="all_types">All</string>
 
-    <string name="sortcondition_def">defalut order</string>
+    <string name="sortcondition">Sort Order</string>
+    <string name="sortcondition_def">Defalut Order</string>
     <array name="sortcondition">
-        <item>defalut order</item>
-        <item>name order</item>
-        <item>name reverse</item>
+        <item>Defalut Order</item>
+        <item>Name Order</item>
+        <item>Name Reverse</item>
     </array>
 
     <string name="main_page_home">Home</string>

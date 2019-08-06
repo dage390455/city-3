@@ -40,7 +40,7 @@
             android:drawablePadding="10dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            android:text="@string/all_types"
+            android:text="@string/sortcondition"
             android:textColor="@color/c_252525"
             android:textSize="18dp" />
 

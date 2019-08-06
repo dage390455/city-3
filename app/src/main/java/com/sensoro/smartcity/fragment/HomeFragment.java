@@ -80,8 +80,12 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     TextView tvDetectionPoint;
     @BindView(R.id.app_bar)
     AppBarLayout appBarLayout;
-    @BindView(R.id.fl_main_home_select_type)
-    FrameLayout flMainHomeSelectType;
+//    @BindView(R.id.fl_main_home_select_type)
+//    FrameLayout flMainHomeSelectType;
+
+    @BindView(R.id.fg_main_home_tv_select_sortcondition)
+    TextView fgMainHomeTvSelectSortcondition;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.home_layout_head)
@@ -182,7 +186,24 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         mSelectSortConditionPopUtils.setmSelectFilterConditionItemClickListener(new SelectSortConditionPopUtils.SelectSortConditionItemClickListener() {
             @Override
             public void onSelectSortConditionItemClick(View view, int position, String sortCondition) {
+                mPresenter.setSelectedCondition(sortCondition);
 
+                //选择类型的pop点击事件
+                Resources resources = Objects.requireNonNull(mRootFragment.getActivity()).getResources();
+                if ("全部".equals(sortCondition)) {
+                    fgMainHomeTvSelectSortcondition.setText(R.string.all_types);
+                    fgMainHomeTvSelectSortcondition.setTextColor(resources.getColor(R.color.c_a6a6a6));
+                    Drawable drawable = resources.getDrawable(R.drawable.main_small_triangle_gray);
+                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                    fgMainHomeTvSelectSortcondition.setCompoundDrawables(null, null, drawable, null);
+                } else {
+                    fgMainHomeTvSelectSortcondition.setText(sortCondition);
+                    Drawable drawable = resources.getDrawable(R.drawable.main_small_triangle);
+                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                    fgMainHomeTvSelectSortcondition.setTextColor(resources.getColor(R.color.c_252525));
+                    fgMainHomeTvSelectSortcondition.setCompoundDrawables(null, null, drawable, null);
+                }
+                mSelectSortConditionPopUtils.dismiss();
             }
         });
 
@@ -591,6 +612,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 }
 //            freshContent(isFirstInit, dataList);
             } else {
+                freshContent(isFirstInit, deviceInfoList);
                 fgMainHomeRcContent.setVisibility(View.GONE);
                 noContent.setVisibility(View.VISIBLE);
 //                if (isFirstInit) {
@@ -624,10 +646,9 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
 
     @Override
-    public void updateSelectFilterConditionPopAndShow() {
-
-
-
+    public void updateSelectFilterConditionPopAndShow(List mSortConditionList,String selectedCondition) {
+        mSelectSortConditionPopUtils.updateSortConditionList(mSortConditionList,selectedCondition);
+        mSelectSortConditionPopUtils.showAtLocation(fgMainHomeLlRoot, Gravity.TOP);
     }
 
     @Override
@@ -646,7 +667,8 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     }
 
 
-    @OnClick({R.id.fg_main_home_imb_add, R.id.fg_main_home_imb_search, R.id.fg_main_home_tv_select_type, R.id.fl_main_home_select_type, R.id.home_iv_top_search, R.id.home_iv_top_add, R.id.iv_header_title_left, R.id.iv_header_title_right})
+//    @OnClick({R.id.fg_main_home_imb_add, R.id.fg_main_home_imb_search, R.id.fg_main_home_tv_select_type, R.id.fl_main_home_select_type, R.id.home_iv_top_search, R.id.home_iv_top_add, R.id.iv_header_title_left, R.id.iv_header_title_right})
+@OnClick({R.id.fg_main_home_imb_add, R.id.fg_main_home_imb_search, R.id.fg_main_home_tv_select_type, R.id.fg_main_home_tv_select_sortcondition, R.id.home_iv_top_search, R.id.home_iv_top_add, R.id.iv_header_title_left, R.id.iv_header_title_right})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.home_iv_top_add:
@@ -660,14 +682,14 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             case R.id.fg_main_home_tv_select_type:
                 mPresenter.updateSelectDeviceTypePopAndShow();
                 break;
-//            case R.id.fg_main_home_tv_select_type:
-//                mPresenter.updateSelectSortConditionPopAndShow();
-//                break;
-
-            case R.id.fl_main_home_select_type:
-                boolean expand = toolbarDirection == DIRECTION_UP;
-                appBarLayout.setExpanded(expand, true);
+            case R.id.fg_main_home_tv_select_sortcondition:
+                mPresenter.updateSelectSortConditionPopAndShow();
                 break;
+
+//            case R.id.fl_main_home_select_type:
+//                boolean expand = toolbarDirection == DIRECTION_UP;
+//                appBarLayout.setExpanded(expand, true);
+//                break;
             case R.id.iv_header_title_left:
                 try {
                     int index = currentPosition - 1;

@@ -62,7 +62,7 @@ public interface IHomeFragmentView extends IToast, IProgressDialog, IActivityInt
     /**
      *  过滤条件查看窗口
      */
-    void updateSelectFilterConditionPopAndShow();
+    void updateSelectFilterConditionPopAndShow(List mSortConditionList,String selectedCondition);
 
 
 }

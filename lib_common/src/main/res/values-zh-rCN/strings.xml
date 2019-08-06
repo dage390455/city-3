@@ -119,6 +119,7 @@
     <string name="malfunction_monitoring_point">故障监测点</string>
     <string name="all_types">全部类型</string>
 
+    <string name="sortcondition">排序方式</string>
     <string name="sortcondition_def">默认排序</string>
     <array name="sortcondition">
         <item>默认排序</item>

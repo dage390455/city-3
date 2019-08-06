@@ -52,7 +52,7 @@ public class SelectSortConditionPopUtils {
         mActivity = activity;
         View view = LayoutInflater.from(activity).inflate(R.layout.item_pop_sortcondition_select, null);
         RecyclerView mRcSortConditionSelect = view.findViewById(R.id.pop_sortcondition_select_rc);
-        mFl = view.findViewById(R.id.pop_type_fl);
+        mFl = view.findViewById(R.id.pop_sortcondition_fl);
         final TextView tvSelectType = view.findViewById(R.id.pop_sortcondition_tv_select_type);
         view.findViewById(R.id.pop_sortcondition_view_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +86,6 @@ public class SelectSortConditionPopUtils {
         mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
 //        mPopupWindow.setFocusable(true);
 
-        initSortConditionList();
 
 
         initAnimation();
@@ -94,13 +93,6 @@ public class SelectSortConditionPopUtils {
     }
 
 
-    /**
-     * 初始化筛选条件列表
-     */
-    private void initSortConditionList(){
-        List mSortConditionList=  Arrays.asList(mActivity.getResources().getStringArray(R.array.sortcondition));
-        mSortConditionSelectAdapter.updateSortConditionList(mSortConditionList);
-    }
 
     private void initAnimation() {
         showTranslateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, -1f, Animation.RELATIVE_TO_SELF, 0);
@@ -124,6 +116,12 @@ public class SelectSortConditionPopUtils {
 
     }
 
+
+    public void updateSortConditionList(List mSortConditionList,String selectedCondition){
+
+        mSortConditionSelectAdapter.setmSelectSortCondition(selectedCondition);
+        mSortConditionSelectAdapter.updateSortConditionList(mSortConditionList);
+    }
 
     public void dismiss() {
         mFl.startAnimation(dismissTranslateAnimation);

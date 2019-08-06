@@ -4,6 +4,7 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,15 @@ public class SortConditionSelectAdapter extends RecyclerView.Adapter<SortConditi
     private final Context mContext;
     private RecycleViewItemClickListener mListener;
     private List<String> mSortConditionList = new ArrayList<>();
+
+    public String getmSelectSortCondition() {
+        return mSelectSortCondition;
+    }
+
+    public void setmSelectSortCondition(String mSelectSortCondition) {
+        this.mSelectSortCondition = mSelectSortCondition;
+    }
+
     private String  mSelectSortCondition;
 
     public SortConditionSelectAdapter(Context context) {
@@ -37,7 +47,7 @@ public class SortConditionSelectAdapter extends RecyclerView.Adapter<SortConditi
     public void updateSortConditionList(List<String>  mSortConditionList){
         this.mSortConditionList.clear();
         this.mSortConditionList.addAll(mSortConditionList);
-        if(this.mSortConditionList.size()>0){
+        if(this.mSortConditionList.size()>0&& TextUtils.isEmpty(mSelectSortCondition)){
             mSelectSortCondition=this.mSortConditionList.get(0);
         }
         notifyDataSetChanged();
@@ -45,7 +55,7 @@ public class SortConditionSelectAdapter extends RecyclerView.Adapter<SortConditi
 
     @Override
     public SortConditionSelectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_pop_adapter_type_select, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_pop_adapter_sortcondition_select, parent, false);
         SortConditionSelectHolder holder = new SortConditionSelectHolder(view);
         view.setTag(holder);
         return holder;
@@ -54,14 +64,16 @@ public class SortConditionSelectAdapter extends RecyclerView.Adapter<SortConditi
     @Override
     public void onBindViewHolder(final SortConditionSelectHolder mHolder, final int position) {
 
-        final  String  mSortConditionModel=mSortConditionList.get(position);
-        if(mSortConditionModel.equalsIgnoreCase(this.mSelectSortCondition)){
+        final  String  mSortCondition=mSortConditionList.get(position);
+        if(mSortCondition.equalsIgnoreCase(this.mSelectSortCondition)){
             mHolder.itemPopSelectImvSortconditionIcon.setVisibility(View.VISIBLE);
             mHolder.itemPopSelectTvSortconditionName.setTextColor(mContext.getResources().getColor(R.color.c_1dbb99));
         }else{
             mHolder.itemPopSelectImvSortconditionIcon.setVisibility(View.INVISIBLE);
             mHolder.itemPopSelectTvSortconditionName.setTextColor(mContext.getResources().getColor(R.color.c_252525));
         }
+
+        mHolder.itemPopSelectTvSortconditionName.setText(mSortCondition);
         mHolder.itemPopSelectLlRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

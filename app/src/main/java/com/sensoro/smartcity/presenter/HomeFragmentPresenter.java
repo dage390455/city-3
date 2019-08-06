@@ -52,6 +52,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -82,6 +83,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     //TODO 联动类型选择
     private volatile String mTypeSelectedType;
     private final ArrayList<String> mMergeTypes = new ArrayList<>();
+    private final ArrayList<String> mSortConditionList = new ArrayList<>();
 
     private volatile int tempAlarmCount = 0;
     private final List<HomeTopModel> mHomeTopModels = new ArrayList<>();
@@ -96,6 +98,18 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
 
     public volatile List<DeviceInfo> mDeviceInfoList = new ArrayList<>();
+
+
+    //当前的搜索条件
+    private String selectedCondition;
+
+    public String getSelectedCondition() {
+        return selectedCondition;
+    }
+
+    public void setSelectedCondition(String selectedCondition) {
+        this.selectedCondition = selectedCondition;
+    }
 
 
     /**
@@ -124,6 +138,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
+
+        selectedCondition = mContext.getResources().getString(R.string.sortcondition_def);
         //
         alarmModel.status = Constants.SENSOR_STATUS_ALARM;
         normalModel.status = Constants.SENSOR_STATUS_NORMAL;
@@ -255,8 +271,12 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                                                                                                                  mDeviceInfoList.clear();
                                                                                                              }
                                                                                                              getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
+
+
                                                                                                              getView().refreshHeaderData(true, mHomeTopModels);
                                                                                                              getView().refreshContentData(true, false, mDeviceInfoList);
+
+
                                                                                                              if (mHomeTopModels.size() <= 1) {
                                                                                                                  getView().setImvHeaderLeftVisible(false);
                                                                                                                  getView().setImvHeaderRightVisible(false);
@@ -264,6 +284,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                                                                                                              if (mHomeTopModels.size() > 0) {
                                                                                                                  updateHeaderTop(mHomeTopModels.get(0));
                                                                                                              }
+
                                                                                                              if (needToast) {
                                                                                                                  getView().toastShort(errorMsg);
                                                                                                              }
@@ -1066,26 +1087,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
 
     public void updateSelectSortConditionPopAndShow() {
-        mMergeTypes.clear();
-        DeviceMergeTypesInfo localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes();
-        if (localDevicesMergeTypes != null) {
-            final DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
-            if (config != null) {
-                Map<String, MergeTypeStyles> mergeType = config.getMergeType();
-                if (mergeType != null) {
-                    Set<Map.Entry<String, MergeTypeStyles>> entries = mergeType.entrySet();
-                    for (Map.Entry<String, MergeTypeStyles> entry : entries) {
-                        String key = entry.getKey();
-                        MergeTypeStyles mergeTypeStyles = entry.getValue();
-                        if (mergeTypeStyles.isOwn()) {
-                            mMergeTypes.add(key);
-                        }
-                    }
-                    Collections.sort(mMergeTypes);
-                }
-            }
-        }
-        getView().updateSelectDeviceTypePopAndShow(mMergeTypes);
+        List mSortConditionList = Arrays.asList(mContext.getResources().getStringArray(R.array.sortcondition));
+        getView().updateSelectFilterConditionPopAndShow(mSortConditionList, selectedCondition);
     }
 
     public void checkUpgrade() {
