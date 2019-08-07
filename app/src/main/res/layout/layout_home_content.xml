@@ -42,7 +42,8 @@
             android:text="@string/sortcondition_def"
             android:textColor="@color/c_252525"
             android:textSize="14dp"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"
+            android:textStyle="bold"/>
 
     </RelativeLayout>
     <!--<FrameLayout-->
@@ -68,7 +69,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <include
             android:id="@+id/nsv_no_content"

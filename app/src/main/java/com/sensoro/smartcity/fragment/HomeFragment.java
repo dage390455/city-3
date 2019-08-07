@@ -583,17 +583,18 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     @Override
     public synchronized void refreshContentData(final boolean isFirstInit,final boolean isPageChanged,List<DeviceInfo>  deviceInfoList) {
-        synchronized (this){
+        synchronized (deviceInfoList){
+
             if (deviceInfoList.size() > 0) {
                 fgMainHomeRcContent.setVisibility(View.VISIBLE);
                 noContent.setVisibility(View.GONE);
                 if (fgMainHomeRcContent.isComputingLayout()) {
 //                查找当前显示的进行更新操作
-                    fgMainHomeRcContent.post(new Runnable() {
+                    fgMainHomeRcContent.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             if (currentPosition >= 0) {
-                                freshContent(isFirstInit, deviceInfoList);
+                                mMainHomeFragContentAdapter.updateData(deviceInfoList);
                                 if(isPageChanged){
                                     startAnimation(fgMainHomeRcContent,R.anim.anim_recycleview_item);
                                 }
@@ -601,42 +602,46 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                             }
 
                         }
-                    });
+                    },50);
                     return;
                 }
                 if (currentPosition >= 0) {
-                    freshContent(isFirstInit, deviceInfoList);
+                    mMainHomeFragContentAdapter.updateData(deviceInfoList);
                     if(isPageChanged){
                         startAnimation(fgMainHomeRcContent,R.anim.anim_recycleview_item);
                     }
                 }
 //            freshContent(isFirstInit, dataList);
             } else {
-                freshContent(isFirstInit, deviceInfoList);
-                fgMainHomeRcContent.setVisibility(View.GONE);
-                noContent.setVisibility(View.VISIBLE);
-//                if (isFirstInit) {
-//                    noContent.setVisibility(View.GONE);
-//                } else {
-//                    noContent.setVisibility(View.VISIBLE);
-//                }
+
+                if (fgMainHomeRcContent.isComputingLayout()) {
+//                查找当前显示的进行更新操作
+                    fgMainHomeRcContent.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mMainHomeFragContentAdapter.updateData(deviceInfoList);
+                            fgMainHomeRcContent.setVisibility(View.GONE);
+                            noContent.setVisibility(View.VISIBLE);
+
+                        }
+                    },50);
+                    return;
+                }
+
+                mMainHomeFragContentAdapter.updateData(deviceInfoList);
+                fgMainHomeRcContent.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        fgMainHomeRcContent.setVisibility(View.GONE);
+                        noContent.setVisibility(View.VISIBLE);
+                    }
+                },50);
+
+
             }
         }
     }
 
-
-    //changqi添加
-    private void freshContent(boolean isFirstInit, List<DeviceInfo> dataList) {
-
-
-        mMainHomeFragContentAdapter.updateData(dataList);
-        try {
-            LogUtils.loge("freshContent_c", dataList.size() + "");
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
-
-    }
 
     @Override
     public void updateSelectDeviceTypePopAndShow(List<String> devicesTypes) {

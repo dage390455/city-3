@@ -243,7 +243,7 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
         mCardGalleryWidth = mRecyclerView.getWidth();
         mCardWidth = mCardGalleryWidth - AppUtils.dp2px(mContext, 2 * (mPagePadding + mShowLeftCardWidth));
         mOnePageWidth = mCardWidth;
-        scrollToPosition(mFirstItemPos);
+//        scrollToPosition(mFirstItemPos);
 
     }
 
