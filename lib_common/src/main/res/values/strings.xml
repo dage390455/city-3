@@ -1206,5 +1206,8 @@
     <string name="re_login">ReLogin</string>
     <string name="no_permission">No permission, please contact administrators and relogin</string>
 
+    <string name="operator">Operator</string>
+    <string name="by">by</string>
+
 
 </resources>

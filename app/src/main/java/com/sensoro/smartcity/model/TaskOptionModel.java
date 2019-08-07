@@ -1,6 +1,6 @@
 package com.sensoro.smartcity.model;
 
-import com.sensoro.smartcity.constant.MonitorPointOperationCode;
+import com.sensoro.common.constant.MonitorPointOperationCode;
 
 import java.util.ArrayList;
 import java.util.List;

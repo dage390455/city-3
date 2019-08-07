@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.constant.Constants;
+import com.sensoro.common.constant.MonitorPointOperationCode;
 import com.sensoro.common.helper.PreferencesHelper;
 import com.sensoro.common.model.SecurityRisksAdapterModel;
 import com.sensoro.common.server.bean.AlarmInfo;
@@ -440,9 +441,45 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             SpannableString spannableString = new SpannableString(alarmDetailInfo);
             holder.itemAlertContentTvContent.setText(changTextColor(alarmDetailInfo, alarmDetailInfo, spannableString, R.color.c_252525));
             holder.llConfirm.setVisibility(View.GONE);
-        } else if ("op".equals(recordInfo.getType())) {
+        } else if ("operation".equals(recordInfo.getType())) {
             //TODO
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.alarm_mute);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(mContext.getString(R.string.operator));
+            String name = recordInfo.getName();
+            String category = recordInfo.getCategory();
+            String source = recordInfo.getSource();
+            stringBuilder.append("【").append(name).append("】").append(" ").append(mContext.getString(R.string.by));
+            if ("app".equals(source)) {
+                stringBuilder.append("APP");
+            } else if ("platform".equals(source)) {
+                stringBuilder.append("Web");
+            }
+            stringBuilder.append(" ");
+            if (!TextUtils.isEmpty(category)) {
+                switch (category) {
+                    case MonitorPointOperationCode.ERASURE_STR:
+                        stringBuilder.append(mContext.getString(R.string.monitor_point_detail_erasure));
+                        //短消音
+                        break;
+                    case MonitorPointOperationCode.ERASURE_LONG_STR:
+                        stringBuilder.append(mContext.getString(R.string.monitor_point_detail_erasure_long));
+                        //长消音
+                        break;
+                    case MonitorPointOperationCode.ERASURE_TIME_STR:
+                        stringBuilder.append(mContext.getString(R.string.monitor_point_detail_erasure_time));
+                        AlarmInfo.RecordInfo.ValueInfo value = recordInfo.getValue();
+                        if (value != null) {
+                            int beepMuteTime = value.getBeepMuteTime();
+                            stringBuilder.append(" ").append(beepMuteTime).append(mContext.getString(R.string.minute));
+                        }
+                        //定时消音
+                        break;
+                }
+            }
+            holder.itemAlertContentTvContent.setText(stringBuilder.toString());
+            holder.llConfirm.setVisibility(View.GONE);
+
         }
 
     }
