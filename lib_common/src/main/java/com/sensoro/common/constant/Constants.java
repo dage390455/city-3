@@ -80,9 +80,18 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD = "extra_grants_has_bad_signal_upload";
     String EXTRA_GRANTS_HAS_CONTROLLER_AID = "extra_grants_has_controller_aid";
     String EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION = "extra_grants_has_device_position_calibration";
+    //控制设备
     String EXTRA_GRANTS_HAS_DEVICE_MUTE_SHORT = "extra_grants_has_device_mute_short";
     String EXTRA_GRANTS_HAS_DEVICE_MUTE_LONG = "extra_grants_has_device_mute_long";
     String EXTRA_GRANTS_HAS_DEVICE_MUTE_TIME = "extra_grants_has_device_mute_time";
+    String EXTRA_GRANTS_HAS_DEVICE_CONTROL_RESET = "extra_grants_has_device_control_reset";
+    String EXTRA_GRANTS_HAS_DEVICE_CONTROL_PASSWORD = "extra_grants_has_device_control_password";
+    String EXTRA_GRANTS_HAS_DEVICE_CONTROL_VIEW = "extra_grants_has_device_control_view";
+    String EXTRA_GRANTS_HAS_DEVICE_CONTROL_CHECK = "extra_grants_has_device_control_check";
+    String EXTRA_GRANTS_HAS_DEVICE_CONTROL_CONFIG = "extra_grants_has_device_control_config";
+    String EXTRA_GRANTS_HAS_DEVICE_CONTROL_OPEN = "extra_grants_has_device_control_open";
+    String EXTRA_GRANTS_HAS_DEVICE_CONTROL_CLOSE = "extra_grants_has_device_control_close";
+    //
     String EXTRA_GRANTS_HAS_DEVICE_FIRMWARE_UPDATE = "extra_grants_has_device_firmware_update";
     String EXTRA_GRANTS_HAS_DEVICE_DEMO_MODE = "extra_grants_has_device_demo_mode";
     String EXTRA_GRANTS_HAS_DEVICE_CAMERA_LIST = "extra_grants_has_device_camera_list";

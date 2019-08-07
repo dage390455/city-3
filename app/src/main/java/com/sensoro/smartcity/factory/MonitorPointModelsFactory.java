@@ -260,7 +260,7 @@ public class MonitorPointModelsFactory {
         TaskOptionModel resetModel = new TaskOptionModel();
         resetModel.id = MonitorPointOperationCode.RESET_STR;
         resetModel.optionType = MonitorPointOperationCode.RESET;
-        boolean resetClickable = status == Constants.SENSOR_STATUS_ALARM || status == Constants.SENSOR_STATUS_MALFUNCTION;
+        boolean resetClickable = (status == Constants.SENSOR_STATUS_ALARM || status == Constants.SENSOR_STATUS_MALFUNCTION) && PreferencesHelper.getInstance().getUserData().hasDeviceControlReset;
         resetModel.clickable = resetClickable;
         resetModel.contentResId = R.string.monitor_point_detail_reset;
         resetModel.drawableResId = resetClickable ? R.drawable.reset_clickable : R.drawable.reset_not_clickable;
@@ -270,7 +270,7 @@ public class MonitorPointModelsFactory {
         TaskOptionModel passwordModel = new TaskOptionModel();
         passwordModel.id = MonitorPointOperationCode.PSD_STR;
         passwordModel.optionType = MonitorPointOperationCode.PSD;
-        boolean passwordClickable = status != Constants.SENSOR_STATUS_LOST && status != Constants.SENSOR_STATUS_INACTIVE;
+        boolean passwordClickable = (status != Constants.SENSOR_STATUS_LOST && status != Constants.SENSOR_STATUS_INACTIVE) && PreferencesHelper.getInstance().getUserData().hasDeviceControlPassword;
         passwordModel.clickable = passwordClickable;
         passwordModel.contentResId = R.string.monitor_point_detail_psd;
         passwordModel.drawableResId = passwordClickable ? R.drawable.psd_clickable : R.drawable.psd_not_clickable;
@@ -280,7 +280,7 @@ public class MonitorPointModelsFactory {
         TaskOptionModel viewModel = new TaskOptionModel();
         viewModel.id = MonitorPointOperationCode.QUERY_STR;
         viewModel.optionType = MonitorPointOperationCode.QUERY;
-        boolean viewClickable = status != Constants.SENSOR_STATUS_LOST && status != Constants.SENSOR_STATUS_INACTIVE;
+        boolean viewClickable = (status != Constants.SENSOR_STATUS_LOST && status != Constants.SENSOR_STATUS_INACTIVE) && PreferencesHelper.getInstance().getUserData().hasDeviceControlView;
         viewModel.clickable = viewClickable;
         viewModel.contentResId = R.string.monitor_point_detail_query;
         viewModel.drawableResId = viewClickable ? R.drawable.query_clickable : R.drawable.query_not_clickable;
@@ -290,7 +290,7 @@ public class MonitorPointModelsFactory {
         TaskOptionModel checkModel = new TaskOptionModel();
         checkModel.id = MonitorPointOperationCode.SELF_CHECK_STR;
         checkModel.optionType = MonitorPointOperationCode.SELF_CHECK;
-        boolean checkClickable = status != Constants.SENSOR_STATUS_LOST && status != Constants.SENSOR_STATUS_INACTIVE;
+        boolean checkClickable = (status != Constants.SENSOR_STATUS_LOST && status != Constants.SENSOR_STATUS_INACTIVE) && PreferencesHelper.getInstance().getUserData().hasDeviceControlCheck;
         checkModel.clickable = checkClickable;
         checkModel.contentResId = R.string.monitor_point_detail_self_check;
         checkModel.drawableResId = checkClickable ? R.drawable.self_check_clickable : R.drawable.self_check_not_clickable;
@@ -300,7 +300,7 @@ public class MonitorPointModelsFactory {
         TaskOptionModel configModel = new TaskOptionModel();
         configModel.id = MonitorPointOperationCode.AIR_SWITCH_CONFIG_STR;
         configModel.optionType = MonitorPointOperationCode.AIR_SWITCH_CONFIG;
-        boolean configClickable = status != Constants.SENSOR_STATUS_LOST && status != Constants.SENSOR_STATUS_INACTIVE;
+        boolean configClickable = (status != Constants.SENSOR_STATUS_LOST && status != Constants.SENSOR_STATUS_INACTIVE) && PreferencesHelper.getInstance().getUserData().hasDeviceControlConfig;
         configModel.clickable = configClickable;
         configModel.contentResId = R.string.monitor_point_detail_air_switch_config;
         configModel.drawableResId = configClickable ? R.drawable.air_switch_config_clickable : R.drawable.air_switch_config_not_clickable;
@@ -310,7 +310,7 @@ public class MonitorPointModelsFactory {
         TaskOptionModel openModel = new TaskOptionModel();
         openModel.id = MonitorPointOperationCode.AIR_SWITCH_POWER_OFF_STR;
         openModel.optionType = MonitorPointOperationCode.AIR_SWITCH_POWER_OFF;
-        boolean openClickable = status != Constants.SENSOR_STATUS_LOST && status != Constants.SENSOR_STATUS_INACTIVE;
+        boolean openClickable = (status != Constants.SENSOR_STATUS_LOST && status != Constants.SENSOR_STATUS_INACTIVE) && PreferencesHelper.getInstance().getUserData().hasDeviceControlOpen;
         openModel.clickable = openClickable;
         openModel.contentResId = R.string.command_elec_disconnect_btn_title;
         openModel.drawableResId = openClickable ? R.drawable.power_off : R.drawable.power_off_gray;
@@ -320,7 +320,7 @@ public class MonitorPointModelsFactory {
         TaskOptionModel closeModel = new TaskOptionModel();
         closeModel.id = MonitorPointOperationCode.AIR_SWITCH_POWER_ON_STR;
         closeModel.optionType = MonitorPointOperationCode.AIR_SWITCH_POWER_ON;
-        boolean closeClickable = status != Constants.SENSOR_STATUS_LOST && status != Constants.SENSOR_STATUS_INACTIVE;
+        boolean closeClickable = (status != Constants.SENSOR_STATUS_LOST && status != Constants.SENSOR_STATUS_INACTIVE) && PreferencesHelper.getInstance().getUserData().hasDeviceControlClose;
         closeModel.clickable = closeClickable;
         closeModel.contentResId = R.string.command_elec_connect_btn_title;
         closeModel.drawableResId = closeClickable ? R.drawable.power_on : R.drawable.power_on_gray;

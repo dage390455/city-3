@@ -29,9 +29,18 @@ public final class EventLoginData implements Serializable {
     public boolean hasSignalConfig = false;
     public boolean hasForceUpload = false;
     public boolean hasDevicePositionCalibration = false;
+    //
     public boolean hasDeviceMuteShort = false;
     public boolean hasDeviceMuteLong = false;
     public boolean hasDeviceMuteTime = false;
+    public boolean hasDeviceControlReset = false;
+    public boolean hasDeviceControlPassword = false;
+    public boolean hasDeviceControlView = false;
+    public boolean hasDeviceControlCheck = false;
+    public boolean hasDeviceControlConfig = false;
+    public boolean hasDeviceControlOpen = false;
+    public boolean hasDeviceControlClose = false;
+    //
     public boolean hasDeviceFirmwareUpdate = false;
     public boolean hasDeviceDemoMode = false;
     public boolean needAuth = false;
@@ -43,7 +52,7 @@ public final class EventLoginData implements Serializable {
     public boolean hasNameplateList = false;
     public boolean hasNameplateDeploy = false;
     public boolean hasIBeaconSearchDemo = false;
-//    _iBeaconSearchDemo
+    //    _iBeaconSearchDemo
     public boolean hasMonitorTaskList = false;
     public boolean hasMonitorTaskConfirm = false;
 
@@ -67,6 +76,13 @@ public final class EventLoginData implements Serializable {
                     hasInspectionDeviceModify == that.hasInspectionDeviceModify &&
                     hasAlarmInfo == that.hasAlarmInfo &&
                     hasMalfunction == that.hasMalfunction &&
+                    hasDeviceControlReset == that.hasDeviceControlReset &&
+                    hasDeviceControlPassword == that.hasDeviceControlPassword &&
+                    hasDeviceControlView == that.hasDeviceControlView &&
+                    hasDeviceControlCheck == that.hasDeviceControlCheck &&
+                    hasDeviceControlConfig == that.hasDeviceControlConfig &&
+                    hasDeviceControlOpen == that.hasDeviceControlOpen &&
+                    hasDeviceControlClose == that.hasDeviceControlClose &&
                     hasDeviceBrief == that.hasDeviceBrief &&
                     hasSignalCheck == that.hasSignalCheck &&
                     hasSignalConfig == that.hasSignalConfig &&
@@ -152,6 +168,13 @@ public final class EventLoginData implements Serializable {
                 ", hasMonitorTaskList=" + hasMonitorTaskList +
                 ", hasMonitorTaskConfirm=" + hasMonitorTaskConfirm +
                 ", accountId=" + accountId +
+                ", hasDeviceControlReset=" + hasDeviceControlReset +
+                ", hasDeviceControlPassword=" + hasDeviceControlPassword +
+                ", hasDeviceControlView=" + hasDeviceControlView +
+                ", hasDeviceControlCheck=" + hasDeviceControlCheck +
+                ", hasDeviceControlConfig=" + hasDeviceControlConfig +
+                ", hasDeviceControlOpen=" + hasDeviceControlOpen +
+                ", hasDeviceControlClose=" + hasDeviceControlClose +
                 '}';
     }
 }
