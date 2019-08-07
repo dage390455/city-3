@@ -40,6 +40,7 @@ import com.sensoro.smartcity.analyzer.AlarmPopupConfigAnalyzer;
 import com.sensoro.smartcity.imainviews.IHomeFragmentView;
 import com.sensoro.smartcity.model.AlarmPopupModel;
 import com.sensoro.smartcity.model.HomeTopModel;
+import com.sensoro.smartcity.model.SortConditionModel;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils;
@@ -82,8 +83,15 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     private SoundPool mSoundPool;
     //TODO 联动类型选择
     private volatile String mTypeSelectedType;
+
     private final ArrayList<String> mMergeTypes = new ArrayList<>();
-    private final ArrayList<String> mSortConditionList = new ArrayList<>();
+
+
+    private volatile SortConditionModel mSelectedCondition;
+
+
+    private final ArrayList<SortConditionModel> mSortConditionList = new ArrayList<>();
+
 
     private volatile int tempAlarmCount = 0;
     private final List<HomeTopModel> mHomeTopModels = new ArrayList<>();
@@ -100,17 +108,13 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     public volatile List<DeviceInfo> mDeviceInfoList = new ArrayList<>();
 
 
-    //当前的搜索条件
-    private String selectedCondition;
-
-    public String getSelectedCondition() {
-        return selectedCondition;
+    public SortConditionModel getmSelectedCondition() {
+        return mSelectedCondition;
     }
 
-    public void setSelectedCondition(String selectedCondition) {
-        this.selectedCondition = selectedCondition;
+    public void setmSelectedCondition(SortConditionModel mSelectedCondition) {
+        this.mSelectedCondition = mSelectedCondition;
     }
-
 
     /**
      * 推送轮训
@@ -137,9 +141,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        onCreate();
 
-        selectedCondition = mContext.getResources().getString(R.string.sortcondition_def);
+
+        onCreate();
         //
         alarmModel.status = Constants.SENSOR_STATUS_ALARM;
         normalModel.status = Constants.SENSOR_STATUS_NORMAL;
@@ -158,6 +162,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         mSoundId = mSoundPool.load(context, R.raw.alarm, 1);
         mHandler.postDelayed(mTask, 3000);
         getView().setImvHeaderLeftVisible(false);
+
+
     }
 
     public void requestInitData(boolean needShowProgressDialog, boolean needToast) {
@@ -178,10 +184,13 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 .io()).flatMap(new Function<ResponseResult<DeviceTypeCount>, ObservableSource<ResponseResult<List<DeviceInfo>>>>() {
             @Override
             public ObservableSource<ResponseResult<List<DeviceInfo>>> apply(ResponseResult<DeviceTypeCount> deviceTypeCountRsp) throws Exception {
+
+
                 int currentStatus = 0;//原有的显示中的type
                 if (mCurrentHomeTopModel != null) {
                     currentStatus = mCurrentHomeTopModel.status;
                 }
+
 
                 mHomeTopModels.clear();
                 alarmModel.clearData();
@@ -217,9 +226,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 }
 
                 //找到最新池子中的当前显示的对象
-                for (int i = 0; i < mHomeTopModels.size(); i++) {
-                    if (currentStatus == mHomeTopModels.get(i).status) {
-                        mCurrentHomeTopModel = mHomeTopModels.get(i);
+                for (HomeTopModel  item:mHomeTopModels) {
+                    if (currentStatus ==item.status) {
+                        mCurrentHomeTopModel =item;
                         break;
                     }
                 }
@@ -237,6 +246,10 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }
+
+
+
+
                 return getDeviceInfoListByStateRspObservable(currentStatus, false);
             }
 
@@ -254,12 +267,23 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                                                                                                                  getView().setImvHeaderRightVisible(false);
                                                                                                              }
                                                                                                              if (mHomeTopModels.size() > 0) {
-                                                                                                                 updateHeaderTop(mHomeTopModels.get(0));
+                                                                                                                 updateHeaderTop(mCurrentHomeTopModel);
                                                                                                              }
                                                                                                              getView().dismissAlarmInfoView();
                                                                                                              getView().recycleViewRefreshComplete();
                                                                                                              getView().dismissProgressDialog();
                                                                                                              needFreshAll = false;
+
+
+                                                                                                             if(needShowAlarmWindow){
+                                                                                                                 if (isAttachedView()) {
+                                                                                                                     if (needAlarmPlay) {
+                                                                                                                         playSound();
+                                                                                                                     }
+                                                                                                                     shoAlarmWindow();
+                                                                                                                 }
+                                                                                                                 needAlarmPlay = false;
+                                                                                                             }
 
                                                                                                          }
 
@@ -282,7 +306,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                                                                                                                  getView().setImvHeaderRightVisible(false);
                                                                                                              }
                                                                                                              if (mHomeTopModels.size() > 0) {
-                                                                                                                 updateHeaderTop(mHomeTopModels.get(0));
+                                                                                                                 updateHeaderTop(mCurrentHomeTopModel);
                                                                                                              }
 
                                                                                                              if (needToast) {
@@ -297,7 +321,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                                                                                                      }
         );
     }
-
     public void updateHeaderTop(HomeTopModel homeTopModel) {
         try {
             mCurrentHomeTopModel = homeTopModel;
@@ -321,7 +344,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     @NonNull
     private Observable<ResponseResult<List<DeviceInfo>>> getDeviceInfoListByStateRspObservable(int status, boolean isPageChanged) {
 //        getView().showProgressDialog();
-        Observable<ResponseResult<List<DeviceInfo>>> listObservable = RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, status, null).subscribeOn(Schedulers
+        Observable<ResponseResult<List<DeviceInfo>>> listObservable = RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(mSelectedCondition==null?null:mSelectedCondition.order, mSelectedCondition==null?null:mSelectedCondition.sort, page, null, mTypeSelectedType, status, null).subscribeOn(Schedulers
                 .io()).doOnNext(new Consumer<ResponseResult<List<DeviceInfo>>>() {
             @Override
             public void accept(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
@@ -333,47 +356,28 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             }
 
         });
-        listObservable.observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
-            @Override
-            public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
-                getView().refreshContentData(false, isPageChanged, mDeviceInfoList);
-                getView().dismissProgressDialog();
-            }
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-
-                if (errorCode == ERR_CODE_NET_CONNECT_EX) {//网络连接异常需要清空数据集合，显示空数据页面
-                    mDeviceInfoList.clear();
-                    getView().refreshContentData(false, isPageChanged, mDeviceInfoList);
-                }
-                getView().toastShort(errorMsg);
-                getView().recycleViewRefreshComplete();
-                getView().dismissProgressDialog();
-            }
-        });
-
-        return listObservable;
-//        return RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, status, null).subscribeOn(Schedulers.io()).flatMap(new Function<ResponseResult<List<DeviceInfo>>, ObservableSource<ResponseResult<List<DeviceInfo>>>>() {
+//        listObservable.observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
 //            @Override
-//            public ObservableSource<ResponseResult<List<DeviceInfo>>> apply(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
-//                List<DeviceInfo> data = deviceInfoListRsp.getData();
-//                mDeviceInfoList.clear();
-//                if (data != null && data.size() > 0) {
-//                    mDeviceInfoList.addAll(data);
-//                }
-//                return RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, status, null);
+//            public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
+//                getView().refreshContentData(false, isPageChanged, mDeviceInfoList);
+//                getView().dismissProgressDialog();
 //            }
-//        }).doOnNext(new Consumer<ResponseResult<List<DeviceInfo>>>() {
+//
 //            @Override
-//            public void accept(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
-//                List<DeviceInfo> data = deviceInfoListRsp.getData();
-//                mDeviceInfoList.clear();
-//                if (data != null && data.size() > 0) {
-//                    mDeviceInfoList.addAll(data);
+//            public void onErrorMsg(int errorCode, String errorMsg) {
+//
+//                if (errorCode == ERR_CODE_NET_CONNECT_EX) {//网络连接异常需要清空数据集合，显示空数据页面
+//                    mDeviceInfoList.clear();
+//                    getView().refreshContentData(false, isPageChanged, mDeviceInfoList);
 //                }
+//                getView().toastShort(errorMsg);
+//                getView().recycleViewRefreshComplete();
+//                getView().dismissProgressDialog();
 //            }
 //        });
+
+        return listObservable;
+
     }
 
 
@@ -391,8 +395,31 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }
+//                getView().showProgressDialog();
+//                getDeviceInfoListByStateRspObservable(mCurrentHomeTopModel.status, isPageChanged);
+
+                page = 1;
                 getView().showProgressDialog();
-                getDeviceInfoListByStateRspObservable(mCurrentHomeTopModel.status, isPageChanged);
+                getDeviceInfoListByStateRspObservable(mCurrentHomeTopModel.status, isPageChanged).retryWhen(new RetryWithDelay(2, 100)).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
+                    @Override
+                    public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
+
+                        getView().refreshContentData(false, isPageChanged, mDeviceInfoList);
+                        getView().dismissProgressDialog();
+                        getView().dismissAlarmInfoView();
+                    }
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        if (errorCode == ERR_CODE_NET_CONNECT_EX) {//网络连接异常需要清空数据集合，显示空数据页面
+                            mDeviceInfoList.clear();
+                            getView().refreshContentData(false, isPageChanged, mDeviceInfoList);
+                        }
+                        getView().toastShort(errorMsg);
+                        getView().recycleViewRefreshComplete();
+                        getView().dismissProgressDialog();
+                        getView().dismissAlarmInfoView();
+                    }
+                });
 
             }
         } catch (Exception e) {
@@ -418,26 +445,15 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             public void run() {
                 if (needFreshAll) {
                     requestInitData(false, false);
+
                 } else {
                     if (needRefreshContent) {
-//                        if (homeTopModelCacheFresh[0] || homeTopModelCacheFresh[1] || homeTopModelCacheFresh[2] || homeTopModelCacheFresh[3] || homeTopModelCacheFresh[4]) {
-//                            homeTopModelCacheFresh[0] = false;
-//                            homeTopModelCacheFresh[1] = false;
-//                            homeTopModelCacheFresh[2] = false;
-//                            homeTopModelCacheFresh[3] = false;
-//                            homeTopModelCacheFresh[4] = false;
-//                            if (isAttachedView()) {
-//                                getView().refreshContentData(false);
-//                            }
-//                        }
                         if (isAttachedView()) {
                             getView().refreshContentData(false, false, mDeviceInfoList);
                         }
                         needRefreshContent = false;
                     }
                     if (needRefreshHeader) {
-
-
                         if (isAttachedView()) {
                             getView().refreshHeaderData(false, mHomeTopModels);
                             getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
@@ -476,11 +492,24 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 mergeType = WidgetUtil.handleMergeType(deviceType);
             }
             if (TextUtils.isEmpty(mTypeSelectedType)) {
-                addSocketData(organizeJsonData(deviceInfo));
+//                addSocketData(organizeJsonData(deviceInfo));
+                if(organizeJsonData(deviceInfo)!=null){//在里面，直接刷新一下
+                    needRefreshContent=true;
+                }else{//不在里面不处理
+//                    needFreshAll=true;
+                }
             } else {
                 if (mTypeSelectedType.equalsIgnoreCase(mergeType)) {
-                    addSocketData(organizeJsonData(deviceInfo));
+//                    addSocketData(organizeJsonData(deviceInfo));
+                    if(organizeJsonData(deviceInfo)!=null){//在里面，直接刷新一下
+                        needRefreshContent=true;
+                    }else{//不在里面不处理
+//                        needFreshAll=true;
+                    }
                 }
+
+
+
             }
         }
         return deployFlag;
@@ -531,9 +560,15 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     //子线程处理
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(DeviceInfo deviceInfo) {
-            if (needHandleDevicePush(deviceInfo)) {
-                needRefreshContent = true;
-            }
+
+        try {
+            LogUtils.loge("onMessageEvent_DeviceInfo", "" + deviceInfo.getSn());
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        if (needHandleDevicePush(deviceInfo)) {
+            needRefreshContent = true;
+        }
 
     }
 
@@ -552,9 +587,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         int lostCount = alarmDeviceCountsBean.get_$2();
         int inactiveCount = alarmDeviceCountsBean.get_$3();
         int malfunctionCount = alarmDeviceCountsBean.get_$4();
-        boolean  isneedFresh=false;
-        if(currentAlarmCount!=alarmModel.value||normalCount!=normalModel.value||lostCount!=lostModel.value||inactiveCount!=inactiveModel.value||malfunctionCount!=malfunctionModel.value){
-            isneedFresh=true;
+        boolean isneedFresh = false;
+        if (currentAlarmCount != alarmModel.value || normalCount != normalModel.value || lostCount != lostModel.value || inactiveCount != inactiveModel.value || malfunctionCount != malfunctionModel.value) {
+            isneedFresh = true;
         }
         //
         if (tempAlarmCount == 0 && currentAlarmCount > 0) {
@@ -597,8 +632,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         }
 
 
-
-
 //        int currentStatus = 0;//原有的显示中的type
 //        if (mCurrentHomeTopModel != null) {
 //            currentStatus = mCurrentHomeTopModel.status;
@@ -620,16 +653,13 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         totalMonitorPoint = currentAlarmCount + normalCount + lostCount + inactiveCount + malfunctionCount;
 
 
+//        needRefreshHeader=isneedFresh;
         needFreshAll=isneedFresh;
 
-//        if (mCurrentHomeTopModel.status == Constants.SENSOR_STATUS_ALARM) {
-//            needFreshAll = true;
-//        } else {
-//            needRefreshHeader = true;
-//        }
 
 
         try {
+            LogUtils.loge("onMessageEventneedFresh","EVENT_DATA_SOCKET_DATA_COUNT-->> tempAlarmCount = " + tempAlarmCount + ",currentAlarmCount = " + currentAlarmCount + ",mCurrentHomeTopModel.type = " + mCurrentHomeTopModel.status);
             LogUtils.loge("onMessageEventneedFresh", "needFreshAll:" + needFreshAll);
         } catch (Throwable throwable) {
             throwable.printStackTrace();
@@ -721,7 +751,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                         throwable.printStackTrace();
                     }
 
-                    if (needShowAlarmWindow && mCurrentHomeTopModel.status != 0) {
+                    if (needShowAlarmWindow && mCurrentHomeTopModel.status != Constants.SENSOR_STATUS_ALARM) {
                         getView().showAlarmInfoView();
                     }
                 } catch (Exception e) {
@@ -774,7 +804,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                             }
 
                             try {
-                                LogUtils.loge("onErrorMsg", "mDeviceInfoList.size="+mDeviceInfoList.size());
+                                LogUtils.loge("onErrorMsg", "mDeviceInfoList.size=" + mDeviceInfoList.size());
 
                             } catch (Throwable throwable) {
                                 throwable.printStackTrace();
@@ -853,8 +883,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         int status = newDeviceInfo.getStatus();
         String sn = newDeviceInfo.getSn();
         try {
-            LogUtils.loge("mDeviceInfoListsize", "mDeviceInfoList.size="+mDeviceInfoList.size());
-            LogUtils.loge("mDeviceInfoListsize", "newDeviceInfo.sn="+newDeviceInfo.getSn());
+            LogUtils.loge("mDeviceInfoListsize", "mDeviceInfoList.size=" + mDeviceInfoList.size());
+            LogUtils.loge("mDeviceInfoListsize", "newDeviceInfo.sn=" + newDeviceInfo.getSn());
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
@@ -864,19 +894,20 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 while (iterator.hasNext()) {
                     DeviceInfo currentDeviceInfo = iterator.next();
                     if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
+                        currentDeviceInfo.cloneSocketData(newDeviceInfo);
 //                        if (status == Constants.SENSOR_STATUS_ALARM) {
 //                            currentDeviceInfo.cloneSocketData(newDeviceInfo);
 //                        } else {
 //                            iterator.remove();
 //                        }
-                        iterator.remove();
+//                        iterator.remove();
 //                        homeTopModelCacheFresh[0] = true;
-                        return newDeviceInfo;
+                        return currentDeviceInfo;
                     }
                 }
 
                 try {
-                    LogUtils.loge("mDeviceInfoListsize", "mDeviceInfoList.size="+mDeviceInfoList.size());
+                    LogUtils.loge("mDeviceInfoListsize", "mDeviceInfoList.size=" + mDeviceInfoList.size());
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }
@@ -887,14 +918,14 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     private void addSocketData(DeviceInfo newDeviceInfo) {
-        if (mCurrentHomeTopModel != null &&newDeviceInfo!=null&& mCurrentHomeTopModel.status == newDeviceInfo.getStatus()) {
+        if (mCurrentHomeTopModel != null && newDeviceInfo != null && mCurrentHomeTopModel.status == newDeviceInfo.getStatus()) {
             synchronized (mDeviceInfoList) {
 //                if(mCurrentHomeTopModel.status== Constants.SENSOR_STATUS_ALARM){//如果是预警不处理，如果不是放入到第一个
 //                }else{
 //                    mDeviceInfoList.add(0, newDeviceInfo);
 //                }
-                if(newDeviceInfo!=null){
-                    mDeviceInfoList.add(0, newDeviceInfo);
+                if (newDeviceInfo != null) {
+//                    mDeviceInfoList.add(0, newDeviceInfo);
                 }
 //                homeTopModelCacheFresh[0] = true;
             }
@@ -959,6 +990,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             }
         });
     }
+
 
 
     @Override
@@ -1113,9 +1145,19 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
 
+    public void initSortCondition() {
+        String[] tilteArray = mContext.getResources().getStringArray(R.array.sortcondition);
+        mSortConditionList.add(mSelectedCondition = new SortConditionModel("init", "status", tilteArray[0], true));
+        mSortConditionList.add(new SortConditionModel("asc", "name", tilteArray[1], false));
+        mSortConditionList.add(new SortConditionModel("desc", "name", tilteArray[2], false));
+
+    }
+
     public void updateSelectSortConditionPopAndShow() {
-        List mSortConditionList = Arrays.asList(mContext.getResources().getStringArray(R.array.sortcondition));
-        getView().updateSelectFilterConditionPopAndShow(mSortConditionList, selectedCondition);
+        if (mSortConditionList.size() == 0) {
+            initSortCondition();
+        }
+        getView().updateSelectFilterConditionPopAndShow(mSortConditionList, mSelectedCondition);
     }
 
     public void checkUpgrade() {
@@ -1142,9 +1184,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     private String getCurrentDataStr() {
         try {
-            if (mCurrentHomeTopModel == null) {
-                mCurrentHomeTopModel = mHomeTopModels.get(0);
-            }
+//            if (mCurrentHomeTopModel == null) {
+//                mCurrentHomeTopModel = mHomeTopModels.get(0);
+//            }
             StringBuilder stringBuilder = new StringBuilder();
             switch (mCurrentHomeTopModel.status) {
                 case 0:
@@ -1171,9 +1213,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     private int getCurrentColor() {
         try {
-            if (mCurrentHomeTopModel == null) {
-                mCurrentHomeTopModel = mHomeTopModels.get(0);
-            }
+//            if (mCurrentHomeTopModel == null) {
+//                mCurrentHomeTopModel = mHomeTopModels.get(0);
+//            }
             switch (mCurrentHomeTopModel.status) {
                 case 0:
                     return R.color.c_f34a4a;

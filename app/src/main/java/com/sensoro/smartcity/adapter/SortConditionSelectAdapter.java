@@ -5,6 +5,7 @@ package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.model.SortConditionModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,30 +28,27 @@ import butterknife.ButterKnife;
 public class SortConditionSelectAdapter extends RecyclerView.Adapter<SortConditionSelectAdapter.SortConditionSelectHolder> {
     private final Context mContext;
     private RecycleViewItemClickListener mListener;
-    private List<String> mSortConditionList = new ArrayList<>();
+    private List<SortConditionModel> mSortConditionList = new ArrayList<>();
 
-    public String getmSelectSortCondition() {
+    public SortConditionModel getmSelectSortCondition() {
         return mSelectSortCondition;
     }
 
-    public void setmSelectSortCondition(String mSelectSortCondition) {
+    public void setmSelectSortCondition(SortConditionModel mSelectSortCondition) {
         this.mSelectSortCondition = mSelectSortCondition;
     }
 
-    private String  mSelectSortCondition;
+    private SortConditionModel  mSelectSortCondition;
 
     public SortConditionSelectAdapter(Context context) {
         mContext = context;
-
     }
 
 
-    public void updateSortConditionList(List<String>  mSortConditionList){
+    public void updateSortConditionList(List<SortConditionModel>  mSortConditionList){
+
         this.mSortConditionList.clear();
         this.mSortConditionList.addAll(mSortConditionList);
-        if(this.mSortConditionList.size()>0&& TextUtils.isEmpty(mSelectSortCondition)){
-            mSelectSortCondition=this.mSortConditionList.get(0);
-        }
         notifyDataSetChanged();
     }
 
@@ -64,8 +63,8 @@ public class SortConditionSelectAdapter extends RecyclerView.Adapter<SortConditi
     @Override
     public void onBindViewHolder(final SortConditionSelectHolder mHolder, final int position) {
 
-        final  String  mSortCondition=mSortConditionList.get(position);
-        if(mSortCondition.equalsIgnoreCase(this.mSelectSortCondition)){
+        final  SortConditionModel  mSortCondition=mSortConditionList.get(position);
+        if(mSortCondition.isSelected){
             mHolder.itemPopSelectImvSortconditionIcon.setVisibility(View.VISIBLE);
             mHolder.itemPopSelectTvSortconditionName.setTextColor(mContext.getResources().getColor(R.color.c_1dbb99));
         }else{
@@ -73,11 +72,15 @@ public class SortConditionSelectAdapter extends RecyclerView.Adapter<SortConditi
             mHolder.itemPopSelectTvSortconditionName.setTextColor(mContext.getResources().getColor(R.color.c_252525));
         }
 
-        mHolder.itemPopSelectTvSortconditionName.setText(mSortCondition);
+        mHolder.itemPopSelectTvSortconditionName.setText(mSortCondition.title);
         mHolder.itemPopSelectLlRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(mSelectSortCondition!=null){
+                    mSelectSortCondition.isSelected=false;
+                }
                 mSelectSortCondition=getItem(position);
+                mSelectSortCondition.isSelected=true;
                 notifyDataSetChanged();
                 if (mListener != null) {
                     mListener.onItemClick(v, position);
@@ -99,7 +102,7 @@ public class SortConditionSelectAdapter extends RecyclerView.Adapter<SortConditi
 
     }
 
-    public  String getItem(int position){
+    public  SortConditionModel getItem(int position){
             return    mSortConditionList.get(position);
     }
 
@@ -108,7 +111,7 @@ public class SortConditionSelectAdapter extends RecyclerView.Adapter<SortConditi
         return mSortConditionList.size() ;
     }
 
-    public List<String> getDataList() {
+    public List<SortConditionModel> getDataList() {
         return mSortConditionList;
     }
 

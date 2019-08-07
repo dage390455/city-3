@@ -33,6 +33,16 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
     private CardLinearSnapHelper mLinearSnapHelper = new CardLinearSnapHelper();
     private int mLastPos;
 
+    public boolean isNeedInitScrollToPosition() {
+        return isNeedInitScrollToPosition;
+    }
+
+    public void setNeedInitScrollToPosition(boolean needInitScrollToPosition) {
+        isNeedInitScrollToPosition = needInitScrollToPosition;
+    }
+
+    private boolean  isNeedInitScrollToPosition=true;
+
     public void attachToRecyclerView(final BannerRecyclerView mRecyclerView) {
         if (mRecyclerView == null) {
             return;
@@ -243,7 +253,10 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
         mCardGalleryWidth = mRecyclerView.getWidth();
         mCardWidth = mCardGalleryWidth - AppUtils.dp2px(mContext, 2 * (mPagePadding + mShowLeftCardWidth));
         mOnePageWidth = mCardWidth;
-//        scrollToPosition(mFirstItemPos);
+        if(isNeedInitScrollToPosition){
+            scrollToPosition(mFirstItemPos);
+        }
+
 
     }
 

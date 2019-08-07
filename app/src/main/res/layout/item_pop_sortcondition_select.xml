@@ -36,7 +36,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="18dp"
             android:layout_marginBottom="16dp"
-            android:drawableEnd="@drawable/main_small_triangle"
+            android:drawableEnd="@drawable/change_sort_condition"
             android:drawablePadding="10dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"

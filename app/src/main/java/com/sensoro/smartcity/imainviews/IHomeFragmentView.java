@@ -7,6 +7,7 @@ import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
 import com.sensoro.common.server.bean.DeviceInfo;
 import com.sensoro.smartcity.model.HomeTopModel;
+import com.sensoro.smartcity.model.SortConditionModel;
 
 import java.util.List;
 
@@ -62,7 +63,7 @@ public interface IHomeFragmentView extends IToast, IProgressDialog, IActivityInt
     /**
      *  过滤条件查看窗口
      */
-    void updateSelectFilterConditionPopAndShow(List mSortConditionList,String selectedCondition);
+    void updateSelectFilterConditionPopAndShow(List mSortConditionList, SortConditionModel selectedCondition);
 
 
 }

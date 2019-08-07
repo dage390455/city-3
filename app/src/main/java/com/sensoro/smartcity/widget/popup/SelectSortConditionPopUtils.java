@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.SortConditionSelectAdapter;
+import com.sensoro.smartcity.model.SortConditionModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -117,8 +118,7 @@ public class SelectSortConditionPopUtils {
     }
 
 
-    public void updateSortConditionList(List mSortConditionList,String selectedCondition){
-
+    public void updateSortConditionList(List mSortConditionList,SortConditionModel selectedCondition){
         mSortConditionSelectAdapter.setmSelectSortCondition(selectedCondition);
         mSortConditionSelectAdapter.updateSortConditionList(mSortConditionList);
     }
@@ -182,11 +182,11 @@ public class SelectSortConditionPopUtils {
         mPopupWindow.setAnimationStyle(R.style.DialogFragmentUpAnim);
     }
 
-    public String getItem(int position) {
+    public SortConditionModel getItem(int position) {
         return mSortConditionSelectAdapter.getItem(position);
     }
 
-    public List<String> getSelectSortConditionList() {
+    public List<SortConditionModel> getSelectSortConditionList() {
         return mSortConditionSelectAdapter.getDataList();
     }
 
@@ -199,6 +199,6 @@ public class SelectSortConditionPopUtils {
     }
 
     public interface SelectSortConditionItemClickListener {
-        void onSelectSortConditionItemClick(View view, int position, String sortCondition);
+        void onSelectSortConditionItemClick(View view, int position, SortConditionModel sortCondition);
     }
 }

@@ -41,6 +41,7 @@ import com.sensoro.smartcity.adapter.MainHomeFragRcTypeAdapter;
 import com.sensoro.smartcity.imainviews.IHomeFragmentView;
 import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.model.HomeTopModel;
+import com.sensoro.smartcity.model.SortConditionModel;
 import com.sensoro.smartcity.presenter.HomeFragmentPresenter;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.CustomVRecyclerView;
@@ -185,24 +186,10 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         mSelectSortConditionPopUtils=new SelectSortConditionPopUtils(mRootFragment.getActivity());
         mSelectSortConditionPopUtils.setmSelectFilterConditionItemClickListener(new SelectSortConditionPopUtils.SelectSortConditionItemClickListener() {
             @Override
-            public void onSelectSortConditionItemClick(View view, int position, String sortCondition) {
-                mPresenter.setSelectedCondition(sortCondition);
-
-                //选择类型的pop点击事件
-                Resources resources = Objects.requireNonNull(mRootFragment.getActivity()).getResources();
-                if ("全部".equals(sortCondition)) {
-                    fgMainHomeTvSelectSortcondition.setText(R.string.all_types);
-                    fgMainHomeTvSelectSortcondition.setTextColor(resources.getColor(R.color.c_a6a6a6));
-                    Drawable drawable = resources.getDrawable(R.drawable.main_small_triangle_gray);
-                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                    fgMainHomeTvSelectSortcondition.setCompoundDrawables(null, null, drawable, null);
-                } else {
-                    fgMainHomeTvSelectSortcondition.setText(sortCondition);
-                    Drawable drawable = resources.getDrawable(R.drawable.main_small_triangle);
-                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                    fgMainHomeTvSelectSortcondition.setTextColor(resources.getColor(R.color.c_252525));
-                    fgMainHomeTvSelectSortcondition.setCompoundDrawables(null, null, drawable, null);
-                }
+            public void onSelectSortConditionItemClick(View view, int position, SortConditionModel sortCondition) {
+                fgMainHomeTvSelectSortcondition.setText(sortCondition.title);
+                mPresenter.setmSelectedCondition(sortCondition);
+                mPresenter.freshContentView(mPresenter.getCurrentHomeModel(),true);
                 mSelectSortConditionPopUtils.dismiss();
             }
         });
@@ -220,6 +207,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         fgMainHomeRcTypeHeader.setFocusable(false);
         fgMainHomeRcTypeHeader.setHasFixedSize(true);
         mBannerScaleHeaderHelper = new BannerScaleHelper();
+        mBannerScaleHeaderHelper.setNeedInitScrollToPosition(false);
         mBannerScaleHeaderHelper.attachToRecyclerView(fgMainHomeRcTypeHeader);
         fgMainHomeRcTypeHeader.setOnPageChangeListener(new BannerRecyclerView.OnPageChangeListener() {
             @Override
@@ -651,7 +639,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
 
     @Override
-    public void updateSelectFilterConditionPopAndShow(List mSortConditionList,String selectedCondition) {
+    public void updateSelectFilterConditionPopAndShow(List mSortConditionList, SortConditionModel selectedCondition) {
         mSelectSortConditionPopUtils.updateSortConditionList(mSortConditionList,selectedCondition);
         mSelectSortConditionPopUtils.showAtLocation(fgMainHomeLlRoot, Gravity.TOP);
     }
