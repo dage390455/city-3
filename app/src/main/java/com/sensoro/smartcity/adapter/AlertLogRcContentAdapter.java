@@ -440,6 +440,9 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             SpannableString spannableString = new SpannableString(alarmDetailInfo);
             holder.itemAlertContentTvContent.setText(changTextColor(alarmDetailInfo, alarmDetailInfo, spannableString, R.color.c_252525));
             holder.llConfirm.setVisibility(View.GONE);
+        } else if ("op".equals(recordInfo.getType())) {
+            //TODO
+            holder.itemAlertContentImvIcon.setImageResource(R.drawable.alarm_mute);
         }
 
     }
