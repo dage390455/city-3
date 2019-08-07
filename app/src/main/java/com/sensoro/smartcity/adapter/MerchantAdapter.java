@@ -37,7 +37,7 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.Mercha
     @NonNull
     @Override
     public MerchantViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MerchantViewHolder(mInflater.inflate(R.layout.item_merchant, null));
+        return new MerchantViewHolder(mInflater.inflate(R.layout.item_merchant, parent, false));
     }
 
     @Override
@@ -63,7 +63,32 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.Mercha
         });
         //
         List<MerchantSubModel> merchantSubList = MerchantSubFactory.createMerchantSubList(userInfo);
-        if (mList.size() > 1) {
+        //只有一项
+        final View.OnClickListener onArrowClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO 处理下拉逻辑
+                if (holder.itemRvMerchantSub.getVisibility() == View.VISIBLE) {
+                    holder.itemRvMerchantSub.setVisibility(View.GONE);
+                    holder.itemBottomS.setVisibility(View.VISIBLE);
+                    holder.itemIvMerchantArrow.setImageResource(R.drawable.merchant_arrow_close);
+                } else {
+                    holder.itemRvMerchantSub.setVisibility(View.VISIBLE);
+                    holder.itemBottomS.setVisibility(View.GONE);
+                    holder.itemIvMerchantArrow.setImageResource(R.drawable.merchant_arrow_open);
+                }
+            }
+        };
+        final MerchantSubAdapter.OnMerchantClickListener onUserInfoClickListener = new MerchantSubAdapter.OnMerchantClickListener() {
+            @Override
+            public void onClickMerchant(UserInfo userInfo) {
+                if (MerchantAdapter.this.listener != null) {
+                    MerchantAdapter.this.listener.onClickMerchant(userInfo);
+                }
+            }
+        };
+        if (mList.size() > 0 && mList.size() <= 1) {
+            //有子账户
             if (merchantSubList != null && merchantSubList.size() > 0) {
                 if (holder.itemRvMerchantSub.getTag() instanceof MerchantSubAdapter) {
                     holder.itemRvMerchantSub.removeAllViews();
@@ -73,42 +98,19 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.Mercha
 
                 MerchantSubAdapter adapter = new MerchantSubAdapter(mContext);
                 holder.itemRvMerchantSub.setAdapter(adapter);
-                adapter.setOnMerchantClickListener(new MerchantSubAdapter.OnMerchantClickListener() {
-                    @Override
-                    public void onClickMerchant(UserInfo userInfo) {
-                        if (listener != null) {
-                            listener.onClickMerchant(userInfo);
-                        }
-                    }
-                });
+                adapter.setOnMerchantClickListener(onUserInfoClickListener);
                 //设置包裹不允许滑动，套一层父布局解决最后一项可能不显示的问题
                 holder.itemRvMerchantSub.setNestedScrollingEnabled(false);
                 holder.itemRvMerchantSub.setTag(adapter);
                 adapter.updateData(merchantSubList);
                 holder.itemIvMerchantArrow.setVisibility(View.VISIBLE);
                 //TODO 处理下拉和上拉逻辑
-                holder.itemIvMerchantArrow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (holder.itemRvMerchantSub.getVisibility() == View.VISIBLE) {
-                            holder.itemRvMerchantSub.setVisibility(View.GONE);
-                            holder.itemBottomS.setVisibility(View.VISIBLE);
-                            holder.itemIvMerchantArrow.setImageResource(R.drawable.arrow_down_elect);
-                        } else {
-                            holder.itemRvMerchantSub.setVisibility(View.VISIBLE);
-                            holder.itemBottomS.setVisibility(View.GONE);
-                            holder.itemIvMerchantArrow.setImageResource(R.drawable.arrow_up_elect);
-                        }
-                    }
-                });
-                if (holder.itemRvMerchantSub.getVisibility() == View.VISIBLE) {
-                    holder.itemBottomS.setVisibility(View.GONE);
-                } else {
-                    holder.itemBottomS.setVisibility(View.VISIBLE);
-                }
-
+                holder.itemIvMerchantArrow.setOnClickListener(onArrowClickListener);
+                holder.itemRvMerchantSub.setVisibility(View.VISIBLE);
+                holder.itemBottomS.setVisibility(View.GONE);
 
             } else {
+                //没有子账户
                 mList.size();
                 if (position == mList.size() - 1) {
                     holder.itemBottomS.setVisibility(View.GONE);
@@ -119,6 +121,7 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.Mercha
                 holder.itemIvMerchantArrow.setVisibility(View.INVISIBLE);
             }
         } else {
+            //存在多个账户
             if (merchantSubList != null && merchantSubList.size() > 0) {
                 if (holder.itemRvMerchantSub.getTag() instanceof MerchantSubAdapter) {
                     holder.itemRvMerchantSub.removeAllViews();
@@ -128,43 +131,22 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.Mercha
 
                 MerchantSubAdapter adapter = new MerchantSubAdapter(mContext);
                 holder.itemRvMerchantSub.setAdapter(adapter);
-                adapter.setOnMerchantClickListener(new MerchantSubAdapter.OnMerchantClickListener() {
-                    @Override
-                    public void onClickMerchant(UserInfo userInfo) {
-                        if (listener != null) {
-                            listener.onClickMerchant(userInfo);
-                        }
-                    }
-                });
+                adapter.setOnMerchantClickListener(onUserInfoClickListener);
                 //设置包裹不允许滑动，套一层父布局解决最后一项可能不显示的问题
                 holder.itemRvMerchantSub.setNestedScrollingEnabled(false);
                 holder.itemRvMerchantSub.setTag(adapter);
                 adapter.updateData(merchantSubList);
                 holder.itemIvMerchantArrow.setVisibility(View.VISIBLE);
                 //TODO 处理下拉和上拉逻辑
-                holder.itemIvMerchantArrow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (holder.itemRvMerchantSub.getVisibility() == View.VISIBLE) {
-                            holder.itemRvMerchantSub.setVisibility(View.GONE);
-                            holder.itemBottomS.setVisibility(View.VISIBLE);
-                            holder.itemIvMerchantArrow.setImageResource(R.drawable.arrow_down_elect);
-                        } else {
-                            holder.itemRvMerchantSub.setVisibility(View.VISIBLE);
-                            holder.itemBottomS.setVisibility(View.GONE);
-                            holder.itemIvMerchantArrow.setImageResource(R.drawable.arrow_up_elect);
-                        }
-                    }
-                });
+                holder.itemIvMerchantArrow.setOnClickListener(onArrowClickListener);
                 if (holder.itemRvMerchantSub.getVisibility() == View.VISIBLE) {
                     holder.itemBottomS.setVisibility(View.GONE);
                 } else {
                     holder.itemBottomS.setVisibility(View.VISIBLE);
                 }
 
-
             } else {
-                if (mList.size() == 0 || position == mList.size() - 1) {
+                if (position == mList.size() - 1) {
                     holder.itemBottomS.setVisibility(View.GONE);
                 } else {
                     holder.itemBottomS.setVisibility(View.VISIBLE);
