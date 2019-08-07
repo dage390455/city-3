@@ -49,9 +49,18 @@ public class UserPermissionFactory {
         eventLoginData.hasSignalConfig = false;
         eventLoginData.hasForceUpload = getHasBadSignalUpload(grants);
         eventLoginData.hasDevicePositionCalibration = getHasDevicePositionCalibration(grants);
+        //设备控制
         eventLoginData.hasDeviceMuteShort = getHasMuteShort(grants);
         eventLoginData.hasDeviceMuteLong = getHasMuteLong(grants);
         eventLoginData.hasDeviceMuteTime = getHasMuteTime(grants);
+        eventLoginData.hasDeviceControlCheck = getHasControlCheck(grants);
+        eventLoginData.hasDeviceControlReset = getHasControlReset(grants);
+        eventLoginData.hasDeviceControlPassword = getHasControlPassword(grants);
+        eventLoginData.hasDeviceControlView = getHasControlView(grants);
+        eventLoginData.hasDeviceControlConfig = getHasControlConfig(grants);
+        eventLoginData.hasDeviceControlOpen = getHasControlOpen(grants);
+        eventLoginData.hasDeviceControlClose = getHasControlClose(grants);
+        //
         eventLoginData.hasDeviceFirmwareUpdate = getHasDeviceFirmUpdate(grants);
         eventLoginData.hasDeviceDemoMode = getHasDeviceDemoMode(grants);
         eventLoginData.hasDeviceCameraList = getHasDeviceCameraList(grants);
@@ -313,6 +322,7 @@ public class UserPermissionFactory {
 
     /**
      * 权限 briefList statusStatistics list 权限
+     *
      * @param grants
      * @return
      */
@@ -449,6 +459,118 @@ public class UserPermissionFactory {
             List<String> grantsControl = grants.getControl();
             if (grantsControl != null) {
                 return grantsControl.contains("mute_time");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 是否有重置权限
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasControlReset(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsControl = grants.getControl();
+            if (grantsControl != null) {
+                return grantsControl.contains("reset");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 控制密码修改
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasControlPassword(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsControl = grants.getControl();
+            if (grantsControl != null) {
+                return grantsControl.contains("password");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 查询
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasControlView(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsControl = grants.getControl();
+            if (grantsControl != null) {
+                return grantsControl.contains("view");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 自检
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasControlCheck(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsControl = grants.getControl();
+            if (grantsControl != null) {
+                return grantsControl.contains("check");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 断电
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasControlOpen(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsControl = grants.getControl();
+            if (grantsControl != null) {
+                return grantsControl.contains("open");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 上电
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasControlClose(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsControl = grants.getControl();
+            if (grantsControl != null) {
+                return grantsControl.contains("close");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 配置
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasControlConfig(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsControl = grants.getControl();
+            if (grantsControl != null) {
+                return grantsControl.contains("config");
             }
         }
         return false;
