@@ -7,12 +7,12 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,13 +51,13 @@ import static com.sensoro.common.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.common.constant.Constants.DIRECTION_UP;
 
 public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivityView, MerchantSwitchActivityPresenter> implements IMerchantSwitchActivityView
-        , View.OnClickListener, AbsListView.OnScrollListener, TipOperationDialogUtils.TipDialogUtilsClickListener, MerchantSubAdapter.OnMerchantClickListener {
+        , View.OnClickListener, TipOperationDialogUtils.TipDialogUtilsClickListener, MerchantSubAdapter.OnMerchantClickListener {
     @BindView(R.id.ll_main_merchant)
     LinearLayout llMainMerchant;
     @BindView(R.id.tv_back_to_main_merchant)
     TextView tvBackToMainMerchant;
     @BindView(R.id.fragment_merchant_list)
-    ListView mPullListView;
+    RecyclerView mPullListView;
     @BindView(R.id.merchant_iv_menu_list)
     ImageView mMenuListImageView;
     @BindView(R.id.merchant_list_bottom_sep)
@@ -93,7 +93,7 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     LinearLayout merchantLlListRoot;
     @BindView(R.id.merchant_tv_cancel)
     TextView merchantTvCancel;
-
+    private Animation returnTopAnimation;
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
     private SearchHistoryAdapter mSearchHistoryAdapter;
@@ -119,6 +119,9 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
         }
+        if (returnTopAnimation != null) {
+            returnTopAnimation.cancel();
+        }
 
         if (historyClearDialog != null) {
             historyClearDialog.destroy();
@@ -128,6 +131,9 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     }
 
     private void initView() {
+        returnTopAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.return_top_in_anim);
+        mReturnTopImageView.setAnimation(returnTopAnimation);
+        mReturnTopImageView.setVisibility(View.GONE);
         mReturnTopImageView.setOnClickListener(this);
         mMenuListImageView.setOnClickListener(this);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
@@ -165,10 +171,40 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 //            }
 //        });
 //        mPullListView.setMode(PullToRefreshBase.Mode.BOTH);
-        mPullListView.setOnScrollListener(this);
+
         mMerchantAdapter = new MerchantAdapter(mActivity);
-        mPullListView.setAdapter(mMerchantAdapter);
         mMerchantAdapter.setOnMerchantClickListener(this);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
+        mPullListView.setLayoutManager(layoutManager);
+        mPullListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+//                if (xLinearLayoutManager.findFirstVisibleItemPosition() == 0 && newState == SCROLL_STATE_IDLE &&
+//                        toolbarDirection == DIRECTION_DOWN) {
+////                    mListRecyclerView.setre
+//                }
+                if (layoutManager.findFirstVisibleItemPosition() > 4) {
+                    if (newState == 0) {
+                        mReturnTopImageView.setVisibility(View.VISIBLE);
+                        if (returnTopAnimation != null && returnTopAnimation.hasEnded()) {
+                            mReturnTopImageView.startAnimation(returnTopAnimation);
+                        }
+                    } else {
+                        mReturnTopImageView.setVisibility(View.GONE);
+                    }
+                } else {
+                    mReturnTopImageView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+            }
+        });
+        mPullListView.setAdapter(mMerchantAdapter);
 //        mPullListView.setOnItemClickListener(this);
 
         initRcHistorySearch();
@@ -450,23 +486,6 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
         }
     }
 
-
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-                         int totalItemCount) {
-//        int tempPos = mPullListView.getRefreshableView().getFirstVisiblePosition();
-        int tempPos = mPullListView.getFirstVisiblePosition();
-        if (tempPos > 0) {
-            mReturnTopImageView.setVisibility(View.VISIBLE);
-        } else {
-            mReturnTopImageView.setVisibility(View.GONE);
-        }
-    }
 
     @Override
     public void onCancelClick() {
