@@ -1,5 +1,7 @@
 package com.sensoro.common.server.bean;
 
+import com.google.gson.annotations.Expose;
+
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -31,6 +33,8 @@ public class UserInfo implements Serializable {
     private boolean addUserEnable = true;
     private String controllerAid;
     private String token;
+    @Expose(serialize = false, deserialize = false)
+    public boolean exp;
 
     public int getDepth() {
         return depth;
@@ -49,6 +53,7 @@ public class UserInfo implements Serializable {
     public void setControllerAid(String controllerAid) {
         this.controllerAid = controllerAid;
     }
+
     public boolean isAddUserEnable() {
         return addUserEnable;
     }

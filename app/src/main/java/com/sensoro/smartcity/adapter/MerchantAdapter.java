@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -103,11 +104,12 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.Mercha
                 holder.itemRvMerchantSub.setNestedScrollingEnabled(false);
                 holder.itemRvMerchantSub.setTag(adapter);
                 adapter.updateData(merchantSubList);
-                holder.itemIvMerchantArrow.setVisibility(View.VISIBLE);
+                holder.flArrow.setVisibility(View.VISIBLE);
                 //TODO 处理下拉和上拉逻辑
-                holder.itemIvMerchantArrow.setOnClickListener(onArrowClickListener);
+                holder.flArrow.setOnClickListener(onArrowClickListener);
                 holder.itemRvMerchantSub.setVisibility(View.VISIBLE);
                 holder.itemBottomS.setVisibility(View.GONE);
+                holder.itemIvMerchantArrow.setImageResource(R.drawable.merchant_arrow_open);
 
             } else {
                 //没有子账户
@@ -118,7 +120,7 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.Mercha
                     holder.itemBottomS.setVisibility(View.VISIBLE);
                 }
                 holder.itemRvMerchantSub.setVisibility(View.GONE);
-                holder.itemIvMerchantArrow.setVisibility(View.INVISIBLE);
+                holder.flArrow.setVisibility(View.INVISIBLE);
             }
         } else {
             //存在多个账户
@@ -136,9 +138,9 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.Mercha
                 holder.itemRvMerchantSub.setNestedScrollingEnabled(false);
                 holder.itemRvMerchantSub.setTag(adapter);
                 adapter.updateData(merchantSubList);
-                holder.itemIvMerchantArrow.setVisibility(View.VISIBLE);
+                holder.flArrow.setVisibility(View.VISIBLE);
                 //TODO 处理下拉和上拉逻辑
-                holder.itemIvMerchantArrow.setOnClickListener(onArrowClickListener);
+                holder.flArrow.setOnClickListener(onArrowClickListener);
                 if (holder.itemRvMerchantSub.getVisibility() == View.VISIBLE) {
                     holder.itemBottomS.setVisibility(View.GONE);
                 } else {
@@ -152,7 +154,7 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.Mercha
                     holder.itemBottomS.setVisibility(View.VISIBLE);
                 }
                 holder.itemRvMerchantSub.setVisibility(View.GONE);
-                holder.itemIvMerchantArrow.setVisibility(View.INVISIBLE);
+                holder.flArrow.setVisibility(View.INVISIBLE);
             }
         }
     }
@@ -180,6 +182,7 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.Mercha
 
     static class MerchantViewHolder extends RecyclerView.ViewHolder {
 
+        FrameLayout flArrow;
         TextView item_name;
         ImageView itemIvMerchantArrow;
         RecyclerView itemRvMerchantSub;
@@ -191,6 +194,7 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.Mercha
             itemIvMerchantArrow = itemView.findViewById(R.id.iv_merchant_arrow);
             itemRvMerchantSub = itemView.findViewById(R.id.rv_merchant_sub);
             itemBottomS = itemView.findViewById(R.id.item_bottom_s);
+            flArrow = itemView.findViewById(R.id.fl_arrow);
         }
     }
 }
