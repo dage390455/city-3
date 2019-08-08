@@ -467,24 +467,15 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 mergeType = WidgetUtil.handleMergeType(deviceType);
             }
             if (TextUtils.isEmpty(mTypeSelectedType)) {
-//                addSocketData(organizeJsonData(deviceInfo));
                 if(organizeJsonData(deviceInfo)!=null){//在里面，直接刷新一下
                     needRefreshContent=true;
-                }else{//不在里面不处理
-//                    needFreshAll=true;
                 }
             } else {
                 if (mTypeSelectedType.equalsIgnoreCase(mergeType)) {
-//                    addSocketData(organizeJsonData(deviceInfo));
                     if(organizeJsonData(deviceInfo)!=null){//在里面，直接刷新一下
                         needRefreshContent=true;
-                    }else{//不在里面不处理
-//                        needFreshAll=true;
                     }
                 }
-
-
-
             }
         }
         return deployFlag;
@@ -541,9 +532,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
-        if (needHandleDevicePush(deviceInfo)) {
-            needRefreshContent = true;
-        }
+        needHandleDevicePush(deviceInfo);
 
     }
 
@@ -732,29 +721,21 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 case Constants.DIRECTION_DOWN:
                     page = 1;
                     RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, homeTopModel.status, null).subscribeOn(Schedulers
-                            .io()).doOnNext(new Consumer<ResponseResult<List<DeviceInfo>>>() {
+                            .io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
                         @Override
-                        public void accept(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
+                        public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
                             mDeviceInfoList.clear();
                             List<DeviceInfo> data = deviceInfoListRsp.getData();
                             if (data != null && data.size() > 0) {
                                 mDeviceInfoList.addAll(data);
                             }
-                        }
 
-                    }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
-                        @Override
-                        public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
                             freshDataList(homeTopModel);
                             getView().dismissProgressDialog();
                         }
 
                         @Override
                         public void onErrorMsg(int errorCode, String errorMsg) {
-//                            freshDataList(homeTopModel);
-//                            getView().toastShort(errorMsg);
-//                            getView().recycleViewRefreshComplete();
-//                            getView().dismissProgressDialog();
 
                             if (errorCode == ERR_CODE_NET_CONNECT_EX) {//网络连接异常需要清空数据集合，显示空数据页面
                                 mDeviceInfoList.clear();
@@ -780,28 +761,16 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 case Constants.DIRECTION_UP:
                     page++;
                     RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, homeTopModel.status, null).subscribeOn(Schedulers
-                            .io()).doOnNext(new Consumer<ResponseResult<List<DeviceInfo>>>() {
-                        @Override
-                        public void accept(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
-                            try {
-                                List<DeviceInfo> data = deviceInfoListRsp.getData();
-                                if (data == null || data.size() == 0) {
-                                    page--;
-                                } else {
-                                    mDeviceInfoList.addAll(data);
-                                }
-                            } catch (Exception e) {
-                                page--;
-                                e.printStackTrace();
-                            }
-                        }
-                    }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
+                            .io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
                         @Override
                         public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
                             try {
                                 List<DeviceInfo> data = deviceInfoListRsp.getData();
                                 if (data == null || data.size() == 0) {
+                                    page--;
                                     getView().toastShort(mContext.getString(R.string.no_more_data));
+                                }else{
+                                    mDeviceInfoList.addAll(data);
                                 }
                                 try {
                                     LogUtils.loge("mDeviceInfoList.size", mDeviceInfoList.size() + "");
@@ -866,22 +835,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         return null;
 
     }
-
-    private void addSocketData(DeviceInfo newDeviceInfo) {
-        if (mCurrentHomeTopModel != null && newDeviceInfo != null && mCurrentHomeTopModel.status == newDeviceInfo.getStatus()) {
-            synchronized (mDeviceInfoList) {
-//                if(mCurrentHomeTopModel.status== Constants.SENSOR_STATUS_ALARM){//如果是预警不处理，如果不是放入到第一个
-//                }else{
-//                    mDeviceInfoList.add(0, newDeviceInfo);
-//                }
-                if (newDeviceInfo != null) {
-//                    mDeviceInfoList.add(0, newDeviceInfo);
-                }
-//                homeTopModelCacheFresh[0] = true;
-            }
-        }
-    }
-
 
     public void requestDataByStatus(HomeTopModel homeTopModel) {
         try {
@@ -1108,18 +1061,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             initSortCondition();
         }
         getView().updateSelectFilterConditionPopAndShow(mSortConditionList, mSelectedCondition);
-    }
-
-    public void checkUpgrade() {
-        UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
-        if (upgradeInfo == null) {
-            ThreadPoolManager.getInstance().execute(new Runnable() {
-                @Override
-                public void run() {
-                    Beta.checkUpgrade(false, true);
-                }
-            });
-        }
     }
 
     @Override
