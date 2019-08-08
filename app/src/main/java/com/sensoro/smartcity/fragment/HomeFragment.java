@@ -157,7 +157,8 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 }
                 //选择类型的pop点击事件
                 Resources resources = Objects.requireNonNull(mRootFragment.getActivity()).getResources();
-                if ("全部".equals(item.name)) {
+//                if ("全部".equals(item.name)) {
+                if (position==0) {
                     fgMainHomeTvSelectType.setText(R.string.all_types);
                     fgMainHomeTvSelectType.setTextColor(resources.getColor(R.color.c_a6a6a6));
                     Drawable drawable = resources.getDrawable(R.drawable.main_small_triangle_gray);
