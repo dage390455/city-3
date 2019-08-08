@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -81,8 +79,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     TextView tvDetectionPoint;
     @BindView(R.id.app_bar)
     AppBarLayout appBarLayout;
-//    @BindView(R.id.fl_main_home_select_type)
-//    FrameLayout flMainHomeSelectType;
+
 
     @BindView(R.id.fg_main_home_tv_select_sortcondition)
     TextView fgMainHomeTvSelectSortcondition;
@@ -112,7 +109,6 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     @BindView(R.id.nsv_no_content)
     LinearLayout noContent;
     private MainHomeFragRcTypeAdapter mMainHomeFragRcTypeHeaderAdapter;
-//    private MainHomeFragRcContentAdapterHorizontal mMainHomeFragRcContentAdapter;
 
     private MainHomeFragRcContentAdapter mMainHomeFragContentAdapter;//首页设备列表适配器
     private ProgressUtils mProgressUtils;
@@ -189,7 +185,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             public void onSelectSortConditionItemClick(View view, int position, SortConditionModel sortCondition) {
                 fgMainHomeTvSelectSortcondition.setText(sortCondition.title);
                 mPresenter.setmSelectedCondition(sortCondition);
-                mPresenter.freshContentView(mPresenter.getCurrentHomeModel(),true);
+                mPresenter.freshContentView(mPresenter.getCurrentHomeModel(),false);
                 mSelectSortConditionPopUtils.dismiss();
             }
         });
@@ -220,10 +216,6 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 try {
                     currentPosition = position;
                     HomeTopModel homeTopModel = mMainHomeFragRcTypeHeaderAdapter.getData().get(position);
-//                    mBannerScaleContentHelper.initWidthData();
-//                    mBannerScaleContentHelper.scrollToPositionAlpha(position);
-//                    mBannerScaleContentHelper.setCurrentItem(position, true);
-//                    mPresenter.resetContentView();
                     mPresenter.requestDataByStatus(homeTopModel);
                     mPresenter.freshContentView(homeTopModel,true);
                 } catch (Exception e) {
@@ -232,35 +224,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
             }
         });
-        fgMainHomeRcTypeHeader.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-//                if (recyclerView.getScrollState() != RecyclerView.SCROLL_STATE_IDLE) {
-//                    if (currentPercent == 0) {
-//                        try {
-//                            double widthHeader = recyclerView.getChildAt(0).getWidth();
-//                            double widthContent = fgMainHomeRcContent.getChildAt(0).getWidth();
-//                            currentPercent = widthHeader / widthContent;
-//                        } catch (Exception e) {
-//                            currentPercent = 1;
-//                        } finally {
-//                            if (currentPercent == 0) {
-//                                currentPercent = 1;
-//                            }
-//                        }
-//                    }
-//                    if (dx > 0) {
-//                        dx = (int) (dx / currentPercent + 0.5d);
-//                    } else if (dx < 0) {
-//                        dx = (int) (dx / currentPercent - 0.5d);
-//                    }
-//                    fgMainHomeRcContent.scrollBy(dx, dy);
-//                }
-            }
-        });
     }
 
     @Override
@@ -300,25 +264,11 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setOnLoadMoreListener(this);
 
-        //
-//        mMainHomeFragRcContentAdapter = new MainHomeFragRcContentAdapterHorizontal(mRootFragment.getActivity());
-//        mMainHomeFragRcContentAdapter.setOnLoadInnerListener(this);
-
-
         //changqi添加
         mMainHomeFragContentAdapter = new MainHomeFragRcContentAdapter(mRootFragment.getActivity());
         mMainHomeFragContentAdapter.setHasStableIds(true);
 
-//        mMainHomeFragContentAdapter.setOnLoad
-
-
         xLinearLayoutManager = new LinearLayoutManager(mRootFragment.getActivity());
-//        xLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-//        fgMainHomeRcContent.setContent(true);
-//        fgMainHomeRcContent.setLayoutManager(xLinearLayoutManager);
-//        fgMainHomeRcContent.setNestedScrollingEnabled(true);
-//        fgMainHomeRcContent.setAdapter(mMainHomeFragRcContentAdapter);
-
         //changqi添加
         xLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         fgMainHomeRcContent.setLayoutManager(xLinearLayoutManager);
@@ -329,97 +279,8 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
         mMainHomeFragContentAdapter.setOnContentItemClickListener(this);
 
-//        fgMainHomeRcContent.addOnScrollListener(new SwipyAppBarScrollListener(appBarLayout, fgMainHomeRcContent, fgh));
         mBannerScaleContentHelper = new BannerAlphaHelper();
         fgMainHomeRcContent.setOverScrollMode(View.OVER_SCROLL_NEVER);
-//        mBannerScaleContentHelper.attachToRecyclerView(fgMainHomeRcContent);
-//        mBannerScaleContentHelper.setOnBannerHelperListener(new BannerAlphaHelper.OnBannerHelperListener() {
-//            @Override
-//            public void onScrolledCurrent(float currentPercent) {
-////                LogUtils.loge("setOnBannerHelperListener  onScrolledCurrent --->> " + currentPercent);
-////                flMainHomeSelectType.setAlpha(1 - currentPercent);
-//            }
-//
-//            @Override
-//            public void onScrolledOther(float otherPercent) {
-//                try {
-//                    LogUtils.loge("setOnBannerHelperListener  onScrolledOther --->> " + otherPercent);
-//                } catch (Throwable throwable) {
-//                    throwable.printStackTrace();
-//                }
-//            }
-//        });
-
-
-//        fgMainHomeRcContent.setOnPageChangeListener(new BannerRecyclerView.OnPageChangeListener() {
-//            @Override
-//            public void onPageSelected(int position) {
-//                try {
-//                    LogUtils.loge(this, "setOnPageChangeListener mBannerAlphaContentHelper--> position = " + position);
-//                } catch (Throwable throwable) {
-//                    throwable.printStackTrace();
-//                }
-//                try {
-//                    currentPosition = position;
-//                    HomeTopModel homeTopModel = mMainHomeFragRcTypeHeaderAdapter.getData().get(position);
-//                    mPresenter.requestDataByStatus(homeTopModel);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//        });
-//
-//        fgMainHomeRcContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//                if (xLinearLayoutManager.findFirstVisibleItemPosition() == 0 && newState == RecyclerView.SCROLL_STATE_IDLE &&
-//                        toolbarDirection == DIRECTION_DOWN) {
-////                    mListRecyclerView.setre
-//                }
-//                if (xLinearLayoutManager.findFirstVisibleItemPosition() > 4) {
-//                    if (newState == 0) {
-////                        mReturnTopImageView.setVisibility(VISIBLE);
-////                        if (returnTopAnimation.hasEnded()) {
-////                            mReturnTopImageView.startAnimation(returnTopAnimation);
-////                        }
-//                    } else {
-////                        mReturnTopImageView.setVisibility(View.GONE);
-//                    }
-//                } else {
-////                    mReturnTopImageView.setVisibility(View.GONE);
-//                }
-//            }
-//
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                if (recyclerView.getScrollState() != RecyclerView.SCROLL_STATE_IDLE) {
-//
-//                    if (currentPercent == 0) {
-//                        try {
-//                            double widthContent = recyclerView.getChildAt(0).getWidth();
-//                            double widthHeader = fgMainHomeRcTypeHeader.getChildAt(0).getWidth();
-//                            currentPercent = widthHeader / widthContent;
-//                        } catch (Exception e) {
-//                            currentPercent = 1;
-//                        } finally {
-//                            if (currentPercent == 0) {
-//                                currentPercent = 1;
-//                            }
-//                        }
-//
-//                    }
-//                    if (dx > 0) {
-//                        dx = (int) (currentPercent * dx + 0.5d);
-//                    } else if (dx < 0) {
-//                        dx = (int) (currentPercent * dx - 0.5d);
-//                    }
-//                    fgMainHomeRcTypeHeader.scrollBy(dx, dy);
-//                }
-//            }
-//        });
 
 
     }
@@ -535,28 +396,9 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             mBannerScaleHeaderHelper.initWidthData();
             mMainHomeFragRcTypeHeaderAdapter.updateData(fgMainHomeRcTypeHeader, data);
         } else {
-//            HomeTopModel homeTopModel = mMainHomeFragRcTypeHeaderAdapter.getData().get(0);
-//            if (homeTopModel.type != 0 && data.get(0).type == 0) {
-//                //不滑动并且刷新
-//                mBannerScaleHeaderHelper.setCurrentItem(mBannerScaleHeaderHelper.getCurrentItem(), true);
-//                mMainHomeFragRcTypeHeaderAdapter.updateData(fgMainHomeRcTypeHeader, data);
-////                mBannerScaleHeaderHelper.scrollToPositionAlpha(type);
-//                try {
-//                    mBannerScaleContentHelper.scrollToPositionAlpha(0);
-//                    currentPosition = 0;
-////                    mBannerScaleContentHelper.initWidthData();
-//                    mBannerScaleContentHelper.scrollToPositionAlpha(currentPosition);
-////                    mBannerScaleContentHelper.setCurrentItem(position, true);
-//                    mPresenter.requestDataByStatus(mMainHomeFragRcTypeHeaderAdapter.getData().get(currentPosition));
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            } else {
 
             mBannerScaleHeaderHelper.setCurrentItem(mBannerScaleHeaderHelper.getCurrentItem(), true);
             mMainHomeFragRcTypeHeaderAdapter.updateData(fgMainHomeRcTypeHeader, data);
-//            }
-//            mMainHomeFragRcTypeHeaderAdapter.updateData(fgMainHomeRcTypeHeader, data);
         }
 
         //如果需要带缩放的scale需要调用一下，否则缩放效果会出现缩放误差
@@ -764,7 +606,6 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         }
         if (index >= 0 && index <= itemCount - 1) {
 
-//            mBannerScaleContentHelper.setCurrentItem(index, true);
             mBannerScaleHeaderHelper.setCurrentItem(index, true);
             if (index == 0) {
                 setImvHeaderLeftVisible(false);
@@ -776,7 +617,6 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             } else {
                 setImvHeaderRightVisible(true);
             }
-//                        mBannerScaleHeaderHelper.setCurrentItem(index, true);
         }
     }
 
@@ -892,11 +732,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 home_layout_head.setAlpha(1 - bar_alpha);
                 homeTopToolbar.setVisibility(View.VISIBLE);
                 homeToolbarMonitor.setVisibility(View.GONE);
-//                LogUtils.loge(this, "onOffsetChanged-->> DIRECTION_DOWN bar_alpha = " + bar_alpha);
             }
-//            else {
-//                LogUtils.loge(this, "onOffsetChanged-->> DIRECTION_DOWN 0000");
-//            }
 
         } else {
             if (Math.abs(verticalOffset) < appBarLayout.getTotalScrollRange()) {
@@ -909,9 +745,6 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                     throwable.printStackTrace();
                 }
             }
-//            else {
-//                LogUtils.loge(this, "onOffsetChanged-->> DIRECTION_UP 0000");
-//            }
 
         }
     }
@@ -941,7 +774,6 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     @Override
     public void onItemClick(View view, int position) {
         try {
-//            HomeTopModel homeTopModel = mMainHomeFragRcContentAdapter.getData().get(currentPosition);
             mPresenter.clickItem(position, mPresenter.getCurrentHomeModel());
         } catch (Exception e) {
             e.printStackTrace();

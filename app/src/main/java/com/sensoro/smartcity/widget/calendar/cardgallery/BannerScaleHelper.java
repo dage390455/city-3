@@ -50,9 +50,16 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
         this.mRecyclerView = mRecyclerView;
         mContext = mRecyclerView.getContext();
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+
+                try {
+                    LogUtils.loge("onScrollStateChanged" ,"newState = "+ newState);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 switch (newState) {
                     case RecyclerView.SCROLL_STATE_IDLE:
                         int currentItem = getCurrentItem();
@@ -61,7 +68,7 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
                         } catch (Throwable throwable) {
                             throwable.printStackTrace();
                         }
-                        mLinearSnapHelper.mNoNeedToScroll = currentItem == 0 || currentItem == mRecyclerView.getAdapter().getItemCount() - 2;
+                        mLinearSnapHelper.mNoNeedToScroll = currentItem == 0 ||currentItem == mRecyclerView.getAdapter().getItemCount() - 1;
                         if (mLinearSnapHelper.finalSnapDistance[0] == 0 && mLinearSnapHelper.finalSnapDistance[1] == 0) {
                             mCurrentItemOffset = 0;
                             mLastPos = currentItem;
@@ -69,6 +76,7 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
 //                        mRecyclerView.dispatchOnPageSelected(mLastPos);
                             //Log.e("TAG", "滑动停止后最终位置为" + getCurrentItem());
                         }
+
                         mRecyclerView.dispatchOnPageSelected(getCurrentItem());
                         break;
                     case RecyclerView.SCROLL_STATE_SETTLING:
@@ -249,7 +257,7 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
 
     @Override
     public void onGlobalLayout() {
-        mRecyclerView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+        mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
         mCardGalleryWidth = mRecyclerView.getWidth();
         mCardWidth = mCardGalleryWidth - AppUtils.dp2px(mContext, 2 * (mPagePadding + mShowLeftCardWidth));
         mOnePageWidth = mCardWidth;
