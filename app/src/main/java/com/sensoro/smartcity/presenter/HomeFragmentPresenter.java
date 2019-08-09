@@ -94,7 +94,10 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
 
     private volatile int tempAlarmCount = 0;
-    private final List<HomeTopModel> mHomeTopModels = new ArrayList<>();
+
+
+
+    private volatile List<HomeTopModel> mHomeTopModels = new ArrayList<>();
     //
     private volatile HomeTopModel mCurrentHomeTopModel;
     //
@@ -108,6 +111,13 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     public volatile List<DeviceInfo> mDeviceInfoList = new ArrayList<>();
 
 
+    public List<HomeTopModel> getmHomeTopModels() {
+        return mHomeTopModels;
+    }
+
+    public void setmHomeTopModels(List<HomeTopModel> mHomeTopModels) {
+        this.mHomeTopModels = mHomeTopModels;
+    }
     public SortConditionModel getmSelectedCondition() {
         return mSelectedCondition;
     }
@@ -154,7 +164,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         final SoundPool.OnLoadCompleteListener listener = new SoundPool.OnLoadCompleteListener() {
             @Override
             public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                requestInitData(true, true);
+                requestInitData(true, true,false);
             }
         };
 
@@ -166,7 +176,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     }
 
-    public void requestInitData(boolean needShowProgressDialog, boolean needToast) {
+    public void requestInitData(boolean needShowProgressDialog, boolean needToast,final boolean isResetHeaderPosition) {
         if (!PreferencesHelper.getInstance().getUserData().hasDeviceBrief) {
             needFreshAll = false;
             return;
@@ -176,6 +186,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         }
         try {
             LogUtils.loge(this, "刷新Top,内容数据： " + System.currentTimeMillis());
+            LogUtils.loge( "刷新Top,内容数据： " , mCurrentHomeTopModel.status+"");
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
@@ -186,10 +197,12 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             public ObservableSource<ResponseResult<List<DeviceInfo>>> apply(ResponseResult<DeviceTypeCount> deviceTypeCountRsp) throws Exception {
 
 
-                int currentStatus = 0;//原有的显示中的type
+                int currentStatus = -1;//原有的显示中的type
                 if (mCurrentHomeTopModel != null) {
                     currentStatus = mCurrentHomeTopModel.status;
+                    mCurrentHomeTopModel=null;
                 }
+
 
 
                 mHomeTopModels.clear();
@@ -225,18 +238,33 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     mHomeTopModels.add(inactiveModel);
                 }
 
-                //找到最新池子中的当前显示的对象
-                for (HomeTopModel  item:mHomeTopModels) {
-                    if (currentStatus ==item.status) {
-                        mCurrentHomeTopModel =item;
-                        break;
+
+                if(isResetHeaderPosition){
+                  if(mHomeTopModels.size() > 0){
+                      mCurrentHomeTopModel = mHomeTopModels.get(0);
+                      currentStatus = mCurrentHomeTopModel.status;
+                  }
+                }else{
+                    boolean isExisted=false;
+                    //找到最新池子中的当前显示的对象
+                    for (HomeTopModel  item:mHomeTopModels) {
+                        if (currentStatus ==item.status) {
+                            isExisted=true;
+                            mCurrentHomeTopModel =item;
+                            currentStatus = mCurrentHomeTopModel.status;
+                            break;
+                        }
+                    }
+                    //上次没有显示中的，默认显示第一个
+                    if (!isExisted&& mHomeTopModels.size() > 0) {
+                        mCurrentHomeTopModel = mHomeTopModels.get(0);
+                        currentStatus = mCurrentHomeTopModel.status;
                     }
                 }
-                //上次没有显示中的，默认显示第一个
-                if (mCurrentHomeTopModel == null && mHomeTopModels.size() > 0) {
-                    mCurrentHomeTopModel = mHomeTopModels.get(0);
-                    currentStatus = mCurrentHomeTopModel.status;
-                }
+
+
+
+
 
                 //
                 totalMonitorPoint = alarmCount + normal + lostCount + inactiveCount + malfunctionCount;
@@ -248,18 +276,18 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 }
 
 
-
-
                 return getDeviceInfoListByStateRspObservable(currentStatus, false);
             }
 
-        }).retryWhen(new RetryWithDelay(2, 100)).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
+        })
+                .retryWhen(new RetryWithDelay(2, 100))
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
                                                                                                          @Override
                                                                                                          public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
 
 
                                                                                                              getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
-                                                                                                             getView().refreshHeaderData(true, mHomeTopModels);
+                                                                                                             getView().refreshHeaderData(isResetHeaderPosition,true, mHomeTopModels);
                                                                                                              getView().refreshContentData(true, false, mDeviceInfoList);
 
                                                                                                              if (mHomeTopModels.size() <= 1) {
@@ -289,6 +317,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
                                                                                                          @Override
                                                                                                          public void onErrorMsg(int errorCode, String errorMsg) {
+
                                                                                                              needFreshAll = errorCode == ERR_CODE_NET_CONNECT_EX;
 
                                                                                                              if (errorCode == ERR_CODE_NET_CONNECT_EX) {//网络连接异常需要清空数据集合，显示空数据页面
@@ -297,7 +326,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                                                                                                              getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
 
 
-                                                                                                             getView().refreshHeaderData(true, mHomeTopModels);
+                                                                                                             getView().refreshHeaderData(isResetHeaderPosition,true, mHomeTopModels);
                                                                                                              getView().refreshContentData(true, false, mDeviceInfoList);
 
 
@@ -347,11 +376,18 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 .io()).doOnNext(new Consumer<ResponseResult<List<DeviceInfo>>>() {
             @Override
             public void accept(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) throws Exception {
+
+                try {
+                    LogUtils.loge( "xxxxxxxx" , "getDeviceInfoListByStateRspObservable==="+mDeviceInfoList.size()+"");
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 mDeviceInfoList.clear();
                 List<DeviceInfo> data = deviceInfoListRsp.getData();
                 if (data != null && data.size() > 0) {
                     mDeviceInfoList.addAll(data);
                 }
+
             }
 
         });
@@ -370,11 +406,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         this.mCurrentHomeTopModel = homeTopModel;
         try {
             if (isAttachedView()) {
-                try {
-                    LogUtils.loge("mCurrentHomeTopModel:", mCurrentHomeTopModel.status + "");
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
-                }
+
                 page = 1;
                 getView().showProgressDialog();
                 getDeviceInfoListByStateRspObservable(mCurrentHomeTopModel.status, isPageChanged).retryWhen(new RetryWithDelay(2, 100)).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
@@ -406,8 +438,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
 
     private void freshDataList(HomeTopModel homeTopModel) {
-        freshContentView(homeTopModel, false);
-        getView().recycleViewRefreshComplete();
+
     }
 
     /**
@@ -419,7 +450,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             @Override
             public void run() {
                 if (needFreshAll) {
-                    requestInitData(false, false);
+                    requestInitData(false, false,false);
 
                 } else {
                     if (needRefreshContent) {
@@ -430,7 +461,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     }
                     if (needRefreshHeader) {
                         if (isAttachedView()) {
-                            getView().refreshHeaderData(false, mHomeTopModels);
+                            getView().refreshHeaderData(false,false, mHomeTopModels);
                             getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
                             if (needAlarmPlay) {
                                 playSound();
@@ -642,7 +673,12 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 break;
             case Constants.EVENT_DATA_SEARCH_MERCHANT:
                 if (isAttachedView()) {
-                    requestInitData(true, true);
+                    try {
+                        LogUtils.loge("changeuser","切换账户");
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                    requestInitData(true, true,true);
                 }
                 break;
             case Constants.EVENT_DATA_LOCK_SCREEN_ON:
@@ -730,7 +766,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                                 mDeviceInfoList.addAll(data);
                             }
 
-                            freshDataList(homeTopModel);
+                            getView().refreshContentData(false, false,mDeviceInfoList);
+                            getView().recycleViewRefreshComplete();
                             getView().dismissProgressDialog();
                         }
 

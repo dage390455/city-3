@@ -18,7 +18,7 @@ public interface IHomeFragmentView extends IToast, IProgressDialog, IActivityInt
 
     void setImvSearchVisible(boolean isVisible);
 
-    void refreshHeaderData(boolean isFirstInit, List<HomeTopModel> data);
+    void refreshHeaderData(boolean isResetHeaderPosition,boolean isFirstInit, List<HomeTopModel> data);
 
     void returnTop();
 

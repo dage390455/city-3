@@ -153,7 +153,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                     mPresenter.requestDataByTypes(position, homeTopModel);
                 } else {
                     //尝试刷新所有数据
-                    mPresenter.requestInitData(true, true);
+                    mPresenter.requestInitData(true, true,false);
                 }
                 //选择类型的pop点击事件
                 Resources resources = Objects.requireNonNull(mRootFragment.getActivity()).getResources();
@@ -209,16 +209,17 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         fgMainHomeRcTypeHeader.setOnPageChangeListener(new BannerRecyclerView.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                try {
-                    LogUtils.loge(this, "setOnPageChangeListener mBannerScaleHeaderHelper--> position = " + position);
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
-                }
+
+
                 try {
                     currentPosition = position;
-                    HomeTopModel homeTopModel = mMainHomeFragRcTypeHeaderAdapter.getData().get(position);
-                    mPresenter.requestDataByStatus(homeTopModel);
-                    mPresenter.freshContentView(homeTopModel,true);
+//                    HomeTopModel homeTopModel = mMainHomeFragRcTypeHeaderAdapter.getData().get(position);
+                    if(mPresenter.getmHomeTopModels().size()>position){
+                        HomeTopModel homeTopModel = mPresenter.getmHomeTopModels().get(position);
+                        mPresenter.requestDataByStatus(homeTopModel);
+                        mPresenter.freshContentView(homeTopModel,true);
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -377,27 +378,31 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     }
 
     @Override
-    public void refreshHeaderData(final boolean isFirstInit, final List<HomeTopModel> data) {
+    public void refreshHeaderData(final boolean isResetHeaderPosition,final boolean isFirstInit, final List<HomeTopModel> data) {
         //防止大量数据刷新导致
         if (fgMainHomeRcTypeHeader.isComputingLayout()) {
             fgMainHomeRcTypeHeader.post(new Runnable() {
                 @Override
                 public void run() {
-                    freshHeader(isFirstInit, data);
+                    freshHeader(isResetHeaderPosition,isFirstInit, data);
                 }
             });
             return;
         }
-        freshHeader(isFirstInit, data);
+        freshHeader(isResetHeaderPosition,isFirstInit, data);
     }
 
-    private void freshHeader(boolean isFirstInit, List<HomeTopModel> data) {
+    private void freshHeader(boolean isResetHeaderPosition,boolean isFirstInit, List<HomeTopModel> data) {
+        if(isResetHeaderPosition){
+            if(mPresenter.getCurrentHomeModel()!=null){
+                mBannerScaleHeaderHelper.scrollToPosition(0);
+            }
+        }
         if (isFirstInit) {
 //            mBannerScaleHeaderHelper.setFirstItemPos(data.indexOf(mPresenter.getCurrentHomeModel()));
             mBannerScaleHeaderHelper.initWidthData();
             mMainHomeFragRcTypeHeaderAdapter.updateData(fgMainHomeRcTypeHeader, data);
         } else {
-
             mBannerScaleHeaderHelper.setCurrentItem(mBannerScaleHeaderHelper.getCurrentItem(), true);
             mMainHomeFragRcTypeHeaderAdapter.updateData(fgMainHomeRcTypeHeader, data);
         }
@@ -841,13 +846,13 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         try {
 
             if (mPresenter.getCurrentHomeModel() == null) {
-                mPresenter.requestInitData(false, true);
+                mPresenter.requestInitData(false, true,false);
                 return;
             }
             mPresenter.requestWithDirection(DIRECTION_DOWN, false, mPresenter.getCurrentHomeModel());
         } catch (Exception e) {
             e.printStackTrace();
-            mPresenter.requestInitData(false, true);
+            mPresenter.requestInitData(false, true,false);
         }
     }
 
