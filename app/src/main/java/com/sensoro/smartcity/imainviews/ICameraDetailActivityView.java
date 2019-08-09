@@ -1,6 +1,5 @@
 package com.sensoro.smartcity.imainviews;
 
-import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import com.sensoro.common.iwidget.IActivityIntent;
@@ -9,6 +8,7 @@ import com.sensoro.common.iwidget.IToast;
 import com.sensoro.common.server.bean.DeviceCameraFacePic;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface ICameraDetailActivityView extends IProgressDialog, IToast, IActivityIntent {
@@ -27,7 +27,7 @@ public interface ICameraDetailActivityView extends IProgressDialog, IToast, IAct
 
     void setLiveState(boolean isLiveStream);
 
-    void setImage(Drawable resource);
+//    void setImage(Drawable resource);
 
     void clearClickPosition();
 
@@ -50,7 +50,7 @@ public interface ICameraDetailActivityView extends IProgressDialog, IToast, IAct
 
     void doPlayerResume();
 
-    void doPlayLive(String url, String cameraName, boolean b);
+    void doPlayLive(ArrayList<String> urlList, String cameraName, boolean b);
 
     void setGsyVideoNoVideo();
 
@@ -63,5 +63,7 @@ public interface ICameraDetailActivityView extends IProgressDialog, IToast, IAct
     void onVideoPause();
 
     void onVideoResume(boolean isLive);
+
+    public void loadCoverImage(String url);
 
 }

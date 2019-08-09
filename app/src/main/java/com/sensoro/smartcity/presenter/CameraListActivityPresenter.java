@@ -94,12 +94,14 @@ public class CameraListActivityPresenter extends BasePresenter<ICameraListActivi
                 DeviceCameraDetailInfo data = deviceCameraDetailRsp.getData();
                 if (data != null) {
                     String hls = data.getHls();
+                    String flv = data.getFlv();
                     DeviceCameraDetailInfo.CameraBean camera = data.getCamera();
                     String lastCover = data.getLastCover();
                     Intent intent = new Intent();
                     intent.setClass(mContext, CameraDetailActivity.class);
                     intent.putExtra("cid", cid);
                     intent.putExtra("hls", hls);
+                    intent.putExtra("flv", flv);
                     intent.putExtra("sn", sn);
                     if (camera != null) {
                         String name = camera.getName();

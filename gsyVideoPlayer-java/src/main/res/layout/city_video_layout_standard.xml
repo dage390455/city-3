@@ -17,7 +17,6 @@
 
         </RelativeLayout>
 
-
         <RelativeLayout
             android:id="@+id/thumb"
             android:layout_width="match_parent"
@@ -29,7 +28,11 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:background="#000000"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter">
+
+
+        </RelativeLayout>
+
 
         <LinearLayout
             android:id="@+id/layout_bottom"
@@ -81,6 +84,7 @@
                     android:textColor="#ffffff"
                     android:textSize="10sp" />
 
+
                 <SeekBar
                     android:id="@+id/progress"
                     android:layout_width="0dp"
@@ -104,6 +108,22 @@
 
                     android:textSize="10sp" />
 
+                <TextView
+                    android:id="@+id/sw_video_format"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/bg_transparent_1px"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="4dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="4dp"
+                    android:paddingBottom="2dp"
+                    android:text=""
+                    android:textColor="#ffffff"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
                 <ToggleButton
                     android:id="@+id/audio_iv"
@@ -153,6 +173,16 @@
             android:layout_marginTop="6dp"
             android:visibility="gone" />
 
+        <ImageView
+            android:id="@+id/thumbImage"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+
+            android:layout_centerInParent="true"
+
+
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
 
         <RelativeLayout
             android:id="@+id/layout_top"

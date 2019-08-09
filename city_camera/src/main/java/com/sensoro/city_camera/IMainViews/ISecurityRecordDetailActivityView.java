@@ -5,7 +5,7 @@ import android.widget.ImageView;
 import com.sensoro.common.iwidget.IActivityIntent;
 import com.sensoro.common.iwidget.IProgressDialog;
 import com.sensoro.common.iwidget.IToast;
-import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.CityAIStandardGSYVideoPlayer;
 
 import java.io.File;
 
@@ -22,7 +22,7 @@ public interface ISecurityRecordDetailActivityView extends IActivityIntent, IToa
 
     ImageView getImageView();
 
-    CityStandardGSYVideoPlayer getPlayView();
+    CityAIStandardGSYVideoPlayer getPlayView();
 
     void setVerOrientationUtil(boolean b);
 

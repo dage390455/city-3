@@ -40,6 +40,7 @@ public class SelectDialog extends Dialog implements OnClickListener, OnItemClick
     private boolean mUseCustomColor = false;
     private int mFirstItemColor;
     private int mOtherItemColor;
+    private int mSelectedPos = -1;
 
     public interface SelectDialogListener {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id);
@@ -96,6 +97,25 @@ public class SelectDialog extends Dialog implements OnClickListener, OnItemClick
         mListener = listener;
         this.mName = names;
         mTitle = title;
+
+        // 设置是否点击外围可解散
+        setCanceledOnTouchOutside(true);
+    }
+
+    /**
+     * @param activity 调用弹出菜单的activity
+     * @param theme    主题
+     * @param listener 菜单项单击事件
+     * @param names    菜单项名称
+     * @param title    菜单标题文字
+     */
+    public SelectDialog(Activity activity, int selectedPos, int theme, SelectDialogListener listener, List<String> names, String title) {
+        super(activity, theme);
+        mActivity = activity;
+        mListener = listener;
+        this.mName = names;
+        mTitle = title;
+        this.mSelectedPos = selectedPos;
 
         // 设置是否点击外围可解散
         setCanceledOnTouchOutside(true);
@@ -181,7 +201,13 @@ public class SelectDialog extends Dialog implements OnClickListener, OnItemClick
                             long id) {
 
         mListener.onItemClick(parent, view, position, id);
-        dismiss();
+
+        /**
+         * 选中的时候点击不隐藏
+         */
+        if (mSelectedPos == -1) {
+            dismiss();
+        }
     }
 
     private class DialogAdapter extends BaseAdapter {
@@ -220,6 +246,25 @@ public class SelectDialog extends Dialog implements OnClickListener, OnItemClick
                 viewholder = (Viewholder) convertView.getTag();
             }
             viewholder.dialogItemButton.setText(mStrings.get(position));
+
+
+            /**
+             * 选中的时候颜色加重
+             */
+            if (mSelectedPos >= 0) {
+                if (position == mSelectedPos) {
+                    viewholder.dialogItemButton.setTextColor(mActivity.getResources().getColor(R.color.c_1dbb99));
+                } else {
+                    viewholder.dialogItemButton.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+
+                }
+
+            } else {
+                viewholder.dialogItemButton.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+
+            }
+
+
 //            if (!mUseCustomColor) {
 //                mFirstItemColor = mActivity.getResources().getColor(R.color.gray);
 //                mOtherItemColor = mActivity.getResources().getColor(R.color.gray);

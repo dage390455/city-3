@@ -26,6 +26,8 @@ import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -213,8 +215,8 @@ public class DeployCameraLiveDetailActivity extends BaseActivity<IDeployCameraLi
     }
 
     @Override
-    public void doPlayLive(final String url, String cameraName) {
-        gsyVideoOption.setUrl(url).setVideoTitle(cameraName).build(getCurPlay());
+    public void doPlayLive(final ArrayList<String> urlList, String cameraName) {
+        gsyPlayerAcDeployCameraLiveDetail.setCityURl(urlList, cameraName);
         gsyPlayerAcDeployCameraLiveDetail.setIsLive(View.INVISIBLE);
         gsyPlayerAcDeployCameraLiveDetail.setIsShowMaskTopBack(false);
         getCurPlay().startPlayLogic();
@@ -236,6 +238,24 @@ public class DeployCameraLiveDetailActivity extends BaseActivity<IDeployCameraLi
     @Override
     public CityStandardGSYVideoPlayer getPlayView() {
         return gsyPlayerAcDeployCameraLiveDetail;
+    }
+
+    @Override
+    public void setVerOrientationUtilEnable(boolean enable) {
+        if (orientationUtils != null) {
+            orientationUtils.setEnable(enable);
+        }
+    }
+
+    @Override
+    public void backFromWindowFull() {
+        if (orientationUtils != null) {
+            orientationUtils.backToProtVideo();
+        }
+        orientationUtils.setEnable(false);
+        if (GSYVideoManager.backFromWindowFull(this)) {
+            return;
+        }
     }
 
     @Override
@@ -284,10 +304,11 @@ public class DeployCameraLiveDetailActivity extends BaseActivity<IDeployCameraLi
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         //如果旋转了就全屏
-        if (isPlay && !isPause) {
+
+
+        if (isPlay && !isPause && orientationUtils.isEnable()) {
             getCurPlay().onConfigurationChanged(this, newConfig, orientationUtils, true, true);
         }
-
     }
 
     @OnClick(R.id.include_imv_title_imv_arrows_left)

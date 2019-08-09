@@ -9,7 +9,7 @@ import android.widget.RelativeLayout;
 
 import com.sensoro.city_camera.R;
 import com.shuyu.gsyvideoplayer.listener.GSYVideoShotSaveListener;
-import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.CityAIStandardGSYVideoPlayer;
 
 import java.io.File;
 
@@ -17,7 +17,7 @@ import java.io.File;
  * @author : bin.tian
  * date   : 2019-06-27
  */
-public class AiGSYVideoPlayer extends CityStandardGSYVideoPlayer {
+public class AiGSYVideoPlayer extends CityAIStandardGSYVideoPlayer {
     private RelativeLayout mRightToolRl;
     private ImageView mCaptureIv;
     private ImageView mDownloadIv;

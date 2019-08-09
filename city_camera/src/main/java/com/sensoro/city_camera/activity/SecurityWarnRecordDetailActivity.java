@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -32,7 +31,7 @@ import com.shuyu.gsyvideoplayer.listener.LockClickListener;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
-import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.CityAIStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
 import java.io.File;
@@ -245,7 +244,7 @@ public class SecurityWarnRecordDetailActivity
     }
 
     @Override
-    public CityStandardGSYVideoPlayer getPlayView() {
+    public CityAIStandardGSYVideoPlayer getPlayView() {
         return gsyPlayerAcCameraPersonDetail;
     }
 

@@ -39,7 +39,6 @@ import com.sensoro.smartcity.activity.NetWorkInfoActivity;
 import com.sensoro.smartcity.activity.SelfCheckActivity;
 import com.sensoro.smartcity.imainviews.IBaseStationDetailActivityView;
 import com.sensoro.smartcity.model.CityEntry;
-import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
 
@@ -61,7 +60,6 @@ import io.reactivex.schedulers.Schedulers;
 public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStationDetailActivityView> implements GeocodeSearch.OnGeocodeSearchListener {
     private Activity mContext;
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd HH:mm:ss");
-    private SimpleDateFormat hmssimpleDateFormat = new SimpleDateFormat("HH:mm:ss");
     private DecimalFormat decimalFormat = new DecimalFormat(".00");
     private String sn;
 
@@ -172,7 +170,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
                     Integer max = Collections.max(delays);
                     for (BaseStationDetailModel.NetDelay netDelay : data.getDataMessage()) {
                         if (netDelay.getTime() == max) {
-                            int timeout = Integer.parseInt(netDelay.getTimeout());
+                            long timeout = Long.parseLong(netDelay.getTimeout());
 
                             int color = R.color.c_1dbb99;
                             if (timeout >= 0 && timeout < 300) {
@@ -213,27 +211,17 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
 
         curentType = dayOrWeek;
         long from;
-//'1m'|'1d
         String interval = "1h";
 
         if ("day".equals(dayOrWeek)) {
-//            Date dayBegin = DateUtil.getDayBegin();
 
             from = DateUtil.getPastDate(1).getTime();
-
-
-//            from = dayBegin.getTime();
             interval = "30m";
         } else {
-            Date beginDayOfWeek = DateUtil.getBeginDayOfWeek();
-//            from = beginDayOfWeek.getTime();
-
             from = DateUtil.getPastDate(7).getTime();
-
             interval = "1h";
 
         }
-//        getView().showProgressDialog();
 
 
         RetrofitServiceHelper.getInstance().getBaseStationChartDetail(sn, "temperature", interval, from, System.currentTimeMillis()).subscribeOn(Schedulers.io())
@@ -247,7 +235,6 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
                     modelList.clear();
 
                     modelList.addAll(data);
-                    System.out.println("====" + data.size());
 
                 } else {
                     getView().updateCharEmpty();
@@ -284,48 +271,40 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
      */
     public void processChartData(List<BaseStationChartDetailModel> modelList) {
 
-
-        ArrayList<Entry> values1 = new ArrayList<>();
-
-        ArrayList<Entry> values2 = new ArrayList<>();
-
-        List<Float> list1 = new ArrayList<>();
-        List<Float> list2 = new ArrayList<>();
-
-
+        ArrayList<Entry> twentyhourList = new ArrayList<>();
+        ArrayList<Entry> sevendaysList = new ArrayList<>();
+        List<Float> boardList = new ArrayList<>();
+        List<Float> shellList = new ArrayList<>();
         for (int i = 0; i < modelList.size(); i++) {
-
             BaseStationChartDetailModel model = modelList.get(i);
-            list1.add(model.getBoard());
-            list2.add(model.getShell());
-
+            boardList.add(model.getBoard());
+            shellList.add(model.getShell());
             float f = Float.parseFloat(model.getKey()) / 100000;
-            values1.add(new CityEntry(i, f, model.getBoard()));
-
-            values2.add(new CityEntry(i, f, model.getShell()));
+            twentyhourList.add(new CityEntry(i, f, model.getBoard()));
+            sevendaysList.add(new CityEntry(i, f, model.getShell()));
         }
 
-        Float max1 = Collections.max(list1);
-        Float max2 = Collections.max(list2);
+        Float max1 = Collections.max(boardList);
+        Float max2 = Collections.max(shellList);
         float max = Math.max(max1, max2);
 
 
-        Float min1 = Collections.min(list1);
-        Float min2 = Collections.min(list2);
+        Float min1 = Collections.min(boardList);
+        Float min2 = Collections.min(shellList);
 
         float min = Math.min(min1, min2);
 
         LineDataSet set1, set2;
 
-        set1 = new LineDataSet(values1, "DataSet 1");
+        set1 = new LineDataSet(twentyhourList, "DataSet 1");
 
         set1.setLineWidth(2f);
         set1.setCircleRadius(0f);
         set1.setFillAlpha(65);
         set1.setHighLightColor(Color.BLACK);
-        set1.setFillColor(Color.parseColor("#6D5EAC"));
+        set1.setFillColor(mContext.getResources().getColor(R.color.c_6D5EAC));
 
-        set1.setColor(Color.parseColor("#6D5EAC"));
+        set1.setColor(mContext.getResources().getColor(R.color.c_6D5EAC));
         set1.setDrawCircleHole(false);
         set1.setDrawValues(false);
         set1.setDrawCircles(false);
@@ -335,13 +314,13 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         set1.setDrawHorizontalHighlightIndicator(false);
 
         // create a dataset and give it a type
-        set2 = new LineDataSet(values2, "DataSet 2");
+        set2 = new LineDataSet(sevendaysList, "DataSet 2");
         set2.setLineWidth(2f);
         set2.setFillAlpha(65);
         set2.setHighLightColor(Color.BLACK);
 
-        set2.setFillColor(Color.parseColor("#37B0E9"));
-        set2.setColor(Color.parseColor("#37B0E9"));
+        set2.setFillColor(mContext.getResources().getColor(R.color.c_37B0E9));
+        set2.setColor(mContext.getResources().getColor(R.color.c_37B0E9));
 
 
         set2.setDrawCircleHole(false);
@@ -366,17 +345,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
         String time;
         long lt = new BigDecimal(stap).longValue();
         Date date = new Date(lt * 100000);
-
-
-//        if (curentType.equals("day")) {
-//            time = hmssimpleDateFormat.format(date);
-//
-//        } else {
         time = simpleDateFormat.format(date);
-
-//        }
-
-
         return time;
     }
 
@@ -394,10 +363,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
 
         if (dataSetIndex == 0) {
             LineDataSet dataSetByIndex = (LineDataSet) data.getDataSetByIndex(1);
-
             LineDataSet dataSetByIndex0 = (LineDataSet) data.getDataSetByIndex(0);
-
-
             boolean setIcon = false;
             for (int i = 0; i < dataSetByIndex0.getValues().size(); i++) {
                 dataSetByIndex0.getValues().get(i).setIcon(null);
@@ -407,7 +373,6 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
                 if (e.getX() != entry.getX()) {
                     entry.setIcon(null);
                 } else {
-
                     if (!setIcon) {
                         entry.setIcon(mContext.getResources().getDrawable(R.drawable.chart_black_dot));
                         setIcon = true;
@@ -417,16 +382,11 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
 
             first = e.getY();
             List<Entry> entriesForXValue = dataSetByIndex.getEntriesForXValue(h.getX());
-
             second = entriesForXValue.get(entriesForXValue.size() - 1).getY();
-
-
         } else if (dataSetIndex == 1) {
             LineDataSet dataSetByIndex = (LineDataSet) data.getDataSetByIndex(0);
             //防止多个相同的x坐标黑点绘制多次
             boolean setIcon = false;
-
-
             for (int i = 0; i < dataSetByIndex.getValues().size(); i++) {
                 Entry entry = dataSetByIndex.getValues().get(i);
                 if (e.getX() != entry.getX()) {
@@ -437,26 +397,17 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
                         setIcon = true;
                     }
 
-
                 }
             }
-
-
             LineDataSet dataSetByIndex1 = (LineDataSet) data.getDataSetByIndex(1);
             for (int i = 0; i < dataSetByIndex1.getValues().size(); i++) {
                 dataSetByIndex1.getValues().get(i).setIcon(null);
             }
-
             second = e.getY();
             List<Entry> entriesForXValue = dataSetByIndex.getEntriesForXValue(h.getX());
-
             first = entriesForXValue.get(entriesForXValue.size() - 1).getY();
 
         }
-
-
-//        String time = stampToDate(Float.toString());
-
 
         getView().updateTopView(DateUtil.getFullMonthDate(Long.parseLong(modelList.get(cityEntry.getIndex()).getKey())), mContext.getResources().getString(R.string.internal) + decimalFormat.format(first) + "\u2103", mContext.getResources().getString(R.string.external) + decimalFormat.format(second) + "\u2103");
 
@@ -505,13 +456,9 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
             double v1 = lonlat.get(0);
             if (v == 0 || v1 == 0) {
                 data.setLonlat(lonNew);
-//                getView().toastShort(mContext.getString(R.string.location_information_not_set));
-//                return;
             }
         } else {
             data.setLonlat(lonNew);
-//            getView().toastShort(mContext.getString(R.string.location_information_not_set));
-//            return;
         }
         Intent intent = new Intent();
         if (AppUtils.isChineseLanguage()) {
@@ -605,7 +552,7 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
                 }
                 //
                 try {
-                    LogUtils.loge(this, "onRegeocodeSearched: " + "code = " + i + ",address = " + address);
+//                    LogUtils.loge(this, "onRegeocodeSearched: " + "code = " + i + ",address = " + address);
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }
@@ -668,7 +615,6 @@ public class BaseStationDetailActivityPresenter extends BasePresenter<IBaseStati
     @Override
     public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
         try {
-            LogUtils.loge(this, "onGeocodeSearched: " + "onGeocodeSearched");
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }

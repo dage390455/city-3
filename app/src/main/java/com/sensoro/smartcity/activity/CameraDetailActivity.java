@@ -3,7 +3,6 @@ package com.sensoro.smartcity.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.gyf.immersionbar.ImmersionBar;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshHeader;
@@ -41,6 +43,7 @@ import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -160,6 +163,8 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
         //增加封面
         if (imageView == null) {
             imageView = new ImageView(this);
+
+            imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 //            imageView.setImageResource(R.mipmap.ic_launcher);
         }
@@ -328,18 +333,6 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
 //        llLiveAcCameraDetail.startAnimation(isLiveStream ? downAnimation : upAnimation);
     }
 
-    @Override
-    public void setImage(Drawable resource) {
-        if (imageView != null) {
-            imageView.setImageDrawable(resource);
-        } else {
-            imageView = new ImageView(this);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setImageDrawable(resource);
-        }
-        gsyPlayerAcCameraDetail.setMobileFace(resource);
-
-    }
 
     @Override
     public void clearClickPosition() {
@@ -424,12 +417,13 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
     }
 
     @Override
-    public void doPlayLive(final String url, String cameraName, final boolean isLive) {
+    public void doPlayLive(final ArrayList<String> urlList, String cameraName, final boolean isLive) {
 
         if ((!NetworkUtils.isAvailable(mActivity) || !NetworkUtils.isWifiConnected(mActivity))) {
             orientationUtils.setEnable(false);
         }
-        gsyVideoOption.setUrl(url).setVideoTitle(cameraName).build(getCurPlay());
+//        gsyVideoOption.setUrl(urlList.get(0)).setVideoTitle(cameraName).build(getCurPlay());
+        gsyPlayerAcCameraDetail.setCityURl(urlList, cameraName);
         gsyPlayerAcCameraDetail.setIsLive(isLive ? View.INVISIBLE : VISIBLE);
         getCurPlay().startPlayLogic();
 
@@ -474,6 +468,31 @@ public class CameraDetailActivity extends BaseActivity<ICameraDetailActivityView
             onResume();
         }
 
+    }
+
+    @Override
+    public void loadCoverImage(String url) {
+
+
+        loadCover(imageView, url);
+
+//        gsyPlayerAcCameraDetail.loadCoverImage(url);
+
+
+    }
+
+    private void loadCover(ImageView imageView, String url) {
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//        imageView.setImageResource(R.drawable.camera_detail_mask);
+        Glide.with(this.getApplicationContext())
+                .setDefaultRequestOptions(
+                        new RequestOptions()
+                                .frame(3000000)
+                                .centerCrop()
+                                .error(R.drawable.camera_detail_mask)
+                )
+                .load(url)
+                .into(imageView);
     }
 
     @Override

@@ -464,11 +464,11 @@ public class AlarmCameraLiveDetailActivity extends BaseActivity<IAlarmCameraLive
     }
 
     @Override
-    public void doPlayLive(final String url) {
+    public void doPlayLive(ArrayList<String> urlList) {
         if ((!NetworkUtils.isAvailable(mActivity) || !NetworkUtils.isWifiConnected(mActivity))) {
             orientationUtils.setEnable(false);
         }
-        gsyVideoOption.setUrl(url).build(getCurPlay());
+        gsyPlayerAcAlarmCameraLiveDetail.setCityURl(urlList, "");
         getCurPlay().startPlayLogic();
 
 

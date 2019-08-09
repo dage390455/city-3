@@ -17,4 +17,8 @@
     <string name="live">"live"</string>
     <string name="cameroffline">"camera-off-line"</string>
     <string name="no_vido">Video has expired and the server only keeps video for 7 days</string>
+
+    <string name="flv_format">Real-time mode</string>
+    <string name="hls_format">Smooth mode</string>
+    <string name="video_format_des">It is recommended to use real-time mode when the network status is good, and the video playback delay is low.</string>
 </resources>

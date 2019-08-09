@@ -636,6 +636,7 @@ public abstract class GSYBaseVideoPlayer extends GSYVideoControlView {
             gsyVideoPlayer.setId(getFullId());
             gsyVideoPlayer.setIfCurrentIsFullscreen(true);
             gsyVideoPlayer.setVideoAllCallBack(mVideoAllCallBack);
+//            gsyVideoPlayer.setThumbImageView(this.mThumbImageView);
 
             cloneParams(this, gsyVideoPlayer);
 

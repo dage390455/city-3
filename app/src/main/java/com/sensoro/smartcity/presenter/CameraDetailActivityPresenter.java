@@ -3,21 +3,11 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.sensoro.common.base.BasePresenter;
 import com.sensoro.common.constant.Constants;
 import com.sensoro.common.model.EventData;
@@ -55,6 +45,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     private String minId = null;
     private String yearMonthDate;
     private String url;
+    private String flv;
     private long startDateTime;
     private long endDateTime;
     private CalendarPopUtils mCalendarPopUtils;
@@ -68,6 +59,7 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     private String deviceStatus;
     private String sn;
     private ArrayList<DeviceCameraFacePic> mLists = new ArrayList<>();
+    private ArrayList<String> urlList = new ArrayList<>();
 
     /**
      * 网络改变状态
@@ -161,9 +153,13 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
         if (intent != null) {
             cid = intent.getStringExtra("cid");
             url = intent.getStringExtra("hls");
+            flv = intent.getStringExtra("flv");
+            urlList.add(flv);
+            urlList.add(url);
             mCameraName = intent.getStringExtra("cameraName");
             lastCover = intent.getStringExtra("lastCover");
-            getLastCoverImage(lastCover);
+
+            getView().loadCoverImage(lastCover);
             deviceStatus = intent.getStringExtra("deviceStatus");
             sn = intent.getStringExtra("sn");
 
@@ -179,17 +175,6 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
     }
 
 
-    private void getLastCoverImage(String lastCover) {
-        Glide.with(mActivity).asBitmap().load(lastCover).into(new SimpleTarget<Bitmap>() {
-            @Override
-            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                if (isAttachedView()){
-                    BitmapDrawable bitmapDrawable = new BitmapDrawable(resource);
-                    getView().setImage(bitmapDrawable);
-                }
-            }
-        });
-    }
 
     private void requestData(String cid, final int direction) {
         if (direction == Constants.DIRECTION_DOWN) {
@@ -265,13 +250,13 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
         EventBus.getDefault().unregister(this);
     }
 
-    private void setLastCover(DeviceCameraFacePic model) {
-        Glide.with(mActivity).asBitmap().load(Constants.CAMERA_BASE_URL + model.getSceneUrl())
-                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-                //缓存全尺寸
-                .into(getView().getImageView());
-
-    }
+//    private void setLastCover(DeviceCameraFacePic model) {
+//        Glide.with(mActivity).asBitmap().load(Constants.CAMERA_BASE_URL + model.getSceneUrl())
+//                .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
+//                //缓存全尺寸
+//                .into(getView().getImageView());
+//
+//    }
 
     public void onCameraItemClick(final int index) {
         List<DeviceCameraFacePic> rvListData = getView().getRvListData();
@@ -279,9 +264,11 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
 
             DeviceCameraFacePic model = rvListData.get(index);
             String captureTime1 = model.getCaptureTime();
-            getLastCoverImage(Constants.CAMERA_BASE_URL + model.getSceneUrl());
 
-            setLastCover(model);
+
+//            setLastCover(model);
+
+            getView().loadCoverImage(model.getSceneUrl());
             long time;
             try {
                 time = Long.parseLong(captureTime1);
@@ -360,11 +347,17 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
         if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
             getView().offlineType(mCameraName);
         } else {
-            getView().doPlayLive(url, TextUtils.isEmpty(mCameraName) ? "" : mCameraName, true);
+
+
+            getView().doPlayLive(urlList, TextUtils.isEmpty(mCameraName) ? "" : mCameraName, true);
+
+
+//            getView().doPlayLive(url, TextUtils.isEmpty(mCameraName) ? "" : mCameraName, true);
             itemUrl = null;
             itemTitle = null;
         }
     }
+
 
     @Override
     public void onCalendarPopupCallback(CalendarDateModel calendarDateModel) {
@@ -408,7 +401,10 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
             if (getView().getPlayView().getCurrentState() == CURRENT_STATE_PAUSE) {
                 GSYVideoManager.onResume(true);
             } else if (getView().getPlayView().getCurrentState() != CURRENT_STATE_AUTO_COMPLETE) {
-                getView().doPlayLive(itemUrl, TextUtils.isEmpty(itemTitle) ? "" : itemTitle, false);
+
+                getView().startPlayLogic(itemUrl, itemTitle);
+
+//                getView().doPlayLive(itemUrl, TextUtils.isEmpty(itemTitle) ? "" : itemTitle, false);
             }
         }
     }
@@ -427,7 +423,9 @@ public class CameraDetailActivityPresenter extends BasePresenter<ICameraDetailAc
                     String lastCover = data.getLastCover();
 
                     url = hls;
-                    getLastCoverImage(lastCover);
+
+                    getView().loadCoverImage(lastCover);
+//                    getLastCoverImage(lastCover);
                     deviceStatus = data.getDeviceStatus();
                     if (!TextUtils.isEmpty(deviceStatus) && "0".equals(deviceStatus)) {
                         getView().offlineType(mCameraName);

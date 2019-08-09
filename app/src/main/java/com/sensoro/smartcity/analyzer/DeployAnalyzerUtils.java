@@ -719,6 +719,7 @@ public class DeployAnalyzerUtils {
                                         deployAnalyzerModel.deployType = Constants.TYPE_SCAN_DEPLOY_CAMERA;
                                         deployAnalyzerModel.sn = scanSerialNumber;
                                         deployAnalyzerModel.hls = data.getHls();
+                                        deployAnalyzerModel.flv = data.getFlv();
                                         DeviceCameraDetailInfo.CameraBean camera = data.getCamera();
                                         //
                                         if (camera != null) {
