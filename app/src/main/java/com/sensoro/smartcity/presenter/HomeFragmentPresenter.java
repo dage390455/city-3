@@ -77,6 +77,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     private volatile boolean needShowAlarmWindow = false;
     private volatile boolean needRefreshHeader = false;
     private volatile boolean needFreshAll = false;
+
+    private volatile boolean needResetHeaderPosition=false;//重置header到第一个位置
     //
     private volatile int totalMonitorPoint;
     private int mSoundId;
@@ -164,7 +166,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         final SoundPool.OnLoadCompleteListener listener = new SoundPool.OnLoadCompleteListener() {
             @Override
             public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                requestInitData(true, true,false);
+                requestInitData(true, true);
             }
         };
 
@@ -176,7 +178,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     }
 
-    public void requestInitData(boolean needShowProgressDialog, boolean needToast,final boolean isResetHeaderPosition) {
+    public void requestInitData(boolean needShowProgressDialog, boolean needToast) {
         if (!PreferencesHelper.getInstance().getUserData().hasDeviceBrief) {
             needFreshAll = false;
             return;
@@ -186,7 +188,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         }
         try {
             LogUtils.loge(this, "刷新Top,内容数据： " + System.currentTimeMillis());
-            LogUtils.loge( "刷新Top,内容数据： " , mCurrentHomeTopModel.status+"");
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
@@ -195,6 +196,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 .io()).flatMap(new Function<ResponseResult<DeviceTypeCount>, ObservableSource<ResponseResult<List<DeviceInfo>>>>() {
             @Override
             public ObservableSource<ResponseResult<List<DeviceInfo>>> apply(ResponseResult<DeviceTypeCount> deviceTypeCountRsp) throws Exception {
+
 
 
                 int currentStatus = -1;//原有的显示中的type
@@ -239,7 +241,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 }
 
 
-                if(isResetHeaderPosition){
+
+                if(needResetHeaderPosition){
                   if(mHomeTopModels.size() > 0){
                       mCurrentHomeTopModel = mHomeTopModels.get(0);
                       currentStatus = mCurrentHomeTopModel.status;
@@ -287,8 +290,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
 
                                                                                                              getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
-                                                                                                             getView().refreshHeaderData(isResetHeaderPosition,true, mHomeTopModels);
+                                                                                                             getView().refreshHeaderData(needResetHeaderPosition,true, mHomeTopModels);
                                                                                                              getView().refreshContentData(true, false, mDeviceInfoList);
+
 
                                                                                                              if (mHomeTopModels.size() <= 1) {
                                                                                                                  getView().setImvHeaderLeftVisible(false);
@@ -301,6 +305,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                                                                                                              getView().recycleViewRefreshComplete();
                                                                                                              getView().dismissProgressDialog();
                                                                                                              needFreshAll = false;
+                                                                                                             needResetHeaderPosition=false;
 
 
                                                                                                              if(needShowAlarmWindow){
@@ -319,6 +324,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                                                                                                          public void onErrorMsg(int errorCode, String errorMsg) {
 
                                                                                                              needFreshAll = errorCode == ERR_CODE_NET_CONNECT_EX;
+                                                                                                             needResetHeaderPosition = errorCode == ERR_CODE_NET_CONNECT_EX;
 
                                                                                                              if (errorCode == ERR_CODE_NET_CONNECT_EX) {//网络连接异常需要清空数据集合，显示空数据页面
                                                                                                                  mDeviceInfoList.clear();
@@ -326,7 +332,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                                                                                                              getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
 
 
-                                                                                                             getView().refreshHeaderData(isResetHeaderPosition,true, mHomeTopModels);
+                                                                                                             getView().refreshHeaderData(needResetHeaderPosition,true, mHomeTopModels);
                                                                                                              getView().refreshContentData(true, false, mDeviceInfoList);
 
 
@@ -437,10 +443,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
 
-    private void freshDataList(HomeTopModel homeTopModel) {
 
-    }
-
+    int  lastModelCount=0;//上一次header的数量，如果发生变化，需要跳转到header第一个位置
     /**
      * 请求剩余的数据
      */
@@ -450,8 +454,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             @Override
             public void run() {
                 if (needFreshAll) {
-                    requestInitData(false, false,false);
-
+                        requestInitData(false, false);
                 } else {
                     if (needRefreshContent) {
                         if (isAttachedView()) {
@@ -575,6 +578,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
+        int  lastModelCount=mHomeTopModels.size();
 
 
         int currentAlarmCount = alarmDeviceCountsBean.get_$0();
@@ -625,7 +629,15 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             inactiveModel.value = inactiveCount;
             mHomeTopModels.add(inactiveModel);
         }
-
+        //比较header数量是否发生变化
+        if(lastModelCount!=mHomeTopModels.size()){
+            needResetHeaderPosition=true;
+        }
+        try {
+            LogUtils.loge( "needResetHeaderPosition" , needResetHeaderPosition+"");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
 
         totalMonitorPoint = currentAlarmCount + normalCount + lostCount + inactiveCount + malfunctionCount;
 
@@ -678,7 +690,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     } catch (Throwable throwable) {
                         throwable.printStackTrace();
                     }
-                    requestInitData(true, true,true);
+                    requestInitData(true, true);
                 }
                 break;
             case Constants.EVENT_DATA_LOCK_SCREEN_ON:

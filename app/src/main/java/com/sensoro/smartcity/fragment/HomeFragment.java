@@ -153,7 +153,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                     mPresenter.requestDataByTypes(position, homeTopModel);
                 } else {
                     //尝试刷新所有数据
-                    mPresenter.requestInitData(true, true,false);
+                    mPresenter.requestInitData(true, true);
                 }
                 //选择类型的pop点击事件
                 Resources resources = Objects.requireNonNull(mRootFragment.getActivity()).getResources();
@@ -399,9 +399,9 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             }
         }
         if (isFirstInit) {
-//            mBannerScaleHeaderHelper.setFirstItemPos(data.indexOf(mPresenter.getCurrentHomeModel()));
             mBannerScaleHeaderHelper.initWidthData();
             mMainHomeFragRcTypeHeaderAdapter.updateData(fgMainHomeRcTypeHeader, data);
+
         } else {
             mBannerScaleHeaderHelper.setCurrentItem(mBannerScaleHeaderHelper.getCurrentItem(), true);
             mMainHomeFragRcTypeHeaderAdapter.updateData(fgMainHomeRcTypeHeader, data);
@@ -846,13 +846,13 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         try {
 
             if (mPresenter.getCurrentHomeModel() == null) {
-                mPresenter.requestInitData(false, true,false);
+                mPresenter.requestInitData(false, true);
                 return;
             }
             mPresenter.requestWithDirection(DIRECTION_DOWN, false, mPresenter.getCurrentHomeModel());
         } catch (Exception e) {
             e.printStackTrace();
-            mPresenter.requestInitData(false, true,false);
+            mPresenter.requestInitData(false, true);
         }
     }
 
