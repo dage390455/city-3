@@ -477,6 +477,38 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                         break;
                 }
             }
+            stringBuilder.append(" ").append(mContext.getString(R.string.msg_sbc_results)).append(" ");
+            Integer taskStatus = recordInfo.getTaskStatus();
+            if (taskStatus == null) {
+                stringBuilder.append(mContext.getString(R.string.unknown));
+            } else {
+                // 消音任务状态 0-成功，1-失败，2-未知
+                switch (taskStatus) {
+                    case 0:
+                        stringBuilder.append(mContext.getString(R.string.success));
+                        break;
+                    case 1:
+                        String result = mContext.getString(R.string.failed);
+                        stringBuilder.append(result);
+                        try {
+                            //防止字段截取出错
+                            String allMsg = stringBuilder.toString();
+                            SpannableString spannableString = new SpannableString(allMsg);
+                            spannableString.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.c_f34a4a)), allMsg.length() - result.length(), allMsg.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            holder.itemAlertContentTvContent.setText(spannableString);
+                            holder.llConfirm.setVisibility(View.GONE);
+                            return;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    case 2:
+                        stringBuilder.append(mContext.getString(R.string.unknown));
+                        break;
+                    default:
+                        stringBuilder.append(mContext.getString(R.string.unknown));
+                        break;
+                }
+            }
             holder.itemAlertContentTvContent.setText(stringBuilder.toString());
             holder.llConfirm.setVisibility(View.GONE);
 

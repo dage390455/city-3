@@ -125,6 +125,7 @@ public class AlarmInfo implements Serializable {
         private String type;
         private String sensorType;
         private int thresholds;
+        private Integer taskStatus;
         private long updatedTime;
         private String source;
         private String status;
@@ -159,6 +160,14 @@ public class AlarmInfo implements Serializable {
 
         public void setFireType(Integer fireType) {
             this.fireType = fireType;
+        }
+
+        public Integer getTaskStatus() {
+            return taskStatus;
+        }
+
+        public void setTaskStatus(Integer taskStatus) {
+            this.taskStatus = taskStatus;
         }
 
         //
