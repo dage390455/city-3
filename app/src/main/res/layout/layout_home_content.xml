@@ -29,7 +29,7 @@
 
 
         <TextView
-            android:id="@+id/fg_main_home_tv_select_sortcondition"
+            android:id="@+id/fg_main_home_tv_select_sort_condition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
