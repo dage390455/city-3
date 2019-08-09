@@ -13,8 +13,8 @@ public class TopListAdapterDiff extends DiffCallBack<HomeTopModel> {
 
     @Override
     public boolean getItemsTheSame(int oldItemPosition, int newItemPosition) {
-        int oldType = mOldList.get(oldItemPosition).type;
-        int newType = mNewList.get(newItemPosition).type;
+        int oldType = mOldList.get(oldItemPosition).status;
+        int newType = mNewList.get(newItemPosition).status;
         boolean b = oldType == newType;
         try {
             LogUtils.loge("updateData-----getItemsTheSame-->>b = " + b + ",oldType = " + oldType + ",newType = " + newType);
@@ -45,8 +45,8 @@ public class TopListAdapterDiff extends DiffCallBack<HomeTopModel> {
             throwable.printStackTrace();
         }
         HashMap<String, Object> payload = new HashMap<>();
-        if (oldData.type != newData.type) {
-            payload.put("type", newData.type);
+        if (oldData.status != newData.status) {
+            payload.put("type", newData.status);
         }
         if (oldData.value != newData.value) {
             payload.put("value", newData.value);

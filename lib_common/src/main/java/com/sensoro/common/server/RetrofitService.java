@@ -145,7 +145,7 @@ public interface RetrofitService {
                                                                          @Query("all") int all);
 
     @GET(DEVICE_BRIEF_LIST)
-    Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(@Query("sns") List<String> sns, @Query("page") int page, @Query("count")
+    Observable<ResponseResult<List<DeviceInfo>>> getDeviceBriefInfoList(@Query("order") String order,@Query("sort") String sort,@Query("sns") List<String> sns, @Query("page") int page, @Query("count")
             int count, @Query("all") int all, @Query("showIndoorDevice") int showIndoorDevice,
                                                                         @Query("sensorTypes") String sensorTypes, @Query("mergeTypes") String mergeTypes, @Query("status") Integer status, @Query("search") String search);
 

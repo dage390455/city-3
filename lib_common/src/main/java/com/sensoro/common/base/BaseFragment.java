@@ -164,6 +164,9 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
         if (mRootFragment != null) {
             mRootFragment = null;
         }
+        if (mRootView != null) {
+            ((ViewGroup) mRootView.getParent()).removeView(mRootView);
+        }
 
 //        if(immersionBar != null){
 //            immersionBar.destroy();
