@@ -690,6 +690,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     } catch (Throwable throwable) {
                         throwable.printStackTrace();
                     }
+                    needResetHeaderPosition=true;
                     requestInitData(true, true);
                 }
                 break;
