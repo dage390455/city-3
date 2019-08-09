@@ -5,7 +5,10 @@
 
     android:layout_height="match_parent"
     android:background="#f2252525"
-    android:orientation="vertical">
+
+    android:orientation="vertical"
+
+    android:textColor="@color/f2252525">
 
 
     <LinearLayout
@@ -23,7 +26,7 @@
             android:layout_marginTop="128dp"
             android:gravity="center"
             android:text="@string/flv_format"
-            android:textColor="#ffffff"
+            android:textColor="@color/white"
 
             android:textSize="16dp" />
 
@@ -37,7 +40,7 @@
             android:text="@string/hls_format"
 
 
-            android:textColor="#ffffff"
+            android:textColor="@color/white"
             android:textSize="16dp" />
 
     </LinearLayout>
