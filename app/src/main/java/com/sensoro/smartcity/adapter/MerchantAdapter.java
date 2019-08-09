@@ -185,14 +185,20 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.Mercha
         mList.clear();
         mList.addAll(data);
         //只在一条时显示展开
-        if (isSearch) {
-            if (mList.size() == 1) {
-                UserInfo userInfo = mList.get(0);
+        if (mList.size() == 1) {
+            UserInfo userInfo = mList.get(0);
+            if (isSearch) {
                 if (userInfo.expand != null) {
                     userInfo.expand = true;
                 }
+            } else {
+                if (userInfo.expand != null) {
+                    userInfo.expand = false;
+                }
             }
+
         }
+
         notifyDataSetChanged();
     }
 
