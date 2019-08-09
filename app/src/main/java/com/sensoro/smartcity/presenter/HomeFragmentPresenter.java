@@ -769,7 +769,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             switch (direction) {
                 case Constants.DIRECTION_DOWN:
                     page = 1;
-                    RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, homeTopModel.status, null).subscribeOn(Schedulers
+                    RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(mSelectedCondition==null?null:mSelectedCondition.order, mSelectedCondition==null?null:mSelectedCondition.sort,page, null, mTypeSelectedType, homeTopModel.status, null).subscribeOn(Schedulers
                             .io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
                         @Override
                         public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
@@ -810,7 +810,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     break;
                 case Constants.DIRECTION_UP:
                     page++;
-                    RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(page, null, mTypeSelectedType, homeTopModel.status, null).subscribeOn(Schedulers
+                    RetrofitServiceHelper.getInstance().getDeviceBriefInfoList(mSelectedCondition==null?null:mSelectedCondition.order, mSelectedCondition==null?null:mSelectedCondition.sort,page, null, mTypeSelectedType, homeTopModel.status, null).subscribeOn(Schedulers
                             .io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<DeviceInfo>>>(this) {
                         @Override
                         public void onCompleted(ResponseResult<List<DeviceInfo>> deviceInfoListRsp) {
