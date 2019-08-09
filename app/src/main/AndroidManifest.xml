@@ -384,7 +384,6 @@
         <activity
             android:name=".activity.AlarmCameraVideoDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity android:name=".temp.LineChartActivity2" />
         <activity android:name=".activity.SelfCheckActivity" />
         <activity android:name=".activity.FrequencyPointActivity" />
         <activity android:name=".activity.NetWorkInfoActivity" />

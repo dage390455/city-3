@@ -200,8 +200,9 @@
                     android:layout_below="@+id/chartname_ll"
                     android:background="#ffffff">
 
+
                     <com.github.mikephil.charting.charts.LineChart
-                        android:id="@+id/chart1"
+                        android:id="@+id/twentyhour_chart"
                         android:layout_width="match_parent"
                         android:layout_height="196dp"
                         android:layout_below="@+id/top_state_rl"
@@ -211,15 +212,15 @@
                         android:paddingRight="20dp" />
 
                     <com.github.mikephil.charting.charts.LineChart
-                        android:id="@+id/chart2"
+                        android:id="@+id/sevendays_chart"
                         android:layout_width="match_parent"
                         android:layout_height="196dp"
                         android:layout_below="@+id/top_state_rl"
 
-                        android:visibility="invisible"
                         android:layout_marginLeft="20dp"
                         android:layout_marginBottom="16dp"
-                        android:paddingRight="20dp" />
+                        android:paddingRight="20dp"
+                        android:visibility="invisible" />
 
                 </FrameLayout>
 
@@ -661,13 +662,6 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-
-    </RelativeLayout>
 
 
 </LinearLayout>

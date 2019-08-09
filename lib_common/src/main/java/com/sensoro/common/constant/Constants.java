@@ -395,6 +395,10 @@ public interface Constants {
     String EXTRA_ASSOCIATION_SENSOR_ADD_BIND_LIST = "extra_association_sensor_add_bind_list";
     String EXTRA_ASSOCIATION_SENSOR_NAMEPLATE_ID = "extra_association_sensor_nameplate_id";
     //
+
+    String PREFERENCE_VIDEO_FORMAT_SETTING_SP = "preference_video_format_setting_sp";
+    String PREFERENCE_VIDEO_FORMAT_SETTING_KEY = "preference_video_format_setting_key";
+
     String EXTRA_SECURITY_RISK = "extra_security_risk";
 
     String PREFERENCE_LOCAL_DEVICES_MERGE_TYPES = "preference_local_devices_mergetypes";

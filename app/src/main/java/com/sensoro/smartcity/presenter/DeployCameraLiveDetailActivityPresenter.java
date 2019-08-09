@@ -6,11 +6,11 @@ import android.net.ConnectivityManager;
 import android.view.View;
 
 import com.sensoro.common.base.BasePresenter;
+import com.sensoro.common.constant.Constants;
+import com.sensoro.common.model.DeployAnalyzerModel;
 import com.sensoro.common.model.EventData;
 import com.sensoro.smartcity.R;
-import com.sensoro.common.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployCameraLiveDetailActivityView;
-import com.sensoro.common.model.DeployAnalyzerModel;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -18,11 +18,13 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 
 public class DeployCameraLiveDetailActivityPresenter extends BasePresenter<IDeployCameraLiveDetailActivityView> {
     private Activity mActivity;
     private DeployAnalyzerModel deployAnalyzerModel;
+    private ArrayList<String> urlList = new ArrayList<>();
 
     @Override
     public void initData(Context context) {
@@ -33,7 +35,13 @@ public class DeployCameraLiveDetailActivityPresenter extends BasePresenter<IDepl
         if (extra instanceof DeployAnalyzerModel) {
 //            getView().initVideoOption(extra.get);
             deployAnalyzerModel = (DeployAnalyzerModel) extra;
-            getView().doPlayLive(deployAnalyzerModel.hls, "");
+
+
+            urlList.add(deployAnalyzerModel.flv);
+            urlList.add(deployAnalyzerModel.hls);
+
+
+            getView().doPlayLive(urlList, "");
         } else {
             getView().toastShort(mActivity.getString(R.string.tips_data_error));
         }
@@ -58,27 +66,31 @@ public class DeployCameraLiveDetailActivityPresenter extends BasePresenter<IDepl
             switch (data) {
 
                 case ConnectivityManager.TYPE_WIFI:
-//                    if (gsyPlayerAcCameraDetail..getVisibility() == VISIBLE) {
-//                        rMobileData.setVisibility(GONE);
-//                        GSYVideoManager.onResume();
-//                    }
+                    getView().getPlayView().setCityPlayState(-1);
+                    getView().doPlayLive(urlList, "");
+
 
                     break;
 
                 case ConnectivityManager.TYPE_MOBILE:
 
-                    GSYVideoManager.onPause();
                     if (isAttachedView()) {
                         getView().getPlayView().setCityPlayState(2);
+                        getView().setVerOrientationUtilEnable(false);
                         getView().getPlayView().getPlayAndRetryBtn().setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                GSYVideoManager.onResume();
-//                            gsyPlayerAcCameraDetail.startPlayLogic();
+                                getView().getPlayView().setCityPlayState(-1);
+                                getView().setVerOrientationUtilEnable(true);
+                                getView().doPlayLive(urlList, "");
 
                             }
                         });
+
+
+                        getView().backFromWindowFull();
                     }
+
 
                     break;
 
@@ -93,10 +105,21 @@ public class DeployCameraLiveDetailActivityPresenter extends BasePresenter<IDepl
                     break;
 
             }
+        } else if (code == Constants.VIDEO_START) {
+
+            getView().doPlayLive(urlList, "");
+
+        } else if (code == Constants.VIDEO_STOP) {
+            getView().setVerOrientationUtilEnable(false);
+            GSYVideoManager.onPause();
+
+            getView().backFromWindowFull();
+
+
         }
     }
 
     public void doRetry() {
-        getView().doPlayLive(deployAnalyzerModel.hls, "");
+        getView().doPlayLive(urlList, "");
     }
 }

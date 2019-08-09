@@ -136,7 +136,6 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
         orientationUtils = new OrientationUtils(this, gsyPlayerAcAlarmCameraVideoDetail);
         //初始化不打开外部的旋转
         orientationUtils.setEnable(false);
-        gsyPlayerAcAlarmCameraVideoDetail.setIsLive(View.INVISIBLE);
 
         //增加封面
         if (ivGsyCover == null) {
@@ -404,13 +403,10 @@ public class AlarmCameraVideoDetailActivity extends BaseActivity<IAlarmCameraVid
 
     @Override
     public void setVerOrientationUtil(boolean enable) {
-
-
         if (!enable) {
             isPause = true;
         } else {
             isPause = false;
-
         }
         if (orientationUtils != null) {
             orientationUtils.setEnable(enable);

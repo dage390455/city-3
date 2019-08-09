@@ -10,7 +10,7 @@ import com.shuyu.gsyvideoplayer.video.CityStandardGSYVideoPlayer;
 import java.util.ArrayList;
 
 public interface IAlarmCameraLiveDetailActivityView extends IToast, IProgressDialog {
-    void doPlayLive(final String url);
+    void doPlayLive(ArrayList<String> urlList);
 
     void offlineType(String url, String sn);
 

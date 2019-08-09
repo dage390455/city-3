@@ -44,6 +44,7 @@ dependencies {
     implementation(deps.immersionbar) {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
+    compile project(path: ':lib_common')
 
 
 //    compile fileTree(dir: 'libs', include: ['*.jar'])

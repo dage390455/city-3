@@ -13,8 +13,6 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
-import android.os.Handler;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -23,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -31,15 +30,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.sensoro.common.base.ContextUtils;
-import com.sensoro.common.constant.Constants;
-import com.sensoro.common.utils.LogUtils;
-import com.sensoro.common.widgets.SelectDialog;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.R;
 import com.shuyu.gsyvideoplayer.listener.GSYVideoShotListener;
 import com.shuyu.gsyvideoplayer.listener.GSYVideoShotSaveListener;
-import com.shuyu.gsyvideoplayer.utils.ChangeVideoFormatDialog;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
@@ -47,31 +41,21 @@ import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import moe.codeest.enviews.CityENDownloadView;
 import moe.codeest.enviews.ENPlayView;
 
 /**
- * 标准播放器，继承之后实现一些ui显示效果，如显示／隐藏ui，播放按键等
- * Created by shuyu on 2016/11/11.
+ * AI layout布局存在下载和截图逻辑，不处理视频格式切换
  */
 
-public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
-
-    /**
-     * 自定义横屏时候的封面
-     */
-    private ImageView mCoverImage;
+public class CityAIStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     public ImageView backMaskTv;
-    public TextView swVideoFormatTv;
     private RelativeLayout maskLayoutTop;
 
     public TextView maskTitleTv;
     private RelativeLayout rMobileData;
-
 
     private static int isLive;
     private int currVolume;
@@ -81,10 +65,6 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
      * 1没网,2移动数据 3加载失败重试 4 播放完成重播 5 离线 6直播 7 录像
      */
     private static int cityPlayState;
-    private ArrayList<String> urlList = new ArrayList<>();
-    private int currentVideoFormat = ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_VIDEO_FORMAT_SETTING_SP, Context.MODE_PRIVATE)
-            .getInt(Constants.PREFERENCE_VIDEO_FORMAT_SETTING_KEY, 0);
-
     private static boolean isAudioChecked;
 
 
@@ -95,8 +75,6 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     private TextView tiptv;
 
     private ToggleButton audioIv;
-    private ChangeVideoFormatDialog changeVideoFormatDialog = new ChangeVideoFormatDialog();
-    private SelectDialog selectDialog;
 
     //亮度dialog
     protected Dialog mBrightnessDialog;
@@ -145,21 +123,18 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     private boolean mHideActionBar = false;
     private MyVolumeReceiver mVolumeReceiver;
 
-//    private ImageView mCoverImage;
-//    private String mCoverOriginUrl;
-
     /**
      * 1.5.0开始加入，如果需要不同布局区分功能，需要重载
      */
-    public CityStandardGSYVideoPlayer(Context context, Boolean fullFlag) {
+    public CityAIStandardGSYVideoPlayer(Context context, Boolean fullFlag) {
         super(context, fullFlag);
     }
 
-    public CityStandardGSYVideoPlayer(Context context) {
+    public CityAIStandardGSYVideoPlayer(Context context) {
         super(context);
     }
 
-    public CityStandardGSYVideoPlayer(Context context, AttributeSet attrs) {
+    public CityAIStandardGSYVideoPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
         int dp48 = (int) (context.getResources().getDisplayMetrics().density * 28 + 0.5f);
         if (attrs != null) {
@@ -183,18 +158,6 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
             mStatEmptyIv.setLayoutParams(mStatEmpty);
 
         }
-
-    }
-
-
-    /**
-     * 设置播放urls
-     *
-     * @param cityURl
-     */
-    public void setCityURl(ArrayList<String> cityURl, String title) {
-        urlList = cityURl;
-        setUp(cityURl.get(currentVideoFormat), false, title);
 
     }
 
@@ -234,16 +197,32 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         switch (cityPlayState) {
 
             case 1:
+
+
                 GSYVideoManager.onPause();
+
                 playAndRetryBtn.setText(getResources().getString(R.string.retry));
+
                 tiptv.setText(getResources().getString(R.string.online_tip));
                 playAndRetryBtn.setVisibility(VISIBLE);
                 rMobileData.setVisibility(VISIBLE);
                 rMobileData.setBackgroundResource(R.drawable.camera_detail_mask);
+
                 maskFaceIv.setVisibility(GONE);
                 maskLayoutTop.setVisibility(VISIBLE);
                 setViewShowState(mBottomContainer, INVISIBLE);
-                playAndRetryBtn.setOnClickListener(v -> startPlayLogic());
+                playAndRetryBtn.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+
+                        startPlayLogic();
+
+
+                    }
+                });
+
+
                 break;
             case 2:
                 GSYVideoManager.onPause();
@@ -254,20 +233,28 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
                 playAndRetryBtn.setText(R.string.play);
                 rMobileData.setBackgroundColor(Color.TRANSPARENT);
                 maskFaceIv.setVisibility(VISIBLE);
+
+
                 maskTitleTv.setText(mTitle);
+
+
                 tiptv.setText(getResources().getString(R.string.mobile_network));
                 maskLayoutTop.setVisibility(VISIBLE);
-                playAndRetryBtn.setOnClickListener(v -> {
-                    maskLayoutTop.setVisibility(GONE);
-                    rMobileData.setVisibility(GONE);
-                    cityPlayState = -1;
-                    if (mVideoAllCallBack != null) {
-                        Debuger.printfLog("onClickStartThumb");
-                        mVideoAllCallBack.onClickStartThumb(mOriginUrl, mTitle, CityStandardGSYVideoPlayer.this);
-                    }
-                    prepareVideo();
-                    startDismissControlViewTimer();
+                playAndRetryBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        maskLayoutTop.setVisibility(GONE);
+                        rMobileData.setVisibility(GONE);
+                        cityPlayState = -1;
 
+                        if (mVideoAllCallBack != null) {
+                            Debuger.printfLog("onClickStartThumb");
+                            mVideoAllCallBack.onClickStartThumb(mOriginUrl, mTitle, CityAIStandardGSYVideoPlayer.this);
+                        }
+                        prepareVideo();
+                        startDismissControlViewTimer();
+
+                    }
                 });
 
                 break;
@@ -278,25 +265,42 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
                 playAndRetryBtn.setVisibility(VISIBLE);
                 rMobileData.setBackgroundResource(R.drawable.camera_detail_mask);
                 maskFaceIv.setVisibility(GONE);
+
                 playAndRetryBtn.setText(R.string.retry);
                 tiptv.setText(getResources().getString(R.string.retry_play));
                 maskLayoutTop.setVisibility(VISIBLE);
                 maskTitleTv.setText(mTitle);
+
+//                playAndRetryBtn.setOnClickListener(new OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        startPlayLogic();
+//                    }
+//                });
                 break;
             case 4:
 
                 tiptv.setText(getResources().getString(R.string.played));
                 playAndRetryBtn.setText(getResources().getString(R.string.replay));
                 playAndRetryBtn.setVisibility(VISIBLE);
+
                 rMobileData.setVisibility(VISIBLE);
                 maskFaceIv.setVisibility(GONE);
-                rMobileData.setBackground(null);
-                setViewShowState(mBottomContainer, GONE);
-                rMobileData.setBackgroundColor(getResources().getColor(R.color.c_66000000));
-                playAndRetryBtn.setOnClickListener(v -> {
-                    setIsLive(View.VISIBLE);
-                    startPlayLogic();
 
+                rMobileData.setBackground(null);
+
+                setViewShowState(mBottomContainer, GONE);
+                rMobileData.setBackgroundColor(Color.parseColor("#66000000"));
+                playAndRetryBtn.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        setIsLive(View.VISIBLE);
+
+
+                        startPlayLogic();
+
+
+                    }
                 });
 
 
@@ -322,8 +326,8 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
                 rMobileData.setVisibility(View.GONE);
                 maskLayoutTop.setVisibility(View.GONE);
                 maskFaceIv.setVisibility(GONE);
-                mCoverImage.setVisibility(GONE);
 
+//                GSYVideoManager.onResume();
 
                 break;
         }
@@ -339,7 +343,9 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     public void setMobileFace(final Drawable drawable) {
         maskFaceIv.setVisibility(VISIBLE);
+
         if (null != drawable) {
+
             maskFaceIv.setImageDrawable(drawable);
         } else {
             maskFaceIv.setImageResource(R.drawable.camera_detail_mask);
@@ -353,22 +359,27 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
      * @param isLive
      */
     public void setIsLive(int isLive) {
+
         if (isLive == View.INVISIBLE) {
             cityChangePosition = false;
             mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+
             audioIv.setChecked(true);
             isAudioChecked = true;
+
+
             mStateTv.setText(R.string.live);
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_29c_shadow);
         } else {
+
             cityChangePosition = true;
+
             mStateTv.setText(R.string.gsy_video);
             mStateTv.setBackgroundResource(R.drawable.shape_bg_corner_2dp_f48f57_shadow);
         }
 
-        CityStandardGSYVideoPlayer.isLive = isLive;
+        CityAIStandardGSYVideoPlayer.isLive = isLive;
         hide();
-        updateVideTypeTag();
 
 
     }
@@ -378,7 +389,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
      */
     public void setIsShowMaskTopBack(boolean isShowMaskTopBack) {
 
-        CityStandardGSYVideoPlayer.isShowMaskTopBack = isShowMaskTopBack;
+        CityAIStandardGSYVideoPlayer.isShowMaskTopBack = isShowMaskTopBack;
         if (!isShowMaskTopBack) {
             backMaskTv.setVisibility(GONE);
         }
@@ -401,7 +412,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     private class MyVolumeReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if ("android.media.VOLUME_CHANGED_ACTION".equals(intent.getAction())) {
+            if (intent.getAction().equals("android.media.VOLUME_CHANGED_ACTION")) {
                 currVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
                 if (currVolume == 0) {
                     audioIv.setChecked(true);
@@ -411,6 +422,10 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
                     isAudioChecked = false;
                     lastVolume = currVolume;
                 }
+//                if (isAudioChecked) {
+//                    mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+//                }
+//                Toast.makeText(getActivityContext(), currVolume + "", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -428,14 +443,10 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     @Override
     protected void init(Context context) {
         super.init(context);
-        mCoverImage = (ImageView) findViewById(R.id.thumbImage);
-
-
         currVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
         lastVolume = currVolume;
         registerReceiver();
-        swVideoFormatTv = findViewById(R.id.sw_video_format);
         maskFaceIv = findViewById(R.id.face_iv);
         seekDialogTv = findViewById(R.id.city_seek_dialog_tv);
         layoutBottomControlLl = findViewById(R.id.layout_bottom_control_ll);
@@ -447,66 +458,63 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         maskLayoutTop = findViewById(R.id.mask_layout_top);
         tiptv = findViewById(R.id.tip_data_tv);
 
-        playAndRetryBtn.setOnClickListener(v -> {
-            maskLayoutTop.setVisibility(GONE);
-            rMobileData.setVisibility(GONE);
-            cityPlayState = -1;
+        playAndRetryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                maskLayoutTop.setVisibility(GONE);
+                rMobileData.setVisibility(GONE);
+                cityPlayState = -1;
 
-            if (mVideoAllCallBack != null) {
-                Debuger.printfLog("onClickStartThumb");
-                mVideoAllCallBack.onClickStartThumb(mOriginUrl, mTitle, CityStandardGSYVideoPlayer.this);
+                if (mVideoAllCallBack != null) {
+                    Debuger.printfLog("onClickStartThumb");
+                    mVideoAllCallBack.onClickStartThumb(mOriginUrl, mTitle, CityAIStandardGSYVideoPlayer.this);
+                }
+                prepareVideo();
+                startDismissControlViewTimer();
+
             }
-            prepareVideo();
-            startDismissControlViewTimer();
-
         });
-        backMaskTv.setOnClickListener(v -> {
-            if (getContext() instanceof Activity) {
+        backMaskTv.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getContext() instanceof Activity) {
 
-                if (GSYVideoManager.isFullState((Activity) getContext())) {
+                    if (GSYVideoManager.isFullState((Activity) getContext())) {
 
 
-                    if (GSYVideoManager.backFromWindowFull(mContext)) {
-                        return;
-                    }
-                } else {
-                    if (getContext() instanceof Activity) {
-                        ((Activity) getContext()).finish();
+                        if (GSYVideoManager.backFromWindowFull(mContext)) {
+                            return;
+                        }
+                    } else {
+                        if (getContext() instanceof Activity) {
+                            ((Activity) getContext()).finish();
+                        }
                     }
                 }
             }
         });
         audioIv = findViewById(R.id.audio_iv);
-        audioIv.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        audioIv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-            isAudioChecked = isChecked;
-            if (isChecked) {
-                mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
-            } else {
+                isAudioChecked = isChecked;
+                if (isChecked) {
+                    mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+                } else {
 
-                postDelayed(() -> mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, lastVolume, 0), 200);
+                    postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, lastVolume, 0);
 
+                        }
+                    }, 200);
+
+                }
             }
         });
 
-        swVideoFormatTv.setOnClickListener(v -> {
-            int orientation = mContext.getResources().getConfiguration().orientation;
-            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                changeVideoFormatDialog.showChangeVideoFormatDialog(mContext, currentVideoFormat, position -> changeVideoFormat(position));
-            } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-
-                List<String> names = new ArrayList<>();
-                names.add(mContext.getString(R.string.flv_format));
-                names.add(mContext.getString(R.string.hls_format));
-                selectDialog = new SelectDialog((Activity) mContext, currentVideoFormat, R.style
-                        .transparentFrameWindowStyle,
-                        (parent, view, position, id) -> changeVideoFormat(position), names, mContext.getString(R.string.video_format_des));
-                selectDialog.show();
-
-            }
-
-
-        });
 
         if (mBottomShowProgressDrawable != null) {
             mProgressBar.setProgressDrawable(mBottomProgressDrawable);
@@ -519,7 +527,6 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     }
 
-
     /**
      * 显示wifi确定框
      */
@@ -527,31 +534,36 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     public void startPlayLogic() {
         setViewShowState(mBottomContainer, INVISIBLE);
 
-
-        try {
-            LogUtils.loge(mUrl);
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
         maskLayoutTop.setVisibility(GONE);
         rMobileData.setVisibility(GONE);
         maskFaceIv.setVisibility(GONE);
 
 
         if ((!NetworkUtils.isAvailable(getContext()) || !NetworkUtils.isWifiConnected(getContext()))) {
+
             if (!NetworkUtils.isAvailable(getContext())) {
+
                 setCityPlayState(1);
+
                 return;
             }
             if (!NetworkUtils.isWifiConnected(getContext())) {
                 setCityPlayState(2);
+
                 return;
+
             }
+
+
         }
+
+
         if (mVideoAllCallBack != null) {
             Debuger.printfLog("onClickStartThumb");
-            mVideoAllCallBack.onClickStartThumb(mOriginUrl, mTitle, CityStandardGSYVideoPlayer.this);
+            mVideoAllCallBack.onClickStartThumb(mOriginUrl, mTitle, CityAIStandardGSYVideoPlayer.this);
         }
+
+
         prepareVideo();
         startDismissControlViewTimer();
         cityPlayState = -1;
@@ -559,9 +571,6 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     }
 
-    /**
-     * 根据是否直播隐藏控件
-     */
     public void hide() {
         setViewShowState(mProgressBar, isLive);
 
@@ -681,6 +690,67 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
                                       int seekTimePosition, String totalTime, int totalTimeDuration) {
 
         showCityProgressDiallog(seekTime, seekTimePosition);
+//        if (mProgressDialog == null) {
+//            View localView = LayoutInflater.from(getActivityContext()).inflate(getProgressDialogLayoutId(), null);
+//            if (localView.findViewById(getProgressDialogProgressId()) instanceof ProgressBar) {
+//                mDialogProgressBar = ((ProgressBar) localView.findViewById(getProgressDialogProgressId()));
+//                if (mDialogProgressBarDrawable != null) {
+//                    mDialogProgressBar.setProgressDrawable(mDialogProgressBarDrawable);
+//                }
+//            }
+//            if (localView.findViewById(getProgressDialogCurrentDurationTextId()) instanceof TextView) {
+//                mDialogSeekTime = ((TextView) localView.findViewById(getProgressDialogCurrentDurationTextId()));
+//            }
+//            if (localView.findViewById(getProgressDialogAllDurationTextId()) instanceof TextView) {
+//                mDialogTotalTime = ((TextView) localView.findViewById(getProgressDialogAllDurationTextId()));
+//            }
+//            if (localView.findViewById(getProgressDialogImageId()) instanceof ImageView) {
+//                mDialogIcon = ((ImageView) localView.findViewById(getProgressDialogImageId()));
+//            }
+//            mProgressDialog = new Dialog(getActivityContext(), R.style.video_style_dialog_progress);
+//            mProgressDialog.setContentView(localView);
+//            mProgressDialog.getWindow().addFlags(Window.FEATURE_ACTION_BAR);
+//            mProgressDialog.getWindow().addFlags(32);
+//            mProgressDialog.getWindow().addFlags(16);
+//            mProgressDialog.getWindow().setLayout(getWidth(), getHeight());
+//            if (mDialogProgressNormalColor != -11 && mDialogTotalTime != null) {
+//                mDialogTotalTime.setTextColor(mDialogProgressNormalColor);
+//            }
+//            if (mDialogProgressHighLightColor != -11 && mDialogSeekTime != null) {
+//                mDialogSeekTime.setTextColor(mDialogProgressHighLightColor);
+//            }
+//            WindowManager.LayoutParams localLayoutParams = mProgressDialog.getWindow().getAttributes();
+//            localLayoutParams.gravity = Gravity.TOP;
+//            localLayoutParams.width = getWidth();
+//            localLayoutParams.height = getHeight();
+//            int location[] = new int[2];
+//            getLocationOnScreen(location);
+//            localLayoutParams.x = location[0];
+//            localLayoutParams.y = location[1];
+//            mProgressDialog.getWindow().setAttributes(localLayoutParams);
+//        }
+//        if (!mProgressDialog.isShowing()) {
+//            mProgressDialog.show();
+//        }
+//        if (mDialogSeekTime != null) {
+//            mDialogSeekTime.setText(seekTime);
+//        }
+//        if (mDialogTotalTime != null) {
+//            mDialogTotalTime.setText(" / " + totalTime);
+//        }
+//        if (totalTimeDuration > 0)
+//            if (mDialogProgressBar != null) {
+//                mDialogProgressBar.setProgress(seekTimePosition * 100 / totalTimeDuration);
+//            }
+//        if (deltaX > 0) {
+//            if (mDialogIcon != null) {
+//                mDialogIcon.setBackgroundResource(R.drawable.video_forward_icon);
+//            }
+//        } else {
+//            if (mDialogIcon != null) {
+//                mDialogIcon.setBackgroundResource(R.drawable.video_backward_icon);
+//            }
+//        }
 
     }
 
@@ -692,6 +762,26 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     private void showCityProgressDiallog(String seekTime, int seekTimePosition) {
 
+//        if (mSeekProgressDialog == null) {
+////            View localView = LayoutInflater.from(getActivityContext()).inflate(R.layout.city_seek_dilog, null);
+//
+////            seekDialogTv = localView.findViewById(R.id.city_seek_dialog_tv);
+//            mSeekProgressDialog = new Dialog(getActivityContext(), R.style.video_style_dialog_progress);
+//            mSeekProgressDialog.setContentView(localView);
+//            mSeekProgressDialog.getWindow().addFlags(Window.FEATURE_ACTION_BAR);
+//            mSeekProgressDialog.getWindow().addFlags(32);
+//            mSeekProgressDialog.getWindow().addFlags(16);
+//            mSeekProgressDialog.getWindow().setLayout(getWidth(), getHeight());
+//            WindowManager.LayoutParams localLayoutParams = mSeekProgressDialog.getWindow().getAttributes();
+//            localLayoutParams.gravity = Gravity.TOP;
+//            localLayoutParams.width = getWidth();
+//            localLayoutParams.height = getHeight();
+//            int location[] = new int[2];
+//            getLocationOnScreen(location);
+//            localLayoutParams.x = location[0];
+//            localLayoutParams.y = location[1];
+//            mSeekProgressDialog.getWindow().setAttributes(localLayoutParams);
+//        }
         if (seekDialogTv.getVisibility() != View.VISIBLE) {
             seekDialogTv.setVisibility(VISIBLE);
         }
@@ -814,8 +904,8 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     @Override
     protected void cloneParams(GSYBaseVideoPlayer from, GSYBaseVideoPlayer to) {
         super.cloneParams(from, to);
-        CityStandardGSYVideoPlayer sf = (CityStandardGSYVideoPlayer) from;
-        CityStandardGSYVideoPlayer st = (CityStandardGSYVideoPlayer) to;
+        CityAIStandardGSYVideoPlayer sf = (CityAIStandardGSYVideoPlayer) from;
+        CityAIStandardGSYVideoPlayer st = (CityAIStandardGSYVideoPlayer) to;
         if (st.mProgressBar != null && sf.mProgressBar != null) {
             st.mProgressBar.setProgress(sf.mProgressBar.getProgress());
             st.mProgressBar.setSecondaryProgress(sf.mProgressBar.getSecondaryProgress());
@@ -825,9 +915,6 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         }
         if (st.mCurrentTimeTextView != null && sf.mCurrentTimeTextView != null) {
             st.mCurrentTimeTextView.setText(sf.mCurrentTimeTextView.getText());
-        }
-        if (st.mThumbImageViewLayout != null && sf.mThumbImageViewLayout != null) {
-            st.mThumbImageViewLayout = sf.mThumbImageViewLayout;
         }
     }
 
@@ -842,18 +929,17 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     @Override
     public GSYBaseVideoPlayer startWindowFullscreen(Context context, boolean actionBar,
                                                     boolean statusBar) {
-        CityStandardGSYVideoPlayer gsyBaseVideoPlayer = (CityStandardGSYVideoPlayer) super.startWindowFullscreen(context, actionBar, statusBar);
+        GSYBaseVideoPlayer gsyBaseVideoPlayer = super.startWindowFullscreen(context, actionBar, statusBar);
         if (gsyBaseVideoPlayer != null) {
-            CityStandardGSYVideoPlayer gsyVideoPlayer = (CityStandardGSYVideoPlayer) gsyBaseVideoPlayer;
+            CityAIStandardGSYVideoPlayer gsyVideoPlayer = (CityAIStandardGSYVideoPlayer) gsyBaseVideoPlayer;
             gsyVideoPlayer.setLockClickListener(mLockClickListener);
             gsyVideoPlayer.setNeedLockFull(isNeedLockFull());
             initFullUI(gsyVideoPlayer);
             //比如你自定义了返回案件，但是因为返回按键底层已经设置了返回事件，所以你需要在这里重新增加的逻辑
-            backMaskTv.setVisibility(VISIBLE);
-            gsyBaseVideoPlayer.urlList = urlList;
-            gsyBaseVideoPlayer.currentVideoFormat = currentVideoFormat;
-            gsyBaseVideoPlayer.mThumbImageViewLayout = mThumbImageViewLayout;
         }
+        backMaskTv.setVisibility(VISIBLE);
+
+
         return gsyBaseVideoPlayer;
     }
 
@@ -863,15 +949,6 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
         backMaskTv.setVisibility(isShowMaskTopBack ? VISIBLE : GONE);
         super.resolveNormalVideoShow(oldF, vp, gsyVideoPlayer);
-
-        if (gsyVideoPlayer != null) {
-            CityStandardGSYVideoPlayer sampleVideo = (CityStandardGSYVideoPlayer) gsyVideoPlayer;
-            currentVideoFormat = sampleVideo.currentVideoFormat;
-//            mCoverImage = sampleVideo.mCoverImage;
-            setCityURl(urlList, mTitle);
-            mThumbImageViewLayout = sampleVideo.mThumbImageViewLayout;
-
-        }
 
 
     }
@@ -967,28 +1044,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         setViewShowState(mBottomContainer, View.INVISIBLE);
 //        setViewShowState(mStartButton, INVISIBLE);
         setViewShowState(mLoadingProgressBar, VISIBLE);
-
-
-        /**
-         * 横竖屏切换视图被清除
-         */
-//        if (mThumbImageViewLayout.getChildCount() > 0) {
-//            ImageView imageView = (ImageView) mThumbImageViewLayout.getChildAt(0);
-//            if (mOriginResource != null && null == imageView.getDrawable()) {
-//                imageView.setImageDrawable(mOriginResource);
-//            }
-//        } else {
-//            ImageView imageView = new ImageView(mContext);
-//            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//            if (mOriginResource != null) {
-//                imageView.setImageDrawable(mOriginResource);
-//                mThumbImageViewLayout.addView(imageView);
-//            }
-//        }
-
-
-        setViewShowState(mThumbImageViewLayout, VISIBLE);
-//        setViewShowState(mCoverImage, VISIBLE);
+        setViewShowState(mThumbImageViewLayout, INVISIBLE);
 //        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, GONE);
         if (mHideActionBar) {
@@ -1011,12 +1067,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
         setViewShowState(mStartButton, VISIBLE);
         setViewShowState(mLoadingProgressBar, INVISIBLE);
         setViewShowState(mThumbImageViewLayout, INVISIBLE);
-
-
-        if (mCoverImage.getVisibility() == VISIBLE) {
-            postDelayed(() -> setViewShowState(mCoverImage, INVISIBLE), 300);
-        }
-
+//        setViewShowState(mBottomProgressBar, INVISIBLE);
         setViewShowState(mLockScreen, (mIfCurrentIsFullscreen && mNeedLockFull) ? VISIBLE : GONE);
         if (mHideActionBar) {
             CommonUtil.showSupportActionBar(mContext, true, true);
@@ -1318,7 +1369,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     /**
      * 全屏的UI逻辑
      */
-    private void initFullUI(CityStandardGSYVideoPlayer standardGSYVideoPlayer) {
+    private void initFullUI(CityAIStandardGSYVideoPlayer standardGSYVideoPlayer) {
 
         if (mBottomProgressDrawable != null) {
             standardGSYVideoPlayer.setBottomProgressBarDrawable(mBottomProgressDrawable);
@@ -1447,15 +1498,6 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
     @Override
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        updateVideTypeTag();
-
-        /**
-         * 横竖屏切换隐藏dialog
-         */
-        changeVideoFormatDialog.disMiss();
-        if (null != selectDialog) {
-            selectDialog.dismiss();
-        }
 
 
         if (isLive == View.INVISIBLE) {
@@ -1541,90 +1583,6 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     }
 
-    /**
-     * 视频格式标签
-     */
-    private void changeVideoFormat(int pos) {
-
-        if (currentVideoFormat != pos) {
-
-            if ((mCurrentState == GSYVideoPlayer.CURRENT_STATE_PLAYING
-                    || mCurrentState == GSYVideoPlayer.CURRENT_STATE_PAUSE)) {
-
-                String url = urlList.get(pos);
-                if (!TextUtils.isEmpty(url)) {
-                    /**
-                     * 获取最后视频截图loading显示占位图
-                     */
-
-                    taskShotPic(bitmap -> {
-
-                        if (null != bitmap) {
-                            mCoverImage.setImageBitmap(bitmap);
-                            mCoverImage.setVisibility(VISIBLE);
-                        }
-
-                    });
-
-
-                    onVideoPause();
-                    getGSYVideoManager().releaseMediaPlayer();
-                    cancelProgressTimer();
-                    hideAllWidget();
-
-                    changeVideoFormatDialog.disMiss();
-                    if (null != selectDialog) {
-                        selectDialog.dismiss();
-                    }
-                    new Handler().postDelayed(() -> {
-                        setUp(url, mCache, mCachePath, mTitle);
-                        setSeekOnStart(0);
-                        startPlayLogic();
-                        cancelProgressTimer();
-                        hideAllWidget();
-
-                    }, 300);
-
-
-                    /**
-                     * 存储本地记录
-                     */
-                    ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_VIDEO_FORMAT_SETTING_SP, Context.MODE_PRIVATE)
-                            .edit().putInt(Constants.PREFERENCE_VIDEO_FORMAT_SETTING_KEY, pos).apply();
-                    updateVideTypeTag();
-                    currentVideoFormat = pos;
-
-                }
-            }
-        }
-
-
-    }
-
-
-    /**
-     * 更新视频格式tag
-     */
-    public void updateVideTypeTag() {
-        currentVideoFormat = ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_VIDEO_FORMAT_SETTING_SP, Context.MODE_PRIVATE)
-                .getInt(Constants.PREFERENCE_VIDEO_FORMAT_SETTING_KEY, 0);
-        if (isLive == View.INVISIBLE) {
-            swVideoFormatTv.setVisibility(VISIBLE);
-
-            if (currentVideoFormat == 0) {
-                swVideoFormatTv.setText(mContext.getString(R.string.flv_format));
-            } else if (currentVideoFormat == 1) {
-                swVideoFormatTv.setText(mContext.getString(R.string.hls_format));
-
-            }
-        } else {
-            swVideoFormatTv.setVisibility(GONE);
-
-        }
-
-
-    }
-
 
     @Override
     protected void onDetachedFromWindow() {
@@ -1650,7 +1608,6 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     }
 
-
     @Override
     public void onError(int what, int extra) {
         super.onError(what, extra);
@@ -1661,21 +1618,10 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
 
     }
 
-
-    @Override
-    protected void releasePauseCover() {
-        super.releasePauseCover();
-    }
-
     @Override
     protected void releaseVideos() {
         super.releaseVideos();
 
-    }
-
-    @Override
-    protected void showPauseCover() {
-        super.showPauseCover();
     }
 
 

@@ -46,6 +46,7 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
     private int mItemClickPosition = 0;
 
     private String currentReTryClickSn;
+    private ArrayList<String> urlList = new ArrayList<>();
 
     /**
      * 网络改变状态
@@ -204,7 +205,11 @@ public class AlarmCameraLiveDetailActivityPresenter extends BasePresenter<IAlarm
             if (!TextUtils.isEmpty(dataBean.getDeviceStatus()) && "0".equals(dataBean.getDeviceStatus())) {
                 getView().offlineType(dataBean.getHls(), dataBean.getSn());
             } else {
-                getView().doPlayLive(dataBean.getHls());
+
+                urlList.clear();
+                urlList.add(dataBean.getFlv());
+                urlList.add(dataBean.getHls());
+                getView().doPlayLive(urlList);
 
             }
         } else {
