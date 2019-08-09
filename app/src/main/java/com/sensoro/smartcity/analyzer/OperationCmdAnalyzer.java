@@ -3,7 +3,7 @@ package com.sensoro.smartcity.analyzer;
 import com.sensoro.libbleserver.ble.callback.SensoroWriteCallback;
 import com.sensoro.libbleserver.ble.connection.SensoroDeviceConnection;
 import com.sensoro.libbleserver.ble.proto.MsgNode1V1M5;
-import com.sensoro.smartcity.constant.MonitorPointOperationCode;
+import com.sensoro.common.constant.MonitorPointOperationCode;
 
 import java.util.Random;
 

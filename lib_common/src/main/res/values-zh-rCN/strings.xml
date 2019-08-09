@@ -1184,4 +1184,7 @@
 
     <string name="missing_required_photo">缺少必选照片</string>
 
+    <string name="operator">操作人</string>
+    <string name="by">通过</string>
+
 </resources>

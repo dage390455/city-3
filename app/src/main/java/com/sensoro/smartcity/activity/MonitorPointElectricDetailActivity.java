@@ -37,7 +37,7 @@ import com.sensoro.smartcity.adapter.MonitoringPointRcContentAdapter;
 import com.sensoro.smartcity.adapter.MonitoringPointRcMalfunctionContentAdapter;
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
-import com.sensoro.smartcity.constant.MonitorPointOperationCode;
+import com.sensoro.common.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.imainviews.IMonitorPointElectricDetailActivityView;
 import com.sensoro.smartcity.model.Elect3DetailModel;
 import com.sensoro.smartcity.model.TaskOptionModel;

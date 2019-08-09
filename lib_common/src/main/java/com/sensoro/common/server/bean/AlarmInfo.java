@@ -125,6 +125,7 @@ public class AlarmInfo implements Serializable {
         private String type;
         private String sensorType;
         private int thresholds;
+        private Integer taskStatus;
         private long updatedTime;
         private String source;
         private String status;
@@ -137,7 +138,9 @@ public class AlarmInfo implements Serializable {
         private Event[] phoneList;
         private Integer fireStage;
         private Integer fireType;
+        private String category;
         private List<SecurityRisksAdapterModel> danger;
+        private ValueInfo value;
 
         public List<SecurityRisksAdapterModel> getDanger() {
             return danger;
@@ -159,7 +162,46 @@ public class AlarmInfo implements Serializable {
             this.fireType = fireType;
         }
 
+        public Integer getTaskStatus() {
+            return taskStatus;
+        }
+
+        public void setTaskStatus(Integer taskStatus) {
+            this.taskStatus = taskStatus;
+        }
+
         //
+        public class ValueInfo implements Serializable {
+            private List<String> snList;
+            private String type;
+
+            public int getBeepMuteTime() {
+                return beepMuteTime;
+            }
+
+            public void setBeepMuteTime(int beepMuteTime) {
+                this.beepMuteTime = beepMuteTime;
+            }
+
+            private int beepMuteTime;
+
+            public List<String> getSnList() {
+                return snList;
+            }
+
+            public void setSnList(List<String> snList) {
+                this.snList = snList;
+            }
+
+            public String getType() {
+                return type;
+            }
+
+            public void setType(String type) {
+                this.type = type;
+            }
+        }
+
         private List<String> images;
 
         private List<ScenesData> scenes;
@@ -208,6 +250,14 @@ public class AlarmInfo implements Serializable {
 
         public String getType() {
             return type;
+        }
+
+        public ValueInfo getValue() {
+            return value;
+        }
+
+        public void setValue(ValueInfo value) {
+            this.value = value;
         }
 
         public void setType(String type) {
@@ -288,6 +338,14 @@ public class AlarmInfo implements Serializable {
 
         public void setStatus(String status) {
             this.status = status;
+        }
+
+        public String getCategory() {
+            return category;
+        }
+
+        public void setCategory(String category) {
+            this.category = category;
         }
 
         public class Event implements Serializable {
