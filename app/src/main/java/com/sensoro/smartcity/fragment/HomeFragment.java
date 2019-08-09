@@ -174,6 +174,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     }
 
+
     private void initSortConditionPop() {
 
         mSelectSortConditionPopUtils = new SelectSortConditionPopUtils(mRootFragment.getActivity());
@@ -182,12 +183,34 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             public void onSelectSortConditionItemClick(View view, int position, SortConditionModel sortCondition) {
                 fgMainHomeTvSelectSortCondition.setText(sortCondition.title);
                 mPresenter.setSelectedCondition(sortCondition);
-                mPresenter.freshContentView(mPresenter.getCurrentHomeModel(), false);
+                if(mPresenter.getCurrentHomeModel()!=null){
+                    mPresenter.freshContentView(mPresenter.getCurrentHomeModel(), false);
+                }
                 mSelectSortConditionPopUtils.dismiss();
             }
         });
 
     }
+
+    /**
+     * 切换商户重置类型和排序条件
+     */
+    public  void resetTypeAndSortCondition(){
+
+        //重置类型
+        Resources resources = Objects.requireNonNull(mRootFragment.getActivity()).getResources();
+        fgMainHomeTvSelectType.setText(R.string.all_types);
+        fgMainHomeTvSelectType.setTextColor(resources.getColor(R.color.c_a6a6a6));
+        Drawable drawable = resources.getDrawable(R.drawable.main_small_triangle_gray);
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        fgMainHomeTvSelectType.setCompoundDrawables(null, null, drawable, null);
+
+
+        //重置排序
+        fgMainHomeTvSelectSortCondition.setText(R.string.sortcondition_def);
+        mPresenter.resetConditionList();
+    }
+
 
     private void initRcTypeHeader() {
         mMainHomeFragRcTypeHeaderAdapter = new MainHomeFragRcTypeAdapter(mRootFragment.getActivity());
@@ -491,6 +514,11 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     public void updateSelectFilterConditionPopAndShow(List mSortConditionList, SortConditionModel selectedCondition) {
         mSelectSortConditionPopUtils.updateSortConditionList(mSortConditionList, selectedCondition);
         mSelectSortConditionPopUtils.showAtLocation(fgMainHomeLlRoot, Gravity.TOP);
+    }
+
+    @Override
+    public void updateSelectFilterCondition(List mSortConditionList, SortConditionModel selectedCondition) {
+        mSelectSortConditionPopUtils.updateSortConditionList(mSortConditionList, selectedCondition);
     }
 
     @Override
