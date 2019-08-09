@@ -5,8 +5,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,9 +27,9 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.Mercha
     private LayoutInflater mInflater;
     private final List<UserInfo> mList = new ArrayList<>();
     //展示动画
-    private TranslateAnimation mShowAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-            Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-            -1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+//    private TranslateAnimation mShowAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+//            Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+//            -1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
 
     //隐藏动画
 //    private TranslateAnimation mHiddenAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF,
@@ -42,7 +40,7 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.Mercha
     public MerchantAdapter(Context context) {
         this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
-        mShowAction.setDuration(350);
+//        mShowAction.setDuration(350);
 //        mHiddenAction.setDuration(300);
     }
 
@@ -140,7 +138,7 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.Mercha
             //存在展开项
             if (userInfo.expand) {
                 //动画展示
-                holder.itemRvMerchantSub.startAnimation(mShowAction);
+//                holder.itemRvMerchantSub.startAnimation(mShowAction);
                 holder.itemRvMerchantSub.setVisibility(View.VISIBLE);
 //                holder.itemRvMerchantSub.setVisibility(View.VISIBLE);
                 holder.itemBottomS.setVisibility(View.GONE);
@@ -183,16 +181,19 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.Mercha
         this.listener = listener;
     }
 
-    public void setDataList(List<UserInfo> data) {
+    public void updateDataList(List<UserInfo> data, boolean isSearch) {
         mList.clear();
         mList.addAll(data);
         //只在一条时显示展开
-        if (mList.size() == 1) {
-            UserInfo userInfo = mList.get(0);
-            if (userInfo.expand != null) {
-                userInfo.expand = true;
+        if (isSearch) {
+            if (mList.size() == 1) {
+                UserInfo userInfo = mList.get(0);
+                if (userInfo.expand != null) {
+                    userInfo.expand = true;
+                }
             }
         }
+        notifyDataSetChanged();
     }
 
     public List<UserInfo> getData() {

@@ -71,6 +71,8 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
         } else {
             tempSearch = searchText;
         }
+        //不为空是搜索状态
+        boolean isSearch = !TextUtils.isEmpty(tempSearch);
         switch (direction) {
             case Constants.DIRECTION_DOWN:
                 cur_page = 0;
@@ -95,7 +97,8 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
                         mUserInfoList.clear();
-                        getView().updateAdapterUserInfo(mUserInfoList);
+
+                        getView().updateAdapterUserInfo(mUserInfoList, isSearch);
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
                         getView().onPullRefreshComplete();
@@ -108,7 +111,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                         if (list != null) {
                             mUserInfoList.addAll(list);
                         }
-                        getView().updateAdapterUserInfo(mUserInfoList);
+                        getView().updateAdapterUserInfo(mUserInfoList, isSearch);
                         getView().dismissProgressDialog();
                         getView().onPullRefreshComplete();
                     }
@@ -149,7 +152,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                             getView().toastShort(mContext.getString(R.string.no_more_data));
                         } else {
                             mUserInfoList.addAll(list);
-                            getView().updateAdapterUserInfo(mUserInfoList);
+                            getView().updateAdapterUserInfo(mUserInfoList, isSearch);
                         }
                         getView().dismissProgressDialog();
                         getView().onPullRefreshComplete();

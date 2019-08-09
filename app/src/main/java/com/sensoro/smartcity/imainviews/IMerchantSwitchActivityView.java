@@ -10,7 +10,7 @@ import java.util.List;
 public interface IMerchantSwitchActivityView extends IProgressDialog, IActivityIntent, IToast {
     void setCurrentNameAndPhone(String name, String phone);
 
-    void updateAdapterUserInfo(List<UserInfo> data);
+    void updateAdapterUserInfo(List<UserInfo> data, boolean isSearCh);
 
     void onPullRefreshComplete();
 

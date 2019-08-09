@@ -429,12 +429,11 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     }
 
     @Override
-    public void updateAdapterUserInfo(List<UserInfo> data) {
+    public void     updateAdapterUserInfo(List<UserInfo> data,boolean isSearCh) {
         if (data != null && data.size() > 0) {
             icNoContent.setVisibility(View.GONE);
             merchantLlListRoot.setVisibility(View.VISIBLE);
-            mMerchantAdapter.setDataList(data);
-            mMerchantAdapter.notifyDataSetChanged();
+            mMerchantAdapter.updateDataList(data,isSearCh);
         } else {
             if (isRlTitleAccountVisible()) {
                 icNoContent.setVisibility(View.GONE);
