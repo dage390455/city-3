@@ -19,6 +19,7 @@ import com.sensoro.common.server.bean.UserInfo;
 import com.sensoro.common.server.response.ResponseResult;
 import com.sensoro.common.utils.LogUtils;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.factory.MerchantSubFactory;
 import com.sensoro.smartcity.factory.UserPermissionFactory;
 import com.sensoro.smartcity.imainviews.IMerchantSwitchActivityView;
 
@@ -73,7 +74,21 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
         switch (direction) {
             case Constants.DIRECTION_DOWN:
                 cur_page = 0;
-                RetrofitServiceHelper.getInstance().getUserAccountList(tempSearch, null, cur_page * 20, 20).subscribeOn(Schedulers.io()).observeOn
+                RetrofitServiceHelper.getInstance().getUserAccountList(tempSearch, null, cur_page * 20, 20).doOnNext(new Consumer<ResponseResult<List<UserInfo>>>() {
+                    @Override
+                    public void accept(ResponseResult<List<UserInfo>> listResponseResult) throws Exception {
+                        //TODO 处理list中的子商户信息
+                        List<UserInfo> data = listResponseResult.getData();
+                        if (data != null) {
+                            for (UserInfo userInfo : data) {
+                                userInfo.merchantSubList = MerchantSubFactory.createMerchantSubList(userInfo);
+                                if (userInfo.merchantSubList != null && userInfo.merchantSubList.size() > 0) {
+                                    userInfo.expand = data.size() <= 1;
+                                }
+                            }
+                        }
+                    }
+                }).subscribeOn(Schedulers.io()).observeOn
                         (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<UserInfo>>>(this) {
 
 
@@ -101,7 +116,21 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                 break;
             case Constants.DIRECTION_UP:
                 cur_page++;
-                RetrofitServiceHelper.getInstance().getUserAccountList(tempSearch, null, cur_page * 20, 20).subscribeOn(Schedulers.io()).observeOn
+                RetrofitServiceHelper.getInstance().getUserAccountList(tempSearch, null, cur_page * 20, 20).doOnNext(new Consumer<ResponseResult<List<UserInfo>>>() {
+                    @Override
+                    public void accept(ResponseResult<List<UserInfo>> listResponseResult) throws Exception {
+                        //TODO 处理list中的子商户信息，处理子商户信息
+                        List<UserInfo> data = listResponseResult.getData();
+                        if (data != null) {
+                            for (UserInfo userInfo : data) {
+                                userInfo.merchantSubList = MerchantSubFactory.createMerchantSubList(userInfo);
+                                if (userInfo.merchantSubList != null && userInfo.merchantSubList.size() > 0) {
+                                    userInfo.expand = data.size() <= 1;
+                                }
+                            }
+                        }
+                    }
+                }).subscribeOn(Schedulers.io()).observeOn
                         (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseResult<List<UserInfo>>>(this) {
 
                     @Override

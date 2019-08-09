@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sensoro.common.server.bean.UserInfo;
 import com.sensoro.common.utils.DpUtils;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.model.MerchantSubModel;
+import com.sensoro.common.model.MerchantSubModel;
 
 import java.util.ArrayList;
 import java.util.List;

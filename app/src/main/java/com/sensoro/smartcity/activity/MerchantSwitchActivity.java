@@ -204,6 +204,10 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 
             }
         });
+//        DefaultItemAnimator defaultItemAnimator = new DefaultItemAnimator();
+//        defaultItemAnimator.setAddDuration(500);
+//        defaultItemAnimator.setRemoveDuration(500);
+//        mPullListView.setItemAnimator(defaultItemAnimator);
         mPullListView.setAdapter(mMerchantAdapter);
 //        mPullListView.setOnItemClickListener(this);
 

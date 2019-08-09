@@ -1,9 +1,12 @@
 package com.sensoro.common.server.bean;
 
 import com.google.gson.annotations.Expose;
+import com.sensoro.common.model.MerchantSubModel;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by sensoro on 17/7/25.
@@ -34,7 +37,10 @@ public class UserInfo implements Serializable {
     private String controllerAid;
     private String token;
     @Expose(serialize = false, deserialize = false)
-    public boolean exp;
+    public Boolean expand;
+    @Expose(serialize = false, deserialize = false)
+    public List<MerchantSubModel> merchantSubList = new ArrayList<>();
+
 
     public int getDepth() {
         return depth;

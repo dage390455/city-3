@@ -1,7 +1,7 @@
 package com.sensoro.smartcity.factory;
 
 import com.sensoro.common.server.bean.UserInfo;
-import com.sensoro.smartcity.model.MerchantSubModel;
+import com.sensoro.common.model.MerchantSubModel;
 
 import java.util.ArrayList;
 import java.util.List;
