@@ -5,17 +5,19 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sensoro.common.R;
@@ -41,6 +43,7 @@ public class SelectDialog extends Dialog implements OnClickListener, OnItemClick
     private int mFirstItemColor;
     private int mOtherItemColor;
     private int mSelectedPos = -1;
+    private LinearLayout dialog_list_root;
 
     public interface SelectDialogListener {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id);
@@ -118,7 +121,7 @@ public class SelectDialog extends Dialog implements OnClickListener, OnItemClick
         this.mSelectedPos = selectedPos;
 
         // 设置是否点击外围可解散
-        setCanceledOnTouchOutside(true);
+
     }
 
     public SelectDialog(Activity activity, int theme, SelectDialogListener listener, SelectDialogCancelListener cancelListener, List<String> names, String title) {
@@ -134,24 +137,37 @@ public class SelectDialog extends Dialog implements OnClickListener, OnItemClick
     }
 
     @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
+            dismiss();
+        }
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = getLayoutInflater().inflate(R.layout.view_dialog_select,
                 null);
-        setContentView(view, new LayoutParams(LayoutParams.MATCH_PARENT,
-                LayoutParams.WRAP_CONTENT));
+        setContentView(view);
+        dialog_list_root = view.findViewById(R.id.dialog_list_root);
         Window window = getWindow();
         // 设置显示动画
         window.setWindowAnimations(R.style.main_menu_animstyle);
-        WindowManager.LayoutParams wl = window.getAttributes();
-        wl.x = 0;
-        wl.y = mActivity.getWindowManager().getDefaultDisplay().getHeight();
-        // 以下这两句是为了保证按钮可以水平满屏
-        wl.width = LayoutParams.MATCH_PARENT;
-        wl.height = LayoutParams.WRAP_CONTENT;
+//        WindowManager.LayoutParams wl = window.getAttributes();
+//        wl.x = 0;
+//        wl.y = mActivity.getWindowManager().getDefaultDisplay().getHeight();
+//        // 以下这两句是为了保证按钮可以水平满屏
+//        wl.width = LayoutParams.MATCH_PARENT;
+//        wl.height = LayoutParams.WRAP_CONTENT;
 
         // 设置显示位置
-        onWindowAttributesChanged(wl);
+        window.setGravity(Gravity.BOTTOM);
+        WindowManager.LayoutParams params = window.getAttributes();
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(params);
 
         initViews();
     }

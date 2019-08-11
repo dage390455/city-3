@@ -501,6 +501,8 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
                 selectDialog = new SelectDialog((Activity) mContext, currentVideoFormat, R.style
                         .transparentFrameWindowStyle,
                         (parent, view, position, id) -> changeVideoFormat(position), names, mContext.getString(R.string.video_format_des));
+                selectDialog.setCanceledOnTouchOutside(true);
+
                 selectDialog.show();
 
             }
