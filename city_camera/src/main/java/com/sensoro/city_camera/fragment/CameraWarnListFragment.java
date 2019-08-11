@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -179,6 +180,15 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
             @Override
             public void afterTextChanged(Editable s) {
                 setSearchClearImvVisible(s.length() > 0);
+            }
+        });
+        edFilterContent.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                edFilterContent.requestFocus();
+                edFilterContent.setCursorVisible(true);
+                setSearchHistoryVisible(true);
+                return false;
             }
         });
         AppUtils.getInputSoftStatus(mRootView, new AppUtils.InputSoftStatusListener() {
@@ -662,8 +672,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
         super.onDestroyView();
     }
 
-    @OnClick({R2.id.fg_camera_warns_top_search_frame_search, R2.id.fg_camera_warns_top_search_et_search,
-            R2.id.fg_camera_warns_top_search_imv_clear, R2.id.btn_search_clear,
+    @OnClick({R2.id.fg_camera_warns_top_search_imv_clear, R2.id.btn_search_clear,
             R2.id.tv_top_search_alarm_search_cancel, R2.id.alarm_return_top,
             R2.id.iv_search_camera_warns_status, R2.id.tv_search_camera_warns_status,
             R2.id.tv_search_camera_warns_time, R2.id.iv_search_camera_warns_time,
@@ -671,11 +680,7 @@ public class CameraWarnListFragment extends BaseFragment<ICameraWarnListFragment
     })
     public void onViewClicked(View view) {
         int i = view.getId();
-        if (i == R.id.fg_camera_warns_top_search_frame_search || i == R.id.fg_camera_warns_top_search_et_search) {
-            edFilterContent.requestFocus();
-            edFilterContent.setCursorVisible(true);
-            setSearchHistoryVisible(true);
-        } else if (i == R.id.fg_camera_warns_top_search_imv_clear) {
+        if (i == R.id.fg_camera_warns_top_search_imv_clear) {
             edFilterContent.getText().clear();
             edFilterContent.requestFocus();
             AppUtils.openInputMethodManager(mRootFragment.getActivity(), edFilterContent);

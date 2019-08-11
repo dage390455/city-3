@@ -3,13 +3,12 @@ package com.sensoro.smartcity.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -18,16 +17,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sensoro.smartcity.R;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.sensoro.common.adapter.NameAddressHistoryAdapter;
 import com.sensoro.common.base.BaseActivity;
-import com.sensoro.smartcity.imainviews.IDeployMonitorWeChatRelationActivityView;
-import com.sensoro.smartcity.presenter.DeployMonitorWeChatRelationActivityPresenter;
-import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.callback.RecycleViewItemClickListener;
 import com.sensoro.common.manger.SensoroLinearLayoutManager;
-import com.sensoro.common.widgets.TipOperationDialogUtils;
+import com.sensoro.common.utils.AppUtils;
 import com.sensoro.common.widgets.SensoroToast;
+import com.sensoro.common.widgets.TipOperationDialogUtils;
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.imainviews.IDeployMonitorWeChatRelationActivityView;
+import com.sensoro.smartcity.presenter.DeployMonitorWeChatRelationActivityPresenter;
 
 import java.util.List;
 
@@ -71,6 +73,14 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
         initMiniProgramDesc();
         initRcHistory();
         initClearHistoryDialog();
+        acWeChatRelationEt.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                acWeChatRelationEt.requestFocus();
+                acWeChatRelationEt.setCursorVisible(true);
+                return false;
+            }
+        });
 //        initEtWatcher();
     }
 
@@ -198,7 +208,7 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
 
     }
 
-    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel, R.id.iv_ac_chat_relation_delete_history, R.id.ac_we_chat_relation_et})
+    @OnClick({R.id.include_text_title_tv_subtitle, R.id.include_text_title_tv_cancel, R.id.iv_ac_chat_relation_delete_history})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
@@ -212,10 +222,6 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
                 break;
             case R.id.iv_ac_chat_relation_delete_history:
                 showHistoryClearDialog();
-                break;
-            case R.id.ac_we_chat_relation_et:
-                acWeChatRelationEt.requestFocus();
-                acWeChatRelationEt.setCursorVisible(true);
                 break;
         }
 
