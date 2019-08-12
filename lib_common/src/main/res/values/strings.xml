@@ -122,6 +122,15 @@
     <string name="inactive_monitoring_point">Inactive Monitoring Points</string>
     <string name="malfunction_monitoring_point">Malfunction Monitoring Points</string>
     <string name="all_types">All</string>
+
+    <string name="sortcondition">Sort Order</string>
+    <string name="sortcondition_def">Defalut Order</string>
+    <array name="sortcondition">
+        <item>Defalut Order</item>
+        <item>Name Order</item>
+        <item>Name Reverse</item>
+    </array>
+
     <string name="main_page_home">Home</string>
     <string name="main_page_warn">Alarm</string>
     <string name="main_page_malfunction">Malfunction</string>
