@@ -258,6 +258,11 @@ public final class PreferencesHelper implements Constants {
     }
 
     public void saveMyBaseUrl(String url) {
+        if (!TextUtils.isEmpty(url)) {
+            if (!url.endsWith("/")) {
+                url = url + "/";
+            }
+        }
         this.myBaseUrl = url;
         if (!TextUtils.isEmpty(myBaseUrl)) {
             SharedPreferences sp = ContextUtils.getContext().getSharedPreferences(PREFERENCE_SCOPE, Context
@@ -928,7 +933,6 @@ public final class PreferencesHelper implements Constants {
         }
         return null;
     }
-
 
 
 }
