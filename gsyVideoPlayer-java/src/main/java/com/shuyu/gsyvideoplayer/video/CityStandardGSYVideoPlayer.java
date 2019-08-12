@@ -82,22 +82,22 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
      */
     private static int cityPlayState;
     private ArrayList<String> urlList = new ArrayList<>();
+    /**
+     * 当前视频格式
+     */
     private int currentVideoFormat = ContextUtils.getContext().getSharedPreferences(Constants.PREFERENCE_VIDEO_FORMAT_SETTING_SP, Context.MODE_PRIVATE)
             .getInt(Constants.PREFERENCE_VIDEO_FORMAT_SETTING_KEY, 0);
 
-    private static boolean isAudioChecked;
     /**
      * 切换视频格式，不提示移动数据
      */
     private static boolean isChangeVideoFormat = false;
-
+    private static boolean isAudioChecked;
 
     private Button playAndRetryBtn;
     private LinearLayout layoutBottomControlLl;
     private ImageView maskFaceIv;
-
     private TextView tiptv;
-
     private ToggleButton audioIv;
     private ChangeVideoFormatDialog changeVideoFormatDialog = new ChangeVideoFormatDialog();
     private SelectDialog selectDialog;
@@ -1555,9 +1555,7 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
      * 视频格式标签
      */
     private void changeVideoFormat(int pos) {
-
         if (currentVideoFormat != pos) {
-
             if ((mCurrentState == GSYVideoPlayer.CURRENT_STATE_PLAYING
                     || mCurrentState == GSYVideoPlayer.CURRENT_STATE_PAUSE)) {
 
@@ -1567,22 +1565,17 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
                     /**
                      * 获取最后视频截图loading显示占位图
                      */
-
                     taskShotPic(bitmap -> {
-
                         if (null != bitmap) {
                             mCoverImage.setImageBitmap(bitmap);
                             mCoverImage.setVisibility(VISIBLE);
                         }
 
                     });
-
-
                     onVideoPause();
                     getGSYVideoManager().releaseMediaPlayer();
                     cancelProgressTimer();
                     hideAllWidget();
-
                     changeVideoFormatDialog.disMiss();
                     if (null != selectDialog) {
                         selectDialog.dismiss();
@@ -1595,8 +1588,6 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
                         hideAllWidget();
 
                     }, 300);
-
-
                     /**
                      * 存储本地记录
                      */
@@ -1604,7 +1595,6 @@ public class CityStandardGSYVideoPlayer extends StandardGSYVideoPlayer {
                             .edit().putInt(Constants.PREFERENCE_VIDEO_FORMAT_SETTING_KEY, pos).apply();
                     updateVideTypeTag();
                     currentVideoFormat = pos;
-
                 }
             }
         }
