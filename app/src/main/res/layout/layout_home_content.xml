@@ -27,22 +27,32 @@
             android:textSize="14dp"
             android:layout_alignParentStart="true"/>
 
-
-        <TextView
-            android:id="@+id/fg_main_home_tv_select_sort_condition"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:drawableEnd="@drawable/change_sort_condition"
-            android:drawablePadding="8dp"
-            android:paddingStart="14dp"
-            android:paddingTop="6dp"
-            android:paddingEnd="14dp"
-            android:paddingBottom="6dp"
-            android:text="@string/sortcondition_def"
-            android:textColor="@color/c_252525"
-            android:textSize="14dp"
-            android:layout_alignParentEnd="true"/>
+            android:gravity="center_vertical"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="20dp">
+
+
+            <TextView
+                android:id="@+id/fg_main_home_tv_select_sort_condition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="14dp"
+                android:paddingTop="6dp"
+                android:paddingEnd="6dp"
+                android:paddingBottom="6dp"
+                android:text="@string/sortcondition_def"
+                android:textColor="@color/c_252525"
+                android:textSize="14dp"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="18dp"
+                android:src="@drawable/change_sort_condition"/>
+        </LinearLayout>
+
 
     </RelativeLayout>
     <!--<FrameLayout-->

@@ -65,5 +65,8 @@ public interface IHomeFragmentView extends IToast, IProgressDialog, IActivityInt
      */
     void updateSelectFilterConditionPopAndShow(List mSortConditionList, SortConditionModel selectedCondition);
 
+    void updateSelectFilterCondition(List mSortConditionList, SortConditionModel selectedCondition);
+    void resetTypeAndSortCondition();
+
 
 }

@@ -640,6 +640,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                         throwable.printStackTrace();
                     }
                     needResetHeaderPosition = true;
+                    mTypeSelectedType=null;
+                    mSelectedCondition=null;
+                    getView().resetTypeAndSortCondition();
                     requestInitData(true, true);
                 }
                 break;
@@ -1033,6 +1036,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
 
     private void initSortCondition() {
+        mSortConditionList.clear();;
         String[] titleArray = mContext.getResources().getStringArray(R.array.sortcondition);
         mSortConditionList.add(mSelectedCondition = new SortConditionModel("init", "status", titleArray[0], true));
         mSortConditionList.add(new SortConditionModel("asc", "name", titleArray[1], false));
@@ -1040,6 +1044,10 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     }
 
+    public void resetConditionList(){
+        initSortCondition();
+        getView().updateSelectFilterCondition(mSortConditionList, mSelectedCondition);
+    }
     public void updateSelectSortConditionPopAndShow() {
         if (mSortConditionList.size() == 0) {
             initSortCondition();
