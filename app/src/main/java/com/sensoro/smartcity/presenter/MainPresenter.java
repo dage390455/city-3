@@ -611,14 +611,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             options.forceNew = true;
             options.path = "/city";
             options.transports = transports;
-            String base_url = RetrofitServiceHelper.getInstance().BASE_URL;
-            try {
-                LogUtils.logd("base_url", base_url);
-            } catch (Throwable e) {
-
-                e.printStackTrace();
-            }
-            mSocket = IO.socket(base_url + "app", options);
+            mSocket = IO.socket(RetrofitServiceHelper.getInstance().BASE_URL + "app", options);
             mSocket.on(Constants.SOCKET_EVENT_PERMISSION_CHANGE, mPermissionListener);
             if (hasDeviceBriefControl()) {
                 mSocket.on(Constants.SOCKET_EVENT_DEVICE_INFO, mInfoListener);
@@ -632,7 +625,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnCreate
             if (hasAlarmInfoControl() || hasDeviceBriefControl()) {
                 mSocket = mSocket.connect();
             }
-        } catch (Exception e) {
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         } finally {
             mHandler.postDelayed(mSocketTask, SOCKET_CHECK_TIME);
